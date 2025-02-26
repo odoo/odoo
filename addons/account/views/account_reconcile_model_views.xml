@@ -173,7 +173,7 @@
                                 </group>
                                 <group string="Counterpart Items" colespan="4"
                                        class="oe_inline"
-                                       invisible="rule_type == 'invoice_matching' and (not allow_payment_tolerance or allow_payment_tolerance and payment_tolerance_param == 0.0)">
+                                       invisible="not lines_are_applicable">
                                     <group>
                                         <field name="show_decimal_separator" invisible="1"/>
                                         <field name="decimal_separator"

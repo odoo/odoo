@@ -331,6 +331,7 @@ class AccountReconcileModel(models.Model):
     # used to decide if we should show the decimal separator for the regex matching field
     show_decimal_separator = fields.Boolean(compute='_compute_show_decimal_separator')
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
+    lines_are_applicable = fields.Boolean(compute='_compute_lines_are_applicable')
 
     def action_reconcile_stat(self):
         self.ensure_one()
@@ -365,6 +366,14 @@ class AccountReconcileModel(models.Model):
                 record.payment_tolerance_param = min(100.0, max(0.0, record.payment_tolerance_param))
             else:
                 record.payment_tolerance_param = max(0.0, record.payment_tolerance_param)
+
+    @api.depends('rule_type', 'allow_payment_tolerance', 'payment_tolerance_param')
+    def _compute_lines_are_applicable(self):
+        """ Compute lines_are_applicable and set it to true if the lines should show in the view and be used during reconciliation.
+        This helps to avoid having lines applied when the payment tolerance is disabled, because they were created before disabling it.
+        """
+        for model in self:
+            model.lines_are_applicable = model.rule_type != 'invoice_matching' or (model.allow_payment_tolerance and model.payment_tolerance_param != 0.0)
 
     @api.constrains('allow_payment_tolerance', 'payment_tolerance_param', 'payment_tolerance_type')
     def _check_payment_tolerance_param(self):
