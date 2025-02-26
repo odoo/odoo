@@ -56,22 +56,15 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_countdown', login='admin')
 
     def test_05_social_media(self):
-        self.env.ref('website.default_website').write({
-            'social_facebook': "https://www.facebook.com/Odoo",
-            'social_twitter': 'https://twitter.com/Odoo',
-            'social_linkedin': 'https://www.linkedin.com/company/odoo',
-            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
-            'social_github': 'https://github.com/odoo',
-            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
-            'social_tiktok': 'https://www.tiktok.com/@odoo',
-        })
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_social_media', login="admin")
-        self.assertEqual(
-            self.env['website'].browse(1).social_instagram,
-            'https://instagram.com/odoo.official/',
-            'Social media should have been updated'
-        )
+
+        # Retrieve the social media snippet architecture
+        social_media_snippet = self.env['ir.ui.view'].search([('key', '=', 'website.s_social_media')], limit=1)
+        social_media_snippet_arch = social_media_snippet.arch
+
+        # Assert that the Instagram URL is present in the snippet architecture
+        self.assertIn('https://www.instagram.com/explore/tags/odoo/', social_media_snippet_arch)
 
     def test_06_snippet_popup_add_remove(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_add_remove', login='admin')

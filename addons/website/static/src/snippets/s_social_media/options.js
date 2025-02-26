@@ -4,11 +4,9 @@ import options from '@web_editor/js/editor/snippets.options';
 import { _t } from "@web/core/l10n/translation";
 import { ICON_SELECTOR } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
-let dbSocialValues;
-let dbSocialValuesProm;
+let dbSocialValues = {};
 const clearDbSocialValuesCache = () => {
-    dbSocialValuesProm = undefined;
-    dbSocialValues = undefined;
+    dbSocialValues = {};
 };
 const getDbSocialValuesCache = () => {
     return dbSocialValues;
@@ -36,7 +34,7 @@ options.registry.SocialMedia = options.Class.extend({
     async onBuilt() {
         await this._fetchSocialMedia();
         for (const anchorEl of this.$target[0].querySelectorAll(':scope > a')) {
-            const mediaName = anchorEl.href.split('/website/social/').pop();
+            const mediaName = this._findRelevantSocialMedia(anchorEl.href);
             if (mediaName && !dbSocialValues[`social_${mediaName}`]) {
                 // Delete social media without value in DB.
                 anchorEl.remove();
@@ -44,25 +42,6 @@ options.registry.SocialMedia = options.Class.extend({
         }
         // Ensure we do not drop a blank block.
         this._handleNoMediaAlert();
-    },
-    /**
-     * @override
-     */
-    async cleanForSave() {
-        // When the snippet is cloned via its parent, the options UI won't be
-        // updated and DB values won't be fetched, the options `cleanForSave`
-        // will then update the website with empty values.
-        if (!dbSocialValues) {
-            return;
-        }
-        // Update the DB links.
-        let websiteId;
-        this.trigger_up('context_get', {
-            callback: function (ctx) {
-                websiteId = ctx['website_id'];
-            },
-        });
-        await this.orm.write("website", [websiteId], dbSocialValues);
     },
     /**
      * @override
@@ -145,19 +124,13 @@ options.registry.SocialMedia = options.Class.extend({
                         anchorEl.setAttribute('target', '_blank');
                         const iEl = document.createElement('i');
                         iEl.classList.add('fa', 'rounded-circle', 'shadow-sm', 'o_editable_media');
-                        anchorEl.appendChild(iEl);
                     } else {
                         // Copy existing style if there is already another link.
                         anchorEl = this.$target[0].querySelector(':scope > a').cloneNode(true);
                         this._removeSocialMediaClasses(anchorEl);
                     }
-                    const iEl = anchorEl.querySelector(ICON_SELECTOR);
-                    if (iEl) {
-                        const faIcon = isDbField ? `fa-${entry.media}` : 'fa-pencil';
-                        iEl.classList.add(faIcon);
-                    }
                     if (isDbField) {
-                        anchorEl.href = `/website/social/${encodeURIComponent(entry.media)}`;
+                        anchorEl.href = dbSocialValues[`social_${encodeURIComponent(entry.media)}`];
                         anchorEl.classList.add(`s_social_media_${entry.media}`);
                     }
                     setAriaLabelOfSocialNetwork(anchorEl, entry.media, entry.display_name);
@@ -171,26 +144,32 @@ options.registry.SocialMedia = options.Class.extend({
                 this.entriesNotInDom.push(entry);
                 continue;
             }
-            if (!isDbField) {
-                // Handle URL change for custom links.
-                const href = anchorEl.getAttribute('href');
-                if (href !== entry.display_name) {
-                    let socialMedia = null;
-                    if (this._isValidURL(entry.display_name)) {
-                        // Propose an icon only for valid URLs (no mailto).
-                        socialMedia = this._findRelevantSocialMedia(entry.display_name);
-                        if (socialMedia) {
-                            const iEl = anchorEl.querySelector(ICON_SELECTOR);
-                            this._removeSocialMediaClasses(anchorEl);
-                            anchorEl.classList.add(`s_social_media_${socialMedia}`);
-                            if (iEl) {
-                                iEl.classList.add(`fa-${socialMedia}`);
-                            }
+            const iEl = anchorEl.querySelector(ICON_SELECTOR);
+            if (iEl) {
+                let faIcon = isDbField
+                    ? `fa-${entry.media == "youtube" ? "youtube-play" : entry.media}`
+                    : "fa-pencil";
+                iEl.classList.add(faIcon);
+            }
+            // Sets the icon for each social medias.
+            const href = anchorEl.getAttribute("href");
+            if (href !== entry.display_name) {
+                let socialMedia = null;
+                if (this._isValidURL(entry.display_name)) {
+                    // Propose an icon only for valid URLs (no mailto).
+                    socialMedia = this._findRelevantSocialMedia(entry.display_name);
+                    if (socialMedia) {
+                        this._removeSocialMediaClasses(anchorEl);
+                        anchorEl.classList.add(`s_social_media_${socialMedia}`);
+                        if (iEl) {
+                            iEl.classList.add(
+                                `fa-${socialMedia == "youtube" ? "youtube-play" : socialMedia}`
+                            );
                         }
                     }
-                    anchorEl.setAttribute('href', entry.display_name);
-                    setAriaLabelOfSocialNetwork(anchorEl, socialMedia, entry.display_name);
                 }
+                anchorEl.setAttribute("href", entry.display_name);
+                setAriaLabelOfSocialNetwork(anchorEl, socialMedia, entry.display_name);
             }
             // Place the link at the correct position
             this.$target[0].appendChild(anchorEl);
@@ -224,49 +203,26 @@ options.registry.SocialMedia = options.Class.extend({
         let listPosition = 0;
         let domPosition = 0;
         // Check the DOM to compute the state of the ListUserValueWidget.
-        let entries = [...this.$target[0].querySelectorAll(':scope > a')].map(el => {
-            const media = el.href.split('/website/social/')[1];
+        let entries = [...this.$target[0].querySelectorAll(":scope > a")].map((el) => {
+            const media = dbSocialValues[`social_${this._findRelevantSocialMedia(el.href)}`]
+                ? this._findRelevantSocialMedia(el.href)
+                : undefined;
             // Avoid a DOM entry and a non-dom entry having the same position.
             while (this.entriesNotInDom.find(entry => entry.listPosition === listPosition)) {
                 listPosition++;
             }
             return {
                 id: weUtils.generateHTMLId(),
-                display_name: media ? dbSocialValues[`social_${media}`] : el.getAttribute('href'),
+                display_name: el.getAttribute("href"),
                 placeholder: `https://${encodeURIComponent(media) || 'example'}.com/yourPage`,
-                undeletable: !!media,
-                notToggleable: !media,
+                undeletable: false,
+                notToggleable: true,
                 selected: true,
                 listPosition: listPosition++,
                 domPosition: domPosition++,
                 media: media,
             };
         });
-        // Adds the DB social media links that are not in the DOM.
-        for (let [media, link] of Object.entries(dbSocialValues)) {
-            media = media.split('social_').pop();
-            if (!this.$target[0].querySelector(`:scope > a[href="/website/social/${encodeURIComponent(media)}"]`)) {
-                const entryNotInDom = this.entriesNotInDom.find(entry => entry.media === media);
-                if (!entryNotInDom) {
-                    this.entriesNotInDom.push({
-                        id: weUtils.generateHTMLId(),
-                        display_name: link,
-                        placeholder: `https://${encodeURIComponent(media)}.com/yourPage`,
-                        undeletable: true,
-                        selected: false,
-                        listPosition: listPosition++,
-                        media: media,
-                        notToggleable: false,
-                    });
-                } else {
-                    // Do not change the listPosition of the existing entry.
-                    entryNotInDom.display_name = link;
-                    entryNotInDom.undeletable = true;
-                    entryNotInDom.notToggleable = false;
-                }
-            }
-        }
-        // Reorder entries and entriesNotInDom by position.
         entries = entries.concat(this.entriesNotInDom);
         entries.sort((a, b) => {
             return a.listPosition - b.listPosition;
@@ -277,28 +233,13 @@ options.registry.SocialMedia = options.Class.extend({
      * Fetches the urls of the social networks that are in the database.
      */
     async _fetchSocialMedia() {
-        if (!dbSocialValuesProm) {
-            let websiteId;
-            this.trigger_up('context_get', {
-                callback: function (ctx) {
-                    websiteId = ctx['website_id'];
-                },
-            });
-            // Fetch URLs for db links.
-            dbSocialValuesProm = this.orm.read("website", [websiteId], [
-                "social_facebook",
-                "social_twitter",
-                "social_linkedin",
-                "social_youtube",
-                "social_instagram",
-                "social_github",
-                "social_tiktok",
-            ]).then(function (values) {
-                [dbSocialValues] = values;
-                delete dbSocialValues.id;
-            });
-        }
-        await dbSocialValuesProm;
+        const targetAs = [...this.$target[0].querySelectorAll(":scope > a")];
+        targetAs.forEach((el) => {
+            const media = this._findRelevantSocialMedia(el.href);
+            if (media) {
+                dbSocialValues[`social_${media}`] = el.href;
+            }
+        });
     },
     /**
      * Finds the social network for the given url.
