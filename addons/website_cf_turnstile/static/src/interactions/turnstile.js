@@ -13,9 +13,8 @@ export class TurnStile {
         turnstileEl.dataset.appearance = mode;
         turnstileEl.dataset.responseFieldName = "turnstile_captcha";
         turnstileEl.dataset.sitekey = session.turnstile_site_key;
+        turnstileEl.dataset.callback = "turnstileCallback";
         turnstileEl.dataset.errorCallback = "throwTurnstileError";
-        turnstileEl.dataset.beforeInteractiveCallback = "turnstileBeforeInteractive";
-        turnstileEl.dataset.afterInteractiveCallback = "turnstileAfterInteractive";
 
         const script1El = document.createElement("script");
         script1El.className = "s_turnstile";
@@ -27,17 +26,12 @@ export class TurnStile {
                 error.code = code;
                 throw error;
             }
-            function turnstileBeforeInteractive() {
-                const btnEl = document.querySelector("${selector}");
-                if (btnEl && !btnEl.classList.contains("disabled")) {
-                    btnEl.classList.add("disabled", "cf_form_disabled");
-                }
-            }
-            function turnstileAfterInteractive() {
+            function turnstileCallback() {
                 const btnEl = document.querySelector("${selector}");
                 if (btnEl && btnEl.classList.contains("cf_form_disabled")) {
                     btnEl.classList.remove("disabled", "cf_form_disabled");
                 }
+                btnEl.closest('form').querySelector('input.turnstile_captcha_valid').value = 'done';
             }
         `;
 
@@ -45,9 +39,16 @@ export class TurnStile {
         script2El.className = "s_turnstile";
         script2El.src = TurnStile.turnstileURL;
 
+        // avoid autosubmit from password manager
+        const inputValidation = document.createElement("input");
+        inputValidation.style = 'display: none;';
+        inputValidation.className = 'turnstile_captcha_valid';
+        inputValidation.required = true;
+
         this.turnstileEl = turnstileEl;
         this.script1El = script1El;
         this.script2El = script2El;
+        this.inputValidation = inputValidation;
     }
 
     /**
