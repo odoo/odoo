@@ -1,4 +1,7 @@
+import base64
 from datetime import datetime, timedelta
+import io
+import zipfile
 
 from odoo import api, fields, models
 
@@ -39,6 +42,36 @@ class CardCard(models.Model):
         """Compute the res_model once and never update it again."""
         for campaign, cards in self.grouped('campaign_id').items():
             cards.res_model = campaign.res_model
+
+    def action_download_images(self):
+        if len(self) == 1:
+            return {
+                'type': 'ir.actions.act_url',
+                'url': self._get_card_url(),
+                'target': 'self',
+            }
+
+        zip_filename = "images.zip"
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+            for record in self:
+                if record.image:
+                    card_slug = self.env['ir.http']._slug(record)
+                    filename = f"{card_slug}.jpg"
+                    zip_file.writestr(filename, base64.b64decode(record.image))
+
+        attachment = self.env['ir.attachment'].create({
+            'name': zip_filename,
+            'type': 'binary',
+            'datas': base64.b64encode(zip_buffer.getvalue()),
+            'mimetype': 'application/zip',
+        })
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{attachment.id}?download=true',
+            'target': 'self',
+        }
 
     @api.autovacuum
     def _gc_card(self):
