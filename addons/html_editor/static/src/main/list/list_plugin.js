@@ -124,7 +124,7 @@ export class ListPlugin extends Plugin {
             { commandId: "toggleListUL" },
             { commandId: "toggleListOL" },
             { commandId: "toggleListCL" },
-        ],
+        ].map((item) => withSequence(15, item)),
 
         hints: [{ selector: "LI", text: _t("List") }],
         system_style_properties: ["--placeholder-left"],
