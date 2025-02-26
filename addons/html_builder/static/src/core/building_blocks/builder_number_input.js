@@ -43,11 +43,21 @@ export class BuilderNumberInput extends Component {
 
     // TODO: use this.preview or this.commit?
     handleKeydown(event) {
-        // TODO apply on each part of the value
-        if (event.key === "ArrowUp") {
-            event.target.value = parseFloat(event.target.value) + (this.props.step || 1);
-        } else if (event.key === "ArrowDown") {
-            event.target.value = parseFloat(event.target.value) - (this.props.step || 1);
+        if (!["ArrowUp", "ArrowDown"].includes(event.key)) {
+            return;
         }
+        const values = event.target.value.split(" ").map((number) => parseFloat(number) || 0);
+        if (event.key === "ArrowUp") {
+            values.forEach((value, i) => {
+                values[i] = value + (this.props.step || 1);
+            });
+        } else if (event.key === "ArrowDown") {
+            values.forEach((value, i) => {
+                values[i] = value - (this.props.step || 1);
+            });
+        }
+        event.target.value = values.join(" ");
+        // OK because it only uses event.target.value.
+        this.onChange(event);
     }
 }
