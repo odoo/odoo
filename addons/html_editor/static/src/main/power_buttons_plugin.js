@@ -13,6 +13,7 @@ import { omit, pick } from "@web/core/utils/objects";
  * @property {Object} [commandParams]
  * @property {string} [title] Can be inferred from the user command
  * @property {string} [icon] Can be inferred from the user command
+ * @property {string} [text] Mandatory if `icon` is not provided
  * @property {string} [isAvailable] Can be inferred from the user command
  */
 /**
@@ -71,9 +72,19 @@ export class PowerButtonsPlugin extends Plugin {
                 run: () => command.run(item.commandParams),
             };
         };
-        const renderButton = ({ title, icon, run }) => {
+        const renderButton = ({ title, icon, text, run }) => {
             const btn = this.document.createElement("button");
-            btn.className = `power_button btn px-2 py-1 cursor-pointer fa ${icon}`;
+            let className = "power_button btn px-2 py-1 cursor-pointer";
+            if (icon) {
+                className += ` fa ${icon}`;
+            } else {
+                const span = this.document.createElement("span");
+                span.textContent = text;
+                span.className = "d-flex align-items-center";
+                span.style.height = "1em";
+                btn.append(span);
+            }
+            btn.className = className;
             btn.title = title;
             this.addDomListener(btn, "click", () => this.applyCommand(run));
             return btn;

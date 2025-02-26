@@ -67,6 +67,11 @@ export class ChatGPTPlugin extends Plugin {
             icon: "fa-magic",
             // isAvailable: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
         },
+
+        power_buttons: withSequence(20, {
+            commandId: "openChatGPTDialog",
+            text: "AI",
+        }),
     };
 
     isReplaceableByAI(selection = this.dependencies.selection.getEditableSelection()) {
