@@ -512,19 +512,26 @@ export class ListPlugin extends Plugin {
      */
     indentLI(li) {
         const lip = this.document.createElement("li");
+        const parentLi = li.parentElement;
+        const nextSiblingLi = li.nextSibling;
         lip.classList.add("oe-nested");
         const destul =
             li.previousElementSibling?.querySelector("ol, ul") ||
             li.nextElementSibling?.querySelector("ol, ul") ||
             li.closest("ol, ul");
-
+        const cursors = this.dependencies.selection.preserveSelection();
+        parentLi.removeChild(li);
         const ul = createList(this.document, this.getListMode(destul));
         lip.append(ul);
 
-        const cursors = this.dependencies.selection.preserveSelection();
         // lip replaces li
         li.before(lip);
         ul.append(li);
+        if (nextSiblingLi) {
+            parentLi.insertBefore(lip, nextSiblingLi);
+        } else {
+            parentLi.appendChild(lip);
+        }
         cursors.update((cursor) => {
             if (cursor.node === lip.parentNode) {
                 const childIndex = childNodeIndex(lip);
