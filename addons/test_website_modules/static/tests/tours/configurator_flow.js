@@ -50,6 +50,9 @@ tour.register('configurator_flow', {
     },
     // Features screen
     {
+        content: "select About Us",
+        trigger: '.card:contains("About Us")',
+    }, {
         content: "select Pricing",
         trigger: '.card:contains("Pricing")',
     }, {
