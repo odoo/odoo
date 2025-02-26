@@ -57,4 +57,7 @@ class ReportProductTemplateLabelDymo(models.AbstractModel):
     _description = 'Product Label Report'
 
     def _get_report_values(self, docids, data):
+        custom_barcodes = data.pop('custom_barcodes', None)
+        if custom_barcodes:
+            data['quantity_by_product'].update({p: 1 for p in custom_barcodes})
         return _prepare_data(self.env, data)
