@@ -164,9 +164,8 @@ export class KanbanController extends Component {
         });
         useSetupAction({
             rootRef: this.rootRef,
-            beforeLeave: () =>
-                // wait for potential pending write operations (e.g. records being moved)
-                this.model.mutex.getUnlockedDef(),
+            beforeUnload: this.beforeUnload.bind(this),
+            beforeLeave: this.beforeLeave.bind(this),
             getLocalState: () => ({
                 activeBars: this.progressBarState?.activeBars,
                 modelState: this.model.exportState(),
@@ -396,6 +395,13 @@ export class KanbanController extends Component {
                     this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps),
             },
         };
+    }
+
+    async beforeUnload() {}
+
+    async beforeLeave() {
+        // wait for potential pending write operations (e.g. records being moved)
+        return this.model.mutex.getUnlockedDef();
     }
 
     evalViewModifier(modifier) {
