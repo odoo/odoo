@@ -20,6 +20,17 @@ class BackgroundOptionPlugin extends Plugin {
                     withColorCombinations: true,
                 },
             },
+            // Background-color only
+            {
+                selector: ".s_chart",
+                OptionComponent: BackgroundOption,
+                props: {
+                    withColors: true,
+                    withImages: false,
+                    withGradient: true,
+                    withColorCombinations: false,
+                },
+            },
         ],
         normalize_handlers: this.normalize.bind(this),
         system_classes: ["o_colored_level"],
