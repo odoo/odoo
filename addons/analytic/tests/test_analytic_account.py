@@ -2,6 +2,7 @@
 
 from odoo.tests import Form, tagged
 from odoo import Command
+from odoo.exceptions import RedirectWarning
 
 from odoo.addons.analytic.tests.common import AnalyticCommon
 
@@ -199,6 +200,7 @@ class TestAnalyticAccount(AnalyticCommon):
             'company_id': self.company_b_branch.id,
         })
 
+<<<<<<< saas-17.4
     def test_create_analytic_with_minimal_access(self):
         analyst_partner = self.env['res.partner'].create({'name': 'analyst'})
         analyst = self.env['res.users'].create({
@@ -208,3 +210,49 @@ class TestAnalyticAccount(AnalyticCommon):
         })
         plan = self.env['account.analytic.plan'].with_user(analyst).create({'name': 'test plan'})
         self.assertEqual(plan.create_uid, analyst)
+||||||| 0789a962a45adb5a038cb86e62de2b4f657a2762
+=======
+    def test_change_plan(self):
+        """Changing the plan of an account updates columns of the analytic lines."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+        })
+        self.analytic_account_1.plan_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_1_col: False,
+            plan_2_col: self.analytic_account_1.id,
+        }])
+
+    def test_change_plan_conflict(self):
+        """Don't allow changing the plan if some lines already have values set for that plan."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_2.id,
+        })
+        with self.assertRaisesRegex(RedirectWarning, "wipe out your current data"):
+            self.analytic_account_1.plan_id = self.analytic_plan_2
+
+    def test_change_plan_no_conflict(self):
+        """Exception for the previous test if it was already the correct value that is set."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_1.id,
+        })
+        self.analytic_account_1.plan_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_1_col: False,
+            plan_2_col: self.analytic_account_1.id,
+        }])
+>>>>>>> 0ec87c774743fcaf058190df0b0e09854782e0fb

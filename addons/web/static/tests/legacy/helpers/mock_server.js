@@ -118,6 +118,7 @@ function makeLogger(prefix, title) {
     return { request, response };
 }
 
+<<<<<<< saas-17.4:addons/web/static/tests/legacy/helpers/mock_server.js
 export function makeServerError({
     code,
     context,
@@ -127,13 +128,18 @@ export function makeServerError({
     errorName,
     type,
 } = {}) {
+||||||| 0789a962a45adb5a038cb86e62de2b4f657a2762:addons/web/static/tests/helpers/mock_server.js
+export function makeServerError({ code, context, description, message, subType, type } = {}) {
+=======
+export function makeServerError({ code, context, description, message, subType, type, args } = {}) {
+>>>>>>> 0ec87c774743fcaf058190df0b0e09854782e0fb:addons/web/static/tests/helpers/mock_server.js
     return makeErrorFromResponse({
         code: code || 200,
         message: message || "Odoo Server Error",
         data: {
             name: errorName || `odoo.exceptions.${type || "UserError"}`,
             debug: "traceback",
-            arguments: [],
+            arguments: args || [],
             context: context || {},
             subType,
             message: description,
