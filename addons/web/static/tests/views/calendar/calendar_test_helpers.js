@@ -1,4 +1,4 @@
-import { click, drag, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
+import { click, drag, edit, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
 import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import { contains, getMockEnv, swipeLeft, swipeRight } from "@web/../tests/web_test_helpers";
@@ -512,7 +512,10 @@ export async function moveEventToTime(eventId, dateTime) {
 }
 
 export async function selectHourOnPicker(selectedValue) {
-    await contains(`.o_time_picker_select:eq(0)`).select(selectedValue);
+    await click(".o_time_picker_input:eq(0)");
+    await animationFrame();
+    await edit(selectedValue, { confirm: "enter" });
+    await animationFrame();
     await contains(".o_datetime_picker .o_apply").click();
 }
 

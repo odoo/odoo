@@ -247,7 +247,7 @@ test("RemainingDaysField on a datetime field in form view", async () => {
         resId: 1,
         arch: /* xml */ `<form><field name="datetime" widget="remaining_days" /></form>`,
     });
-    expect(".o_field_widget input").toHaveValue("10/08/2017 11:00:00");
+    expect(".o_field_widget input").toHaveValue("10/08/2017 11:00");
     expect("div.o_field_widget[name='datetime'] input").toHaveCount(1);
 
     await click(".o_field_widget input");
@@ -258,7 +258,7 @@ test("RemainingDaysField on a datetime field in form view", async () => {
     await animationFrame();
     await click(".o_form_button_save");
     await animationFrame();
-    expect(".o_field_widget input").toHaveValue("10/09/2017 11:00:00");
+    expect(".o_field_widget input").toHaveValue("10/09/2017 11:00");
 });
 
 test("RemainingDaysField on a datetime field in list view in UTC", async () => {
