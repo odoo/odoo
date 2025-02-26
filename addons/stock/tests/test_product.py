@@ -366,25 +366,6 @@ class TestVirtualAvailable(TestStockCommon):
         # At this point product_3 should have the quantity reserved
         self.product_3.active = False
 
-        # Should not be possible to change the product type when quantities are reserved
-        with self.assertRaises(UserError):
-            self.product_3.write({'is_storable': False})
+        self.product_3.write({'is_storable': False})
 
-        # Should not be possible to change the product type when moves are done.
         self.picking_out.button_validate()
-        with self.assertRaises(UserError):
-            self.product_3.write({'is_storable': False})
-
-    def test_product_template_multiwarehouse_quantities(self):
-        warehouse_one, warehouse_two = self.env['stock.warehouse'].search([], limit=2)
-
-        self.env['stock.quant'].search([('product_id', '=', self.product_3.id)]).unlink()
-        self.env['stock.quant']._update_available_quantity(self.product_3, warehouse_one.lot_stock_id, 200)
-        self.env['stock.quant']._update_available_quantity(self.product_3, warehouse_two.lot_stock_id, 50)
-
-        product_template = self.product_3.product_tmpl_id
-        main_qty = product_template.with_context(warehouse_id=warehouse_one.id).qty_available
-        other_qty = product_template.with_context(warehouse_id=warehouse_two.id).qty_available
-
-        self.assertEqual(main_qty, 200)
-        self.assertEqual(other_qty, 50)

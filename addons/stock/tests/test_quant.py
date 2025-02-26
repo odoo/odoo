@@ -445,6 +445,30 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 10.0)
         self.assertEqual(len(self.gather_relevant(self.product, self.stock_location)), 1)
 
+    def test_change_tracking_1(self):
+        """ change a product from consumable to storable and check that a reserved quant is created"""
+        quants = self.gather_relevant(self.product_consu, self.stock_location)
+        self.assertEqual(sum(quants.mapped('reserved_quantity')), 0.0)
+        stock_location = self.stock_location
+        dst_location = self.stock_subloc2
+        move = self.env['stock.move'].create({
+            'name': 'In 5 x %s' % self.product_consu.name,
+            'product_id': self.product_consu.id,
+            'location_id': stock_location.id,
+            'location_dest_id': dst_location.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_consu.uom_id.id,
+        })
+        move._action_confirm()
+        move.quantity = 5
+        # No reservation as product is consumable
+        quants = self.gather_relevant(self.product_consu, self.stock_location)
+        self.assertEqual(sum(quants.mapped('reserved_quantity')), 0.0)
+
+        self.product_consu.is_storable = True
+        quants = self.gather_relevant(self.product_consu, self.stock_location)
+        self.assertEqual(sum(quants.mapped('reserved_quantity')), 5.0)
+
     def test_action_done_1(self):
         pack_location = self.env.ref('stock.location_pack_zone')
         pack_location.active = True
