@@ -5,7 +5,6 @@
 import csv
 import logging
 from itertools import product
-from os.path import sep
 from pathlib import Path
 
 import odoo
