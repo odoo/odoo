@@ -5183,6 +5183,70 @@ class TestMrpOrder(TestMrpCommon):
             production_form.date_start = original_start_date
         self.assertEqual(mo.date_start, original_start_date)
 
+    def test_final_product_as_component(self):
+        """ Test the production of a product with itself as a component """
+
+        smartphone = self.env['product.product'].create({
+            'name': 'Smartphone',
+            'type': 'consu',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        serial_number = self.env['stock.lot'].create({
+            'name': 'SAME-SN',
+            'product_id': smartphone.id,
+        })
+        qty_final = self.env['stock.quant']._get_available_quantity(
+            smartphone, self.stock_location_14, lot_id=serial_number
+        )
+        self.assertEqual(qty_final, 0, "We have no quantity on hand")
+        # Produce the product with no components
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = smartphone
+        mo_form.product_qty = 1
+        mo_form.location_dest_id = self.stock_location_14
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo_form = Form(mo)
+        mo_form.lot_producing_id = serial_number
+        mo = mo_form.save()
+        mo.button_mark_done()
+        qty_final = self.env['stock.quant']._get_available_quantity(
+            smartphone, self.stock_location_14, lot_id=serial_number
+        )
+        self.assertEqual(qty_final, 1.0, "We have one quantity with the newly serial number")
+
+        # Reproducing with itself as a component
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = smartphone
+        mo_form.product_qty = 1
+        mo_form.location_dest_id = self.stock_location_14
+        with mo_form.move_raw_ids.new() as move:
+            move.product_id = smartphone
+            move.product_uom_qty = 1
+
+        mo = mo_form.save()
+        self.env['stock.move.line'].create({
+            'move_id': mo.move_raw_ids[0].id,
+            'lot_id': serial_number.id,
+            'product_id': smartphone.id,
+        })
+        mo.action_confirm()
+
+        mo_form = Form(mo)
+        mo_form.lot_producing_id = serial_number
+        mo = mo_form.save()
+
+        self.assertEqual(mo.lot_producing_id, mo.move_raw_ids[0].lot_ids[0])
+        mo.button_mark_done()
+        self.assertEqual(mo.lot_producing_id, mo.move_raw_ids[0].lot_ids[0])
+        qty_final = self.env['stock.quant']._get_available_quantity(
+            smartphone, self.stock_location_14, lot_id=serial_number
+        )
+        self.assertEqual(qty_final, 1, "We consumed 1 product (-1) and we produced 1 product (+1)")
+
+
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
