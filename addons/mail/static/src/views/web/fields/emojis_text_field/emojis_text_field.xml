@@ -8,5 +8,8 @@
         <xpath expr="//*[hasclass('o_field_input_buttons')]" position="inside">
             <t t-call="mail.EmojisFieldButton"/>
         </xpath>
+        <xpath expr="//*[hasclass('o_field_input_buttons')]" position="attributes">
+            <attribute name="style" add="visibility: visible;" separator=" " />
+        </xpath>
     </t>
 </templates>
