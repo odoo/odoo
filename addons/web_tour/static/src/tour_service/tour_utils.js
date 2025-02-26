@@ -34,49 +34,78 @@ function formatValue(key, value, maxLength = 200) {
 
 function serializeNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
-        return `"${node.nodeValue.trim()}"`;
+        return `${node.nodeValue.trim()}`;
     }
-    return node.outerHTML ? formatValue("node", node.outerHTML, 500) : "[Unknown Node]";
+    return node.outerHTML
+        ? formatValue("node", node.outerHTML.replace(node.innerHTML, "").trim(), 10000)
+        : "[Unknown Node]";
 }
 
-export function serializeChanges(snapshot, current) {
-    const changes = {
-        node: serializeNode(current),
+function filterTree(node) {
+    if (Array.isArray(node)) {
+        return node.map(filterTree).filter(Boolean);
+    }
+
+    if (node.text || node.attributes?.length) {
+        return node;
+    }
+
+    if (node.children) {
+        const filteredChildren = node.children.map(filterTree).filter(Boolean);
+        if (filteredChildren.length > 0) {
+            return { ...node, children: filteredChildren };
+        }
+    }
+
+    return null;
+}
+
+export function serializeChanges(initialElement, modifiedElement, changes = [], deep = 0) {
+    const children1 = [...initialElement.childNodes];
+    const children2 = [...modifiedElement.childNodes];
+    const maxLength = Math.max(children1.length, children2.length);
+    if (serializeNode(modifiedElement) === "" && modifiedElement.nodeType === Node.TEXT_NODE) {
+        return;
+    }
+    const hasChanged = {
+        node: serializeNode(modifiedElement),
     };
-    function pushChanges(key, obj) {
-        changes[key] = changes[key] || [];
-        changes[key].push(obj);
+    if (maxLength) {
+        hasChanged.children = [];
     }
 
-    if (snapshot.textContent !== current.textContent) {
-        pushChanges("modifiedText", { before: snapshot.textContent, after: current.textContent });
+    if (
+        modifiedElement.nodeType === Node.TEXT_NODE &&
+        initialElement.textContent !== modifiedElement.textContent &&
+        !initialElement.children?.length &&
+        !modifiedElement.children?.length
+    ) {
+        hasChanged.text = {
+            before: initialElement.textContent,
+            after: modifiedElement.textContent,
+        };
     }
 
-    const oldChildren = [...snapshot.childNodes].filter((node) => node.nodeType !== Node.TEXT_NODE);
-    const newChildren = [...current.childNodes].filter((node) => node.nodeType !== Node.TEXT_NODE);
-    oldChildren.forEach((oldNode, index) => {
-        if (!newChildren[index] || !oldNode.isEqualNode(newChildren[index])) {
-            pushChanges("removedNodes", { oldNode: serializeNode(oldNode) });
-        }
-    });
-    newChildren.forEach((newNode, index) => {
-        if (!oldChildren[index] || !newNode.isEqualNode(oldChildren[index])) {
-            pushChanges("addedNodes", { newNode: serializeNode(newNode) });
-        }
-    });
-
-    const oldAttrNames = new Set([...snapshot.attributes].map((attr) => attr.name));
-    const newAttrNames = new Set([...current.attributes].map((attr) => attr.name));
-    new Set([...oldAttrNames, ...newAttrNames]).forEach((attributeName) => {
-        const oldValue = snapshot.getAttribute(attributeName);
-        const newValue = current.getAttribute(attributeName);
-        const before = oldValue !== newValue || !newAttrNames.has(attributeName) ? oldValue : null;
-        const after = oldValue !== newValue || !oldAttrNames.has(attributeName) ? newValue : null;
+    const oldAttrNames = new Set([...(initialElement.attributes || [])].map((attr) => attr.name));
+    const newAttrNames = new Set([...(modifiedElement.attributes || [])].map((attr) => attr.name));
+    new Set([...oldAttrNames, ...newAttrNames]).forEach((name) => {
+        const oldValue = initialElement.getAttribute(name);
+        const newValue = modifiedElement.getAttribute(name);
+        const before = oldValue !== newValue || !newAttrNames.has(name) ? oldValue : null;
+        const after = oldValue !== newValue || !oldAttrNames.has(name) ? newValue : null;
         if (before || after) {
-            pushChanges("modifiedAttributes", { attributeName, before, after });
+            hasChanged.attributes = hasChanged.attributes || [];
+            hasChanged.attributes.push({ name, before, after });
         }
     });
-    return changes;
+
+    changes.push(hasChanged);
+
+    for (let i = 0; i < maxLength; i++) {
+        serializeChanges(children1[i], children2[i], hasChanged.children, deep++);
+    }
+
+    return filterTree(changes);
 }
 
 export function serializeMutation(mutation) {

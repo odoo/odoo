@@ -5,7 +5,7 @@ import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirma
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
-import { queryFirst } from "@odoo/hoot-dom";
+import { waitForStable } from "@web/core/macro";
 
 //
 const clickOrderNowAndWaitLocation = (location = "Take Out") => [
@@ -14,15 +14,8 @@ const clickOrderNowAndWaitLocation = (location = "Take Out") => [
     {
         trigger: ".btn:contains(order now)",
         async run(actions) {
-            await new Promise((resolve) => {
-                const interval = setInterval(() => {
-                    actions.click();
-                    if (queryFirst(`.o_kiosk_eating_location_box h3:contains(${location})`)) {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, 300);
-            });
+            await waitForStable(document, 300);
+            await actions.click();
         },
     },
     LandingPage.selectLocation(location),

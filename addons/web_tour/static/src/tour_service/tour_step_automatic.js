@@ -26,7 +26,7 @@ export class TourStepAutomatic extends TourStep {
         const snapshot = initialElement.cloneNode(true);
         const mutations = await waitForStable(initialElement, delay);
         let reason;
-        if (!hoot.isVisible(initialElement)) {
+        if (hoot.isVisible(snapshot) && !hoot.isVisible(initialElement)) {
             reason = `Initial element is no longer visible`;
         } else if (!initialElement.isEqualNode(snapshot)) {
             reason =
