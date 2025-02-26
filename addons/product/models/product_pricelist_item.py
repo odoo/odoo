@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import SUPERUSER_ID, _, api, fields, models, tools
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.tools import format_amount, format_datetime, formatLang
 
@@ -614,15 +614,3 @@ class ProductPricelistItem(models.Model):
                 break
 
         return pricelist_item._compute_base_price(*args, **kwargs)
-
-    @api.model
-    def _is_discount_feature_enabled(self):
-        superuser = self.env['res.users'].browse(SUPERUSER_ID)
-        return superuser.has_group('sale.group_discount_per_so_line')
-
-    def _show_discount(self):
-        if not self:
-            return False
-
-        self.ensure_one()
-        return self._is_discount_feature_enabled() and self.compute_price == 'percentage'
