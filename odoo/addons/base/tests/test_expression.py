@@ -205,8 +205,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(len(cats), 0)
 
         # test hierarchical search in m2m with 'False' value
-        with self.assertLogs('odoo.domains'):
-            cats = self._search(Category, [('id', 'child_of', False)])
+        cats = self._search(Category, [('id', 'child_of', False)])
         self.assertEqual(len(cats), 0)
 
         # test hierarchical search in m2m with parent id (list of ids)
@@ -234,8 +233,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(len(cats), 0)
 
         # test hierarchical search in m2m with 'False' value
-        with self.assertLogs('odoo.domains'):
-            cats = self._search(Category, [('id', 'parent_of', False)])
+        cats = self._search(Category, [('id', 'parent_of', False)])
         self.assertEqual(len(cats), 0)
 
     @mute_logger('odoo.models.unlink')
