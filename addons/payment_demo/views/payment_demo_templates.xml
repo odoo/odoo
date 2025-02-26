@@ -166,6 +166,19 @@
                         />
                     </div>
                     <div class="col mb-0">
+                        <label for="o_payment_demo_shipping_state" class="mt-1">
+                            <small><b>State</b></small>
+                        </label>
+                        <select id="o_payment_demo_shipping_state"
+                                class="form-select"
+                                disabled="true"
+                        >
+                            <option t-att-value="customer.state_id.code or 'BE-WBR'"
+                                    t-out="customer.state_id.name or 'Walloon Brabant'"
+                            />
+                        </select>
+                    </div>
+                    <div class="col mb-0">
                         <label for="o_payment_demo_shipping_country" class="mt-1">
                             <small><b>Country</b></small>
                         </label>
