@@ -1,21 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import os
 import datetime
 import json
+import os
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
+from urllib.parse import urlencode
+
 import pytz
 from freezegun import freeze_time
-from urllib.parse import urlencode
-from unittest.mock import patch
-from tempfile import TemporaryDirectory
 
 import odoo
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.http import SESSION_LIFETIME
-from odoo.tools import config, mute_logger, reset_cached_properties
 from odoo.tests import get_db_name, tagged
-from .test_common import TestHttpBase
+from odoo.tools import config, mute_logger, reset_cached_properties
 
+from .test_common import TestHttpBase
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 GEOIP_ODOO_FARM_2 = {
     'city': 'Ramillies',
@@ -24,7 +25,7 @@ GEOIP_ODOO_FARM_2 = {
     'latitude': 50.6314,
     'longitude': 4.8573,
     'region': 'WAL',
-    'time_zone': 'Europe/Brussels'
+    'time_zone': 'Europe/Brussels',
 }
 
 
@@ -32,7 +33,7 @@ GEOIP_ODOO_FARM_2 = {
 class TestHttpSession(TestHttpBase):
 
     @mute_logger('odoo.http')  # greeting_none called ignoring args {'debug'}
-    def test_session0_debug_mode(self):
+    def test_session00_debug_mode(self):
         session = self.authenticate(None, None)
         self.assertEqual(session.debug, '')
         self.db_url_open('/test_http/greeting').raise_for_status()
@@ -44,7 +45,7 @@ class TestHttpSession(TestHttpBase):
         self.db_url_open('/test_http/greeting?debug=').raise_for_status()
         self.assertEqual(session.debug, '')
 
-    def test_session1_default_session(self):
+    def test_session01_default_session(self):
         # The default session should not be saved on the filestore.
         with patch.object(odoo.http.root.session_store, 'save') as mock_save:
             res = self.db_url_open('/test_http/geoip')
@@ -55,7 +56,7 @@ class TestHttpSession(TestHttpBase):
                 msg = f'save() was called with args: {mock_save.call_args}'
                 raise AssertionError(msg) from exc
 
-    def test_session3_logout_15_0_geoip(self):
+    def test_session03_logout_15_0_geoip(self):
         session = self.authenticate(None, None)
         session['db'] = 'idontexist'
         session['geoip'] = {}  # Until saas-15.2 geoip was directly stored in the session
@@ -71,7 +72,7 @@ class TestHttpSession(TestHttpBase):
         self.assertEqual(res.status_code, 303)
         self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
-    def test_session4_web_authenticate_multidb(self):
+    def test_session04_web_authenticate_multidb(self):
         self.db_list = [get_db_name(), 'another_database']
 
         payload = json.dumps({
@@ -82,7 +83,7 @@ class TestHttpSession(TestHttpBase):
                 'db': get_db_name(),
                 'login': 'admin',
                 'password': 'admin',
-            }
+            },
         })
 
         res = self.multidb_url_open(
@@ -97,7 +98,7 @@ class TestHttpSession(TestHttpBase):
         res.raise_for_status()
         self.assertEqual(res.status_code, 200, "Should not be redirected to /web/login")
 
-    def test_session5_default_lang(self):
+    def test_session05_default_lang(self):
         self.env['res.lang']._activate_lang('en_US')  # default lang
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
 
@@ -118,7 +119,7 @@ class TestHttpSession(TestHttpBase):
             })
             self.assertEqual(res.text, 'en_US')
 
-    def test_session6_saved_lang(self):
+    def test_session06_saved_lang(self):
         session = self.authenticate('demo', 'demo')
         self.env['res.lang']._activate_lang('en_US')  # default lang
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
@@ -147,7 +148,7 @@ class TestHttpSession(TestHttpBase):
             lang_fr.active = False
             self.url_open(f'/test_http/{milky_way.id}').raise_for_status()
 
-    def test_session7_serializable(self):
+    def test_session07_serializable(self):
         """
             Test (non-)serializable values in the session in JSON format.
         """
@@ -165,7 +166,7 @@ class TestHttpSession(TestHttpBase):
                 session['foo'] = value
                 try:
                     self.assertEqual(session['foo'], value)
-                except Exception:
+                except Exception:  # noqa: BLE001
                     return None
                 session.pop('foo')
                 self.assertNotIn('foo', session)
@@ -173,7 +174,7 @@ class TestHttpSession(TestHttpBase):
                 self.assertEqual(session['foo'], value)
                 session.pop('foo')
                 return True
-            except Exception:
+            except Exception:  # noqa: BLE001
                 return False
 
         accepted_values = [
@@ -214,7 +215,7 @@ class TestHttpSession(TestHttpBase):
             self.assertEqual(check_session_attr(value), None)
 
     @patch("odoo.http.root.session_store.vacuum")
-    def test_session8_gc_ignored_no_db_name(self, mock):
+    def test_session08_gc_ignored_no_db_name(self, mock):
         with patch.dict(os.environ, {'ODOO_SKIP_GC_SESSIONS': ''}):
             self.env['ir.http']._gc_sessions()
             mock.assert_called_once()
@@ -224,7 +225,7 @@ class TestHttpSession(TestHttpBase):
             self.env['ir.http']._gc_sessions()
             mock.assert_not_called()
 
-    def test_session9_logout(self):
+    def test_session09_logout(self):
         sid = self.authenticate('admin', 'admin').sid
         self.assertTrue(odoo.http.root.session_store.get(sid), "session should exist")
         self.url_open('/web/session/logout', allow_redirects=False).raise_for_status()
@@ -283,6 +284,51 @@ class TestHttpSession(TestHttpBase):
         session.is_dirty = False
         session['foo_2'] = 'bar_2'
         self.assertTrue(session.is_dirty)
+
+    def test_session12_x_odoo_database_good_no_prior_session(self):
+        res = self.multidb_url_open(
+            '/test_http/ensure_db',
+            dblist=('a', 'b'),
+            headers={'X-Odoo-Database': 'a'})
+        self.assertEqual(res.status_code, 200, res.text)
+        self.assertEqual(res.text, 'a')
+        self.assertNotIn('session_id', res.cookies)
+
+    def test_session13_x_odoo_database_bad_no_prior_session(self):
+        res = self.multidb_url_open(
+            '/test_http/ensure_db',
+            dblist=('a', 'b'),
+            headers={
+                'X-Odoo-Database': 'c',
+            }, timeout=10000)
+        self.assertEqual(res.status_code, 303, res.text)
+        self.assertURLEqual(res.next.url, '/web/database/selector')
+        self.assertNotIn('session_id', res.cookies)
+
+    def test_session14_x_odoo_database_with_prior_session_same(self):
+        session = self.authenticate(None, None)
+        self.assertEqual(session.db, get_db_name())
+
+        res = self.url_open('/test_http/ensure_db', headers={
+            'X-Odoo-Database': get_db_name(),
+        })
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200, res.text)
+        self.assertEqual(res.text, get_db_name())
+        self.assertNotIn('session_id', res.cookies)
+
+    def test_session15_x_odoo_database_with_prior_session_different(self):
+        session = self.authenticate(None, None)
+        self.assertEqual(session.db, get_db_name())
+
+        res = self.url_open('/test_http/ensure_db', headers={
+            'X-Odoo-Database': f'not-{get_db_name()}',
+        })
+        self.assertEqual(res.status_code, 403, res.text)
+        self.assertIn(
+            "Cannot use both the session_id cookie and the x-odoo-database header.",
+            res.text,
+        )
 
 
 class TestSessionStore(HttpCaseWithUserDemo):
