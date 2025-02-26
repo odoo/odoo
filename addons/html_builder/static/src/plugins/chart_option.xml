@@ -115,6 +115,7 @@
                 t-key="window.String(state.currentCell.datasetIndex) + window.String(state.currentCell.dataIndex)"
                 label="state.currentCell.backgroundLabel">
         <BuilderColorPicker
+            getUsedCustomColors="getColorPalette.bind(this)"
             action="'colorChange'"
             actionParam="{
                 type: 'backgroundColor',
@@ -127,6 +128,7 @@
                 t-key="window.String(state.currentCell.datasetIndex) + window.String(state.currentCell.dataIndex)"
                 label="state.currentCell.borderLabel">
         <BuilderColorPicker
+            getUsedCustomColors="getColorPalette.bind(this)"
             action="'colorChange'"
             actionParam="{
                 type: 'borderColor',
