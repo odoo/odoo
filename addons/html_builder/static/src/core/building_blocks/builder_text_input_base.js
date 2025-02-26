@@ -4,6 +4,7 @@ export const textInputBasePassthroughProps = {
     action: { type: String, optional: true },
     placeholder: { type: String, optional: true },
     title: { type: String, optional: true },
+    style: { type: String, optional: true },
 };
 
 // TODO: rename BuilderInputBase if compatible with type=range
