@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="im_livechat_channel_view_form_inherit" model="ir.ui.view">
+        <field name="name">im_livechat.channel.form.inherit</field>
+        <field name="model">im_livechat.channel</field>
+        <field name="inherit_id" ref="im_livechat.im_livechat_channel_view_form" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//ol[@name='internal_integration_steps']" position="after">
+                    <a href="/odoo/settings#livechat" target="_blank" class="btn btn-link" role="button" groups="base.group_system">
+                        <i class="oi oi-fw oi-arrow-right ms-1" />
+                        Configure Live Chat
+                    </a>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>
