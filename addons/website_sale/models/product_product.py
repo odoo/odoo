@@ -184,3 +184,49 @@ class ProductProduct(models.Model):
                 'reviewCount': self.rating_count,
             }
         return markup_data
+
+    # ---------------------------------------------------------
+    # Product Ribbon Methods
+    # ---------------------------------------------------------
+
+    def _get_ribbon(self, product_prices):
+        manually_set_ribbon = self.product_tmpl_id.website_ribbon_id or self.variant_ribbon_id
+        if manually_set_ribbon:
+            return manually_set_ribbon
+
+        product_ribbon_sudo = self.env['product.ribbon'].sudo()
+        if not self:
+            return product_ribbon_sudo
+        auto_assign_ribbons = product_ribbon_sudo.search([('assign', '!=', 'manual')])
+        for ribbon in auto_assign_ribbons:
+            if self._is_matched_for_ribbon(ribbon, product_prices):
+                return ribbon
+        return product_ribbon_sudo
+
+    def _is_matched_for_ribbon(self, ribbon, product_prices):
+        """
+        Determine if the product matches the criteria of assign for the given ribbon.
+
+        :param ribbon(product.ribbon): The ribbon to check against.
+        :param product_prices(dict): A dictionary containing product pricing information.
+        :return: True if the product matches the ribbon's criteria, False otherwise.
+        :rtype: bool
+        """
+
+        # Check if a discount is applied to the product using pricelist, comparision price, or others
+        is_sale_assign = (
+            ribbon.assign == 'sale'
+            and product_prices
+            and (
+                'base_price' in product_prices
+                or product_prices.get('list_price', 0) != product_prices.get('price', 0)
+            )
+        )
+
+        # Check if product is published within the ribbon's new period
+        is_new_assign = (
+            ribbon.assign == 'new'
+            and ribbon.new_period >= (fields.Datetime.today() - self.publish_date).days
+        )
+
+        return is_sale_assign or is_new_assign

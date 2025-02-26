@@ -66,3 +66,13 @@ class ProductProduct(models.Model):
                 availability = 'https://schema.org/OutOfStock'
             markup_data['offers']['availability'] = availability
         return markup_data
+
+    def _is_matched_for_ribbon(self, ribbon, product_prices):
+        """ Override of `website_sale` to check if the product is out of stock. """
+        # check if the product is out of stock and not allowed
+        is_assign_out_of_stock = (
+            ribbon.assign == 'out_of_stock'
+            and not self.product_tmpl_id.allow_out_of_stock_order
+            and self._is_sold_out()
+        )
+        return is_assign_out_of_stock or super()._is_matched_for_ribbon(ribbon, product_prices)
