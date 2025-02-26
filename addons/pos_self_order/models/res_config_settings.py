@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import qrcode
+import qrcode.image.svg
 import zipfile
 from io import BytesIO
 
@@ -93,7 +94,10 @@ class ResConfigSettings(models.TransientModel):
         )
         qr.add_data(url)
         qr.make(fit=True)
-        return qr.make_image(fill_color="black", back_color="transparent")
+        return {
+            'png': qr.make_image(fill_color="black", back_color="transparent"),
+            'svg': qr.make_image(fill_color="black", back_color="transparent", image_factory=qrcode.image.svg.SvgImage)
+        }
 
     def generate_qr_codes_zip(self):
         if not self.pos_self_ordering_mode in ['mobile', 'consultation']:
@@ -109,12 +113,12 @@ class ResConfigSettings(models.TransientModel):
 
             for table in table_ids:
                 qr_images.append({
-                    'image': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url(table.id))),
+                    'images': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url(table.id))),
                     'name': f"{table.floor_id.name} - {table.table_number}",
                 })
         else:
             qr_images.append({
-                'image': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url())),
+                'images': self._generate_single_qr_code(url_unquote(self.pos_config_id._get_self_order_url())),
                 'name': "generic",
             })
 
@@ -123,7 +127,9 @@ class ResConfigSettings(models.TransientModel):
         with zipfile.ZipFile(zip_buffer, "w", 0) as zip_file:
             for index, qr_image in enumerate(qr_images):
                 with zip_file.open(f"{qr_image['name']} ({index + 1}).png", "w") as buf:
-                    qr_image['image'].save(buf, format="PNG")
+                    qr_image['images']['png'].save(buf, format="PNG")
+                with zip_file.open(f"{qr_image['name']} ({index + 1}).svg", "w") as buf:
+                    qr_image['images']['svg'].save(buf)
         zip_buffer.seek(0)
 
         # Delete previous attachments
