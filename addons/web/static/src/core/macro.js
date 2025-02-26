@@ -19,9 +19,7 @@ const macroSchema = {
                 trigger: { type: [Function, String], optional: true },
                 value: { type: [String, Number], optional: true },
             },
-            validate: (step) => {
-                return step.action || step.trigger;
-            },
+            validate: (step) => step.action || step.trigger,
         },
     },
     onComplete: { type: Function, optional: true },
@@ -36,6 +34,25 @@ class MacroError extends Error {
         super(message, options);
         this.type = type;
     }
+}
+
+export async function waitForStable(target = document, timeout = 1000 / 16) {
+    return new Promise((resolve) => {
+        let observer;
+        let timer;
+        const mutationList = [];
+        function onMutation(mutations) {
+            mutationList.push(...(mutations || []));
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                observer.disconnect();
+                resolve(mutationList);
+            }, timeout);
+        }
+        observer = new MacroMutationObserver(onMutation);
+        observer.observe(target);
+        onMutation([]);
+    });
 }
 
 export class Macro {
