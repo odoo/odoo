@@ -377,3 +377,110 @@ test("Show IM status", async () => {
     await start();
     await contains(".o-mail-ChatBubble .fa-circle.text-success[aria-label='User is online']");
 });
+
+test("Attachment-only message preview shows file name", async () => {
+    const pyEnv = await startServer();
+    const [Partner1, Partner2, Partner3] = pyEnv["res.partner"].create([
+        { name: "Partner1" },
+        { name: "Partner2" },
+        { name: "Partner3" },
+    ]);
+    const [Channel1, Channel2, Channel3] = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: Partner1 }),
+            ],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: Partner2 }),
+            ],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: Partner3 }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            attachment_ids: [
+                Command.create({
+                    mimetype: "application/pdf",
+                    name: "File.pdf",
+                    res_id: Channel1,
+                    res_model: "discuss.channel",
+                }),
+            ],
+            author_id: Partner1,
+            body: "",
+            model: "discuss.channel",
+            res_id: Channel1,
+        },
+        {
+            attachment_ids: [
+                Command.create({
+                    mimetype: "image/jpeg",
+                    name: "Image.jpeg",
+                    res_id: Channel2,
+                    res_model: "discuss.channel",
+                }),
+                Command.create({
+                    mimetype: "application/pdf",
+                    name: "File.pdf",
+                    res_id: Channel2,
+                    res_model: "discuss.channel",
+                }),
+            ],
+            author_id: Partner2,
+            body: "",
+            model: "discuss.channel",
+            res_id: Channel2,
+        },
+        {
+            attachment_ids: [
+                Command.create({
+                    mimetype: "application/pdf",
+                    name: "File.pdf",
+                    res_id: Channel3,
+                    res_model: "discuss.channel",
+                }),
+                Command.create({
+                    mimetype: "image/jpeg",
+                    name: "Image.jpeg",
+                    res_id: Channel3,
+                    res_model: "discuss.channel",
+                }),
+                Command.create({
+                    mimetype: "video/mp4",
+                    name: "Video.mp4",
+                    res_id: Channel3,
+                    res_model: "discuss.channel",
+                }),
+            ],
+            author_id: Partner3,
+            body: "",
+            model: "discuss.channel",
+            res_id: Channel3,
+        },
+    ]);
+    setupChatHub({ folded: [Channel1, Channel2, Channel3] });
+    await start();
+    await contains(".o-mail-ChatBubble[name='Partner1']");
+    await hover(".o-mail-ChatBubble[name='Partner1']");
+    await contains(".o-mail-ChatBubble-preview", { text: "Partner1File.pdf" });
+    await contains(".o-mail-ChatBubble[name='Partner2']");
+    await hover(".o-mail-ChatBubble[name='Partner2']");
+    await contains(".o-mail-ChatBubble-preview", { text: "Partner2Image.jpeg and File.pdf" });
+    await contains(".o-mail-ChatBubble[name='Partner3']");
+    await hover(".o-mail-ChatBubble[name='Partner3']");
+    await contains(".o-mail-ChatBubble-preview", {
+        text: "Partner3File.pdf and 2 other attachments",
+    });
+});
