@@ -102,16 +102,16 @@ class IapAccount(models.Model):
             return
 
         for token, information in accounts_information.items():
-            account_id = self.filtered(lambda acc: secrets.compare_digest(acc.account_token, token))
-
-            # Default rounding of 4 decimal places to avoid large decimals
-            balance_amount = round(information['balance'], None if account_id.service_id.integer_balance else 4)
-            balance = f"{balance_amount} {account_id.service_id.unit_name}"
-
             information.pop('link_to_service_page', None)
-            account_info = self._get_account_info(account_id, balance, information)
+            accounts = self.filtered(lambda acc: secrets.compare_digest(acc.account_token, token))
 
-            account_id.with_context(disable_iap_update=True, tracking_disable=True).write(account_info)
+            for account in accounts:
+                # Default rounding of 4 decimal places to avoid large decimals
+                balance_amount = round(information['balance'], None if account.service_id.integer_balance else 4)
+                balance = f"{balance_amount} {account.service_id.unit_name or ''}"
+
+                account_info = self._get_account_info(account, balance, information)
+                account.with_context(disable_iap_update=True, tracking_disable=True).write(account_info)
 
     def _get_account_info(self, account_id, balance, information):
         return {
