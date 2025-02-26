@@ -33,7 +33,7 @@
                         squashed="isSquashed(msg, prevMsg)"
                         onParentMessageClick.bind="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage, props.thread)"
                         thread="props.thread"
-                        messageEdition="props.messageEdition"
+                        messageEdition="messageEdition"
                         isFirstMessage="msg_first"
                         hasActions="props.messageActions and !msg.eq(props.thread.from_message_id)"
                         showDates="props.showDates"
