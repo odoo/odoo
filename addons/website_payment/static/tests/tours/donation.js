@@ -11,6 +11,8 @@ registerWebsitePreviewTour(
     {
         url: "/",
         edition: true,
+        debug: true,
+        d2cu: 3000,
     },
     () => [
         ...insertSnippet({
