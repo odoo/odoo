@@ -179,10 +179,7 @@ class MailActivitySchedule(models.TransientModel):
     @api.depends('activity_type_id')
     def _compute_activity_user_id(self):
         for scheduler in self:
-            if scheduler.activity_type_id.default_user_id:
-                scheduler.activity_user_id = scheduler.activity_type_id.default_user_id
-            elif not scheduler.activity_user_id:
-                scheduler.activity_user_id = self.env.user
+            scheduler.activity_user_id = scheduler.activity_type_id.default_user_id or self.env.user
 
     # Any writable fields that can change error computed field
     @api.constrains('res_model_id', 'res_ids',  # records (-> responsible)

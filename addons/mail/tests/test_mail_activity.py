@@ -146,6 +146,21 @@ class ActivityScheduleCase(MailCommon):
             **(additional_context_value if additional_context_value else {}),
         }))
 
+    def test_user_recompute_onchange_activity_type(self):
+        user_test = self.env['res.users'].create({
+            'name': 'user_test',
+            'login': 'a_user',
+        })
+        self.activity_type_call.default_user_id = user_test
+        with Form(self.env['mail.activity.schedule'].with_context({
+            'active_model': 'mail.activity.schedule',
+        })) as form:
+            form.activity_type_id = self.activity_type_todo
+            before_change_user = form.activity_user_id.name
+            form.activity_type_id = self.activity_type_call
+            form.activity_type_id = self.activity_type_todo
+            self.assertEqual(before_change_user, form.activity_user_id.name)
+
 
 @tagged("-at_install", "post_install")
 class TestMailActivityChatter(HttpCase):
