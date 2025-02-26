@@ -154,6 +154,10 @@
             'website_sale/static/src/scss/kanban_record.scss',
         ],
         'website.assets_wysiwyg': [
+            'website_sale/static/src/js/website_sale.js',
+            'website/static/src/libs/zoomodoo/zoomodoo.js',
+            'website_sale/static/src/js/components/website_sale_image_viewer.js',
+            'website_sale/static/src/js/sale_variant_mixin.js',
             'website_sale/static/src/scss/website_sale.editor.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
