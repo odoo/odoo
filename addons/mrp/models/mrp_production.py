@@ -606,7 +606,7 @@ class MrpProduction(models.Model):
                             'workcenter_id': operation.workcenter_id.id,
                             'product_uom_id': production.product_uom_id.id,
                             'operation_id': operation.id,
-                            'state': 'pending',
+                            'state': 'blocked',
                         }]
                 workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(
                     lambda wo: wo.operation_id and wo.ids and wo.id not in deleted_workorders_ids)}
@@ -923,7 +923,7 @@ class MrpProduction(models.Model):
             if vals.get('date_finished'):
                 production.move_finished_ids.write({'date': production.date_finished})
             if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state != 'draft':
-                production.with_context(no_procurement=True)._autoconfirm_production()
+                production.with_context(no_procurement=True)._autoconfirm_production()  # FIXME: WO dependency Auto-(re)link entry point
                 if production in production_to_replan:
                     production._plan_workorders()
             if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
@@ -1469,6 +1469,7 @@ class MrpProduction(models.Model):
         move_raws_to_adjust._adjust_procure_method()
         moves_to_confirm._action_confirm(merge=False)
         workorder_to_confirm._action_confirm()
+        workorder_to_confirm.filtered(lambda w: not w.blocked_by_workorder_ids).state = 'ready'
         # run scheduler for moves forecasted to not have enough in stock
         ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
         self.move_raw_ids.with_context(ignore_mo_ids=ignored_mo_ids + self.ids)._trigger_scheduler()
@@ -1535,7 +1536,7 @@ class MrpProduction(models.Model):
         """ Plan all the production's workorders depending on the workcenters
         work schedule.
 
-        :param replan: If it is a replan, only ready and pending workorder will be taken into account
+        :param replan: If it is a replan, only ready and blocked workorder will be taken into account
         :type replan: bool.
         """
         self.ensure_one()
@@ -2473,7 +2474,7 @@ class MrpProduction(models.Model):
                 'operation_id': operation.id,
                 'product_uom_id': self.product_uom_id.id,
                 'production_id': self.id,
-                'state': 'pending',
+                'state': 'blocked',
                 'workcenter_id': operation.workcenter_id.id,
             }
             workorders_values.append(workorder_vals)

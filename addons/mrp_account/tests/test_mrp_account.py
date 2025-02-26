@@ -370,7 +370,7 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
             'date_end': now,
             'loss_id': self.env.ref('mrp.block_reason7').id,
         })
-        workorder.button_done()
+        workorder.action_mark_as_done()
         wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
         wizard.save().confirm()
         wip_entries1 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', wip_empty_entries.ids)])
