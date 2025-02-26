@@ -312,7 +312,7 @@ describe("useService", () => {
         }
 
         await expect(mountWithCleanup(MyComponent)).rejects.toThrow(
-            "Service toy_service is not available"
+            'Service toy_service is not available in "MyComponent".'
         );
     });
 
