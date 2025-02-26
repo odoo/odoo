@@ -4256,6 +4256,7 @@ class BaseModel(metaclass=MetaModel):
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation
           (such as setting an object as its own parent)
         """
+        assert isinstance(vals_list, (list, tuple))
         if not vals_list:
             return self.browse()
 
