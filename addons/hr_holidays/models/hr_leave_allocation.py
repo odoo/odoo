@@ -71,18 +71,19 @@ class HolidaysAllocation(models.Model):
         'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
         index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
+    employee_resource_calendar_id = fields.Many2one("resource.calendar", compute="_compute_employee_resource_calendar_id", required=True, readonly=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_manager_id', store=True, string='Manager')
     notes = fields.Text('Reasons', readonly=False)
     # duration
     number_of_days = fields.Float(
-        'Number of Days', compute='_compute_number_of_days', store=True, readonly=False, tracking=True, default=1,
+        'Number of Days', store=True, readonly=False, tracking=True, default=1,
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
-        'Duration (days)', compute='_compute_number_of_days_display',
+        'Duration (days)', compute='_compute_number_of_days_display', inverse="_inverse_number_of_days_display",
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
     number_of_hours_display = fields.Float(
-        'Duration (hours)', compute='_compute_number_of_hours_display', store=True,
+        'Duration (hours)', compute='_compute_number_of_hours_display', inverse="_inverse_number_of_hours_display", store=True,
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
     duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display', inverse='_inverse_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
@@ -148,11 +149,7 @@ class HolidaysAllocation(models.Model):
             return _(
                 '%(name)s (%(duration)s hour(s))',
                 name=self.holiday_status_id.name,
-                duration=self.number_of_days * (
-                    self.employee_id.sudo().resource_calendar_id.hours_per_day
-                    or self.holiday_status_id.company_id.resource_calendar_id.hours_per_day
-                    or HOURS_PER_DAY
-                ),
+                duration=self.number_of_days * self.employee_resource_calendar_id.hours_per_day,
             )
         return _(
             '%(name)s (%(duration)s day(s))',
@@ -205,13 +202,11 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             allocation.number_of_days_display = allocation.number_of_days
 
-    @api.depends('number_of_days')
+    @api.depends('number_of_days', 'employee_resource_calendar_id')
     def _compute_number_of_hours_display(self):
         for allocation in self:
-            hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day \
-                            or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day \
-                            or HOURS_PER_DAY
-            allocation.number_of_hours_display = allocation.number_of_days * hours_per_day
+            allocation.number_of_hours_display = (allocation.number_of_days
+                                                  * allocation.employee_resource_calendar_id.hours_per_day)
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
     def _compute_duration_display(self):
@@ -224,19 +219,24 @@ class HolidaysAllocation(models.Model):
 
     def _inverse_duration_display(self):
         for allocation in self:
-            hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day \
-                            or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day \
-                            or HOURS_PER_DAY
-
             try:
                 value = float(allocation.duration_display.split(' ')[0].replace(',','.'))
             except ValidationError:
                 raise ValidationError(_("Cannot convert allocated days/hours value : '%s' to float", allocation.duration_display))
 
             if allocation.type_request_unit:
-                allocation.number_of_days = float(value) if allocation.type_request_unit != 'hour' else float(value) / hours_per_day
+                allocation.number_of_days = float(value) if allocation.type_request_unit != 'hour' \
+                    else float(value) / allocation.employee_resource_calendar_id.hours_per_day
             else:
                 raise ValidationError(_("No allocation value unit defined"))
+
+    def _inverse_number_of_days_display(self):
+        for allocation in self:
+            allocation.number_of_days = allocation.number_of_days_display
+
+    def _inverse_number_of_hours_display(self):
+        for allocation in self:
+            allocation.number_of_days = allocation.number_of_hours_display / allocation.employee_resource_calendar_id.hours_per_day
 
     @api.depends('state')
     def _compute_can_approve(self):
@@ -273,17 +273,11 @@ class HolidaysAllocation(models.Model):
                         default_holiday_status_id = self._default_holiday_status_id()
                     allocation.holiday_status_id = default_holiday_status_id
 
-    @api.depends('holiday_status_id', 'number_of_hours_display', 'number_of_days_display', 'type_request_unit')
-    def _compute_number_of_days(self):
+    @api.depends('date_from', 'employee_id.resource_calendar_id')
+    def _compute_employee_resource_calendar_id(self):
         for allocation in self:
-            allocation_unit = allocation.type_request_unit
-            if allocation_unit != 'hour':
-                allocation.number_of_days = allocation.number_of_days_display
-            else:
-                hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day\
-                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day\
-                    or HOURS_PER_DAY
-                allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
+            allocation.employee_resource_calendar_id = allocation.employee_id\
+                ._get_calendars(allocation.date_from)[allocation.employee_id.id]
 
     @api.depends('holiday_status_id', 'allocation_type')
     def _compute_accrual_plan_id(self):
@@ -338,10 +332,9 @@ class HolidaysAllocation(models.Model):
         days_to_add = self._process_accrual_plan_level(
             current_level, period_start, self.lastcall, period_end, self.nextcall)
         if current_level.cap_accrued_time_yearly:
-            hours_per_day = self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY
             maximum_leave_yearly = current_level.maximum_leave_yearly\
                 if current_level.added_value_type != 'hour'\
-                else current_level.maximum_leave_yearly / hours_per_day
+                else current_level.maximum_leave_yearly / self.employee_resource_calendar_id.hours_per_day
             yearly_remaining_amount = maximum_leave_yearly - self.yearly_accrued_amount
             days_to_add = min(days_to_add, yearly_remaining_amount)
         if current_level.cap_accrued_time:
@@ -417,7 +410,7 @@ class HolidaysAllocation(models.Model):
             added_value = level.added_value
         # Convert time in hours to time in days in case the level is encoded in hours
         if level.added_value_type == 'hour':
-            added_value = added_value / (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            added_value = added_value / self.employee_resource_calendar_id.hours_per_day
         period_prorata = 1
         if (start_period != start_date or end_period != end_date) and not level.accrual_plan_id.is_based_on_worked_time:
             period_days = (end_period - start_period)
@@ -444,7 +437,8 @@ class HolidaysAllocation(models.Model):
             # even if the value doesn't change. This is the best performance atm.
             first_level = level_ids[0]
             first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
-            leaves_taken = allocation.leaves_taken if allocation.holiday_status_id.request_unit in ["day", "half_day"] else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            leaves_taken = allocation.leaves_taken if allocation.holiday_status_id.request_unit in ["day", "half_day"] \
+                else allocation.leaves_taken / allocation.employee_resource_calendar_id.hours_per_day
             allocation.already_accrued = already_accrued[allocation.id]
             # first time the plan is run, initialize nextcall and take carryover / level transition into account
             if not allocation.nextcall:
@@ -473,7 +467,9 @@ class HolidaysAllocation(models.Model):
                 if not current_level:
                     break
                 if current_level.cap_accrued_time:
-                    current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "day" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                    current_level_maximum_leave = current_level.maximum_leave \
+                        if current_level.added_value_type == "day" \
+                        else current_level.maximum_leave / allocation.employee_resource_calendar_id.hours_per_day
                 nextcall = current_level._get_next_date(allocation.nextcall)
                 # Since _get_previous_date returns the given date if it corresponds to a call date
                 # this will always return lastcall except possibly on the first call
@@ -527,7 +523,10 @@ class HolidaysAllocation(models.Model):
                         allocated_days_left = allocation.number_of_days - leaves_taken
                         allocation_max_days = 0 # default if unused_accrual are lost
                         if current_level.action_with_unused_accruals == 'maximum':
-                            postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                            postpone_max_days = current_level.postpone_max_days \
+                                if current_level.added_value_type == 'day' \
+                                else (current_level.postpone_max_days
+                                      / allocation.employee_resource_calendar_id.hours_per_day)
                             allocation_max_days = min(postpone_max_days, allocated_days_left)
                         allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
                     allocation.expiring_carryover_days = allocation.number_of_days
@@ -572,7 +571,8 @@ class HolidaysAllocation(models.Model):
                             allocation.last_executed_carryover_date = carryover_date
                             allocated_days_left = allocation.number_of_days - leaves_taken
                             postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' \
-                                else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                                else (current_level.postpone_max_days
+                                      / allocation.employee_resource_calendar_id.hours_per_day)
                             allocated_days_left = allocation.number_of_days - leaves_taken
                             allocation_max_days = 0 # default if unused_accrual are lost
                             if current_level.action_with_unused_accruals == 'maximum':
@@ -597,7 +597,9 @@ class HolidaysAllocation(models.Model):
                 current_level = level_start.get(allocation.actual_lastcall) or current_level or allocation.accrual_plan_id.level_ids[0]
                 period_start = current_level._get_previous_date(allocation.actual_lastcall)
                 if current_level.cap_accrued_time:
-                    current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "day" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                    current_level_maximum_leave = current_level.maximum_leave \
+                        if current_level.added_value_type == "day" \
+                        else current_level.maximum_leave / allocation.employee_resource_calendar_id.hours_per_day
                 if allocation.actual_lastcall in {period_start, allocation.date_from} | set(level_start.keys()):
                     allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, allocation.nextcall)
                     allocation.already_accrued = True
