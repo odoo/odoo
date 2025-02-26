@@ -70,6 +70,9 @@ $spacers: (
 $body-bg: o-color('o-cc1-bg') !default;
 $body-color: o-color('o-cc1-text') or color-contrast($body-bg) !default;
 
+// Bootstrap's default value on hover on some components eg. dropdown-item.
+$body-tertiary-bg: mix(color-contrast($body-bg), $body-bg, 10%) !default;
+
 // Links
 //
 // Style anchor elements.
