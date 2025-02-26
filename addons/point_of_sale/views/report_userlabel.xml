@@ -14,7 +14,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><div t-if="user.barcode" t-field="user.barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'width': 300, 'height': 50, 'img_style': 'width:100%;height:35%;'}"/></td>
+                                <td><div t-if="user.sudo().barcode" t-field="user.sudo().barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'width': 300, 'height': 50, 'img_style': 'width:100%;height:35%;'}"/></td>
                                 <td><strong t-field="user.name"/></td>
                             </tr>
                         </tbody>
