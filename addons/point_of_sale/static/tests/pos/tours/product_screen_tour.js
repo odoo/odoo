@@ -425,14 +425,14 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             },
             ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button:eq(-1) > span:contains("AAX")',
             },
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button:eq(-1) > span:contains("AAX")',
                 run: "click",
             },
             {
-                trigger: '.category-button:eq(3) > span:contains("AAY")',
+                trigger: '.category-button:eq(-1) > span:contains("AAY")',
             },
         ].flat(),
 });

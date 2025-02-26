@@ -25,10 +25,6 @@ export class ProductInfoBanner extends Component {
         this.state = useState({
             other_warehouses: [],
             available_quantity: 0,
-            price_with_tax: 0,
-            price_without_tax: 0,
-            tax_name: "",
-            tax_amount: 0,
         });
 
         const debouncedFetchStocks = debounce(async (product, productTemplate) => {
@@ -47,10 +43,6 @@ export class ProductInfoBanner extends Component {
                 const productInfo = result.productInfo;
                 this.state.other_warehouses = productInfo.warehouses.slice(1);
                 this.state.available_quantity = productInfo.warehouses[0]?.available_quantity;
-                this.state.price_with_tax = productInfo.all_prices.price_with_tax;
-                this.state.price_without_tax = productInfo.all_prices.price_without_tax;
-                this.state.tax_name = productInfo.all_prices.tax_details[0]?.name || "";
-                this.state.tax_amount = productInfo.all_prices.tax_details[0]?.amount || 0;
             }
         }, 500);
 
@@ -63,17 +55,5 @@ export class ProductInfoBanner extends Component {
             () => [this.props.product]
         );
         onWillUnmount(() => debouncedFetchStocks.cancel());
-    }
-
-    get bannerBackground() {
-        if (!this.props.productTemplate.is_storable || this.state.available_quantity > 10) {
-            return "bg-info";
-        }
-
-        return this.state.available_quantity < 5 ? "bg-danger" : "bg-warning";
-    }
-
-    get bannerClass() {
-        return this.bannerBackground;
     }
 }
