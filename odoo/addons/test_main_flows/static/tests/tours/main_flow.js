@@ -912,6 +912,9 @@ stepUtils.autoExpandMoreButtons(),
 },
 //Go to purchase:
 ...stepUtils.toggleHomeMenu(),
+
+
+
 ...stepUtils.goToAppSteps('purchase.menu_purchase_root', _t('Go to Purchase')),
 {
     isActive: ["desktop"],
@@ -929,32 +932,6 @@ stepUtils.autoExpandMoreButtons(),
 ...stepUtils.statusbarButtonsSteps('Confirm Order', _t("Confirm quotation"), ".o_statusbar_status .dropdown-toggle:contains('RFQ')"),
 ...stepUtils.statusbarButtonsSteps('Receive', _t("Receive Product"), ".o_statusbar_status .dropdown-toggle:contains('Purchase Order')"),
 ...stepUtils.statusbarButtonsSteps('Validate', _t("Validate"), ".o_statusbar_status:contains('Ready')"),
-{
-    trigger: ".o_back_button:enabled, .breadcrumb-item:not('.active'):last",
-    content: _t('go back to the purchase order'),
-    tooltipPosition: 'bottom',
-    run: "click",
-},
-...stepUtils.statusbarButtonsSteps('Create Bill', _t('go to Vendor Bills'), ".o_statusbar_status:contains('Purchase Order')"),
-{
-    trigger: ".o_form_label .o_field_widget:contains('Vendor Bill')",
-},
-{
-    trigger:".o_field_widget[name=invoice_date] input",
-    content: _t('Set the invoice date'),
-    run: "edit 01/01/2020",
-},
-...stepUtils.statusbarButtonsSteps('Confirm', _t("Try to send it to email"), ".o_statusbar_status .dropdown-toggle:contains('Draft')"),
-...stepUtils.statusbarButtonsSteps('Pay', _t("Pay"), ".o_statusbar_status .dropdown-toggle:contains('Posted')"),
-{
-    trigger: ".modal .modal-footer .btn-primary",
-    content: _t("Validate"),
-    tooltipPosition: "bottom",
-    run: "click",
-},
-{
-    trigger: "body:not(:has(.modal))",
-},
 ...stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps('mrp.menu_mrp_root', _t('Go to Manufacturing')),
 {

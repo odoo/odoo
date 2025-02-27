@@ -647,7 +647,7 @@ class PurchaseOrder(models.Model):
         ]  # a simple concatenation would cause all order_line to recompute, we do not want it to happen
         return downpayment_lines
 
-    def action_create_invoice(self):
+    def action_create_invoice(self, attachment_ids=False):
         """Create the invoice associated to the PO.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit')
@@ -656,9 +656,6 @@ class PurchaseOrder(models.Model):
         invoice_vals_list = []
         sequence = 10
         for order in self:
-            if order.invoice_status != 'to invoice':
-                continue
-
             order = order.with_company(order.company_id)
             pending_section = None
             # Invoice values.
@@ -668,21 +665,17 @@ class PurchaseOrder(models.Model):
                 if line.display_type == 'line_section':
                     pending_section = line
                     continue
-                if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
-                    if pending_section:
-                        line_vals = pending_section._prepare_account_move_line()
-                        line_vals.update({'sequence': sequence})
-                        invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
-                        sequence += 1
-                        pending_section = None
-                    line_vals = line._prepare_account_move_line()
+                if pending_section:
+                    line_vals = pending_section._prepare_account_move_line()
                     line_vals.update({'sequence': sequence})
                     invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
                     sequence += 1
+                    pending_section = None
+                line_vals = line._prepare_account_move_line()
+                line_vals.update({'sequence': sequence})
+                invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                sequence += 1
             invoice_vals_list.append(invoice_vals)
-
-        if not invoice_vals_list:
-            raise UserError(_('There is no invoiceable line. If a product has a control policy based on received quantity, please make sure that a quantity has been received.'))
 
         # 2) group by (company_id, partner_id, currency_id) for batch creation
         new_invoice_vals_list = []
@@ -708,17 +701,32 @@ class PurchaseOrder(models.Model):
         invoice_vals_list = new_invoice_vals_list
 
         # 3) Create invoices.
-        moves = self.env['account.move']
+        invoices = self.env['account.move']
         AccountMove = self.env['account.move'].with_context(default_move_type='in_invoice')
         for vals in invoice_vals_list:
-            moves |= AccountMove.with_company(vals['company_id']).create(vals)
+            invoices |= AccountMove.with_company(vals['company_id']).create(vals)
 
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
-        moves.filtered(lambda m: m.currency_id.round(m.amount_total) < 0).action_switch_move_type()
+        invoices.filtered(lambda m: m.currency_id.round(m.amount_total) < 0).action_switch_move_type()
 
-        return self.action_view_invoice(moves)
+        # 5) Link the attachments to the invoice
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        if not attachments:
+            return self.action_view_invoice(invoices)
+
+        if len(invoices) != 1:
+            raise ValidationError(_("You can only upload a bill for a single partner at a time."))
+        invoices.with_context(skip_is_manually_modified=True)._extend_with_attachments(attachments, new=True)
+
+        invoices.with_context(
+            account_predictive_bills_disable_prediction=True,
+            no_new_invoice=True,
+        ).message_post(attachment_ids=attachments.ids)
+
+        attachments.write({'res_model': 'account.move', 'res_id': invoices.id})
+        return self.action_view_invoice(invoices)
 
     def action_merge(self):
         all_origin = []
