@@ -329,7 +329,6 @@ class HTML_Editor(http.Controller):
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
             try:
-                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
                 mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
@@ -339,11 +338,10 @@ class HTML_Editor(http.Controller):
                         str(uuid.uuid4())[:6],
                         SUPPORTED_IMAGE_MIMETYPES[mimetype],
                     )
-            except UserError:
-                # considered as an image by the browser file input, but not
-                # recognized as such by PIL, eg .webp
-                return {'error': format_error_msg}
-            except ValueError as e:
+                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
+            except (ValueError, UserError) as e:
+                # When UserError thrown, browser considers file input an
+                # image but not recognized as such by PIL, eg .webp
                 return {'error': e.args[0]}
 
         self._clean_context()
