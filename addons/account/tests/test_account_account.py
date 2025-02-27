@@ -798,7 +798,8 @@ class TestAccountAccount(TestAccountMergeCommon):
 
         # Create the merged account by merging `accounts`
         wizard = self._create_account_merge_wizard(accounts)
-        wizard.action_merge()
+        with self.patched_savepoints():
+            wizard.action_merge()
         self.assertFalse(accounts[1].exists())
 
         # Check that the merged account has correct values

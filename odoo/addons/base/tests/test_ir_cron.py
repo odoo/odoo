@@ -13,6 +13,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo import fields
+from odoo.addons.base.models import ir_cron
 from odoo.addons.base.models.ir_cron import (
     MIN_DELTA_BEFORE_DEACTIVATION,
     MIN_FAILURE_COUNT_BEFORE_DEACTIVATION,
@@ -317,13 +318,14 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 self.assertEqual(self.cron.failure_count, fail_count)
                 self.assertEqual(self.cron.active, active)
 
+    @patch.object(ir_cron, 'MIN_RUNS_PER_JOB', 4) # Savepoint limit optimisation
     def test_cron_retrigger(self):
         Trigger = self.env['ir.cron.trigger']
         Progress = self.env['ir.cron.progress']
         default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
         frozen_datetime = self.frozen_datetime
 
-        CALL_TARGET = 31
+        CALL_TARGET = 10
         mocked_run_state = {'call_count': 0, 'duration': 0}
 
         def mocked_run(self):
@@ -336,11 +338,38 @@ class TestIrCron(TransactionCase, CronMixinCase):
 
         self.cron._trigger()
         self.env.flush_all()
+        # Testing break by runs_per_job
         with (
             self.enter_registry_test_mode(),
             patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
         ):
-            # make each run 2 seconds, so that it is run 10 times, 20 seconds in total
+            # make each run 10 seconds, so that it is run 4 times, 40 seconds in total
+            mocked_run_state['duration'] = 10
+            self.registry['ir.cron']._process_job(
+                self.registry.cursor(),
+                {**self.cron.read(load=None)[0], **default_progress_values}
+            )
+
+        self.assertEqual(
+            mocked_run_state['call_count'], 4,
+            '`run` should have been called 4 times',
+        )
+        self.assertEqual(
+            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 4,
+            'There should be 4 progress log for this cron',
+        )
+        self.assertEqual(
+            Trigger.search_count([('cron_id', '=', self.cron.id)]), 1,
+            "One trigger should have been kept",
+        )
+
+        self.env.flush_all()
+        # Testing break by time_per_job
+        with (
+            self.enter_registry_test_mode(),
+            patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
+        ):
+            # make each run 2 seconds, so that it is run 5 times, 10 seconds in total
             mocked_run_state['duration'] = 2
             self.registry['ir.cron']._process_job(
                 self.registry.cursor(),
@@ -348,37 +377,12 @@ class TestIrCron(TransactionCase, CronMixinCase):
             )
 
         self.assertEqual(
-            mocked_run_state['call_count'], 10,
-            '`run` should have been called 10 times',
+            mocked_run_state['call_count'], 9,
+            '`run` should have been called 9 times',
         )
         self.assertEqual(
-            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 10,
-            'There should be 10 progress log for this cron',
-        )
-        self.assertEqual(
-            Trigger.search_count([('cron_id', '=', self.cron.id)]), 1,
-            "One trigger should have been kept",
-        )
-
-        self.env.flush_all()
-        with (
-            self.enter_registry_test_mode(),
-            patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
-        ):
-            # make each run 0.5 seconds, so that it is run 20 times, 10 seconds in total
-            mocked_run_state['duration'] = 0.5
-            self.registry['ir.cron']._process_job(
-                self.registry.cursor(),
-                {**self.cron.read(load=None)[0], **default_progress_values}
-            )
-
-        self.assertEqual(
-            mocked_run_state['call_count'], 30,
-            '`run` should have been called 10 times',
-        )
-        self.assertEqual(
-            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 30,
-            'There should be 30 progress log for this cron',
+            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 9,
+            'There should be 9 progress log for this cron',
         )
         self.assertEqual(
             Trigger.search_count([('cron_id', '=', self.cron.id)]), 1,
@@ -386,6 +390,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         )
 
         self.env.flush_all()
+        # Testing break by job finished
         with (
             self.enter_registry_test_mode(),
             patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
@@ -401,12 +406,12 @@ class TestIrCron(TransactionCase, CronMixinCase):
             'The cron has finished executing'
         )
         self.assertEqual(
-            mocked_run_state['call_count'], 31,
+            mocked_run_state['call_count'], 10,
             '`run` should have been called one additional time',
         )
         self.assertEqual(
-            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 31,
-            'There should be 11 progress log for this cron',
+            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 10,
+            'There should be 10 progress log for this cron',
         )
 
     def test_cron_failed_increase(self):

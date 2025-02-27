@@ -241,9 +241,10 @@ class TestLoyalty(TransactionCase):
             }
         ])
 
-        self.env['base.partner.merge.automatic.wizard']._merge(
-            [partner_1.id, partner_2.id, dest_partner.id], dest_partner
-        )
+        with self.patched_savepoints():
+            self.env['base.partner.merge.automatic.wizard']._merge(
+                [partner_1.id, partner_2.id, dest_partner.id], dest_partner
+            )
 
         dest_partner_loyalty_cards = self.env['loyalty.card'].search([
             ('partner_id', '=', dest_partner.id),

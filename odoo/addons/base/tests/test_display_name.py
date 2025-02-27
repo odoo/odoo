@@ -57,5 +57,5 @@ class TestEveryModel(TransactionCase):
                     continue
 
                 with self.subTest(msg=f"Compute method of {field} should work on new record."):
-                    with self.env.cr.savepoint():
+                    with contextlib.closing(self.env.cr.savepoint()):
                         model.new()[field.name]

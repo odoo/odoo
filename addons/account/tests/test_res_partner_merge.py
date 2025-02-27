@@ -1,5 +1,7 @@
+import inspect
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Like
 
 
 @tagged('post_install', '-at_install')
@@ -51,7 +53,8 @@ class TestMergePartner(AccountTestInvoicingCommon):
 
     def test_merge_partners_with_bank_accounts_linked_to_payments(self):
         wizard = self.env['base.partner.merge.automatic.wizard'].create({})
-        wizard._merge([self.partner1.id, self.partner2.id], self.partner1)
+        with self.patched_savepoints():
+            wizard._merge([self.partner1.id, self.partner2.id], self.partner1)
 
         self.assertFalse(self.partner2.exists(), "Source partner should be deleted after merge")
         self.assertTrue(self.partner1.exists(), "Destination partner should exist after merge")
@@ -62,7 +65,28 @@ class TestMergePartner(AccountTestInvoicingCommon):
 
     def test_merge_partners_with_duplicate_bank_accounts_linked_to_payments(self):
         wizard = self.env['base.partner.merge.automatic.wizard'].create({})
-        wizard._merge([self.partner1.id, self.partner3.id], self.partner1)
+
+        # All of the savepoints acted during this test are to be committed
+        # except when checking for `res_partner_bank` which will need to be rolled back.
+        def filter_savepoints():
+            stack = inspect.stack()
+            frame = None
+            while not frame or frame.filename != Like('.../base/wizard/base_partner_merge.py'):
+                frame = stack.pop(0)
+            if not frame or frame.filename != Like('.../base/wizard/base_partner_merge.py'):
+                return False
+            if frame.function != '_update_foreign_keys_generic':
+                return False
+            f_locals = frame.frame.f_locals
+            src_records = f_locals['src_records']
+            dst_record = f_locals['dst_record']
+            return dst_record == self.partner1 \
+                and src_records == self.partner3 \
+                and f_locals['table'] == 'res_partner_bank' \
+                and f_locals['column'] == 'partner_id'
+
+        with self.patched_savepoints(filter=filter_savepoints):
+            wizard._merge([self.partner1.id, self.partner3.id], self.partner1)
 
         self.assertFalse(self.partner3.exists(), "Source partner should be deleted after merge")
         self.assertTrue(self.partner1.exists(), "Destination partner should exist after merge")

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, Command
-from odoo.tests import Form, HttpCase, new_test_user
+from odoo.tests import Form, HttpCase, new_test_user, patch_savepoint
 from odoo.tools.float_utils import float_round
 
 from odoo.addons.product.tests.common import ProductCommon
+from odoo.addons.account.models.sequence_mixin import SequenceMixin
+from odoo.addons.account.models.account_move import AccountMove
 
 import json
 import base64
@@ -51,6 +53,11 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        # The following two methods cause a lot of sub transaction overflow and never actually
+        # require a savepoint within the current tests.
+        cls.startClassPatcher(patch_savepoint(SequenceMixin, '_set_next_sequence'))
+        cls.startClassPatcher(patch_savepoint(AccountMove, '_extend_with_attachments'))
 
         cls.maxDiff = None
         cls.company_data = cls.collect_company_accounting_data(cls.env.company)

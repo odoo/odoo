@@ -5,8 +5,10 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.tests import tagged, patch_savepoint
 from odoo.addons.account.models.chart_template import code_translations, AccountChartTemplate, TEMPLATE_MODELS
+from odoo.addons.account.models.sequence_mixin import SequenceMixin
+from odoo.addons.account.models.account_move import AccountMove
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
@@ -173,6 +175,11 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         # Avoid creating data from AccountTestInvoicingCommon setUpClass
         # just use the override of the functions it provides
         super(AccountTestInvoicingCommon, cls).setUpClass()
+
+        # The following two methods cause a lot of sub transaction overflow and never actually
+        # require a savepoint within the current tests.
+        cls.startClassPatcher(patch_savepoint(SequenceMixin, '_set_next_sequence'))
+        cls.startClassPatcher(patch_savepoint(AccountMove, '_extend_with_attachments'))
 
         cls.ChartTemplate = cls.env['account.chart.template'].with_company(cls.company)
         cls.country_be = cls.env.ref('base.be')
