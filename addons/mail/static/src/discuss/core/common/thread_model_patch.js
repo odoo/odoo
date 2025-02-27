@@ -379,7 +379,11 @@ const threadPatch = {
     },
     /** @param {string} body */
     async post(body) {
-        if (this.model === "discuss.channel" && body.startsWith("/")) {
+        if (
+            this.model === "discuss.channel" &&
+            body.startsWith("/") &&
+            this.store.self.type !== "guest"
+        ) {
             const [firstWord] = body.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
             if (
