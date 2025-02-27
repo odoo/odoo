@@ -25,6 +25,9 @@
     'installable': True,
     'application': True,
     'assets': {
+        'web.assets_backend': [
+            'ai_apps/static/src/thread_model_patch.js',
+        ],
     },
     'license': 'LGPL-3',
 }

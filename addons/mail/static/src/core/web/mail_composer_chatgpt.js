@@ -1,78 +1,41 @@
-import { ChatGPTPromptDialog } from "@html_editor/main/chatgpt/chatgpt_prompt_dialog";
-
-import { htmlJoin } from "@mail/utils/common/html";
-
-import { Component, markup } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-<<<<<<< HEAD
-=======
-import { ChatGPTPromptDialog } from "@html_editor/main/chatgpt/chatgpt_prompt_dialog";
-import { Component, markup } from "@odoo/owl";
-import { useOpenChat } from "./open_chat_hook";
+import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
-
->>>>>>> fc3f0f6487bd (this is just a poc (pukes))
 export class MailComposerChatGPT extends Component {
     static template = "mail.MailComposerChatGPT";
     static props = { ...standardFieldProps };
 
     setup() {
         this.btnLabel = _t("AI"); // workaround to translate short string
-        this.openChat = useOpenChat('res.users');
+        this.store = useService("mail.store");
+        this.orm = useService("orm");
     }
 
     async onOpenChatGPTPromptDialogBtnClick() {
-<<<<<<< HEAD
-        this.env.services.dialog.add(ChatGPTPromptDialog, {
-            /** @param {DocumentFragment} content */
-            insert: (content) => {
-                const root = document.createElement("div");
-                root.appendChild(content);
-                const { body } = this.props.record.data;
-                this.props.record.update({
-                    body: htmlJoin(body, markup(root.innerHTML)),
-                });
-            },
-            /**
-             * @param {HTMLElement} fragment
-             * @returns {string}
-             */
-            sanitize: (fragment) =>
-                DOMPurify.sanitize(fragment, {
-                    IN_PLACE: true,
-                    ADD_TAGS: ["#document-fragment"],
-                    ADD_ATTR: ["contenteditable"],
-                }),
+        // create the discuss channel used for talking with the ai
+        const ai_channel_id = await this.orm.call(
+            'discuss.channel',
+            'create_ai_composer_channel',
+            [ 
+                this.props.record.data.record_name,
+                this.props.record.data.model,
+                this.props.record.data.res_ids,
+            ], 
+        );
+        // create and open the thread for the discuss channel
+        const thread = await this.store.Thread.getOrFetch({
+            model: "discuss.channel",
+            id: Number(ai_channel_id), 
         });
-=======
-        // this.env.services.dialog.add(ChatGPTPromptDialog, {
-        //     /** @param {DocumentFragment} content */
-        //     insert: content => {
-        //         const root = document.createElement("div");
-        //         root.appendChild(content);
-        //         const { body } = this.props.record.data;
-        //         this.props.record.update({
-        //             body: body + markup(root.innerHTML)
-        //         });
-        //     },
-        //     /**
-        //      * @param {HTMLElement} fragment
-        //      * @returns {string}
-        //      */
-        //     sanitize: (fragment) => {
-        //         return DOMPurify.sanitize(fragment, {
-        //             IN_PLACE: true,
-        //             ADD_TAGS: ["#document-fragment"],
-        //             ADD_ATTR: ["contenteditable"],
-        //         });
-        //     },
-        // });
-        this.joinChat()
->>>>>>> fc3f0f6487bd (this is just a poc (pukes))
+        thread.open({ focus: true });
+        // drop the mail composer dialog's z-index so the chat windows and bubble are above it
+        const mail_composer_dialog = document.querySelector(".o-overlay-item");
+        mail_composer_dialog.style.zIndex = "9"; 
+        return;
     }
 }
 
