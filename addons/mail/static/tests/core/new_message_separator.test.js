@@ -1,4 +1,4 @@
-import { presenceService } from "@bus/services/presence_service";
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import {
     click,
     contains,
@@ -14,12 +14,11 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { press, queryFirst } from "@odoo/hoot-dom";
+import { click as hootClick, press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
-    mockService,
     serverState,
     waitForSteps,
     withUser,
@@ -111,19 +110,21 @@ test("keep new message separator until user goes back to the thread", async () =
     await contains(".o-mail-Thread");
     await contains(".o-mail-Message", { text: "hello" });
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
-    await click(".o-mail-DiscussSidebar-item", { text: "History" });
+    await hootClick(document.body); // Force "focusin" back on the textarea
+    await hootClick(".o-mail-Composer-input");
+    await waitNotifications([
+        "mail.record/insert",
+        (n) => n["discuss.channel.member"][0].new_message_separator,
+    ]);
+    await hootClick(".o-mail-DiscussSidebar-item:contains(History)");
     await contains(".o-mail-Discuss-threadName", { value: "History" });
-    await click(".o-mail-DiscussSidebar-item", { text: "test" });
+    await hootClick(".o-mail-DiscussSidebar-item:contains(test)");
     await contains(".o-mail-Discuss-threadName", { value: "test" });
     await contains(".o-mail-Message", { text: "hello" });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
 });
 
 test("show new message separator on receiving new message when out of odoo focus", async () => {
-    mockService("presence", () => ({
-        ...presenceService.start(),
-        isOdooFocused: () => false,
-    }));
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
     const userId = pyEnv["res.users"].create({
