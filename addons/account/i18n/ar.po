@@ -235,6 +235,8 @@ msgstr "%s (نسخة)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
 
@@ -15784,6 +15786,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is"
 " set for invoices."
 msgstr ""
+"لم يتم إعداد إرسال الفواتير بشكل صحيح، تأكد من تعيين التقرير المستخدم "
+"للفواتير. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -16808,6 +16812,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"تشغيل التنبيهات عند إنشاء الفواتير وأوامر المبيعات للشركاء الذين يتجاوز "
+"إجمالي المبالغ المستحقة القبض حداً معيناً."
+"                                      قم بتعيين قيمة أكبر من 0.0 لتفعيل "
+"التحقق من حد الائتمان "
 
 #. module: account
 #. odoo-python
@@ -17784,7 +17792,7 @@ msgstr "يمكنك فقط تغيير الفترة/الحساب لعناصر ال
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "يمكنك فقط إنشاء مستندات المبيعات. "
 
 #. module: account
 #. odoo-python
@@ -17909,7 +17917,7 @@ msgstr "لا يمكنك حذف تقرير به متغيرات. "
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "لا يمكنك إنشاء فواتير لم يتم ترحيلها. "
 
 #. module: account
 #. odoo-python

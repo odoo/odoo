@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Martin Trigaux, 2024
 # Thi Huong Nguyen, 2025
 # 
 msgid ""
@@ -46,7 +45,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Xin chào,<br/><br/>\n"
-"                Bạn đã yêu cầu được đăng ký vào danh sách gửi thư này <strong t-out=\"object.name or ''\"/>.\n"
+"                Bạn đã yêu cầu được đăng ký vào danh sách liên hệ này <strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
 "                Để xác nhận, hãy đi tới liên kết sau: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
@@ -69,7 +68,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Xin chào,<br/><br/>\n"
-"                Bạn đã yêu cầu ngừng đăng ký vào danh sách gửi thư này <strong t-out=\"object.name or ''\"/>.\n"
+"                Bạn đã yêu cầu ngừng đăng ký vào danh sách liên hệ này <strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
 "                Để xác nhận, hãy truy cập liên kết sau: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
@@ -89,7 +88,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "                <p>Xin chào <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Vui lòng tham khảo quy định về <t t-out=\"object.mail_group_id.name\"/> danh sách thư</p> dưới đây.\n"
+"                <p>Vui lòng tham khảo quy định về <t t-out=\"object.mail_group_id.name\"/> danh sách liên hệ</p> dưới đây.\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
 "            </div>\n"
 "        "
@@ -734,12 +733,12 @@ msgstr "Quản trị nhóm thư"
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr "Nhóm thư: Đăng ký danh sách gửi thư"
+msgstr "Nhóm thư: Đăng ký danh sách liên hệ"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr "Nhóm thư: Huỷ đăng ký danh sách gửi thư"
+msgstr "Nhóm thư: Huỷ đăng ký danh sách liên hệ"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
@@ -766,17 +765,17 @@ msgstr "Nội dung email"
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_member
 msgid "Mailing List Member"
-msgstr "Thành viên danh sách gửi thư"
+msgstr "Thành viên danh sách liên hệ"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message
 msgid "Mailing List Message"
-msgstr "Tin nhắn danh sách gửi thư"
+msgstr "Tin nhắn danh sách liên hệ"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_moderation
 msgid "Mailing List black/white list"
-msgstr "Danh sách đen/trắng gửi thư"
+msgstr "Danh sách đen/trắng"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
@@ -794,7 +793,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Mailing-List:"
-msgstr "Danh sách gửi thư:"
+msgstr "Danh sách liên hệ:"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
@@ -1015,14 +1014,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Only members can send email to the mailing list."
-msgstr "Chỉ thành viên mới có thể gửi email tới danh sách gửi thư."
+msgstr "Chỉ thành viên mới có thể gửi email tới danh sách liên hệ."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "Only selected groups of users can send email to the mailing list."
 msgstr ""
-"Chỉ nhóm người dùng được chọn mới có thể gửi email tới danh sách gửi thư."
+"Chỉ nhóm người dùng được chọn mới có thể gửi email tới danh sách liên hệ."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1132,7 +1131,7 @@ msgstr "Tính riêng tư"
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_2
 msgid "Public Mailing List"
-msgstr "Danh sách gửi thư công cộng"
+msgstr "Danh sách liên hệ công cộng"
 
 #. module: mail_group
 #. odoo-python

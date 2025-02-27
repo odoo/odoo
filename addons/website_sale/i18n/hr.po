@@ -11,7 +11,6 @@
 # Gordana Bilas, 2024
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2024
 # Davor Bojkić <davor.bojkic@storm.hr>, 2024
-# Luka Carević <luka@uvid.hr>, 2024
 # Matija Gudlin, 2024
 # Milan Tribuson <one.mile.code@gmail.com>, 2024
 # Vladimir Vrgoč, 2024
@@ -26,6 +25,7 @@
 # Bole <bole@dajmi5.com>, 2025
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2025
 # Zvonimir Galic, 2025
+# Luka Carević <luka@uvid.hr>, 2025
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Zvonimir Galic, 2025\n"
+"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2029,7 +2029,7 @@ msgstr "Dodatni info"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_template_image_ids
 msgid "Extra Product Media"
-msgstr ""
+msgstr "Dodatni medijski sadržaj za proizvod"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2106,6 +2106,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Fill in your address"
 msgstr "Unesite svoju adresu"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
+msgid ""
+"Final price may vary based on selection. Tax will be calculated at checkout."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id
@@ -4135,6 +4142,8 @@ msgid ""
 "Suggest alternatives to your customer (upsell strategy). Those products show"
 " up on the product page."
 msgstr ""
+"Predložite alternative svom kupcu (strategija povećanja prodaje). Ti "
+"proizvodi će se pojaviti na stranici proizvoda."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4277,6 +4286,9 @@ msgid ""
 "Shop > Edit Click on the page and enable 'Categories' to view all eCommerce "
 "categories."
 msgstr ""
+"Proizvod će biti dostupan u svakoj spomenutoj kategoriji e-trgovine. Idite "
+"na Trgovina > Uredi Kliknite na stranicu i omogućite 'Kategorije' za prikaz "
+"svih kategorija e-trgovine."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles

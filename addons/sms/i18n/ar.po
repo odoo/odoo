@@ -67,6 +67,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
 msgstr ""
+"<i class=\"fa fa-warning\"/> حدث خطأ في حسابك. يرجى التواصل مع فريق الدعم "
+"للحصول على مزيد من المعلومات... "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -74,6 +76,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
 msgstr ""
+"<i class=\"fa fa-warning\"/>  لا يمكنك إرسال رسائل نصية قصيرة بينما حسابك "
+"غير مسجل. "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -219,6 +223,8 @@ msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
 msgstr ""
+"حدث خطأ غير معروف. يُرجى التواصل مع فريق الدعم لدى أودو في حال استمرار هذا "
+"الخطأ. "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -485,6 +491,7 @@ msgstr "تمكين الرسائل النصية القصيرة "
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
 msgstr ""
+"قم بإدخال رقم الهاتف للحصول على رسالة نصية قصيرة تحتوي على رمز التحقق. "
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -691,6 +698,9 @@ msgid ""
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
+"رقم الهاتف غير صالح. يُرجى التأكد من اتباع التنسيق الدولي، أي علامة زائد "
+"(+)، ثم رمز البلد ورمز المدينة ورقم الهاتف المحلي. على سبيل المثال: +1 "
+"555-555-555 "
 
 #. module: sms
 #. odoo-python
@@ -838,6 +848,8 @@ msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
 msgstr ""
+"لاحظ أن هذا الأمر غير مطلوب، إذا لم تقم بتعيين اسم المرسل، فسيتم إرسال "
+"الرسائل القصيرة من رمز قصير. "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -1472,6 +1484,8 @@ msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
 msgstr ""
+"خدمة الرسائل النصية القصيرة غير متاحة حالياً للمستخدمين الجدد وتم تعليق "
+"تسجيل الحسابات الجديدة. "
 
 #. module: sms
 #. odoo-python
@@ -1526,12 +1540,12 @@ msgstr "تمت إزالة هذه الرسالة النصية القصيرة لأ
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "لدى هذا الحساب اسم مرسل موجود بالفعل ولا يمكن تغييره. "
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "هذا هو الاسم الذي سيتم عرضه كمرسل الرسالة النصية القصيرة. "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1664,6 +1678,8 @@ msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
 msgstr ""
+"لم نتمكن من الوصول إليك عبر رقم هاتفك. إذا كنت قد طلبت عدة رموز مؤخراً، يرجى"
+" إعادة المحاولة لاحقاً. "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1739,6 +1755,8 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
 msgstr ""
+"يجب أن يتراوح طول اسم المرسل بين 3 و11 حرفاً وأن يحتوي على أحرف أبجدية "
+"وعددية فقط. "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1746,6 +1764,8 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
 "                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
 msgstr ""
+"يجب أن يتراوح طول اسم المرسل الخاص بك بين 3 و11 حرفاً وأن يحتوي على أحرف أبجدية وعددية فقط.\n"
+"                        يجب أن يتناسب مع اسم شركتك، ولا يُسمح لك بتعديله بمجرد تسجيله، لذلك اختره بعناية. "
 
 #. module: sms
 #. odoo-python

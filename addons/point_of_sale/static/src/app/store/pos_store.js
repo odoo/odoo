@@ -39,6 +39,7 @@ import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
 import { user } from "@web/core/user";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "./devices_synchronisation";
+import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
 
 const { DateTime } = luxon;
 
@@ -608,6 +609,13 @@ export class PosStore extends Reactive {
         this.markReady();
         this.showScreen(this.firstScreen);
         await this.deviceSync.readDataFromServer();
+        if (this.config.customer_display_type !== "none") {
+            openCustomerDisplay(
+                this.getDisplayDeviceIP(),
+                this.config.access_token,
+                this.config.id
+            );
+        }
     }
 
     get productListViewMode() {

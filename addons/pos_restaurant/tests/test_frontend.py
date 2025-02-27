@@ -295,9 +295,10 @@ class TestFrontend(TestFrontendCommon):
         self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
         self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
 
-    def test_11_bill_screen_qrcode(self):
+    def test_11_bill_screen_qrcode_data(self):
         self.pos_config.write({'printer_ids': False})
         self.pos_config.company_id.point_of_sale_use_ticket_qr_code = True
+        self.pos_config.company_id.point_of_sale_ticket_portal_url_display_mode = 'qr_code_and_url'
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('BillScreenTour')
 

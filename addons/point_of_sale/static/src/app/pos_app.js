@@ -19,7 +19,13 @@ export class Chrome extends Component {
     static props = { disableLoader: Function };
     setup() {
         this.pos = usePos();
-        useIdleTimer(this.pos.idleTimeout, () => this.pos.showScreen(this.pos.firstScreen));
+        useIdleTimer(this.pos.idleTimeout, (ev) => {
+            const stopEventPropagation = ["mousedown", "click", "keypress"];
+            if (stopEventPropagation.includes(ev.type)) {
+                ev.stopPropagation();
+            }
+            this.pos.showScreen(this.pos.firstScreen);
+        });
         const reactivePos = reactive(this.pos);
         // TODO: Should we continue on exposing posmodel as global variable?
         window.posmodel = reactivePos;
@@ -91,8 +97,8 @@ export class Chrome extends Component {
                 this.pos.config.access_token,
             ]);
         }
-        if (this.pos.config.customer_display_type === "proxy") {
-            const proxyIP = this.pos.getDisplayDeviceIP();
+        const proxyIP = this.pos.getDisplayDeviceIP();
+        if (proxyIP) {
             fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
                 method: "POST",
                 headers: {

@@ -120,7 +120,7 @@ const READ_GROUP_NUMBER_GRANULARITY = [
 
 const DATE_FORMAT = {
     day: (date) => date.toFormat("yyyy-MM-dd"),
-    day_of_week: (date) => date.weekday,
+    day_of_week: (date) => date.weekday % 7, // number of days after the first day of the week (assumed to be Sunday)
     day_of_month: (date) => date.day,
     day_of_year: (date) => date.ordinal,
     week: (date) => `W${date.toFormat("WW kkkk")}`,

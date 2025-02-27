@@ -934,6 +934,8 @@ msgid ""
 "<span><b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.\n"
 "        </span>"
 msgstr ""
+"<span><b>تهانينا</b>، لقد تم إرسال أول عرض السعر لك!<br>تحقق من بريدك الإلكتروني لتصديق عرض السعر.\n"
+"        </span> "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1040,7 +1042,7 @@ msgstr "يجب أن يكون لعرض السعر تاريخ تأكيد. "
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "A line on these orders missing a product, you cannot confirm it."
-msgstr ""
+msgstr "هناك بند في هذه الطلبات ينقصه منتج، وبالتالي لا يمكنك تأكيده. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1054,6 +1056,8 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"يجب أن يكون عنصر ”الكومبو“ الخاص ببند أمر البيع من بين عناصر الكومبو المتاحة"
+" في البند المرتبط به. "
 
 #. module: sale
 #. odoo-python
@@ -1268,6 +1272,13 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
 msgstr ""
+"يتيح لك مشاركة المستند مع عملائك ضمن عملية بيع.\n"
+"اتركه فارغاً إذا كنت لا ترغب في مشاركة هذا المستند مع عميل المبيعات.\n"
+"في مرحلة عرض السعر: سيتم إرسال المستند إلى العملاء وبمقدورهم الوصول إليه في أي وقت.\n"
+"مثال: قد يكون هذا الخيار مفيداً لمشاركة ملفات وصف المنتج.\n"
+"في مرحلة التأكيد: سيتم إرسال المستند إلى العملاء وبمقدورهم الوصول إليه.\n"
+"مثال: قد يكون هذا الخيار مفيداً لمشاركة دليل المستخدم أو المحتوى الرقمي الذي تم شراؤه عن طريق المتجر الإلكتروني. \n"
+"داخل PDF عرض السعر: سيتم تضمين المستند في ملف pdf لعرض السعر وداخل أمر البيع بين صفحات الترويسة وجدول عرض السعر. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2217,7 +2228,7 @@ msgstr "خصم على البنود"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "الخصم- على المنتجات التي تحتوي على الضرائب التالية: %(taxes)s "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3047,7 +3058,7 @@ msgstr "بنود الطلب المرتبطة "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "مرتبط افتراضياً "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4755,6 +4766,8 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"تم تحديد بعض الطلبات المؤكدة. قد تتأثر المنتجات المتعلقة بها\n"
+"                        جراء الإلغاء. "
 
 #. module: sale
 #. odoo-python
@@ -4964,6 +4977,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register"
 " an expense on a cancelled Sales Order."
 msgstr ""
+"تم إلغاء أمر البيع %(order)s المراد إعادة فوترته. لا يمكنك تسجيل نفقات في "
+"أمر بيع ملغى. "
 
 #. module: sale
 #. odoo-python
@@ -4972,6 +4987,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
+"أمر البيع %(order)s المراد إعادة فوترته مقفل حالياً. لا يمكنك تسجيل نفقات في"
+" أمر بيع مقفل. "
 
 #. module: sale
 #. odoo-python
@@ -4979,7 +4996,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
-msgstr ""
+msgstr "يجب تصديق أمر البيع %(order)s المراد إعادة فوترته قبل تسجيل النفقات. "
 
 #. module: sale
 #. odoo-python
@@ -5062,6 +5079,7 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"يجب أن يتطابق عدد عناصر الكومبو المحددة مع عدد خيارات الكومبو المتاحة. "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5149,6 +5167,8 @@ msgid ""
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
 msgstr ""
+"يبدو أنه لا يوجد أي منتج خصم تمت تهيئته لهذه الشركة حتى الآن. يمكنك إما "
+"استخدام خصم لكل بند أو يمكنك أن تطلب من المسؤول منح الخصم في المرة الأولى. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
@@ -5538,6 +5558,9 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
+"يمكن إصدار فواتير النفقات التي تم تصديقها أو فواتير المورّدين أو عمليات "
+"انتقاء المخزون (تم إعدادها لتتبع التكاليف) للعميل إما بسعر التكلفة أو بسعر "
+"البيع. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date

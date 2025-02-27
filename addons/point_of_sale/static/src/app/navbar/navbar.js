@@ -15,9 +15,10 @@ import { Input } from "@point_of_sale/app/generic_components/inputs/input/input"
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { deduceUrl } from "@point_of_sale/utils";
 import { user } from "@web/core/user";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
+import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
+import { _t } from "@web/core/l10n/translation";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -97,35 +98,19 @@ export class Navbar extends Component {
                 "newWindow",
                 "width=800,height=600,left=200,top=200"
             );
-            this.notification.add("Connected");
+            this.notification.add(_t("PoS Customer Display opened in a new window"));
         }
         if (this.pos.config.customer_display_type === "remote") {
-            this.notification.add("Navigate to your POS Customer Display on the other computer");
+            this.notification.add(
+                _t("Navigate to your PoS Customer Display on the other computer")
+            );
         }
-        if (this.pos.config.customer_display_type === "proxy") {
-            this.notification.add("Connecting to the IoT Box");
-            const proxyIP = this.pos.getDisplayDeviceIP();
-            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    params: {
-                        action: "open",
-                        access_token: this.pos.config.access_token,
-                        pos_id: this.pos.config.id,
-                    },
-                }),
-            })
-                .then(() => {
-                    this.notification.add("Connection successful", { type: "success" });
-                })
-                .catch(() => {
-                    this.notification.add("Connection failed", { type: "danger" });
-                });
-        }
+        openCustomerDisplay(
+            this.pos.getDisplayDeviceIP(),
+            this.pos.config.access_token,
+            this.pos.config.id,
+            this.notification
+        );
     }
 
     get showCreateProductButton() {

@@ -209,10 +209,6 @@ export const accountTaxHelpers = {
         return null;
     },
 
-    eval_raw_base(quantity, price_unit, evaluation_context) {
-        return quantity * price_unit;
-    },
-
     get_tax_details(
         taxes,
         price_unit,
@@ -309,11 +305,7 @@ export const accountTaxHelpers = {
             }
         }
 
-        const raw_base_evaluation_context = {
-            taxes: sorted_taxes,
-            precision_rounding: precision_rounding,
-        };
-        let raw_base = this.eval_raw_base(quantity, price_unit, raw_base_evaluation_context);
+        let raw_base = quantity * price_unit;
         if (rounding_method === "round_per_line") {
             raw_base = roundPrecision(raw_base, precision_rounding);
         }
@@ -324,7 +316,6 @@ export const accountTaxHelpers = {
             quantity: quantity,
             raw_base: raw_base,
             special_mode: special_mode,
-            precision_rounding: precision_rounding,
         };
 
         // Define the order in which the taxes must be evaluated.

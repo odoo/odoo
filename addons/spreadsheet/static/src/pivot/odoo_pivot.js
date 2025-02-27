@@ -194,6 +194,7 @@ export class OdooPivot {
             {
                 orm: this.odooDataProvider.orm,
                 serverData: this.odooDataProvider.serverData,
+                getters: this.getters,
             }
         );
         return { model, definition };

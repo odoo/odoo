@@ -1978,9 +1978,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def _action_done(self, cancel_backorder=False):
         moves = self.filtered(
-            lambda move: move.state == 'draft'
-            or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
-        )._action_confirm(merge=False)  # MRP allows scrapping draft moves
+            lambda move: move.state == 'draft')._action_confirm(merge=False)
         moves = (self | moves).exists().filtered(lambda x: x.state not in ('done', 'cancel'))
 
         # Cancel moves where necessary ; we should do it before creating the extra moves because
@@ -2130,6 +2128,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         return new_move_vals
 
     def _recompute_state(self):
+        if self._context.get('preserve_state'):
+            return
         moves_state_to_write = defaultdict(set)
         for move in self:
             rounding = move.product_uom.rounding

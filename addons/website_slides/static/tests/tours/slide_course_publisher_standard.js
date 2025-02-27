@@ -2,6 +2,7 @@
 
 import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
 import { clickOnEditAndWaitEditMode, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
+import { waitForStable } from '@web/core/macro';
 
 /**
  * Global use case:
@@ -109,7 +110,10 @@ registerWebsitePreviewTour('course_publisher_standard', {
 {
     content: "eLearning: use breadcrumb to go back to channel",
     trigger: ':iframe .o_wslides_course_nav a:contains("Déboulonnate")[href^="/slides/how-to-deboulonnate"]',
-    run: "click",
+    async run(actions) {
+        await waitForStable(document, 2000);
+        await actions.click();
+    }
 }],
     slidesTourTools.addImageToSection('Introduction', 'Overview', true),
     slidesTourTools.addPdfToSection('Introduction', 'Exercise', true),

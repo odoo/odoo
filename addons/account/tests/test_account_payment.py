@@ -105,6 +105,10 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             expected_liquidity_line,
         ])
 
+        # Cancel the move.
+        payment.move_id.button_cancel()
+        self.assertRecordValues(payment, [{'state': 'canceled'}])
+
     def test_payment_move_sync_update_journal_custom_accounts(self):
         """The objective is to edit the journal of a payment in order to check if the accounts are updated."""
 

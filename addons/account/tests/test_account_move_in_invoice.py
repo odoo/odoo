@@ -98,7 +98,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'date_maturity': False,
         }
         cls.term_line_vals_1 = {
-            'name': '',
+            'name': False,
             'product_id': False,
             'account_id': cls.company_data['default_account_payable'].id,
             'partner_id': cls.partner_a.id,
@@ -1200,7 +1200,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': '',
+                'name': False,
                 'amount_currency': 1128.0,
                 'debit': 1128.0,
                 'credit': 0.0,
@@ -1262,7 +1262,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': '',
+                'name': False,
                 'amount_currency': -1128.0,
                 'debit': 0.0,
                 'credit': 1128.0,
@@ -1330,7 +1330,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': '',
+                'name': False,
                 'amount_currency': 1128.0,
                 'currency_id': self.other_currency.id,
                 'debit': 564.0,
@@ -1387,7 +1387,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': '',
+                'name': False,
                 'amount_currency': -1128.0,
                 'currency_id': self.other_currency.id,
                 'debit': 0.0,
@@ -2535,7 +2535,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(payment_term_line.name, 'test')
         with Form(self.invoice) as move_form:
             move_form.payment_reference = False
-        self.assertEqual(payment_term_line.name, '', 'Payment term line was not changed')
+        self.assertEqual(payment_term_line.name, False, 'Payment term line was not changed')
 
     def test_taxes_onchange_product_uom_and_price_unit(self):
         """

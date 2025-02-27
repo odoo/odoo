@@ -238,6 +238,8 @@ msgstr "%s (Kopie)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
 
@@ -4875,7 +4877,7 @@ msgstr "Beschadigde gegevens op boeking id %(id)s (%(name)s)."
 #: model:account.account,name:account.1_cost_of_goods_sold
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__cogs
 msgid "Cost of Goods Sold"
-msgstr "Prijs van de verkochte goederen"
+msgstr "Kostprijs van de omzet"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_production
@@ -4885,7 +4887,7 @@ msgstr "Productiekosten"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
 msgid "Cost of Revenue"
-msgstr "Inkoopwaarde van de omzet"
+msgstr "Kosten van omzet"
 
 #. module: account
 #. odoo-python
@@ -15551,7 +15553,7 @@ msgid ""
 msgstr ""
 "De inkooprekening wordt gebruikt als een leveranciersfactuur wordt "
 "goedgekeurd, behalve bij Anglo-Saksisch boekhouden met permanente "
-"voorraadwaardering waarbij de inkooprekening (kostprijs van inkopen) wordt "
+"voorraadwaardering waarbij de inkooprekening (kostprijs van de omzet) wordt "
 "gebruikt bij het boeken van de klantfactuur."
 
 #. module: account

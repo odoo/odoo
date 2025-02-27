@@ -143,6 +143,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on "
 "%(date)s)%(attachment_extension)s"
 msgstr ""
+"%(attachment_name)s (bị huỷ đính kèm bởi %(user)s vào "
+"%(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -173,8 +175,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
 "%(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed) đã lên hóa đơn, "
-"%(quantity_received)s Đã nhận với giá %(unit_price)s mỗi cái"
+"%(order)s - %(order_line)s; %(quantity_billed)s đã được lập hóa đơn, "
+"%(quantity_received)s Đã nhận với đơn giá là %(unit_price)s "
 
 #. module: account
 #. odoo-python
@@ -232,6 +234,8 @@ msgstr "%s (Bản sao)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
 msgid "%s (copy)"
 msgstr "%s (bản sao)"
 
@@ -7325,7 +7329,7 @@ msgstr "Tài khoản tài chính"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Tiền tố tài khoản tài chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -13979,7 +13983,7 @@ msgstr "Đặt giá."
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
-msgstr ""
+msgstr "Đặt giá trị lớn hơn 0,0 để kích hoạt kiểm tra hạn mức tín dụng"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -16979,6 +16983,9 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Kích hoạt cảnh báo khi tạo Hóa đơn và Đơn bán hàng cho Đối tác có Tổng số "
+"tiền phải thu vượt quá hạn mức. Đặt giá trị lớn hơn 0,0 để kích hoạt kiểm "
+"tra hạn mức tín dụng"
 
 #. module: account
 #. odoo-python

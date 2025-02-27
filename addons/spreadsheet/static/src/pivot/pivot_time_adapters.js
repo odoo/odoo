@@ -5,6 +5,7 @@ import { registries, helpers, constants } from "@odoo/o-spreadsheet";
 import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+import { localization } from "@web/core/l10n/localization";
 
 const { pivotTimeAdapterRegistry } = registries;
 const { formatValue, toNumber, toJsDate, toString } = helpers;
@@ -170,11 +171,12 @@ const odooQuarterAdapter = {
 };
 
 const odooDayOfWeekAdapter = {
-    normalizeServerValue(groupBy, field, readGroupResult) {
-        /**
-         * 0: First day of the week in the locale.
-         */
-        return Number(readGroupResult[groupBy]) + 1;
+    normalizeServerValue(groupBy, field, readGroupResult, locale) {
+        const weekStart = localization.weekStart; // 1 = Monday, 7 = Sunday
+        const dayOffset = Number(readGroupResult[groupBy]); // offset from the first day of the week
+        const fromSundayIsZero = (dayOffset + weekStart) % 7;
+        const fromLocaleIsZero = (7 - locale.weekStart + fromSundayIsZero) % 7;
+        return fromLocaleIsZero + 1; // 1-based
     },
     increment(normalizedValue, step) {
         return (normalizedValue + step) % 7;
@@ -211,11 +213,11 @@ const odooSecondNumberAdapter = {
  */
 function falseHandlerDecorator(adapter) {
     return {
-        normalizeServerValue(groupBy, field, readGroupResult) {
+        normalizeServerValue(groupBy, field, readGroupResult, locale) {
             if (readGroupResult[groupBy] === false) {
                 return false;
             }
-            return adapter.normalizeServerValue(groupBy, field, readGroupResult);
+            return adapter.normalizeServerValue(groupBy, field, readGroupResult, locale);
         },
         increment(normalizedValue, step) {
             if (
