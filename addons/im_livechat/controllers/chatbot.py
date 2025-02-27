@@ -70,26 +70,17 @@ class LivechatChatbotScriptController(http.Controller):
         store = Store(posted_message, for_current_user=True)
         store.add(next_step)
         store.add_model_values(
-            "ChatbotStep",
-            {
-                "id": (next_step.id, posted_message.id),
-                "isLast": next_step._is_last_step(discuss_channel),
-                "message": posted_message.id,
-                "operatorFound": next_step.is_forward_operator
-                and discuss_channel.livechat_operator_id != chatbot.operator_partner_id,
-                "scriptStep": next_step.id,
-            },
-        )
-        store.add_model_values(
             "Chatbot",
             {
                 "currentStep": {
-                    "id": (next_step.id, discuss_channel.id),
-                    "scriptStep": next_step.id,
+                    "isLast": next_step._is_last_step(discuss_channel),
                     "message": posted_message.id,
+                    "operatorFound": next_step.is_forward_operator
+                    and discuss_channel.livechat_operator_id != chatbot.operator_partner_id,
+                    "scriptStep": next_step.id,
                 },
-                "id": (chatbot.id, discuss_channel.id),
                 "script": chatbot.id,
+                "steps": [["ADD", [{"scriptStep": next_step.id, "message": posted_message.id}]]],
                 "thread": Store.One(discuss_channel, [], as_thread=True),
             },
         )

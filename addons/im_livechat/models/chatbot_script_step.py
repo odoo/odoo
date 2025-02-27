@@ -404,7 +404,6 @@ class ChatbotScriptStep(models.Model):
                 store.add_model_values(
                     "ChatbotStep",
                     {
-                        "id": (self.id, step_message.id),
                         "scriptStep": self.id,
                         "message": step_message.id,
                         "operatorFound": True,

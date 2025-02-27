@@ -218,7 +218,7 @@ class Store:
     def _get_record_index(self, model_name, values):
         ids = ids_by_model[model_name]
         for i in ids:
-            assert values.get(i), f"missing id {i} in {model_name}: {values}"
+            assert i in values, f"missing id {i} in {model_name}: {values}"
         return tuple(values[i] for i in ids)
 
     class Attr:

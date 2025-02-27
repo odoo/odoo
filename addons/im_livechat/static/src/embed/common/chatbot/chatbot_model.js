@@ -113,8 +113,7 @@ export class Chatbot extends Record {
                 this.currentStep.isLast = true;
                 return;
             }
-            const { ChatbotStep: steps } = this.store.insert(storeData, { html: true });
-            this.steps.push(steps[0]);
+            this.store.insert(storeData, { html: true });
         } else {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
