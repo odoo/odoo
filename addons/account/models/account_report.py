@@ -293,12 +293,11 @@ class AccountReport(models.Model):
 
     @api.depends('name', 'country_id')
     def _compute_display_name(self):
-        for report in self:
-            if report.name:
-                report.display_name = report.name + (f' ({report.country_id.code})' if report.country_id else '')
-            else:
-                report.display_name = False
+        has_foreign_vat = any(self.env.company.fiscal_position_ids.mapped("foreign_vat"))
 
+        for report in self:
+            country_code = f" ({report.country_id.code})" if has_foreign_vat and report.country_id else ""
+            report.display_name = f"{report.name}{country_code}"
 
 class AccountReportLine(models.Model):
     _name = "account.report.line"
