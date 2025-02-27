@@ -27,5 +27,6 @@ def migrate(cr, version):
     )
     # Change the constraint on the table definition
     for column in column_names:
-        sql.drop_constraint(cr, 'account_analytic_line', f'account_analytic_line_{column}_fkey')
-        sql.add_foreign_key(cr, 'account_analytic_line', column, 'account_analytic_account', 'id', 'restrict')
+        if sql.column_exists(cr, 'account_analytic_line', column):
+            sql.drop_constraint(cr, 'account_analytic_line', f'account_analytic_line_{column}_fkey')
+            sql.add_foreign_key(cr, 'account_analytic_line', column, 'account_analytic_account', 'id', 'restrict')
