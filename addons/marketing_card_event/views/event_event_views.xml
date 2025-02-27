@@ -1,0 +1,15 @@
+<odoo>
+    <record id="event_event_view_form_inherit_marketing_card_event" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.form.inherit.marketing.card.event</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_mass_mailing_attendees']" position="before">
+                <button name="action_open_card_mailing" type="object" class="btn btn-secondary"
+                        groups="marketing_card.marketing_card_group_user">
+                    Send Cards
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

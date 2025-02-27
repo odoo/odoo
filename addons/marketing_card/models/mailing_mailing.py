@@ -1,5 +1,9 @@
+import re
+
 from odoo import _, api, exceptions, fields, models
 from odoo.fields import Domain
+
+from odoo.addons.marketing_card.wizards.mail_compose_message import CARD_IMAGE_URL, CARD_PREVIEW_URL
 
 
 class MailingMailing(models.Model):
@@ -53,6 +57,13 @@ class MailingMailing(models.Model):
                 ('requires_sync', '=', False),
             ])
             mailing.card_requires_sync_count = len(recipients) - out_of_date_count
+
+    @api.onchange('card_campaign_id')
+    def _onchange_card_campaign_id(self):
+        """Update body_arch preview image url to match the selected campaign."""
+        for mailing in self.filtered('body_arch').filtered('card_campaign_id'):
+            mailing.body_arch = re.sub(CARD_IMAGE_URL, f'src="/web/image/card.campaign/{mailing.card_campaign_id.id}/image_preview"', mailing.body_arch)
+            mailing.body_arch = re.sub(CARD_PREVIEW_URL, f'href="/cards/{mailing.card_campaign_id.id}/preview"', mailing.body_arch)
 
     def action_put_in_queue(self):
         """Detect mismatches before scheduling."""

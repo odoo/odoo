@@ -20,7 +20,10 @@ class CardCampaign(models.Model):
 
     def _get_model_selection(self):
         """Hardcoded list of models, checked against actually-present models."""
-        allowed_models = ['res.partner', 'event.track', 'event.booth', 'event.registration']
+        allowed_models = [
+            'event.attendee', 'event.booth', 'event.track', 'event.registration', 'event.sponsor',
+            'res.partner',
+        ]
         models = self.env['ir.model'].sudo().search_fetch([('model', 'in', allowed_models)], ['model', 'name'])
         return [(model.model, model.name) for model in models]
 
