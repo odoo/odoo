@@ -46,7 +46,7 @@ export class ComboPage extends Component {
         return !(
             this.selfOrder.editedLine &&
             this.selfOrder.editedLine.uuid &&
-            order.lastChangesSent[this.selfOrder.editedLine.uuid]
+            order.uiState.lineChanges[this.selfOrder.editedLine.uuid]
         );
     }
 
@@ -125,7 +125,7 @@ export class ComboPage extends Component {
 
         this.selfOrder.addToCart(
             this.props.productTemplate,
-            1,
+            this.state.qty,
             "",
             {},
             {},
