@@ -30,7 +30,7 @@ class HrEmployeeBase(models.AbstractModel):
         store=True,
         readonly=False,
         check_company=True)
-    work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
+    work_phone = fields.Char('Work Phone', compute="_compute_phones", inverse="_inverse_phones", store=True, readonly=False)
     phone = fields.Char(related="user_id.phone")
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
@@ -74,6 +74,7 @@ class HrEmployeeBase(models.AbstractModel):
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
     im_status = fields.Char(related="user_id.im_status")
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
+    has_address_work_phone = fields.Boolean(default=True)
 
     @api.model
     def _get_new_hire_field(self):
@@ -203,14 +204,21 @@ class HrEmployeeBase(models.AbstractModel):
         for employee in self.filtered('job_id'):
             employee.job_title = employee.job_id.name
 
-    @api.depends('address_id')
+    @api.depends('address_id.phone')
     def _compute_phones(self):
         for employee in self:
-            if employee.address_id and employee.address_id.phone:
+            if employee._origin.address_id != employee.address_id:
                 employee.work_phone = employee.address_id.phone
-            else:
-                employee.work_phone = False
+            elif employee.has_address_work_phone:
+                employee.work_phone = employee.address_id.phone
 
+    def _inverse_phones(self):
+        for employee in self:
+            if not employee.address_id or employee.work_phone != employee.address_id.phone:
+                employee.has_address_work_phone = False
+            else:
+                employee.has_address_work_phone = True
+    
     @api.depends('work_contact_id', 'work_contact_id.phone', 'work_contact_id.email')
     def _compute_work_contact_details(self):
         for employee in self:
