@@ -30,10 +30,7 @@ class TestMailingRetrySMS(MassSMSCommon, CronMixinCase):
         def patched_sms_sms_send(sms_records, unlink_failed=False, unlink_sent=True, raise_exception=False):
             sms_records.write({'state': 'error', 'failure_type':'sms_credit'})
 
-        with (
-            patch('odoo.addons.sms.models.sms_sms.SmsSms._send', patched_sms_sms_send),
-            self.enter_registry_test_mode(),
-        ):
+        with patch('odoo.addons.sms.models.sms_sms.SmsSms._send', patched_sms_sms_send):
             self.env.ref('sms.ir_cron_sms_scheduler_action').sudo().method_direct_trigger()
 
         with self.capture_triggers('mass_mailing.ir_cron_mass_mailing_queue') as captured_triggers:
