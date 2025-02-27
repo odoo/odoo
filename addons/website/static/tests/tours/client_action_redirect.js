@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { waitForStable } from "@web/core/macro";
 import { registry } from "@web/core/registry";
 
 const testUrl = '/test_client_action_redirect';
@@ -22,7 +23,7 @@ const goToBackendSteps = [{
     },
 }, {
     content: "Check we are in the backend",
-    trigger: '.o_website_preview',
+    trigger: ".o_website_preview[data-view-xmlid='website.test_client_action_redirect'] :iframe",
 }];
 const checkEditorSteps = [{
     content: "Check that the editor is loaded",
@@ -30,8 +31,12 @@ const checkEditorSteps = [{
     timeout: 30000,
 }, {
     content: "exit edit mode",
-    trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
-    run: "click",
+    trigger: "button[data-action=save]:enabled:contains(save)",
+    async run(actions) {
+        await waitForStable(document, 100);
+        await actions.click();
+    },
+    timeout: 30000,
 }, {
     content: "wait for editor to close",
     trigger: ':iframe body:not(.editor_enable)',
