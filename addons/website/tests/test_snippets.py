@@ -35,6 +35,12 @@ class TestSnippets(HttpCase):
             's_instagram_page',  # avoid call to instagram.com
             's_image',  # Avoid specific case where the media dialog opens on drop
             's_snippet_group',  # Snippet groups are not snippets
+            "s_masonry_block_default_template",
+            "s_masonry_block_reversed_template",
+            "s_masonry_block_images_template",
+            "s_masonry_block_mosaic_template",
+            "s_masonry_block_alternation_text_image_template",
+            "s_masonry_block_alternation_image_text_template",
         ]
         snippets_names = ','.join({
             f"{el.attrib['data-oe-snippet-key']}:{el.attrib.get('data-o-group', '')}"
