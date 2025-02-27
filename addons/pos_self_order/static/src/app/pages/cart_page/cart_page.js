@@ -207,11 +207,16 @@ export class CartPage extends Component {
         await this._changeQuantity(line, increase);
     }
 
+    canClickOnLine(line) {
+        const order = this.selfOrder.currentOrder;
+        return order.state === "draft" && !order.uiState.lineChanges[line.uuid];
+    }
+
     clickOnLine(line) {
         const order = this.selfOrder.currentOrder;
         this.selfOrder.editedLine = line;
 
-        if (order.state === "draft" && !order.lastChangesSent[line.uuid]) {
+        if (this.canClickOnLine(line)) {
             this.selfOrder.selectedOrderUuid = order.uuid;
 
             if (line.combo_line_ids.length > 0) {
