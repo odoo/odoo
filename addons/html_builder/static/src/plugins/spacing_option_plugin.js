@@ -1,35 +1,30 @@
+import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
-import { defaultBuilderComponents } from "../core/default_builder_components";
-import { useDomState } from "../core/building_blocks/utils";
+import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 
 export class SpacingOption extends Component {
     static template = "html_builder.SpacingOption";
-    static components = {
-        ...defaultBuilderComponents,
+    static components = { ...defaultBuilderComponents };
+    static props = {
+        level: { type: Number, optional: true },
+        applyTo: { type: String, optional: true },
     };
-    static props = {};
-
-    setup() {
-        this.target = this.env.getEditingElement().querySelector(".o_grid_mode");
-        this.targetComputedStyle = getComputedStyle(this.target);
-
-        this.state = useDomState(() => ({
-            spacingX: parseInt(this.targetComputedStyle.columnGap),
-            spacingY: parseInt(this.targetComputedStyle.rowGap),
-        }));
-    }
-    previewSpacingX(spacing) {
-        this.target.style["column-gap"] = `${spacing}px`;
-    }
-    previewSpacingY(spacing) {
-        this.target.style["row-gap"] = `${spacing}px`;
-    }
-    changeSpacingX(spacing) {
-        this.target.style["column-gap"] = `${spacing}px`;
-        this.env.editor.shared.history.addStep();
-    }
-    changeSpacingY(spacing) {
-        this.target.style["row-gap"] = `${spacing}px`;
-        this.env.editor.shared.history.addStep();
-    }
+    static defaultProps = {
+        level: 0,
+    };
 }
+class SpacingOptionPlugin extends Plugin {
+    static id = "SpacingOption";
+    resources = {
+        builder_options: [
+            {
+                OptionComponent: SpacingOption,
+                selector: ".s_masonry_block",
+                applyTo: ".o_grid_mode",
+            },
+        ],
+    };
+}
+
+registry.category("website-plugins").add(SpacingOptionPlugin.id, SpacingOptionPlugin);
