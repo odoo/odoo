@@ -22,7 +22,6 @@ import {
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { contains } from "./mail_test_helpers_contains";
 
-import { busService } from "@bus/services/bus_service";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
@@ -30,7 +29,6 @@ import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
-import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
@@ -82,19 +80,6 @@ registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 mailGlobal.isInTest = true;
 useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // so that RPCs after tests do not throw error
 
-patch(busService, {
-    _onMessage(id, type, payload) {
-        super._onMessage(...arguments);
-        if (type === "mail.record/insert") {
-            const recordsByModelName = Object.entries(payload);
-            for (const [modelName, records] of recordsByModelName) {
-                for (const record of Array.isArray(records) ? records : [records]) {
-                    registerDebugInfo(modelName, record);
-                }
-            }
-        }
-    },
-});
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
