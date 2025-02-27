@@ -516,15 +516,21 @@ export class TablePlugin extends Plugin {
         const table = closestElement(cell, "table");
         const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
         const index = cells.findIndex((td) => td === cell);
-        table
-            .querySelectorAll(`tr td:nth-of-type(${index + 1})`)
-            .forEach((td) => (td.innerHTML = "<p><br></p>"));
+        table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach((td) => {
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.appendChild(this.document.createElement("br"));
+            td.replaceChildren(baseContainer);
+        });
     }
     /**
      * @param {HTMLTableRowElement} row
      */
     clearRowContent(row) {
-        row.querySelectorAll("td").forEach((td) => (td.innerHTML = "<p><br></p>"));
+        row.querySelectorAll("td").forEach((td) => {
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.appendChild(this.document.createElement("br"));
+            td.replaceChildren(baseContainer);
+        });
     }
     deleteTable(table) {
         table =
