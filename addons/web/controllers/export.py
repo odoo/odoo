@@ -417,6 +417,7 @@ class Export(http.Controller):
             }
             if len(ident.split('/')) < 3 and 'relation' in field:
                 field_dict['value'] += '/id'
+                field_dict['type'] = '#!pseudocode   ID'
                 field_dict['params'] = {
                     'model': field['relation'],
                     'prefix': ident,
