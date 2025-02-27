@@ -2,6 +2,7 @@ import { before, describe, expect, globals, test } from "@odoo/hoot";
 import { animationFrame, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { delay } from "@web/core/utils/concurrency";
 
 defineWebsiteModels();
 
@@ -185,6 +186,24 @@ test("Should change the shape color of an image with a class color", async () =>
         "data-shape-colors",
         "#2D3142;#2D3142;#F3F2F2;;#111827"
     );
+});
+test("Should not show transform action on shape that cannot bet transformed", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    const editor = getEditor();
+    await contains(":iframe .test-options-target img").click();
+
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+    // ensure the shape action has been applied
+    await editor.shared.operation.next(() => {});
+    await animationFrame();
+
+    expect(`[data-action-id="flipImageShape"]`).not.toBeVisible();
+    expect(`[data-action-id="rotateImageShape"]`).not.toBeVisible();
 });
 describe("flip shape axis", () => {
     test("Should flip the shape X axis", async () => {
@@ -381,4 +400,51 @@ describe("rotate shape", () => {
 
         expect(`:iframe .test-options-target img`).toHaveAttribute("data-shape-rotate", "90");
     });
+});
+test("Should not show animate speed if the shape is not animated", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    const editor = getEditor();
+    await contains(":iframe .test-options-target img").click();
+
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+    // ensure the shape action has been applied
+    await editor.shared.operation.next(() => {});
+    await animationFrame();
+
+    expect(`[data-action-id="setImageShapeSpeed"]`).not.toBeVisible();
+});
+test("Should change the speed of an animated shape", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    const editor = getEditor();
+    await contains(":iframe .test-options-target img").click();
+
+    await contains("[data-label='Shape'] .dropdown").click();
+    await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
+    // ensure the shape action has been applied
+    await editor.shared.operation.next(() => {});
+
+    const originalSrc = queryFirst(":iframe .test-options-target img").src;
+
+    await waitFor(`[data-action-id="setImageShapeSpeed"]`);
+    const rangeInput = queryFirst(`[data-action-id="setImageShapeSpeed"] input`);
+    rangeInput.value = 2;
+    rangeInput.dispatchEvent(new Event("input"));
+    await delay();
+    rangeInput.dispatchEvent(new Event("change"));
+    await delay();
+
+    // ensure the shape action has been applied
+    await editor.shared.operation.next(() => {});
+
+    expect(`:iframe .test-options-target img`).toHaveAttribute("data-shape-animation-speed", "2");
+    expect(`:iframe .test-options-target img`).not.toHaveAttribute("src", originalSrc);
 });
