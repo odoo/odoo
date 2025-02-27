@@ -133,7 +133,14 @@ registry.category("web_tour.tours").add("self_order_language_changes", {
     steps: () => [
         LandingPage.checkLanguageSelected("English"),
         LandingPage.checkCountryFlagShown("us"),
-        Utils.openLanguageSelector(),
-        Utils.checkLanguageIsAvailable("French"),
+
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Test Product"),
+        ...ProductPage.clickCancel(),
+
+        ...Utils.changeLanguage("French"),
+
+        Utils.clickBtn("Commander maintenant"),
+        ProductPage.clickProduct("Produit Test"),
     ],
 });
