@@ -71,7 +71,7 @@ const providers = [
     ["paytm", "pos_paytm", "PayTM"],
     ["razorpay", "pos_razorpay", "Razorpay"],
     ["stripe", "pos_stripe", "Stripe"],
-    ["viva_wallet", "pos_viva_wallet", "Viva Wallet"],
+    ["viva_com", "pos_viva_com", "Viva.com"],
     ["worldline", "pos_iot_worldline", "Worldline"],
 ];
 
