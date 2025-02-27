@@ -405,6 +405,36 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(loyalty_program.pos_order_count, 1)
         self.assertAlmostEqual(aaa_loyalty_card.points, 5.2)
 
+    def test_loyalty_free_product_rewards_2(self):
+        free_product = self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1 desk_organizer',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.desk_organizer.product_variant_id.ids,
+                'reward_point_amount': 1,
+                'reward_point_mode': 'order',
+                'minimum_qty': 2,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.desk_organizer.product_variant_id.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+            })],
+        })
+        (self.promo_programs | self.coupon_program).write({'active': False})
+
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+        self.start_pos_tour("test_loyalty_free_product_rewards_2")
+
+        self.assertEqual(free_product.pos_order_count, 1)
+
     def test_pos_loyalty_tour_max_amount(self):
         """Test the loyalty program with a maximum amount and product with different taxe."""
 
