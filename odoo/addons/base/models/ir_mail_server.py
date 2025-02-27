@@ -381,8 +381,8 @@ class IrMail_Server(models.Model):
     @classmethod
     def _disable_send(cls):
         """Whether to disable sending e-mails"""
-        # no e-mails during testing or when registry is not ready
-        return modules.module.current_test or not cls.pool._init
+        # no e-mails during testing or when registry is initializing
+        return modules.module.current_test or cls.pool._init
 
     def connect(self, host=None, port=None, user=None, password=None, encryption=None,
                 smtp_from=None, ssl_certificate=None, ssl_private_key=None, smtp_debug=False, mail_server_id=None,
