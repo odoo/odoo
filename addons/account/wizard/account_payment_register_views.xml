@@ -126,8 +126,11 @@
                                    invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
                         </group>
                         <field name="qr_code" invisible="1"/>
-                        <div invisible="not qr_code" colspan="2" class="text-center">
+                        <div invisible="not qr_code" colspan="2" class="text-center d-none d-lg-block">
                             <field name="qr_code"/>
+                        </div>
+                        <div invisible="not qr_code" colspan="2" class="text-center d-block d-lg-none">
+                            <button string="Pay with your banking app" name="action_open_bank_app" type="object" class="btn btn-secondary"/>
                         </div>
                     </group>
                     <footer>
