@@ -305,18 +305,18 @@ class Web_Editor(http.Controller):
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
     def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+        mimetype = kwargs.get('mimetype')
         data = b64decode(data)
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
             try:
-                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
-                mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
-            except UserError:
+                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
+            except UserError as e:
                 # considered as an image by the browser file input, but not
                 # recognized as such by PIL, eg .webp
-                return {'error': format_error_msg}
+                return {'error': e.args[0]}
             except ValueError as e:
                 return {'error': e.args[0]}
 
