@@ -5,6 +5,7 @@
         <div
             t-on-click="openLocationSelector"
             class="o_click_and_collect_availability btn d-flex align-items-center gap-3 border border-1 mb-3 text-start"
+            t-att-class="{'disabled': !this.state.active}"
         >
             <div>
                 <strong>
@@ -18,7 +19,7 @@
                 <div t-if="!this.state.selectedWhLocation.id" class="text-muted">
                     Check availability
                 </div>
-                <t t-elif="!!this.state.inStoreStock.in_stock">
+                <t t-elif="!!this.state.inStoreStock?.in_stock">
                     <div t-if="!!this.state.inStoreStock.show_quantity" class="text-warning">
                         <i class="fa fa-circle"/>
                         Only <t t-out="this.state.inStoreStock.quantity"/> available
