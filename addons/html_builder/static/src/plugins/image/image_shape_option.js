@@ -2,6 +2,7 @@ import { defaultBuilderComponents } from "@html_builder/core/default_builder_com
 import { Component } from "@odoo/owl";
 import { ShapeSelector } from "../shape/shape_selector";
 import { useDomState } from "@html_builder/core/building_blocks/utils";
+import { toRatio } from "@html_builder/utils/utils";
 
 export class ImageShapeOption extends Component {
     static template = "html_builder.ImageShapeOption";
@@ -10,6 +11,7 @@ export class ImageShapeOption extends Component {
     setup() {
         this.customizeTabPlugin = this.env.editor.shared.customizeTab;
         this.imageShapeOption = this.env.editor.shared.imageShapeOption;
+        this.toRatio = toRatio;
         this.state = useDomState((editingElement) => ({
             hasShape: !!editingElement.dataset.shape,
             showImageShape0: this.isShapeVisible(editingElement, 0),
@@ -17,7 +19,12 @@ export class ImageShapeOption extends Component {
             showImageShape2: this.isShapeVisible(editingElement, 2),
             showImageShape3: this.isShapeVisible(editingElement, 3),
             showImageShape4: this.isShapeVisible(editingElement, 4),
-            showImageShapeTransform: true,
+            showImageShapeTransform: this.imageShapeOption.isTransformableShape(
+                editingElement.dataset.shape
+            ),
+            showImageShapeAnimation: this.imageShapeOption.isAnimableShape(
+                editingElement.dataset.shape
+            ),
         }));
     }
     isShapeVisible(img, shapeIndex) {
