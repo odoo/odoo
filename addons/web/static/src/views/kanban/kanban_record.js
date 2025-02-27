@@ -252,7 +252,9 @@ export class KanbanRecord extends Component {
             const { fieldName, colors } = progressBarState.progressAttributes;
             const value = record.data[fieldName];
             const color = colors[value];
-            classes.push(`oe_kanban_card_${color}`);
+            if (color) {
+                classes.push(`oe_kanban_card_${color}`);
+            }
         }
         if (archInfo.cardColorField) {
             const value = record.data[archInfo.cardColorField];
