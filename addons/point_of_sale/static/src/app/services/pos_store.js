@@ -913,12 +913,18 @@ export class PosStore extends WithLazyGetterTrap {
             if (curLine.id !== line.id) {
                 if (curLine.canBeMergedWith(line) && merge !== false) {
                     to_merge_orderline = curLine;
+                    break;
                 }
             }
         }
 
         if (to_merge_orderline) {
             to_merge_orderline.merge(line);
+            if (line.combo_line_ids?.length) {
+                for (const comboLine of [...line.combo_line_ids]) {
+                    comboLine.delete();
+                }
+            }
             line.delete();
             this.selectOrderLine(order, to_merge_orderline);
         } else if (!selectedOrderline) {
@@ -1475,6 +1481,9 @@ export class PosStore extends WithLazyGetterTrap {
         );
     }
     showScreen(name, props = {}, newOrder = false) {
+        if (name === "") {
+            name = this.defaultScreen;
+        }
         if (name === "PaymentScreen" && !props.orderUuid) {
             name = "ProductScreen";
         }

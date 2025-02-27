@@ -140,6 +140,9 @@ export class SplitBillScreen extends Component {
         const lineToDel = [];
         const newCourses = new Map();
         for (const line of originalOrder.lines) {
+            if (this.parentCombo && !line.combo_parent_id) {
+                this.parentCombo = false;
+            }
             if (this.qtyTracker[line.uuid]) {
                 let newCourse;
                 if (line.course_id) {
@@ -156,8 +159,15 @@ export class SplitBillScreen extends Component {
                     }
                 }
                 const data = { ...line.raw };
+                if (this.parentCombo) {
+                    data.combo_parent_id = this.parentCombo;
+                }
                 delete data.uuid;
                 delete data.id;
+                if (data.combo_line_ids.length > 0) {
+                    delete data.combo_line_ids;
+                    this.parentCombo = true;
+                }
                 const newLine = this.pos.models["pos.order.line"].create(
                     {
                         ...data,
@@ -168,6 +178,9 @@ export class SplitBillScreen extends Component {
                     false,
                     true
                 );
+                if (this.parentCombo === true) {
+                    this.parentCombo = newLine.id;
+                }
 
                 if (line.getQuantity() === this.qtyTracker[line.uuid]) {
                     lineToDel.push(line);
