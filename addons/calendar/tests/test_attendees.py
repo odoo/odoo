@@ -99,6 +99,31 @@ class TestEventNotifications(TransactionCase):
         self.assertNotIn(self.partner, self.event.message_follower_ids.partner_id, "It should have unsubscribed the partner")
         self.assertIn(partner_bis, self.event.attendee_ids.partner_id, "It should have left the attendee")
 
+    def test_attendee_unavailabilities(self):
+        partner1, partner2 = self.env['res.partner'].create([{
+            'name': 'Test partner 1',
+            'email': 'test1@example.com',
+        }, {
+            'name': 'Test partner 2',
+            'email': 'test2@example.com',
+        }])
+        event1 = self.env['calendar.event'].create({
+            'name': 'Meeting 1',
+            'start': datetime(2020, 12, 13, 17),
+            'stop': datetime(2020, 12, 13, 22),
+            'partner_ids': [(4, partner.id) for partner in (partner1, partner2)]
+        })
+        self.assertFalse(event1.unavailable_partner_ids)
+        event2 = self.env['calendar.event'].create({
+            'name': 'Meeting 2',
+            'start': datetime(2020, 12, 13, 17),
+            'stop': datetime(2020, 12, 13, 22),
+            'partner_ids': [(4, partner1.id)],
+        })
+        event1.invalidate_recordset()
+        self.assertEqual(event1.unavailable_partner_ids, partner1)
+        self.assertEqual(event2.unavailable_partner_ids, partner1)
+
     def test_attendee_without_email(self):
         self.partner.email = False
         self.event.partner_ids = self.partner
