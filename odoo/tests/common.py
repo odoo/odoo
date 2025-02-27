@@ -30,6 +30,8 @@ import time
 import traceback
 import unittest
 import warnings
+import functools
+import operator
 from collections import defaultdict, deque
 from concurrent.futures import Future, CancelledError, wait
 from contextlib import contextmanager, ExitStack
@@ -37,7 +39,8 @@ from datetime import datetime
 from functools import lru_cache, partial
 from itertools import zip_longest as izip_longest
 from passlib.context import CryptContext
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Callable, overload, Any
+from types import FunctionType
 from unittest.mock import patch, _patch, Mock
 from xmlrpc import client as xmlrpclib
 
@@ -959,6 +962,13 @@ class TransactionCase(BaseCase):
         finally:
             registry.leave_test_mode()
             env.invalidate_all()
+
+    @classmethod
+    def patched_savepoints(cls, *, filter: Callable[[], bool] | None = None):
+        """
+        Shortcut to :func:`~odoo.tests.common.patch_savepoint`
+        """
+        return patch_savepoint(filter=filter)
 
 
 class SingleTransactionCase(BaseCase):
@@ -1928,11 +1938,12 @@ class HttpCase(TransactionCase):
     def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):
             url = self.base_url() + url
-        if head:
-            return self.opener.head(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=False)
-        if data or files:
-            return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
-        return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
+        with self.patched_savepoints():
+            if head:
+                return self.opener.head(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=False)
+            if data or files:
+                return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
+            return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
 
     def _wait_remaining_requests(self, timeout=10):
 
@@ -2010,7 +2021,7 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, patch_savepoints=True, savepoint_filter: Callable[[], bool] | None = None, **kw):
         """ Test JavaScript code running in the browser.
 
         To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
@@ -2049,7 +2060,16 @@ class HttpCase(TransactionCase):
         sendone_patch = None
         websocket_allowed_patch = None
         kick_all_websockets = None
-        try:
+        if patch_savepoints and not savepoint_filter:
+            def _savepoint_filter():
+                return False
+            savepoint_filter = _savepoint_filter
+        elif not patch_savepoints:
+            def _savepoint_filter():
+                return True
+            savepoint_filter = _savepoint_filter
+        with self.patched_savepoints(filter=savepoint_filter):
+          try:
             if "bus.bus" in self.env.registry:
                 from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler
                 from odoo.addons.bus.models.bus import BusBus
@@ -2122,7 +2142,7 @@ class HttpCase(TransactionCase):
                     message = "Some js test failed"
                 self.fail('%s\n\n%s' % (message, error))
 
-        finally:
+          finally:
             browser.stop()
             if sendone_patch:
                 sendone_patch.stop()
@@ -2325,3 +2345,84 @@ class freeze_time:
     def __exit__(self, *args):
         if self.freezer:
             self.freezer.stop()
+
+
+@overload
+def patch_savepoint(*, filter: Callable[[], bool] | None = None) -> _patch:
+    ...
+
+@overload
+def patch_savepoint(function: Callable, *, filter: Callable[[], bool] | None = None) -> Callable:
+    ...
+
+@overload
+def patch_savepoint(target: Any, attr: str, *, filter: Callable[[], bool] | None = None) -> _patch:
+    ...
+
+def patch_savepoint(*args, filter: Callable[[], bool] | None = None):
+    """
+    Patches a method such that savepoints within that method do nothing.
+    Note that readonly savepoints are still executed as they are always rolled back.
+
+    The method can be used as a regular decorator or as a context manager if
+    the object and method to patch are provided.
+
+    ```
+    @patch_savepoint
+    def method():
+        ...
+
+    @patch_savepoint(MyClass, 'MyMethod')
+    def method():
+        ...
+
+    def method():
+        with patch_savepoint():
+            ...
+
+    def method():
+        with patch_savepoint(MyClass, 'MyMethod'):
+            ...
+    ```
+    """
+
+    class CursorWrapper(BaseCursor):
+        """
+        Wrapper class to render cursor to no-op operations, additionally prevents
+        savepoint SubXIdCache to fill.
+        """
+        def __init__(self, cr):
+            self.__cr = cr
+            super().__init__()
+
+        def __getattr__(self, name):
+            if name == '_obj':
+                return self
+            return getattr(self.__cr, name)
+
+        def execute(self, *_, **__):
+            pass
+
+    f = None
+    if args and isinstance(args[0], FunctionType):
+        f = args[0]
+
+    orig_init = Savepoint.__init__
+    def _patched_init(self, cr, *args, readonly=False):
+        if not readonly and (not filter or not filter()):
+            cr = CursorWrapper(cr)
+        return orig_init(self, cr, *args, readonly=readonly)
+
+    sp_patch = patch.object(Savepoint, '__init__', _patched_init)
+
+    def _wrapped(f):
+        @functools.wraps(f)
+        def _wrapper(self, *args, **kwargs):
+            with sp_patch:
+                return f(self, *args, **kwargs)
+        return _wrapper
+    if f:
+        return _wrapped(f)
+    elif len(args) == 2 and isinstance(args[1], str):
+        return patch.object(*args, _wrapped(operator.attrgetter(args[1])(args[0])))
+    return sp_patch
