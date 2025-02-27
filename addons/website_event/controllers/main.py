@@ -279,7 +279,6 @@ class WebsiteEventController(http.Controller):
         :param form_details: posted data from frontend registration form, like
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
-        form_details.pop("recaptcha_token_response", None)
         allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
@@ -293,7 +292,7 @@ class WebsiteEventController(http.Controller):
         # goal is to use the answer to the first question of every 'type' (aka name / phone / email / company name)
         already_handled_fields_data = {}
         for key, value in form_details.items():
-            if not value:
+            if not value or '-' not in key:
                 continue
 
             key_values = key.split('-')
@@ -303,6 +302,9 @@ class WebsiteEventController(http.Controller):
                 if field_name not in registration_fields:
                     continue
                 registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
+                continue
+
+            if len(key_values) != 3:
                 continue
 
             registration_index, question_type, question_id = key_values
