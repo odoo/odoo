@@ -56,6 +56,10 @@ class AccountPaymentRegister(models.TransientModel):
         string="QR Code URL",
         compute="_compute_qr_code",
     )
+    qr_code_link = fields.Char(
+        string="QR Code link",
+        compute="_compute_qr_code",
+    )
 
     batches = fields.Binary(compute='_compute_batches', export_string_translation=False)
     installments_mode = fields.Selection(
@@ -852,6 +856,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_qr_code(self):
         for pay in self:
             qr_html = False
+            qr_link = False
             if pay.partner_bank_id \
                and pay.partner_bank_id.allow_out_payment \
                and pay.payment_method_line_id.code == 'manual' \
@@ -866,12 +871,15 @@ class AccountPaymentRegister(models.TransientModel):
                     debtor_partner=pay.partner_id,
                 )
                 if b64_qr:
-                    qr_html = f'''
+                    txt = _('Scan me with your banking app.')
+                    qr_html = markupsafe.Markup('''
                         <img class="border border-dark rounded" src="{b64_qr}"/>
                         <br/>
-                        <strong>{_('Scan me with your banking app.')}</strong>
-                    '''
+                        <strong>{txt}</strong>
+                    ''').format(b64_qr=b64_qr, txt=txt)
+                    qr_link = 'https://www.perdu.com/'
             pay.qr_code = qr_html
+            pay.qr_code_link = qr_link
 
     @api.depends('partner_id', 'amount', 'payment_date', 'payment_type', 'line_ids')
     def _compute_duplicate_moves(self):
@@ -1325,3 +1333,10 @@ class AccountPaymentRegister(models.TransientModel):
             listview_id = self.env.ref('account.partner_missing_account_list_view').id
             vals['views'] = [(listview_id, 'list'), (False, "form")]
         return self.missing_account_partners._get_records_action(**vals)
+
+    def action_open_bank_app(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.qr_code_link,
+            'target': 'new',
+        }
