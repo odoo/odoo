@@ -50,7 +50,7 @@ class HrWorkEntry(models.Model):
             """)
 
     def _get_duration_is_valid(self):
-        return self.work_entry_type_id and self.work_entry_type_id.is_leave
+        return self.work_entry_type_id and not self.work_entry_type_id.is_work
 
     @api.onchange('employee_id', 'date_start', 'date_stop')
     def _onchange_contract_id(self):
@@ -146,7 +146,7 @@ class HrWorkEntry(models.Model):
         return res or outside_calendar
 
     def _get_leaves_entries_outside_schedule(self):
-        return self.filtered(lambda w: w.work_entry_type_id.is_leave and w.state not in ('validated', 'cancelled'))
+        return self.filtered(lambda w: not w.work_entry_type_id.is_work and w.state not in ('validated', 'cancelled'))
 
     def _mark_leaves_outside_schedule(self):
         """
@@ -184,5 +184,5 @@ class HrWorkEntryType(models.Model):
     _inherit = 'hr.work.entry.type'
     _description = 'HR Work Entry Type'
 
-    is_leave = fields.Boolean(
-        default=False, string="Time Off", help="Allow the work entry type to be linked with time off types.")
+    is_work = fields.Boolean(default=True, string="Working Time",
+        help="If checked, the work entry is counted as work time in the working schedule")
