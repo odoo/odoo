@@ -1663,7 +1663,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         country = request.env["res.country"].search([
             ('code', '=', address.pop('country')),
         ], limit=1)
-        if state_code := address.pop('state'):
+        if state_code := address.pop('state', None):
             state = request.env['res.country.state'].search([
                 ('code', '=', state_code),
                 ('country_id', '=', country.id),
