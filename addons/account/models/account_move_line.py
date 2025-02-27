@@ -103,6 +103,8 @@ class AccountMoveLine(models.Model):
         check_company=True,
         tracking=True,
     )
+    account_name = fields.Char(related='account_id.name') # Used for easy configuration of consolidation in the reports
+    account_code = fields.Char(related='account_id.code') # Used for easy configuration of consolidation in the reports
     name = fields.Char(
         string='Label',
         compute='_compute_name', store=True, readonly=False, precompute=True,
