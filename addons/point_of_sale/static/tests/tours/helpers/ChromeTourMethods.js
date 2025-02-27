@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+<<<<<<< 17.0
 export function confirmPopup() {
     return [
         {
@@ -69,3 +70,78 @@ export function endTour() {
         isCheck: true,
     };
 }
+||||||| 51296055790f8c6f01dfbbc82ca340756c54cdb3
+    const { createTourMethods } = require('point_of_sale.tour.utils');
+
+    class Do {
+        confirmPopup() {
+            return [
+                {
+                    content: 'confirm popup',
+                    trigger: '.popups .modal-dialog .button.confirm',
+                },
+            ];
+        }
+        clickTicketButton() {
+            return [
+                {
+                    trigger: '.pos-topheader .ticket-button',
+                },
+                {
+                    trigger: '.subwindow .ticket-screen',
+                    run: () => {},
+                },
+            ];
+        }
+    }
+
+    class Check {
+        isCashMoveButtonHidden() {
+            return [
+                {
+                    trigger: '.pos-topheader:not(:contains(Cash In/Out))',
+                    run: () => {},
+                }
+            ];
+        }
+
+        isCashMoveButtonShown() {
+            return [
+                {
+                    trigger: '.pos-topheader:contains(Cash In/Out)',
+                    run: () => {},
+                }
+            ];
+        }
+    }
+
+    return createTourMethods('Chrome', Do, Check);
+});
+=======
+    const { createTourMethods } = require('point_of_sale.tour.utils');
+
+    class Do {
+        confirmPopup() {
+            return [
+                {
+                    content: 'confirm popup',
+                    trigger: '.popups .modal-dialog .button.confirm',
+                },
+            ];
+        }
+        clickTicketButton() {
+            return [
+                {
+                    trigger: '.pos-topheader .ticket-button',
+                },
+                {
+                    trigger: '.subwindow .ticket-screen',
+                    run: () => {},
+                },
+            ];
+        }
+    }
+
+    return createTourMethods('Chrome', Do);
+});
+>>>>>>> c2acc7045d4e27d2ff68e7a61de9a50117f8ac2f
