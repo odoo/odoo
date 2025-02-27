@@ -54,7 +54,7 @@ class PosPaymentMethod(models.Model):
     active = fields.Boolean(default=True)
     type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
     image = fields.Image("Image", max_width=50, max_height=50)
-    payment_method_type = fields.Selection(selection=_get_payment_method_type, string="Integration", default='none', required=True)
+    payment_method_type = fields.Selection(selection=lambda self: self._get_payment_method_type(), string="Integration", default='none', required=True)
     default_qr = fields.Char(compute='_compute_qr')
     qr_code_method = fields.Selection(
         string='QR Code Format', copy=False,
