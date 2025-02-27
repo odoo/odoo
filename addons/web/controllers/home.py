@@ -94,7 +94,7 @@ class Home(http.Controller):
     def _login_redirect(self, uid, redirect=None):
         return _get_login_redirect_url(uid, redirect)
 
-    @http.route('/web/login', type='http', auth='none', readonly=False, captcha='login')
+    @http.route('/web/login', type='http', auth='none', readonly=False)
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
@@ -121,6 +121,8 @@ class Home(http.Controller):
             try:
                 credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS and value}
                 credential.setdefault('type', 'password')
+                if request.env['res.users']._should_captcha_login(credential):
+                    request.env['ir.http']._verify_request_recaptcha_token('login')
                 auth_info = request.session.authenticate(request.env, credential)
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(auth_info['uid'], redirect=redirect))
