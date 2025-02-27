@@ -94,19 +94,17 @@ class TestForumCRUD(TestForumCommon):
 
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
-                with self.cr.savepoint():
-                    # One should not be able to vote more than once on a same post
-                    Vote.with_user(self.user_employee).create({
-                        'post_id': self.admin_post.id,
-                        'vote': '1',
-                    })
+                # One should not be able to vote more than once on a same post
+                Vote.with_user(self.user_employee).create({
+                    'post_id': self.admin_post.id,
+                    'vote': '1',
+                })
             with self.assertRaises(IntegrityError):
-                with self.cr.savepoint():
-                    # One should not be able to vote more than once on a same post
-                    Vote.with_user(self.user_employee).create({
-                        'post_id': self.admin_post.id,
-                        'vote': '1',
-                    })
+                # One should not be able to vote more than once on a same post
+                Vote.with_user(self.user_employee).create({
+                    'post_id': self.admin_post.id,
+                    'vote': '1',
+                })
 
         # One should not be able to create a vote for someone else
         new_employee_vote = Vote.with_user(self.user_employee).create({

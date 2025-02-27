@@ -673,10 +673,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             # hard fail the loading if the context key is set to ensure `test_all_l10n` works as expected
-            with (
-                self.assertRaisesRegex(ValueError, 'unknown_company_key'),
-                self.env.cr.savepoint(),
-            ):
+            with self.assertRaisesRegex(ValueError, 'unknown_company_key'):
                 self.env['account.chart.template'].with_context(l10n_check_fields_complete=True).try_loading('test', company=company, install_demo=False)
 
             # silently ignore if the field doesn't exist (yet)

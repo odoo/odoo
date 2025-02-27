@@ -50,7 +50,7 @@ class TestSlideInternals(slides_common.SlidesCase):
     @users('user_manager')
     def test_slide_create_vote_constraint(self):
         # test vote value must be 1, 0 and -1.
-        with self.assertRaises(psycopg2.errors.CheckViolation), self.cr.savepoint():
+        with self.assertRaises(psycopg2.errors.CheckViolation):
             self.env['slide.slide.partner'].create({
                 'slide_id': self.slide.id,
                 'channel_id': self.channel.id,

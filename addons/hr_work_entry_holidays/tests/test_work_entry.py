@@ -142,7 +142,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         # TODO I don't know what this test is supposed to test, but I feel that
         # in any case it should raise a Validation Error, as it's trying to
         # validate a leave in a period the employee is not supposed to work.
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             leave.action_approve()
             leave.action_validate()
 

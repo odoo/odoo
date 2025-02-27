@@ -1,3 +1,5 @@
+from contextlib import closing
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.models import Model
 from odoo.tests import Form, tagged
@@ -353,11 +355,11 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
 
-        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."):
             move3.button_hash()
 
         move1.button_hash()  # Afterwards move2 is a hole at the beginning of the unhashed part of the chain [move1 (hashed), move2, move3]
-        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."):
             move3.button_hash()
 
         with self._skip_hash_moves():
@@ -491,7 +493,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
                 'fiscalyear_lock_date',
                 'sale_lock_date',
         ]:
-            with self.subTest(lock_date_field=lock_date_field), self.env.cr.savepoint() as sp:
+            with self.subTest(lock_date_field=lock_date_field), closing(self.env.cr.savepoint()):
                 move1 = self.init_invoice('out_invoice', self.partner_a, "2024-01-01", amounts=[1000], post=True)
                 move2 = self.init_invoice('out_invoice', self.partner_a, "2024-01-02", amounts=[1000], post=True)
                 move3 = self.init_invoice('out_invoice', self.partner_a, "2024-01-03", amounts=[1000], post=True)
@@ -527,8 +529,6 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
                     self.assertNotEqual(move.inalterable_hash, False)
                 self.company_data['default_journal_sale'].restrict_mode_hash_table = True  # to run integrity check
                 self._verify_integrity(move5, "Entries are correctly hashed", move1, move5)
-
-                sp.close()  # Rollback to ensure all subtests start in the same situation
 
     def test_retroactive_hashing_before_current(self):
         """Test that we hash entries before the current recordset of moves, not the ones after"""
@@ -591,7 +591,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         moves_v3_pre_restrict_mode[-1]._hash_moves(raise_if_no_document=False)  # Shouldn't raise
         self.assertFalse(moves_v3_pre_restrict_mode[-1].inalterable_hash)
 
-        with self.assertRaisesRegex(UserError, "This move could not be locked either because.*"), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "This move could not be locked either because.*"):
             moves_v3_pre_restrict_mode.button_hash()
 
         # Test that we allow holes that are not in the moves_to_hash and
@@ -674,7 +674,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         })
         unreconciled_move = unreconciled_bank_statement_line.move_id
         unreconciled_move.journal_id.restrict_mode_hash_table = True
-        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. All entries have to be reconciled."), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. All entries have to be reconciled."):
             unreconciled_move.button_hash()
 
     def test_account_move_unhashed_entries(self):
@@ -823,13 +823,12 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         self.assertEqual(wizard.move_to_hash_ids, moves_v4)
 
         # We can still hash the remaining moves
-        with self.subTest(msg="Hash the remaining moves"), self.env.cr.savepoint() as sp:
+        with self.subTest(msg="Hash the remaining moves"), closing(self.env.cr.savepoint()):
             wizard.action_secure_entries()
             for move in moves_v3_pre_restrict_mode:
                 self.assertFalse(move.inalterable_hash)
             for move in moves_v4:
                 self.assertNotEqual(move.inalterable_hash, False)
-            sp.close()  # Rollback
 
         # We can ignore the moves by setting the hard lock date:
         self.assertEqual(wizard.max_hash_date, fields.Date.from_string("2023-12-31"))

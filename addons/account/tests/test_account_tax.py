@@ -71,7 +71,7 @@ class TestAccountTax(AccountTestInvoicingCommon):
             ],
         })
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.company_data['default_tax_sale'].company_id = self.company_data_2['company']
 
     def test_logging_of_tax_update_when_tax_is_used(self):

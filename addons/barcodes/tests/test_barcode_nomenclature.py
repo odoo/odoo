@@ -62,23 +62,23 @@ class TestBarcodeNomenclature(common.TransactionCase):
             'encoding': 'ean8',
         })
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             # Must fail because empty braces.
             barcode_rule.pattern = '......{}..'
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             # Must fail because decimal can't be before integer.
             barcode_rule.pattern = '......{DN}'
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             # Must fail because a pattern can't have multiple braces group.
             barcode_rule.pattern = '....{NN}{DD}'
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             # Must fail because '*' isn't accepted (should be '.*' instead).
             barcode_rule.pattern = '*'
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             # Must fail because '**' isn't even a valid regular expression.
             barcode_rule.pattern = '**>>>{ND}'
         # Allowed since it leads to a valid regular expression.
