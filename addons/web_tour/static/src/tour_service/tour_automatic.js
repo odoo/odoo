@@ -44,9 +44,6 @@ export class TourAutomatic {
                         } else {
                             console.log(step.describeMe);
                         }
-                        // This delay is important for making the current set of tour tests pass.
-                        // IMPROVEMENT: Find a way to remove this delay.
-                        await new Promise((resolve) => requestAnimationFrame(resolve));
                         if (stepDelay > 0) {
                             await hoot.delay(stepDelay);
                         }
@@ -55,7 +52,10 @@ export class TourAutomatic {
                 {
                     initialDelay: () => (this.previousStepIsJustACheck ? 0 : null),
                     trigger: step.trigger ? () => step.findTrigger() : null,
-                    timeout: step.timeout || this.timeout || 10000,
+                    timeout:
+                        step.pause && this.debugMode
+                            ? 9999999
+                            : step.timeout || this.timeout || 10000,
                     action: async (trigger) => {
                         if (delayToCheckUndeterminisms > 0) {
                             await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
@@ -105,7 +105,6 @@ export class TourAutomatic {
 
         this.macro = new Macro({
             name: this.name,
-            checkDelay: this.checkDelay || 200,
             steps: macroSteps,
             onError: (error) => {
                 if (error.type === "Timeout") {

@@ -7,9 +7,8 @@ import { Macro } from "@web/core/macro";
 
 let macro;
 async function waitForMacro() {
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
         await animationFrame();
-        await advanceTime(265);
         if (macro.isComplete) {
             return;
         }
@@ -212,7 +211,7 @@ test("macro wait element is visible to do action", async () => {
     expect(span).toHaveText("0");
     new Macro({
         name: "test",
-        timeout: 1000,
+        timeout: 333,
         steps: [
             {
                 trigger: "button.inc",
@@ -239,7 +238,7 @@ test("macro timeout if element is not visible", async () => {
     expect(span).toHaveText("0");
     const macro = new Macro({
         name: "test",
-        timeout: 1000,
+        timeout: 333,
         steps: [
             {
                 trigger: "button.inc",
@@ -254,5 +253,5 @@ test("macro timeout if element is not visible", async () => {
     });
     macro.start(queryOne(".counter"));
     await waitForMacro();
-    expect.verifySteps(["TIMEOUT step failed to complete within 1000 ms."]);
+    expect.verifySteps(["TIMEOUT step failed to complete within 333 ms."]);
 });
