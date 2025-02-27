@@ -104,9 +104,10 @@ export class DiscussChannel extends models.ServerModel {
     /**
      * @param {number[]} ids
      * @param {number[]} partner_ids
+     * @param {boolean} [invite_to_rtc_call=undefined]
      */
-    add_members(ids, partner_ids) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
+    add_members(ids, partner_ids, invite_to_rtc_call) {
+        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "invite_to_rtc_call");
         ids = kwargs.ids;
         delete kwargs.ids;
         partner_ids = kwargs.partner_ids || [];
@@ -161,6 +162,7 @@ export class DiscussChannel extends models.ServerModel {
                 ["channel_id", "=", channel.id],
             ]) > 0;
         if (isSelfMember) {
+<<<<<<< 18.0
             BusBus._sendone(
                 channel,
                 "mail.record/insert",
@@ -172,6 +174,26 @@ export class DiscussChannel extends models.ServerModel {
                     .add(DiscussChannelMember.browse(insertedChannelMembers))
                     .get_result()
             );
+||||||| 1706ced19e91a4e00c6475295be07e3f0ca94657
+            const store = new mailDataHelpers.Store("Thread", {
+                id: channel.id,
+                memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
+                model: "discuss.channel",
+            });
+            store.add(DiscussChannelMember.browse(insertedChannelMembers));
+            BusBus._sendone(channel, "mail.record/insert", store.get_result());
+=======
+            const store = new mailDataHelpers.Store("Thread", {
+                id: channel.id,
+                memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
+                model: "discuss.channel",
+                invitedMembers: kwargs.invite_to_rtc_call
+                    ? [["ADD", insertedChannelMembers]]
+                    : false,
+            });
+            store.add(DiscussChannelMember.browse(insertedChannelMembers));
+            BusBus._sendone(channel, "mail.record/insert", store.get_result());
+>>>>>>> 0d644572c814dbdbd022a05a203f14bb2d09920e
         }
     }
 

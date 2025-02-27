@@ -503,6 +503,7 @@ test("Use saved volume settings", async () => {
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
 });
 
+<<<<<<< 18.0
 test("automatically cancel incoming call after some time", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -517,4 +518,29 @@ test("automatically cancel incoming call after some time", async () => {
     await contains(".o-discuss-CallInvitation");
     await advanceTime(30_000);
     await contains(".o-discuss-CallInvitation", { count: 0 });
+||||||| 1706ced19e91a4e00c6475295be07e3f0ca94657
+=======
+test("should also invite to the call when inviting to the channel", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-Call");
+    await click(".o-mail-Discuss-header button[title='Add Users']");
+    await contains(".o-discuss-ChannelInvitation");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
+    await click("[title='Invite to Channel']:enabled");
+    await contains(".o-discuss-CallParticipantCard.o-isInvitation");
+>>>>>>> 0d644572c814dbdbd022a05a203f14bb2d09920e
 });
