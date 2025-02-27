@@ -23,7 +23,14 @@ export class ChannelInvitation extends Component {
     setup() {
         super.setup();
         this.orm = useService("orm");
+<<<<<<< saas-18.1
         this.store = useService("mail.store");
+||||||| 193a749240b071772757ebac8cc0d032a9d9a31d
+        this.store = useState(useService("mail.store"));
+=======
+        this.store = useState(useService("mail.store"));
+        this.rtc = useService("discuss.rtc");
+>>>>>>> ccbc0cbc5288522c8c36a0bc666b69a248e4d928
         this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
         this.ui = useService("ui");
@@ -163,7 +170,14 @@ export class ChannelInvitation extends Component {
             await this.store.startChat(partnerIds);
         } else {
             await this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
+<<<<<<< saas-18.1
                 partner_ids: this.selectedPartners.map((partner) => partner.id),
+||||||| 193a749240b071772757ebac8cc0d032a9d9a31d
+                partner_ids: this.state.selectedPartners.map((partner) => partner.id),
+=======
+                partner_ids: this.state.selectedPartners.map((partner) => partner.id),
+                invite_to_rtc_call: this.rtc.state.channel?.eq(this.props.thread),
+>>>>>>> ccbc0cbc5288522c8c36a0bc666b69a248e4d928
             });
         }
         this.props.close();
