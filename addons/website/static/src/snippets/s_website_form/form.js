@@ -646,11 +646,24 @@ export class Form extends Interaction {
             value = "";
         }
 
+        const isContains = (comparable, value) => {
+            // Both arrays case
+            if (Array.isArray(comparable) && Array.isArray(value)) {
+                return comparable.some((comp) => value.includes(comp));
+            }
+            // comparable Array and string cases
+            if (Array.isArray(comparable)) {
+                return comparable.some((comp) => value === comp);
+            }
+            // Both strings case or value is an array
+            return value.includes(comparable);
+        };
+
         switch (comparator) {
             case "contains":
-                return value.includes(comparable);
+                return isContains(comparable, value);
             case "!contains":
-                return !value.includes(comparable);
+                return !isContains(comparable, value);
             case "equal":
             case "selected":
                 return value === comparable;
@@ -713,10 +726,20 @@ export class Form extends Interaction {
      *      recalculate the visibility of fieldEl
      */
     buildVisibilityFunction(fieldEl) {
-        const visibilityCondition = fieldEl.dataset.visibilityCondition;
+        let visibilityCondition = fieldEl.dataset.visibilityCondition;
         const dependencyName = fieldEl.dataset.visibilityDependency;
         const comparator = fieldEl.dataset.visibilityComparator;
         const between = fieldEl.dataset.visibilityBetween;
+        const dependencyEl = this.el.querySelector(
+            `.s_website_form_input[name="${dependencyName}"]`
+        );
+        const isMultiValueDependency =
+            ["contains", "!contains"].includes(comparator) &&
+            (["checkbox", "radio"].includes(dependencyEl.type) ||
+                dependencyEl.nodeName === "SELECT");
+        if (isMultiValueDependency) {
+            visibilityCondition = JSON.parse(visibilityCondition);
+        }
         return () => {
             // To be visible, at least one field with the dependency name must be visible.
             const dependencyVisibilityFunction = this.visibilityFunctionByFieldName.get(dependencyName);
@@ -726,8 +749,8 @@ export class Form extends Interaction {
             }
 
             const formData = new FormData(this.el);
-            const currentValueOfDependency = ["contains", "!contains"].includes(comparator)
-                ? formData.getAll(dependencyName).join()
+            const currentValueOfDependency = isMultiValueDependency
+                ? formData.getAll(dependencyName)
                 : formData.get(dependencyName);
             return this.compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
         };
