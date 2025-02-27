@@ -2214,6 +2214,13 @@ class AccountMoveLine(models.Model):
                                     This is usefull if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         """
+        partial_matching_numbers = self.filtered(lambda aml: aml.matching_number and aml.matching_number.startswith("P")).mapped("matching_number")
+        if partial_matching_numbers:
+            for pmn in partial_matching_numbers:
+                if False not in self.filtered(lambda aml: aml.matching_number == pmn).mapped("reconciled"):
+                    raise UserError(_("You can only reconcile partially reconciled entries if one of them is not fully reconciled."))
+        self = self.filtered(lambda aml: not aml.reconciled or aml.matching_number not in partial_matching_numbers)
+
         if not self:
             return
 
