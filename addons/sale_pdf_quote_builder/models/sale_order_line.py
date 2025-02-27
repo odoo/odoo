@@ -22,6 +22,16 @@ class SaleOrderLine(models.Model):
         readonly=False,
     )
 
+    # === ONCHANGE METHODS === #
+
+    @api.onchange('product_id', 'product_template_id')
+    def _onchange_product(self):
+        for line in self:
+            # Ensure selected documents are still in the available documents
+            line.product_document_ids = line.product_document_ids.filtered(
+                lambda doc: doc in line.available_product_document_ids
+            )
+
     # === COMPUTE METHODS === #
 
     @api.depends('product_id', 'product_template_id')
@@ -31,9 +41,9 @@ class SaleOrderLine(models.Model):
                 '|',
                     '&',
                         ('res_model', '=', 'product.product'),
-                        ('res_id', '=', line.product_id.id),
+                        ('res_id', '=', line.product_id.ids),
                     '&',
                         ('res_model', '=', 'product.template'),
-                        ('res_id', '=', line.product_template_id.id),
+                        ('res_id', '=', line.product_template_id.ids),
                 ('attached_on_sale', '=', 'inside')
             ], order='res_model, sequence').ids
