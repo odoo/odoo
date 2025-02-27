@@ -500,8 +500,11 @@ export class PosData extends Reactive {
                 const results = this.models.loadData(data);
                 result = results[model];
             } else if (type === "write") {
-                const baseData = Object.assign(this.baseData[model][ids[0]], values);
-                this.synchronizeServerDataInIndexedDB({ [model]: [baseData] });
+                const recordBaseData = this.baseData[model][ids[0]];
+                if (recordBaseData) {
+                    Object.assign(recordBaseData, values);
+                    this.synchronizeServerDataInIndexedDB({ [model]: [recordBaseData] });
+                }
             }
 
             if (result === null || result === undefined) {
