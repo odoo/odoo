@@ -14,9 +14,8 @@ const turnStile = {
         turnstileEl.dataset.appearance = mode;
         turnstileEl.dataset.responseFieldName = "turnstile_captcha";
         turnstileEl.dataset.sitekey = session.turnstile_site_key;
+        turnstileEl.dataset.callback = "turnstileCallback";
         turnstileEl.dataset.errorCallback = "throwTurnstileError";
-        turnstileEl.dataset.beforeInteractiveCallback = "turnstileBeforeInteractive";
-        turnstileEl.dataset.afterInteractiveCallback = "turnstileAfterInteractive";
 
         const script1El = document.createElement("script");
         script1El.className = "s_turnstile";
@@ -28,17 +27,13 @@ const turnStile = {
                 error.code = code;
                 throw error;
             }
-            function turnstileBeforeInteractive() {
-                const btnEl = document.querySelector('${selector}');
-                if (btnEl && !btnEl.classList.contains('disabled')) {
-                    btnEl.classList.add('disabled', 'cf_form_disabled');
-                }
-            }
-            function turnstileAfterInteractive() {
+
+            function turnstileCallback() {
                 const btnEl = document.querySelector('${selector}');
                 if (btnEl && btnEl.classList.contains('cf_form_disabled')) {
                     btnEl.classList.remove('disabled', 'cf_form_disabled');
                 }
+                btnEl.closest('form').querySelector("input.turnstile_captcha_valid').value = 'done';
             }
         `;
 
@@ -46,7 +41,13 @@ const turnStile = {
         script2El.className = "s_turnstile";
         script2El.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
 
-        return [turnstileEl, script1El, script2El];
+        // avoid autosubmit from password manager
+        const inputValidation = document.createElement("input");
+        inputValidation.style = 'display: none;';
+        inputValidation.className = 'turnstile_captcha_valid';
+        inputValidation.required = true;
+
+        return [turnstileEl, script1El, script2El, inputValidation];
     },
 
     /**
@@ -83,14 +84,17 @@ publicWidget.registry.s_website_form.include({
         ) {
             this.uniq = uniqueId("turnstile_");
             this.el.classList.add(this.uniq);
-            const [turnstileEl, script1El, script2El] = this.addTurnstile(
-                "website_form",
-                `.${this.uniq} .s_website_form_send,.${this.uniq} .o_website_form_send`,
-            );
+            const selector = `.${this.uniq} .s_website_form_send,.${this.uniq} .o_website_form_send`;
+            const btnEl = document.querySelector(selector);
+            if (btnEl && !btnEl.classList.contains('disabled') && !btnEl.classList.contains('no_auto_disable')) {
+                btnEl.classList.add('disabled', 'cf_form_disabled');
+            }
+            const [turnstileEl, script1El, script2El, input] = this.addTurnstile("website_form", selector);
             const formSendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
             formSendEl.parentNode.insertBefore(turnstileEl, formSendEl);
             formSendEl.parentNode.insertBefore(script1El, formSendEl.nextSibling);
             formSendEl.parentNode.insertBefore(script2El, formSendEl.nextSibling);
+            formSendEl.parentNode.insertBefore(input, formSendEl.nextSibling);
         }
         return res;
     },
@@ -99,7 +103,7 @@ publicWidget.registry.s_website_form.include({
 publicWidget.registry.turnstileCaptcha = publicWidget.Widget.extend({
     ...turnStile,
 
-    selector: "[data-captcha]",
+    selector: "form[data-captcha]",
 
     async willStart() {
         this._super(...arguments);
@@ -111,12 +115,17 @@ publicWidget.registry.turnstileCaptcha = publicWidget.Widget.extend({
         ) {
             this.uniq = uniqueId("turnstile_");
             const action = this.el.dataset.captcha || "generic";
-            const [turnstileEl, script1El, script2El] = this.addTurnstile(action, `.${this.uniq}`);
+
+            const [turnstileEl, script1El, script2El, input] = this.addTurnstile(action, `.${this.uniq}`);
             const submitButton = this.el.querySelector("button[type='submit']");
             submitButton.classList.add(this.uniq);
+            if (!submitButton.classList.contains('no_auto_disable')) {
+                submitButton.classList.add('disabled', 'cf_form_disabled');
+            }
             submitButton.parentNode.insertBefore(turnstileEl, submitButton);
             this.el.appendChild(script1El);
             this.el.appendChild(script2El);
+            this.el.appendChild(input);
         }
     },
 });
