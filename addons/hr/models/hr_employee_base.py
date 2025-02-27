@@ -13,9 +13,9 @@ class HrEmployeeBase(models.AbstractModel):
     _description = "Basic Employee"
     _order = 'name'
 
-    name = fields.Char()
     active = fields.Boolean("Active")
     color = fields.Integer('Color Index', default=0)
+    name = fields.Char()
     department_id = fields.Many2one('hr.department', 'Department', check_company=True)
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
@@ -26,7 +26,7 @@ class HrEmployeeBase(models.AbstractModel):
         'res.partner',
         string='Work Address',
         compute="_compute_address_id",
-        precompute=True,
+        # precompute=True,
         store=True,
         readonly=False,
         check_company=True)
