@@ -15,8 +15,8 @@ patch(ComboConfiguratorDialog.prototype, {
         if (!this.isComboQuantityAllowed(quantity)) {
             quantity = Math.min(
                 ...this._selectedComboItems
-                    .map(comboItem => comboItem.product.free_qty)
-                    .filter(freeQty => freeQty !== undefined)
+                    .map(comboItem => comboItem.product.max_quantity)
+                    .filter(maxQuantity => maxQuantity !== undefined)
             );
         }
         return super.setQuantity(quantity);
