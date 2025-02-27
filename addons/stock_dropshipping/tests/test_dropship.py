@@ -350,3 +350,19 @@ class TestDropship(common.TransactionCase):
             {'product_id': subcontracted_service.id, 'product_uom_qty': 1.0, 'qty_delivered': 0.0},
             {'product_id': self.dropship_product.id, 'product_uom_qty': 0.0, 'qty_delivered': 1.0},
         ])
+
+    def test_delivery_type(self):
+        # Create an operation type starting as incoming/internal.
+        operation_type = self.env['stock.picking.type'].create({
+            "name": "test",
+            "sequence_code": "TEST",
+            "code": "incoming"
+        })
+        
+        # Update the code/type to outgoing/delivery.
+        operation_type.write({
+            "code": "outgoing"
+        })
+        
+        # Trigger re-computes.
+        operation_type.default_location_src_id
