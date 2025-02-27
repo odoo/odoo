@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import { stores } from "@odoo/o-spreadsheet";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { makeStore } from "@spreadsheet/../tests/helpers/stores";
@@ -12,8 +13,9 @@ test("ODOO.ACCOUNT.GROUP type", async function () {
     const { store: composer } = await makeStore(CellComposerStore);
 
     composer.startEdition("=ODOO.ACCOUNT.GROUP(");
-    const autoComplete = composer.autocompleteProvider;
-    expect(autoComplete.proposals.map((p) => p.text)).toEqual([
+    await animationFrame();
+    const proposals = composer.autoCompleteProposals;
+    expect(proposals.map((p) => p.text)).toEqual([
         '"asset_receivable"',
         '"asset_cash"',
         '"asset_current"',
@@ -33,7 +35,8 @@ test("ODOO.ACCOUNT.GROUP type", async function () {
         '"expense_direct_cost"',
         '"off_balance"',
     ]);
-    autoComplete.selectProposal(autoComplete.proposals[0].text);
+    composer.insertAutoCompleteValue(proposals[0].text);
+    await animationFrame();
     expect(composer.currentContent).toBe('=ODOO.ACCOUNT.GROUP("asset_receivable"');
-    expect(composer.autocompleteProvider).toBe(undefined);
+    expect(composer.isAutoCompleteDisplayed).toBe(false);
 });
