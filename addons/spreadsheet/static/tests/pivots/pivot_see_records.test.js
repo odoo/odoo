@@ -304,6 +304,34 @@ test("Cannot see records of spreadsheet pivot", async function () {
     expect(action.isVisible(env)).toBe(false);
 });
 
+test("See records is not visible if the formula has an weird IF", async function (assert) {
+    let deferred = undefined;
+    const { env, model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+            <pivot>
+                <field name="probability" type="measure"/>
+            </pivot>
+        `,
+        mockRPC: async function (route, args) {
+            if (deferred && args.method === "read_group" && args.model === "partner") {
+                await deferred;
+            }
+        },
+    });
+    setCellContent(
+        model,
+        "A1",
+        '=if(false, ODOO.PIVOT("1","probability","user_id",2,"partner_id", "#Error"), "test")'
+    );
+    deferred = new Deferred();
+    model.dispatch("REFRESH_ALL_DATA_SOURCES");
+    const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
+    expect(action.isVisible(env)).toBe(false);
+    deferred.resolve();
+    await animationFrame();
+    expect(action.isVisible(env)).toBe(false);
+});
+
 test("See records is not visible on an empty cell", async function () {
     const { env, model } = await createSpreadsheetWithPivot();
     expect(getCell(model, "A21")).toBe(undefined);
@@ -314,24 +342,24 @@ test("See records is not visible on an empty cell", async function () {
 
 test("See records is not visible if the pivot is not loaded, even if the cell has a value", async function () {
     let deferred = undefined;
-        const { env, model } = await createSpreadsheetWithPivot({
-            arch: /*xml*/ `
-            <pivot>
-                <field name="probability" type="measure"/>
-            </pivot>
-        `,
-            mockRPC: async function (route, args) {
-                if (deferred && args.method === "read_group" && args.model === "partner") {
-                    await deferred;
-                }
-            },
-        });
-        setCellContent(model, "A1", '=IFERROR(PIVOT.VALUE("1","probability"), 42)');
-        deferred = new Deferred();
-        model.dispatch("REFRESH_ALL_DATA_SOURCES");
-        const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
-        expect(action.isVisible(env)).toBe(false);
-        deferred.resolve();
-        await animationFrame();
-        expect(action.isVisible(env)).toBe(true);
+    const { env, model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+        <pivot>
+            <field name="probability" type="measure"/>
+        </pivot>
+    `,
+        mockRPC: async function (route, args) {
+            if (deferred && args.method === "read_group" && args.model === "partner") {
+                await deferred;
+            }
+        },
+    });
+    setCellContent(model, "A1", '=IFERROR(PIVOT.VALUE("1","probability"), 42)');
+    deferred = new Deferred();
+    model.dispatch("REFRESH_ALL_DATA_SOURCES");
+    const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
+    expect(action.isVisible(env)).toBe(false);
+    deferred.resolve();
+    await animationFrame();
+    expect(action.isVisible(env)).toBe(true);
 });

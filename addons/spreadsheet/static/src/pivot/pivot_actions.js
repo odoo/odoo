@@ -47,16 +47,29 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
     const evaluatedCell = getters.getEvaluatedCell(position);
     const pivotId = getters.getPivotIdFromPosition(position);
     const pivotCell = getters.getPivotCellFromPosition(position);
-    return (
-        evaluatedCell.type !== "empty" &&
-        evaluatedCell.type !== "error" &&
-        evaluatedCell.value !== "" &&
-        pivotCell.type !== "EMPTY" &&
-        cell &&
-        cell.isFormula &&
-        getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1 &&
-        getters.getPivotCoreDefinition(pivotId).type === "ODOO"
-    );
+    if (pivotId) {
+        const pivot = getters.getPivot(pivotId);
+        try {
+            // parse the domain (field, value) to ensure they are of the correct type
+            pivot.getPivotCellDomain(pivotCell.domain);
+            return (
+                evaluatedCell.type !== "empty" &&
+                evaluatedCell.type !== "error" &&
+                evaluatedCell.value !== "" &&
+                pivotCell.type !== "EMPTY" &&
+                cell &&
+                cell.isFormula &&
+                getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1 &&
+                getters.getPivotCoreDefinition(pivotId).type === "ODOO"
+            );
+            // eslint-disable-next-line no-unused-vars
+        } catch (e) {
+            // if the arguments of the domain are not correct, don't let the user click on it.
+            return false;
+        }
+    } else {
+        return false;
+    }
 };
 
 /**
