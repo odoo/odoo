@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet.BooleanMultiSelector">
+        <div class="o_input d-flex flex-wrap gap-1">
+            <TagsList tags="tags"/>
+            <AutoComplete sources="sources" placeholder="placeholder" onSelect.bind="onSelect" />
+        </div>
+    </t>
+</templates>
