@@ -1,12 +1,11 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryOne, scroll } from "@odoo/hoot-dom";
+import { enableTransitions } from "@odoo/hoot-mock";
 
 setupInteractionWhiteList("website.animation");
+beforeEach(enableTransitions);
 
 describe.current.tags("interaction_dev");
 

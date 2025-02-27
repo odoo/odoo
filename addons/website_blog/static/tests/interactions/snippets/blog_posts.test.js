@@ -1,41 +1,47 @@
-import { describe, expect, test } from "@odoo/hoot";
-import {
-    onRpc,
-} from "@web/../tests/web_test_helpers";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { queryAll } from "@odoo/hoot-dom";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
-import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
-import { queryAll } from "@odoo/hoot-dom";
 
 class TestItem extends Interaction {
     static selector = ".s_test_item";
     dynamicContent = {
-        "_root": {
+        _root: {
             "t-att-data-started": (el) => `*${el.dataset.testParam}*`,
         },
     };
 }
-registry.category("public.interactions").add("website_blog.test_blog_post_item", TestItem);
 
 setupInteractionWhiteList(["website_blog.blog_posts", "website_blog.test_blog_post_item"]);
+beforeEach(() => {
+    registry.category("public.interactions").add("website_blog.test_blog_post_item", TestItem);
+});
+
 describe.current.tags("interaction_dev");
 
 test("dynamic snippet blog posts loads items and displays them through template", async () => {
     onRpc("/website/snippet/filters", async (args) => {
         const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
         expect(json.params.filter_id).toBe(1);
-        expect(json.params.template_key).toBe("website_blog.dynamic_filter_template_blog_post_big_picture");
+        expect(json.params.template_key).toBe(
+            "website_blog.dynamic_filter_template_blog_post_big_picture"
+        );
         expect(json.params.limit).toBe(16);
         expect(json.params.search_domain).toEqual([["blog_id", "=", 1]]);
-        return [`
+        return [
+            `
             <div class="s_test_item" data-test-param="test">
                 Some test record
             </div>
-        `, `
+        `,
+            `
             <div class="s_test_item" data-test-param="test2">
                 Another test record
             </div>
-        `];
+        `,
+        ];
     });
     const { core } = await startInteractions(`
       <div id="wrapwrap">

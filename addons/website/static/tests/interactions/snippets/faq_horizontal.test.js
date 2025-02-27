@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, queryOne } from "@odoo/hoot-dom";
@@ -80,7 +77,8 @@ const getTemplate = function (headerType) {
                 </div>
             </section>
         </main>
-    `};
+    `;
+};
 
 const HEADER_SIZE = 50;
 const DEFAULT_OFFSET = 16;
@@ -93,7 +91,8 @@ test("faq_horizontal is started when there is an element .s_faq_horizontal", asy
     expect(core.interactions).toHaveLength(1);
 });
 
-test.tags("desktop")("faq_horizontal updates titles position with a o_header_standard", async () => {
+test.tags("desktop");
+test("faq_horizontal updates titles position with a o_header_standard", async () => {
     const { core } = await startInteractions(getTemplate("o_header_standard"));
     expect(core.interactions).toHaveLength(2);
     const wrapwrap = queryOne("#wrapwrap");
@@ -109,7 +108,8 @@ test.tags("desktop")("faq_horizontal updates titles position with a o_header_sta
     }
 });
 
-test.tags("desktop")("faq_horizontal updates titles position with a o_header_fixed", async () => {
+test.tags("desktop");
+test("faq_horizontal updates titles position with a o_header_fixed", async () => {
     const { core } = await startInteractions(getTemplate("o_header_fixed"));
     expect(core.interactions).toHaveLength(2);
     // We force the header to never be consider "atTop", so that its
@@ -125,7 +125,8 @@ test.tags("desktop")("faq_horizontal updates titles position with a o_header_fix
     }
 });
 
-test.tags("desktop")("faq_horizontal updates titles position with a o_header_disappears", async () => {
+test.tags("desktop");
+test("faq_horizontal updates titles position with a o_header_disappears", async () => {
     const { core } = await startInteractions(getTemplate("o_header_disappears"));
     expect(core.interactions).toHaveLength(2);
     const wrapwrap = queryOne("#wrapwrap");
@@ -143,7 +144,8 @@ test.tags("desktop")("faq_horizontal updates titles position with a o_header_dis
     }
 });
 
-test.tags("desktop")("faq_horizontal updates titles position with a o_header_fade_out", async () => {
+test.tags("desktop");
+test("faq_horizontal updates titles position with a o_header_fade_out", async () => {
     const { core } = await startInteractions(getTemplate("o_header_fade_out"));
     expect(core.interactions).toHaveLength(2);
     const wrapwrap = queryOne("#wrapwrap");
