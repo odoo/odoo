@@ -796,6 +796,14 @@ export class Composer extends Component {
             const config = {
                 emailAddSignature,
                 text,
+                mentionedPartners: composer.mentionedPartners.map((p) => ({
+                    id: p.id,
+                    type: p.type,
+                })),
+                mentionedChannels: composer.mentionedChannels.map((c) => ({
+                    id: c.id,
+                    model: c.model,
+                })),
             };
             browser.localStorage.setItem(composer.localId, JSON.stringify(config));
         };
@@ -808,13 +816,34 @@ export class Composer extends Component {
         }
     }
 
-    restoreContent() {
+    async restoreContent() {
         const composer = toRaw(this.props.composer);
         try {
             const config = JSON.parse(browser.localStorage.getItem(composer.localId));
             if (config.text) {
                 composer.emailAddSignature = config.emailAddSignature;
                 composer.text = config.text;
+                await this.suggestion.suggestionService.fetchPartners(
+                    config.mentionedPartners
+                        .filter((m) => !this.store.Persona.get(m))
+                        .map((m) => m.id),
+                    this.thread
+                );
+                this.props.composer.mentionedPartners =
+                    this.suggestion.suggestionService.filterPartnerSugestions(
+                        config.mentionedPartners.map((mentionedPartner) =>
+                            this.store.Persona.get(mentionedPartner)
+                        )
+                    );
+                const channelsPromises = config.mentionedChannels.map((c) =>
+                    this.store.Thread.getOrFetch(c)
+                );
+                const channels = this.suggestion.suggestionService.filterChannelSuggestions(
+                    await Promise.all(channelsPromises)
+                );
+                for (const channel of channels) {
+                    this.props.composer.mentionedChannels.push(channel);
+                }
             }
         } catch {
             browser.localStorage.removeItem(composer.localId);
