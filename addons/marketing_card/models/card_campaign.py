@@ -18,7 +18,10 @@ class CardCampaign(models.Model):
 
     def _get_model_selection(self):
         """Hardcoded list of models, checked against actually-present models."""
-        allowed_models = ['res.partner', 'event.track', 'event.booth', 'event.registration']
+        allowed_models = [
+            'event.attendee', 'event.booth', 'event.track', 'event.registration', 'event.sponsor',
+            'res.partner',
+        ]
         models = self.env['ir.model'].sudo().search_fetch([('model', 'in', allowed_models)], ['model', 'name'])
         return [(model.model, model.name) for model in models]
 
@@ -196,6 +199,10 @@ class CardCampaign(models.Model):
             preview_model = campaign.preview_record_ref and campaign.preview_record_ref._name
             campaign.res_model = preview_model or campaign.res_model or 'res.partner'
 
+    def _compute_target_url(self):
+        """Overridden in event bridge."""
+        pass
+
     @api.model_create_multi
     def create(self, create_vals):
         utm_source = self.env.ref('marketing_card.utm_source_marketing_card', raise_if_not_found=False)
@@ -302,7 +309,14 @@ class CardCampaign(models.Model):
                 'default_subject': self.name,
                 'default_card_campaign_id': self.id,
                 'default_mailing_model_id': self.env['ir.model']._get_id(self.res_model),
-                'default_body_arch': f"""
+                'default_body_arch': self._action_share_get_default_body(),
+            },
+            'views': [[False, 'form']],
+            'target': 'new',
+        }
+
+    def _action_share_get_default_body(self):
+        return f"""
 <div class="o_layout oe_unremovable oe_unmovable bg-200 o_empty_theme" data-name="Mailing">
 <style id="design-element"></style>
 <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
@@ -323,8 +337,8 @@ class CardCampaign(models.Model):
         <tbody>
             <tr>
                 <td align="center">
-                    <a href="/cards/{self.id}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
-                        <img src="/web/image/card.campaign/{self.id}/image_preview" alt="{_("Card Preview")}" class="img-fluid" style="width: 540px;"/>
+                    <a href="/cards/{self.id or 0}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
+                        <img src="/web/image/card.campaign/{self.id or 0}/image_preview" alt="{_("Card Preview")}" class="img-fluid" style="width: 540px;"/>
                     </a>
                 </td>
             </tr>
@@ -333,11 +347,7 @@ class CardCampaign(models.Model):
 </div>
 
 </div></div></div></div>
-""",
-            },
-            'views': [[False, 'form']],
-            'target': 'new',
-        }
+"""
 
     # ==========================================================================
     # Image generation
