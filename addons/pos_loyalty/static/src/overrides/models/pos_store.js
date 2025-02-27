@@ -92,6 +92,16 @@ patch(PosStore.prototype, {
                         (reward.reward_type !== "product" ||
                             (reward.reward_type == "product" && !reward.multi_product))
                     ) {
+                        if (
+                            (reward.reward_type == "product" &&
+                                reward.program_id.applies_on !== "both") ||
+                            (reward.program_id.applies_on == "both" && reward.reward_product_qty)
+                        ) {
+                            this.addLineToCurrentOrder({
+                                product_id: reward.reward_product_id,
+                                qty: reward.reward_product_qty || 1,
+                            });
+                        }
                         order._applyReward(reward, coupon_id);
                         changed = true;
                     }
