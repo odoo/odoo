@@ -123,3 +123,14 @@ export function getValueFromVar(value) {
     }
     return value;
 }
+
+/**
+ * Converts a value to a ratio.
+ *
+ * @param {string} value
+ */
+export function toRatio(value) {
+    const inputValueAsNumber = Number(value);
+    const ratio = inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
+    return `${ratio.toFixed(2)}x`;
+}

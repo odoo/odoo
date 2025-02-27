@@ -1,5 +1,6 @@
 import { useDomState, useIsActiveItem } from "@html_builder/core/building_blocks/utils";
 import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { toRatio } from "@html_builder/utils/utils";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -13,6 +14,7 @@ export class BackgroundShapeOption extends Component {
     setup() {
         this.backgroundShapePlugin = this.env.editor.shared.backgroundShapeOption;
         this.isActiveItem = useIsActiveItem();
+        this.toRatio = toRatio;
         this.state = useDomState((editingElement) => {
             const shapeData = this.backgroundShapePlugin.getShapeData(editingElement);
             const shapeInfo = this.backgroundShapePlugin.getBackgroundShapes()[shapeData.shape];
@@ -25,12 +27,6 @@ export class BackgroundShapeOption extends Component {
     }
     showBackgroundShapes() {
         this.backgroundShapePlugin.showBackgroundShapes(this.env.getEditingElements());
-    }
-    getBgAnimationSpeed(speed) {
-        const inputValueAsNumber = Number(speed);
-        const ratio =
-            inputValueAsNumber >= 0 ? 1 + inputValueAsNumber : 1 / (1 - inputValueAsNumber);
-        return `${ratio.toFixed(2)}x`;
     }
     getDefaultColorNames() {
         const editingEl = this.env.getEditingElement();
