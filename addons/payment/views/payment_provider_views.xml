@@ -156,6 +156,7 @@
                         </aside>
                         <main class="ms-2">
                             <field name="name" class="mb-0 fw-bold fs-4"/>
+                            <field name="company_id" groups="base.group_multi_company" class="fs-6 text-muted mb-1"/>
                             <div class="d-flex">
                                 <t t-if="installed">
                                     <field name="state"
@@ -220,8 +221,14 @@
         <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new payment provider
+                No providers available
             </p>
+            <p class="fw-bold">To add a provider to the current company:</p>
+            <ol class="text-start d-inline-block">
+                <li>Toggle the main company in the company switcher.</li>
+                <li>Duplicate the provider you want to add.</li>
+                <li>Set the current company as the company of the provider.</li>
+            </ol>
         </field>
     </record>
 
