@@ -156,8 +156,10 @@ export class TicketScreen extends Component {
     }
     async onClickScanOrder(qrcode) {
         if (qrcode) {
-            const ref = new URL(qrcode).searchParams.get("order_uuid");
-            const [order] = await this.pos.data.searchRead("pos.order", [["uuid", "=", ref]]);
+            const uuid = new URL(qrcode).searchParams.get("order_uuid");
+            const [order] = await this.pos.data.searchRead("pos.order", [
+                ["order_uuid", "=", "Order " + uuid],
+            ]);
             if (order) {
                 this.state.filter = "SYNCED";
                 this.state.selectedOrder = order;
