@@ -160,7 +160,6 @@ class TestEventMailSchedule(TestEventMailCommon):
             self.mockSMSGateway(),
             self.mock_mail_gateway(),
             self.capture_triggers('event.event_mail_scheduler') as capture,
-            self.enter_registry_test_mode(),
         ):
             self.event_cron_id.method_direct_trigger()
 
@@ -187,7 +186,6 @@ class TestEventMailSchedule(TestEventMailCommon):
             self.mockSMSGateway(),
             self.mock_mail_gateway(),
             self.capture_triggers('event.event_mail_scheduler') as capture,
-            self.enter_registry_test_mode(),
         ):
             self.event_cron_id.method_direct_trigger()
         self.assertEqual(before_mail.last_registration_id, registrations[-1])
@@ -205,7 +203,6 @@ class TestEventMailSchedule(TestEventMailCommon):
             self.mockSMSGateway(),
             self.mock_mail_gateway(),
             self.capture_triggers('event.event_mail_scheduler') as capture,
-            self.enter_registry_test_mode(),
         ):
             self.event_cron_id.method_direct_trigger()
 
@@ -226,7 +223,6 @@ class TestEventMailSchedule(TestEventMailCommon):
             self.mockSMSGateway(),
             self.mock_mail_gateway(),
             self.capture_triggers('event.event_mail_scheduler') as capture,
-            self.enter_registry_test_mode(),
         ):
             self.event_cron_id.method_direct_trigger()
         self.assertEqual(after_mail.last_registration_id, registrations[-1])
@@ -282,7 +278,6 @@ class TestEventMailSchedule(TestEventMailCommon):
             self.mockSMSGateway(),
             self.mock_mail_gateway(),
             self.capture_triggers('event.event_mail_scheduler') as capture,
-            self.enter_registry_test_mode(),
         ):
             self.event_cron_id.method_direct_trigger()
 

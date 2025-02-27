@@ -139,7 +139,7 @@ class TestMailingTest(TestMassMailCommon):
             subject='[TEST] %s' % expected_subject,
             body_content=expected_body)
 
-        with self.mock_mail_gateway(), self.enter_registry_test_mode():
+        with self.mock_mail_gateway():
             # send the mailing
             mailing.action_launch()
             self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').method_direct_trigger()
