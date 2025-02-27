@@ -59,7 +59,7 @@ from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.service import security
-from odoo.sql_db import BaseCursor, Cursor
+from odoo.sql_db import BaseCursor, Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
@@ -816,8 +816,6 @@ class Approx:  # noqa: PLW1641
         return self.cmp(self.value, other) == 0
 
 
-savepoint_seq = itertools.count()
-
 
 class TransactionCase(BaseCase):
     """ Test class in which all test methods are run in a single transaction,
@@ -941,9 +939,8 @@ class TransactionCase(BaseCase):
         # flush everything in setUpClass before introducing a savepoint
         self.env.flush_all()
 
-        self._savepoint_id = next(savepoint_seq)
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
-        self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+        savepoint = Savepoint(self.cr)
+        self.addCleanup(savepoint.close)
 
     @contextmanager
     def enter_registry_test_mode(self):
