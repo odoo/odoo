@@ -25,7 +25,7 @@ should_fail = None
 
 
 class TestHttp(http.Controller):
-    def _readonly(self):
+    def _readonly(self, rule, args):
         return str2bool(request.httprequest.args.get('readonly', True))
 
     def _max_content_length_1kiB(self):
