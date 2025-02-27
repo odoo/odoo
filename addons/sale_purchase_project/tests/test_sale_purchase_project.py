@@ -22,7 +22,7 @@ class TestSalePurchaseProject(TestSalePurchase):
 
         (self.sale_order_1 + self.sale_order_2).action_confirm()
 
-        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.supplierinfo1.partner_id.id), ('state', '=', 'draft')])
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.service_purchase_1.seller_ids.partner_id.id), ('state', '=', 'draft')])
         self.assertEqual(len(purchase_order), 2, "Two PO should have been created, from the 2 Sales orders")
         self.assertEqual(len(purchase_order.order_line), 2, "The purchase order should have 2 lines")
         self.assertEqual(set(purchase_order.mapped('state')), {'draft'}, "The created PO should be in draft state.")

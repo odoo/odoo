@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests import tagged
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 
@@ -30,17 +30,16 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
         """ Basic stock configuration and a supplier with a minimum qty and a lead time """
 
         self.env.user.company_id.po_lead = 7
-        seller = self.env['product.supplierinfo'].create({
-            'partner_id': self.vendor.id,
-            'min_qty': 1,
-            'price': 10,
-            'date_start': fields.Date.today() - timedelta(days=1),
-        })
 
         product = self.env['product.product'].create({
             'name': 'corpse starch',
             'is_storable': True,
-            'seller_ids': [(6, 0, seller.ids)],
+            'seller_ids': [Command.create({
+                'partner_id': self.vendor.id,
+                'min_qty': 1,
+                'price': 10,
+                'date_start': fields.Date.today() - timedelta(days=1),
+            })],
             'route_ids': [(6, 0, (self.mto_route + self.buy_route).ids)],
         })
 
@@ -59,7 +58,7 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
         so.action_confirm()
 
         po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
-        self.assertEqual(po.order_line.price_unit, seller.price)
+        self.assertEqual(po.order_line.price_unit, product.seller_ids.price)
 
     def test_dynamic_lead_time_delay(self):
         self.product_a.write({

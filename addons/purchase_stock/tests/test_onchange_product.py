@@ -47,17 +47,17 @@ class TestOnchangeProductId(TransactionCase):
                                                     original_tax_ids=tax_include_id,
                                                     amount='0.00',
                                                     type_tax_use='purchase'))
+
+        product_tmpl_id = self.product_tmpl_model.create(dict(name="Voiture",
+                                                              list_price=121,
+                                                              supplier_taxes_id=[(6, 0, [tax_include_id.id])]))
         supplierinfo_vals = {
+            'product_id': product_tmpl_id.product_variant_id.id,
             'partner_id': partner_id.id,
             'price': 121.0,
         }
 
         supplierinfo = self.supplierinfo_model.create(supplierinfo_vals)
-
-        product_tmpl_id = self.product_tmpl_model.create(dict(name="Voiture",
-                                                              list_price=121,
-                                                              seller_ids=[(6, 0, [supplierinfo.id])],
-                                                              supplier_taxes_id=[(6, 0, [tax_include_id.id])]))
         product_id = product_tmpl_id.product_variant_id
 
         po_vals = {

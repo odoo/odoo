@@ -271,6 +271,16 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
+    trigger: ".o_field_widget[name=min_qty] + .o_field_widget[name=product_uom_id] input",
+    run: "click",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_kanban_record span:contains('Units')",
+    run: "click",
+},
+{
+    isActive: ["mobile"],
     trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(Save & Close):enabled",
     content: _t('Save & Close'),
     tooltipPosition: 'right',
@@ -425,6 +435,16 @@ stepUtils.autoExpandMoreButtons(),
     content: _t('Set the cost price'),
     tooltipPosition: 'right',
     run: "edit 1",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_field_widget[name=min_qty] + .o_field_widget[name=product_uom_id] input",
+    run: "click",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_kanban_record span:contains('Units')",
+    run: "click",
 },
 {
     isActive: ["mobile"],
