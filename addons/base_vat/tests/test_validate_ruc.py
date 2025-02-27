@@ -54,7 +54,7 @@ class TestStructure(TransactionCase):
         # reactivate it and correct the vat number
         with patch('odoo.addons.base_vat.models.res_partner.check_vies', type(self)._vies_check_func):
             self.env.user.company_id.vat_check_vies = True
-            with self.assertRaises(ValidationError), self.env.cr.savepoint():
+            with self.assertRaises(ValidationError):
                 company.vat = "BE0987654321"  # VIES refused, don't fallback on other check
             company.vat = "BE0477472701"
 

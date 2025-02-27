@@ -27,7 +27,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         journal_bank.currency_id = self.other_currency
 
         # Try to set a different currency on the 'debit' account.
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             journal_bank.default_account_id.currency_id = self.company_data['currency']
 
     def test_changing_journal_company(self):
@@ -40,7 +40,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
             'journal_id': self.company_data['default_journal_sale'].id,
         })
 
-        with self.assertRaisesRegex(UserError, "entries linked to it"), self.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "entries linked to it"):
             self.company_data['default_journal_sale'].company_id = self.company_data_2['company']
 
     def test_account_journal_add_new_payment_method_multi(self):

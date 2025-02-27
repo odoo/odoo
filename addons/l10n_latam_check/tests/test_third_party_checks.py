@@ -54,7 +54,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         delivery.action_post()
         self.assertFalse(check.current_journal_id, 'Current journal was not computed properly on delivery')
         # check dont delivery twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"):
             self.env['account.payment'].create(vals).action_post()
 
         # Check Return / Rejection
@@ -70,7 +70,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         supplier_return.action_post()
         self.assertEqual(check.current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on return')
         # check dont return twice
-        with self.assertRaisesRegex(ValidationError, "Some checks are already in hand and can't be received again"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "Some checks are already in hand and can't be received again"):
             self.env['account.payment'].create(vals).action_post()
 
         # Check Claim/Return to customer
@@ -85,7 +85,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         customer_return.action_post()
         self.assertFalse(check.current_journal_id, 'Current journal was not computed properly on customer return')
         # check dont claim twice
-        with self.assertRaisesRegex(ValidationError, "Some checks are not anymore in journal,"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "Some checks are not anymore in journal,"):
             self.env['account.payment'].create(vals).action_post()
 
         operations = self.env['account.payment'].search([('l10n_latam_move_check_ids', '=', check.id), ('state', '!=', 'draft')], order="date desc, id desc")

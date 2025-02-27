@@ -51,10 +51,8 @@ class TestLoyalty(TransactionCase):
 
     def test_discount_product_unlink(self):
         # Test that we can not unlink discount line product id
-        with mute_logger('odoo.sql_db'):
-            with self.assertRaises(IntegrityError):
-                with self.cr.savepoint():
-                    self.program.reward_ids.discount_line_product_id.unlink()
+        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
+            self.program.reward_ids.discount_line_product_id.unlink()
 
     def test_loyalty_mail(self):
         # Test basic loyalty_mail functionalities

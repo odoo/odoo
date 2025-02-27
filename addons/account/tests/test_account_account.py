@@ -336,7 +336,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         move.line_ids.filtered(lambda line: line.account_id == account).reconcile()
 
         # Try to set the account as a not-reconcile one.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             account.reconcile = False
 
     def test_remove_account_from_account_group(self):

@@ -110,7 +110,7 @@ class TestPeppolParticipant(TransactionCase):
             'peppol_eas': False,
             'peppol_endpoint': False,
         })
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             wizard.button_register_peppol_participant()
 
     def test_create_success_sender(self):
@@ -167,7 +167,7 @@ class TestPeppolParticipant(TransactionCase):
         # should not be possible to create a duplicate participant
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
         wizard.button_register_peppol_participant()
-        with self.assertRaises(IntegrityError), self.cr.savepoint():
+        with self.assertRaises(IntegrityError):
             wizard.account_peppol_proxy_state = 'not_registered'
             wizard.button_register_peppol_participant()
 
