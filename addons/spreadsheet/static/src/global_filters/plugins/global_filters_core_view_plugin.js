@@ -43,7 +43,8 @@ const MONTHS = {
     december: { value: 12, granularity: "month" },
 };
 
-const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber } = helpers;
+const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC, toNumber, toBoolean } =
+    helpers;
 const uuidGenerator = new UuidGenerator();
 
 export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
@@ -154,6 +155,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 return this._getDateDomain(filter, fieldMatching);
             case "relation":
                 return this._getRelationDomain(filter, fieldMatching);
+            case "boolean":
+                return this._getBooleanDomain(filter, fieldMatching);
         }
     }
 
@@ -172,6 +175,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         if (value === undefined && preventDefaultValue) {
             switch (filter.type) {
                 case "relation":
+                case "boolean":
                     return [];
                 case "text":
                     return "";
@@ -216,6 +220,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                         value.to)
                 );
             case "relation":
+            case "boolean":
                 return value && value.length;
         }
     }
@@ -240,6 +245,8 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         }
         const value = this.getGlobalFilterValue(filter.id);
         switch (filter.type) {
+            case "boolean":
+                return [[{ value: value.length ? value.join(", ") : "" }]];
             case "text":
                 return [[{ value: value || "" }]];
             case "date": {
@@ -528,6 +535,18 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const field = fieldMatching.chain;
         const operator = filter.includeChildren ? "child_of" : "in";
         return new Domain([[field, operator, values]]);
+    }
+
+    _getBooleanDomain(filter, fieldMatching) {
+        const value = this.getGlobalFilterValue(filter.id);
+        if (!value || !value.length || !fieldMatching.chain) {
+            return new Domain();
+        }
+        const field = fieldMatching.chain;
+        if (value.length === 1) {
+            return new Domain([[field, "=", toBoolean(value[0])]]);
+        }
+        return new Domain([[field, "in", [toBoolean(value[0]), toBoolean(value[1])]]]);
     }
 
     /**
