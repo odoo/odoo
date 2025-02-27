@@ -17,8 +17,8 @@
         </t>
     </BuilderRow>
     <t t-if="isActiveItem('grid')">
-        <AddElementOption />
-        <SpacingOption />
+        <AddElementOption level="1" applyTo="'.o_grid_mode'"/>
+        <SpacingOption level="1" applyTo="'.o_grid_mode'"/>
     </t>
     <t t-else="">
         <BuilderContext applyTo="'.row'">
