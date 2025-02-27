@@ -338,7 +338,7 @@ export const editorCommands = {
                         } else if (isEmptyBlock(right)) {
                             right.remove();
                         }
-                        currentNode = insertBefore ? right : left;
+                        currentNode = insertBefore && right.isConnected ? right : left;
                     } else {
                         currentNode = currentNode.parentElement;
                     }
