@@ -4,12 +4,34 @@ import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { onMounted } from "@odoo/owl";
+
 
 patch(AttendeeCalendarController.prototype, {
     setup() {
         super.setup(...arguments);
         this.dialog = useService("dialog");
         this.notification = useService("notification");
+        onMounted(() => {
+                this.addCustomPillAndTooltip();
+        });
+    },
+
+    addCustomPillAndTooltip() {
+        const eventElements = document.querySelectorAll('.fc-event');
+        eventElements.forEach(eventElement => {
+            // Create a warning icon
+            const warningIcon = document.createElement('span');
+            warningIcon.className = 'warning-icon';
+            warningIcon.style.cssText = 'position: absolute; top: 5px; right: 5px; color: red;'; // Adjust as needed
+            warningIcon.innerHTML = '⚠️'; // You can use an SVG or an image instead
+
+            // Append the warning icon to the event element
+            eventElement.appendChild(warningIcon);
+
+            // Ensure the tooltip is set for the entire event
+            eventElement.setAttribute('title', "This event was created before you started synchronizing your calendar and therefore is not synchronized to avoid spamming attendees");
+        });
     },
 
     async onMicrosoftSyncCalendar() {

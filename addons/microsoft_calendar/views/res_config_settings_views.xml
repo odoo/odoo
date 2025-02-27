@@ -21,6 +21,17 @@
                         </div>
                     </div>
                 </div>
+                <xpath expr="//setting[@id='sync_google_calendar_setting']" position="after">
+                    <setting groups="base.group_no_one" string="Sync Past (Days)">
+                        <div class="content-group">
+                            <div class="mt16">
+                                <label for="cal_microsoft_lower_bound_range" class="o_light_label" string="Sync events from the past"/>
+                                <field name="cal_microsoft_lower_bound_range" class="oe_inline col-4 col-lg-2 me-1 text-center"/>
+                                <span>days.</span>
+                            </div>
+                        </div>
+                    </setting>
+                </xpath>
             </field>
         </record>
 </odoo>
