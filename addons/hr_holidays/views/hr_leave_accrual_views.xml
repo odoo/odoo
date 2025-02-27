@@ -1,5 +1,44 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
+
+    <record id="hr_accrual_detail_view_list" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.detail.list</field>
+        <field name="model">hr.leave.accrual.detail</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date"/>
+                <field name="added_days"/>
+                <field name="reason"/>
+                <field name="level_sequence" width="150"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_accrual_detail_view_graph" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.detail.graph</field>
+        <field name="model">hr.leave.accrual.detail</field>
+        <field name="arch" type="xml">
+            <graph string="accrual details" sample="1" type="line" stacked="0">
+                <field name="date"/>
+                <field name="added_days" type="measure"/>
+                <field name="reason"/>
+                <field name="level_sequence"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_accrual_detail_view_search" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.detail.search</field>
+        <field name="model">hr.leave.accrual.detail</field>
+        <field name="arch" type="xml">
+            <search string="Search accrual details">
+                <field name="reason"/>
+                <filter string="Reason" name='reason' context="{'group_by':'reason'}"/>
+                <filter string="Milestone level" name='level_sequence' context="{'group_by':'level_sequence'}"/>
+            </search>
+        </field>
+    </record>
+
     <record id="hr_accrual_level_view_form" model="ir.ui.view">
         <field name="name">hr.leave.accrual.level.form</field>
         <field name="model">hr.leave.accrual.level</field>
