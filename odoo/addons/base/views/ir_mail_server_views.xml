@@ -49,17 +49,29 @@
                                 <group>
                                     <group>
                                         <field name="smtp_encryption" widget="radio"/>
-                                        <field name="smtp_debug" groups="base.group_no_one"/>
                                         <field name="smtp_host"
                                             required="smtp_authentication != 'cli'"/>
                                         <field name="smtp_port" options="{'format': false}"
                                             required="smtp_authentication != 'cli'"/>
+                                        <field name="smtp_debug" groups="base.group_no_one"/>
+                                        <field name="smtp_ssl_check_certificate" invisible="smtp_encryption == 'none'"/>
                                     </group>
                                     <group>
                                         <field name="smtp_user" invisible="smtp_authentication == 'certificate'" force_save="1"/>
                                         <field name="smtp_pass" invisible="smtp_authentication != 'login'" password="True" force_save="1"/>
                                         <field name="smtp_ssl_certificate" invisible="smtp_authentication != 'certificate'" force_save="1"/>
                                         <field name="smtp_ssl_private_key" invisible="smtp_authentication != 'certificate'" force_save="1"/>
+                                        <field name="smtp_ssl_trusted_public_keys" invisible="smtp_encryption == 'none' or not smtp_ssl_check_certificate">
+                                            <list>
+                                                <field name="name"/>
+                                                <field name="write_date"/>
+                                                <control>
+                                                    <create string="Add a public key"/>
+                                                    <button string="Add a certificate" type="object" name="action_x509_extract_public_key" context="{'default_mail_server_id': parent.id}" class="btn-link"/>
+                                                    <button string="Download the server's public key" type="object" name="action_x509_download_public_key" context="{'default_mail_server_id': parent.id}" class="btn-link"/>
+                                                </control>
+                                            </list>
+                                        </field>
                                     </group>
                                 </group>
                             </page>
