@@ -8,7 +8,7 @@ from unittest.mock import patch
 from werkzeug.datastructures import FileStorage
 
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.tools.misc import file_open
 
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
@@ -164,6 +164,28 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         # should return all document data regardless of access
         self.assertEqual('Header', dialog_param['headers']['files'][0]['name'])
         self.assertEqual('Product > Test Product', dialog_param['lines'][0]['name'])
+
+    def test_onchange_product_removes_previously_selected_documents(self):
+        """ Check that changing a line that has a selected document unselect said document. """
+
+        available_doc = self.sale_order.order_line[0].available_product_document_ids
+        self.sale_order.order_line[0].product_document_ids = available_doc  # select the document
+
+        self.assertTrue(available_doc, msg="Default order line should have an available document.")
+        msg = "The available document should have been selected."
+        self.assertEqual(
+            self.sale_order.order_line[0].product_document_ids, available_doc, msg=msg
+        )
+
+        so_form = Form(self.sale_order)
+        with so_form.order_line.edit(0) as line:
+            line.product_id = self._create_product()
+        so_form.save()
+
+        msg = "There shouldn't be any available product documents."
+        self.assertFalse(self.sale_order.order_line[0].available_product_document_ids, msg=msg)
+        msg = "There shouldn't be any selected product documents left."
+        self.assertFalse(self.sale_order.order_line[0].product_document_ids, msg=msg)
 
     def test_quotation_document_upload_no_template(self):
         """Check that uploading quotation documents get assigned the active company."""
