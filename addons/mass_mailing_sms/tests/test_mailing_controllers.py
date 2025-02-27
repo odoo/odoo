@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import werkzeug.urls
 
 from odoo.tests.common import users
 from odoo.addons.mass_mailing_sms.tests.common import MassSMSCommon
-from odoo.tests import HttpCase, tagged
+from odoo.tests import tagged
 
 
 @tagged('mailing_portal', 'post_install', '-at_install')
-class TestMailingListSms(HttpCase, MassSMSCommon):
+class TestMailingListSms(MassSMSCommon):
 
     @users('user_marketing')
     def test_controller_unsubscribe(self):
