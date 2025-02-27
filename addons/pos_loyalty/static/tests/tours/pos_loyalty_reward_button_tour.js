@@ -82,11 +82,10 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
             ProductScreen.selectedOrderlineHas("Magnetic Board", "2.00"),
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", "3.00"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
 
-            PosLoyalty.orderTotalIs("5.94"),
+            PosLoyalty.orderTotalIs("9.14"),
             PosLoyalty.finalizeOrder("Cash", "10"),
 
             // Promotion: 2 items of shelves, get desk_pad/monitor_stand free
@@ -142,6 +141,21 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
             SelectionPopup.has("Free Product - Test Product A", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product - Test Product A", "-11.50", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_2", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-5.10", "1.00"),
+            PosLoyalty.orderTotalIs("10.20"),
+            PosLoyalty.finalizeOrder("Cash", "10.20"),
         ].flat(),
 });
 
