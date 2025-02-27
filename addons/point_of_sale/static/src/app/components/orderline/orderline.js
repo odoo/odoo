@@ -37,16 +37,4 @@ export class Orderline extends Component {
             ),
         ].join(" ");
     }
-    get priceChange() {
-        const oldUnitPrice = this.line.getOldUnitDisplayPrice()
-            ? this.formatCurrency(this.line.getOldUnitDisplayPrice())
-            : "";
-        const price = this.line.getPriceString();
-
-        return Boolean(
-            this.line.price_type !== "original" ||
-                this.line.getDiscount() != 0 ||
-                (oldUnitPrice && oldUnitPrice !== price)
-        );
-    }
 }
