@@ -84,37 +84,6 @@ class StockMoveLine(models.Model):
         aggregated_properties['line_key'] += f'_{bom.id if bom else ""}'
         return aggregated_properties
 
-    @api.model
-    def _compute_packaging_qtys(self, aggregated_move_lines):
-        non_kit_ml = {}
-        kit_aggregated_ml = set()
-        kit_moves = defaultdict(lambda: self.env['stock.move'])
-        kit_qty = {}
-
-        filters = {'incoming_moves': lambda m: True, 'outgoing_moves': lambda m: False}
-        for bom, moves in kit_moves.items():
-            if moves.picking_id.backorder_ids:
-                kit_qty_ordered = (moves + moves.picking_id.backorder_ids.move_ids)._compute_kit_quantities(bom.product_id or bom.product_tmpl_id.product_variant_id, 1, bom, filters)
-                kit_qty_done = moves._compute_kit_quantities(bom.product_id or bom.product_tmpl_id.product_variant_id, 1, bom, filters)
-            else:
-                kit_qty_done = moves._compute_kit_quantities(bom.product_id or bom.product_tmpl_id.product_variant_id, 1, bom, filters)
-                kit_qty_ordered = kit_qty_done
-            kit_qty[bom.id] = (kit_qty_ordered, kit_qty_done)
-
-        for key in kit_aggregated_ml:
-            line = aggregated_move_lines[key]
-            bom_id = line['bom']
-            kit_qty_ordered, kit_qty_done = kit_qty[bom_id.id]
-            line['packaging_qty'] = line['packaging']._compute_qty(kit_qty_ordered, bom_id.product_uom_id)
-            line['packaging_quantity'] = line['packaging']._compute_qty(kit_qty_done, bom_id.product_uom_id)
-            aggregated_move_lines[key] = line
-
-        non_kit_ml = super()._compute_packaging_qtys(non_kit_ml)
-        for line in non_kit_ml.values():
-            aggregated_move_lines[line['line_key']] = line
-
-        return aggregated_move_lines
-
     def _get_aggregated_product_quantities(self, **kwargs):
         """Returns dictionary of products and corresponding values of interest grouped by optional kit_name
 
