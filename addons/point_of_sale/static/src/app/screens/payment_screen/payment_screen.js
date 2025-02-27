@@ -229,7 +229,10 @@ export class PaymentScreen extends Component {
     }
     deletePaymentLine(uuid) {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
-        if (line.payment_method_id.payment_method_type === "qr_code") {
+        if (
+            line.payment_method_id.payment_method_type === "qr_code" ||
+            line.payment_method_id.is_online_payment
+        ) {
             this.currentOrder.remove_paymentline(line);
             this.numberBuffer.reset();
             return;
