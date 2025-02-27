@@ -66,7 +66,7 @@ export const uploadLocalFileService = {
             try {
                 const files = await selectLocalFiles({ multiple, accept });
                 const attachments = await filesToAttachments(files, { resModel, resId });
-                if (accessToken && attachments.length && !attachments[0].public) {
+                if (accessToken && attachments.length && !attachments[0].public && !attachments[0].access_token) {
                     await addAccessToken(attachments);
                 }
                 return attachments;
