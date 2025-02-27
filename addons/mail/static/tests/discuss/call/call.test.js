@@ -14,7 +14,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
+import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
 import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -587,4 +587,20 @@ test("show call participants after stopping camera share", async () => {
     await contains("video", { count: 0 });
     // when all participant cards are shown they are minimized
     await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
+});
+
+test("automatically cancel incoming call after some time", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const [memberId] = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    const rtcSessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: memberId,
+        channel_id: channelId,
+    });
+    pyEnv["discuss.channel.member"].write([memberId], { rtc_inviting_session_id: rtcSessionId });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-CallInvitation");
+    await advanceTime(30_000);
+    await contains(".o-discuss-CallInvitation", { count: 0 });
 });
