@@ -447,9 +447,11 @@ const GPSPicker = InputUserValueWidget.extend({
         if (!this._gmapLoaded) {
             return;
         }
-
-        this._gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
-        this.contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+        
+        const {Autocomplete} = await this.contentWindow.google.maps.importLibrary("places")
+        this._gmapAutocomplete = new Autocomplete(this.inputEl, {types: ['geocode','establishment'], fields: ["geometry", "formatted_address"]});
+        const {event} = await this.contentWindow.google.maps.importLibrary("core");
+        event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
     },
     /**
      * @override
@@ -489,7 +491,8 @@ const GPSPicker = InputUserValueWidget.extend({
         this._gmapPlace = await this._nearbySearch(this._value);
 
         if (this._gmapPlace) {
-            this.inputEl.value = this._gmapPlace.formatted_address;
+            // getPlace method  of autoComplete and nearbySearch doesn't return the same format
+            this.inputEl.value = this._gmapPlace.formatted_address || this._gmapPlace.Eg.formattedAddress;
         }
     },
 
@@ -507,48 +510,28 @@ const GPSPicker = InputUserValueWidget.extend({
         if (this._gmapCacheGPSToPlace[gps]) {
             return this._gmapCacheGPSToPlace[gps];
         }
+        const { Place } = await this.contentWindow.google.maps.importLibrary("places");
 
         const p = gps.substring(1).slice(0, -1).split(',');
-        const location = new this.contentWindow.google.maps.LatLng(p[0] || 0, p[1] || 0);
-        return new Promise(resolve => {
-            const service = new this.contentWindow.google.maps.places.PlacesService(document.createElement('div'));
-            service.nearbySearch({
-                // Do a 'nearbySearch' followed by 'getDetails' to avoid using
-                // GMap Geocoder which the user may not have enabled... but
-                // ideally Geocoder should be used to get the exact location at
-                // those coordinates and to limit billing query count.
-                location: location,
-                radius: 1,
-            }, (results, status) => {
-                const GMAP_CRITICAL_ERRORS = [
-                    this.contentWindow.google.maps.places.PlacesServiceStatus.REQUEST_DENIED,
-                    this.contentWindow.google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR
-                ];
-                if (status === this.contentWindow.google.maps.places.PlacesServiceStatus.OK) {
-                    service.getDetails({
-                        placeId: results[0].place_id,
-                        fields: ['geometry', 'formatted_address'],
-                    }, (place, status) => {
-                        if (status === this.contentWindow.google.maps.places.PlacesServiceStatus.OK) {
-                            this._gmapCacheGPSToPlace[gps] = place;
-                            resolve(place);
-                        } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
-                            if (notify) {
-                                this._notifyGMapError();
-                            }
-                            resolve();
-                        }
-                    });
-                } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
-                    if (notify) {
-                        this._notifyGMapError();
-                    }
-                    resolve();
-                } else {
-                    resolve();
-                }
-            });
-        });
+        const searchLocation = {lat: Number(p[0]) || 0, lng: Number(p[1]) || 0};
+        const request = {
+            fields: ["location", "formattedAddress"],
+            locationRestriction: {
+                center: searchLocation,
+                radius: 10
+            }
+        };
+        const { places } = await Place.searchNearby(request);
+        if (places.length) {
+            this._gmapCacheGPSToPlace[gps] = places[0];
+            return places[0];
+        }
+        else {
+            if (notify) {
+                this._notifyGMapError();
+            }
+        }
+
     },
     /**
      * Indicates to the user there is an error with the google map API and
