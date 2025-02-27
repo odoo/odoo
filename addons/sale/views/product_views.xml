@@ -128,7 +128,7 @@
             <filter name="goods" position="after">
                 <filter string="In the Order"
                         invisible="context.get('active_model', '') != 'sale.order.line'"
-                        name="products_in_order"
+                        name="products_in_sale_order"
                         domain="[('product_catalog_product_is_in_sale_order', '=', True)]"/>
             </filter>
         </field>
