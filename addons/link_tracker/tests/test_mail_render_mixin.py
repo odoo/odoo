@@ -157,3 +157,23 @@ class TestMailRenderMixin(common.TransactionCase):
             .format(old_short_url=created_short_url, base_url=self.base_url)
         )
         self.assertRegex(new_content, expected)
+
+    def test_shorten_blacklisted_links(self):
+        test_links = [
+            'This link should not be shortened: <a href="https://www.example.com/page/blacklist">text</a>',
+            'Neither should this link: <a href="https://www.example.com/page/view?param=true">text</a>',
+            'But this link should be shortened: "<a href="https://www.example.com/page/viewform">text</a>',
+        ]
+        blacklist = ['/blacklist', '/view']
+        shortened_links = []
+        shortened_links_text = []
+        for link in test_links:
+            shortened_links.append(self.env['mail.render.mixin']._shorten_links(link, {}, blacklist=blacklist))
+            shortened_links_text.append(self.env['mail.render.mixin']._shorten_links_text(link, {}, blacklist=blacklist))
+
+        self.assertEqual(test_links[0], shortened_links[0])
+        self.assertEqual(test_links[1], shortened_links[1])
+        self.assertNotEqual(test_links[2], shortened_links[2])      # should be not equal, because it's been shortened
+        self.assertEqual(test_links[0], shortened_links_text[0])
+        self.assertEqual(test_links[1], shortened_links_text[1])
+        self.assertNotEqual(test_links[2], shortened_links_text[2]) # should be not equal, because it's been shortened
