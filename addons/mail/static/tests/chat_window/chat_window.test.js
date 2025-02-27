@@ -1046,3 +1046,18 @@ test("getting focus of chat window through tab key should jump to new message se
         ".o-mail-ChatWindow:eq(0) .o-mail-Thread"
     );
 });
+
+test("Ctrl+k opens the @ command palette", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create([
+        {
+            name: "General",
+            channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        },
+    ]);
+    setupChatHub({ opened: channelId });
+    await start();
+    await focus(".o-mail-ChatWindow", { text: "General" });
+    triggerHotkey("control+k");
+    await contains(".o_command_palette_search", { text: "@" });
+});
