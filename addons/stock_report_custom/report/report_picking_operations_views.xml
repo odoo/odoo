@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="stock_report_custom.custom_report_picking_template" inherit_id="stock.report_picking">
+            <!-- Remove some content to avoid duplication. -->
+            <xpath expr="//div[@t-field='o.name']/../../.." position="replace"/>
+            <xpath expr="//div[@id='informations']" position="replace"/>
+            <xpath expr="//thead/tr" position="before">
+                <tr class="bg-light border-bottom">
+                    <th name="information">
+                        <div class="row mt-2 mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h1 t-field="o.name" class="fw-bold text-uppercase">WH/OUT/00001</h1>
+                                </div>
+                                <div>
+                                    <div t-field="o.name"
+                                        t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}">
+                                        <div
+                                            class="bg-light border rounded d-flex flex-column align-items-center justify-content-center p-2 text-muted text-center">
+                                            (document barcode)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="oe_structure"></div>
+                        <div id="informations" class="row mb-2 bg-light p-3 rounded border">
+                            <div t-if="o.origin" class="col">
+                                <strong class="text-uppercase text-muted">Order</strong>
+                                <div t-field="o.origin" class="fw-bold">S0001</div>
+                            </div>
+                            <div class="col">
+                                <strong class="text-uppercase text-muted">Status</strong>
+                                <div t-field="o.state" class="fw-bold text-primary">Draft</div>
+                            </div>
+                            <div t-if="o.scheduled_date" class="col">
+                                <strong class="text-uppercase text-muted">Scheduled Date</strong>
+                                <div t-field="o.scheduled_date" class="fw-bold text-danger">2023-09-24</div>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </xpath>
+        </template>
+    </data>
+</odoo>
