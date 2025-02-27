@@ -8,3 +8,4 @@ from . import test_payment_method
 from . import test_payment_provider
 from . import test_payment_token
 from . import test_payment_transaction
+from . import test_res_company
