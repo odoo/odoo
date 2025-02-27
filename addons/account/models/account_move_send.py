@@ -3,6 +3,7 @@ from markupsafe import Markup
 
 from odoo import _, api, models, modules, tools
 from odoo.exceptions import UserError
+from odoo.tools.misc import SENTINEL
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -57,20 +58,23 @@ class AccountMoveSend(models.AbstractModel):
         return move._get_mail_template()
 
     @api.model
-    def _get_default_sending_settings(self, move, from_cron=False, **custom_settings):
+    def _get_default_sending_settings(self, move, **custom_settings):
         """ Returns a dict with all the necessary data to generate and send invoices.
         Either takes the provided custom_settings, or the default value.
         """
-        def get_setting(key, from_cron=False, default_value=None):
-            return custom_settings.get(key) if key in custom_settings else move.sending_data.get(key) if from_cron else default_value
+        def get_setting(key, default_value=None):
+            setting = custom_settings.get(key, SENTINEL)
+            if setting is not SENTINEL:
+                return setting
+            return (move.sending_data or {}).get(key, default_value)
 
         vals = {
             'sending_methods': get_setting('sending_methods', default_value=self._get_default_sending_methods(move)) or {},
             'invoice_edi_format': get_setting('invoice_edi_format', default_value=self._get_default_invoice_edi_format(move)),
             'extra_edis': get_setting('extra_edis', default_value=self._get_default_extra_edis(move)) or {},
             'pdf_report': get_setting('pdf_report') or self._get_default_pdf_report_id(move),
-            'author_user_id': get_setting('author_user_id', from_cron=from_cron) or self.env.user.id,
-            'author_partner_id': get_setting('author_partner_id', from_cron=from_cron) or self.env.user.partner_id.id,
+            'author_user_id': get_setting('author_user_id') or self.env.user.id,
+            'author_partner_id': get_setting('author_partner_id') or self.env.user.partner_id.id,
         }
         if 'email' in vals['sending_methods']:
             mail_template = get_setting('mail_template') or self._get_default_mail_template_id(move)
@@ -415,10 +419,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _hook_if_errors(self, moves_data, allow_raising=True):
         """ Process errors found so far when generating the documents.
-        :param from_cron:   Flag indicating if the method is called from a cron. In that case, we avoid raising any
-                            error.
-        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
-                                    proforma PDF report instead.
+        :param allow_raising: In case of error, raise it as UserError
         """
         for move, move_data in moves_data.items():
             error = move_data['error']
@@ -683,6 +684,7 @@ class AccountMoveSend(models.AbstractModel):
         """Assert the data provided to _generate_and_send_invoices are correct.
         This is a security in case the method is called directly without going through the wizards.
         """
+        assert all(move.sending_data for move in moves)
         self._check_move_constrains(moves)
         self._check_invoice_report(moves, **custom_settings)
         assert all(
@@ -691,21 +693,25 @@ class AccountMoveSend(models.AbstractModel):
         ) if 'sending_methods' in custom_settings else True
 
     @api.model
-    def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
+    def _generate_and_send_invoices(self, moves, *, allow_raising=True, allow_fallback_pdf=False, notification=None, **custom_settings):
         """ Generate and send the moves given custom_settings if provided, else their default configuration set on related partner/company.
         :param moves: account.move to process
-        :param from_cron: whether the processing comes from a cron.
         :param allow_raising: whether the process can raise errors, or should log them on the move's chatter.
         :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a proforma PDF report instead.
+        :param notification: A function that generates a message to notify the author of the move `(moves, is_success: bool) -> str`
         :param custom_settings: settings to apply instead of related partner's defaults settings.
         """
         self._check_sending_data(moves, **custom_settings)
         moves_data = {
             move: {
-                **self._get_default_sending_settings(move, from_cron=from_cron, **custom_settings),
+                **self._get_default_sending_settings(move, **custom_settings),
             }
             for move in moves
         }
+
+        # Collect moves by res.partner that executed the Send & Print wizard, must be done before the _process
+        # that modify sending_data.
+        moves_by_partner = moves.grouped(lambda m: m.sending_data['author_partner_id']) if notification else {}
 
         # Generate all invoice documents (PDF and electronic documents if relevant).
         self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
@@ -713,7 +719,7 @@ class AccountMoveSend(models.AbstractModel):
         # Manage errors.
         errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
         if errors:
-            self._hook_if_errors(errors, allow_raising=not from_cron and not allow_fallback_pdf and allow_raising)
+            self._hook_if_errors(errors, allow_raising=not allow_fallback_pdf and allow_raising)
 
         # Fallback in case of error.
         errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
@@ -725,12 +731,18 @@ class AccountMoveSend(models.AbstractModel):
         if success:
             self._hook_if_success(success)
 
+        # Notify partners
+        for partner_id, partner_moves in moves_by_partner.items():
+            partner = self.env['res.partner'].browse(partner_id)
+            partner_moves_error = partner_moves.filtered(lambda m: m in errors)
+            if partner_moves_error:
+                partner._bus_send(*notification(partner_moves_error, False))
+            partner_moves_success = partner_moves - partner_moves_error
+            if partner_moves_success:
+                partner._bus_send(*notification(partner_moves_success, True))
+
         # Update sending data of moves
-        for move, move_data in moves_data.items():
-            if from_cron and move_data.get('error'):
-                move.sending_data = {'error': True}
-            else:
-                move.sending_data = False
+        moves.sending_data = False
 
         # Return generated attachments.
         attachments = self.env['ir.attachment']
