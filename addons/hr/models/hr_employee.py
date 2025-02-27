@@ -321,6 +321,39 @@ class HrEmployee(models.Model):
             })
         }
 
+    def action_create_user_all(self):
+        users = []
+        for employee in self:
+            if self.user_id:
+                continue
+            users.append({
+                'create_employee_id': employee.id,
+                'name': employee.name,
+                'phone': employee.work_phone,
+                'login': employee.work_email,
+                'partner_id': employee.work_contact_id.id,
+            })
+        if not users:
+            message = _('User already exists for the selected Employees')
+            message_type = 'warning'
+        try:
+            self.env['res.users'].create(users)
+            message = _('Users creation successful')
+            message_type = 'success'
+        except ValidationError as e:
+            raise ValidationError(e)
+
+        return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _("User Creation Notification"),
+                    'type': message_type,
+                    'message': message,
+                    'next': {'type': 'ir.actions.act_window_close'},
+                }
+            }
+
     def _compute_display_name(self):
         if self.browse().has_access('read'):
             return super()._compute_display_name()
