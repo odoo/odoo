@@ -429,3 +429,38 @@ test("isUploading state should be set to false after upload", async () => {
     expect.verifyErrors([/RPC_ERROR/]);
     expect(`.o_select_file_button`).toHaveText("Upload your file");
 });
+
+test("should accept file with allowed MIME type and reject others", async () => {
+    await mountView({
+        resModel: "res.partner",
+        resId: 1,
+        type: "form",
+        arch: `
+            <form>
+                <field name="document" filename="foo" widget="binary" options="{'allowed_mime_type' : 'application/pdf'}"/>
+            </form>
+        `,
+    });
+
+    await click(`.o_select_file_button`);
+    await animationFrame();
+    const pdfFile = new File(["test"], "fake_pdf.pdf", { type: "application/pdf" });
+    await setInputFiles([pdfFile]);
+
+    await waitFor(`.o_form_button_save:visible`);
+    expect(`.o_field_binary input[type=text]`).toHaveAttribute("readonly");
+    expect(`.o_field_binary input[type=text]`).toHaveValue("fake_pdf.pdf");
+
+    await click(`.o_clear_file_button`);
+    await animationFrame();
+
+    await click(`.o_select_file_button`);
+    await animationFrame();
+    const textFile = new File(["test"], "text_file.txt", { type: "text/plain"});
+    await setInputFiles([textFile]);
+    await animationFrame();
+
+    expect(".o_notification").toHaveCount(1);
+    expect(".o_notification_content").toHaveText("Oops! 'text_file.txt' didn’t upload since its format isn’t allowed.");
+    expect(".o_notification_bar").toHaveClass("bg-danger");
+});
