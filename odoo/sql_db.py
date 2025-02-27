@@ -100,14 +100,19 @@ class Savepoint:
     The savepoint can also safely be explicitly closed during context body. This
     will rollback by default.
 
+    Readonly savepoints are always rolled back.
+
     :param BaseCursor cr: the cursor to execute the `SAVEPOINT` queries on
     """
 
-    def __init__(self, cr: _CursorProtocol):
+    def __init__(self, cr: _CursorProtocol, *, readonly=False):
         self.name = str(uuid.uuid1())
         self._cr = cr
         self.closed: bool = False
+        self._readonly = readonly
         cr.execute('SAVEPOINT "%s"' % self.name)
+        if self._readonly:
+            cr.execute('SET TRANSACTION READ ONLY')
 
     def __enter__(self):
         return self
@@ -123,7 +128,7 @@ class Savepoint:
         self._cr.execute('ROLLBACK TO SAVEPOINT "%s"' % self.name)
 
     def _close(self, rollback: bool):
-        if rollback:
+        if rollback or self._readonly:
             self.rollback()
         self._cr.execute('RELEASE SAVEPOINT "%s"' % self.name)
         self.closed = True
@@ -619,10 +624,7 @@ class TestCursor(BaseCursor):
             # we use self._cursor._obj for the savepoint to avoid having the
             # savepoint queries in the query counts, profiler, ...
             # Those queries are tests artefacts and should be invisible.
-            self._savepoint = Savepoint(self._cursor._obj)
-            if self.readonly:
-                # this will simulate a readonly connection
-                self._cursor._obj.execute('SET TRANSACTION READ ONLY')  # use _obj to avoid impacting query count and profiler.
+            self._savepoint = Savepoint(self._cursor._obj, readonly=self.readonly)
 
     def execute(self, *args, **kwargs) -> None:
         assert not self._closed, "Cannot use a closed cursor"
