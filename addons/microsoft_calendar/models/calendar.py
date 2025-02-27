@@ -68,11 +68,22 @@ class Meeting(models.Model):
 
     def _check_microsoft_sync_status(self):
         """
-        Returns True if synchronization with Outlook Calendar is active and False otherwise.
-        The 'microsoft_synchronization_stopped' variable needs to be 'False' and Outlook account must be connected.
+        Returns True if Outlook Calendar sync is active or if this is a recurring Outlook event from a synced user.
+        Returns False otherwise.
         """
-        outlook_connected = self.env.user._get_microsoft_calendar_token()
-        return outlook_connected and self.env.user.microsoft_synchronization_stopped is False
+        current_user = self.env.user
+        current_connected = self._is_user_connected(current_user)
+        events = self.exists()
+        if not events:
+            return current_connected
+
+        organizer = events.partner_id.user_ids
+        organizer_connected = events._is_user_connected(organizer)
+
+        return current_connected or organizer_connected
+
+    def _is_user_connected(self, user):
+        return user._get_microsoft_calendar_token() and not user.microsoft_synchronization_stopped
 
     @api.model_create_multi
     def create(self, vals_list):
