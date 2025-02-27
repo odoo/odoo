@@ -116,8 +116,8 @@ test(`toggle a "simple" groupby quickly does not crash`, async () => {
     });
     await toggleSearchBarMenu();
 
-    toggleMenuItem("Foo");
-    toggleMenuItem("Foo");
+    await toggleMenuItem("Foo");
+    await toggleMenuItem("Foo");
     await animationFrame();
 
     expect(isItemSelected("Foo")).toBe(false);

@@ -2,8 +2,6 @@ import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
-import { RATING } from "@im_livechat/embed/common/livechat_service";
 import {
     click,
     contains,
@@ -23,6 +21,9 @@ import {
     waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
+
+import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
+import { RATING } from "@im_livechat/embed/common/livechat_service";
 
 describe.current.tags("desktop");
 defineLivechatModels();
