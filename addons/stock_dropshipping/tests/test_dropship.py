@@ -380,6 +380,37 @@ class TestDropship(common.TransactionCase):
             }]
         )
 
+    def test_delivery_type(self):
+        # Create an operation type starting as incoming/internal.
+        operation_type = self.env['stock.picking.type'].create({
+            "name": "test",
+            "sequence_code": "TEST",
+            "code": "incoming"
+        })
+
+        # Update the code/type to outgoing/delivery.
+        operation_type.write({
+            "code": "outgoing"
+        })
+
+        # Trigger re-computes.
+        operation_type.default_location_src_id
+        operation_type.default_location_dest_id
+
+        self.assertEqual(operation_type.code, "outgoing")
+
+        # Expect source location to be warehouse's location.
+        self.assertEqual(
+            operation_type.default_location_src_id,
+            operation_type.warehouse_id.lot_stock_id
+        )
+
+        # Expect destination location to be customer's location.
+        self.assertEqual(
+            operation_type.default_location_dest_id,
+            self.env.ref('stock.stock_location_customers')
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestDropshipPostInstall(common.TransactionCase):
