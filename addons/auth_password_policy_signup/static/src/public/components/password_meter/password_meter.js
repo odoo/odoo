@@ -22,7 +22,7 @@ class PasswordMeter extends Component {
             this.state.password = e.target.value || "";
         });
 
-        const minlength = Number(inputEl.dataset?.minlength || inputEl.getAttribute("minlength"));
+        const minlength = Number(inputEl.getAttribute("minlength"));
         this.hasMinlength = !isNaN(minlength);
         this.state = useState({
             password: inputEl.value || "",
