@@ -8,7 +8,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { disableAnimations } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -71,12 +71,7 @@ test("Open pinned panel from notification", async () => {
 });
 
 test("Jump to message", async () => {
-    // make scroll behavior instantaneous.
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView() {
-            return super.scrollIntoView(true);
-        },
-    });
+    disableAnimations();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({

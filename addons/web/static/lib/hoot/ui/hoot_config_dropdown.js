@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useRef, useState, xml } from "@odoo/owl";
-import { logLevels } from "../core/logger";
+import { LOG_LEVELS } from "../core/logger";
 import { refresh } from "../core/url";
 import { useAutofocus, useWindowListener } from "../hoot_utils";
 import { generateSeed, internalRandom } from "../mock/math";
@@ -171,7 +171,7 @@ export class HootConfigDropdown extends Component {
                                 class="outline-none w-full bg-base text-base border-b border-primary px-1"
                                 t-model.number="config.loglevel"
                             >
-                                <t t-foreach="logLevels" t-as="level" t-key="level.value">
+                                <t t-foreach="LOG_LEVELS" t-as="level" t-key="level.value">
                                     <option
                                         t-att-value="level.value"
                                         t-esc="level.label"
@@ -226,7 +226,7 @@ export class HootConfigDropdown extends Component {
         { value: "lifo", title: "Last in, first out", icon: "fa-sort-numeric-desc" },
         { value: "random", title: "Random", icon: "fa-random" },
     ];
-    logLevels = $entries(logLevels)
+    LOG_LEVELS = $entries(LOG_LEVELS)
         .filter(([, value]) => value)
         .map(([label, value]) => ({ label, value }));
 
@@ -273,7 +273,7 @@ export class HootConfigDropdown extends Component {
      * @param {Event & { currentTarget: HTMLInputElement }} ev
      */
     onLogLevelChange(ev) {
-        this.config.loglevel = ev.currentTarget.checked ? logLevels.SUITES : logLevels.RUNNER;
+        this.config.loglevel = ev.currentTarget.checked ? LOG_LEVELS.suites : LOG_LEVELS.runner;
     }
 
     /**

@@ -3,6 +3,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { HtmlMailField } from "@mail/views/web/fields/html_mail_field/html_mail_field";
 import { after, before, beforeEach, expect, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, enableTransitions } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -13,7 +14,6 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { mailModels } from "../mail_test_helpers";
-import { animationFrame } from "@odoo/hoot-mock";
 
 function setSelectionInHtmlField(selector = "p", fieldName = "body") {
     const anchorNode = queryOne(`[name='${fieldName}'] .odoo-editor-editable ${selector}`);
@@ -70,6 +70,7 @@ beforeEach(() => {
 });
 
 test("HtmlMail save inline html", async function () {
+    enableTransitions();
     useCustomStyleRules(`.test-h1-inline .note-editable h1 { color: #111827 !important; }`);
     onRpc("web_save", ({ args }) => {
         expect(args[1].body.replace(/font-size: ?(\d+(\.\d+)?)px/, "font-size: []px")).toBe(
@@ -116,6 +117,7 @@ test("HtmlMail don't have access to column commands", async function () {
 });
 
 test("HtmlMail add icon and save inline html", async function () {
+    enableTransitions();
     useCustomStyleRules(
         `.test-icon-inline .note-editable .fa {
             color: rgb(55,65,81) !important;
