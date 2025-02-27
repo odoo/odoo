@@ -1725,6 +1725,18 @@ class TestUi(TestPointOfSaleHttpCommon):
         for order in self.env['pos.order'].search([]):
             self.assertEqual(int(order.tracking_number) % 100, 1)
 
+    def test_reload_page_before_payment_with_customer_account(self):
+        self.customer_account_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Customer Account',
+            'split_transactions': True,
+        })
+        self.main_pos_config.write({'payment_method_ids': [(6, 0, self.customer_account_payment_method.ids)]})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f'/pos/ui?config_id={self.main_pos_config.id}',
+            'test_reload_page_before_payment_with_customer_account',
+            login='pos_user'
+        )
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
