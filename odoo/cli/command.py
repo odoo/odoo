@@ -56,13 +56,10 @@ class Command:
             )
         return self._parser
 
-<<<<<<< HEAD
     @classmethod
     def is_valid_name(cls, name):
         return re.match(COMMAND_NAME_RE, name)
 
-||||||| parent of 631ad8ee29b ([WIP])
-=======
     @contextmanager
     def build_env(self, db_name, update_module=False):
         registry = Registry.new(db_name, update_module=update_module)
@@ -111,7 +108,6 @@ class Subcommand:
         self.parser = self.subparsers.add_parser(self.name, help=description)
         self.build_env = self.parent_command.build_env
 
->>>>>>> 631ad8ee29b ([WIP])
 
 def load_internal_commands():
     """ Load ``commands`` from ``odoo.cli`` """
@@ -134,7 +130,6 @@ def load_addons_commands(command=None):
 
     mapping = {}
     initialize_sys_path()
-<<<<<<< HEAD
     for path in odoo.addons.__path__:
         for fullpath in Path(path).glob(f'*/cli/{command}.py'):
             if (found_command := fullpath.stem) and Command.is_valid_name(found_command):
@@ -145,21 +140,6 @@ def load_addons_commands(command=None):
     for fq_name, fullpath in mapping.items():
         with contextlib.suppress(ImportError):
             load_script(fullpath, fq_name)
-||||||| parent of 631ad8ee29b ([WIP])
-    for module in get_modules():
-        if (Path(get_module_path(module)) / 'cli').is_dir():
-            with contextlib.suppress(ImportError):
-                __import__(f'odoo.addons.{module}')
-    logging.disable(logging.NOTSET)
-    return list(commands)
-=======
-    for module in get_modules():
-        if (Path(get_module_path(module)) / 'cli').is_dir():
-            with suppress(ImportError):
-                __import__(f'odoo.addons.{module}')
-    logging.disable(logging.NOTSET)
-    return list(commands)
->>>>>>> 631ad8ee29b ([WIP])
 
 
 def find_command(name: str) -> Command | None:
@@ -204,14 +184,8 @@ def main():
     if command := find_command(command_name):
         command().run(args)
     else:
-<<<<<<< HEAD
         message = (
             f"Unknown command {command_name!r}.\n"
             f"Use '{PROG_NAME} --help' to see the list of available commands."
         )
-        sys.exit(message)
-||||||| parent of 631ad8ee29b ([WIP])
-        sys.exit(f"Unknown command {command_name!r}")
-=======
-        Command.die(f"Unknown command {command_name!r}")
->>>>>>> 631ad8ee29b ([WIP])
+        Command.die(message)
