@@ -25,19 +25,21 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
         })
 
         cls.supplierinfo1 = cls.env['product.supplierinfo'].create({
+            'product_uom_id': uom_unit.id,
             'partner_id': cls.partner_vendor_service.id,
             'price': 100,
             'delay': 1,
             'discount': 30,
         })
         cls.supplierinfo2 = cls.env['product.supplierinfo'].create({
+            'product_uom_id': uom_dozen.id,
             'partner_id': cls.partner_vendor_service.id,
             'price': 10,
             'delay': 5,
         })
 
         # Create product
-        # When service_to_purser is True add the supplier i.e 'saller_ids' on the product to void the Validation error at product creation time
+        # When service_to_purchase is True add the supplier i.e 'seller_ids' on the product to void the Validation error at product creation time
         cls.service_purchase_1 = cls.env['product.product'].create({
             'name': "Out-sourced Service 1",
             'standard_price': 200.0,

@@ -13,15 +13,15 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         cls.group = cls.env['procurement.group'].create({'partner_id': cls.customer.id, 'name': 'New Group'})
         cls.warehouse = cls.env.ref('stock.warehouse0')
         cls.cust_location = cls.env.ref('stock.stock_location_customers')
-        seller = cls.env['product.supplierinfo'].create({
-            'partner_id': cls.customer.id,
-            'price': 100.0,
-        })
         product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
             'route_ids': [(4, cls.route_mto), (4, cls.route_buy)],
-            'seller_ids': [(6, 0, [seller.id])],
+        })
+        cls.env['product.supplierinfo'].create({
+            'product_id': product.id,
+            'partner_id': cls.customer.id,
+            'price': 100.0,
         })
         cls.picking_out = cls.env['stock.picking'].create({
             'location_id': cls.warehouse.out_type_id.default_location_src_id.id,
@@ -238,6 +238,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
             'name': 'Steve'
         })
         seller = self.env['product.supplierinfo'].create({
+            'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'partner_id': partner.id,
             'price': 10.0,
         })
