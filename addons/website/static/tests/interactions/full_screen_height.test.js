@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
@@ -10,7 +7,8 @@ setupInteractionWhiteList("website.full_screen_height");
 
 describe.current.tags("interaction_dev");
 
-test.tags("desktop")("full_screen_height is not set on visible section", async () => {
+test.tags("desktop");
+test("full_screen_height is not set on visible section", async () => {
     const { core } = await startInteractions(`
         <main>
             <section class="o_full_screen_height">content</section>
