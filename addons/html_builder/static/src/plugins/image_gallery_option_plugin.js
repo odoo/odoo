@@ -17,6 +17,7 @@ class ImageGalleryOption extends Plugin {
         system_classes: ["o_empty_gallery_alert"],
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.updateAlertBanner.bind(this),
+        on_reorder_items_handlers: this.reorderGalleryItems.bind(this),
     };
 
     getActions() {
@@ -63,6 +64,37 @@ class ImageGalleryOption extends Plugin {
             if (!container.querySelector("img") && !container.querySelector(".alert")) {
                 this.insertEmptyGalleryAlert(container);
             }
+        }
+    }
+    reorderGalleryItems({ elementToReorder, position, optionName }) {
+        if (optionName === "GalleryImageList") {
+            const editingGalleryElement = elementToReorder.closest(".s_image_gallery");
+
+            const container = this.getContainer(editingGalleryElement);
+
+            const itemsEls = this.getImages(container);
+            const oldPosition = itemsEls.indexOf(elementToReorder);
+            if (oldPosition === 0 && position === "prev") {
+                position = "last";
+            } else if (oldPosition === itemsEls.length - 1 && position === "next") {
+                position = "first";
+            }
+            itemsEls.splice(oldPosition, 1);
+            switch (position) {
+                case "first":
+                    itemsEls.unshift(elementToReorder);
+                    break;
+                case "prev":
+                    itemsEls.splice(Math.max(oldPosition - 1, 0), 0, elementToReorder);
+                    break;
+                case "next":
+                    itemsEls.splice(oldPosition + 1, 0, elementToReorder);
+                    break;
+                case "last":
+                    itemsEls.push(elementToReorder);
+                    break;
+            }
+            this.reorderItems(itemsEls, itemsEls.indexOf(elementToReorder));
         }
     }
 
@@ -367,6 +399,23 @@ class ImageGalleryOption extends Plugin {
         return imageGalleryElement.querySelector(
             ".container, .container-fluid, .o_container_small"
         );
+    }
+
+    reorderItems(itemsEls, newItemPosition) {
+        itemsEls.forEach((img, index) => {
+            img.dataset.index = index;
+        });
+        const editingImageElement = itemsEls[newItemPosition];
+        const editingGalleryElement = editingImageElement.closest(".s_image_gallery");
+        const mode = this.getMode(editingGalleryElement);
+
+        // relayout the gallery
+        this.setImages(editingGalleryElement, mode, itemsEls);
+        if (mode === "slideshow") {
+            // todo: wait for implementation in CarouselHandler, convert it to a
+            // handler and dispatch to it
+            // this._updateIndicatorAndActivateSnippet(newItemPosition);
+        }
     }
 }
 
