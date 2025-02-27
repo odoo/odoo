@@ -145,7 +145,7 @@ export class FloorScreen extends Component {
                 }
                 const table = this.getPosTable(ctx.element);
                 this.state.potentialLink = { child: table };
-                table.uiState.initialPosition = pick(table, "position_h", "position_v");
+                this.tableInitialPosition = pick(table, "position_h", "position_v");
                 // This helps when unlinking tables ( to keep the position )
                 table.position_h = table.getX();
                 table.position_v = table.getY();
@@ -214,8 +214,8 @@ export class FloorScreen extends Component {
                 if (this.pos.isEditMode) {
                     return;
                 }
-                table.position_h = table.uiState.initialPosition.position_h;
-                table.position_v = table.uiState.initialPosition.position_v;
+                table.position_h = this.tableInitialPosition.position_h;
+                table.position_v = this.tableInitialPosition.position_v;
                 if (!suggestLinkingPositions()) {
                     this.state.potentialLink = null;
                     return;

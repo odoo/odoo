@@ -415,7 +415,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
         const orderIsDeleted = await this.deleteOrders([order]);
         if (orderIsDeleted) {
-            order.uiState.displayed = false;
             await this.afterOrderDeletion();
         }
         return orderIsDeleted;
@@ -1076,20 +1075,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.showScreen("PaymentScreen", {
             orderUuid: this.selectedOrderUuid,
         });
-    }
-    async getServerOrders() {
-        return await this.loadServerOrders([
-            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
-            ["state", "=", "draft"],
-        ]);
-    }
-    async loadServerOrders(domain) {
-        const orders = await this.data.searchRead("pos.order", domain);
-        for (const order of orders) {
-            order.config_id = this.config;
-            order.session_id = this.session;
-        }
-        return orders;
     }
     async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.getOrder();

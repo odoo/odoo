@@ -244,6 +244,9 @@ export class PosOrder extends Base {
     get hasChange() {
         return this.getChanges().nbrOfChanges;
     }
+    isDisplayed() {
+        return this.state !== "cancel";
+    }
 
     isEmpty() {
         return this.lines.length === 0;
