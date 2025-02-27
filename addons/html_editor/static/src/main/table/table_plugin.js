@@ -1,7 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import { fillShrunkPhrasingParent, removeClass, splitTextNode } from "@html_editor/utils/dom";
+import {
+    fillEmpty,
+    fillShrunkPhrasingParent,
+    removeClass,
+    splitTextNode,
+} from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -519,15 +524,21 @@ export class TablePlugin extends Plugin {
         const table = closestElement(cell, "table");
         const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
         const index = cells.findIndex((td) => td === cell);
-        table
-            .querySelectorAll(`tr td:nth-of-type(${index + 1})`)
-            .forEach((td) => (td.innerHTML = "<p><br></p>"));
+        table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach((td) => {
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            fillEmpty(baseContainer);
+            td.replaceChildren(baseContainer);
+        });
     }
     /**
      * @param {HTMLTableRowElement} row
      */
     clearRowContent(row) {
-        row.querySelectorAll("td").forEach((td) => (td.innerHTML = "<p><br></p>"));
+        row.querySelectorAll("td").forEach((td) => {
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            fillEmpty(baseContainer);
+            td.replaceChildren(baseContainer);
+        });
     }
     deleteTable(table) {
         table =
