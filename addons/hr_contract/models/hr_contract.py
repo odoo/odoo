@@ -161,7 +161,7 @@ class HrContract(models.Model):
 
             domain = expression.AND([domain, start_domain, end_domain])
             if self.search_count(domain):
-                raise ValidationError(
+                raise HrContractValidationError(
                     _(
                         'An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n\nEmployee: %(employee_name)s',
                         employee_name=contract.employee_id.name
@@ -402,3 +402,11 @@ class HrContract(models.Model):
                       'views':  [[False, 'list'], [False, 'kanban'], [False, 'activity'], [False, 'form']],
                        'context': {'default_employee_id': self.employee_id.id}})
         return action
+
+
+class HrContractValidationError(ValidationError):
+    """
+        Custom exception class for hr.contract validation errors.
+        This class is used to reset the contract state when a constraint violation occurs.
+    """
+    pass

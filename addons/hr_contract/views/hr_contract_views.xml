@@ -149,8 +149,8 @@
                 <form string="Current Contract">
                     <field name="contracts_count" invisible="1"/>
                     <header invisible="not id">
-                        <field name="state" groups="!hr_contract.group_hr_contract_manager" widget="statusbar"/>
-                        <field name="state" groups="hr_contract.group_hr_contract_manager" widget="statusbar" options="{'clickable': '1'}"/>
+                        <field name="state" groups="!hr_contract.group_hr_contract_manager" widget="hr_contract_statusbar"/>
+                        <field name="state" groups="hr_contract.group_hr_contract_manager" widget="hr_contract_statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <field name="state" invisible="1"/>
