@@ -19,6 +19,7 @@ export class ChannelInvitation extends Component {
         this.discussCoreCommonService = useState(useService("discuss.core.common"));
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
+        this.rtc = useService("discuss.rtc");
         this.notification = useService("notification");
         this.threadService = useState(useService("mail.thread"));
         this.suggestionService = useService("mail.suggestion");
@@ -101,6 +102,7 @@ export class ChannelInvitation extends Component {
         } else {
             await this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
                 partner_ids: this.state.selectedPartners.map((partner) => partner.id),
+                invite_to_rtc_call: this.rtc.state.channel?.eq(this.props.thread),
             });
         }
         this.props.close();
