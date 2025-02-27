@@ -329,6 +329,17 @@
                             <field name="automated_name" invisible="1"/> <!-- needed for name compute -->
                             <field name="name" placeholder="e.g. Mass archive contacts"/>
                         </h1>
+                        <group invisible="context.get('is_modal')">
+                            <group>
+                                <field name="model_id" options="{'no_create': True, 'no_open': True}" groups="base.group_no_one" />
+                                <field name="model_id" options="{'no_create': True, 'no_open': True}" groups="!base.group_no_one"
+                                       invisible="context.get('default_model_id')"
+                                       domain="[('id', 'in', available_model_ids)]"/>
+                            </group>
+                            <group groups="base.group_no_one">
+                                <field name="group_ids" widget="many2many_tags" />
+                            </group>
+                        </group>
                         <div class="d-flex flex-column">
                             <label for="state"/>
                             <field name="state" widget="selection_badge" options="{'size': 'sm'}"/>
@@ -336,13 +347,6 @@
                         <div class="alert alert-warning" role="alert" invisible="not warning">
                             <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="warning" nolabel="1"/>
                         </div>
-                        <group string="Technical Settings" groups="base.group_no_one" invisible="context.get('is_modal')">
-                            <group>
-                                <field name="model_id" options="{'no_create': True, 'no_open': True}" />
-                                <field name="group_ids" widget="many2many_tags" />
-                            </group>
-                        </group>
-                        <separator string="Action Details" groups="base.group_no_one" />
                         <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                             <field name="evaluation_type" class="oe_inline"/>
                             <field name="update_path" widget="field_selector" class="oe_inline" options="{'model': 'model_name'}"/>
@@ -376,9 +380,6 @@
                         </div>
                         <group name="action_wrapper">
                             <group name="action_content">
-                                <field name="model_id" options="{'no_create': True, 'no_open': True}" groups="!base.group_no_one" invisible="context.get('default_model_id')"
-                                       domain="[('id', 'in', available_model_ids)]"/>
-
                                 <field name="crud_model_id"
                                     options="{'no_create': True, 'no_open': True}"
                                     invisible="state != 'object_create'"
