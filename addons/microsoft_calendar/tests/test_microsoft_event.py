@@ -2,6 +2,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pytz import UTC
 
+from odoo.exceptions import UserError
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.tests.common import TestCommon, patch_api
 
@@ -30,6 +31,53 @@ class TestMicrosoftEvent(TestCommon):
         # assert
         self.assertEqual(len(mapped._events), 1)
         self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
+
+    def test_forbid_edit_outlook_recurring_event_by_non_synced_user(self):
+        """
+        Test that users cannot edit recurring events that were created
+        from Outlook (have microsoft_recurrence_master_id).
+        """
+        # Give the organizer user a Microsoft token
+        self.organizer_user.microsoft_calendar_token = "fake_token"
+
+        # Create a recurring event that's "generated" from Outlook
+        outlook_recurring_event = self.env['calendar.event'].with_context(dont_notify=True).create({
+            'name': 'Outlook Recurring Event',
+            'start': datetime(2023, 9, 25, 10, 0),
+            'stop': datetime(2023, 9, 25, 11, 0),
+            'microsoft_id': 'AAA123:BBB456',
+            'microsoft_recurrence_master_id': 'MASTER123',
+            'user_id': self.organizer_user.id,
+        })
+
+        # User without Microsoft sync
+        other_user = self.env['res.users'].create({
+            'name': 'User Without Sync',
+            'login': 'no_sync_user',
+            'email': 'no_sync@example.com',
+        })
+
+        # This user should not be able to edit the event
+        with self.assertRaises(UserError):
+            outlook_recurring_event.with_user(other_user).with_context(dont_notify=False).write({
+                'name': 'Not synced user trying to change name',
+                'recurrence_update': 'future_events'
+            })
+
+        # The organizer should not be able to edit the event
+        with self.assertRaises(UserError):
+            outlook_recurring_event.with_user(self.organizer_user).with_context(dont_notify=False).write({
+                'name': 'Organizer trying to change name',
+                'recurrence_update': 'future_events',
+            })
+        self.assertEqual(outlook_recurring_event.name, 'Outlook Recurring Event')
+
+        # But changes from Microsoft sync itself should still work
+        outlook_recurring_event.with_context(dont_notify=True).write({
+            'name': 'Updated from Outlook',
+            'recurrence_update': 'future_events'
+        })
+        self.assertEqual(outlook_recurring_event.name, 'Updated from Outlook')
 
     def test_map_an_event_using_global_id(self):
 
