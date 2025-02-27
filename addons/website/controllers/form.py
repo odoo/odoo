@@ -6,6 +6,7 @@ import json
 from markupsafe import Markup
 from psycopg2 import IntegrityError
 import re
+import werkzeug
 from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID
@@ -340,28 +341,65 @@ class CustomAuthSignup(AuthSignupHome):
                 headers=[("Content-Type", "application/json")]
             )
 
-        if kwargs.get("login") and response.status_code in range(200, 308):
-            users = request.env["res.users"].sudo().search([("login", "=", kwargs["login"])])
+        login = kwargs.get("login")
+        if not login or response.status_code not in range(200, 308):
+            return response
 
-            existing_fields = set(self.env["res.users"]._fields.keys())
-            remaining_fields = {key: value for key, value in kwargs.items() if key not in existing_fields and key != "confirm_password"}
+        users = self.env["res.users"].sudo().search([("login", "=", login)])
+        if not users:
+            return response
 
-            if remaining_fields:
-                # Add the remaining fields ( other than existing fields ) to the chatter
-                # of the user
-                custom_content = _("Other Information:\n___________\n\n") + str(remaining_fields)
-                record = self.env["res.partner"].browse(users.partner_id.id)
-                record._message_log(
-                    body=nl2br_enclose(custom_content, "p"),
-                    message_type="comment",
-                )
-                request.env.cr.commit()
+        partner = users.partner_id.sudo()
 
-            return request.make_response(
-                json.dumps({"id": users.id}),
-                headers=[("Content-Type", "application/json")]
+        existing_fields = set(self.env["res.users"]._fields.keys())
+        remaining_fields = {
+            key: value for key, value in kwargs.items()
+            if key not in existing_fields and key != "confirm_password"
+        }
+
+        # Separate text fields and file attachments
+        attachments, text_fields = [], {}
+
+        for key, value in remaining_fields.items():
+            if isinstance(value, werkzeug.datastructures.FileStorage):
+                attachment = self.env["ir.attachment"].sudo().create({
+                    "name": value.filename,
+                    "datas": base64.b64encode(value.read()).decode("utf-8"),
+                    "res_model": "res.partner",
+                    "res_id": partner.id,
+                    "mimetype": value.content_type,
+                })
+                attachments.append(attachment.id)
+            else:
+                text_fields[key] = value
+
+        # Prepare message body efficiently
+        message_body_parts = []
+
+        if text_fields:
+            message_body_parts.append("<p><strong>Other Information:</strong></p><ul>")
+            message_body_parts.extend(
+                f"<li><strong>{key}:</strong> {value}</li>" for key, value in text_fields.items()
             )
-        return response
+            message_body_parts.append("</ul>")
+
+        if attachments:
+            message_body_parts.append("<p><strong>📎 Attachment Files</strong></p>")
+
+        # Log message in chatter
+        if message_body_parts or attachments:
+            partner._message_log(
+                body=Markup(''.join(message_body_parts)),
+                attachment_ids=[(6, 0, attachments)] if attachments else [],
+                message_type="comment",
+            )
+
+        self.env.cr.commit()
+
+        return request.make_response(
+            json.dumps({"id": users.id}),
+            headers=[("Content-Type", "application/json")]
+        )
 
     def _prepare_signup_values(self, qcontext):
         values = super()._prepare_signup_values(qcontext)
