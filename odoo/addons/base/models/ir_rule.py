@@ -236,7 +236,8 @@ class IrRule(models.Model):
             # information in the description to help them to change company
             if company_related and 'company_id' in rec and rec.company_id in self.env.user.company_ids:
                 return f'{description}, {rec.display_name} ({model}: {rec.id}, company={rec.company_id.display_name})'
-            return f'{description}, {rec.display_name} ({model}: {rec.id})'
+            #return f'{description}, {rec.display_name} ({model}: {rec.id})'#TILSOL
+            return f'{description} ({model}: {rec.id})'
 
         failing_records = '\n '.join(f'- {get_record_description(rec)}' for rec in records_sudo)
 
