@@ -61,8 +61,7 @@ class TestWebPushNotification(SMSCommon):
         ])
 
     def _trigger_cron_job(self):
-        with self.enter_registry_test_mode():
-            self.env.ref('mail.ir_cron_web_push_notification').method_direct_trigger()
+        self.env.ref('mail.ir_cron_web_push_notification').method_direct_trigger()
 
     def _assert_notification_count_for_cron(self, number_of_notification):
         notification_count = self.env['mail.push'].search_count([])
