@@ -49,13 +49,12 @@ class ViewCase(TransactionCaseWithUserDemo):
     def assertInvalid(self, arch, expected_message=None, name='invalid view', inherit_id=False, model='ir.ui.view'):
         with mute_logger('odoo.addons.base.models.ir_ui_view'):
             with self.assertRaises(ValidationError) as catcher:
-                with self.cr.savepoint():
-                    self.View.create({
-                        'name': name,
-                        'model': model,
-                        'inherit_id': inherit_id,
-                        'arch': arch,
-                    })
+                self.View.create({
+                    'name': name,
+                    'model': model,
+                    'inherit_id': inherit_id,
+                    'arch': arch,
+                })
         message = str(catcher.exception.args[0])
         self.assertEqual(catcher.exception.context['name'], name)
         if expected_message:
@@ -282,18 +281,18 @@ class TestViewInheritance(ViewCase):
 
     def test_no_recursion(self):
         r1 = self.makeView('R1')
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             r1.write({'inherit_id': r1.id})
 
         r2 = self.makeView('R2', r1.id)
         r3 = self.makeView('R3', r2.id)
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             r2.write({'inherit_id': r3.id})
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             r1.write({'inherit_id': r3.id})
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             r1.write({
                 'inherit_id': r1.id,
                 'arch': self.arch_for('itself', parent=True),

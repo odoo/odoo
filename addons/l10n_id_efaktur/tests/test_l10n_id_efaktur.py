@@ -334,7 +334,7 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
         # No codes have been consumed.
         self.assertEqual(self.efaktur.available, available_code)
 
-        with self.assertRaises(ValidationError, msg='E-faktur is not available for invoices without any taxes.'), self.cr.savepoint():
+        with self.assertRaises(ValidationError, msg='E-faktur is not available for invoices without any taxes.'):
             out_invoice_no_taxes.download_efaktur()
 
     def test_efaktur_consume_code(self):

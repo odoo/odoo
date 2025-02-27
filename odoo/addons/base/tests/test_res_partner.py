@@ -616,7 +616,7 @@ class TestPartnerAddressCompany(TransactionCase):
         test_partner_company.write({'company_id': False})
         self.assertFalse(test_user.partner_id.company_id.id, "If the company_id is deleted from the partner company, it should be propagated to its children")
 
-        with self.assertRaises(UserError, msg="You should not be able to update the company_id of the partner company if the linked user of a child partner is not an allowed to be assigned to that company"), self.cr.savepoint():
+        with self.assertRaises(UserError, msg="You should not be able to update the company_id of the partner company if the linked user of a child partner is not an allowed to be assigned to that company"):
             test_partner_company.write({'company_id': company_2.id})
 
     def test_display_address_missing_key(self):

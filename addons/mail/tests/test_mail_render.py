@@ -592,11 +592,9 @@ class TestMailRenderSecurity(TestMailRenderCommon):
 
         # sanity check, make sure the expressions are not allowed before the test (not in default allow list, etc...)
         with self.assertRaises(AccessError, msg="Complex inline expression should fail if it is not the default."):
-            with self.cr.savepoint():
-                template.lang = template_defaults['lang']
+            template.lang = template_defaults['lang']
         with self.assertRaises(AccessError, msg="Complex qweb expression should fail if it is not the default."):
-            with self.cr.savepoint():
-                template.body_html = template_defaults['body_html']
+            template.body_html = template_defaults['body_html']
 
         with patch(
             'odoo.addons.base.models.res_partner.ResPartner._mail_template_default_values',
@@ -612,8 +610,7 @@ class TestMailRenderSecurity(TestMailRenderCommon):
             self.assertEqual(template.body_html, template_defaults['body_html'])
 
             with self.assertRaises(AccessError, msg="Complex expressions should only be allowed if they are the default for that field."):
-                with self.cr.savepoint():
-                    template.email_cc = template_defaults['lang']
+                template.email_cc = template_defaults['lang']
 
     @users('user_rendering_restricted')
     def test_render_template_qweb_restricted(self):
