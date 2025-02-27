@@ -363,6 +363,9 @@ export class PosData extends Reactive {
                 if (!this.shouldSync) {
                     return;
                 }
+                // if (model === "pos.preparation.orderline") {
+                //     debugger;
+                // }
                 const dateTypeVals = Object.keys(vals).filter((v) =>
                     Object.values(this.models[model].fields)
                         .filter((v) => ["date", "datetime"].includes(v.type))
@@ -714,10 +717,10 @@ export class PosData extends Reactive {
         // 2. because calls to flush are debounced, it will take 1 sec to sync the record with the server
         // 3. this means that if you call `call` in the meantime, the record will not have a server id, but only a uuid.
         // 4. this will cause the call to fail because the server expects an id.
-        args[0] =
-            typeof args[0] === "number"
-                ? args[0]
-                : this.models[model].find((x) => x.uuid === args[0])?.id;
+        // args[0] =
+        //     typeof args[0] === "number"
+        //         ? args[0]
+        //         : this.models[model].find((x) => x.uuid === args[0])?.id;
         return await this.orm.call(model, method, args, kwargs);
     }
 

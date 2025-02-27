@@ -962,6 +962,7 @@ export class PosOrder extends Base {
             )
             // .filter((preparationLine) => preparationLine.qty !== 0 && preparationLine.note !== );
             .filter((preparationLine) => preparationLine.qty !== 0);
+        console.log("preparation_line_ids", preparation_line_ids);
         return {
             order_id: this,
             preparation_line_ids: preparation_line_ids.map((record) => ["create", record]),

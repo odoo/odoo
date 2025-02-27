@@ -412,6 +412,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return this.name in records && this.records[this.name].has(id);
         }
         create(vals, ignoreRelations = false, fromSerialized = false, delayedSetup = false) {
+            // if (this.name == "pos.preparation.order") {
+            //     debugger;
+            // }
             vals.uuid ||= uuidv4();
             vals.id ||= vals.uuid;
             const record = disabler.call(

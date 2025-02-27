@@ -29,7 +29,7 @@ class PosPreparationOrderline(models.Model):
     _inherit = ['pos.load.mixin']
 
     preparation_order_id = fields.Many2one('pos.preparation.order', string='Order', ondelete='cascade')
-    pos_orderline_id = fields.Many2one('pos.order.line', string='Order Line', ondelete='cascade')
+    pos_orderline_id = fields.Many2one('pos.order.line', string='Order Line', ondelete='cascade', required=True)
     qty = fields.Float("Quantity", required=True)
     note = fields.Text("Note")
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
