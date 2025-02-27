@@ -2,7 +2,7 @@
 {
     'name': 'Rwanda - Accounting',
     'icon': '/account/static/description/l10n.png',
-    'countries': ['rw'],
+    'countries': ['RW'],
     'category': 'Accounting/Localizations/Account Charts',
     'version': '1.0',
     'depends': [
@@ -19,6 +19,8 @@
     'data': [
         'data/l10n_rw_chart_data.xml',
         'data/account_tax_report_data.xml',
+        'views/account_tax_views.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
