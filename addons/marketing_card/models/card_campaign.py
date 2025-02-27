@@ -273,10 +273,10 @@ class CardCampaign(models.Model):
 
 <div class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
     <div class="container s_allow_columns">
-        <p>Hello everyone</p>
-        <p>Here's the link to advertise your participation.
-        <br> Your help with this promotion would be greatly appreciated!`</p>
-        <p>Many thanks</p>
+        <p">{_("Hello everyone")}</p>
+        <p>{_("Here's the link to advertise your participation.")}
+        <br>{_("Your help with this promotion would be greatly appreciated!")}</p>
+        <p>{_("Many thanks")}</p>
     </div>
 </div>
 
@@ -286,7 +286,7 @@ class CardCampaign(models.Model):
             <tr>
                 <td align="center">
                     <a href="/cards/{self.id}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
-                        <img src="/web/image/card.campaign/{self.id}/image_preview" alt="Card Preview" class="img-fluid" style="width: 540px;"/>
+                        <img src="/web/image/card.campaign/{self.id}/image_preview" alt="{_("Card Preview")}" class="img-fluid" style="width: 540px;"/>
                     </a>
                 </td>
             </tr>
