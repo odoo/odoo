@@ -697,8 +697,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
         _update(record, vals, opts = {}) {
             const ownFields = getFields(this.name);
-            Object.assign(baseData[this.name][record.id], vals);
-
+            const recordBaseData = baseData[this.name][record.id];
+            if (recordBaseData) {
+                Object.assign(recordBaseData, vals);
+            }
             for (const name in vals) {
                 if (!(name in ownFields) && name !== "id") {
                     continue;
@@ -827,6 +829,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const key = database[this.name]?.key || "id";
             this.triggerEvents("delete", { key: record[key] });
             this.records[this.name].delete(id);
+            delete baseData[this.name][id];
             for (const key of indexes[this.name] || []) {
                 const keyVal = record.raw[key];
                 if (Array.isArray(keyVal)) {

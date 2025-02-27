@@ -712,3 +712,44 @@ describe("models without backlinks", () => {
         });
     });
 });
+
+describe("Base data", () => {
+    test("baseData is updated when the record id is updated", () => {
+        const { models, baseData } = createRelatedModels(
+            {
+                "pos.order": { name: { type: "char" }, uuid: { name: "uuid", type: "char" } },
+            },
+            {},
+            {
+                dynamicModels: ["pos.order"],
+                databaseIndex: {
+                    "pos.order": ["uuid"],
+                },
+                databaseTable: {
+                    "pos.order": { key: "uuid" },
+                },
+            }
+        );
+
+        const order1 = models["pos.order"].create({ name: "Order 1" });
+        expect(baseData["pos.order"][order1.id].id).toBe(order1.id);
+        const oldId = order1.id;
+
+        // Update
+        models.loadData({
+            "pos.order": [
+                {
+                    id: 22,
+                    uuid: order1.uuid,
+                    name: "Order 1",
+                },
+            ],
+        });
+
+        const updatedOrder = models["pos.order"].get(22);
+        expect(updatedOrder).not.toBe(undefined);
+
+        expect(baseData["pos.order"][oldId]).toBeEmpty(); // Old Basedata is deleted
+        expect(baseData["pos.order"][updatedOrder.id].id).toBe(updatedOrder.id);
+    });
+});
