@@ -164,7 +164,6 @@ class ResourceCalendar(models.Model):
     def _get_global_attendances(self):
         return self.attendance_ids.filtered(lambda attendance:
             attendance.day_period != 'lunch'
-            and not attendance.date_from and not attendance.date_to
             and not attendance.resource_id and not attendance.display_type)
 
     def _get_hours_per_day(self, attendances):
