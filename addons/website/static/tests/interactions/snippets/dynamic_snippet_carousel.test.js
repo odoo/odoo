@@ -1,34 +1,38 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryOne } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
+import { advanceTime, enableTransitions } from "@odoo/hoot-mock";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
 
-import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 
 class TestDynamicCarouselItem extends Interaction {
     static selector = ".s_test_dynamic_carousel_item";
     dynamicContent = {
-        "_root": {
+        _root: {
             "t-att-data-started": (el) => `*${el.dataset.testParam}*`,
         },
     };
 }
-registry
-    .category("public.interactions")
-    .add("website.test_dynamic_carousel_item", TestDynamicCarouselItem);
 
-setupInteractionWhiteList(["website.dynamic_snippet_carousel", "website.test_dynamic_carousel_item"]);
+setupInteractionWhiteList([
+    "website.dynamic_snippet_carousel",
+    "website.test_dynamic_carousel_item",
+]);
+beforeEach(() => {
+    enableTransitions();
+
+    registry
+        .category("public.interactions")
+        .add("website.test_dynamic_carousel_item", TestDynamicCarouselItem);
+});
 
 describe.current.tags("interaction_dev");
 
-const testTemplate = `
+const testTemplate = /* xml */ `
     <div id="wrapwrap">
         <section data-snippet="s_dynamic_snippet_carousel" class="s_dynamic_snippet_carousel s_dynamic s_dynamic_empty pt32 pb32 o_colored_level" data-custom-template-data="{}" data-name="Dynamic Carousel"
                 data-filter-id="1"
@@ -51,16 +55,18 @@ const testTemplate = `
                 </div>
             </div>
         </section>
-    </div>`
+    </div>`;
 
-test.tags("desktop")("dynamic snippet carousel loads items and displays them through template (desktop)", async () => {
+test.tags("desktop");
+test("dynamic snippet carousel loads items and displays them through template (desktop)", async () => {
     onRpc("/website/snippet/filters", async (args) => {
         const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
         expect(json.params.filter_id).toBe(1);
         expect(json.params.template_key).toBe("website.dynamic_filter_template_test_item");
         expect(json.params.limit).toBe(16);
         expect(json.params.search_domain).toEqual([]);
-        return [`<div class="s_test_dynamic_carousel_item" data-test-param="test1">Test Record 1</div>`,
+        return [
+            `<div class="s_test_dynamic_carousel_item" data-test-param="test1">Test Record 1</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test2">Test Record 2</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test3">Test Record 3</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test4">Test Record 4</div>`,
@@ -97,14 +103,16 @@ test.tags("desktop")("dynamic snippet carousel loads items and displays them thr
     expect(core.interactions).toHaveLength(0);
 });
 
-test.tags("mobile")("dynamic snippet carousel loads items and displays them through template (mobile)", async () => {
+test.tags("mobile");
+test("dynamic snippet carousel loads items and displays them through template (mobile)", async () => {
     onRpc("/website/snippet/filters", async (args) => {
         const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
         expect(json.params.filter_id).toBe(1);
         expect(json.params.template_key).toBe("website.dynamic_filter_template_test_item");
         expect(json.params.limit).toBe(16);
         expect(json.params.search_domain).toEqual([]);
-        return [`<div class="s_test_dynamic_carousel_item" data-test-param="test1">Test Record 1</div>`,
+        return [
+            `<div class="s_test_dynamic_carousel_item" data-test-param="test1">Test Record 1</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test2">Test Record 2</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test3">Test Record 3</div>`,
             `<div class="s_test_dynamic_carousel_item" data-test-param="test4">Test Record 4</div>`,
