@@ -163,6 +163,46 @@ class PaymentTransaction(models.Model):
             'ref': reference,
             **extra_create_values,
         }
+<<<<<<< saas-17.4
+||||||| fd0c1abf9cb0c853d6435777ba2d2e9555b5915c
+
+        if self.invoice_ids:
+            next_payment_values = self.invoice_ids._get_invoice_next_payment_values()
+            if next_payment_values['installment_state'] == 'epd' and self.amount == next_payment_values['amount_due']:
+                aml = next_payment_values['epd_line']
+                epd_aml_values_list = [({
+                    'aml': aml,
+                    'amount_currency': -aml.amount_residual_currency,
+                    'balance': -aml.balance,
+                })]
+                open_balance = next_payment_values['epd_discount_amount']
+                early_payment_values = self.env['account.move']._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
+                for aml_values_list in early_payment_values.values():
+                    if aml_values_list:
+                        aml_vl = aml_values_list[0]
+                        aml_vl['partner_id'] = self.partner_id.id
+                        payment_values['write_off_line_vals'] += [aml_vl]
+
+=======
+
+        for invoice in self.invoice_ids:
+            next_payment_values = invoice._get_invoice_next_payment_values()
+            if next_payment_values['installment_state'] == 'epd' and self.amount == next_payment_values['amount_due']:
+                aml = next_payment_values['epd_line']
+                epd_aml_values_list = [({
+                    'aml': aml,
+                    'amount_currency': -aml.amount_residual_currency,
+                    'balance': -aml.balance,
+                })]
+                open_balance = next_payment_values['epd_discount_amount']
+                early_payment_values = self.env['account.move']._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
+                for aml_values_list in early_payment_values.values():
+                    if aml_values_list:
+                        aml_vl = aml_values_list[0]
+                        aml_vl['partner_id'] = self.partner_id.id
+                        payment_values['write_off_line_vals'] += [aml_vl]
+
+>>>>>>> f10045bd8142b39a3566440821cd9bbabf4c6627
         payment = self.env['account.payment'].create(payment_values)
         payment.action_post()
 
