@@ -135,7 +135,12 @@ class EventMailScheduler(models.Model):
             else:
                 date, sign = scheduler.event_id.date_end, 1
 
-            scheduler.scheduled_date = date.replace(microsecond=0) + _INTERVALS[scheduler.interval_unit](sign * scheduler.interval_nbr) if date else False
+            new_scheduled_date = date.replace(microsecond=0) + _INTERVALS[scheduler.interval_unit](sign * scheduler.interval_nbr) if date else False
+            if (scheduler.scheduled_date and new_scheduled_date and
+                new_scheduled_date > scheduler.scheduled_date and
+                scheduler.mail_done):
+                scheduler.mail_done = False
+            scheduler.scheduled_date = new_scheduled_date
 
     @api.depends('interval_type', 'scheduled_date', 'mail_done')
     def _compute_mail_state(self):
