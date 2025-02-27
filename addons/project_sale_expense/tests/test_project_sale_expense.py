@@ -35,7 +35,13 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
     def test_compute_analytic_distribution_expense(self):
         project = self.env['project.project'].create({'name': 'SO Project'})
-        project.account_id = self.analytic_account_1
+        project_plan = self.env['account.analytic.plan'].browse(int(self.env['ir.config_parameter'].get_param('analytic.project_plan', 0)))
+
+        project.account_id = self.env['account.analytic.account'].create({
+            'name': 'Project - AA',
+            'code': 'AA-1234',
+            'plan_id': project_plan.id,
+        })
         so_values = {
             'partner_id': self.partner_a.id,
             'order_line': [(0, 0, {
@@ -56,7 +62,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         })
         self.assertEqual(
             expense.analytic_distribution,
-            {str(self.analytic_account_1.id): 100},
+            {str(project.account_id.id): 100},
             "The analytic distribution of the expense should be set to the account of the project.",
         )
 
