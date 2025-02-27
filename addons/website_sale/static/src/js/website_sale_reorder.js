@@ -34,7 +34,47 @@ import { Component, onWillStart } from "@odoo/owl";
 
 // Reorder Dialog
 
+<<<<<<< 17.0
 export class ReorderConfirmationDialog extends ConfirmationDialog {}
+||||||| 733b1474e75b32c3a467b7c3f0a83c75467d4e50
+export class ReorderDialogWrapper extends Component {
+    setup() {
+        this.dialogService = useService("dialog");
+
+        onRendered(() => {
+            this.dialogService.add(ReorderDialog, this.props);
+        });
+    }
+}
+ReorderDialogWrapper.template = xml``;
+
+export class ReorderConfirmationDialog extends ConfirmationDialog {}
+=======
+export class ReorderDialogWrapper extends Component {
+    setup() {
+        this.dialogService = useService("dialog");
+
+        onRendered(() => {
+            this.dialogService.add(ReorderDialog, this.props);
+        });
+    }
+}
+ReorderDialogWrapper.template = xml``;
+
+export class ReorderConfirmationDialog extends ConfirmationDialog {
+    /**
+     * @override
+     * 
+     * In ConfirmationDialog class cancel button and close button's behavior is the same
+     * so we need to override the default behavior of close button. Because on cancel
+     * we add products to cart without clearing the cart.
+     * */
+    setup() {
+        super.setup();
+        this.env.dialogData.close = () => this.props.close();
+    }
+}
+>>>>>>> 77a65b3d1499592eba090461cb889638c6d90fb1
 ReorderConfirmationDialog.template = "website_sale.ReorderConfirmationDialog";
 
 export class ReorderDialog extends Component {
