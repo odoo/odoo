@@ -343,6 +343,7 @@ class SaleOrder(models.Model):
             ('product_id', '=', product_id),
             ('product_custom_attribute_value_ids', '=', False),
             ('linked_line_id', '=', linked_line_id),
+            ('combo_item_id', '=', False),
         ]
 
         filtered_sol = self.order_line.filtered_domain(domain)
