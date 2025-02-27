@@ -53,7 +53,7 @@ const R_REGEX_PATTERN = /^\/(.*)\/([dgimsuvy]+)?$/;
  * @param {Node} node
  */
 export function getTag(node) {
-    return node?.nodeName.toLowerCase() || "";
+    return node?.nodeName?.toLowerCase() || "";
 }
 
 /**
