@@ -85,8 +85,6 @@ class ImageToolOptionPlugin extends Plugin {
                 },
                 apply: ({ editingElement, editor, loadResult: newSrc }) => {
                     editingElement.setAttribute("src", newSrc);
-                    // todo: Should re-apply a shape if it was applied before.
-                    editor.shared.history.addStep();
                 },
             },
             transformImage: {
@@ -104,7 +102,6 @@ class ImageToolOptionPlugin extends Plugin {
                             ""
                         )
                     );
-                    this.dependencies.history.addStep();
                 },
             },
             glFilter: {
@@ -124,7 +121,6 @@ class ImageToolOptionPlugin extends Plugin {
                 },
                 apply: ({ editingElement, editor, loadResult: newSrc }) => {
                     editingElement.setAttribute("src", newSrc);
-                    editor.shared.history.addStep();
                 },
             },
         };
