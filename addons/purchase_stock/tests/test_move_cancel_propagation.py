@@ -12,15 +12,16 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         super().setUpClass()
         cls.customer = cls.env['res.partner'].create({'name': 'abc'})
         cls.group = cls.env['procurement.group'].create({'partner_id': cls.customer.id, 'name': 'New Group'})
-        seller = cls.env['product.supplierinfo'].create({
-            'partner_id': cls.customer.id,
-            'price': 100.0,
-        })
+        cls.warehouse = cls.env.ref('stock.warehouse0')
+        cls.cust_location = cls.env.ref('stock.stock_location_customers')
         product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
             'route_ids': [Command.set([cls.route_mto.id, cls.route_buy.id])],
-            'seller_ids': [Command.set([seller.id])],
+            'seller_ids': [Command.create({
+                'partner_id': cls.customer.id,
+                'price': 100.0,
+            })],
         })
         cls.picking_out = cls.env['stock.picking'].create({
             'location_id': cls.picking_type_out.default_location_src_id.id,
@@ -238,10 +239,6 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         partner = self.env['res.partner'].create({
             'name': 'Steve'
         })
-        seller = self.env['product.supplierinfo'].create({
-            'partner_id': partner.id,
-            'price': 10.0,
-        })
         product_car = self.env['product.product'].create({
             'name': 'Car',
             'is_storable': True,
@@ -249,7 +246,11 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
                 Command.link(self.route_mto.id),
                 Command.link(self.route_buy.id),
             ],
-            'seller_ids': [Command.set([seller.id])],
+            'seller_ids': [Command.create({
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                'partner_id': partner.id,
+                'price': 10.0,
+            })],
         })
         customer_picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,

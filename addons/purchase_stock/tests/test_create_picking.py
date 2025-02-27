@@ -2,8 +2,8 @@
 
 from datetime import date, datetime, timedelta
 
+from odoo import Command
 from odoo.tests import Form
-
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests.common import ProductVariantsCommon
 
@@ -109,17 +109,17 @@ class TestCreatePicking(ProductVariantsCommon):
             'name': 'Roger'
         })
 
-        seller = self.env['product.supplierinfo'].create({
-            'partner_id': partner.id,
-            'price': 12.0,
-        })
-
         product = self.env['product.product'].create({
             'name': 'product',
             'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
-            'seller_ids': [(6, 0, [seller.id])],
             'supplier_taxes_id': [(6, 0, [])],
+        })
+
+        seller = self.env['product.supplierinfo'].create({
+            'product_id': product.id,
+            'partner_id': partner.id,
+            'price': 12.0,
         })
 
         customer_move = self.env['stock.move'].create({
@@ -246,15 +246,15 @@ class TestCreatePicking(ProductVariantsCommon):
         mto_route.rule_ids.procure_method = 'mts_else_mto'
         buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
         buy_route.rule_ids.group_propagation_option = 'propagate'
-        seller = self.env['product.supplierinfo'].create({
-            'partner_id': self.partner_id.id,
-            'price': 12.0,
-        })
         self.product_id_1 = self.env['product.product'].create({
             'name': 'ProductA',
             'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
-            'seller_ids': [(6, 0, [seller.id])],
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_id.id,
+                'min_qty': 5,
+                'price': 250,
+            })],
         })
 
         pg1 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-1'})
@@ -320,16 +320,16 @@ class TestCreatePicking(ProductVariantsCommon):
             'name': 'Jhon'
         })
 
-        seller = self.env['product.supplierinfo'].create({
-            'partner_id': partner.id,
-            'price': 12.0,
-        })
-
         product = self.env['product.product'].create({
             'name': 'product',
             'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
-            'seller_ids': [(6, 0, [seller.id])],
+        })
+
+        seller = self.env['product.supplierinfo'].create({
+            'product_id': product.id,
+            'partner_id': partner.id,
+            'price': 12.0,
         })
 
         # A picking is require since only moves inside the same picking are merged.
@@ -465,10 +465,6 @@ class TestCreatePicking(ProductVariantsCommon):
         unit = self.ref("uom.product_uom_unit")
         picking_type_out = self.env.ref('stock.picking_type_out')
         partner = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
-        supplier_info1 = self.env['product.supplierinfo'].create({
-            'partner_id': partner.id,
-            'price': 50,
-        })
 
         warehouse1 = self.env.ref('stock.warehouse0')
         route_buy = warehouse1.buy_pull_id.route_id
@@ -478,8 +474,12 @@ class TestCreatePicking(ProductVariantsCommon):
             'name': 'Usb Keyboard',
             'is_storable': True,
             'uom_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
             'route_ids': [(6, 0, [route_buy.id, route_mto.id])]
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': product.id,
+            'partner_id': partner.id,
+            'price': 50,
         })
 
         delivery_order = self.env['stock.picking'].create({
@@ -618,10 +618,6 @@ class TestCreatePicking(ProductVariantsCommon):
         partner = self.env['res.partner'].create({
             'name': 'Jhon'
         })
-        seller = self.env['product.supplierinfo'].create({
-            'partner_id': partner.id,
-            'price': 12.0,
-        })
         vendor = self.env['res.partner'].create({
             'name': 'Roger'
         })
@@ -632,8 +628,12 @@ class TestCreatePicking(ProductVariantsCommon):
             'name': 'product',
             'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
-            'seller_ids': [(6, 0, [seller.id])],
             'supplier_taxes_id': [(6, 0, [])],
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': product.id,
+            'partner_id': partner.id,
+            'price': 12.0,
         })
 
         procurement_group = self.env['procurement.group'].create({

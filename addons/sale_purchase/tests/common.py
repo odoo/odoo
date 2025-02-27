@@ -24,20 +24,8 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'email': 'supplier.serv@supercompany.com',
         })
 
-        cls.supplierinfo1 = cls.env['product.supplierinfo'].create({
-            'partner_id': cls.partner_vendor_service.id,
-            'price': 100,
-            'delay': 1,
-            'discount': 30,
-        })
-        cls.supplierinfo2 = cls.env['product.supplierinfo'].create({
-            'partner_id': cls.partner_vendor_service.id,
-            'price': 10,
-            'delay': 5,
-        })
-
         # Create product
-        # When service_to_purser is True add the supplier i.e 'saller_ids' on the product to void the Validation error at product creation time
+        # When service_to_purchase is True add the supplier i.e 'seller_ids' on the product to void the Validation error at product creation time
         cls.service_purchase_1 = cls.env['product.product'].create({
             'name': "Out-sourced Service 1",
             'standard_price': 200.0,
@@ -51,7 +39,13 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'taxes_id': False,
             'categ_id': cls.product_category_purchase.id,
             'service_to_purchase': True,
-            'seller_ids': [Command.set(cls.supplierinfo1.ids)],
+            'seller_ids': [Command.create({
+                'product_uom_id': uom_unit.id,
+                'partner_id': cls.partner_vendor_service.id,
+                'price': 100,
+                'delay': 1,
+                'discount': 30,
+            })],
         })
         cls.service_purchase_2 = cls.env['product.product'].create({
             'name': "Out-sourced Service 2",
@@ -66,8 +60,10 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'taxes_id': False,
             'categ_id': cls.product_category_purchase.id,
             'service_to_purchase': True,
-            'seller_ids': [Command.set(cls.supplierinfo2.ids)],
+            'seller_ids': [Command.create({
+                'product_uom_id': uom_dozen.id,
+                'partner_id': cls.partner_vendor_service.id,
+                'price': 10,
+                'delay': 5,
+            })],
         })
-
-        cls.supplierinfo1.product_tmpl_id = cls.service_purchase_1.product_tmpl_id.id
-        cls.supplierinfo2.product_tmpl_id = cls.service_purchase_2.product_tmpl_id.id
