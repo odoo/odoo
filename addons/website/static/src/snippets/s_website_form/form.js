@@ -265,7 +265,7 @@ export class Form extends Interaction {
         buttonEl.classList.add("disabled"); // !compatibility
         buttonEl.setAttribute("disabled", "disabled");
         this.restoreBtnLoading = addLoadingEffect(buttonEl);
-        this.el.querySelector("#s_website_form_result, #o_website_form_result").replaceChildren(); // !compatibility
+        this.el.querySelector("#s_website_form_result, #o_website_form_result")?.replaceChildren(); // !compatibility
         this.el.querySelectorAll(".s_website_form_custom_error")?.forEach((error) => {
             error.remove();
         });
@@ -569,6 +569,9 @@ export class Form extends Interaction {
             this.restoreBtnLoading();
         }
         const resultEl = this.el.querySelector("#s_website_form_result, #o_website_form_result"); // !compatibility
+        if (!resultEl) {
+            return;
+        }
 
         if (status === "error" && !message) {
             message = _t("An error has occured, the form has not been sent.");
