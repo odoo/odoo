@@ -21,6 +21,14 @@ msgstr ""
 
 #. module: pos_razorpay
 #. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid ""
+"A partial refund is not allowed because the transaction has not yet been "
+"settled."
+msgstr ""
+
+#. module: pos_razorpay
+#. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
 "Adding a new Razorpay payment line is not allowed under the current "
@@ -36,12 +44,6 @@ msgstr "Все"
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__bharatqr
 msgid "BHARATQR"
 msgstr "BHARATQR"
-
-#. module: pos_razorpay
-#. odoo-javascript
-#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
-msgid "Cancel"
-msgstr "Отменить"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -208,6 +210,22 @@ msgid "Reference number mismatched"
 msgstr "Несоответствие номера ссылки"
 
 #. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid ""
+"Related transaction has already been Refunded. Please try using another "
+"payment method."
+msgstr ""
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
+msgid ""
+"Related transaction has already been voided. Please try using another "
+"payment method."
+msgstr ""
+
+#. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
 msgid "Required to fetch payment status during the refund order process"
 msgstr ""
@@ -258,23 +276,3 @@ msgid ""
 msgstr ""
 "Имя пользователя (вход с устройства) \n"
 "например: 1234500121"
-
-#. module: pos_razorpay
-#. odoo-javascript
-#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
-msgid "Void Payment Confirmation"
-msgstr ""
-
-#. module: pos_razorpay
-#. odoo-javascript
-#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
-msgid "Void Transaction"
-msgstr "Пустая транзакция"
-
-#. module: pos_razorpay
-#. odoo-javascript
-#: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
-msgid ""
-"Your transaction isn't settled yet, and the refund is less than the amount paid.\n"
-"The full amount will be cancelled, do you want to proceed?"
-msgstr ""

@@ -1208,7 +1208,7 @@ msgstr "Thêm một số biến thể vào đơn hàng từ dạng lưới"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "ĐVT được phép"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1362,6 +1362,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Vì sản phẩm này đã sử dụng các đơn vị tính (VD: %(problem_uom)s) khác "
+"%(uom)s nên không thể thay đổi đơn vị tính. Nếu bạn muốn thay đổi, vui lòng "
+"lưu trữ sản phẩm và tạo sản phẩm mới."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -2187,7 +2190,7 @@ msgstr "Chiết khấu theo dòng"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr " Chiết khấu - Trên sản phẩm có các loại thuế sau %(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4567,6 +4570,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Bán và mua sản phẩm theo các đơn vị tính hoặc quy cách đóng gói khác nhau"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

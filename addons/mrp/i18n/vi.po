@@ -91,7 +91,7 @@ msgstr "# BoM được sử dụng"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(display_name)s"
-msgstr ""
+msgstr "%(display_name)s"
 
 #. module: mrp
 #. odoo-python
@@ -770,7 +770,7 @@ msgstr "Được phép"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "ĐVT được phép"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -845,6 +845,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Vì sản phẩm này đã sử dụng các đơn vị tính (VD: %(problem_uom)s) khác "
+"%(uom)s nên không thể thay đổi đơn vị tính. Nếu bạn muốn thay đổi, vui lòng "
+"lưu trữ sản phẩm và tạo sản phẩm mới."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1397,6 +1400,8 @@ msgid ""
 "Changing the product or variant will permanently reset all previously "
 "encoded variant-related data."
 msgstr ""
+"Việc thay đổi sản phẩm hoặc biến thể sẽ vĩnh viễn cài đặt lại tất cả dữ liệu"
+" liên quan đến biến thể đã nhập trước đó."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2865,17 +2870,17 @@ msgstr "Là lý do chặn"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is paused"
-msgstr ""
+msgstr "Đang tạm ngừng"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is running"
-msgstr ""
+msgstr "Đang chạy"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is stopped"
-msgstr ""
+msgstr "Đã kết thúc"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_user_working
@@ -4512,7 +4517,7 @@ msgstr "Mẫu sản phẩm"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Product Unit"
-msgstr ""
+msgstr "Đơn vị sản phẩm"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4642,7 +4647,7 @@ msgstr "Sản phẩm"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
 msgid "Progress Done (%)"
-msgstr "Tiến trình hoàn tất (%)"
+msgstr "Tiến độ hoàn tất (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_cancel

@@ -580,6 +580,8 @@ msgid ""
 "Lot %(lot)s has a negative quantity in stock.\n"
 "Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
+"تحتوي المجموعة %(lot)s على كمية سالبة في المخزون.\n"
+"قم بتصحيح هذه الكمية قبل تمكين/تعطيل تقييم المجموعة. "
 
 #. module: stock_account
 #. odoo-python
@@ -679,6 +681,8 @@ msgid ""
 "Product %(product)s has quantity in valued location %(location)s without any lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
+"يحتوي المنتج %(product)s على كمية في موقع التقييم %(location)s دون أي مجموعة. \n"
+"يرجى تعيين مجموعات لكافة الكميات التي لديك قبل تمكين تقييم المجموعة. "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -983,6 +987,7 @@ msgstr ""
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
 msgstr ""
+"يجب أن يتم تعيين حسابات المخزون حتى تتمكن من استخدام التقييم التلقائي. "
 
 #. module: stock_account
 #. odoo-python
@@ -1024,6 +1029,8 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for"
 " all lots/SN. Do you want to proceed ? "
 msgstr ""
+"قد تؤدي هذه العملية إلى فقدان البيانات. سيكون التقييم مطابقاً لكافة "
+"المجموعات /الأرقام التسلسلية. هل ترغب في المتابعة؟ "
 
 #. module: stock_account
 #. odoo-python
@@ -1032,6 +1039,8 @@ msgid ""
 "This product is valuated by lot/serial number. Changing the cost will update"
 " the cost of every lot/serial number in stock."
 msgstr ""
+"يتم تقييم هذا المنتج حسب رقم المجموعة/الرقم التسلسلي. سيؤدي تغيير التكلفة "
+"إلى تحديث تكلفة كل مجموعة/رقم تسلسلي في المخزون. "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -1209,6 +1218,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"قيمة المجموعة (يتم احتسابها تلقائياً في AVCO).\n"
+"        تُستخدم لتحديد قيمة المنتج عندما تكون تكلفة الشراء غير معروفة (مثال: تعديلات المخزون).\n"
+"        تُستخدم لاحتساب الهوامش في أوامر المبيعات."
 
 #. module: stock_account
 #. odoo-python
@@ -1269,6 +1281,8 @@ msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
 msgstr ""
+"لا يمكنك تغيير طريقة تقدير تكلفة المنتج الذي يتم تقييمه حسب المجموعة / الرقم"
+" التسلسلي. "
 
 #. module: stock_account
 #. odoo-python
@@ -1277,6 +1291,8 @@ msgid ""
 "You cannot change the product category of a product valuated by lot/serial "
 "number."
 msgstr ""
+"لا يمكنك تغيير فئة منتج من المنتجات التي تم تقييمها حسب رقم المجموعة/الرقم "
+"التسلسلي. "
 
 #. module: stock_account
 #. odoo-python

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-04 14:39+0000\n"
 "PO-Revision-Date: 2025-02-09 04:00+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,39 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>您好！<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        我们很高兴地通知您，您的订单正在运输途中。\n"
+"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            订单追踪号码：<a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>。\n"
+"                            <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            订单追踪号码：\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-as=\"tracking_url\">\n"
+"                                    <a t-attf-href=\"{{tracking_url}}\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                    <!-- Order delivered body -->\n"
+"                    <t t-if=\"ctx.get('order_delivered')\">\n"
+"                        我们很高兴地通知您，您的订单已经送达。\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    谢谢！\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-container=\"1\">\n"
+"                        <br/>\n"
+"                        <t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -63,6 +97,8 @@ msgid ""
 "<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
 "                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
 msgstr ""
+"<i title=\"设置所有打印图像\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
+"                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
@@ -88,24 +124,24 @@ msgstr "联系"
 #. odoo-python
 #: code:addons/sale_gelato/utils.py:0
 msgid "Could not establish the connection to the Gelato API."
-msgstr ""
+msgstr "无法建立与 Gelato API 的连接。"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Could not synchronize with Gelato"
-msgstr ""
+msgstr "无法与 Gelato 同步"
 
 #. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.express_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__express
 msgid "Express Delivery"
-msgstr ""
+msgstr "快递送货"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.express_delivery_product_product_template
 msgid "Express Delivery (Gelato)"
-msgstr ""
+msgstr "快递送货（Gelato）"
 
 #. module: sale_gelato
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
@@ -113,46 +149,46 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Gelato"
-msgstr ""
+msgstr "Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_api_key
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_api_key
 msgid "Gelato API Key"
-msgstr ""
+msgstr "Gelato API 密钥"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_image_ids
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_image_ids
 msgid "Gelato Print Images"
-msgstr ""
+msgstr "Gelato 打印图片"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_product_uid
 msgid "Gelato Product UID"
-msgstr ""
+msgstr "Gelato 产品 UID"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_product_uid
 msgid "Gelato Product Uid"
-msgstr ""
+msgstr "Gelato 产品 UID"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__gelato_shipping_service_type
 msgid "Gelato Shipping Service Type"
-msgstr ""
+msgstr "Gelato 运输服务类型"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_template_ref
 msgid "Gelato Template Reference"
-msgstr ""
+msgstr "Gelato 模板参考"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_webhook_secret
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_webhook_secret
 msgid "Gelato Webhook Secret"
-msgstr ""
+msgstr "Gelato 网络钩子密钥"
 
 #. module: sale_gelato
 #. odoo-python
@@ -160,51 +196,51 @@ msgstr ""
 msgid ""
 "Gelato could not proceed with the fulfillment of order %(order_reference)s: "
 "%(gelato_message)s"
-msgstr ""
+msgstr "Gelato 未能继续为订单履行配送。订单参考编号：%(order_reference)s，错误信息：%(gelato_message)s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has returned order %(reference)s."
-msgstr ""
+msgstr "Gelato 传回订单。订单参考编号：%(reference)s。"
 
 #. module: sale_gelato
 #: model:mail.template,name:sale_gelato.order_status_update
 msgid "Gelato: Order status update"
-msgstr ""
+msgstr "Gelato：订单状态更性"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
 msgid "Is Gelato"
-msgstr ""
+msgstr "是 Gelato"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "Manage Delivery Methods"
-msgstr ""
+msgstr "管理送货方式"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_missing_images
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_missing_images
 msgid "Missing Print Images"
-msgstr ""
+msgstr "缺失打印图像"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Missing product variants and images have been successfully created."
-msgstr ""
+msgstr "已成功创建缺失的产品变体和图像。"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Print Images"
-msgstr ""
+msgstr "打印图像"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_document.py:0
 msgid "Print images must be set on products before they can be ordered."
-msgstr ""
+msgstr "在订购产品之前，必须在产品上设置打印图像。"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_template
@@ -221,7 +257,7 @@ msgstr "产品文件"
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Product UID"
-msgstr ""
+msgstr "产品 UID"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_product
@@ -246,7 +282,7 @@ msgstr "销售订单明细"
 #. module: sale_gelato
 #: model:mail.template,description:sale_gelato.order_status_update
 msgid "Sent to the customer when Gelato updates the status of an order"
-msgstr ""
+msgstr "在 Gelato 更新订单状态时发送给客户"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_delivery_carrier
@@ -257,18 +293,18 @@ msgstr "送货方式"
 #: model:delivery.carrier,name:sale_gelato.standard_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__normal
 msgid "Standard Delivery"
-msgstr ""
+msgstr "标准送货"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.standard_delivery_product_product_template
 msgid "Standard Delivery (Gelato)"
-msgstr ""
+msgstr "标准送货（Gelato）"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Successfully synchronized with Gelato"
-msgstr ""
+msgstr "已成功与 Gelato 同步"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -279,30 +315,30 @@ msgstr "同步"
 #: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,help:sale_gelato.field_product_template__gelato_template_ref
 msgid "Synchronize to fetch variants from Gelato"
-msgstr ""
+msgstr "同步从 Gelato 获取变体"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Template Reference"
-msgstr ""
+msgstr "模板参考"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The delivery method is not available for this order."
-msgstr ""
+msgstr "送货方式不适用于此订单。"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The following required address fields are missing: %s"
-msgstr ""
+msgstr "以下必填地址字段缺失：%s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "The order has been successfully passed on Gelato."
-msgstr ""
+msgstr "订单已成功传送给 Gelato。"
 
 #. module: sale_gelato
 #. odoo-python
@@ -311,6 +347,8 @@ msgid ""
 "The order with reference %(order_reference)s was not sent to Gelato.\n"
 "Reason: %(error_message)s"
 msgstr ""
+"订单（参考编号：%(order_reference)s）未发送至 Gelato。\n"
+"原因：%(error_message)s"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
@@ -322,9 +360,9 @@ msgstr "Webhook 密钥"
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid ""
 "You cannot mix Gelato products with non-Gelato products in the same order."
-msgstr ""
+msgstr "不能将 Gelato 产品与非 Gelato 产品混合在同一订单中。"
 
 #. module: sale_gelato
 #: model:mail.template,subject:sale_gelato.order_status_update
 msgid "{{ object.reference }}"
-msgstr ""
+msgstr "{{ object.reference }}"

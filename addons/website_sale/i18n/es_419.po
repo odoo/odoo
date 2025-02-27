@@ -311,7 +311,7 @@ msgid ""
 "                                                    </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                                                        No es posible cambiar el nombre de la empresa o el número de identificación fiscal si ya se emitieron documentos para su cuenta. Póngase en contacto con nosotros para realizar esta operación.\n"
+"                                                        No puede cambiar el nombre de la empresa o el número de identificación fiscal si ya se emitieron documentos para su cuenta. Contáctenos para realizar esta operación.\n"
 "                                                    </small>"
 
 #. module: website_sale
@@ -557,7 +557,7 @@ msgstr ""
 "                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Imagen del producto\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
-"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Combinación de escritorio</strong><br/><t t-out=\"line.name or ''\">[FURN_7800]  Combinación de escritorio, negro-marrón: silla + escritorio + cajonera.</t>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Combinación de escritorio</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Combinación de escritorio, negro-marrón: silla + escritorio + cajonera.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
 "                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom_id.name or ''\">unidades</t>\n"
@@ -573,7 +573,7 @@ msgstr ""
 "                        </a>\n"
 "                    </div>\n"
 "                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
-"                    <div style=\"text-align: center;\"><strong>Gracias por comprar con <t t-out=\"company.name or ''\">Mi Empresa (San Francisco)</t>.</strong></div>\n"
+"                    <div style=\"text-align: center;\"><strong>Gracias por comprar en <t t-out=\"company.name or ''\">Mi Empresa (San Francisco)</t>.</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -2242,6 +2242,15 @@ msgstr "Rellenar"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Fill in your address"
 msgstr "Llene su dirección de correo"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
+msgid ""
+"Final price may vary based on selection. Tax will be calculated at checkout."
+msgstr ""
+"El precio final puede variar de acuerdo con la selección. Los impuestos se "
+"calcularán al finalizar la compra."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id

@@ -71,13 +71,13 @@ msgstr "% người nhận"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 msgid "%(contact_name)s subscribed to the following mailing list(s)"
-msgstr "%(contact_name)s đã đăng ký (các) danh sách thư sau"
+msgstr "%(contact_name)s đã đăng ký (các) danh sách liên hệ sau"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 msgid "%(contact_name)s unsubscribed from the following mailing list(s)"
-msgstr "%(contact_name)s đã huỷ đăng ký (các) danh sách thư sau"
+msgstr "%(contact_name)s đã huỷ đăng ký (các) danh sách liên hệ sau"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
@@ -657,7 +657,7 @@ msgstr "Một tiêu đề tuyệt vời"
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_subscription_unique_contact_list
 msgid ""
 "A mailing contact cannot subscribe to the same mailing list multiple times."
-msgstr "Một liên hệ không thể đăng ký cùng một danh sách gửi thư nhiều lần."
+msgstr "Một liên hệ không thể đăng ký cùng một danh sách liên hệ nhiều lần."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -800,7 +800,7 @@ msgstr "Thêm"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
 msgid "Add Contacts to Mailing List"
-msgstr "Thêm liên hệ vào danh sách gửi thư"
+msgstr "Thêm liên hệ vào danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -810,7 +810,7 @@ msgstr "Thêm liên hệ gửi thư"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
 msgid "Add Selected Contacts to a Mailing List"
-msgstr "Thêm liên hệ được chọn vào danh sách gửi thư"
+msgstr "Thêm liên hệ được chọn vào danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -1037,7 +1037,7 @@ msgstr "Đã lưu trữ"
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid "Are you sure you want to unsubscribe from our mailing list?"
-msgstr ""
+msgstr "Bạn có chắc chắn muốn hủy đăng ký nhận thư của chúng tôi không?"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1046,6 +1046,8 @@ msgid ""
 "Are you sure you want to unsubscribe from the mailing list "
 "\"%(unsubscribed_lists)s\"?"
 msgstr ""
+"Bạn có chắc chắn muốn hủy đăng ký khỏi danh sách liên hệ "
+"\"%(unsubscribed_lists)s\" không?"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__is_feedback
@@ -1059,7 +1061,7 @@ msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
 msgstr ""
-"Ít nhất một trong những danh sách gửi thư bạn muốn lưu trữ được sử dụng cho "
+"Ít nhất một trong những danh sách liên hệ bạn muốn lưu trữ được sử dụng cho "
 "một chiến dịch gửi thư đang diễn ra."
 
 #. module: mass_mailing
@@ -1704,7 +1706,7 @@ msgstr "Tạo thư"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
 msgid "Create a Mailing List"
-msgstr "Tạo danh sách gửi thư"
+msgstr "Tạo danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
@@ -1893,7 +1895,7 @@ msgstr "Thiết kế đã được loại khỏi %s mẫu!"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__dest_list_id
 msgid "Destination Mailing List"
-msgstr "Đích đến của danh sách mail"
+msgstr "Đích đến của danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -2607,7 +2609,7 @@ msgstr "Nhập liên hệ gửi thư"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 msgid "Import Template for Mailing List Contacts"
-msgstr "Nhập mẫu cho liên hệ danh sách gửi thư"
+msgstr "Nhập mẫu cho liên hệ danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -2991,12 +2993,12 @@ msgstr "Bộ lọc thư"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Mailing List"
-msgstr "Danh sách Mailing"
+msgstr "Danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
 msgid "Mailing List #"
-msgstr "Danh sách gửi thư #"
+msgstr "Danh sách liên hệ #"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
@@ -3007,13 +3009,13 @@ msgstr "Danh sách gửi thư #"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Mailing List Contacts"
-msgstr "Liên hệ của danh sách mail"
+msgstr "Liên hệ của danh sách liên hệ"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_subscription
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_form
 msgid "Mailing List Subscription"
-msgstr "Gói đăng ký danh sách thư"
+msgstr "Gói đăng ký danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_graph
@@ -3021,7 +3023,7 @@ msgstr "Gói đăng ký danh sách thư"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_tree
 msgid "Mailing List Subscriptions"
-msgstr "Gói đăng ký danh sách thư"
+msgstr "Gói đăng ký danh sách liên hệ"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
@@ -3262,7 +3264,7 @@ msgstr "Hợp nhất"
 #: model:ir.model,name:mass_mailing.model_mailing_list_merge
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Merge Mass Mailing List"
-msgstr "Gộp danh sách gửi thư"
+msgstr "Gộp danh sách liên hệ"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__merge_options
@@ -3272,12 +3274,12 @@ msgstr "Lựa chọn gộp"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_list_merge__merge_options__new
 msgid "Merge into a new mailing list"
-msgstr "Gộp vào một danh sách mail mới"
+msgstr "Gộp vào một danh sách liên hệ mới"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_list_merge__merge_options__existing
 msgid "Merge into an existing mailing list"
-msgstr "Gộp với một danh sách gửi thư có sẵn"
+msgstr "Gộp với một danh sách liên hệ có sẵn"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_error
@@ -3404,7 +3406,7 @@ msgstr "Tên / Email"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__new_list_name
 msgid "New Mailing List Name"
-msgstr "Tên danh sách mail mới"
+msgstr "Tên danh sách liên hệ mới"
 
 #. module: mass_mailing
 #. odoo-python
@@ -3491,7 +3493,7 @@ msgid ""
 "list."
 msgstr ""
 "Không có liên hệ nào được nhập. Tất cả địa chỉ email đã có trong danh sách "
-"gửi thư."
+"liên hệ."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -3735,8 +3737,8 @@ msgid ""
 "Opt out flag for a specific mailing list. This field should not be used in a"
 " view without a unique and active mailing list context."
 msgstr ""
-"Cờ huỷ đăng ký cho một danh sách gửi thư cụ thể. Không nên sử dụng trường "
-"này trong chế độ xem không có ngữ cảnh danh sách gửi thư duy nhất và đang "
+"Cờ huỷ đăng ký cho một danh sách liên hệ cụ thể. Không nên sử dụng trường "
+"này trong chế độ xem không có ngữ cảnh danh sách liên hệ duy nhất và đang "
 "hoạt động."
 
 #. module: mass_mailing
@@ -4744,7 +4746,7 @@ msgid ""
 "The mailing list can be accessible by recipients in the subscription "
 "management page to allow them to update their preferences."
 msgstr ""
-"Người nhận có thể truy cập danh sách gửi thư trong trang quản lý đăng ký để "
+"Người nhận có thể truy cập danh sách liên hệ trong trang quản lý đăng ký để "
 "cập nhật tùy chọn của mình."
 
 #. module: mass_mailing
@@ -5268,7 +5270,7 @@ msgid ""
 "                    Each line will be imported as a mailing list contact."
 msgstr ""
 "Viết hoặc dán địa chỉ email vào trường dưới đây.\n"
-"                    Mỗi dòng sẽ được nhập dưới dạng liên hệ danh sách gửi thư."
+"                    Mỗi dòng sẽ được nhập dưới dạng liên hệ danh sách liên hệ."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
@@ -5280,7 +5282,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid "You are no longer part of our mailing list(s)."
-msgstr "Bạn không còn nằm trong (các) danh sách gửi thư của chúng tôi nữa."
+msgstr "Bạn không còn nằm trong (các) danh sách liên hệ của chúng tôi nữa."
 
 #. module: mass_mailing
 #. odoo-python
@@ -5295,13 +5297,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid "You are no longer part of the %(mailing_name)s mailing list."
-msgstr "Bạn không còn nằm trong danh sách gửi thư %(mailing_name)s."
+msgstr "Bạn không còn nằm trong danh sách liên hệ %(mailing_name)s."
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 msgid "You are no longer part of the %(mailing_names)s mailing list."
-msgstr "Bạn không còn nằm trong danh sách gửi thư %(mailing_names)s."
+msgstr "Bạn không còn nằm trong danh sách liên hệ %(mailing_names)s."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form

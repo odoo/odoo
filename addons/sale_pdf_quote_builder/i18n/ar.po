@@ -46,6 +46,8 @@ msgid ""
 "A form field set as used in product documents can't be linked to a quotation"
 " document."
 msgstr ""
+"لا يمكن ربط حقل نموذج تم تعيينه كما هو مستخدم في مستندات المنتج بمستند عرض "
+"أسعار. "
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -54,6 +56,7 @@ msgid ""
 "A form field set as used in quotation documents can't be linked to a product"
 " document."
 msgstr ""
+"لا يمكن ربط حقل النموذج كما هو مستخدم في مستندات عروض الأسعار بمستند منتج. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -324,7 +327,7 @@ msgstr "المُعرف"
 msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
-msgstr ""
+msgstr "عند إلغاء تحديده، يمكنك إخفاء الترويسة أو التذييل دون حذفهما. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
@@ -468,12 +471,16 @@ msgid ""
 "                <br>\n"
 "                to boost your sales."
 msgstr ""
+"أضِف طابعاً شخصياً على عروض أسعارك من خلال صفحات تذييل ورأس الصفحة الجذابة\n"
+"                <br>\n"
+"                لزيادة مبيعاتك. "
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid "Please use only relational fields until the last value of your path."
 msgstr ""
+"يرجى استخدام الحقول العلائقية فقط حتى القيمة الأخيرة من المسار الخاص بك. "
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -502,6 +509,11 @@ msgid ""
 "                        details of the quote and then the footer pages. <br/>\n"
 "                        If empty, it will use those define in the company settings. <br/>"
 msgstr ""
+"احصل على صفحات ترويسية وصفحات تذييلية لإنشاء عروض أسعار جذابة\n"
+"                        بها المزيد من المعلومات حول شركتك ومنتجاتك وخدماتك. <br/>\n"
+"                        سيتم إنشاء ملف pdf لعروض أسعارك عن طريق تجميع الصفحات الترويسية\n"
+"                        وأوصاف المنتج وتفاصيل عرض السعر ثم صفحات التذييل. <br/>\n"
+"                        إذا تم تركه فارغاً، سيتم استخدام المحدد في إعدادات الشركة. <br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -619,6 +631,8 @@ msgid ""
 "The path to follow to dynamically fill the form field. \n"
 "Leave empty to be able to customized it in the quotation form."
 msgstr ""
+"المسار الذي يجب اتباعه لملء حقل الاستمارة بشكل ديناميكي. \n"
+"اتركه فارغاً حتى تتمكن من تخصيصه في استمارة عرض الأسعار. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
@@ -626,6 +640,8 @@ msgid ""
 "The product documents for this order line that will be merged in the PDF "
 "quote."
 msgstr ""
+"مستندات المنتج الخاصة ببند الطلب هذا والتي سيتم دمجها في عرض السعر بصيغة "
+"PDF. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__theme_template_id

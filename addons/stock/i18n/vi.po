@@ -50,6 +50,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"Số lượng hoàn tất cho sản phẩm %(product)s không tuân thủ độ chính xác làm tròn đã cài đặt trên hệ thống.\n"
+"Vui lòng thay đổi số lượng hoàn tất hoặc độ chính xác làm tròn trong phần cài đặt."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -320,6 +323,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Mới: Điều chuyển tồn kho đã được tạo nhưng chưa được xác nhận.\n"
+"* Chờ điều chuyển khác: Điều chuyển tồn kho liên kết cần được hoàn tất trước điều chuyển này.\n"
+"* Đang chờ: Điều chuyển tồn kho đã được xác nhận nhưng không thể dự trữ sản phẩm.\n"
+"* Có hàng: Sản phẩm của điều chuyển chuyển tồn kho đã được dự trữ.\n"
+"* Hoàn tất: Sản phẩm đã được chuyển đi và lệnh chuyển hàng này đã được xác nhận."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -766,7 +774,7 @@ msgstr "<strong>Địa chỉ khách hàng</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
-msgstr ""
+msgstr "<strong>Địa chỉ giao hàng:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1174,7 +1182,7 @@ msgstr "Vị trí cho phép"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
 msgid "Allowed Replenishment Uom"
-msgstr ""
+msgstr "ĐVT bổ sung hàng được phép"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
@@ -1187,12 +1195,12 @@ msgstr "Tuyến được phép"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "ĐVT được phép"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
 msgid "Alternative (2.00\" x 1.00\")"
-msgstr ""
+msgstr "Dự trù (2.00\" x 1.00\")"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1254,7 +1262,7 @@ msgstr "Có thể áp dụng cho"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
 msgid "Applicable on Package Type"
-msgstr ""
+msgstr "Có thể áp dụng cho Kiểu đóng gói"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1327,6 +1335,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Vì sản phẩm này đã sử dụng các đơn vị tính (VD: %(problem_uom)s) khác "
+"%(uom)s nên không thể thay đổi đơn vị tính. Nếu bạn muốn thay đổi, vui lòng "
+"lưu trữ sản phẩm và tạo sản phẩm mới."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -2712,6 +2723,13 @@ msgid ""
 "Least Packages: products/lots that were stocked in package with least amount of qty will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Xác định phương pháp mặc định được sử dụng để đề xuất nơi chính xác (kệ) để lấy sản phẩm từ đâu, lô hàng nào,... cho vị trí này. Phương pháp này có thể được thực hiện ở cấp độ danh mục sản phẩm và dự phòng được thực hiện trên các vị trí cha nếu không có vị trí nào được thiết lập ở đây.\n"
+"\n"
+"FIFO: sản phẩm/lô hàng nhập kho trước sẽ được xuất kho trước.\n"
+"LIFO: sản phẩm/lô được nhập kho sau cùng sẽ được xuất kho trước.\n"
+"Vị trí gần nhất: sản phẩm/lô hàng gần vị trí mục tiêu nhất sẽ được xuất kho trước.\n"
+"Kiện có ít hàng nhất: sản phẩm/lô hàng được lưu kho trong kiện chứa ít hàng nhất sẽ được xuất kho trước.\n"
+"FEFO: sản phẩm/lô có ngày loại bỏ gần nhất sẽ được xuất kho trước (tính khả dụng của phương pháp này tùy thuộc vào cài đặt \"Ngày hết hạn\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -4666,7 +4684,7 @@ msgstr "Tháng 1"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__jewelry
 msgid "Jewelry (2.20\" x 0.50\")"
-msgstr ""
+msgstr "Trang sức (2.20\" x 0.50\")"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -4937,7 +4955,7 @@ msgstr "Thời gian hoàn thành"
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
 msgid "Least Packages"
-msgstr "Ít kiện hàng nhất"
+msgstr "Kiện có ít hàng nhất"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -5796,7 +5814,7 @@ msgstr "Bình thường"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__normal
 msgid "Normal (2.25\" x 1.25\")"
-msgstr ""
+msgstr "Thông thường (2.25\" x 1.25\")"
 
 #. module: stock
 #. odoo-javascript
@@ -6466,7 +6484,7 @@ msgstr "Chiều rộng gói hàng"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "Đơn vị đóng gói từ đơn bán hoặc mua hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6620,7 +6638,7 @@ msgstr "Vấn đề lập kế hoạch"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Please contact your administrator to configure your warehouse."
-msgstr ""
+msgstr "Vui lòng liên hệ với quản trị viên để cấu hình kho hàng của bạn."
 
 #. module: stock
 #. odoo-python
@@ -6672,6 +6690,8 @@ msgid ""
 "Press the \"New\" button to define the quantity for a product in your stock "
 "or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
+"Nhấn nút \"Mới\" để xác định số lượng cho sản phẩm trong tồn kho của bạn "
+"hoặc nhập số lượng từ bảng tính thông qua menu Tác vụ"
 
 #. module: stock
 #. odoo-javascript
@@ -7294,7 +7314,7 @@ msgstr "Số lượng theo đơn vị tính mặc định của sản phẩm"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "Số lượng theo đơn vị đóng gói"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7706,7 +7726,7 @@ msgstr "Thông tin bổ sung hàng cho %(product)s trong %(warehouse)s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid "Replenishment Multiple"
-msgstr ""
+msgstr "Bổ sung hàng theo bội số"
 
 #. module: stock
 #. odoo-python
@@ -7969,7 +7989,7 @@ msgstr "Có thể chọn tuyến cung ứng trên sản phẩm này"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
 msgid "Routes propagated from the package type"
-msgstr ""
+msgstr "Tuyến đường được áp dụng theo kiểu đóng gói"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8235,6 +8255,7 @@ msgstr "Lựa chọn không được hỗ trợ."
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Bán và mua sản phẩm theo các đơn vị tính hoặc quy cách đóng gói khác nhau"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8375,7 +8396,7 @@ msgstr ""
 "LIFO: sản phẩm/lô được nhập kho sau cùng sẽ được xuất kho trước.\n"
 "Vị trí gần nhất: sản phẩm/lô hàng gần vị trí mục tiêu nhất sẽ được xuất kho trước.\n"
 "FEFO: sản phẩm/lô có ngày loại bỏ gần nhất sẽ được xuất kho trước (tính khả dụng của phương pháp này tùy thuộc vào cài đặt \"Ngày hết hạn\").\n"
-"Ít kiện hàng nhất: FIFO nhưng sử dụng ít kiện hàng nhất có thể khi có nhiều kiện hàng chứa cùng một loại sản phẩm."
+"Kiện có ít hàng nhất: FIFO nhưng sử dụng kiện chứa ít hàng nhất có thể khi có nhiều kiện hàng chứa cùng một loại sản phẩm."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8560,7 +8581,7 @@ msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trướ
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 msgid "Show details"
-msgstr ""
+msgstr "Hiện chi tiết"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
@@ -8607,7 +8628,7 @@ msgstr "Kích thước: Chiều dài x Chiều rộng x Chiều cao"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__small
 msgid "Small (1.25\" x 1.00\")"
-msgstr ""
+msgstr "Nhỏ (1.25\" x 1.00\")"
 
 #. module: stock
 #. odoo-javascript
@@ -9297,6 +9318,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this "
 "unit/packaging. If it is not set, it is not rounded."
 msgstr ""
+"Số lượng mua sắm sẽ được làm tròn thành bội số của đơn vị/quy cách đóng gói "
+"này. Nếu bằng 0, thì sẽ không được làm tròn."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9581,8 +9604,8 @@ msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
-"Ghi chú này sẽ được thêm vào phiếu lệnh chuyển hàng nội bộ (vd: nơi lấy sản "
-"phẩm trong kho hàng)."
+"Ghi chú này sẽ được thêm vào lệnh chuyển hàng nội bộ (vd: nơi lấy sản phẩm "
+"trong kho hàng)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -10711,6 +10734,8 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need. %(suffix)s"
 msgstr ""
+"Khi sản phẩm cần tại <b>%(destination)s</b>, <br> <b>%(operation)s</b> được "
+"tạo từ <b>%(source_location)s</b> để đáp ứng nhu cầu.%(suffix)s"
 
 #. module: stock
 #. odoo-python
@@ -11382,52 +11407,52 @@ msgstr "]<br/>tối thiểu:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
 msgid "^FO150,165 ^A0N,25^FH ^FD"
-msgstr ""
+msgstr "^FO150,165 ^A0N,25^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid "^FO150,210 ^A0N,25^FH ^FD("
-msgstr ""
+msgstr "^FO150,210 ^A0N,25^FH ^FD("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 msgid "^FO160,185 ^A0N,18^FH ^FD("
-msgstr ""
+msgstr "^FO160,185 ^A0N,18^FH ^FD("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 msgid "^FO290,165 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,165 ^A0N,30^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
 msgid "^FO290,50 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,50 ^A0N,30^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid "^FO300,200 ^A0N,40^FH ^FD"
-msgstr ""
+msgstr "^FO300,200 ^A0N,40^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
 msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
 msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
