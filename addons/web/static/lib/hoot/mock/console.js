@@ -1,5 +1,7 @@
 /** @odoo-module */
 
+import { MockEventTarget } from "../hoot_utils";
+
 //-----------------------------------------------------------------------------
 // Global
 //-----------------------------------------------------------------------------
@@ -16,7 +18,7 @@ const DISPATCHING_METHODS = ["error", "trace", "warn"];
 // Exports
 //-----------------------------------------------------------------------------
 
-export class MockConsole extends EventTarget {
+export class MockConsole extends MockEventTarget {
     static {
         for (const [name, value] of Object.entries(console)) {
             if (DISPATCHING_METHODS.includes(name)) {

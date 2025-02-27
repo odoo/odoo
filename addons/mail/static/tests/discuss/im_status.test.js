@@ -1,10 +1,9 @@
-import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
-
 import { beforeEach, describe, test } from "@odoo/hoot";
 import { advanceTime, freezeTime } from "@odoo/hoot-dom";
-
 import { asyncStep, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
+
+import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 
 defineMailModels();
 beforeEach(freezeTime);

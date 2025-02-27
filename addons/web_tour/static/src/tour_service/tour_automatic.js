@@ -27,7 +27,7 @@ export class TourAutomatic {
     }
 
     start() {
-        setupEventActions(document.createElement("div"));
+        setupEventActions(document.createElement("div"), { allowSubmit: true });
         const { delayToCheckUndeterminisms, stepDelay } = this.config;
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)

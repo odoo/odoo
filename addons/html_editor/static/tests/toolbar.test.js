@@ -1,3 +1,4 @@
+import { withSequence } from "@html_editor/utils/resource";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
@@ -13,11 +14,10 @@ import {
     queryOne,
     waitFor,
     waitForNone,
-    waitUntil,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import { contains, patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { fontSizeItems, fontItems } from "../src/main/font/font_plugin";
+import { fontItems, fontSizeItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { convertNumericToUnit, getCSSVariableValue, getHtmlStyle } from "../src/utils/formatting";
@@ -29,7 +29,6 @@ import {
     setContent,
     setSelection,
 } from "./_helpers/selection";
-import { withSequence } from "@html_editor/utils/resource";
 import { strong } from "./_helpers/tags";
 import { insertText } from "./_helpers/user_actions";
 
@@ -45,7 +44,7 @@ test("toolbar is only visible when selection is not collapsed in desktop", async
 
     // set a collapsed selection to close toolbar
     setContent(el, "<p>test[]</p>");
-    await waitUntil(() => !document.querySelector(".o-we-toolbar"));
+    await waitForNone(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
@@ -581,7 +580,7 @@ test("toolbar behave properly if selection has no range", async () => {
     selection.removeAllRanges();
 
     setContent(el, "<p>abc</p>");
-    await waitUntil(() => !document.querySelector(".o-we-toolbar"));
+    await waitForNone(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(0);
 });
 

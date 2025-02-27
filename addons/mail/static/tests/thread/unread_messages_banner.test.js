@@ -85,10 +85,9 @@ test("reset new message separator from unread messages banner", async () => {
         ["partner_id", "=", serverState.partnerId],
         ["channel_id", "=", channelId],
     ]);
-    const env = await start();
+    await start();
     // Wait for the mark as read notification to update the local state.
     const markAsReadNotification = [
-        env,
         "mail.record/insert",
         {
             "discuss.channel.member": [

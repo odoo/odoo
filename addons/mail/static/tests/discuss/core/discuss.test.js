@@ -1,4 +1,4 @@
-import { patchWebsocketWorkerWithCleanup } from "@bus/../tests/mock_websocket";
+import { onWebsocketEvent } from "@bus/../tests/mock_websocket";
 import {
     click,
     contains,
@@ -29,12 +29,8 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
 test("bus subscription is refreshed when channel is joined", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
-    patchWebsocketWorkerWithCleanup({
-        _sendToServer({ event_name, data }) {
-            if (event_name === "subscribe") {
-                asyncStep(`subscribe - ${JSON.stringify(data.channels)}`);
-            }
-        },
+    onWebsocketEvent("subscribe", (data) => {
+        asyncStep(`subscribe - ${JSON.stringify(data.channels)}`);
     });
     const later = luxon.DateTime.now().plus({ seconds: 2 });
     mockDate(
@@ -64,12 +60,8 @@ test("bus subscription is refreshed when channel is joined", async () => {
 test("bus subscription is refreshed when channel is left", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
-    patchWebsocketWorkerWithCleanup({
-        _sendToServer({ event_name, data }) {
-            if (event_name === "subscribe") {
-                asyncStep(`subscribe - ${JSON.stringify(data.channels)}`);
-            }
-        },
+    onWebsocketEvent("subscribe", (data) => {
+        asyncStep(`subscribe - ${JSON.stringify(data.channels)}`);
     });
     const later = luxon.DateTime.now().plus({ seconds: 2 });
     mockDate(

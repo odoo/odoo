@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { edit, keyDown, press, queryAll, queryAllAttributes, queryAllTexts } from "@odoo/hoot-dom";
+import { edit, keyDown, press, queryAllAttributes, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
@@ -8,9 +8,9 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
 import { cookie } from "@web/core/browser/cookie";
 import { user } from "@web/core/user";
+import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
 
 const ORIGINAL_TOGGLE_DELAY = SwitchCompanyMenu.toggleDelay;
 
@@ -28,17 +28,15 @@ function patchUserActiveCompanies(cids) {
 
 describe.current.tags("desktop");
 
-async function open() {
-    await contains(".dropdown-toggle").click();
-}
+const clickConfirm = () => contains(".o_switch_company_menu_buttons button:first").click();
 
-async function toggle(index) {
-    await contains(queryAll("[data-company-id] [role=menuitemcheckbox]")[index]).click();
-}
+const openCompanyMenu = () => contains(".dropdown-toggle").click();
 
-async function confirm() {
-    await contains(queryAll(".o_switch_company_menu_buttons button")[0]).click();
-}
+/**
+ * @param {number} index
+ */
+const toggleCompany = (index) =>
+    contains(`[data-company-id] [role=menuitemcheckbox]:eq(${index})`).click();
 
 beforeEach(() => {
     cookie.set("cids", "3");
@@ -57,7 +55,8 @@ test("basic rendering", async () => {
     expect("div.o_switch_company_menu").toHaveCount(1);
     expect("div.o_switch_company_menu").toHaveText("Hermit");
 
-    await open();
+    await openCompanyMenu();
+
     expect("[data-company-id] [role=menuitemcheckbox]").toHaveCount(5);
     expect(".log_into").toHaveCount(5);
     expect(".fa-check-square").toHaveCount(1);
@@ -79,7 +78,7 @@ test("companies can be toggled: toggle a second company", async () => {
      */
     expect(user.activeCompanies.map((c) => c.id)).toEqual([3]);
     expect(user.activeCompany.id).toBe(3);
-    await open();
+    await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
     expect("[data-company-id] .fa-square-o").toHaveCount(4);
@@ -101,7 +100,7 @@ test("companies can be toggled: toggle a second company", async () => {
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
-    await toggle(1);
+    await toggleCompany(1);
     expect(".dropdown-menu").toHaveCount(1, { message: "dropdown is still opened" });
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(3);
@@ -115,7 +114,7 @@ test("companies can be toggled: toggle a second company", async () => {
         "false",
         "false",
     ]);
-    await confirm();
+    await clickConfirm();
     expect(cookie.get("cids")).toEqual("3-2");
 });
 
@@ -131,7 +130,7 @@ test("can toggle multiple companies at once", async () => {
      */
     expect(user.activeCompanies.map((c) => c.id)).toEqual([3]);
     expect(user.activeCompany.id).toBe(3);
-    await open();
+    await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
     expect("[data-company-id] .fa-square-o").toHaveCount(4);
@@ -143,15 +142,15 @@ test("can toggle multiple companies at once", async () => {
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
-    await toggle(0);
-    await toggle(1);
-    await toggle(2);
+    await toggleCompany(0);
+    await toggleCompany(1);
+    await toggleCompany(2);
     expect(".dropdown-menu").toHaveCount(1, { message: "dropdown is still opened" });
     expect("[data-company-id] .fa-check-square").toHaveCount(4);
     expect("[data-company-id] .fa-square-o").toHaveCount(1);
 
     expect.verifySteps([]);
-    await confirm();
+    await clickConfirm();
     expect(cookie.get("cids")).toEqual("2-1-4-5");
 });
 
@@ -169,7 +168,7 @@ test("single company selected: toggling it off will keep it", async () => {
     expect(cookie.get("cids")).toBe("3");
     expect(user.activeCompanies.map((c) => c.id)).toEqual([3]);
     expect(user.activeCompany.id).toBe(3);
-    await open();
+    await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
     expect("[data-company-id] .fa-square-o").toHaveCount(4);
@@ -181,14 +180,14 @@ test("single company selected: toggling it off will keep it", async () => {
      *   [ ]    Hercules
      *   [ ]    Hulk
      */
-    await toggle(0);
-    await confirm();
+    await toggleCompany(0);
+    await clickConfirm();
     await animationFrame();
     expect(cookie.get("cids")).toEqual("3");
     expect(user.activeCompanies.map((c) => c.id)).toEqual([3]);
     expect(user.activeCompany.id).toBe(3);
 
-    await open();
+    await openCompanyMenu();
     expect("[data-company-id] .fa-check-square").toHaveCount(0);
     expect("[data-company-id] .fa-square-o").toHaveCount(5);
 });
@@ -205,7 +204,7 @@ test("single company mode: companies can be logged in", async () => {
      */
     expect(user.activeCompanies.map((c) => c.id)).toEqual([3]);
     expect(user.activeCompany.id).toBe(3);
-    await open();
+    await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
     expect("[data-company-id] .fa-square-o").toHaveCount(4);
@@ -235,7 +234,7 @@ test("multi company mode: log into a non selected company", async () => {
      */
     expect(user.activeCompanies.map((c) => c.id)).toEqual([3, 1]);
     expect(user.activeCompany.id).toBe(3);
-    await open();
+    await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(3);
@@ -265,7 +264,7 @@ test("multi company mode: log into an already selected company", async () => {
      */
     expect(user.activeCompanies.map((c) => c.id)).toEqual([2, 1]);
     expect(user.activeCompany.id).toBe(2);
-    await open();
+    await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(3);
@@ -294,7 +293,7 @@ test("companies can be logged in even if some toggled within delay", async () =>
      */
     expect(user.activeCompanies.map((c) => c.id)).toEqual([3]);
     expect(user.activeCompany.id).toBe(3);
-    await open();
+    await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
     expect("[data-company-id] .fa-check-square").toHaveCount(1);
     expect("[data-company-id] .fa-square-o").toHaveCount(4);
@@ -445,21 +444,21 @@ test("multi company mode: switching company doesn't deselect already selected on
 
 test("show confirm and reset buttons only when selection has changed", async () => {
     await createSwitchCompanyMenu();
-    await open();
+    await openCompanyMenu();
 
     expect(".o_switch_company_menu_buttons").toHaveCount(0);
 
-    await toggle(1);
+    await toggleCompany(1);
     expect(".o_switch_company_menu_buttons button").toHaveCount(2);
 
-    await toggle(1);
+    await toggleCompany(1);
     expect(".o_switch_company_menu_buttons").toHaveCount(0);
 });
 
 test("no search input when less that 10 companies", async () => {
     await createSwitchCompanyMenu();
 
-    await open();
+    await openCompanyMenu();
     expect(".o-dropdown--menu .visually-hidden input").toHaveCount(1);
 });
 
@@ -479,7 +478,7 @@ test("show search input when more that 10 companies & search filters items but i
 
     await createSwitchCompanyMenu();
 
-    await open();
+    await openCompanyMenu();
     expect(".o-dropdown--menu input").toHaveCount(1);
     expect(".o-dropdown--menu input").toBeFocused();
     expect(".o-dropdown--menu .o_switch_company_item").toHaveCount(10);
@@ -497,7 +496,7 @@ test("show search input when more that 10 companies & search filters items but i
 
 test("when less than 10 companies, typing key makes the search input visible", async () => {
     await createSwitchCompanyMenu();
-    await open();
+    await openCompanyMenu();
 
     expect(".o-dropdown--menu input").toHaveCount(1);
     expect(".o-dropdown--menu input").toBeFocused();
@@ -525,17 +524,17 @@ test("navigation with search input", async () => {
     ];
 
     await createSwitchCompanyMenu();
-    await open();
+    await openCompanyMenu();
 
     expect(".o-dropdown--menu input").toBeFocused();
     expect(".o_switch_company_item.focus").toHaveCount(0);
 
-    const navigationEvents = [
+    const navigationSteps = [
         { hotkey: "arrowdown", focused: 1, selectedCompanies: [3] }, // Go to first item
         { hotkey: "arrowup", focused: 0 }, // Go to search input
         { hotkey: "arrowup", focused: 10 }, // Go to last item
         { hotkey: "Space", focused: 10, selectedCompanies: [3, 10] }, // Select last item
-        { hotkey: "shift+tab", focused: 9, selectedCompanies: [3, 10] }, // Go to previous item
+        { hotkey: ["shift", "tab"], focused: 9, selectedCompanies: [3, 10] }, // Go to previous item
         { hotkey: "tab", focused: 10, selectedCompanies: [3, 10] }, // Go to next item
         { hotkey: "arrowdown", focused: 11 }, // Go to Confirm
         { hotkey: "arrowdown", focused: 12 }, // Go to Reset
@@ -546,12 +545,12 @@ test("navigation with search input", async () => {
         { hotkey: "Space", focused: 1, selectedCompanies: [2] }, // Select first item
     ];
 
-    for (let i = 0; i < navigationEvents.length; i++) {
-        const { hotkey, focused, selectedCompanies, input } = navigationEvents[i];
+    for (const navigationStep of navigationSteps) {
+        expect.step(navigationStep);
+        const { hotkey, focused, selectedCompanies, input } = navigationStep;
         if (hotkey) {
             await press(hotkey);
         }
-
         if (input) {
             await edit(input);
         }
@@ -560,36 +559,30 @@ test("navigation with search input", async () => {
         await animationFrame();
         await runAllTimers();
 
-        const item = queryAll(".o_popover .o-navigable")[focused];
-        expect(item).toHaveClass("focus", {
-            message: `step ${i}: item has focus class (${JSON.stringify(navigationEvents[i])})`,
-        });
-        expect(item).toBeFocused({
-            message: `step ${i}: item is focused (${JSON.stringify(navigationEvents[i])})`,
-        });
+        expect(`.o_popover .o-navigable:eq(${focused})`).toHaveClass("focus");
+        expect(`.o_popover .o-navigable:eq(${focused})`).toBeFocused();
 
         if (selectedCompanies) {
-            const companies = queryAllAttributes(
-                ".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])",
-                "data-company-id"
-            ).map((i) => parseInt(i));
-
-            expect(companies).toEqual(selectedCompanies, {
-                message: `step ${i}: selected companies match`,
-            });
+            expect(
+                queryAllAttributes(
+                    ".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])",
+                    "data-company-id"
+                ).map(Number)
+            ).toEqual(selectedCompanies);
         }
     }
 
-    await keyDown("control+enter");
+    await keyDown(["control", "enter"]);
     await animationFrame();
 
     expect(cookie.get("cids")).toEqual("3-2");
     expect(".o_switch_company_item").toHaveCount(0);
+    expect.verifySteps(navigationSteps);
 });
 
 test("select and de-select all", async () => {
     await createSwitchCompanyMenu();
-    await open();
+    await openCompanyMenu();
 
     // Show search
     await edit(" ");

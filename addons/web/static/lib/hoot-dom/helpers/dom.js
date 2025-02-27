@@ -909,10 +909,6 @@ export function getCurrentDimensions() {
     return currentDimensions;
 }
 
-export function getDefaultRootNode() {
-    return getDefaultRoot();
-}
-
 /**
  * @param {Node} [node]
  * @returns {Document}
@@ -1304,19 +1300,45 @@ export function formatXml(value, options) {
 }
 
 /**
- * Returns the active element in the given document (or in the owner document of
- * the given node).
+ * Returns the active element in the given document. Further checks are performed
+ * in the following cases:
+ * - the given node is an iframe (checks in its content document);
+ * - the given node has a shadow root (checks in that shadow root document);
+ * - the given node is the body of an iframe (checks in the parent document).
  *
  * @param {Node} [node]
  */
 export function getActiveElement(node) {
-    const { activeElement } = getDocument(node);
-    if (activeElement.contentDocument) {
-        return getActiveElement(activeElement.contentDocument);
+    const document = getDocument(node);
+    const window = getWindow(node);
+    const { activeElement } = document;
+    const { contentDocument, shadowRoot } = activeElement;
+
+    if (contentDocument && contentDocument.activeElement !== contentDocument.body) {
+        // Active element is an "iframe" element (with an active element other than its own body):
+        if (contentDocument.activeElement === contentDocument.body) {
+            // Active element is the body of the iframe:
+            // -> returns that element
+            return contentDocument.activeElement
+        } else {
+            // Active element is something else than the body:
+            // -> get the active element inside the iframe document
+            return getActiveElement(contentDocument);
+        }
     }
-    if (activeElement.shadowRoot) {
-        return activeElement.shadowRoot.activeElement;
+
+    if (shadowRoot) {
+        // Active element has a shadow root:
+        // -> get the active element inside its root
+        return shadowRoot.activeElement;
     }
+
+    if (activeElement === document.body && window !== window.parent) {
+        // Active element is the body of an iframe:
+        // -> get the active element of its parent frame (recursively)
+        return getActiveElement(window.parent.document);
+    }
+
     return activeElement;
 }
 

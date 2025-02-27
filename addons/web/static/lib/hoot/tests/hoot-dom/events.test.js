@@ -1135,7 +1135,6 @@ describe(parseUrl(import.meta.url), () => {
                 `input:${char}@input`,
                 `keyup:${char}@input`,
             ]),
-            "select@input",
         ]);
     });
 
@@ -1607,8 +1606,6 @@ describe(parseUrl(import.meta.url), () => {
             "focus@input",
             "focusin@input",
             "focusin@form",
-            "select@input",
-            "select@form",
             // Enter
             "keydown:Enter@input",
             "keydown:Enter@form",
