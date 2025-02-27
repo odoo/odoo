@@ -99,7 +99,19 @@ export class ReorderDialogWrapper extends Component {
 }
 ReorderDialogWrapper.template = xml``;
 
-export class ReorderConfirmationDialog extends ConfirmationDialog {}
+export class ReorderConfirmationDialog extends ConfirmationDialog {
+    /**
+     * @override
+     * 
+     * In ConfirmationDialog class cancel button and close button's behavior is the same
+     * so we need to override the default behavior of close button. Because on cancel
+     * we add products to cart without clearing the cart.
+     * */
+    setup() {
+        super.setup();
+        this.env.dialogData.close = () => this.props.close();
+    }
+}
 ReorderConfirmationDialog.template = "website_sale.ReorderConfirmationDialog";
 
 export class ReorderDialog extends Component {
