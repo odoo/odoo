@@ -8,8 +8,12 @@ import { loadWysiwyg } from "web_editor.loader";
 const prom = createPublicRoot(WebsiteRoot).then(rootInstance => {
     // This data attribute is set by the WebsitePreview client action for a
     // restricted editor user.
-    if (window.frameElement && window.frameElement.dataset.loadWysiwyg === 'true') {
-        loadWysiwyg(['website.assets_wysiwyg']).then(() => {
+    if (window.frameElement) {
+        let prepare = Promise.resolve();
+        if (window.frameElement.dataset.loadWysiwyg === 'true') {
+            prepare = loadWysiwyg(['website.assets_wysiwyg']);
+        }
+        prepare.then(() => {
             window.dispatchEvent(new CustomEvent('PUBLIC-ROOT-READY', {detail: {rootInstance}}));
         });
     }
