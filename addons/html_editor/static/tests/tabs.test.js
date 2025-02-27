@@ -62,6 +62,20 @@ describe("insert tabulation", () => {
         });
     });
 
+    test("tab should not be colored when inserting tab at the begining of a text having background color", async () => {
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255,255,0);">[]ab</font></p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit: `<p>${oeTab(
+                TAB_WIDTH,
+                false
+            )}<font style="background-color: rgb(255,255,0);">[]ab</font></p>`,
+            contentAfter: `<p>${oeTab(
+                TAB_WIDTH
+            )}<font style="background-color: rgb(255,255,0);">[]ab</font></p>`,
+        });
+    });
+
     test("should insert tab characters at the beginning of two separate paragraphs", async () => {
         await testTabulation({
             contentBefore: `<p>a[b</p>` + `<p>c]d</p>`,

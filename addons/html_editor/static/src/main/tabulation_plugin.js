@@ -1,7 +1,14 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { splitTextNode } from "@html_editor/utils/dom";
-import { isEditorTab, isTextNode, isZWS } from "@html_editor/utils/dom_info";
+import {
+    isEditorTab,
+    isEmptyBlock,
+    isTextNode,
+    isVisible,
+    isZWS,
+    previousLeaf,
+} from "@html_editor/utils/dom_info";
 import { descendants, getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, childNodeIndex } from "@html_editor/utils/position";
@@ -63,7 +70,25 @@ export class TabulationPlugin extends Plugin {
 
         const selection = this.dependencies.selection.getEditableSelection();
         if (selection.isCollapsed) {
-            this.insertTab();
+            const blockEl = closestBlock(selection.anchorNode);
+            let previousNode = !selection.anchorOffset && selection.anchorNode;
+            while (previousNode) {
+                previousNode = previousLeaf(previousNode, blockEl);
+                if (
+                    isVisible(previousNode) &&
+                    !isEditorTab(
+                        previousNode.nodeType === 3 ? previousNode.parentElement : previousNode
+                    )
+                ) {
+                    break;
+                }
+            }
+            if (!isEmptyBlock(blockEl) && !selection.anchorOffset && !previousNode) {
+                const tab = parseHTML(this.document, tabHtml).cloneNode(true);
+                blockEl.prepend(tab);
+            } else {
+                this.insertTab();
+            }
         } else {
             const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
             this.indentBlocks(traversedBlocks);
