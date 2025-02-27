@@ -12,7 +12,7 @@ from .utils import clean_action
 
 class DataSet(http.Controller):
 
-    def _call_kw_readonly(self):
+    def _call_kw_readonly(self, rule, args):
         params = request.get_json_data()['params']
         try:
             model_class = request.registry[params['model']]
