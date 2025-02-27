@@ -1,8 +1,19 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { splitTextNode } from "@html_editor/utils/dom";
-import { isEditorTab, isTextNode, isZWS } from "@html_editor/utils/dom_info";
-import { descendants, getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
+import {
+    isEditorTab,
+    isEmptyBlock,
+    isTextNode,
+    isVisible,
+    isZWS,
+    previousLeaf,
+} from "@html_editor/utils/dom_info";
+import {
+    descendants,
+    getAdjacentPreviousSiblings,
+    closestElement,
+} from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, childNodeIndex } from "@html_editor/utils/position";
 
@@ -63,7 +74,24 @@ export class TabulationPlugin extends Plugin {
 
         const selection = this.dependencies.selection.getEditableSelection();
         if (selection.isCollapsed) {
-            this.insertTab();
+            const blockEl = closestBlock(selection.anchorNode);
+            let indentAtStart =
+                blockEl !== closestElement(selection.anchorNode) &&
+                (!selection.anchorOffset || isEmptyBlock(blockEl));
+            let previousNode = previousLeaf(selection.anchorNode, blockEl);
+            while (previousNode && indentAtStart) {
+                // Check if cursor is at the starting of block element.
+                if (isVisible(previousNode) && !isEditorTab(closestElement(previousNode))) {
+                    indentAtStart = false;
+                    break;
+                }
+                previousNode = previousLeaf(previousNode, blockEl);
+            }
+            if (indentAtStart) {
+                blockEl.prepend(parseHTML(this.document, tabHtml));
+            } else {
+                this.insertTab();
+            }
         } else {
             const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
             this.indentBlocks(traversedBlocks);
