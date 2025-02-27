@@ -313,10 +313,10 @@ class Web_Editor(http.Controller):
                 mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
-            except UserError:
+            except UserError as e:
                 # considered as an image by the browser file input, but not
                 # recognized as such by PIL, eg .webp
-                return {'error': format_error_msg}
+                return {'error': e.args[0]}
             except ValueError as e:
                 return {'error': e.args[0]}
 
