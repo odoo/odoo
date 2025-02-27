@@ -1,7 +1,6 @@
 import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 import { Component } from "@odoo/owl";
 import { ShapeSelector } from "../shape/shape_selector";
-import { imageShapeDefinitions } from "./image_shapes_definition";
 import { useDomState } from "@html_builder/core/building_blocks/utils";
 
 export class ImageShapeOption extends Component {
@@ -10,12 +9,15 @@ export class ImageShapeOption extends Component {
     static props = {};
     setup() {
         this.customizeTabPlugin = this.env.editor.shared.customizeTab;
+        this.imageShapeOption = this.env.editor.shared.imageShapeOption;
         this.state = useDomState((editingElement) => ({
+            hasShape: !!editingElement.dataset.shape,
             showImageShape0: this.isShapeVisible(editingElement, 0),
             showImageShape1: this.isShapeVisible(editingElement, 1),
             showImageShape2: this.isShapeVisible(editingElement, 2),
             showImageShape3: this.isShapeVisible(editingElement, 3),
             showImageShape4: this.isShapeVisible(editingElement, 4),
+            showImageShapeTransform: true,
         }));
     }
     isShapeVisible(img, shapeIndex) {
@@ -33,11 +35,8 @@ export class ImageShapeOption extends Component {
             this.env.getEditingElements(),
             {
                 shapeActionId: "setImageShape",
-                shapeGroups: this.getImageShapeGroups(),
+                shapeGroups: this.imageShapeOption.getImageShapeGroups(),
             }
         );
-    }
-    getImageShapeGroups() {
-        return imageShapeDefinitions;
     }
 }

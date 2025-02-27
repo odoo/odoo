@@ -11,10 +11,12 @@ import {
     loadImageInfo,
 } from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
+import { imageShapeDefinitions } from "./image_shapes_definition";
 
 class ImageShapeOptionPlugin extends Plugin {
     static id = "imageShapeOption";
     static dependencies = ["history", "userCommand"];
+    static shared = ["getImageShapeGroups"];
     resources = {
         builder_actions: this.getActions(),
     };
@@ -25,15 +27,13 @@ class ImageShapeOptionPlugin extends Plugin {
         return {
             setImageShape: {
                 load: async ({ editingElement, value: shapeName }) =>
-                    this.loadShape(editingElement, shapeName),
-                apply: ({ editingElement: img, value: shapeName, loadResult }) => {
-                    img.dataset.shape = shapeName;
-
-                    const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
-                    img.dataset.fileName = `${imgFilename}.svg`;
-
+                    this.loadShape(editingElement, { shape: shapeName }),
+                apply: ({ editingElement: img, loadResult }) => {
+                    img.dataset.shape = loadResult.shape;
                     img.dataset.shapeColors = loadResult.shapeColors;
                     img.src = loadResult.shapeDataURL;
+                    const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
+                    img.dataset.fileName = `${imgFilename}.svg`;
                 },
             },
             setImgShapeColor: {
@@ -45,17 +45,51 @@ class ImageShapeOptionPlugin extends Plugin {
                     value: color,
                 }) => {
                     color = getValueFromVar(color);
-                    const shapeName = img.dataset.shape;
                     const newColorId = parseInt(colorIndex);
                     const oldColors = img.dataset.shapeColors.split(";");
                     const newColors = oldColors.slice(0);
                     newColors[newColorId] = this.getCSSColorValue(
                         color === "" ? `o-color-${newColorId + 1}` : color
                     );
-                    return this.loadShape(img, shapeName, newColors);
+                    return this.loadShape(img, { shapeColors: newColors.join(";") });
                 },
                 apply: ({ editingElement: img, loadResult }) => {
                     img.dataset.shapeColors = loadResult.shapeColors;
+                    img.src = loadResult.shapeDataURL;
+                    img.classList.add("o_modified_image_to_save");
+                },
+            },
+            flipImageShape: {
+                load: async ({ editingElement: img, param: { axis } }) => {
+                    const currentAxis = img.dataset.shapeFlip || "";
+                    const newAxis = currentAxis.includes(axis)
+                        ? currentAxis.replace(axis, "")
+                        : currentAxis + axis;
+                    return this.loadShape(img, { shapeFlip: newAxis === "yx" ? "xy" : newAxis });
+                },
+                apply: ({ editingElement: img, loadResult }) => {
+                    if (loadResult.shapeFlip) {
+                        img.dataset.shapeFlip = loadResult.shapeFlip;
+                    } else {
+                        delete img.dataset.shapeFlip;
+                    }
+                    img.src = loadResult.shapeDataURL;
+                    img.classList.add("o_modified_image_to_save");
+                },
+            },
+            rotateImageShape: {
+                load: async ({ editingElement: img, param: { side } }) => {
+                    const currentRotateValue = parseInt(img.dataset.shapeRotate) || 0;
+                    const rotation = side === "left" ? -90 : 90;
+                    const newRotateValue = (currentRotateValue + rotation + 360) % 360;
+                    return this.loadShape(img, { shapeRotate: newRotateValue });
+                },
+                apply: ({ editingElement: img, loadResult }) => {
+                    if (loadResult.shapeRotate) {
+                        img.dataset.shapeRotate = loadResult.shapeRotate;
+                    } else {
+                        delete img.dataset.shapeRotate;
+                    }
                     img.src = loadResult.shapeDataURL;
                     img.classList.add("o_modified_image_to_save");
                 },
@@ -72,9 +106,10 @@ class ImageShapeOptionPlugin extends Plugin {
         this.shapeDataCache[shapeName] = shape;
         return shape;
     }
-    async loadShape(img, shapeName, newColors) {
+    async loadShape(img, newData = {}) {
         // todo: ensure that there is no problem having mutation on the image here.
         await this.loadImageInfos(img);
+        const shapeName = newData.shape ?? img.dataset.shape;
         const shapeData = await this.getShapeData(shapeName);
 
         // Map the default palette colors to an array if the shape includes them
@@ -83,15 +118,17 @@ class ImageShapeOptionPlugin extends Plugin {
         const oldColors = Object.values(DEFAULT_PALETTE).map((color) =>
             shapeData.includes(color) ? color : null
         );
-        newColors = newColors || this.getDefaulteNewColors(oldColors);
+        const shapeColors = newData.shapeColors ?? img.dataset.defaultShapeColors;
+        const newColors = shapeColors?.split(";") || this.getDefaultNewColors(oldColors);
         const coloredShapeData = this.getColoredShapeData(shapeData, oldColors, newColors);
 
-        const shapeDataURL = await this.computeShape(coloredShapeData, img);
+        const shapeDataURL = await this.computeShape(coloredShapeData, img, newData);
         //todo: handle hover effect before
 
         // todo: is it still needed?
         // await loadImage(shapeDataURL, img);
         return {
+            ...newData,
             shapeColors: newColors.join(";"),
             shapeDataURL,
         };
@@ -110,13 +147,16 @@ class ImageShapeOptionPlugin extends Plugin {
      * @returns {Promise} resolved once the svg is properly loaded
      * in the document
      */
-    async computeShape(svgText, img) {
+    async computeShape(svgText, img, newData = {}) {
+        const getData = (propName) =>
+            typeof newData[propName] !== "undefined" ? newData[propName] : img.dataset[propName];
         const params = {
-            shapeAnimationSpeed: Number(img.dataset.shapeAnimationSpeed) || 0,
-            shapeFlip: img.dataset.shapeFlip || "",
-            shapeRotate: img.dataset.shapeRotate || 0,
-            hoverEffect: img.dataset.hoverEffect,
-            width: img.dataset.resizeWidth || img.dataset.width || img.naturalWidth,
+            shape: getData("shape"),
+            shapeAnimationSpeed: Number(getData("shapeAnimationSpeed")) || 0,
+            shapeFlip: getData("shapeFlip") || "",
+            shapeRotate: getData("shapeRotate") || 0,
+            hoverEffect: getData("hoverEffect"),
+            width: getData("resizeWidth") || getData("width") || img.naturalWidth,
         };
 
         // todo:
@@ -131,7 +171,7 @@ class ImageShapeOptionPlugin extends Plugin {
         // Modifies the SVG according to the "flip" or/and "rotate" options.
         const shapeFlip = params.shapeFlip;
         const shapeRotate = params.shapeRotate;
-        if ((shapeFlip || shapeRotate) && this._isTransformableShape()) {
+        if ((shapeFlip || shapeRotate) && this.isTransformableShape(params.shape)) {
             const shapeTransformValues = [];
             if (shapeFlip) {
                 // Possible values => "x", "y", "xy"
@@ -207,7 +247,7 @@ class ImageShapeOptionPlugin extends Plugin {
         }
         return shapeData;
     }
-    getDefaulteNewColors(oldColors) {
+    getDefaultNewColors(oldColors) {
         return oldColors.map((color, i) =>
             color !== null ? this.getCSSColorValue(`o-color-${i + 1}`) : null
         );
@@ -224,6 +264,26 @@ class ImageShapeOptionPlugin extends Plugin {
             return color;
         }
         return getCSSVariableValue(color);
+    }
+    isTransformableShape(shape) {
+        if (!shape) {
+            return false;
+        }
+        const canTransform = this.getImageShapes()[shape].transform;
+        return typeof canTransform === "undefined" ? true : canTransform;
+    }
+    getImageShapeGroups() {
+        return imageShapeDefinitions;
+    }
+    getImageShapes() {
+        const entries = Object.values(this.getImageShapeGroups())
+            .map((x) =>
+                Object.values(x.subgroups)
+                    .map((x) => Object.entries(x.shapes))
+                    .flat()
+            )
+            .flat();
+        return Object.fromEntries(entries);
     }
 }
 registry.category("website-plugins").add(ImageShapeOptionPlugin.id, ImageShapeOptionPlugin);

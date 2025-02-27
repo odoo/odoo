@@ -1,4 +1,4 @@
-import { before, expect, globals, test } from "@odoo/hoot";
+import { before, describe, expect, globals, test } from "@odoo/hoot";
 import { animationFrame, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
@@ -23,6 +23,7 @@ before(() => {
     }));
     onRpcReal("/html_builder/static/image_shapes/geometric/geo_shuriken.svg");
     onRpcReal("/html_builder/static/image_shapes/pattern/pattern_wave_4.svg");
+    onRpcReal("/html_builder/static/image_shapes/geometric/geo_tetris.svg");
     onRpcReal("/web/image/website.s_text_image_default_image");
     onRpcReal("/website/static/src/img/snippets_demo/s_text_image.jpg");
 });
@@ -184,4 +185,200 @@ test("Should change the shape color of an image with a class color", async () =>
         "data-shape-colors",
         "#2D3142;#2D3142;#F3F2F2;;#111827"
     );
+});
+describe("flip shape axis", () => {
+    test("Should flip the shape X axis", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Shape'] .dropdown").click();
+        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        await waitFor(`[data-action-id="flipImageShape"]`);
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_tetris"
+        );
+
+        await contains(`.oi-arrows-h[data-action-id="flipImageShape"]`).click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute("data-shape-flip", "x");
+    });
+    test("Should unflip the shape X axis", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Shape'] .dropdown").click();
+        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        await waitFor(`[data-action-id="flipImageShape"]`);
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_tetris"
+        );
+
+        await contains(`.oi-arrows-h[data-action-id="flipImageShape"]`).click();
+        await contains(`.oi-arrows-h[data-action-id="flipImageShape"]`).click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        expect(`:iframe .test-options-target img`).not.toHaveAttribute("data-shape-flip");
+    });
+    test("Should flip the shape Y axis", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Shape'] .dropdown").click();
+        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        await waitFor(`[data-action-id="flipImageShape"]`);
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_tetris"
+        );
+
+        await contains(`.oi-arrows-v[data-action-id="flipImageShape"]`).click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute("data-shape-flip", "y");
+    });
+    test("Should flip the shape XY axis", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Shape'] .dropdown").click();
+        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        await waitFor(`[data-action-id="flipImageShape"]`);
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_tetris"
+        );
+
+        await contains(`.oi-arrows-h[data-action-id="flipImageShape"]`).click();
+        await contains(`.oi-arrows-v[data-action-id="flipImageShape"]`).click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute("data-shape-flip", "xy");
+    });
+});
+describe("rotate shape", () => {
+    test("Should rotate the shape to the left", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Shape'] .dropdown").click();
+        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        await waitFor(`[data-action-id="rotateImageShape"]`);
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_tetris"
+        );
+
+        await contains(`.fa-rotate-left[data-action-id="rotateImageShape"]`).click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute("data-shape-rotate", "270");
+    });
+    test("Should remove rotate data when there is no rotation", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Shape'] .dropdown").click();
+        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        await waitFor(`[data-action-id="rotateImageShape"]`);
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_tetris"
+        );
+
+        await contains(`.fa-rotate-left[data-action-id="rotateImageShape"]`).click();
+        await contains(`.fa-rotate-right[data-action-id="rotateImageShape"]`).click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        expect(`:iframe .test-options-target img`).not.toHaveAttribute("data-shape-rotate");
+    });
+    test("Should rotate the shape to the right", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Shape'] .dropdown").click();
+        await contains("[data-action-value='html_builder/geometric/geo_tetris']").click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        await waitFor(`[data-action-id="rotateImageShape"]`);
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute(
+            "data-shape",
+            "html_builder/geometric/geo_tetris"
+        );
+
+        await contains(`.fa-rotate-right[data-action-id="rotateImageShape"]`).click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        expect(`:iframe .test-options-target img`).toHaveAttribute("data-shape-rotate", "90");
+    });
 });
