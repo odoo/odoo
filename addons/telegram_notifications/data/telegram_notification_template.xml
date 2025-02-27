@@ -1,0 +1,16 @@
+<odoo>
+    <record id="telegram_notification_template" model="mail.template">
+        <field name="name">Telegram Notification</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="subject">New Notification</field>
+        <field name="email_from">${(object.company_id.email or 'info@yourodoo.com')|safe}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html"><![CDATA[
+            <p>Hello,</p>
+            <p>You have a new notification:</p>
+            <p><strong>${object.name}</strong></p>
+            <p>${object.comment}</p>
+            <p>Best Regards,<br/>Your Company</p>
+        ]]></field>
+    </record>
+</odoo>

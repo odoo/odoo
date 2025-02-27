@@ -1,0 +1,16 @@
+<odoo>
+    <record id="view_telegram_bot_form" model="ir.ui.view">
+        <field name="name">telegram.bot.form</field>
+        <field name="model">telegram.bot</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="bot_token"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
