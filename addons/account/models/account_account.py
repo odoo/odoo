@@ -506,6 +506,7 @@ class AccountAccount(models.Model):
             record.used = record.id in ids
 
     @api.model
+<<<<<<< 9abb1fddc2abab557996f5f336f889a544c1f353
     def _search_new_account_code(self, start_code, cache=None):
         """ Get an account code that is available for creating a new account in the active
             company by starting from an existing code and incrementing it.
@@ -571,6 +572,25 @@ class AccountAccount(models.Model):
 
         for num in range(99):
             if code_is_available(new_code := f'{start_code}.copy{num and num + 1 or ""}'):
+||||||| a0c548240c02646094f1c4f9c7f17f6c4fe3a9ad
+    def _search_new_account_code(self, company, digits, prefix, cache=None):
+        for num in range(1, 10000):
+            new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
+            if new_code in (cache or []):
+                continue
+            rec = self.search([('code', '=', new_code), ('company_id', 'child_of', company.root_id.id)], limit=1)
+            if not rec:
+=======
+    def _search_new_account_code(self, company, digits, prefix, cache=None):
+        for num in range(1, 10000):
+            num_str = str(num)
+            num_digits = min(len(num_str), digits - len(prefix))
+            new_code = str(prefix.ljust(digits - num_digits, '0')) + num_str
+            if new_code in (cache or []):
+                continue
+            rec = self.search([('code', '=', new_code), ('company_id', 'child_of', company.root_id.id)], limit=1)
+            if not rec:
+>>>>>>> f9fea442b48b200d7607bf2d123aa5bfe2085881
                 return new_code
 
         raise UserError(_('Cannot generate an unused account code.'))
