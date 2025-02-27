@@ -13,15 +13,30 @@ import {
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { imageShapeDefinitions } from "./image_shapes_definition";
 
+// Regex definitions to apply speed modification in SVG files
+// Note : These regex patterns are duplicated on the server side for
+// background images that are part of a CSS rule "background-image: ...". The
+// client-side regex patterns are used for images that are part of an
+// "src" attribute with a base64 encoded svg in the <img> tag. Perhaps we should
+// consider finding a solution to define them only once? The issue is that the
+// regex patterns in Python are slightly different from those in JavaScript.
+// See : controllers/main.py
+const CSS_ANIMATION_RULE_REGEX =
+    /(?<declaration>animation(?:-duration)?: .*?)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>ms|s)(?<separator>\s|;|"|$)/gm;
+const SVG_DUR_TIMECOUNT_VAL_REGEX =
+    /(?<attribute_name>\sdur="\s*)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>h|min|ms|s)?\s*"/gm;
+const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m;
+
 class ImageShapeOptionPlugin extends Plugin {
     static id = "imageShapeOption";
     static dependencies = ["history", "userCommand"];
-    static shared = ["getImageShapeGroups"];
+    static shared = ["getImageShapeGroups", "isTransformableShape", "isAnimableShape"];
     resources = {
         builder_actions: this.getActions(),
     };
     setup() {
         this.shapeDataCache = {};
+        this.imageShapes = this.makeImageShapes();
     }
     getActions() {
         return {
@@ -94,6 +109,18 @@ class ImageShapeOptionPlugin extends Plugin {
                     img.classList.add("o_modified_image_to_save");
                 },
             },
+            setImageShapeSpeed: {
+                getValue: ({ editingElement: img }) => img.dataset.shapeAnimationSpeed || 0,
+                load: async ({ editingElement: img, value: speed }) =>
+                    this.loadShape(img, {
+                        shapeAnimationSpeed: speed,
+                    }),
+                apply: ({ editingElement: img, loadResult }) => {
+                    img.dataset.shapeAnimationSpeed = loadResult.shapeAnimationSpeed;
+                    img.src = loadResult.shapeDataURL;
+                    img.classList.add("o_modified_image_to_save");
+                },
+            },
         };
     }
     async getShapeData(shapeName) {
@@ -159,12 +186,11 @@ class ImageShapeOptionPlugin extends Plugin {
             width: getData("resizeWidth") || getData("width") || img.naturalWidth,
         };
 
-        // todo:
-        // // Apply the right animation speed if there is an animated shape.
-        // const shapeAnimationSpeed = params.shapeAnimationSpeed;
-        // if (shapeAnimationSpeed) {
-        //     svgText = this._replaceAnimationDuration(shapeAnimationSpeed, svgText);
-        // }
+        // Apply the right animation speed if there is an animated shape.
+        const shapeAnimationSpeed = params.shapeAnimationSpeed;
+        if (shapeAnimationSpeed) {
+            svgText = this.replaceAnimationDuration(shapeAnimationSpeed, svgText);
+        }
 
         const svg = new DOMParser().parseFromString(svgText, "image/svg+xml").documentElement;
 
@@ -237,6 +263,53 @@ class ImageShapeOptionPlugin extends Plugin {
         const dataURL = await createDataURL(blob);
         return dataURL;
     }
+    /**
+     * Replace animation durations in SVG and CSS with modified values.
+     *
+     * This function takes a ratio and an SVG string containing animations. It
+     * uses regular expressions to find and replace the duration values in both
+     * CSS animation rules and SVG duration attributes based on the provided
+     * ratio.
+     *
+     * @param {number} speed The speed used to calculate the new animation
+     *                       durations. If speed is 0.0, the original
+     *                       durations are preserved.
+     * @param {string} svg The SVG string containing animations.
+     * @returns {string} The modified SVG string with updated animation
+     *                   durations.
+     */
+    replaceAnimationDuration(speed, svg) {
+        const ratio = (speed >= 0.0 ? 1.0 + speed : 1.0 / (1.0 - speed)).toFixed(3);
+        // Callback for CSS 'animation' and 'animation-duration' declarations
+        function callbackCssAnimationRule(match, declaration, value, unit, separator) {
+            value = parseFloat(value) / (ratio ? ratio : 1);
+            return `${declaration}${value}${unit}${separator}`;
+        }
+
+        // Callback function for handling the 'dur' SVG attribute timecount
+        // value in accordance with the SMIL animation specification (e.g., 4s,
+        // 2ms). If no unit is provided, seconds are implied.
+        function callbackSvgDurTimecountVal(match, attribute_name, value, unit) {
+            value = parseFloat(value) / (ratio ? ratio : 1);
+            return `${attribute_name}${value}${unit ? unit : "s"}"`;
+        }
+
+        // Applying regex substitutions to modify animation speed in the 'svg'
+        // variable.
+        svg = svg.replace(CSS_ANIMATION_RULE_REGEX, callbackCssAnimationRule);
+        svg = svg.replace(SVG_DUR_TIMECOUNT_VAL_REGEX, callbackSvgDurTimecountVal);
+        if (CSS_ANIMATION_RATIO_REGEX.test(svg)) {
+            // Replace the CSS --animation_ratio variable for future purpose.
+            svg = svg.replace(CSS_ANIMATION_RATIO_REGEX, `--animation_ratio: ${ratio};`);
+        } else {
+            // Add the style tag with the root variable --animation ratio for
+            // future purpose.
+            const regex = /<svg .*>/m;
+            const subst = `$&\n\t<style>\n\t\t:root { \n\t\t\t--animation_ratio: ${ratio};\n\t\t}\n\t</style>`;
+            svg = svg.replace(regex, subst);
+        }
+        return svg;
+    }
 
     getColoredShapeData(shapeData, oldColors, newColors) {
         for (const [i, color] of newColors.entries()) {
@@ -269,13 +342,19 @@ class ImageShapeOptionPlugin extends Plugin {
         if (!shape) {
             return false;
         }
-        const canTransform = this.getImageShapes()[shape].transform;
+        const canTransform = this.imageShapes[shape].transform;
         return typeof canTransform === "undefined" ? true : canTransform;
+    }
+    isAnimableShape(shape) {
+        if (!shape) {
+            return false;
+        }
+        return this.imageShapes[shape].animated;
     }
     getImageShapeGroups() {
         return imageShapeDefinitions;
     }
-    getImageShapes() {
+    makeImageShapes() {
         const entries = Object.values(this.getImageShapeGroups())
             .map((x) =>
                 Object.values(x.subgroups)

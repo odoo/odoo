@@ -24,6 +24,16 @@
             <BuilderButton title.translate="Rotate right" icon="'fa-rotate-right'"
                 action="'rotateImageShape'" actionParam="{side: 'right'}" />
         </BuilderRow>
+
+        <BuilderRow label.translate="Speed" level="1" t-if="this.state.showImageShapeAnimation" preview="false">
+            <BuilderRange
+                action="'setImageShapeSpeed'"
+                min="-2"
+                max="2"
+                step="0.1"
+                displayRangeValue="true"
+                computedOutput="this.toRatio" />
+        </BuilderRow>
     </t>
 </t>
 
