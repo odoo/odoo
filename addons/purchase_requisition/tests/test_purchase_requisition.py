@@ -469,6 +469,127 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(po_alt.order_line.price_unit, 4)
         self.assertEqual(po_alt.order_line.name, '[code B] Product')
 
+    def test_alternative_purchase_orders_with_vendor_specific_details(self):
+        """
+        This test ensures that when creating alternative purchase orders, the
+        correct vendor-specific product descriptions, codes and name are applied.
+
+        The following scenarios are covered (All alternative POs are created from Supplier A):
+
+        1. Creating an alternative PO with Supplier B:
+           - Supplier B has a specific product name ('Custom Name B')
+           - The alternative PO should use this product name.
+
+        2. Creating an alternative PO with Supplier C:
+           - Supplier C has a specific product code ('Code C') for minimum qty of 10.
+           - The alternative PO should use '[Code C] Product' as the product name.
+
+        3. Creating an alternative PO with Supplier C for a single quantity:
+           - Supplier C does not have a specific product name/code for min qty = 1.
+           - The default product name ('Product') should be used.
+
+        4. Creating an alternative PO with Supplier D:
+           - Supplier D does not have any specific product name/code.
+           - It should copy the description from Supplier A ('Custom Name A').
+        """
+
+        # Creating vendor records
+        vendor_a = self.env["res.partner"].create({"name": "Supplier A"})
+        vendor_b = self.env["res.partner"].create({"name": "Supplier B"})
+        vendor_c = self.env["res.partner"].create({"name": "Supplier C"})
+        vendor_d = self.env["res.partner"].create({"name": "Supplier D"})
+
+        # Creating a product with multiple vendor-specific pricing and descriptions
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor_a.id,
+                'price': 5,
+                'product_name': 'Custom Name A',
+            }), (0, 0, {
+                'partner_id': vendor_b.id,
+                'price': 4,
+                'min_qty': 10,
+                'product_name': 'Custom Name B',
+            }), (0, 0, {
+                'partner_id': vendor_b.id,
+                'price': 6,
+                'min_qty': 1,
+            }), (0, 0, {
+                'partner_id': vendor_c.id,
+                'price': 7,
+                'min_qty': 10,
+                'product_code': 'Code C',
+            }), (0, 0, {
+                'partner_id': vendor_c.id,
+                'price': 8,
+                'min_qty': 1,
+            }), (0, 0, {
+                'partner_id': vendor_d.id,
+                'price': 9,
+                'min_qty': 1,
+            })
+            ]
+        })
+
+        # Create a purchase order with Supplier A (should use 'Custom Name A')
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = vendor_a
+        with po_form.order_line.new() as line:
+            line.product_id = product
+            line.product_qty = 100
+        po_orig = po_form.save()
+        self.assertEqual(po_orig.order_line.name, 'Custom Name A')
+
+        # 1. Create an alternative PO with Supplier B (should use 'Custom Name B')
+        action = po_orig.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = vendor_b
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+        po_alt_b = po_orig.alternative_po_ids - po_orig
+        self.assertEqual(po_alt_b.order_line.name, 'Custom Name B')
+
+        # 2. Create an alternative PO with Supplier C (should use '[Code C] Product')
+        action = po_orig.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = vendor_c
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+        po_alt_c = po_orig.alternative_po_ids - po_orig - po_alt_b
+        self.assertEqual(po_alt_c.order_line.name, '[Code C] Product')
+
+        # Create a PO with a single quantity for Supplier A (should use 'Custom Name A')
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = vendor_a
+        with po_form.order_line.new() as line:
+            line.product_id = product
+            line.product_qty = 1
+        po_single_qty = po_form.save()
+        self.assertEqual(po_single_qty.order_line.name, 'Custom Name A')
+
+        # 3. Create an alternative PO with Supplier C (should NOT copy description, uses default product name)
+        action = po_single_qty.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = vendor_c
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+        po_alt_c_single_qty = po_single_qty.alternative_po_ids - po_single_qty
+        self.assertEqual(po_alt_c_single_qty.order_line.name, 'Product')
+
+        # 4. Create an alternative PO with Supplier D (should copy description from Supplier A as no custom product_code/name exists)
+        action = po_single_qty.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = vendor_d
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+        po_alt_d_single_qty = po_single_qty.alternative_po_ids - po_single_qty - po_alt_c_single_qty
+        self.assertEqual(po_alt_d_single_qty.order_line.name, 'Custom Name A')
+
     def test_08_purchase_requisition_sequence(self):
         new_company = self.env['res.company'].create({'name': 'Company 2'})
         self.env['ir.sequence'].create({
