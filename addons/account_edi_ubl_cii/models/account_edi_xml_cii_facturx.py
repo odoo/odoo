@@ -400,3 +400,4 @@ class AccountEdiXmlCII(models.AbstractModel):
             if amount_node is not None and float(amount_node.text) < 0:
                 return ('in_refund', 'out_refund'), -1
             return ('in_invoice', 'out_invoice'), 1
+        return None, None
