@@ -83,6 +83,14 @@ export class CoreBuilderActionPlugin extends Plugin {
                     setStyleValue(el, param, value);
                 },
             },
+            "row-gap": {
+                getValue: (el, param) => parseInt(getStyleValue(el, param)) || 0,
+                apply: setStyleValue,
+            },
+            "column-gap": {
+                getValue: (el, param) => parseInt(getStyleValue(el, param)) || 0,
+                apply: setStyleValue,
+            },
         };
         for (const borderWidthPropery of CSS_SHORTHANDS["border-width"]) {
             styleActions[borderWidthPropery] = styleActions["border-width"];
