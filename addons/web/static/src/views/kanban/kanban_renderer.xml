@@ -55,7 +55,7 @@
                                 />
                             </t>
                             <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
-                            <div t-if="unloadedCount > 0" class="o_kanban_load_more">
+                            <div t-if="unloadedCount > 0" class="o_kanban_load_more" t-key="unloadedCount">
                                 <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
                             </div>
                         </t>
