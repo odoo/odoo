@@ -68,7 +68,7 @@ class TestHolidaysOvertime(TransactionCase):
         with self.with_user('user'):
             self.assertEqual(self.user.total_overtime, 0, 'No overtime')
 
-            with self.assertRaises(ValidationError), self.cr.savepoint():
+            with self.assertRaises(ValidationError):
                 self.env['hr.leave'].create({
                     'name': 'no overtime',
                     'employee_id': self.employee.id,
@@ -92,11 +92,11 @@ class TestHolidaysOvertime(TransactionCase):
             overtime = leave.sudo().overtime_id.with_user(self.user)
 
             # An employee cannot delete an overtime adjustment
-            with self.assertRaises(AccessError), self.cr.savepoint():
+            with self.assertRaises(AccessError):
                 overtime.unlink()
 
             # ... nor change its duration
-            with self.assertRaises(AccessError), self.cr.savepoint():
+            with self.assertRaises(AccessError):
                 overtime.duration = 8
 
     def test_leave_adjust_overtime(self):
@@ -145,7 +145,7 @@ class TestHolidaysOvertime(TransactionCase):
 
         leave.date_to = datetime(2021, 1, 5)
         self.assertEqual(self.employee.total_overtime, 0)
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             leave.date_to = datetime(2021, 1, 6)
 
         leave.date_to = datetime(2021, 1, 4)
@@ -154,7 +154,7 @@ class TestHolidaysOvertime(TransactionCase):
     def test_employee_create_allocation(self):
         with self.with_user('user'):
             self.assertEqual(self.employee.total_overtime, 0)
-            with self.assertRaises(ValidationError), self.cr.savepoint():
+            with self.assertRaises(ValidationError):
                 self.env['hr.leave.allocation'].create({
                     'name': 'test allocation',
                     'holiday_status_id': self.leave_type_employee_allocation.id,
@@ -215,7 +215,7 @@ class TestHolidaysOvertime(TransactionCase):
         })
         self.assertEqual(self.employee.total_overtime, 8)
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             alloc.number_of_days = 3
 
         alloc.number_of_days = 2

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from contextlib import nullcontext
+from contextlib import nullcontext, closing
 from freezegun import freeze_time
 from functools import partial
 
@@ -166,7 +166,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
                     invoice_date=invoice_date,
                     move_type=move_type,
                     company=company.name,
-                ), self.env.cr.savepoint() as sp:
+                ), closing(self.env.cr.savepoint()):
                     check = partial(self.assertRaises, UserError) if failure_expected else nullcontext
                     move = self.init_invoice(
                         move_type, amounts=[100], taxes=self.root_company.account_sale_tax_id,
@@ -178,7 +178,6 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
                         self.branch_a[lock] = branch_lock
                     with check():
                         move.button_draft()
-                    sp.close()
 
     def test_change_record_company(self):
         account = self.env['account.account'].create({
