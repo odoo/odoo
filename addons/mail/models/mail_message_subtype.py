@@ -89,7 +89,7 @@ class MailMessageSubtype(models.Model):
                 child_ids += subtype.ids
                 if subtype.default:
                     def_ids += subtype.ids
-            elif subtype.relation_field:
+            if subtype.relation_field:
                 parent[subtype.id] = subtype.parent_id.id
                 relation.setdefault(subtype.res_model, set()).add(subtype.relation_field)
             # required for backward compatibility
