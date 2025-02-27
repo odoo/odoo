@@ -19,7 +19,10 @@ class CardCampaign(models.Model):
 
     def _get_model_selection(self):
         """Hardcoded list of models, checked against actually-present models."""
-        allowed_models = ['res.partner', 'event.track', 'event.booth', 'event.registration']
+        allowed_models = [
+            'event.attendee', 'event.booth', 'event.track', 'event.registration', 'event.sponsor',
+            'res.partner',
+        ]
         models = self.env['ir.model'].sudo().search_fetch([('model', 'in', allowed_models)], ['model', 'name'])
         return [(model.model, model.name) for model in models]
 
@@ -46,7 +49,7 @@ class CardCampaign(models.Model):
     post_suggestion = fields.Text(help="Description below the card and default text when sharing on X")
     preview_record_ref = fields.Reference(string="Preview On", selection="_get_model_selection", required=True)
     tag_ids = fields.Many2many('card.campaign.tag', string='Tags')
-    target_url = fields.Char(string='Post Link')
+    target_url = fields.Char(string='Post Link', compute='_compute_target_url', readonly=False, store=True)
     target_url_click_count = fields.Integer(related="link_tracker_id.count")
 
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, domain="[('share', '=', False)]")
@@ -201,6 +204,10 @@ class CardCampaign(models.Model):
         for campaign in self:
             preview_model = campaign.preview_record_ref and campaign.preview_record_ref._name
             campaign.res_model = preview_model or campaign.res_model or 'res.partner'
+
+    def _compute_target_url(self):
+        """Overridden in event bridge."""
+        pass
 
     @api.model_create_multi
     def create(self, vals_list):

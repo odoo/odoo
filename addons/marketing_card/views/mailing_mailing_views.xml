@@ -20,6 +20,7 @@
             </xpath>
             <xpath expr="//field[@name='mailing_model_id']" position="attributes">
                 <attribute name="readonly" separator=" or " add="card_campaign_id"/>
+                <attribute name="force_save">1</attribute>
             </xpath>
             <xpath expr="//label[@for='mailing_model_id']" position="before">
                 <field name="lang" invisible="not card_campaign_id"/>
