@@ -23,7 +23,7 @@ class ProductSupplierinfo(models.Model):
     sequence = fields.Integer(
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit', compute='_compute_product_uom_id', store=True, readonly=False)
+        'uom.uom', 'Unit', compute='_compute_product_uom_id', store=True, readonly=False, required=True, precompute=True)
     min_qty = fields.Float(
         'Quantity', default=0.0, required=True, digits="Product Unit",
         help="The quantity to purchase from this vendor to benefit from the unit price. If a vendor unit is set, quantity should be specified in this unit, otherwise it should be specified in the default unit of the product.")
@@ -42,11 +42,11 @@ class ProductSupplierinfo(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product Variant', check_company=True,
         domain="[('product_tmpl_id', '=', product_tmpl_id)] if product_tmpl_id else []",
-        compute='_compute_product_id', store=True, readonly=False,
+        compute='_compute_product_id', store=True, readonly=False, precompute=True,
         help="If not set, the vendor price will apply to all variants of this product.")
     product_tmpl_id = fields.Many2one(
-        'product.template', 'Product Template', check_company=True,
-        index=True, ondelete='cascade')
+        'product.template', 'Product Template', check_company=True, compute='_compute_product_tmpl_id', precompute=True,
+        store=True, readonly=False, required=True, index=True, ondelete='cascade')
     product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
@@ -71,6 +71,12 @@ class ProductSupplierinfo(models.Model):
     def _compute_price_discounted(self):
         for rec in self:
             rec.price_discounted = rec.product_uom_id._compute_price(rec.price, rec.product_id.uom_id) * (1 - rec.discount / 100)
+
+    @api.depends('product_id')
+    def _compute_product_tmpl_id(self):
+        for rec in self:
+            if rec.product_id:
+                rec.product_tmpl_id = rec.product_id.product_tmpl_id
 
     @api.depends('product_id', 'product_tmpl_id', 'product_variant_count')
     def _compute_product_id(self):

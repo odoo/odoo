@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 
@@ -34,15 +35,14 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         mto_route.active = True
 
         vendor = self.env['res.partner'].create({'name': 'vendor'})
-        seller = self.env['product.supplierinfo'].create({
-            'partner_id': vendor.id,
-            'price': 8,
-        })
 
         product = self.env['product.product'].create({
             'name': 'SuperProduct',
             'is_storable': True,
-            'seller_ids': [(6, 0, seller.ids)],
+            'seller_ids': [Command.create({
+                'partner_id': vendor.id,
+                'price': 8,
+            })],
             'route_ids': [(6, 0, (mto_route + buy_route).ids)]
         })
 
@@ -81,14 +81,13 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         then creates a sale order, so the PO will be generated. After creating a second SO,
         the PO should be updated since it has not been confirmed yet.
         """
-        seller = self.env['product.supplierinfo'].create({
-            'partner_id': self.partner_a.id,
-            'price': 8,
-        })
         product = self.env['product.product'].create({
             'name': 'SuperProduct',
             'is_storable': True,
-            'seller_ids': [(6, 0, seller.ids)],
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'price': 8,
+            })],
         })
         self.env['stock.warehouse.orderpoint'].create({
             'name': 'orderpoint test',

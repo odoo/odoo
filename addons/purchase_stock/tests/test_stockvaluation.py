@@ -88,12 +88,11 @@ class TestStockValuation(TransactionCase):
 
         # Set vendor
         vendor = self.env['res.partner'].create(dict(name='The Replenisher'))
-        supplierinfo = self.env['product.supplierinfo'].create({
+        self.product1.seller_ids = [Command.create({
             'partner_id': vendor.id,
             'price': kgm_price,
             'product_uom_id': kgm.id,
-        })
-        self.product1.seller_ids = [(4, supplierinfo.id, 0)]
+        })]
 
         # Automated stock valuation
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'

@@ -17,16 +17,16 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         route_mto = warehouse1.mto_pull_id.route_id.id
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         vendor2 = self.env['res.partner'].create({'name': 'BBB', 'email': 'from.test2@example.com'})
-        supplier_info1 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
-            'price': 50,
-        })
         product_test = self.env['product.product'].create({
             'name': 'Usb Keyboard',
             'is_storable': True,
             'uom_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
             'route_ids': [(6, 0, [route_buy, route_mto])]
+        })
+        supplier_info1 = self.env['product.supplierinfo'].create({
+            'product_id': product_test.id,
+            'partner_id': vendor1.id,
+            'price': 50,
         })
 
         # Stock picking
@@ -109,24 +109,27 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         route_buy = self.ref('purchase_stock.route_warehouse0_buy')
         route_mto = warehouse1.mto_pull_id.route_id.id
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
-        supplier_info1 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
-            'price': 50,
-        })
         product_1 = self.env['product.product'].create({
             'name': 'product1',
             'is_storable': True,
             'uom_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
+            'seller_ids': [Command.create({
+                'partner_id': vendor1.id,
+                'price': 50,
+            })],
             'route_ids': [(6, 0, [route_buy, route_mto])]
         })
         product_2 = self.env['product.product'].create({
             'name': 'product2',
             'is_storable': True,
             'uom_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
+            'seller_ids': [Command.create({
+                'partner_id': vendor1.id,
+                'price': 50,
+            })],
             'route_ids': [(6, 0, [route_buy, route_mto])]
         })
+
         # Blanket orders creation
         line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_id.id, 'price_unit': 41})
         line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_id.id, 'price_unit': 42})

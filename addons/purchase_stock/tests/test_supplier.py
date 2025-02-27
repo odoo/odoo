@@ -9,6 +9,7 @@ class TestSupplier(TestStockCommon):
             'min_qty': 345,
             'delay': 1,
             'product_uom_id': self.uom_dozen.id,
+            'product_id': self.product_1.id,
         })
 
         self.assertEqual(supplier.display_name, 'Julia Agrolait (345.0 Dozens - $\xa0123.00)')
