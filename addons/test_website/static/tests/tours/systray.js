@@ -42,17 +42,34 @@ const canToggleMobilePreview = () => [{
     run: "click",
 }];
 
+const cannotToggleMobilePreview = () => [{
+    content: 'Enable mobile preview',
+    trigger: '.o_menu_systray:not(:has(.o_menu_systray_item.o_mobile_preview))',
+}];
+
+// For non-website users, switching across website only works if the domains are
+// specified. Within the scope of test tours, this cannot be achieved.
+const canSwitchWebsiteNoCheck = () => [{
+    content: 'Open website switcher',
+    trigger: '.o_menu_systray .o_menu_systray_item.o_website_switcher_container .dropdown-toggle:contains("My Website"):not(:contains("My Website 2"))',
+    run: "click",
+}, {
+    content: 'Can switch to other website',
+    trigger: '.o-dropdown--menu .dropdown-item:contains("Other")',
+}];
+
+
 const canSwitchWebsite = () => [{
     content: "Open website switcher",
     trigger: '.o_menu_systray .o_menu_systray_item.o_website_switcher_container .dropdown-toggle:contains("My Website"):not(:contains("My Website 2"))',
     run: "click",
 }, {
-    content: "Switch to website 2",
-    trigger: '.o-dropdown--menu .dropdown-item:contains("My Website 2")',
+    content: "Switch to other website",
+    trigger: '.o-dropdown--menu .dropdown-item:contains("Other")',
     run: "click",
 }, {
-    content: "Wait for Website 2",
-    trigger: ':iframe html[data-website-id="2"] body:contains("Test Model")',
+    content: "Wait for other website",
+    trigger: ':iframe  body:contains("Test Model") div:contains("Other")',
 }];
 
 const canAddNewContent = () => [{
@@ -63,6 +80,11 @@ const canAddNewContent = () => [{
     content: "Close +New content",
     trigger: '#o_new_content_menu_choices',
     run: "click",
+}];
+
+const cannotAddNewContent = () => [{
+    content: 'No +New content',
+    trigger: '.o_menu_systray:not(:has(.o_menu_systray_item.o_new_content_container))',
 }];
 
 const canEditInBackEnd = () => [{
@@ -120,18 +142,8 @@ const cannotEdit = () => [{
 const canEditButCannotChange = () => [
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
-        content: "Change name",
-        trigger: ':iframe span[data-oe-expression="test_model.name"][contenteditable="true"]',
-        run: "editor Better name",
-    }, {
-        // Shouldn't the field rather not be editable ?
-        content: "Check that field becomes dirty",
-        trigger: ':iframe span.o_dirty[data-oe-expression="test_model.name"]',
-    },
-    ...wTourUtils.clickOnSave().slice(0, 3), // Do not wait for save to succeed.
-    {
-        content: "Check access error popup",
-        trigger: ':iframe .popover:contains("You are not allowed")',
+        content: 'Cannot change name',
+        trigger: ':iframe main:not(:has([data-oe-expression])):contains("Test Model")',
     },
 ];
 
@@ -171,18 +183,18 @@ register("test_systray_reditor_not_tester", () => [
 
 register("test_systray_not_reditor_tester", () => [
     ...canPublish(),
-    ...canToggleMobilePreview(),
-    ...canSwitchWebsite(),
-    ...canAddNewContent(),
+    ...cannotToggleMobilePreview(),
+    ...canSwitchWebsiteNoCheck(),
+    ...cannotAddNewContent(),
     ...canEditInBackEnd(),
     ...cannotEdit(),
 ]);
 
 register("test_systray_not_reditor_not_tester", () => [
     ...cannotPublish(),
-    ...canToggleMobilePreview(),
-    ...canSwitchWebsite(),
-    ...canAddNewContent(),
+    ...cannotToggleMobilePreview(),
+    ...canSwitchWebsiteNoCheck(),
+    ...cannotAddNewContent(),
     ...canViewInBackEnd(),
     ...cannotEdit(),
 ]);
