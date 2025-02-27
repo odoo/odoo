@@ -105,9 +105,10 @@ export class DiscussChannel extends models.ServerModel {
     /**
      * @param {number[]} ids
      * @param {number[]} partner_ids
+     * @param {boolean} [invite_to_rtc_call=undefined]
      */
-    add_members(ids, partner_ids) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids");
+    add_members(ids, partner_ids, invite_to_rtc_call) {
+        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "invite_to_rtc_call");
         ids = kwargs.ids;
         delete kwargs.ids;
         partner_ids = kwargs.partner_ids || [];
@@ -170,6 +171,9 @@ export class DiscussChannel extends models.ServerModel {
                     member_count: DiscussChannelMember.search_count([
                         ["channel_id", "=", channel.id],
                     ]),
+                    invitedMembers: kwargs.invite_to_rtc_call
+                        ? [["ADD", insertedChannelMembers]]
+                        : false,
                 })
                     .add(DiscussChannelMember.browse(insertedChannelMembers))
                     .get_result()
