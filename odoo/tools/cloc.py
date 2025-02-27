@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import ast
+import fnmatch
 import pathlib
 import os
 import re
@@ -24,6 +25,16 @@ STANDARD_MODULES = ['web', 'web_enterprise', 'theme_common', 'base']
 MAX_FILE_SIZE = 25 * 2**20 # 25 MB
 MAX_LINE_SIZE = 100000
 VALID_EXTENSION = ['.py', '.js', '.xml', '.css', '.scss']
+
+def fnmatch_patterns(glob_patterns):
+    """Yield fnmatch equivalent patterns for the given glob patterns iterable"""
+    for pattern in glob_patterns:
+        yield pattern
+        # '**' in glob patterns should match zero depth too, but
+        # fnmatch doesn't treat it so, so add it explicitly.
+        if pattern.endswith('**/*'):
+            # a/b/c/**.* => a/b/c/*
+            yield pattern[:-4] + "*"
 
 class Cloc(object):
     def __init__(self):
@@ -130,10 +141,8 @@ class Cloc(object):
                     break
             except Exception:
                 pass
-        if not exclude:
-            exclude = set()
-        for i in filter(None, exclude_list):
-            exclude.update(str(p) for p in pathlib.Path(path).glob(i))
+
+
 
         module_name = os.path.basename(path)
         self.book(module_name)
@@ -141,7 +150,8 @@ class Cloc(object):
             for file_name in files:
                 file_path = os.path.join(root, file_name)
 
-                if file_path in exclude:
+                relative_path = str(pathlib.Path(file_path).relative_to(path))
+                if any(fnmatch.fnmatch(relative_path, pattern) for pattern in fnmatch_patterns(exclude_list)):
                     continue
 
                 ext = os.path.splitext(file_path)[1].lower()

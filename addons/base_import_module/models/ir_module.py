@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import ast
 import base64
+import fnmatch
 import json
 import logging
 import lxml
@@ -21,6 +22,7 @@ from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory, ormcache
+from odoo.tools.cloc import fnmatch_patterns
 from odoo.tools.translate import get_po_paths_env, TranslationImporter
 
 _logger = logging.getLogger(__name__)
@@ -113,10 +115,8 @@ class IrModule(models.Model):
             mod = self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
-        exclude_list = set()
+        glob_patterns = terp.get('cloc_exclude', [])
         base_dir = pathlib.Path(path)
-        for pattern in terp.get('cloc_exclude', []):
-            exclude_list.update(str(p.relative_to(base_dir)) for p in base_dir.glob(pattern) if p.is_file())
 
         kind_of_files = ['data', 'init_xml', 'update_xml']
         if with_demo:
@@ -140,7 +140,7 @@ class IrModule(models.Model):
                         convert_sql_import(self.env, fp)
                     elif ext == '.xml':
                         convert_xml_import(self.env, module, fp, idref, mode, noupdate)
-                        if filename in exclude_list:
+                        if any(fnmatch.fnmatch(filename, pattern) for pattern in fnmatch_patterns(glob_patterns)):
                             for key, value in idref.items():
                                 xml_id = f"{module}.{key}" if '.' not in key else key
                                 name = xml_id.replace('.', '_')
@@ -187,7 +187,8 @@ class IrModule(models.Model):
                             'module': module,
                             'res_id': attachment.id,
                         })
-                        if str(pathlib.Path(full_path).relative_to(base_dir)) in exclude_list:
+                        relative_path = str(pathlib.Path(full_path).relative_to(base_dir))
+                        if any((fnmatch.fnmatch(relative_path, pattern)) for pattern in fnmatch_patterns(glob_patterns)):
                             self.env['ir.model.data'].create({
                                 'name': f"cloc_exclude_attachment_{url_path}".replace('.', '_').replace(' ', '_'),
                                 'model': 'ir.attachment',
