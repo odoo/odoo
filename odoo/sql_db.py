@@ -16,6 +16,7 @@ import time
 import typing
 import uuid
 import warnings
+import weakref
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from inspect import currentframe
@@ -84,6 +85,76 @@ sql_counter: int = 0
 MAX_IDLE_TIMEOUT = 60 * 10
 
 
+savepoint_counters = weakref.WeakKeyDictionary() # psycopg2 cursor -> SubXActCache
+SUB_XACT_CACHE_MAX = 64
+
+_subxact_logger = _logger.getChild('SubXActCache')
+
+class SubXActCache:
+    """
+    This class attempts to track sub transactions (savepoints) the same way postgres
+    does internally.
+
+    For simplicity we will store savepoint name instead of transaction id.
+
+    Postgres stores only a certain amount of sub transaction ids in cache before
+    starting to use the disk, in certain situations this can lead to significant
+    performance drop, or even database halts.
+
+    Postgres keeps a reference to sub transaction ids (and grand-sub transaction ids)
+    as long as one of those conditions is met:
+     - The sub transaction is alive
+     - The sub transaction was Released without being rolled back (equivalent to commit)
+        and queries were made during the sub transaction
+
+    Failure to meet those condition means dropping the sub transaction as well as
+    it's children.
+
+    For all intents and purpose rolling back to a savepoint without releasing is equivalent
+    to starting a new savepoint.
+
+    Unfortunately it would be impossible to track activity during a savepoint so we
+    always assume that some activity happened (transaction id was set).
+    """
+
+    def __init__(self):
+        self._sp_stack = []
+        self._last_rollback = ''
+
+    def start(self, name):
+        if len(self._sp_stack) == SUB_XACT_CACHE_MAX:
+            if odoo.modules.module.current_test:
+                raise AssertionError(
+                    'Savepoint limit (%s) reached.\n'
+                    'See https://github.com/odoo/odoo/pull/199596 for troubleshooting and fixes.',
+                    SUB_XACT_CACHE_MAX
+                )
+            else:
+                _subxact_logger.warning(
+                    'Savepoint limit (%s) reached.', SUB_XACT_CACHE_MAX, stack_info=True
+                )
+        self._sp_stack.append(name)
+        self._last_rollback = ''
+        _subxact_logger.debug('Starting savepoint: %s', name)
+
+    def rollback(self, name):
+        self._last_rollback = name
+        _subxact_logger.debug('Rollback savepoint: %s', name)
+
+    def release(self, name):
+        _subxact_logger.debug('Trying to release savepoint: %s', name)
+        if self._last_rollback != name:
+            return
+        for idx in reversed(range(len(self._sp_stack))):
+            if self._sp_stack[idx] == name:
+                break
+        else:
+            raise AssertionError('Tried to release unknown savepoint %s', name)
+        self._sp_stack = self._sp_stack[:idx]
+        self._last_rollback = ''
+        _subxact_logger.debug('Released savepoint: %s', name)
+
+
 class Savepoint:
     """ Reifies an active breakpoint, allows :meth:`BaseCursor.savepoint` users
     to internally rollback the savepoint (as many times as they want) without
@@ -113,6 +184,20 @@ class Savepoint:
         cr.execute('SAVEPOINT "%s"' % self.name)
         if self._readonly:
             cr.execute('SET TRANSACTION READ ONLY')
+        self.__subxactcache.start(self.name)
+
+    @property
+    def __subxactcache(self) -> SubXActCache:
+        return savepoint_counters.setdefault(self.__obj, SubXActCache())
+
+    @property
+    def __obj(self):
+        # Get Psycopg2 cursor from Cursor impl
+        if hasattr(self._cr, 'cr'): # TestCursor
+            return self._cr.cr._obj
+        elif hasattr(self._cr, '_obj'): # Cursor
+            return self._cr._obj
+        return self._cr
 
     def __enter__(self):
         return self
@@ -126,11 +211,13 @@ class Savepoint:
 
     def rollback(self):
         self._cr.execute('ROLLBACK TO SAVEPOINT "%s"' % self.name)
+        self.__subxactcache.rollback(self.name)
 
     def _close(self, rollback: bool):
         if rollback or self._readonly:
             self.rollback()
         self._cr.execute('RELEASE SAVEPOINT "%s"' % self.name)
+        self.__subxactcache.release(self.name)
         self.closed = True
 
 
@@ -554,6 +641,8 @@ class Cursor(BaseCursor):
         self.prerollback.clear()
         self.postrollback.clear()
         self.postcommit.run()
+        if '_obj' in self.__dict__:
+            savepoint_counters[self._obj] = SubXActCache()
 
     def rollback(self) -> None:
         """ Perform an SQL `ROLLBACK` """
@@ -563,6 +652,8 @@ class Cursor(BaseCursor):
         self._cnx.rollback()
         self._now = None
         self.postrollback.run()
+        if '_obj' in self.__dict__:
+            savepoint_counters[self._obj] = SubXActCache()
 
     def __getattr__(self, name):
         if self._closed and name == '_obj':
