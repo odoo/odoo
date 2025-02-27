@@ -669,12 +669,12 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         buy_route = self.env['stock.route'].search([('name', '=', 'Buy')])
         mto_route.active = True
         self.finished.route_ids = mto_route.ids + buy_route.ids
-        seller = self.env['product.supplierinfo'].create({
+        self.env['product.supplierinfo'].create({
+            'product_id': self.finished.id,
             'partner_id': self.vendor.id,
             'price': 12.0,
             'delay': 0
         })
-        self.finished.seller_ids = [(6, 0, [seller.id])]
 
         mo = self.env['mrp.production'].create({
             'product_id': self.finished2.id,

@@ -93,6 +93,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         # Create a supplier and set it to component
         vendor = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         self.env['product.supplierinfo'].create({
+            'product_id': self.finished.id,
             'partner_id': vendor.id,
             'price': 50,
         })

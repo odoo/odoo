@@ -15,20 +15,6 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
         cls.vendor = cls.env['res.partner'].create(dict(name='Vendor'))
         cls.customer = cls.env['res.partner'].create(dict(name='Customer'))
 
-        cls.supplier_A = cls.env['product.supplierinfo'].create({
-            'partner_id' : cls.vendor.id,
-            'min_qty' : 0.0,
-            'price' : 10.0,
-            'delay' : 0
-        })
-
-        cls.supplier_B = cls.env['product.supplierinfo'].create({
-            'partner_id' : cls.vendor.id,
-            'min_qty' : 0.0,
-            'price' : 12.0,
-            'delay' : 0
-        })
-
         # Create a "A" and a "B" Product :
         # No Stock
         # Partner/Customer Lead Time = 0
@@ -41,7 +27,6 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
             'invoice_policy': 'delivery',
             'standard_price': 5.0,
             'list_price': 10.0,
-            'seller_ids': [Command.link(cls.supplier_A.id)],
             'route_ids': [Command.link(cls.buy_route.id)],
             'sale_delay' : 0,
         })
@@ -53,11 +38,25 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
             'invoice_policy': 'delivery',
             'standard_price': 6.0,
             'list_price': 12.0,
-            'seller_ids': [Command.link(cls.supplier_B.id)],
             'route_ids': [Command.link(cls.buy_route.id)],
             'sale_delay': 0,
         })
 
+        cls.supplier_A = cls.env['product.supplierinfo'].create({
+            'product_id': cls.product_A.id,
+            'partner_id': cls.vendor.id,
+            'min_qty': 0.0,
+            'price': 10.0,
+            'delay': 0
+        })
+
+        cls.supplier_B = cls.env['product.supplierinfo'].create({
+            'product_id': cls.product_B.id,
+            'partner_id': cls.vendor.id,
+            'min_qty': 0.0,
+            'price': 12.0,
+            'delay': 0
+        })
 
         orderpoint_form = Form(cls.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = cls.product_A
