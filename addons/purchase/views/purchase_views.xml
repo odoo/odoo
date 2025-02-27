@@ -134,11 +134,10 @@
                     <button name="action_rfq_send" invisible="state != 'draft'" string="Send RFQ" type="object" context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
                     <button name="button_confirm" type="object" invisible="state != 'sent'" string="Confirm Order" context="{'validate_analytic': True}" class="oe_highlight" id="bid_confirm" data-hotkey="q"/>
                     <button name="button_approve" type="object" invisible="state != 'to approve'" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" data-hotkey="z"/>
-                    <button name="action_create_invoice" string="Create Bill" type="object" class="oe_highlight" context="{'create_bill':True}" invisible="state != 'purchase' or invoice_status in ('no', 'invoiced')" data-hotkey="w"/>
                     <button name="action_rfq_send" invisible="state != 'sent'" string="Send RFQ" type="object" context="{'send_rfq':True}" data-hotkey="g"/>
                     <button name="button_confirm" type="object" invisible="state != 'draft'" context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm" data-hotkey="q"/>
+                    <widget name="purchase_file_uploader" invisible="state != 'purchase'"/>
                     <button name="action_rfq_send" invisible="state != 'purchase'" string="Send PO" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
-                    <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" invisible="state != 'purchase' or invoice_status not in ('no', 'invoiced') or not order_line" data-hotkey="w"/>
                     <button name="action_acknowledge" string="Acknowledge" type="object" invisible="acknowledged or state != 'purchase'"/>
                     <button name="button_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="o"/>
                     <button name="print_quotation" string="Print" type="object" groups="base.group_user" data-hotkey="k"/>
@@ -559,7 +558,6 @@
                 multi_edit="1"
                 class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
                     <header>
-                        <button name="action_create_invoice" type="object" string="Create Bills"/>
                         <button name="button_cancel" type="object" string="Cancel"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
@@ -874,6 +872,7 @@
         <field name='group_ids' eval="[(4, ref('account.group_account_invoice'))]"/>
         <field name="state">code</field>
         <field name="sequence">1</field>
+        <field name="binding_view_types">list</field>
         <field name="code">
             if records:
                 action = records.action_merge()
