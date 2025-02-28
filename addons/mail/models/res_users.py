@@ -154,8 +154,8 @@ class Users(models.Model):
         return write_res
 
     def action_archive(self):
-        activities_to_delete = self.env['mail.activity'].search([('user_id', 'in', self.ids)])
-        activities_to_delete.unlink()
+        activities_to_archive = self.env['mail.activity'].search([('user_id', 'in', self.ids)])
+        activities_to_archive.write({'active': False})
         return super(Users, self).action_archive()
 
     def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):
