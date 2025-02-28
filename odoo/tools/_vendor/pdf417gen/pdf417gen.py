@@ -583,613 +583,602 @@ NUMERIC_LATCH = 902
 PADDING_INTERIM_CODE = 29
 
 
-# ---------------------------------------------------------
-
-def il_codes_map_code_word(table, word):
-    """Maps high-level code words to low level code words.
-    """
-    assert 0 <= table <= 2, "table must be between 0 and 2, given: %r" % table
-    assert 0 <= word <= 929, "word must be between 0 and 929, given: %r" % word
+class Codes:
+    def map_code_word(table, word):
+        """Maps high-level code words to low level code words.
+        """
+        assert 0 <= table <= 2, "table must be between 0 and 2, given: %r" % table
+        assert 0 <= word <= 929, "word must be between 0 and 929, given: %r" % word
+
+        return CODES[table][word]
 
-    return CODES[table][word]
+
+class Console:
+
+    def print_usage():
+        print("Usage: pdf417gen [command]")
+        print("")
+        print("Commands:")
+        print("  help    show this help message and exit")
+        print("  encode  generate a bar code from given input")
+        print("")
+        print("https://github.com/ihabunek/pdf417gen")
 
 
-def il_console_print_usage():
-    print("Usage: pdf417gen [command]")
-    print("")
-    print("Commands:")
-    print("  help    show this help message and exit")
-    print("  encode  generate a bar code from given input")
-    print("")
-    print("https://github.com/ihabunek/pdf417gen")
+    def print_err(msg: str):
+        sys.stderr.write('\033[91m' + msg + '\033[0m' + "\n")
 
 
-def il_console_print_err(msg: str):
-    sys.stderr.write('\033[91m' + msg + '\033[0m' + "\n")
+    def get_parser() -> ArgumentParser:
+        parser = ArgumentParser(epilog="https://github.com/ihabunek/pdf417gen",
+                                description="Generate a bar code from given input")
 
+        parser.add_argument("text", type=str, nargs="?",
+                            help="Text or data to encode. Alternatively data can be piped in.")
 
-def il_console_get_parser() -> ArgumentParser:
-    parser = ArgumentParser(epilog="https://github.com/ihabunek/pdf417gen",
-                            description="Generate a bar code from given input")
+        parser.add_argument("-c", "--columns", dest="columns", type=int,
+                            help="The number of columns (default is 6).",
+                            default=6)
 
-    parser.add_argument("text", type=str, nargs="?",
-                        help="Text or data to encode. Alternatively data can be piped in.")
+        parser.add_argument("-l", "--security-level", dest="security_level", type=int,
+                            help="Security level (default is 2).",
+                            default=2)
 
-    parser.add_argument("-c", "--columns", dest="columns", type=int,
-                        help="The number of columns (default is 6).",
-                        default=6)
+        parser.add_argument("-e", "--encoding", dest="encoding", type=str,
+                            help="Character encoding used to decode input (default is utf-8).",
+                            default='utf-8')
 
-    parser.add_argument("-l", "--security-level", dest="security_level", type=int,
-                        help="Security level (default is 2).",
-                        default=2)
+        parser.add_argument("-s", "--scale", dest="scale", type=int,
+                            help="Module width in pixels (default is 3).",
+                            default=3)
 
-    parser.add_argument("-e", "--encoding", dest="encoding", type=str,
-                        help="Character encoding used to decode input (default is utf-8).",
-                        default='utf-8')
+        parser.add_argument("-r", "--ratio", dest="ratio", type=int,
+                            help="Module height to width ratio (default is 3).",
+                            default=3)
 
-    parser.add_argument("-s", "--scale", dest="scale", type=int,
-                        help="Module width in pixels (default is 3).",
-                        default=3)
+        parser.add_argument("-p", "--padding", dest="padding", type=int,
+                            help="Image padding in pixels (default is 20).",
+                            default=20)
 
-    parser.add_argument("-r", "--ratio", dest="ratio", type=int,
-                        help="Module height to width ratio (default is 3).",
-                        default=3)
+        parser.add_argument("-f", "--foreground-color", dest="fg_color", type=str,
+                            help="Foreground color in hex (default is '#000000').",
+                            default="#000000")
 
-    parser.add_argument("-p", "--padding", dest="padding", type=int,
-                        help="Image padding in pixels (default is 20).",
-                        default=20)
+        parser.add_argument("-b", "--background-color", dest="bg_color", type=str,
+                            help="Foreground color in hex (default is '#FFFFFF').",
+                            default="#FFFFFF")
 
-    parser.add_argument("-f", "--foreground-color", dest="fg_color", type=str,
-                        help="Foreground color in hex (default is '#000000').",
-                        default="#000000")
+        parser.add_argument("-o", "--output", dest="output", type=str,
+                            help="Target file (if not given, will just show the barcode).")
 
-    parser.add_argument("-b", "--background-color", dest="bg_color", type=str,
-                        help="Foreground color in hex (default is '#FFFFFF').",
-                        default="#FFFFFF")
+        return parser
 
-    parser.add_argument("-o", "--output", dest="output", type=str,
-                        help="Target file (if not given, will just show the barcode).")
+    def do_encode(raw_args: List[str]):
+        args = Console.get_parser().parse_args(raw_args)
+        text: str = args.text
 
-    return parser
+        # If no text is given, check stdin
+        if not text:
+            text = sys.stdin.read()
 
+        if not text:
+            Console.print_err("No input given")
+            return
 
-def il_console_do_encode(raw_args: List[str]):
-    args = il_console_get_parser().parse_args(raw_args)
-    text: str = args.text
+        try:
+            codes = Encoding.encode(
+                text,
+                columns=args.columns,
+                security_level=args.security_level,
+                encoding=args.encoding,
+            )
 
-    # If no text is given, check stdin
-    if not text:
-        text = sys.stdin.read()
+            image = Rendering.render_image(
+                codes,
+                scale=args.scale,
+                ratio=args.ratio,
+                padding=args.padding,
+                fg_color=args.fg_color,
+                bg_color=args.bg_color,
+            )
+        except Exception as e:
+            Console.print_err(str(e))
+            return
 
-    if not text:
-        il_console_print_err("No input given")
-        return
+        if args.output:
+            image.save(args.output)
+        else:
+            image.show()
 
-    try:
-        codes = il_encoding_encode(
-            text,
-            columns=args.columns,
-            security_level=args.security_level,
-            encoding=args.encoding,
-        )
 
-        image = il_rendering_render_image(
-            codes,
-            scale=args.scale,
-            ratio=args.ratio,
-            padding=args.padding,
-            fg_color=args.fg_color,
-            bg_color=args.bg_color,
-        )
-    except Exception as e:
-        il_console_print_err(str(e))
-        return
+    def main():
+        command = sys.argv[1] if len(sys.argv) > 1 else None
+        args = sys.argv[2:]
 
-    if args.output:
-        image.save(args.output)
-    else:
-        image.show()
+        if command == 'encode':
+            Console.do_encode(args)
+        else:
+            Console.print_usage()
 
 
-def il_console_main():
-    command = sys.argv[1] if len(sys.argv) > 1 else None
-    args = sys.argv[2:]
+class Encoding:
 
-    if command == 'encode':
-        il_console_do_encode(args)
-    else:
-        il_console_print_usage()
+    def encode(data, columns=6, security_level=2, encoding="utf-8"):
+        if columns < 1 or columns > 30:
+            raise ValueError("'columns' must be between 1 and 30. Given: %r" % columns)
 
+        if security_level < 0 or security_level > 8:
+            raise ValueError("'security_level' must be between 1 and 8. Given: %r" % security_level)
 
-def il_encoding_encode(data, columns=6, security_level=2, encoding="utf-8"):
-    if columns < 1 or columns > 30:
-        raise ValueError("'columns' must be between 1 and 30. Given: %r" % columns)
+        num_cols = columns  # Nomenclature
 
-    if security_level < 0 or security_level > 8:
-        raise ValueError("'security_level' must be between 1 and 8. Given: %r" % security_level)
+        # Prepare input
+        data_bytes = Util.to_bytes(data, encoding)
 
-    num_cols = columns  # Nomenclature
+        # Convert data to code words and split into rows
+        code_words = Encoding.encode_high(data_bytes, num_cols, security_level)
+        rows = list(Util.chunks(code_words, num_cols))
 
-    # Prepare input
-    data_bytes = il_util_to_bytes(data, encoding)
+        return list(Encoding.encode_rows(rows, num_cols, security_level))
 
-    # Convert data to code words and split into rows
-    code_words = il_encoding_encode_high(data_bytes, num_cols, security_level)
-    rows = list(il_util_chunks(code_words, num_cols))
 
-    return list(il_encoding_encode_rows(rows, num_cols, security_level))
+    def encode_rows(rows, num_cols, security_level):
+        num_rows = len(rows)
 
+        for row_no, row_data in enumerate(rows):
+            left = Encoding.get_left_code_word(row_no, num_rows, num_cols, security_level)
+            right = Encoding.get_right_code_word(row_no, num_rows, num_cols, security_level)
 
-def il_encoding_encode_rows(rows, num_cols, security_level):
-    num_rows = len(rows)
+            yield Encoding.encode_row(row_no, row_data, left, right)
 
-    for row_no, row_data in enumerate(rows):
-        left = il_encoding_get_left_code_word(row_no, num_rows, num_cols, security_level)
-        right = il_encoding_get_right_code_word(row_no, num_rows, num_cols, security_level)
+    def encode_row(row_no, row_words, left, right):
+        table_idx = row_no % 3
 
-        yield il_encoding_encode_row(row_no, row_data, left, right)
+        # Convert high level code words to low level code words
+        left_low = Codes.map_code_word(table_idx, left)
+        right_low = Codes.map_code_word(table_idx, right)
+        row_words_low = [Codes.map_code_word(table_idx, word) for word in row_words]
 
+        return [START_CHARACTER, left_low] + row_words_low + [right_low, STOP_CHARACTER]
 
-def il_encoding_encode_row(row_no, row_words, left, right):
-    table_idx = row_no % 3
+    def encode_high(data, columns, security_level):
+        """Converts the input string to high level code words.
 
-    # Convert high level code words to low level code words
-    left_low = il_codes_map_code_word(table_idx, left)
-    right_low = il_codes_map_code_word(table_idx, right)
-    row_words_low = [il_codes_map_code_word(table_idx, word) for word in row_words]
+        Including the length indicator and the error correction words, but without
+        padding.
+        """
 
-    return [START_CHARACTER, left_low] + row_words_low + [right_low, STOP_CHARACTER]
+        # Encode data to code words
+        data_words = list(Init.compact(data))
+        data_count = len(data_words)
 
+        # Get the padding to align data to column count
+        ec_count = 2 ** (security_level + 1)
+        padding_words = Encoding.get_padding(data_count, ec_count, columns)
+        padding_count = len(padding_words)
 
-def il_encoding_encode_high(data, columns, security_level):
-    """Converts the input string to high level code words.
+        # Length descriptor includes the data CWs, padding CWs and the descriptor
+        # itself but not the error correction CWs
+        length_descriptor = data_count + padding_count + 1
 
-    Including the length indicator and the error correction words, but without
-    padding.
-    """
+        # Total number of code words and number of rows
+        cw_count = data_count + ec_count + padding_count + 1
+        row_count = math.ceil(cw_count / columns)
 
-    # Encode data to code words
-    data_words = list(il_init_compact(data))
-    data_count = len(data_words)
+        # Check the generated bar code's size is within specification parameters
+        Encoding.validate_barcode_size(length_descriptor, row_count)
 
-    # Get the padding to align data to column count
-    ec_count = 2 ** (security_level + 1)
-    padding_words = il_encoding_get_padding(data_count, ec_count, columns)
-    padding_count = len(padding_words)
+        # Join encoded data with the length specifier and padding
+        extendend_words = [length_descriptor] + data_words + padding_words
 
-    # Length descriptor includes the data CWs, padding CWs and the descriptor
-    # itself but not the error correction CWs
-    length_descriptor = data_count + padding_count + 1
+        # Calculate error correction words
+        ec_words = ErrorCorrection.compute_error_correction_code_words(extendend_words, security_level)
 
-    # Total number of code words and number of rows
-    cw_count = data_count + ec_count + padding_count + 1
-    row_count = math.ceil(cw_count / columns)
+        return extendend_words + ec_words
 
-    # Check the generated bar code's size is within specification parameters
-    il_encoding_validate_barcode_size(length_descriptor, row_count)
 
-    # Join encoded data with the length specifier and padding
-    extendend_words = [length_descriptor] + data_words + padding_words
+    def validate_barcode_size(length_descriptor, row_count):
+        if length_descriptor > MAX_CODE_WORDS:
+            raise ValueError(
+                "Data too long. Generated bar code has length descriptor of %d. "
+                "Maximum is %d." % (length_descriptor, MAX_CODE_WORDS))
 
-    # Calculate error correction words
-    ec_words = il_error_correction_compute_error_correction_code_words(extendend_words, security_level)
+        if row_count < MIN_ROWS:
+            raise ValueError(
+                "Generated bar code has %d rows. Minimum is %d rows. "
+                "Try decreasing column count." % (row_count, MIN_ROWS))
 
-    return extendend_words + ec_words
+        if row_count > MAX_ROWS:
+            raise ValueError(
+                "Generated bar code has %d rows. Maximum is %d rows. "
+                "Try increasing column count." % (row_count, MAX_ROWS))
 
+    def get_left_code_word(row_no, num_rows, num_cols, security_level):
+        table_id = row_no % 3
 
-def il_encoding_validate_barcode_size(length_descriptor, row_count):
-    if length_descriptor > MAX_CODE_WORDS:
-        raise ValueError(
-            "Data too long. Generated bar code has length descriptor of %d. "
-            "Maximum is %d." % (length_descriptor, MAX_CODE_WORDS))
+        if table_id == 0:
+            x = (num_rows - 1) // 3
+        elif table_id == 1:
+            x = security_level * 3 + (num_rows - 1) % 3
+        elif table_id == 2:
+            x = num_cols - 1
 
-    if row_count < MIN_ROWS:
-        raise ValueError(
-            "Generated bar code has %d rows. Minimum is %d rows. "
-            "Try decreasing column count." % (row_count, MIN_ROWS))
+        return 30 * (row_no // 3) + x
 
-    if row_count > MAX_ROWS:
-        raise ValueError(
-            "Generated bar code has %d rows. Maximum is %d rows. "
-            "Try increasing column count." % (row_count, MAX_ROWS))
+    def get_right_code_word(row_no, num_rows, num_cols, security_level):
+        table_id = row_no % 3
 
+        if table_id == 0:
+            x = num_cols - 1
+        elif table_id == 1:
+            x = (num_rows - 1) // 3
+        elif table_id == 2:
+            x = security_level * 3 + (num_rows - 1) % 3
 
-def il_encoding_get_left_code_word(row_no, num_rows, num_cols, security_level):
-    table_id = row_no % 3
+        return 30 * (row_no // 3) + x
 
-    if table_id == 0:
-        x = (num_rows - 1) // 3
-    elif table_id == 1:
-        x = security_level * 3 + (num_rows - 1) % 3
-    elif table_id == 2:
-        x = num_cols - 1
+    def get_padding(data_count, ec_count, num_cols):
+        # Total number of data words and error correction words, additionally
+        # reserve 1 code word for the length descriptor
+        total_count = data_count + ec_count + 1
+        mod = total_count % num_cols
 
-    return 30 * (row_no // 3) + x
+        return [PADDING_CODE_WORD] * (num_cols - mod) if mod > 0 else []
 
 
-def il_encoding_get_right_code_word(row_no, num_rows, num_cols, security_level):
-    table_id = row_no % 3
+class ErrorCorrection:
 
-    if table_id == 0:
-        x = num_cols - 1
-    elif table_id == 1:
-        x = (num_rows - 1) // 3
-    elif table_id == 2:
-        x = security_level * 3 + (num_rows - 1) % 3
+    def compute_error_correction_code_words(data_words, level):
+        assert 0 <= level <= 8
 
-    return 30 * (row_no // 3) + x
+        # Correction factors for the given level
+        factors = ERROR_CORRECTION_FACTORS[level]
 
+        # Number of EC words
+        count = 2 ** (level + 1)
 
-def il_encoding_get_padding(data_count, ec_count, num_cols):
-    # Total number of data words and error correction words, additionally
-    # reserve 1 code word for the length descriptor
-    total_count = data_count + ec_count + 1
-    mod = total_count % num_cols
+        # Correction code words list, prepopulated with zeros
+        ec_words = [0] * count
 
-    return [PADDING_CODE_WORD] * (num_cols - mod) if mod > 0 else []
+        # Do the math
+        for data_word in data_words:
+            temp = (data_word + ec_words[-1]) % 929
 
+            for x in range(count - 1, -1, -1):
+                word = ec_words[x - 1] if x > 0 else 0
+                ec_words[x] = (word + 929 - (temp * factors[x]) % 929) % 929
 
-def il_error_correction_compute_error_correction_code_words(data_words, level):
-    assert 0 <= level <= 8
+        return [929 - x if x > 0 else x for x in reversed(ec_words)]
 
-    # Correction factors for the given level
-    factors = ERROR_CORRECTION_FACTORS[level]
 
-    # Number of EC words
-    count = 2 ** (level + 1)
+class Rendering:
 
-    # Correction code words list, prepopulated with zeros
-    ec_words = [0] * count
+    def barcode_size(codes):
+        """Returns the barcode size in modules."""
+        num_rows = len(codes)
+        num_cols = len(codes[0])
 
-    # Do the math
-    for data_word in data_words:
-        temp = (data_word + ec_words[-1]) % 929
+        # 17 bodules per column, last column has an additional module
+        width = num_cols * 17 + 1
+        height = num_rows
 
-        for x in range(count - 1, -1, -1):
-            word = ec_words[x - 1] if x > 0 else 0
-            ec_words[x] = (word + 929 - (temp * factors[x]) % 929) % 929
+        return width, height
 
-    return [929 - x if x > 0 else x for x in reversed(ec_words)]
+    def modules(codes):
+        """Iterates over codes and yields barcode moudles as (y, x) tuples."""
 
+        for row_id, row in enumerate(codes):
+            col_id = 0
+            for value in row:
+                for digit in format(value, 'b'):
+                    if digit == "1":
+                        yield col_id, row_id
+                    col_id += 1
 
-def il_rendering_barcode_size(codes):
-    """Returns the barcode size in modules."""
-    num_rows = len(codes)
-    num_cols = len(codes[0])
+    def parse_color(color):
+        return ImageColor.getrgb(color)
 
-    # 17 bodules per column, last column has an additional module
-    width = num_cols * 17 + 1
-    height = num_rows
+    def rgb_to_hex(color):
+        return '#{0:02x}{1:02x}{2:02x}'.format(*color)
 
-    return width, height
+    def render_image(codes, scale=3, ratio=3, padding=20, fg_color="#000", bg_color="#FFF"):
+        width, height = Rendering.barcode_size(codes)
 
+        # Translate hex code colors to RGB tuples
+        bg_color = Rendering.parse_color(bg_color)
+        fg_color = Rendering.parse_color(fg_color)
 
-def il_rendering_modules(codes):
-    """Iterates over codes and yields barcode moudles as (y, x) tuples."""
+        # Construct the image
+        image = Image.new("RGB", (width, height), bg_color)
 
-    for row_id, row in enumerate(codes):
-        col_id = 0
-        for value in row:
-            for digit in format(value, 'b'):
-                if digit == "1":
-                    yield col_id, row_id
-                col_id += 1
+        # Draw the pixle grid
+        px = image.load()
+        for x, y in Rendering.modules(codes):
+            px[x, y] = fg_color
 
+        # Scale and add padding
+        image = image.resize((scale * width, scale * height * ratio), resample=Resampling.NEAREST)
+        image = ImageOps.expand(image, padding, bg_color)
 
-def il_rendering_parse_color(color):
-    return ImageColor.getrgb(color)
+        return image
 
+    def render_svg(codes, scale=3, ratio=3, color="#000", description=None):
+        # Barcode size in modules
+        width, height = Rendering.barcode_size(codes)
 
-def il_rendering_rgb_to_hex(color):
-    return '#{0:02x}{1:02x}{2:02x}'.format(*color)
+        # Size of each module
+        scale_x = scale
+        scale_y = scale * ratio
 
+        color = Rendering.rgb_to_hex(Rendering.parse_color(color))
 
-def il_rendering_render_image(codes, scale=3, ratio=3, padding=20, fg_color="#000", bg_color="#FFF"):
-    width, height = il_rendering_barcode_size(codes)
-
-    # Translate hex code colors to RGB tuples
-    bg_color = il_rendering_parse_color(bg_color)
-    fg_color = il_rendering_parse_color(fg_color)
-
-    # Construct the image
-    image = Image.new("RGB", (width, height), bg_color)
-
-    # Draw the pixle grid
-    px = image.load()
-    for x, y in il_rendering_modules(codes):
-        px[x, y] = fg_color
-
-    # Scale and add padding
-    image = image.resize((scale * width, scale * height * ratio), resample=Resampling.NEAREST)
-    image = ImageOps.expand(image, padding, bg_color)
-
-    return image
-
-
-def il_rendering_render_svg(codes, scale=3, ratio=3, color="#000", description=None):
-    # Barcode size in modules
-    width, height = il_rendering_barcode_size(codes)
-
-    # Size of each module
-    scale_x = scale
-    scale_y = scale * ratio
-
-    color = il_rendering_rgb_to_hex(il_rendering_parse_color(color))
-
-    root = Element('svg', {
-        "version": "1.1",
-        "xmlns": "http://www.w3.org/2000/svg",
-        "width": str(width * scale_x),
-        "height": str(height * scale_y),
-    })
-
-    if description:
-        description_element = SubElement(root, 'description')
-        description_element.text = description
-
-    group = SubElement(root, 'g', {
-        "id": "barcode",
-        "fill": color,
-        "stroke": "none"
-    })
-
-    # Generate the barcode modules
-    for col_id, row_id in il_rendering_modules(codes):
-        SubElement(group, 'rect', {
-            "x": str(col_id * scale_x),
-            "y": str(row_id * scale_y),
-            "width": str(scale_x),
-            "height": str(scale_y),
+        root = Element('svg', {
+            "version": "1.1",
+            "xmlns": "http://www.w3.org/2000/svg",
+            "width": str(width * scale_x),
+            "height": str(height * scale_y),
         })
 
-    return ElementTree(element=root)
+        if description:
+            description_element = SubElement(root, 'description')
+            description_element.text = description
+
+        group = SubElement(root, 'g', {
+            "id": "barcode",
+            "fill": color,
+            "stroke": "none"
+        })
+
+        # Generate the barcode modules
+        for col_id, row_id in Rendering.modules(codes):
+            SubElement(group, 'rect', {
+                "x": str(col_id * scale_x),
+                "y": str(row_id * scale_y),
+                "width": str(scale_x),
+                "height": str(scale_y),
+            })
+
+        return ElementTree(element=root)
 
 
-def il_util_from_base(digits: List[int], base: int) -> int:
-    return sum(v * (base ** (len(digits) - k - 1)) for k, v in enumerate(digits))
+class Util:
 
+    def from_base(digits: List[int], base: int) -> int:
+        return sum(v * (base ** (len(digits) - k - 1)) for k, v in enumerate(digits))
 
-def il_util_to_base(value: int, base: int) -> List[int]:
-    digits: List[int] = []
+    def to_base(value: int, base: int) -> List[int]:
+        digits: List[int] = []
 
-    while value > 0:
-        digits.insert(0, value % base)
-        value //= base
+        while value > 0:
+            digits.insert(0, value % base)
+            value //= base
 
-    return digits
+        return digits
 
+    def switch_base(digits: List[int], source_base: int, target_base: int) -> List[int]:
+        return Util.to_base(Util.from_base(digits, source_base), target_base)
 
-def il_util_switch_base(digits: List[int], source_base: int, target_base: int) -> List[int]:
-    return il_util_to_base(il_util_from_base(digits, source_base), target_base)
-
-
-def il_util_chunks(iterable: Iterable[T], size: int) -> Generator[Tuple[T, ...], None, None]:
-    """Generator which chunks data into chunks of given size."""
-    it = iter(iterable)
-    while True:
-        chunk = tuple(islice(it, size))
-        if not chunk:
-            return
-        yield chunk
-
-
-def il_util_to_bytes(input: Any, encoding: str = "utf-8") -> bytes:
-    if isinstance(input, bytes):
-        return input
-
-    if isinstance(input, str):
-        return bytes(input, encoding)
-
-    raise ValueError("Invalid input, expected string or bytes")
-
-
-def il_util_iterate_prev_next(iterable: Iterable[T]) -> Iterator[Tuple[Optional[T], T, Optional[T]]]:
-    """
-    Creates an iterator which provides previous, current and next item.
-    """
-    prevs, items, nexts = tee(iterable, 3)
-    prevs = chain([None], prevs)
-    nexts = chain(islice(nexts, 1, None), [None])
-    return zip(prevs, items, nexts)
-
-
-"""
-Byte Compaction Mode (BC)
-
-Can encode: ASCII 0 to 255
-Rate compaction: 1.2 byte per code word
-"""
-
-
-def il_byte_compact_bytes(data):
-    """Encodes data into code words using the Byte compaction mode."""
-    compacted_chunks = (il_byte__compact_chunk(chunk) for chunk in il_util_chunks(data, size=6))
-    return chain(*compacted_chunks)
-
-
-def il_byte__compact_chunk(chunk):
-    """
-    Chunks of exactly 6 bytes are encoded into 5 codewords by using a base 256
-    to base 900 transformation. Smaller chunks are left unchanged.
-    """
-    digits = [i for i in chunk]
-
-    if len(chunk) == 6:
-        base900 = il_util_switch_base(digits, 256, 900)
-        return [0] * (5 - len(base900)) + base900
-
-    return digits
-
-
-"""
-Numeric Compaction Mode (NC)
-
-Can encode: Digits 0-9, ASCII
-Rate compaction: 2.9 bytes per code word
-"""
-
-
-def il_numeric__compact_chunk(chunk):
-    number = "".join(chr(x) for x in chunk)
-    value = int("1" + number)
-    return il_util_to_base(value, 900)
-
-
-def il_numeric_compact_numbers(data):
-    """Encodes data into code words using the Numeric compaction mode."""
-    compacted_chunks = (il_numeric__compact_chunk(chunk) for chunk in il_util_chunks(data, size=44))
-    return chain(*compacted_chunks)
-
-
-def il_optimizations_replace_short_numeric_chunks(chunks):
-    """
-    The Numeric Compaction mode can pack almost 3 digits (2.93) into a symbol
-    character. Though Numeric Compaction mode can be invoked at any digit
-    length, it is recommended to use Numeric Compaction mode when there are
-    more than 13 consecutive digits. Otherwise, use Text Compaction mode.
-    """
-    from pdf417gen.compaction import Chunk
-
-    for prev, chunk, next in il_util_iterate_prev_next(chunks):
-        is_short_numeric_chunk = (
-            chunk.compact_fn == il_numeric_compact_numbers
-            and len(chunk.data) < 13
-        )
-
-        borders_text_chunk = (
-            (prev and prev.compact_fn == il_text_compact_text) or
-            (next and next.compact_fn == il_text_compact_text)
-        )
-
-        if is_short_numeric_chunk and borders_text_chunk:
-            yield Chunk(chunk.data, il_text_compact_text)
-        else:
+    def chunks(iterable: Iterable[T], size: int) -> Generator[Tuple[T, ...], None, None]:
+        """Generator which chunks data into chunks of given size."""
+        it = iter(iterable)
+        while True:
+            chunk = tuple(islice(it, size))
+            if not chunk:
+                return
             yield chunk
 
+    def to_bytes(input: Any, encoding: str = "utf-8") -> bytes:
+        if isinstance(input, bytes):
+            return input
 
-def il_optimizations_merge_chunks_with_same_compact_fn(chunks):
-    from pdf417gen.compaction import Chunk
+        if isinstance(input, str):
+            return bytes(input, encoding)
 
-    for compact_fn, group in groupby(chunks, key=lambda x: x[1]):
-        data = chain.from_iterable(chunk.data for chunk in group)
-        yield Chunk(list(data), compact_fn)
-
-
-"""
-Text Compaction Mode (TC)
-
-Can encode: ASCII 9, 10, 13 and 32-126
-Rate compaction: 2 bytes per code word
-"""
+        raise ValueError("Invalid input, expected string or bytes")
 
 
-def il_text__exists_in_submode(char, submode):
-    return char in CHARACTERS_LOOKUP and submode in CHARACTERS_LOOKUP[char]
+    def iterate_prev_next(iterable: Iterable[T]) -> Iterator[Tuple[Optional[T], T, Optional[T]]]:
+        """
+        Creates an iterator which provides previous, current and next item.
+        """
+        prevs, items, nexts = tee(iterable, 3)
+        prevs = chain([None], prevs)
+        nexts = chain(islice(nexts, 1, None), [None])
+        return zip(prevs, items, nexts)
 
 
-def il_text__get_submode(char):
-    if char not in CHARACTERS_LOOKUP:
+class Bytes:
+    """ Byte Compaction Mode (BC)
+
+        Can encode: ASCII 0 to 255
+        Rate compaction: 1.2 byte per code word
+    """
+
+    def compact_bytes(data):
+        """Encodes data into code words using the Byte compaction mode."""
+        compacted_chunks = (Bytes._compact_chunk(chunk) for chunk in Util.chunks(data, size=6))
+        return chain(*compacted_chunks)
+
+    def _compact_chunk(chunk):
+        """
+        Chunks of exactly 6 bytes are encoded into 5 codewords by using a base 256
+        to base 900 transformation. Smaller chunks are left unchanged.
+        """
+        digits = [i for i in chunk]
+
+        if len(chunk) == 6:
+            base900 = Util.switch_base(digits, 256, 900)
+            return [0] * (5 - len(base900)) + base900
+
+        return digits
+
+
+class Numeric:
+    """ Numeric Compaction Mode (NC)
+
+        Can encode: Digits 0-9, ASCII
+        Rate compaction: 2.9 bytes per code word
+    """
+
+    def _compact_chunk(chunk):
+        number = "".join(chr(x) for x in chunk)
+        value = int("1" + number)
+        return Util.to_base(value, 900)
+
+
+    def _compact_numbers(data):
+        """Encodes data into code words using the Numeric compaction mode."""
+        compacted_chunks = (Numeric._compact_chunk(chunk) for chunk in Util.chunks(data, size=44))
+        return chain(*compacted_chunks)
+
+
+class Optimizations:
+
+    def replace_short_numeric_chunks(chunks):
+        """
+        The Numeric Compaction mode can pack almost 3 digits (2.93) into a symbol
+        character. Though Numeric Compaction mode can be invoked at any digit
+        length, it is recommended to use Numeric Compaction mode when there are
+        more than 13 consecutive digits. Otherwise, use Text Compaction mode.
+        """
+        for prev, chunk, next in Util.iterate_prev_next(chunks):
+            is_short_numeric_chunk = (
+                chunk.compact_fn == Numeric._compact_numbers
+                and len(chunk.data) < 13
+            )
+
+            borders_text_chunk = (
+                (prev and prev.compact_fn == Text.compact_text) or
+                (next and next.compact_fn == Text.compact_text)
+            )
+
+            if is_short_numeric_chunk and borders_text_chunk:
+                yield Chunk(chunk.data, Text.compact_text)
+            else:
+                yield chunk
+
+
+    def merge_chunks_with_same_compact_fn(chunks):
+        for compact_fn, group in groupby(chunks, key=lambda x: x[1]):
+            data = chain.from_iterable(chunk.data for chunk in group)
+            yield Chunk(list(data), compact_fn)
+
+
+class Text:
+    """ Text Compaction Mode (TC)
+
+        Can encode: ASCII 9, 10, 13 and 32-126
+        Rate compaction: 2 bytes per code word
+    """
+
+    def _exists_in_submode(char, submode):
+        return char in CHARACTERS_LOOKUP and submode in CHARACTERS_LOOKUP[char]
+
+
+    def _get_submode(char):
+        if char not in CHARACTERS_LOOKUP:
+            raise ValueError("Cannot encode char: {}".format(char))
+
+        submodes = CHARACTERS_LOOKUP[char].keys()
+
+        preference = [Submode.LOWER, Submode.UPPER, Submode.MIXED, Submode.PUNCT]
+
+        for submode in preference:
+            if submode in submodes:
+                return submode
+
         raise ValueError("Cannot encode char: {}".format(char))
 
-    submodes = CHARACTERS_LOOKUP[char].keys()
 
-    preference = [Submode.LOWER, Submode.UPPER, Submode.MIXED, Submode.PUNCT]
+    def compact_text_interim(data):
+        """Encodes text data to interim code words."""
 
-    for submode in preference:
-        if submode in submodes:
-            return submode
+        def _interim_text_generator(chars):
+            # By default, encoding starts in uppercase submode
+            submode = Submode.UPPER
 
-    raise ValueError("Cannot encode char: {}".format(char))
+            for char in chars:
+                # Switch submode if needed
+                if not Text._exists_in_submode(char, submode):
+                    prev_submode = submode
+                    submode = Text._get_submode(char)
+                    for code in SWITCH_CODES[prev_submode][submode]:
+                        yield code
 
+                yield CHARACTERS_LOOKUP[char][submode]
 
-def il_text_compact_text_interim(data):
-    """Encodes text data to interim code words."""
-
-    def _interim_text_generator(chars):
-        # By default, encoding starts in uppercase submode
-        submode = Submode.UPPER
-
-        for char in chars:
-            # Switch submode if needed
-            if not il_text__exists_in_submode(char, submode):
-                prev_submode = submode
-                submode = il_text__get_submode(char)
-                for code in SWITCH_CODES[prev_submode][submode]:
-                    yield code
-
-            yield CHARACTERS_LOOKUP[char][submode]
-
-    return _interim_text_generator(data)
+        return _interim_text_generator(data)
 
 
-def il_text__compact_chunk(chunk):
-    if len(chunk) == 1:
-        chunk = (chunk[0], PADDING_INTERIM_CODE)
+    def _compact_chunk(chunk):
+        if len(chunk) == 1:
+            chunk = (chunk[0], PADDING_INTERIM_CODE)
 
-    return 30 * chunk[0] + chunk[1]
-
-
-def il_text_compact_text(data):
-    """Encodes data into code words using the Text compaction mode."""
-    interim_codes = il_text_compact_text_interim(data)
-    return (il_text__compact_chunk(chunk) for chunk in il_util_chunks(interim_codes, 2))
+        return 30 * chunk[0] + chunk[1]
 
 
-def il_init_compact(data):
-    """Encodes given data into an array of PDF417 code words."""
-    chunks = il_init__split_to_chunks(data)
-    chunks = il_optimizations_replace_short_numeric_chunks(chunks)
-    chunks = il_optimizations_merge_chunks_with_same_compact_fn(chunks)
-    return il_init__compact_chunks(chunks)
+    def compact_text(data):
+        """Encodes data into code words using the Text compaction mode."""
+        interim_codes = Text.compact_text_interim(data)
+        return (Text._compact_chunk(chunk) for chunk in Util.chunks(interim_codes, 2))
 
 
-def il_init__compact_chunks(chunks):
-    compacted_chunks = (
-        il_init__compact_chunk(ordinal, chunk) for ordinal, chunk in enumerate(chunks))
+class Init:
 
-    return chain(*compacted_chunks)
-
-
-def il_init__compact_chunk(ordinal, chunk):
-    code_words = []
-
-    # Add the switch code if required
-    add_switch_code = ordinal > 0 or chunk.compact_fn != il_text_compact_text
-    if add_switch_code:
-        code_words.append(il_init_get_switch_code(chunk))
-
-    code_words.extend(chunk.compact_fn(chunk.data))
-
-    return code_words
+    def compact(data):
+        """Encodes given data into an array of PDF417 code words."""
+        chunks = Init._split_to_chunks(data)
+        chunks = Optimizations.replace_short_numeric_chunks(chunks)
+        chunks = Optimizations.merge_chunks_with_same_compact_fn(chunks)
+        return Init._compact_chunks(chunks)
 
 
-def il_init__split_to_chunks(data):
-    """
-    Splits a string into chunks which can be compacted with the same compacting
-    function.
-    """
-    for fn, chunk in groupby(data, key=il_init_get_optimal_compactor_fn):
-        yield Chunk(list(chunk), fn)
+    def _compact_chunks(chunks):
+        compacted_chunks = (
+            Init._compact_chunk(ordinal, chunk) for ordinal, chunk in enumerate(chunks))
+
+        return chain(*compacted_chunks)
 
 
-def il_init_get_optimal_compactor_fn(char):
-    if 48 <= char <= 57:
-        return il_numeric_compact_numbers
+    def _compact_chunk(ordinal, chunk):
+        code_words = []
 
-    if char in CHARACTERS_LOOKUP:
-        return il_text_compact_text
+        # Add the switch code if required
+        add_switch_code = ordinal > 0 or chunk.compact_fn != Text.compact_text
+        if add_switch_code:
+            code_words.append(Init.get_switch_code(chunk))
 
-    return il_byte_compact_bytes
+        code_words.extend(chunk.compact_fn(chunk.data))
+
+        return code_words
+
+    def split_to_chunks(data):
+        """
+        Splits a string into chunks which can be compacted with the same compacting
+        function.
+        """
+        for fn, chunk in groupby(data, key=Init.get_optimal_compactor_fn):
+            yield Chunk(list(chunk), fn)
 
 
-def il_init_get_switch_code(chunk):
-    if chunk.compact_fn == il_text_compact_text:
-        return TEXT_LATCH
+    def get_optimal_compactor_fn(char):
+        if 48 <= char <= 57:
+            return Numeric.compact_numbers
 
-    if chunk.compact_fn == il_byte_compact_bytes:
-        return BYTE_LATCH_ALT if len(chunk.data) % 6 == 0 else BYTE_LATCH
+        if char in CHARACTERS_LOOKUP:
+            return Text.compact_text
 
-    if chunk.compact_fn == il_numeric_compact_numbers:
-        return NUMERIC_LATCH
+        return Bytes.compact_bytes
 
-    assert False, "Nonexistant compaction function"
+
+    def get_switch_code(chunk):
+        if chunk.compact_fn == Text.compact_text:
+            return TEXT_LATCH
+
+        if chunk.compact_fn == Bytes.compact_bytes:
+            return BYTE_LATCH_ALT if len(chunk.data) % 6 == 0 else BYTE_LATCH
+
+        if chunk.compact_fn == Numeric.compact_numbers:
+            return NUMERIC_LATCH
+
+        assert False, "Nonexistant compaction function"
