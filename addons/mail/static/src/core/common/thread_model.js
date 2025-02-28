@@ -775,11 +775,16 @@ export class Thread extends Record {
     /** @param {string} body
      *  @param {Object} extraData
      */
-    async post(body, postData = {}, extraData = {}) {
+    async post({ body, isHtmlBody }, postData = {}, extraData = {}) {
         let tmpMsg;
         postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
         const { attachments, parentId, mentionedChannels, mentionedPartners } = postData;
-        const params = await this.store.getMessagePostParams({ body, postData, thread: this });
+        const params = await this.store.getMessagePostParams({
+            body,
+            isHtmlBody,
+            postData,
+            thread: this,
+        });
         Object.assign(params, extraData);
         const tmpId = this.store.getNextTemporaryId();
         params.context = { ...user.context, ...params.context, temporary_id: tmpId };
@@ -801,6 +806,7 @@ export class Thread extends Record {
                 tmpData.parentMessage = this.store["mail.message"].get(parentId);
             }
             const prettyContent = await prettifyMessageContent(body, {
+                isHtmlBody,
                 validMentions: this.store.getMentionsFromText(body, {
                     mentionedChannels,
                     mentionedPartners,

@@ -35,6 +35,23 @@ const _escapeEntities = (function () {
     };
 })();
 
+const _escape = function (str) {
+    if (str === undefined) {
+        return "";
+    }
+    if (typeof str === "number") {
+        return String(str);
+    }
+    [
+        ["&", "&amp;"],
+        ["<", "&lt;"],
+        [">", "&gt;"],
+    ].forEach((pairs) => {
+        str = String(str).replaceAll(pairs[0], pairs[1]);
+    });
+    return str;
+};
+
 /**
  * @param {string|ReturnType<markup>} rawBody
  * @param {Object} validMentions
@@ -42,23 +59,29 @@ const _escapeEntities = (function () {
  */
 export async function prettifyMessageContent(
     rawBody,
-    { validMentions = [], allowEmojiLoading = true } = {}
+    { isHtmlBody, validMentions = [], allowEmojiLoading = true } = {}
 ) {
     // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
     // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
     // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
-    const escapedAndCompactContent = escapeAndCompactTextContent(rawBody);
-    let body = htmlReplace(escapedAndCompactContent, /&nbsp;/g, " ");
-    body = htmlTrim(body);
-    // This message will be received from the mail composer as html content
-    // subtype but the urls will not be linkified. If the mail composer
-    // takes the responsibility to linkify the urls we end up with double
-    // linkification a bit everywhere. Ideally we want to keep the content
-    // as text internally and only make html enrichment at display time but
-    // the current design makes this quite hard to do.
-    body = generateMentionsLinks(body, validMentions);
+    let body;
+    if (isHtmlBody) {
+        body = markup(escapeAndCompactHtmlContent(rawBody).replace(/&nbsp;/g, " "));
+    } else {
+        body = htmlReplace(escapeAndCompactTextContent(rawBody), /&nbsp;/g, " ");
+        body = htmlTrim(body);
+        // This message will be received from the mail composer as html content
+        // subtype but the urls will not be linkified. If the mail composer
+        // takes the responsibility to linkify the urls we end up with double
+        // linkification a bit everywhere. Ideally we want to keep the content
+        // as text internally and only make html enrichment at display time but
+        // the current design makes this quite hard to do.
+        body = generateMentionsLinks(body, validMentions);
+    }
     if (allowEmojiLoading || odoo.loader.modules.get("@web/core/emoji_picker/emoji_data")) {
-        body = await _generateEmojisOnHtml(body);
+        body = isHtmlBody
+            ? await _generateEmojisOnHtmlBody(body)
+            : await _generateEmojisOnHtml(body);
     }
     body = parseAndTransform(body, addLink);
     return body;
@@ -174,6 +197,27 @@ export function escapeAndCompactTextContent(content) {
     return value;
 }
 
+export function escapeAndCompactHtmlContent(content) {
+    //Removing unwanted extra spaces from message
+    let value = content;
+    value = value.replace(/(\r|\n){2,}/g, "<br/><br/>");
+    value = value.replace(/(\r|\n)/g, "<br/>");
+
+    // prevent html space collapsing
+    value = value.replace(/ /g, "&nbsp;").replace(/([^>])&nbsp;([^<])/g, "$1 $2");
+    // remove empty <br> tags
+    const htmlBody = new DOMParser().parseFromString(value, "text/html");
+    htmlBody.querySelectorAll("*").forEach((element) => {
+        if (
+            element.childNodes.length === 1 &&
+            element.firstElementChild?.tagName.toLowerCase() === "br"
+        ) {
+            element.remove();
+        }
+    });
+    return htmlBody.body.innerHTML;
+}
+
 /**
  * @param body {string|ReturnType<markup>}
  * @param validRecords {Object}
@@ -254,6 +298,26 @@ async function _generateEmojisOnHtml(htmlString) {
 }
 
 /**
+ * @private
+ * @param {string|ReturnType<markup>} htmlString
+ * @returns {ReturnType<markup>}
+ */
+async function _generateEmojisOnHtmlBody(htmlString) {
+    const { emojis } = await loadEmoji();
+    for (const emoji of emojis) {
+        for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
+            const escapedSource = _escape(String(source)).replace(
+                /([.*+?=^!:${}()|[\]/\\])/g,
+                "\\$1"
+            );
+            const regexp = new RegExp("(\\s|\\>|^)(" + escapedSource + ")(?=\\s|\\<\\/|$)", "g");
+            htmlString = htmlReplace(htmlString, regexp, "$1" + emoji.codepoints);
+        }
+    }
+    return markup(htmlString);
+}
+
+/**
  * @param {string|ReturnType<markup>} body
  * @returns {ReturnType<markup>}
  */
@@ -323,3 +387,8 @@ export function parseEmail(text) {
 }
 
 export const EMOJI_REGEX = /\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200d/gu;
+
+export function isEmpty(htmlString) {
+    const htmlBody = new DOMParser().parseFromString(htmlString, "text/html").body;
+    return !htmlBody.textContent.trim() && !htmlBody.querySelector("img");
+}

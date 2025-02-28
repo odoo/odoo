@@ -12,6 +12,11 @@ patch(Message.prototype, {
         });
     },
 
+    onClickEdit() {
+        this.messageBody.el?.querySelector(".o-mail-read-more-less")?.remove();
+        super.onClickEdit(...arguments);
+    },
+
     /**
      * @override
      * @param {HTMLElement} bodyEl

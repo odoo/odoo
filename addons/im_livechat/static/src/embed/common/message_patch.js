@@ -23,6 +23,10 @@ patch(Message.prototype, {
             return;
         }
         this.props.message.disableChatbotAnswers = true;
-        return this.props.message.thread.post(answer.name, {}, { selected_answer_id: answer.id });
+        return this.props.message.thread.post(
+            { body: answer.name },
+            {},
+            { selected_answer_id: answer.id }
+        );
     },
 });

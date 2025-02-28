@@ -103,7 +103,7 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
     /** @returns {Promise<import("models").Message} */
-    async post(body, postData, extraData = {}) {
+    async post({ body, isHtmlBody }, postData, extraData = {}) {
         if (this.channel_type === "livechat" && this.isTransient) {
             // For smoother transition: post the temporary message and set the
             // selected chat bot answer if any. Then, simulate the chat bot is

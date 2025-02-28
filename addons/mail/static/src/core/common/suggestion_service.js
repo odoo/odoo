@@ -143,7 +143,7 @@ export class SuggestionService {
             return c1.id - c2.id;
         };
         return {
-            type: "mail.canned.response",
+            type: "CannedResponse",
             suggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
         };
     }
@@ -154,7 +154,7 @@ export class SuggestionService {
             emojis = fuzzyLookup(cleanedSearchTerm, this.emojis, (emoji) => emoji.shortcodes);
         }
         return {
-            type: "emoji",
+            type: "Emoji",
             suggestions: emojis,
         };
     }

@@ -435,7 +435,11 @@ export class Message extends Record {
         this.store.env.services.notification.add(notification, { type });
     }
 
-    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
+    async edit(
+        { body, isHtmlBody },
+        attachments = [],
+        { mentionedChannels = [], mentionedPartners = [] } = {}
+    ) {
         if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
             return;
         }
@@ -450,7 +454,7 @@ export class Message extends Record {
             attachment_tokens: attachments
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.access_token),
-            body: await prettifyMessageContent(body, { validMentions }),
+            body: await prettifyMessageContent(body, { isHtmlBody, validMentions }),
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             ...this.thread.rpcParams,
