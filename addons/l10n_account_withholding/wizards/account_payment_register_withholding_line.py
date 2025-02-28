@@ -32,12 +32,12 @@ class AccountPaymentRegisterWithholdingLine(models.TransientModel):
         # Extended to add the dependency
         super()._compute_base_amount()
 
-    @api.depends('payment_register_id')
+    @api.depends('payment_register_id.company_id')
     def _compute_company_id(self):
         for line in self:
             line.company_id = line.payment_register_id.company_id
 
-    @api.depends('payment_register_id')
+    @api.depends('payment_register_id.currency_id')
     def _compute_currency_id(self):
         for line in self:
             line.currency_id = line.payment_register_id.currency_id
