@@ -167,7 +167,7 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
     }
 
     get productName() {
-        return this.props.record.data[this.props.name][1];
+        return this.props.record.data[this.props.name]?.[1] ?? "";
     }
 
     get label() {
