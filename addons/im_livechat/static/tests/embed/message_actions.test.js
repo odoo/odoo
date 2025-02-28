@@ -1,5 +1,3 @@
-import { waitNotifications } from "@bus/../tests/bus_test_helpers";
-
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -13,6 +11,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -23,12 +22,15 @@ test("Only two quick actions are shown", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
     const env = await start({ authenticateAs: false });
+    env.services.bus_service.subscribe("discuss.channel/new_message", () =>
+        asyncStep("discuss.channel/new_message")
+    );
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     // message data from post contains no reaction, wait now to avoid overriding newer value later
-    await waitNotifications([env, "discuss.channel/new_message"]);
+    await waitForSteps(["discuss.channel/new_message"]);
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅" });
