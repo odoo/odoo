@@ -145,9 +145,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         the subcontracting manufacturing order through a receipt picking. Checks if the resupplying
         actually works. Also set a different subcontracting location on the partner.
         """
-        # Tick "resupply subconractor on order"
-        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
-        (self.comp1 + self.comp2).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
+        self.env['stock.quant']._update_available_quantity(self.comp1, self.env.ref('stock.stock_location_stock'), 5)
+        self.env['stock.quant']._update_available_quantity(self.comp2, self.env.ref('stock.stock_location_stock'), 5)
         # Create a different subcontract location & check rules replication
         reference_location_rules_count = self.env['stock.rule'].search_count(['|', ('location_src_id', '=', self.env.company.subcontracting_location_id.id), ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
         partner_subcontract_location = self.env['stock.location'].create({
