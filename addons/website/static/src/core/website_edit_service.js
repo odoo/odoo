@@ -95,6 +95,18 @@ PublicRoot.include({
 // Patch Colibri.
 
 patch(Colibri.prototype, {
+    protectSyncAfterAsync(interaction, name, fn) {
+        fn = super.protectSyncAfterAsync(interaction, name, fn);
+        const fullName = `${interaction.constructor.name}/${name}`;
+        return (...args) => {
+            // TODO No jQuery ?
+            const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
+            wysiwyg?.odooEditor.observerUnactive(fullName);
+            const result = fn(...args);
+            wysiwyg?.odooEditor.observerActive(fullName);
+            return result;
+        };
+    },
     addListener(target, event, fn, options) {
         fn = fn.bind(this.interaction);
         let stealth = true;
