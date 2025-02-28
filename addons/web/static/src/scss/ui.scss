@@ -191,3 +191,13 @@ span.o_force_ltr {
         --oi-color: currentColor;
     }
  }
+
+.shadow-wrapper:focus-within {
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 0 0.25rem rgba($primary, 0.25);
+    transition: box-shadow 0.05s ease-in-out;
+
+    input {
+        box-shadow: none;
+    }
+}
