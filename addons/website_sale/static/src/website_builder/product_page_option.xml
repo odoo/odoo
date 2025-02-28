@@ -3,7 +3,10 @@
 
 <t t-name="website_sale.ProductPageOption">
     <!-- Image config -->
-    <BuilderRow label.translate="Images Width">
+    <BuilderRow>
+        <h6 class="text-white">Product Images</h6>
+    </BuilderRow>
+    <BuilderRow label.translate="Width">
         <BuilderButtonGroup action="'productPageImageWidth'" applyTo="'#product_detail_main'">
             <BuilderButton title.translate="None" actionValue="'none'"
                 iconImg="'/website_sale/static/src/img/snippet_options/image-width-none.svg'"
@@ -28,7 +31,7 @@
 	    </BuilderRow>
     </t>
     <t t-if="!domState.isGrid and domState.multipleImages">
-	    <BuilderRow label.translate="Images Ratio" level="1">
+	    <BuilderRow label.translate="Ratio" level="1">
 	        <BuilderSelect action="'websiteConfig'" id="'o_wsale_image_ratio'">
 	            <BuilderSelectItem actionParam="{ views: [] }">Default (1x1)</BuilderSelectItem>
 	            <BuilderSelectItem actionParam="{ views: ['website_sale.products_carousel_4x3'] }">Landscape (4/3)</BuilderSelectItem>
@@ -39,7 +42,7 @@
 	    </BuilderRow>
     </t>
     <t t-if="domState.hasImages">
-	    <BuilderRow label.translate="Images Zoom" level="1">
+	    <BuilderRow label.translate="Zoom" level="1">
 	        <BuilderSelect action="'websiteConfig'" id="'o_wsale_zoom_mode'">
 	            <t t-foreach="props.getZoomLevels()" t-as="zoomLevel" t-key="zoomLevel.id">
 	                <t t-if="zoomLevel.visible">
@@ -84,7 +87,33 @@
 	        <BuilderButton id="'o_wsale_clear_extra_images'" type="'danger'" className="'flex-grow-1'" action="'productRemoveAllExtraImages'">Remove all</BuilderButton>
 	    </BuilderRow>
     </t>
-    <BuilderRow label.translate="Cart" id="'o_wsale_cart_opt'">
+    <hr/>
+    <BuilderRow>
+        <h6 class="text-white">Product Details</h6>
+    </BuilderRow>
+    <BuilderRow label.translate="Purchase Style">
+        <t
+            t-set="CtaLargeViews"
+            t-value="[
+                'website_sale.cta_wrapper_large',
+                'website_sale.product_buy_now_large',
+                'website_sale.product_quantity_large'
+            ]"
+        />
+        <t t-set="CtaBoxedViews" t-value="['website_sale.cta_wrapper_boxed']"/>
+        <BuilderSelect action="'websiteConfig'" id="'o_wsale_product_cta_style'">
+            <BuilderSelectItem id="cta_default_opt" actionParam="{ views: [] }">
+                Default
+            </BuilderSelectItem>
+            <BuilderSelectItem id="cta_boxed_opt" actionParam="{ views: CtaBoxedViews }">
+                Boxed
+            </BuilderSelectItem>
+            <BuilderSelectItem id="cta_large_opt" actionParam="{ views: CtaLargeViews }">
+                Large
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Purchase Options" id="'o_wsale_cart_opt'">
         <BuilderButton title.translate="Buy Now" className="'o_we_buy_now_btn'"
             action="'websiteConfig'"
             actionParam="{ views: ['website_sale.product_buy_now'] }"
@@ -102,17 +131,33 @@
     <BuilderRow id="'o_we_actions_opt'" label.translate="Actions">
         <!-- Filled by other modules -->
     </BuilderRow>
+    <BuilderRow label.translate="Separators">
+        <BuilderCheckbox
+            action="'websiteConfig'"
+            actionParam="{ views: ['website_sale.variants_separator', 'website_sale.cta_separator'] }"
+        />
+    </BuilderRow>
     <BuilderRow label.translate="Tax Indication">
         <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website_sale.tax_indication'] }"/>
     </BuilderRow>
-    <BuilderRow label.translate="Product Tags">
+    <BuilderRow label.translate="Tags">
         <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website_sale.product_tags'] }"/>
     </BuilderRow>
     <BuilderRow label.translate="Terms and Conditions">
-        <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website_sale.product_custom_text'] }"/>
+        <BuilderCheckbox
+            action="'websiteConfig'"
+            actionParam="{ views: ['website_sale.product_terms_and_conditions'] }"
+        />
     </BuilderRow>
     <BuilderRow label.translate="Reviews">
         <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website_sale.product_comment'] }"/>
+    </BuilderRow>
+    <hr/>
+    <BuilderRow label.translate="Search Bar">
+        <BuilderCheckbox
+            action="'websiteConfig'"
+            actionParam="{ views: ['website_sale.product_search'] }"
+        />
     </BuilderRow>
 </t>
 

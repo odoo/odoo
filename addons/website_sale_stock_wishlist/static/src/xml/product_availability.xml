@@ -10,18 +10,16 @@
                     t-if="!is_in_wishlist"
                     type="button"
                     role="button"
-                    class="btn btn-secondary text-nowrap o_add_wishlist_dyn"
+                    class="btn btn-outline-primary text-nowrap o_add_wishlist_dyn"
                     t-att-data-product-template-id="product_id"
                     t-att-data-product-product-id="product_id"
                     data-action="o_wishlist"
                     title="Add to wishlist">
-                <i class="fa fa-clock-o me-2"/>
-                Save for later
+                <i class="fa fa-heart-o me-2"/>Add to wishlist
             </button>
             <div id="wsale_added_to_your_wishlist_alert" t-att-class="is_in_wishlist ? '' : 'd-none'">
-                <div class="alert alert-success">
-                    <i class="fa fa-heart me-1"/>
-                    Added to your wishlist
+                <div class="btn btn-outline-primary disabled">
+                    <i class="fa fa-heart me-2"/>Added to your wishlist
                 </div>
             </div>
 

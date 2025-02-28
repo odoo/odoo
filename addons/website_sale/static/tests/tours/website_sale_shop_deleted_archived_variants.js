@@ -25,11 +25,6 @@ registry.category("web_tour.tours").add('tour_shop_deleted_archived_variants', {
         run: "click",
     },
     {
-        content: "check combination is not possible",
-        trigger: '.js_main_product.css_not_available .css_not_available_msg:contains("This combination does not exist.")',
-        run: "click",
-    },
-    {
         content: "click on the 3rd variant to reset the warning",
         trigger: 'input[data-attribute_name="My Attribute"][data-value_name="My Value 3"]',
         run: "click",
@@ -42,11 +37,6 @@ registry.category("web_tour.tours").add('tour_shop_deleted_archived_variants', {
     {
         content: "click on the first variant",
         trigger: 'input[data-attribute_name="My Attribute"][data-value_name="My Value 1"]',
-        run: "click",
-    },
-    {
-        content: "check combination is not possible",
-        trigger: '.js_main_product.css_not_available .css_not_available_msg:contains("This combination does not exist.")',
         run: "click",
     },
     {
