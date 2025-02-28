@@ -34,7 +34,7 @@ export class TimeOffCalendarModel extends CalendarModel {
                 result.title = [employee, result.title].join(" ");
             }
         }
-        if (rawRecord.request_unit_half) result.request_date_from_period = rawRecord.request_date_from_period
+        if (rawRecord.request_unit_half) result.request_date_from_period = rawRecord.request_date_from_period;
         return result;
     }
 
@@ -105,7 +105,7 @@ export class TimeOffCalendarModel extends CalendarModel {
         if (!this.employeeId) {
             context["short_name"] = 1;
         }
-        const fieldNamesToAdd = ["request_unit_half", "request_date_from_period"]
+        const fieldNamesToAdd = resModel === "hr.leave" ? ["request_unit_half", "request_date_from_period"] : [];
         return this.orm.searchRead(resModel, this.computeDomain(data), [...fieldNames, ...fieldNamesToAdd], { context });
     }
 
