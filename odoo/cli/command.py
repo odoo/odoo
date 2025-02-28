@@ -1,11 +1,10 @@
 import argparse
-import atexit
 import contextlib
 import re
 import logging
 import sys
 from inspect import cleandoc
-from contextlib import closing, contextmanager, suppress
+from contextlib import closing, contextmanager
 from pathlib import Path
 
 import odoo.init  # import first for core setup
@@ -15,11 +14,17 @@ from odoo.tools import config
 from odoo.modules.registry import Registry
 
 
+__all__ = [
+    'Command',
+    'Subcommand',
+    'SubcommandsMixin',
+    'main'
+]
+
 
 COMMAND_NAME_RE = re.compile(r'^[a-z][a-z0-9_]*$', re.I)
 PROG_NAME = Path(sys.argv[0]).name
 commands = {}
-"""All loaded commands"""
 
 
 class Command:
@@ -61,10 +66,14 @@ class Command:
         return re.match(COMMAND_NAME_RE, name)
 
     @contextmanager
-    def build_env(self, db_name, update_module=False):
+    def build_env(self, db_name, update_module=False, min_log_level=None):
+        if min_log_level:
+            logging.disable(min_log_level)
         registry = Registry.new(db_name, update_module=update_module)
         with closing(registry.cursor()) as cr:
             yield odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+        if min_log_level:
+            logging.disable(logging.NOTSET)
 
     @staticmethod
     def die(message=None):
@@ -81,6 +90,7 @@ class SubcommandsMixin():
         """ Instead of running the command, we run the subcommands """
         self._config = odoo.tools.config.parse_config(None, setup_logging=True)
         self.subparsers = self.parser.add_subparsers(dest='subcommand', help='Subcommands help')
+        assert(isinstance(self.subcommands, list | tuple))
         initialized_subcommands = {sc.name: sc for Cls in self.subcommands if (sc := Cls(self))}
         parsed_args, _unknown = self.parser.parse_known_args(args=cmdargs)
         if subcommand := initialized_subcommands.get(parsed_args.subcommand):
