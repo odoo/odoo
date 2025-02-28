@@ -239,9 +239,13 @@ class User(models.Model):
             if field.related_field and field.related_field.model_name == 'hr.employee' and field_name in vals
         }
         can_edit_self = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
-        if hr_fields and not can_edit_self:
-            # Raise meaningful error message
-            raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other information."))
+        can_edit_hr_settings = self.env.user.has_group('hr.group_hr_user')
+        if hr_fields:
+            if not can_edit_self:
+                raise AccessError(_("You are only allowed to update your preferences. Please contact an HR officer to update other information."))
+            restricted_fields = ['employee_type', 'pin', 'barcode']
+            if not can_edit_hr_settings and any(field_name in restricted_fields for field_name in hr_fields):
+                raise AccessError(_("You do not have the necessary permissions to modify HR-related fields. Please contact an HR officer to update the information."))
 
         employee_domain = [
             *self.env['hr.employee']._check_company_domain(self.env.company),
