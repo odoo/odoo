@@ -1356,3 +1356,73 @@ class TestReorderingRule(TransactionCase):
             [("product_id", "=", self.product_01.id)])
         self.assertTrue(po_line)
         self.assertEqual(po_line.order_id.currency_id, foreign_currency)
+
+    def test_intercompany_reordering_rules(self):
+        """
+        Have 2 companies, create a procurment to fulfil a demand in COMP1 using custom route
+        with 2 rules: an intercompany transit from COMP2 to COMP1 and a buy rule linked to COMP2.
+
+        Check that the purchase order is created in COMP2, using its set of supplier.
+        """
+        company_a, company_b = self.env['res.company'].create([
+            {'name': 'Company A'},
+            {'name': 'Company B'},
+        ])
+        warehouse_a, warehouse_b = self.env['stock.warehouse'].search([('company_id', 'in', [company_a.id, company_b.id])], limit=2).sorted('company_id')
+        route_resupply_from_intercomp = self.env['stock.route'].create([
+            {
+                'name': 'ressuply from intercomp',
+                'active': True,
+                'company_id': False,
+                'product_selectable': True,
+                'rule_ids': [
+                    Command.create({
+                        'name': 'inter-comp -> Stock A',
+                        'action': 'pull',
+                        'picking_type_id': warehouse_a.int_type_id.id,
+                        'location_src_id': self.ref('stock.stock_location_inter_company'),
+                        'location_dest_id': warehouse_a.lot_stock_id.id,
+                        'company_id': company_a.id,
+                        'procure_method': 'make_to_order',
+                    }),
+                    Command.create({
+                        'name': 'Stock B -> inter-comp',
+                        'action': 'buy',
+                        'picking_type_id': warehouse_b.out_type_id.id,
+                        'location_src_id': warehouse_b.lot_stock_id.id,
+                        'location_dest_id': self.ref('stock.stock_location_inter_company'),
+                        'company_id': company_b.id,
+                        'procure_method': 'make_to_order',
+                    }),
+                    Command.create({
+                        'name': 'Buy -> Stock B',
+                        'action': 'buy',
+                        'picking_type_id': warehouse_b.in_type_id.id,
+                        'location_dest_id': warehouse_b.lot_stock_id.id,
+                        'company_id': company_b.id,
+                        'procure_method': 'make_to_stock',
+                    })
+                ]
+            },
+        ])
+        product = self.env['product.product'].create({
+            'name': 'super product',
+            'is_storable': True,
+            'route_ids': [Command.set(route_resupply_from_intercomp.ids)],
+            'seller_ids': [Command.create({'partner_id': self.partner.id, 'company_id': company_b.id})],
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_company(company_a).create({
+            'name': 'RR for %s' % product.name,
+            'warehouse_id': warehouse_a.id,
+            'location_id': warehouse_a.lot_stock_id.id,
+            'trigger': 'manual',
+            'product_id': product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 10,
+            'route_id': route_resupply_from_intercomp.id,
+        })
+        orderpoint.action_replenish()
+        # check that the a PO was created in company B for 10 units
+        self.assertRecordValues(self.env['purchase.order'].search([('company_id', '=', company_b.id), ('partner_id', '=', self.partner.id)], limit=1).order_line, [{
+            'product_id': product.id, 'product_uom_qty': 10,
+        }])
