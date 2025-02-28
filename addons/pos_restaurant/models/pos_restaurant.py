@@ -28,7 +28,7 @@ class RestaurantFloor(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image', 'floor_prefix']
+        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
@@ -53,11 +53,6 @@ class RestaurantFloor(models.Model):
                             session_names=" ".join(config.mapped("name")),
                         )
                     )
-            for table in floor.table_ids:
-                # Verify if table number begin by old prefix if it is not 0
-                if (floor.floor_prefix == 0 or (table.table_number and str(table.table_number).startswith(str(floor.floor_prefix)))) and vals.get('floor_prefix') is not None:
-                    table_number_wo_prefix = str(table.table_number)[len(str(floor.floor_prefix)):] if floor.floor_prefix != 0 else str(table.table_number).zfill(2)
-                    table.table_number = str(vals.get('floor_prefix')) + table_number_wo_prefix
 
         return super().write(vals)
 

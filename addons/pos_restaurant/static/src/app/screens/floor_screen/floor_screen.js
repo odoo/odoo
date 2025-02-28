@@ -30,7 +30,6 @@ import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
-import { FloorEditingPopup } from "@pos_restaurant/app/components/popups/floor_editing_popup/floor_editing_popup";
 import { NumpadDropdown } from "@pos_restaurant/app/components/numpad_dropdown/numpad_dropdown";
 
 function constrain(num, min, max) {
@@ -602,7 +601,7 @@ export class FloorScreen extends Component {
                 floor_id: this.activeFloor.id,
             };
         }
-        if (!duplicateFloor && !copyTable) {
+        if (!duplicateFloor) {
             newTableData.table_number = this._getNewTableNumber();
         }
         const table = await this.createTableFromRaw(newTableData);
@@ -619,25 +618,15 @@ export class FloorScreen extends Component {
     }
     _getNewTableNumber() {
         let firstNum = 1;
-        const floorPrefix = this.activeFloor.floor_prefix;
-        let floorPrefixLength = floorPrefix.toString().length;
-        let tablesNumber = [];
-        // Handle special case of prefix being 0
-        if (parseFloat(floorPrefix) === 0) {
-            floorPrefixLength = 0;
-            tablesNumber = this.activeTables;
-        } else {
-            tablesNumber = this.activeTables.filter(
-                (table) =>
-                    parseInt(table.table_number.toString().slice(0, floorPrefixLength)) ===
-                        floorPrefix && table.table_number.toString().length > floorPrefixLength
-            );
-        }
-        tablesNumber = tablesNumber
-            .map((table) => parseInt(table.table_number.toString().slice(floorPrefixLength)))
-            .sort(function (a, b) {
-                return a - b;
-            });
+        const tablesNumber = [
+            ...new Set(
+                this.activeTables
+                    .map((table) => table.table_number)
+                    .sort(function (a, b) {
+                        return a - b;
+                    })
+            ),
+        ];
 
         for (let i = 0; i < tablesNumber.length; i++) {
             if (tablesNumber[i] == firstNum) {
@@ -646,7 +635,7 @@ export class FloorScreen extends Component {
                 break;
             }
         }
-        return parseInt(floorPrefix + firstNum.toString().padStart(2, "0"));
+        return firstNum;
     }
     get activeFloor() {
         return this.state.selectedFloorId
@@ -730,10 +719,6 @@ export class FloorScreen extends Component {
             getPayload: async (newName) => {
                 const lightMode = cookie.get("pos_color_scheme") !== "dark";
                 const backgroundColor = lightMode ? "#E4E4E4" : "#1B1D26";
-                const prefixes = this.pos.models["restaurant.floor"]
-                    .map((floor) => floor.floor_prefix)
-                    .sort((a, b) => b - a);
-                const highestPrefix = prefixes[0] || 0;
                 const floor = await this.pos.data.create(
                     "restaurant.floor",
                     [
@@ -741,7 +726,6 @@ export class FloorScreen extends Component {
                             name: newName,
                             background_color: backgroundColor,
                             pos_config_ids: [this.pos.config.id],
-                            floor_prefix: highestPrefix + 1,
                         },
                     ],
                     false
@@ -798,7 +782,6 @@ export class FloorScreen extends Component {
             {
                 name: newFloorName,
                 background_color: "#ACADAD",
-                floor_prefix: this.activeFloor.floor_prefix,
                 pos_config_ids: [this.pos.config.id],
             },
         ]);
@@ -824,21 +807,15 @@ export class FloorScreen extends Component {
         }
     }
     async renameFloor() {
-        this.dialog.add(FloorEditingPopup, {
-            title: _t("Floor edit"),
-            floor: this.activeFloor,
-            getPayload: async (data) => {
-                if (data.floor_prefix && data.name) {
-                    await this.pos.data.ormWrite("restaurant.floor", [this.activeFloor.id], {
-                        name: data.name,
-                        floor_prefix: parseInt(data.floor_prefix),
+        this.dialog.add(TextInputPopup, {
+            startingValue: this.activeFloor.name,
+            title: _t("Floor Name ?"),
+            getPayload: (newName) => {
+                if (newName !== this.activeFloor.name) {
+                    this.activeFloor.name = newName;
+                    this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
+                        name: newName,
                     });
-                    this.activeFloor.name = data.name;
-                    this.activeFloor.floor_prefix = parseInt(data.floor_prefix);
-                    await this.pos.data.read(
-                        "restaurant.table",
-                        this.activeFloor.table_ids.map((t) => t.id)
-                    );
                 }
             },
         });
@@ -848,22 +825,13 @@ export class FloorScreen extends Component {
             return;
         }
         if (this.selectedTables.length === 1) {
-            const allTableNumber = this.pos.models["restaurant.table"]
-                .filter((t) => t.table_number !== this.selectedTables[0].table_number)
-                .map((t) => t.table_number);
             this.dialog.add(NumberPopup, {
                 startingValue: parseInt(this.selectedTables[0].table_number) || false,
                 title: _t("Change table number?"),
                 placeholder: _t("Enter a table number"),
                 buttons: getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]),
-                isValid: (x) => !allTableNumber.includes(parseInt(x)),
-                isValidFeedback: (x) => _t("Warning, table number %s is already taken", x),
-                isValidBlocking: false,
+                isValid: (x) => x,
                 getPayload: (newNumber) => {
-                    if (!newNumber) {
-                        return;
-                    }
-
                     if (parseInt(newNumber) !== this.selectedTables[0].table_number) {
                         this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
                             table_number: parseInt(newNumber),

@@ -13,15 +13,15 @@ export class CategorySelector extends Component {
     }
 
     getCategoriesList(list, allParents, depth) {
-        return list.map((category) => {
-            if (category.id === allParents[depth]?.id && category.child_ids?.length) {
-                return [
-                    category,
-                    this.getCategoriesList(category.child_ids, allParents, depth + 1),
-                ];
+        const categoriesList = [...list];
+        list.forEach((item) => {
+            if (item.id === allParents[depth]?.id && item.child_ids?.length) {
+                categoriesList.push(
+                    ...this.getCategoriesList(item.child_ids, allParents, depth + 1)
+                );
             }
-            return category;
         });
+        return categoriesList;
     }
 
     getCategoriesAndSub() {
