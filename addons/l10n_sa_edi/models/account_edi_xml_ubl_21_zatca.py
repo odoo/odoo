@@ -132,7 +132,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'plot_identification': partner.l10n_sa_edi_plot_identification,
         }
 
-    def _export_invoice_filename(self, invoice):
+    def _export_invoice_filename(self, invoice, file_format='xml'):
         """
             Generate the name of the invoice XML file according to ZATCA business rules:
             Seller Vat Number (BT-31), Date (BT-2), Time (KSA-25), Invoice Number (BT-1)
@@ -140,7 +140,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         vat = invoice.company_id.partner_id.commercial_partner_id.vat
         invoice_number = re.sub("[^a-zA-Z0-9 -]", "-", invoice.name)
         invoice_date = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), invoice.l10n_sa_confirmation_datetime)
-        return '%s_%s_%s.xml' % (vat, invoice_date.strftime('%Y%m%dT%H%M%S'), invoice_number)
+        return '%s_%s_%s.%s' % (vat, invoice_date.strftime('%Y%m%dT%H%M%S'), invoice_number, file_format)
 
     def _l10n_sa_get_invoice_transaction_code(self, invoice):
         """
