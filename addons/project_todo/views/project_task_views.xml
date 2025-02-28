@@ -63,10 +63,10 @@
                   multi_edit="1"
                   open_form_view="True"
                   js_class="todo_list">
-                <field name="priority" widget="priority" nolabel="1"/>
-                <field name="state" widget="todo_done_checkmark" nolabel="1"/>
+                <field name="state" widget="todo_done_checkmark" nolabel="1" width="20px"/>
                 <field name="name"/>
                 <field name="user_ids" optional="show" required="1" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
+                <field name="priority" widget="priority" optional="hidden" width="70px"/>
                 <field name="date_deadline" optional="show" widget="remaining_days"/>
                 <field name="activity_ids" optional="show" widget="list_activity"/>
                 <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
@@ -95,7 +95,6 @@
                     <div class="oe_title pe-0">
                         <h1 class="d-flex justify-content-between align-items-center">
                             <div class="d-flex w-100">
-                                <field name="priority" widget="priority_switch" class="me-3"/>
                                 <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="To-do..."/>
                             </div>
                             <div class="d-flex justify-content-end o_state_container">
@@ -110,16 +109,15 @@
                                 required="1"
                                 options="{'no_quick_create': True}"
                                 placeholder="Assignees"/>
-                        </group>
-                        <group>
-                            <field name="date_deadline"
-                                decoration-danger="date_deadline &lt; current_date"/>
-                        </group>
-                        <group>
                             <field name="tag_ids"
                                 widget="many2many_tags"
                                 options="{'color_field': 'color', 'no_create_edit': True}"
                                 class="me-2"/>
+                        </group>
+                        <group>
+                            <field name="priority" widget="priority_switch" class="me-3"/>
+                            <field name="date_deadline"
+                                decoration-danger="date_deadline &lt; current_date"/>
                         </group>
                     </group>
                     <field name="description" type="html" class="oe_description" default_focus="1" options="{'resizable': false, 'collaborative': true}"
@@ -231,7 +229,6 @@
                 <field name="tag_ids"/>
                 <field name="user_ids"/>
                 <field name="personal_stage_type_ids" string="Stage"/>
-                <filter string="Starred" name="starred_tasks" domain="[('priority', '=', '1')]"/>
                 <separator/>
                 <filter name="open_tasks" string="Open" domain="[('is_closed', '=', False)]"/>
                 <filter name="closed_tasks" string="Closed" domain="[('is_closed', '=', True)]"/>
@@ -247,6 +244,7 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
+                    <filter string="Priority" name="groupby_priority" context="{'group_by': 'priority'}"/>
                     <filter string="Tags" name="tags" help="By assigned tags" context="{'group_by':'tag_ids'}"/>
                     <filter string="Assignees" name="user_ids" context="{'group_by': 'user_ids'}"/>
                     <filter string="Stage" name="stage" help="By personal stages" context="{'group_by':'personal_stage_type_id'}"/>

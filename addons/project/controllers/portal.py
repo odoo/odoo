@@ -8,6 +8,7 @@ from markupsafe import Markup
 
 from odoo import http, _
 from odoo.exceptions import AccessError, MissingError, UserError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.osv.expression import AND, FALSE_DOMAIN
 from odoo.tools import config, groupby as groupbyelem
@@ -272,6 +273,7 @@ class ProjectCustomerPortal(CustomerPortal):
                 project_accessible = False
         values = {
             'page_name': page_name,
+            'priority_labels': dict(task._fields['priority']._description_selection(request.env)),
             'task': task,
             'user': request.env.user,
             'project_accessible': project_accessible,
@@ -353,7 +355,14 @@ class ProjectCustomerPortal(CustomerPortal):
             user_ids = request.env['res.users'].sudo().search([('name', 'ilike', search)])
             return [('user_ids', 'in', user_ids.ids)]
         elif search_in == 'priority':
-            return [('priority', 'ilike', '0' if search == 'normal' else '1')]
+            priority_selections = request.env['ir.model.fields.selection'].sudo().search([
+                ('field_id.model', '=', 'project.task'),
+                ('field_id.name', '=', 'priority'),
+                ('name', 'ilike', search),
+            ])
+            if priority_selections:
+                return [('priority', 'in', priority_selections.mapped('value'))]
+            return Domain.FALSE
         elif search_in == 'status':
             state_dict = dict(map(reversed, request.env['project.task']._fields['state']._description_selection(request.env)))
             return [('state', 'ilike', state_dict.get(search, search))]
@@ -446,6 +455,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'grouped_tasks': get_grouped_tasks,
             'allow_milestone': milestones_allowed,
             'multiple_projects': True,
+            'priority_labels': dict(Task_sudo._fields['priority']._description_selection(request.env)),
             'page_name': 'task',
             'default_url': url,
             'task_url': 'tasks',
