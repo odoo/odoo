@@ -16,6 +16,7 @@ from odoo.tools import float_is_zero
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
+    PRICELIST_SELECTED_SESSION_CACHE_KEY,
 )
 
 
@@ -252,6 +253,22 @@ class SaleOrder(models.Model):
             new_fpos = self.fiscal_position_id
             request.session[FISCAL_POSITION_SESSION_CACHE_KEY] = new_fpos.id
             request.fiscal_position = new_fpos
+
+        #If user explicitely selected a valid pricelist, we don't want to change it
+        if selected_pricelist_id := request.session.get(PRICELIST_SELECTED_SESSION_CACHE_KEY):
+            selected_pricelist = (
+                self.env['product.pricelist'].browse(selected_pricelist_id).exists()
+            )
+            if (
+                selected_pricelist
+                and selected_pricelist._is_available_on_website(self.website_id)
+                and selected_pricelist._is_available_in_country(
+                    self.partner_id.country_id.code
+                )
+            ):
+                self.pricelist_id = selected_pricelist
+            else:
+                request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
 
         if self.pricelist_id != pricelist_before or fpos_changed:
             # Pricelist may have been recomputed by the `partner_id` field update
