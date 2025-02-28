@@ -96,7 +96,10 @@ test("selects a date and properly applies it", async () => {
     await contains(".o_date_item_cell.o_today + .o_date_item_cell").click();
     await contains(".options-container").click();
     expect(".we-bg-options-container input").toHaveValue(formatDateTime(expectedDateTime));
-    expect(":iframe .test-options-target").toHaveAttribute("data-date", expectedDateTime.toUnixInteger().toString());
+    expect(":iframe .test-options-target").toHaveAttribute(
+        "data-date",
+        expectedDateTime.toUnixInteger().toString()
+    );
 });
 
 test("set a date to empty", async () => {
