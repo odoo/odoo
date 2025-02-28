@@ -580,10 +580,11 @@ export class SelectionPlugin extends Plugin {
     /**
      * Returns an array containing all the nodes fully contained in the selection.
      *
+     * @param { EditorSelection } [selection]
      * @returns {Node[]}
      */
-    getSelectedNodes() {
-        const selection = this.getSelectionData().editableSelection;
+    getSelectedNodes(selection) {
+        selection = selection || this.getSelectionData().editableSelection;
         const range = new Range();
         range.setStart(selection.startContainer, selection.startOffset);
         range.setEnd(selection.endContainer, selection.endOffset);
@@ -592,7 +593,7 @@ export class SelectionPlugin extends Plugin {
             this.getResource("fully_selected_node_predicates").some((cb) => cb(node, selection)) ||
             // Default rule
             (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)));
-        return this.getTraversedNodes().filter(isNodeFullySelected);
+        return this.getTraversedNodes(selection).filter(isNodeFullySelected);
     }
 
     isNodeContentsFullySelected(node) {
@@ -613,10 +614,11 @@ export class SelectionPlugin extends Plugin {
      * Returns the nodes intersected by the current selection, up to the common
      * ancestor container (inclusive).
      *
+     * @param { EditorSelection } [selection]
      * @returns {Node[]}
      */
-    getTraversedNodes() {
-        const selection = this.getSelectionData().deepEditableSelection;
+    getTraversedNodes(selection) {
+        selection = selection || this.getSelectionData().deepEditableSelection;
         const { commonAncestorContainer: root } = selection;
 
         let traversedNodes = [
@@ -646,10 +648,11 @@ export class SelectionPlugin extends Plugin {
     /**
      * Returns a Set of traversed blocks within the given range.
      *
+     * @param { EditorSelection } [selection]
      * @returns {Set<HTMLElement>}
      */
-    getTraversedBlocks() {
-        return new Set(this.getTraversedNodes().map(closestBlock).filter(Boolean));
+    getTraversedBlocks(selection) {
+        return new Set(this.getTraversedNodes(selection).map(closestBlock).filter(Boolean));
     }
     resetActiveSelection() {
         const selection = this.document.getSelection();
