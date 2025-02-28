@@ -405,7 +405,7 @@ class HrLeave(models.Model):
                 continue
             employees_by_dates_calendar[(leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, resource_calendar or leave.resource_calendar_id)] += leave.employee_id
         # We force the company in the domain as we are more than likely in a compute_sudo
-        domain = [('time_type', '=', 'leave'),
+        domain = [('time_type', '=', 'unpaid'),
                   ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
                   # When searching for resource leave intervals, we exclude the one that
                   # is related to the leave we're currently trying to compute for.

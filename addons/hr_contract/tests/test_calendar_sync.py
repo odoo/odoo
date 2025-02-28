@@ -57,7 +57,7 @@ class TestContractCalendars(TestContractCommon):
                 'date_to': end,
                 'resource_id': resource.id if resource else None,
                 'calendar_id': self.employee.resource_calendar_id.id,
-                'time_type': 'leave',
+                'time_type': 'unpaid',
             })
 
         start = Datetime.to_datetime('2015-11-17 07:00:00')

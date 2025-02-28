@@ -452,7 +452,7 @@ class ResourceCalendar(models.Model):
         else:
             resources_list = list(resources) + [self.env['resource.resource']]
         if domain is None:
-            domain = [('time_type', '=', 'leave')]
+            domain = [('time_type', '=', 'unpaid')]
         if not any_calendar:
             domain = domain + [('calendar_id', 'in', [False, self.id])]
         # for the computation, express all datetimes in UTC
@@ -673,7 +673,7 @@ class ResourceCalendar(models.Model):
             account the global leaves.
 
             `domain` controls the way leaves are recognized.
-            None means default value ('time_type', '=', 'leave')
+            None means default value ('time_type', '=', 'unpaid')
 
             Counts the number of work hours between two datetimes.
         """
@@ -701,7 +701,7 @@ class ResourceCalendar(models.Model):
             compute it.
 
             `domain` is used in order to recognise the leaves to take,
-            None means default value ('time_type', '=', 'leave')
+            None means default value ('time_type', '=', 'unpaid')
 
             Returns a dict {'days': n, 'hours': h} containing the
             quantity of working time expressed as days and as hours.
@@ -724,7 +724,7 @@ class ResourceCalendar(models.Model):
         account the global leaves.
 
         `domain` controls the way leaves are recognized.
-        None means default value ('time_type', '=', 'leave')
+        None means default value ('time_type', '=', 'unpaid')
 
         Return datetime after having planned hours
         """
@@ -769,7 +769,7 @@ class ResourceCalendar(models.Model):
         account the global leaves.
 
         `domain` controls the way leaves are recognized.
-        None means default value ('time_type', '=', 'leave')
+        None means default value ('time_type', '=', 'unpaid')
 
         Returns the datetime of a days scheduling.
         """
