@@ -1655,7 +1655,9 @@
     <!-- /shop/cart route -->
     <template id="cart" name="Shopping Cart">
         <t t-call="website_sale.checkout_layout">
-            <t t-set="show_shorter_cart_summary" t-value="True"/>
+            <t t-if="website.account_on_checkout != 'mandatory' or not website.is_public_user()">
+                <t t-set="show_shorter_cart_summary" t-value="True"/>
+            </t>
             <t t-set="show_footer" t-value="True"/>
             <t t-set="oe_structure">
                 <!-- This is the drag-and-drop area for website building blocs at the end of each
