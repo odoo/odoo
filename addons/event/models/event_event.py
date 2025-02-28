@@ -174,7 +174,8 @@ class EventEvent(models.Model):
     seats_max = fields.Integer(
         string='Maximum Attendees',
         compute='_compute_seats_max', readonly=False, store=True,
-        help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
+        help="""For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.
+        If the event has multiple slots, this maximum number is applied per slot.""")
     seats_limited = fields.Boolean('Limit Attendees', required=True, compute='_compute_seats_limited',
                                    precompute=True, readonly=False, store=True)
     seats_reserved = fields.Integer(
@@ -221,6 +222,10 @@ class EventEvent(models.Model):
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     is_finished = fields.Boolean(compute='_compute_is_finished', search='_search_is_finished')
+    # Slots
+    is_multi_slots = fields.Boolean("Is Multi Slots", default=False, help="Allow multiple time slots.")
+    slot_ids = fields.One2many("event.slot", "event_id", "Slots", copy=True,
+        compute="_compute_slot_ids", store=True, readonly=False)
     # Location and communication
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
@@ -319,33 +324,45 @@ class EventEvent(models.Model):
             else:
                 event.kanban_state_label = event.stage_id.legend_done
 
-    @api.depends('seats_max', 'registration_ids.state', 'registration_ids.active')
+    @api.depends('seats_max', 'registration_ids.state', 'registration_ids.active',
+        'is_multi_slots', 'slot_ids', 'slot_ids.seats_reserved', 'slot_ids.seats_used',
+        'slot_ids.seats_available', 'slot_ids.seats_taken')
     def _compute_seats(self):
         """ Determine available, reserved, used and taken seats. """
-        # initialize fields to 0
+        # initialize fields to 0 and compute seats for multi-slots events
         for event in self:
             event.seats_reserved = event.seats_used = event.seats_available = 0
-        # aggregate registrations by event and by state
+            if event.is_multi_slots:
+                event.seats_reserved = sum(event.slot_ids.mapped("seats_reserved"))
+                event.seats_used = sum(event.slot_ids.mapped("seats_used"))
+                event.seats_available = sum(event.slot_ids.mapped("seats_available"))
+                event.seats_taken = sum(event.slot_ids.mapped("seats_taken"))
+
+        events_without_slots = self.filtered(lambda event: not event.is_multi_slots)
+        if not events_without_slots:
+            return
+
+        # For event without slots, aggregate registrations by event and by state
         state_field = {
             'open': 'seats_reserved',
             'done': 'seats_used',
         }
-        base_vals = dict((fname, 0) for fname in state_field.values())
-        results = dict((event_id, dict(base_vals)) for event_id in self.ids)
-        if self.ids:
+        base_vals = dict.fromkeys(state_field.values(), 0)
+        results = {event_id: dict(base_vals) for event_id in events_without_slots.ids}
+        if events_without_slots.ids:
             query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration
                         WHERE event_id IN %s AND state IN ('open', 'done') AND active = true
                         GROUP BY event_id, state
                     """
             self.env['event.registration'].flush_model(['event_id', 'state', 'active'])
-            self._cr.execute(query, (tuple(self.ids),))
+            self._cr.execute(query, (tuple(events_without_slots.ids),))
             res = self._cr.fetchall()
             for event_id, state, num in res:
                 results[event_id][state_field[state]] = num
 
         # compute seats_available and expected
-        for event in self:
+        for event in events_without_slots:
             event.update(results.get(event._origin.id or event.id, base_vals))
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
@@ -615,6 +632,12 @@ class EventEvent(models.Model):
         """Reset url field as it should only be used for events with no physical location."""
         self.filtered('address_id').event_url = ''
 
+    @api.depends("is_multi_slots")
+    def _compute_slot_ids(self):
+        for event in self:
+            if not event.is_multi_slots and event.slot_ids:
+                event.slot_ids = False
+
     @api.constrains('seats_max', 'seats_limited', 'registration_ids')
     def _check_seats_availability(self, minimal_availability=0):
         sold_out_events = []
@@ -647,6 +670,32 @@ class EventEvent(models.Model):
             parsed_url = urlparse(event.event_url)
             if parsed_url.scheme not in ('http', 'https'):
                 event.event_url = 'https://' + event.event_url
+
+    @api.constrains("date_tz", "date_begin", "date_end")
+    def _check_slots_dates(self):
+        for event in self:
+            slots_outside_event_bounds = self.slot_ids.filtered(lambda slot:
+                not (event.date_begin <= slot.start_datetime <= event.date_end) or
+                not (event.date_begin <= slot.end_datetime <= event.date_end)
+            )
+            if slots_outside_event_bounds:
+                raise ValidationError(_(
+                    "The event slots cannot be scheduled outside of the event time range.\n\n"
+                    "Event (%(tz)s):\n"
+                    "%(event_start)s - %(event_end)s\n\n"
+                    "Slots (%(tz)s):\n"
+                    "%(slots)s",
+                    tz=event.date_tz,
+                    event_start=format_datetime(self.env, event.date_begin, tz=event.date_tz, dt_format='medium'),
+                    event_end=format_datetime(self.env, event.date_end, tz=event.date_tz, dt_format='medium'),
+                    slots="\n".join(f"- {slot.name}" for slot in slots_outside_event_bounds)
+                ))
+
+    @api.constrains("is_multi_slots", "slot_ids")
+    def _check_slots_number(self):
+        for event in self:
+            if event.is_multi_slots and len(event.slot_ids) == 0:
+                raise ValidationError(_("A multi-slots event should have at least one slot (Dates & Slots tab)."))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -749,8 +798,9 @@ class EventEvent(models.Model):
         description += textwrap.shorten(html_to_inner_content(self.description), 1900)
         return description
 
-    def _get_ics_file(self):
+    def _get_ics_file(self, slot=False):
         """ Returns iCalendar file for the event invitation.
+            :param slot: If a slot is given, schedule with the given slot datetimes
             :returns a dict of .ics file content for each event
         """
         result = {}
@@ -760,10 +810,12 @@ class EventEvent(models.Model):
         for event in self:
             cal = vobject.iCalendar()
             cal_event = cal.add('vevent')
+            start = slot.start_datetime if slot else event.date_begin
+            end = slot.end_datetime if slot else event.date_end
 
             cal_event.add('created').value = fields.Datetime.now().replace(tzinfo=pytz.timezone('UTC'))
-            cal_event.add('dtstart').value = event.date_begin.astimezone(pytz.timezone(event.date_tz))
-            cal_event.add('dtend').value = event.date_end.astimezone(pytz.timezone(event.date_tz))
+            cal_event.add('dtstart').value = start.astimezone(pytz.timezone(event.date_tz))
+            cal_event.add('dtend').value = end.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('summary').value = event.name
             cal_event.add('description').value = event._get_external_description()
             if event.address_id:
