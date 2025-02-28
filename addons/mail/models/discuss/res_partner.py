@@ -18,6 +18,16 @@ class ResPartner(models.Model):
         copy=False,
     )
     channel_member_ids = fields.One2many("discuss.channel.member", "partner_id")
+    in_call = fields.Boolean(compute="_compute_in_call")
+
+    @api.depends("channel_member_ids.rtc_session_ids")
+    def _compute_in_call(self):
+        partner_ids_in_call = self.env["discuss.channel.member"]._read_group(
+            [("partner_id", "in", self.ids), ("rtc_session_ids", "!=", False)],
+            aggregates=["partner_id:array_agg"],
+        )[0][0]
+        for partner in self:
+            partner.in_call = partner.id in partner_ids_in_call
 
     @api.readonly
     @api.model
