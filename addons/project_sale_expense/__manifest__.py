@@ -10,4 +10,7 @@
     'category': 'Hidden',
     'depends': ['sale_project', 'sale_expense', 'project_hr_expense'],
     'auto_install': True,
+    'demo': [
+        'data/project_sale_expense_demo.xml',
+    ],
 }
