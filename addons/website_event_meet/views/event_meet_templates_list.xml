@@ -9,7 +9,12 @@
             <t t-call="website_event.navbar"/>
             <!-- Drag/Drop Area -->
             <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS</t>
-            <div class="oe_structure oe_empty" id="oe_structure_website_event_location_1" t-att-data-editor-message="editor_message"/>
+            <t t-set="tooltip_message">Shared between all proposal pages of all events</t>
+            <div class="oe_structure oe_empty"
+                id="oe_structure_website_event_location_1"
+                t-att-data-editor-message="editor_message"
+                t-att-data-tooltip-message="tooltip_message"
+            />
             <!-- Content -->
             <div class="o_wemeet_container container h-100">
                 <div class="row h-100 mb-5">
@@ -18,7 +23,11 @@
                 </div>
             </div>
             <!-- Drag/Drop Area -->
-            <div class="oe_structure oe_empty mb-5" id="oe_structure_website_event_location_2" t-att-data-editor-message="editor_message"/>
+            <div class="oe_structure oe_empty mb-5"
+                id="oe_structure_website_event_location_2"
+                t-att-data-editor-message="editor_message"
+                t-att-data-tooltip-message="tooltip_message"
+            />
         </div>
     </t>
 </template>
