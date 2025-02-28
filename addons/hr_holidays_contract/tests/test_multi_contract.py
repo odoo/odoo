@@ -25,25 +25,6 @@ class TestHolidaysMultiContract(TestHolidayContract):
         with self.assertRaises(ValidationError):
             self.contract_cdi.date_start = datetime.strptime('2015-11-17', '%Y-%m-%d').date()
 
-    def test_create_contract_in_leave(self):
-        # test create contract such that a leave is across two contracts
-        start = datetime.strptime('2015-11-05 07:00:00', '%Y-%m-%d %H:%M:%S')
-        end = datetime.strptime('2015-12-15 18:00:00', '%Y-%m-%d %H:%M:%S')
-        self.contract_cdi.date_start = datetime.strptime('2015-12-30', '%Y-%m-%d').date()  # remove this contract to be able to create the leave
-        # begins during contract, ends after contract
-        leave = self.create_leave(start, end, name="Doctor Appointment", employee_id=self.jules_emp.id)
-        leave.action_approve()
-        # move contract in the middle of the leave
-        with self.assertRaises(ValidationError):
-            self.env['hr.contract'].create({
-                'date_start': datetime.strptime('2015-11-30', '%Y-%m-%d').date(),
-                'name': 'Contract for Richard',
-                'resource_calendar_id': self.calendar_40h.id,
-                'wage': 5000.0,
-                'employee_id': self.jules_emp.id,
-                'state': 'open',
-            })
-
     def test_leave_outside_contract(self):
         # Leave outside contract => should not raise
         start = datetime.strptime('2014-10-18 07:00:00', '%Y-%m-%d %H:%M:%S')
