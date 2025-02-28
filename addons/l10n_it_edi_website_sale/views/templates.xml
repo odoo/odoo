@@ -15,6 +15,10 @@
                     </div>
                 </t>
             </xpath>
+            <!-- Sets the country code for every country option -->
+            <xpath expr="//t[@t-foreach='countries']//option" position="attributes">
+                <attribute name="t-att-code">c.code</attribute>
+            </xpath>
         </template>
     </data>
 </odoo>
