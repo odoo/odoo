@@ -1,6 +1,7 @@
 import pytz
 from math import modf
 
+from collections import defaultdict
 from datetime import datetime, time
 
 from odoo import _, api, fields, models
@@ -40,6 +41,8 @@ class EventSlot(models.Model):
     is_sold_out = fields.Boolean(
         "Sold Out", compute="_compute_is_sold_out", store=True,
         help="Whether seats are not available for this slot.")
+    # Seats per Ticket
+    ticket_limitation_ids = fields.One2many("event.slot.ticket", "slot_id", string="Tickets Limitations")
 
     @api.constrains("start_hour", "end_hour")
     def _check_hours(self):
@@ -86,18 +89,31 @@ class EventSlot(models.Model):
             date = format_date(self.env, slot.date, date_format="long")
             start = format_time(self.env, EventSlot._float_to_time(slot.start_hour), time_format="short")
             end = format_time(self.env, EventSlot._float_to_time(slot.end_hour), time_format="short")
-            name = f"{weekday}, {date}, {start} - {end}"
+            slot.name = f"{weekday}, {date}, {start} - {end}"
 
-            if slot.is_sold_out:
-                slot.name = _('%(slot_name)s (Sold out)', slot_name=name)
-            elif slot.event_id.seats_limited and slot.event_id.seats_max:
-                slot.name = _(
-                    '%(slot_name)s (%(count)s seats remaining)',
-                    slot_name=name,
-                    count=formatLang(self.env, slot.seats_available, digits=0),
-                )
+    @api.depends("name")
+    @api.depends_context('name_with_seats_availability', 'availability_for_ticket')
+    def _compute_display_name(self):
+        name_with_availability = self.env.context.get('name_with_seats_availability')
+        selected_ticket = self.env.context.get('availability_for_ticket')
+        if selected_ticket:
+            availability_per_slot = defaultdict(int)
+            for slot_ticket in self.ticket_limitation_ids.filtered(lambda slot_ticket: slot_ticket.ticket_id.id == selected_ticket):
+                availability_per_slot[slot_ticket.slot_id] += slot_ticket.seats_available
+
+        for slot in self:
+            if not name_with_availability or not slot.event_id.seats_limited:
+                slot.display_name = slot.name
+                continue
+            seats_available = availability_per_slot.get(slot) if selected_ticket else slot.seats_available
+            if not seats_available:
+                slot.display_name = _('%(slot_name)s (Sold out)', slot_name=slot.name)
             else:
-                slot.name = name
+                slot.display_name = _(
+                    '%(slot_name)s (%(count)s seats remaining)',
+                    slot_name=slot.name,
+                    count=formatLang(self.env, seats_available, digits=0),
+                )
 
     @api.depends("event_id", "event_id.seats_max", "registration_ids.state", "registration_ids.active")
     def _compute_seats(self):

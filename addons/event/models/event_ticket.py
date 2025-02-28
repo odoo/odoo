@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools.misc import formatLang
@@ -80,6 +81,8 @@ class EventEventTicket(models.Model):
     seats_taken = fields.Integer(string="Taken Seats", compute="_compute_seats", store=False)
     is_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_is_sold_out', help='Whether seats are not available for this ticket.')
+    # Seats per slot
+    slot_limitation_ids = fields.One2many("event.slot.ticket", "ticket_id", string="Slots Limitations")
     # reports
     color = fields.Char('Color', default="#875A7B")
 
@@ -138,7 +141,8 @@ class EventEventTicket(models.Model):
         for ticket in self:
             ticket.update(results.get(ticket._origin.id or ticket.id, {}))
             if ticket.seats_max > 0:
-                ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
+                seats_max = ticket.seats_max * len(ticket.event_id.slot_ids) if ticket.event_id.is_multi_slots else ticket.seats_max
+                ticket.seats_available = seats_max - (ticket.seats_reserved + ticket.seats_used)
             ticket.seats_taken = ticket.seats_reserved + ticket.seats_used
 
     @api.depends('seats_limited', 'seats_available')
@@ -166,21 +170,28 @@ class EventEventTicket(models.Model):
                                   + '\n%s\n' % '\n'.join(sold_out_tickets))
 
     @api.depends('seats_max', 'seats_available')
-    @api.depends_context('name_with_seats_availability')
+    @api.depends_context('name_with_seats_availability', 'availability_for_slot')
     def _compute_display_name(self):
-        """Adds ticket seats availability if requested by context."""
+        """Adds ticket seats availability if requested by context.
+        For a specific slot if slot passed by context. """
         if not self.env.context.get('name_with_seats_availability'):
             return super()._compute_display_name()
+        selected_slot = self.env.context.get('availability_for_slot')
+        if selected_slot:
+            availability_per_ticket = defaultdict(int)
+            for slot_ticket in self.slot_limitation_ids.filtered(lambda slot_ticket: slot_ticket.slot_id.id == selected_slot):
+                availability_per_ticket[slot_ticket.ticket_id] += slot_ticket.seats_available
         for ticket in self:
+            seats_available = availability_per_ticket.get(ticket) if selected_slot else ticket.seats_available
             if not ticket.seats_max:
                 name = ticket.name
-            elif not ticket.seats_available:
+            elif not seats_available:
                 name = _('%(ticket_name)s (Sold out)', ticket_name=ticket.name)
             else:
                 name = _(
                     '%(ticket_name)s (%(count)s seats remaining)',
                     ticket_name=ticket.name,
-                    count=formatLang(self.env, ticket.seats_available, digits=0),
+                    count=formatLang(self.env, seats_available, digits=0),
                 )
             ticket.display_name = name
 

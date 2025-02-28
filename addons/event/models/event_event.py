@@ -191,6 +191,7 @@ class EventEvent(models.Model):
         string='Number of Taken Seats',
         store=False, readonly=True, compute='_compute_seats')
     # Registration fields
+    slot_ticket_limitation_ids = fields.One2many("event.slot.ticket", inverse_name="event_id")
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
@@ -398,7 +399,11 @@ class EventEvent(models.Model):
             event.event_registrations_open = event.event_registrations_started and \
                 (date_end_tz >= current_datetime if date_end_tz else True) and \
                 (not event.seats_limited or not event.seats_max or event.seats_available) and \
-                (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
+                (not event.event_ticket_ids or
+                    any(ticket.sale_available for ticket in (
+                        event.slot_ticket_limitation_ids if event.is_multi_slots else event.event_ticket_ids
+                    ))
+                )
 
     @api.depends('event_ticket_ids.start_sale_datetime')
     def _compute_start_sale_date(self):
@@ -419,7 +424,11 @@ class EventEvent(models.Model):
         for event in self:
             event.event_registrations_sold_out = (
                 (event.seats_limited and event.seats_max and not event.seats_available)
-                or (event.event_ticket_ids and all(ticket.is_sold_out for ticket in event.event_ticket_ids))
+                or (event.event_ticket_ids and
+                    all(ticket.is_sold_out for ticket in (
+                        event.slot_ticket_limitation_ids if event.is_multi_slots else event.event_ticket_ids
+                    ))
+                )
             )
 
     @api.depends('date_begin', 'date_end')
