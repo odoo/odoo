@@ -182,7 +182,7 @@ def il_encoding_encode(data, columns=6, security_level=2, encoding="utf-8"):
     num_cols = columns  # Nomenclature
 
     # Prepare input
-    data_bytes = to_bytes(data, encoding)
+    data_bytes = il_util_to_bytes(data, encoding)
 
     # Convert data to code words and split into rows
     code_words = il_encoding_encode_high(data_bytes, num_cols, security_level)
@@ -243,7 +243,7 @@ def il_encoding_encode_high(data, columns, security_level):
     extendend_words = [length_descriptor] + data_words + padding_words
 
     # Calculate error correction words
-    ec_words = compute_error_correction_code_words(extendend_words, security_level)
+    ec_words = il_error_correction_compute_error_correction_code_words(extendend_words, security_level)
 
     return extendend_words + ec_words
 
@@ -660,7 +660,7 @@ def il_byte__compact_chunk(chunk):
     digits = [i for i in chunk]
 
     if len(chunk) == 6:
-        base900 = switch_base(digits, 256, 900)
+        base900 = il_util_switch_base(digits, 256, 900)
         return [0] * (5 - len(base900)) + base900
 
     return digits
@@ -677,7 +677,7 @@ Rate compaction: 2.9 bytes per code word
 def il_numeric__compact_chunk(chunk):
     number = "".join(chr(x) for x in chunk)
     value = int("1" + number)
-    return to_base(value, 900)
+    return il_util_to_base(value, 900)
 
 
 def il_numeric_compact_numbers(data):
@@ -695,7 +695,7 @@ def il_optimizations_replace_short_numeric_chunks(chunks):
     """
     from pdf417gen.compaction import Chunk
 
-    for prev, chunk, next in iterate_prev_next(chunks):
+    for prev, chunk, next in il_util_iterate_prev_next(chunks):
         is_short_numeric_chunk = (
             chunk.compact_fn == il_numeric_compact_numbers
             and len(chunk.data) < 13
