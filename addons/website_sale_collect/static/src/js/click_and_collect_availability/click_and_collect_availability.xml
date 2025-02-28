@@ -2,10 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="website_sale_collect.ClickAndCollectAvailability">
-        <div class="btn border border-1 mb-3 text-start p-3 w-100 w-md-auto">
+        <div class="border rounded p-3 w-100 w-lg-75">
             <div
                 name="click_and_collect_availability"
                 t-on-click="openLocationSelector"
+                class="cursor-pointer"
                 t-att-class="{'disabled': !this.state.active}"
             >
                 <h6>
@@ -16,7 +17,7 @@
                     />
                     <t t-else="">Click and Collect</t>
                 </h6>
-                <div class="d-flex gap-5">
+                <div class="d-flex justify-content-between">
                     <t t-if="this.state.inStoreStockData.in_stock">
                         <div
                             t-if="this.state.inStoreStockData.show_quantity &amp;&amp; this.state.selectedLocationData.id"
@@ -42,7 +43,7 @@
             <div
                 name="delivery_availability"
                 t-if="this.state.deliveryStockData"
-                class="flex-row cursor-default"
+                class="flex-row"
             >
                 <h6>
                     <i class="fa fa-fw fa-truck text-muted"/>

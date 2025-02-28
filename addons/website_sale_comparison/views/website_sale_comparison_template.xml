@@ -25,18 +25,41 @@
         </t>
     </template>
 
-    <template id="product_add_to_compare" name='Add to comparison in product page' inherit_id="website_sale.product" priority="8">
-        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="after">
+    <template
+        id="product_add_to_compare"
+        name='Add to comparison in product page'
+        inherit_id="website_sale.cta_wrapper"
+        priority="8"
+    >
+        <xpath expr="//div[@id='product_option_block']" position="inside">
             <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <button t-if="product_variant_id and attrib_categories"
+            <t
+                t-set="_button_classes"
+                t-valuef="o_add_compare_dyn btn btn-outline-primary d-none d-md-block order-last"
+            />
+            <t
+                t-if="not is_view_active('website_sale_wishlist.product_add_to_wishlist')"
+                t-set="_button_classes"
+                t-value="_button_classes + ' flex-grow-1'"
+            />
+            <t
+                t-if="is_view_active('website_sale.cta_wrapper_large')"
+                t-set="_button_classes"
+                t-value="_button_classes + ' btn-lg px-lg-0'"
+            />
+            <button
+                t-if="product_variant_id and attrib_categories"
                 type="button"
                 role="button"
-                class="d-none d-md-block btn btn-link px-0 o_add_compare_dyn"
-                aria-label="Compare"
+                t-att-class="_button_classes"
+                aria-label="Add to Compare"
+                title="Add to compare"
                 t-att-data-product-product-id="product_variant_id"
-                data-action="o_comparelist">
-                    <span class="fa fa-exchange me-2"/>Compare
+                data-action="o_comparelist"
+            >
+                <span class="fa fa-exchange"/>
+                <span t-att-class="'d-inline' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale_wishlist.product_add_to_wishlist') else '')">Add to Compare</span>
             </button>
         </xpath>
     </template>
@@ -73,6 +96,14 @@
         active="False"
     >
         <xpath expr="//div[@id='more_information_accordion_item']" position="before">
+            <t
+                t-set="attrib_categories"
+                t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"
+            />
+            <t
+                t-set="product_variant_id"
+                t-value="product._get_first_possible_variant_id()"
+            />
             <t t-if="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()">
                 <t t-foreach="attrib_categories" t-as="category">
                     <div class="accordion-item">

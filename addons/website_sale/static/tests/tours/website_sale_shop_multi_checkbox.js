@@ -21,24 +21,8 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
         run: "click",
     },
     {
-        content: 'click on the third option to select it',
-        trigger: 'input[data-attribute_name="Options"][data-value_name="Option 3"]',
-        run: "click",
-    },
-    {
-        content: 'check combination is not possible',
-        trigger: '.js_main_product.css_not_available .css_not_available_msg:contains("This combination does not exist.")',
-        timeout: 30000,
-        run: "click",
-    },
-    {
-        content: "check add to cart not possible",
-        trigger: '#add_to_cart.disabled',
-    },
-    {
-        content: 'click on the third option to unselect it',
-        trigger: 'input[data-attribute_name="Options"][data-value_name="Option 3"]',
-        run: "click",
+        content: 'check third option is not selectable',
+        trigger: 'input[data-attribute_name="Options"][data-value_name="Option 3"][disabled]',
     },
     {
         content: 'click on the second option to select it',

@@ -140,7 +140,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
             'disable': [
                 'website_sale.carousel_product_indicators_bottom',  # Layout/Thumbnails
                 'website_sale_comparison.product_add_to_compare',  # Comparison
-                'website_sale.product_custom_text',  # Terms and Conditions
+                'website_sale.product_terms_and_conditions',  # Terms and Conditions
             ],
         },
         'website_fields': {},  # Default
@@ -156,7 +156,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
                 'website_sale.product_picture_magnify_hover',
                 'website_sale.product_picture_magnify_both',
                 'website_sale_comparison.product_add_to_compare',  # Comparison
-                'website_sale.product_custom_text',  # Terms and Conditions
+                'website_sale.product_terms_and_conditions',  # Terms and Conditions
             ],
         },
         'website_fields': {
@@ -176,7 +176,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
                 'website_sale.products_carousel_16x9',
                 'website_sale.products_carousel_21x9',
                 'website_sale_comparison.product_add_to_compare',  # Comparison
-                'website_sale.product_custom_text',  # Terms and Conditions
+                'website_sale.product_terms_and_conditions',  # Terms and Conditions
             ],
         },
         'website_fields': {
@@ -194,7 +194,7 @@ PRODUCT_PAGE_STYLE_MAPPING = {
                 'website_sale.product_picture_magnify_hover',
                 'website_sale.product_picture_magnify_both',
                 'website_sale_comparison.product_add_to_compare',  # Comparison
-                'website_sale.product_custom_text',  # Terms and Conditions
+                'website_sale.product_terms_and_conditions',  # Terms and Conditions
             ],
         },
         'website_fields': {

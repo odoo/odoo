@@ -227,7 +227,10 @@ var VariantMixin = {
         $parent
             .find('option, input, label, .o_variant_pills')
             .removeClass('css_not_available')
-            .attr('title', function () { return $(this).data('value_name') || ''; })
+            .removeAttr('disabled')
+            .filter('option, input')
+            .closest('li')
+            .removeAttr('title')
             .data('excluded-by', '');
 
         // exclusion rules: array of ptav
@@ -326,15 +329,16 @@ var VariantMixin = {
     _disableInput: function ($parent, attributeValueId, excludedBy, attributeNames, productName) {
         var $input = $parent
             .find('option[value=' + attributeValueId + '], input[value=' + attributeValueId + ']');
-        $input.addClass('css_not_available');
+        $input.addClass('css_not_available').prop('disabled', true);
         $input.closest('label').addClass('css_not_available');
         $input.closest('.o_variant_pills').addClass('css_not_available');
 
+        const $li = $input.closest('li');
+
         if (excludedBy && attributeNames) {
-            var $target = $input.is('option') ? $input : $input.closest('label').add($input);
             var excludedByData = [];
-            if ($target.data('excluded-by')) {
-                excludedByData = JSON.parse($target.data('excluded-by'));
+            if ($li.data('excluded-by')) {
+                excludedByData = $li.data('excluded-by');
             }
 
             var excludedByName = attributeNames[excludedBy];
@@ -343,8 +347,8 @@ var VariantMixin = {
             }
             excludedByData.push(excludedByName);
 
-            $target.attr('title', _t('Not available with %s', excludedByData.join(', ')));
-            $target.data('excluded-by', JSON.stringify(excludedByData));
+            $li.attr('title', _t('Not available with %s', excludedByData.join(', ')));
+            $li.data('excluded-by', excludedByData);
         }
     },
     /**
@@ -433,7 +437,6 @@ var VariantMixin = {
                 combination.product_id,
                 combination.product_template_id,
                 combination.carousel,
-                isCombinationPossible
             );
             $parent
                 .find('.o_product_tags')
@@ -545,11 +548,16 @@ var VariantMixin = {
      * @param {MouseEvent} ev
      */
     _onChangeColorAttribute: function (ev) {
-        var $parent = $(ev.target).closest('.js_product');
+        let $eventTarget = $(ev.target);
+        var $parent = $eventTarget.closest('.js_product');
         $parent.find('.css_attribute_color')
             .removeClass("active")
             .filter(':has(input:checked)')
             .addClass("active");
+        let $attrValueEl = $eventTarget.closest('.variant_attribute').find('.attribute_value')[0];
+        if ($attrValueEl) {
+            $attrValueEl.innerText = $eventTarget.data('value_name');
+        }
     },
 
     _onChangePillsAttribute: function (ev) {
@@ -557,9 +565,9 @@ var VariantMixin = {
         radio.click();  // Trigger onChangeVariant.
         var $parent = $(ev.target).closest('.js_product');
         $parent.find('.o_variant_pills')
-            .removeClass("active")
+            .removeClass("active border-primary text-primary-emphasis bg-primary-subtle")
             .filter(':has(input:checked)')
-            .addClass("active");
+            .addClass("active border-primary text-primary-emphasis bg-primary-subtle");
     },
 
     /**

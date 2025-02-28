@@ -35,4 +35,5 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
         })
 
     def test_website_sale_cart_notification(self):
+        self.env.ref('website_sale.product_search').active = True
         self.start_tour("/", 'website_sale_cart_notification')
