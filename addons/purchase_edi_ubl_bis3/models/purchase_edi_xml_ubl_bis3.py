@@ -153,11 +153,15 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             'name': value.attribute_id.name,
             'value': value.name
         } for value in product.product_template_attribute_value_ids]
+        supplier_info = product.variant_seller_ids.filtered(lambda s:
+            s.partner_id == order.partner_id and s.product_code or s.product_name
+        )[:1]
 
         vals = {
             'name': product.name or order_line.name,
             'description': order_line.name or product.description,
             'buyer_item_identification': product.default_code or product.id,
+            'seller_item_identification': supplier_info.product_code or supplier_info.product_name,
             'standard_item_identification': product.barcode,
             'classified_tax_category_vals': self._get_tax_category_vals(order, order_line)
         }
