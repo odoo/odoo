@@ -1,10 +1,13 @@
-import { closestBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestPosition,
+    isIconElement,
     isMediaElement,
     isProtected,
     isProtecting,
+    isTextNode,
     isUnprotecting,
+    isZWS,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
 import {
@@ -177,7 +180,9 @@ export class SelectionPlugin extends Plugin {
                 "shift+arrowright",
                 "arrowleft",
                 "shift+arrowleft",
+                "arrowup",
                 "shift+arrowup",
+                "arrowdown",
                 "shift+arrowdown",
             ];
             if (handled.includes(getActiveHotkey(ev))) {
@@ -813,7 +818,11 @@ export class SelectionPlugin extends Plugin {
             const shouldSkipCallbacks = this.getResource(
                 "intangible_char_for_keyboard_navigation_predicates"
             );
-            let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+            let adjacentCharacter = getAdjacentCharacter(
+                this.getSelectionData().deepEditableSelection,
+                domDirection,
+                this.editable
+            );
             let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 
             while (shouldSkip) {
@@ -824,11 +833,104 @@ export class SelectionPlugin extends Plugin {
                 const hasSelectionChanged =
                     nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
                 const lastSkippedChar = adjacentCharacter;
-                adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+                adjacentCharacter = getAdjacentCharacter(
+                    this.getSelectionData().deepEditableSelection,
+                    domDirection,
+                    this.editable
+                );
 
                 shouldSkip =
                     hasSelectionChanged &&
                     shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
+            }
+            let { focusNode, focusOffset } = this.getSelectionData().deepEditableSelection;
+            if (domDirection === "next" && mode === "move") {
+                if (
+                    isTextNode(focusNode) &&
+                    focusNode.length === focusOffset &&
+                    isIconElement(focusNode.nextSibling)
+                ) {
+                    focusNode = focusNode.nextSibling;
+                    focusOffset = 0;
+                }
+
+                if (isIconElement(focusNode) && focusOffset === 0 && !focusNode.nextSibling) {
+                    ev.preventDefault();
+                    this.setSelection({ anchorNode: focusNode, anchorOffset: 1 });
+                }
+            }
+        } else if (mode === "move" && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
+            const isArrowUp = ev.key === "ArrowUp";
+            const { anchorNode, anchorOffset } = this.getSelectionData().deepEditableSelection;
+            const currentBlock = closestBlock(anchorNode);
+            const currentNode =
+                anchorNode === currentBlock ? currentBlock.childNodes[anchorOffset] : anchorNode;
+            const findAdjacentLineNode = (node = currentNode) => {
+                if (isArrowUp && node.nodeName === "BR") {
+                    node = node.previousSibling;
+                }
+                while (node && node.nodeName !== "BR") {
+                    node = isArrowUp ? node.previousSibling : node.nextSibling;
+                }
+                return isArrowUp ? node : node?.nextSibling;
+            };
+            const getPosition = (node, cursorPosition = false) => {
+                if (!node) {
+                    return null;
+                }
+                if (isTextNode(node)) {
+                    if (cursorPosition) {
+                        return this.document.getSelection().getRangeAt(0).getBoundingClientRect();
+                    } else {
+                        const range = this.document.createRange();
+                        range.selectNode(node);
+                        return range.getBoundingClientRect();
+                    }
+                }
+                return node.getBoundingClientRect();
+            };
+            const currentNodePosition = getPosition(currentNode, true);
+            const adjacentLineNode = findAdjacentLineNode();
+            const adjacentBlock = isArrowUp
+                ? currentBlock.previousElementSibling
+                : currentBlock.nextElementSibling;
+            const adjacentNode = adjacentBlock?.[isArrowUp ? "lastChild" : "firstChild"];
+            const targetNodePosition = adjacentLineNode
+                ? getPosition(adjacentLineNode)
+                : getPosition(adjacentNode);
+            if (targetNodePosition) {
+                const cursorX = currentNodePosition.left;
+                const cursorY = targetNodePosition.top;
+                let offsetNode, offset;
+                if (this.document.caretPositionFromPoint) {
+                    const range = this.document.caretPositionFromPoint(cursorX, cursorY);
+                    offsetNode = range.offsetNode;
+                    offset = range.offset;
+                } else if (this.document.caretRangeFromPoint) {
+                    const range = this.document.caretRangeFromPoint(cursorX, cursorY);
+                    offsetNode = range.startContainer;
+                    offset = range.startOffset;
+                }
+                const isTargetIcon =
+                    (isZWS(offsetNode) && isIconElement(offsetNode.parentElement)) ||
+                    (isBlock(offsetNode) &&
+                        (isIconElement(offsetNode.childNodes[offset]) ||
+                            isIconElement(offsetNode.lastChild)));
+                if (
+                    this.editable.contains(offsetNode) &&
+                    (isIconElement(currentNode) || isTargetIcon)
+                ) {
+                    let targetIcon;
+                    if (isZWS(offsetNode) && isIconElement(offsetNode.parentElement)) {
+                        targetIcon = offsetNode.parentElement;
+                    }
+                    if (targetIcon) {
+                        offsetNode = closestBlock(targetIcon);
+                        offset = [...offsetNode.childNodes].indexOf(targetIcon);
+                    }
+                    ev.preventDefault();
+                    this.setSelection({ anchorNode: offsetNode, anchorOffset: offset });
+                }
             }
         }
 
