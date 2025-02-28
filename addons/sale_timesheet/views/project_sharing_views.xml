@@ -18,15 +18,28 @@
                     optional="hide"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='remaining_hours']" position="after">
+<<<<<<< 17.0
                 <field name="sale_line_id" column_invisible="True"/>
                 <field name="remaining_hours_available" column_invisible="True"/>
                 <field name="remaining_hours_so" optional="hide" widget="timesheet_uom" invisible="not sale_line_id or not remaining_hours_available"/>
+||||||| cce0b490090580be51fdf5a40fad2ec2b9a49401
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"/>
+=======
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"
+                    attrs="{'column_invisible': ['|', ('parent.allow_billable', '=', False), ('parent.allow_timesheets', '=', False)]}" />
+>>>>>>> d1a176bc49b7de9d917655b7e1c1f0a091f79255
             </xpath>
             <xpath expr="//field[@name='remaining_hours']" position="after">
                 <field name="allow_billable" invisible="1" />
                 <field name="remaining_hours_available" invisible="1"/>
                 <field name="sale_order_id" invisible="1"/>
+<<<<<<< 17.0
                 <span id="remaining_hours_so_label" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" class="o_td_label float-start">
+||||||| cce0b490090580be51fdf5a40fad2ec2b9a49401
+                <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" class="o_td_label float-start">
+=======
+                <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('remaining_hours_available', '=', False)]}" class="o_td_label float-start">
+>>>>>>> d1a176bc49b7de9d917655b7e1c1f0a091f79255
                     <label class="fw-bold" for="remaining_hours_so" string="Remaining Hours on SO"
                             invisible="encode_uom_in_days or remaining_hours_so &lt; 0"/>
                     <label class="fw-bold" for="remaining_hours_so" string="Remaining Days on SO"
@@ -36,7 +49,38 @@
                     <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Days on SO"
                             invisible="not encode_uom_in_days or remaining_hours_so &gt;= 0"/>
                 </span>
+<<<<<<< 17.0
                 <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" decoration-danger="remaining_hours_so &lt; 0"></field>
+||||||| cce0b490090580be51fdf5a40fad2ec2b9a49401
+                <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" decoration-danger="remaining_hours_so &lt; 0"></field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_inherit_project_task_view_tree_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.task.tree.inherit.sale.timesheet</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.project_sharing_inherit_project_task_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='remaining_hours']" position="after">
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"/>
+=======
+                <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|',('allow_billable', '=', False), ('allow_timesheets', '=', False), ('remaining_hours_available', '=', False)]}" decoration-danger="remaining_hours_so &lt; 0"></field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_inherit_project_task_view_tree_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.task.tree.inherit.sale.timesheet</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.project_sharing_inherit_project_task_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='remaining_hours']" position="after">
+                <field name="allow_billable" invisible="1" />
+                <field name="allow_timesheets" invisible="1"/>
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"
+                    attrs="{'column_invisible': ['|', ('allow_billable', '=', False), ('allow_timesheets', '=', False)]}" />
+>>>>>>> d1a176bc49b7de9d917655b7e1c1f0a091f79255
             </xpath>
         </field>
     </record>
