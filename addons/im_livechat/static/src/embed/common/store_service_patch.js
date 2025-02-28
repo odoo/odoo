@@ -14,6 +14,7 @@ patch(Store.prototype, {
         if (livechatService.state === SESSION_STATE.PERSISTED || force) {
             try {
                 await super.initialize();
+                await this.fetchDeferred;
                 livechatService.thread ??= this.store.Thread.get({
                     id: livechatService.savedState?.store["discuss.channel"][0].id,
                     model: "discuss.channel",
