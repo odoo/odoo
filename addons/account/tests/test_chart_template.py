@@ -692,7 +692,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         }])
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
-            self.env['account.chart.template'].try_loading('test', company=company, install_demo=True)
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertEqual(company.chart_template, 'test')
         self.assertEqual(branch.chart_template, 'test')
 
@@ -714,7 +714,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping),
             patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True)
         ):
-            self.env['account.chart.template'].try_loading('other_test', company=self.company, install_demo=True)
+            self.env['account.chart.template'].try_loading('other_test', company=self.company, install_demo=False)
 
             # Create a branch and an unrelated company
             branch, other_company = self.env['res.company'].create([
