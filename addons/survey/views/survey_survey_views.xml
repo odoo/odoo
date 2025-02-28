@@ -58,12 +58,12 @@
                         </h1>
                     </div>
                     <group>
-                        <group>
+                        <group class="ps-md-0">
                             <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                             <field name="active" invisible="1"/>
                             <field name="has_conditional_questions" invisible="1"/>
                         </group>
-                        <group>
+                        <group class="ps-3 ps-md-0 ps-lg-3">
                             <field name="restrict_user_ids" widget="many2many_tags_avatar"/>
                         </group>
                     </group>
