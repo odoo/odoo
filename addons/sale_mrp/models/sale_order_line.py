@@ -66,7 +66,7 @@ class SaleOrderLine(models.Model):
                         continue
                     moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
                     filters = {
-                        'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+                        'incoming_moves': lambda m: m.location_dest_id.usage in ['customer', 'transit'] and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
                         'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
                     }
                     order_qty = order_line.product_uom_id._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)

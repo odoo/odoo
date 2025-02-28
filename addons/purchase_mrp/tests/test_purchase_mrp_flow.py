@@ -1254,3 +1254,36 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(lot_a.standard_price, 10)
         self.assertEqual(lot_a.quantity_svl, 4)
         self.assertEqual(lot_a.value_svl, 40)
+
+    def test_inter_company_received_qty_with_kit(self):
+        """
+        Test that the received quantity on a purchase order lines gets updated when purchasing a kit
+        through an inter-company transaction.
+        """
+        # Create the purchase order with a partner that uses the inter company location
+        inter_comp_location = self.env.ref('stock.stock_location_inter_company')
+        partner = self.env['res.partner'].create({'name': 'Testing Partner'})
+        partner.property_stock_customer = inter_comp_location
+        partner.property_stock_supplier = inter_comp_location
+        po = self.env['purchase.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                (0, 0,
+                 {
+                     'name': self.kit_1.name,
+                     'product_id': self.kit_1.id,
+                     'product_qty': 1,
+                 })
+            ]
+        })
+        po.button_confirm()
+
+        self.assertTrue(po.picking_ids)
+        self.assertEqual(po.order_line.qty_received, 0)
+
+        picking = po.picking_ids
+        for move in picking.move_ids:
+            move.write({'quantity': move.product_uom_qty, 'picked': True})
+        picking.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 1)
