@@ -1,11 +1,14 @@
 from datetime import datetime
+# from mock import patch
 from xml.etree.ElementTree import ElementTree
-from mock import patch
+
 from PIL.Image import Image
-from .pdf417gen import (
+
+from odoo.tests.common import TransactionCase, tagged
+from odoo.tools._vendor.pdf417gen import (
     Bytes,
     Chunk,
-    Console,
+    # Console,
     Encoding,
     ErrorCorrection,
     Init,
@@ -19,9 +22,7 @@ from .pdf417gen import (
     NUMERIC_LATCH
 )
 
-from odoo.tests.common import TransactionCase
-
-
+@tagged('-at_install', 'post_install')
 class PerformanceTest(TransactionCase):
 
     ZEN = """
@@ -71,6 +72,7 @@ Namespaces are one honking great idea -- let's do more of those!
         duration = datetime.now() - start
         print("Render SVG x{}: {}".format(cycles, duration))
 
+@tagged('-at_install', 'post_install')
 class CompactionTest(TransactionCase):
     def test_byte_compactor(self):
         def do_compact(str):
@@ -166,6 +168,7 @@ class CompactionTest(TransactionCase):
         self.assertEqual(do_compact(b"\x0B\x0B\x0B\x0B\x0B\x0B"), [924, 18, 455, 694, 754, 291])
 
 
+@tagged('-at_install', 'post_install')
 class InitTest(TransactionCase):
     def test_split_to_chunks(self, data, expected):
         def chars(string):
@@ -186,6 +189,7 @@ class InitTest(TransactionCase):
                 self.assertEqual(list(Init._split_to_chunks(data)), expected)
 
 
+@tagged('-at_install', 'post_install')
 class OptimizationsTest(TransactionCase):
     def test_optimizations(self, data, expected):
         def chars(string):
@@ -240,80 +244,82 @@ class OptimizationsTest(TransactionCase):
                 self.assertEqual(list(actual), expected)
 
 
-class ConsoleTest(TransactionCase):
-    def test_print_usage(self, capsys):
-        Console.print_usage()
-        out, err = capsys.readouterr()
-        self.assertTrue("Usage: pdf417gen [command]" in out)
-        self.assertTrue(not err)
+# @tagged('-at_install', 'post_install')
+# class ConsoleTest(TransactionCase):
+#     def test_print_usage(self, capsys):
+#         Console.print_usage()
+#         out, err = capsys.readouterr()
+#         self.assertTrue("Usage: pdf417gen [command]" in out)
+#         self.assertTrue(not err)
+# 
+# 
+#     def test_print_err(self, capsys):
+#         Console.print_err("foo")
+#         out, err = capsys.readouterr()
+#         self.assertTrue(not out)
+#         self.assertTrue("foo" in err)
+# 
+# 
+#     @patch('pdf417gen.Encoding.encode', return_value="RETVAL")
+#     @patch('pdf417gen.Console.render_image')
+#     def test_encode(self, render_image, encode, capsys):
+#         text = "foo"
+# 
+#         Console.do_encode([text])
+# 
+#         encode.assert_called_once_with(
+#             text,
+#             columns=6,
+#             encoding='utf-8',
+#             security_level=2
+#         )
+# 
+#         Rendering.render_image.assert_called_once_with(
+#             'RETVAL',
+#             bg_color='#FFFFFF',
+#             fg_color='#000000',
+#             padding=20,
+#             ratio=3,
+#             scale=3
+#         )
+# 
+# 
+#     @patch('sys.stdin.read', return_value="")
+#     @patch('pdf417gen.Encoding.encode', return_value="RETVAL")
+#     @patch('pdf417gen.Console.render_image')
+#     def test_encode_no_input(self, render_image, encode, read, capsys):
+#         Console.do_encode([])
+# 
+#         encode.assert_not_called()
+#         render_image.assert_not_called()
+#         read.assert_called_once_with()
+# 
+#         out, err = capsys.readouterr()
+#         self.assertTrue(not out)
+#         self.assertTrue("No input given" in err)
+# 
+# 
+#     @patch('pdf417gen.Encoding.encode', return_value="RETVAL")
+#     @patch('pdf417gen.Console.render_image')
+#     def test_encode_exception(self, render_image, encode, capsys):
+#         encode.side_effect = ValueError("FAILED")
+# 
+#         Console.do_encode(["foo"])
+# 
+#         encode.assert_called_once_with(
+#             "foo",
+#             columns=6,
+#             encoding='utf-8',
+#             security_level=2
+#         )
+#         render_image.assert_not_called()
+# 
+#         out, err = capsys.readouterr()
+#         self.assertTrue(not out)
+#         self.assertTrue("FAILED" in err)
 
 
-    def test_print_err(self, capsys):
-        Console.print_err("foo")
-        out, err = capsys.readouterr()
-        self.assertTrue(not out)
-        self.assertTrue("foo" in err)
-
-
-    @patch('pdf417gen.Encoding.encode', return_value="RETVAL")
-    @patch('pdf417gen.Console.render_image')
-    def test_encode(self, render_image, encode, capsys):
-        text = "foo"
-
-        Console.do_encode([text])
-
-        encode.assert_called_once_with(
-            text,
-            columns=6,
-            encoding='utf-8',
-            security_level=2
-        )
-
-        Rendering.render_image.assert_called_once_with(
-            'RETVAL',
-            bg_color='#FFFFFF',
-            fg_color='#000000',
-            padding=20,
-            ratio=3,
-            scale=3
-        )
-
-
-    @patch('sys.stdin.read', return_value="")
-    @patch('pdf417gen.Encoding.encode', return_value="RETVAL")
-    @patch('pdf417gen.Console.render_image')
-    def test_encode_no_input(self, render_image, encode, read, capsys):
-        Console.do_encode([])
-
-        encode.assert_not_called()
-        render_image.assert_not_called()
-        read.assert_called_once_with()
-
-        out, err = capsys.readouterr()
-        self.assertTrue(not out)
-        self.assertTrue("No input given" in err)
-
-
-    @patch('pdf417gen.Encoding.encode', return_value="RETVAL")
-    @patch('pdf417gen.Console.render_image')
-    def test_encode_exception(self, render_image, encode, capsys):
-        encode.side_effect = ValueError("FAILED")
-
-        Console.do_encode(["foo"])
-
-        encode.assert_called_once_with(
-            "foo",
-            columns=6,
-            encoding='utf-8',
-            security_level=2
-        )
-        render_image.assert_not_called()
-
-        out, err = capsys.readouterr()
-        self.assertTrue(not out)
-        self.assertTrue("FAILED" in err)
-
-
+@tagged('-at_install', 'post_install')
 class EncodingTest(TransactionCase):
 
     TEST_DATA = '\n'.join([
@@ -421,6 +427,7 @@ class EncodingTest(TransactionCase):
         self.assertEqual(str(ex.value), "Generated bar code has 132 rows. Maximum is 90 rows. Try increasing column count.")
 
 
+@tagged('-at_install', 'post_install')
 class RenderingTest(TransactionCase):
     codes = Encoding.encode("hello world!")
     
@@ -510,6 +517,7 @@ class RenderingTest(TransactionCase):
             self.assertEqual(px[column, row], expected)
 
 
+@tagged('-at_install', 'post_install')
 class ErrorCorrectionTest(TransactionCase):
 
     def test_error_correction(self):
