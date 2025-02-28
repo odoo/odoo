@@ -71,7 +71,7 @@
         <field name="model">event.track</field>
         <field eval="2" name="priority"/>
         <field name="arch" type="xml">
-            <calendar date_start="date" date_delay="duration" string="Event Tracks" color="location_id" event_limit="5">
+            <calendar date_start="date" date_stop="date_end" string="Event Tracks" color="location_id" event_limit="5">
                 <field name="location_id" filters="1"/>
                 <field name="event_id"/>
                 <field name="partner_id" avatar_field="avatar_128"/>

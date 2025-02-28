@@ -2,14 +2,97 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
+
+@tagged('event_track_internals')
 class TestTrackData(TestEventOnlineCommon):
+
+    @users('user_eventmanager')
+    def test_track_duration(self):
+        """ Test updating duration / end date """
+        event = self.event_0.with_env(self.env)
+        customer = self.event_customer.with_env(self.env)
+
+        now = datetime(2025, 3, 5, 14, 0, 0)
+        with freeze_time(now):
+            tracks = self.env['event.track'].create([
+                {
+                    'date': now,
+                    'duration': 4.5,
+                    'event_id': event.id,
+                    'name': 'Date + duration',
+                    'partner_id': customer.id,
+                }, {
+                    'date': now,
+                    'date_end': now + timedelta(hours=6, minutes=15),
+                    'event_id': event.id,
+                    'name': 'Date + end',
+                    'partner_id': customer.id,
+                }, {
+                    'date': now,
+                    'duration': False,
+                    'event_id': event.id,
+                    'name': 'Start only (duration False)',
+                    'partner_id': customer.id,
+                }, {
+                    'date': now,
+                    'event_id': event.id,
+                    'name': 'Start only (default duration)',
+                    'partner_id': customer.id,
+                }, {
+                    'duration': 3.75,
+                    'event_id': event.id,
+                    'name': 'Duration only',
+                    'partner_id': customer.id,
+                }, {
+                    'duration': False,
+                    'date_end': now,
+                    'event_id': event.id,
+                    'name': 'End only (duration False)',
+                    'partner_id': customer.id,
+                }, {
+                    'duration': 2.5,
+                    'date_end': now,
+                    'event_id': event.id,
+                    'name': 'End + duration',
+                    'partner_id': customer.id,
+                }, {
+                    'date': now,
+                    'date_end': now + timedelta(hours=6, minutes=15),
+                    'duration': 10,
+                    'event_id': event.id,
+                    'name': 'Date + end + duration (such schrizo)',
+                    'partner_id': customer.id,
+                },
+            ])
+
+        for track, (exp_date, exp_date_end, exp_duration) in zip(tracks, [
+            (now, now + timedelta(hours=4, minutes=30), 4.5),
+            (now, now + timedelta(hours=6, minutes=15), 6.25),
+            (now, now, 0),  # duration False = 0 = end = start
+            (now, now + timedelta(minutes=30), 0.5),  # default duration is 0.5
+            (False, False, 3.75),
+            (now, now, 0),  # duration False = 0 = end = start
+            (now - timedelta(hours=2, minutes=30), now, 2.5),
+            (now, now + timedelta(hours=6, minutes=15), 6.25),
+        ], strict=True):
+            with self.subTest(track_name=track.name):
+                self.assertEqual(track.date, exp_date)
+                self.assertEqual(track.date_end, exp_date_end)
+                self.assertEqual(track.duration, exp_duration)
+
+        # update duration to check start / end update
+        tracks[0].duration = 12
+        self.assertEqual(tracks[0].date, now)
+        self.assertEqual(tracks[0].date_end, now + timedelta(hours=12))
+        self.assertEqual(tracks[0].duration, 12)
 
     @users('user_eventmanager')
     def test_track_partner_sync(self):

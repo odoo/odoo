@@ -102,8 +102,8 @@ class EventTrack(models.Model):
         readonly=False, store=True, tracking=30)
     location_id = fields.Many2one('event.track.location', 'Location')
     # time information
-    date = fields.Datetime('Track Date')
-    date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
+    date = fields.Datetime('Track Date', compute='_compute_date', inverse="_inverse_date", store=True)
+    date_end = fields.Datetime('Track End Date', compute='_compute_end_date', inverse="_inverse_end_date", store=True)
     duration = fields.Float('Duration', default=0.5)
     is_track_live = fields.Boolean(
         'Is Track Live', compute='_compute_track_time_data')
@@ -267,6 +267,20 @@ class EventTrack(models.Model):
 
     # TIME
 
+    @api.depends('date_end', 'duration')
+    def _compute_date(self):
+        for track in self:
+            if track.date_end:
+                delta = timedelta(minutes=60 * track.duration)
+                track.date = track.date_end - delta
+            else:
+                track.date = False
+
+    def _inverse_date(self):
+        for track in self:
+            if track.date and track.date_end:
+                track.duration = (track.date_end - track.date).total_seconds() / 3600
+
     @api.depends('date', 'duration')
     def _compute_end_date(self):
         for track in self:
@@ -276,6 +290,10 @@ class EventTrack(models.Model):
             else:
                 track.date_end = False
 
+    def _inverse_end_date(self):
+        for track in self:
+            if track.date and track.date_end:
+                track.duration = (track.date_end - track.date).total_seconds() / 3600
 
     # FRONTEND DESCRIPTION
 
