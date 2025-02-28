@@ -59,6 +59,10 @@ import { Test } from "./test";
  *
  * @typedef {{
  *  message?: AssertionMessage;
+ *  not?: boolean;
+ *  rejects?: boolean;
+ *  resolves?: boolean;
+ *  silent?: boolean;
  * }} ExpectOptions
  *
  * @typedef {import("../hoot_utils").Label} Label
@@ -351,6 +355,7 @@ const FLAGS = {
     not: 0b100,
     rejects: 0b1000,
     resolves: 0b10000,
+    silent: 0b100000,
 };
 const LABEL_EXPECTED = "Expected:";
 const LABEL_RECEIVED = "Received:";
@@ -884,7 +889,7 @@ export class Matcher {
      *  expect("foo").not.toBe("bar");
      */
     get not() {
-        if (this.flags & FLAGS.not) {
+        if (this._flags & FLAGS.not) {
             throw matcherModifierError("not", `matcher is already negated`);
         }
         return this._clone(FLAGS.not);
@@ -943,9 +948,7 @@ export class Matcher {
      *  expect({ foo: 1 }).not.toBe({ foo: 1 });
      */
     toBe(expected, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "any", ["object", null]);
+        this._ensureArguments(arguments, "any");
 
         return this._resolve((received) => ({
             name: "toBe",
@@ -973,9 +976,7 @@ export class Matcher {
      *  expect(3.51).toBeCloseTo(3.5, { digits: 1 });
      */
     toBeCloseTo(expected, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "number", ["object", null]);
+        this._ensureArguments(arguments, "number");
 
         const digits = options?.digits ?? 2;
         return this._resolve((received) => {
@@ -1011,9 +1012,7 @@ export class Matcher {
      *  expect(queryOne("input")).toBeEmpty();
      */
     toBeEmpty(options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["object", null]);
+        this._ensureArguments(arguments);
 
         return this._resolve((received) => ({
             name: "toBeEmpty",
@@ -1038,9 +1037,7 @@ export class Matcher {
      *  expect(4 + 2).toBeGreaterThan(5);
      */
     toBeGreaterThan(min, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "number", ["object", null]);
+        this._ensureArguments(arguments, "number");
 
         return this._resolve((received) => ({
             name: "toBeGreaterThan",
@@ -1071,9 +1068,7 @@ export class Matcher {
      *  expect(document.createElement("div")).toBeInstanceOf(HTMLElement);
      */
     toBeInstanceOf(cls, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "function", ["object", null]);
+        this._ensureArguments(arguments, "function");
 
         return this._resolve((received) => ({
             name: "toBeInstanceOf",
@@ -1104,9 +1099,7 @@ export class Matcher {
      *  expect(8 - 6).toBeLessThan(3);
      */
     toBeLessThan(max, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "number", ["object", null]);
+        this._ensureArguments(arguments, "number");
 
         return this._resolve((received) => ({
             name: "toBeLessThan",
@@ -1137,9 +1130,7 @@ export class Matcher {
      *  expect({ foo: 1 }).toBeOfType("object");
      */
     toBeOfType(type, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "string", ["object", null]);
+        this._ensureArguments(arguments, "string");
 
         return this._resolve((received) => ({
             name: "toBeOfType",
@@ -1173,9 +1164,7 @@ export class Matcher {
      *  expect(100).toBeWithin(50, 100);
      */
     toBeWithin(min, max, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "number", "number", ["object", null]);
+        this._ensureArguments(arguments, "number", "number");
 
         if (min > max) {
             [min, max] = [max, min];
@@ -1209,9 +1198,7 @@ export class Matcher {
      *  expect({ foo: 1 }).toEqual({ foo: 1 });
      */
     toEqual(expected, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "any", ["object", null]);
+        this._ensureArguments(arguments, "any");
 
         return this._resolve((received) => ({
             name: "toEqual",
@@ -1244,9 +1231,7 @@ export class Matcher {
      *  expect(new Set([1, 2])).toHaveLength(2);
      */
     toHaveLength(length, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "integer", ["object", null]);
+        this._ensureArguments(arguments, "integer");
 
         return this._resolve((received) => {
             const receivedLength = getLength(received);
@@ -1290,9 +1275,7 @@ export class Matcher {
      *  expect(new Set([{ foo: 1 }, { bar: 2 }])).toInclude({ bar: 2 });
      */
     toInclude(item, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "any", ["object", null]);
+        this._ensureArguments(arguments, "any");
 
         return this._resolve((received) => ({
             name: "toInclude",
@@ -1323,9 +1306,7 @@ export class Matcher {
      *  expect("a foo value").toMatch(/fo.*ue/);
      */
     toMatch(matcher, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "any", ["object", null]);
+        this._ensureArguments(arguments, "any");
 
         return this._resolve((received) => ({
             name: "toMatch",
@@ -1356,9 +1337,7 @@ export class Matcher {
      *  await expect(Promise.reject("foo")).rejects.toThrow("foo");
      */
     toThrow(matcher = Error, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "any", ["object", null]);
+        this._ensureArguments(arguments, "any");
 
         return this._resolve((received) => {
             const isAsync = this._flags & (FLAGS.rejects | FLAGS.resolves);
@@ -1412,9 +1391,7 @@ export class Matcher {
      *  expect("input[type=checkbox]").toBeChecked();
      */
     toBeChecked(options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["object", null]);
+        this._ensureArguments(arguments);
 
         const prop = options?.indeterminate ? "indeterminate" : "checked";
         const pseudo = ":" + prop;
@@ -1448,9 +1425,7 @@ export class Matcher {
      *  expect(document.createElement("div")).not.toBeDisplayed();
      */
     toBeDisplayed(options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["object", null]);
+        this._ensureArguments(arguments);
 
         return this._resolve((received) => {
             const elMap = new ElementMap(received);
@@ -1493,9 +1468,7 @@ export class Matcher {
      *  expect("input[type=radio]").not.toBeEnabled();
      */
     toBeEnabled(options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["object", null]);
+        this._ensureArguments(arguments);
 
         return this._resolve((received) => {
             const elMap = new ElementMap(received, (el) => el.matches?.(":enabled"));
@@ -1520,9 +1493,7 @@ export class Matcher {
      * @param {ExpectOptions} [options]
      */
     toBeFocused(options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["object", null]);
+        this._ensureArguments(arguments);
 
         return this._resolve((received) => {
             const elMap = new ElementMap(received, (el) => getActiveElement(el));
@@ -1558,9 +1529,7 @@ export class Matcher {
      *  expect("[style='opacity: 0']").not.toBeVisible();
      */
     toBeVisible(options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["object", null]);
+        this._ensureArguments(arguments);
 
         return this._resolve((received) => {
             const elMap = new ElementMap(received);
@@ -1605,9 +1574,7 @@ export class Matcher {
      *  expect("script").toHaveAttribute("src", "./index.js");
      */
     toHaveAttribute(attribute, value, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "string", ["string", "number", "regex", null], ["object", null]);
+        this._ensureArguments(arguments, "string", ["string", "number", "regex", null]);
 
         const expectsValue = !isNil(value);
 
@@ -1658,9 +1625,7 @@ export class Matcher {
      *  expect("body").toHaveClass(["o_webclient", "o_dark"]);
      */
     toHaveClass(className, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["string", "string[]"], ["object", null]);
+        this._ensureArguments(arguments, ["string", "string[]"]);
 
         const rawClassNames = ensureArray(className);
         const classNames = rawClassNames.flatMap((cls) => cls.trim().split(R_WHITE_SPACE)).sort();
@@ -1712,9 +1677,7 @@ export class Matcher {
      *  expect("ul > li").toHaveCount(4);
      */
     toHaveCount(amount, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["integer", null], ["object", null]);
+        this._ensureArguments(arguments, ["integer", null]);
 
         const anyAmount = isNil(amount);
         return this._resolve((received) => {
@@ -1755,7 +1718,7 @@ export class Matcher {
      *  `);
      */
     toHaveInnerHTML(expected, options) {
-        this._saveStack();
+        this._ensureArguments(arguments, ["string", "regex"]);
 
         return this._toHaveHTML("toHaveInnerHTML", "innerHTML", ...arguments);
     }
@@ -1774,7 +1737,7 @@ export class Matcher {
      *  `);
      */
     toHaveOuterHTML(expected, options) {
-        this._saveStack();
+        this._ensureArguments(arguments, ["string", "regex"]);
 
         return this._toHaveHTML("toHaveOuterHTML", "outerHTML", ...arguments);
     }
@@ -1792,9 +1755,7 @@ export class Matcher {
      *  expect("script").toHaveProperty("src", "./index.js");
      */
     toHaveProperty(property, value, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, "string", "any", ["object", null]);
+        this._ensureArguments(arguments, "string", "any");
 
         const expectsValue = !isNil(value);
         return this._resolve((received) => {
@@ -1851,9 +1812,7 @@ export class Matcher {
      *  expect("button").toHaveRect(".container");
      */
     toHaveRect(rect, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["object", "string", "node", "node[]"], ["object", null]);
+        this._ensureArguments(arguments, ["object", "string", "node", "node[]"]);
 
         let refRect;
         if (typeof rect === "string" || isNode(rect)) {
@@ -1898,9 +1857,7 @@ export class Matcher {
      *  expect("p").toHaveStyle("text-align: center");
      */
     toHaveStyle(style, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["string", "object"], ["object", null]);
+        this._ensureArguments(arguments, ["string", "object"]);
 
         const styleDef = parseInlineStyle(style);
         const styleKeys = $keys(styleDef).sort();
@@ -1956,9 +1913,7 @@ export class Matcher {
      *  expect("header h1").toHaveText(/odoo/i);
      */
     toHaveText(text, options) {
-        this._saveStack();
-
-        ensureArguments(arguments, ["string", "regex", null], ["object", null]);
+        this._ensureArguments(arguments, ["string", "regex", null]);
 
         const expectsText = !isNil(text);
 
@@ -1997,13 +1952,14 @@ export class Matcher {
      *  expect("select[multiple]").toHaveValue(["foo", "bar"]);
      */
     toHaveValue(value, options) {
-        this._saveStack();
-
-        ensureArguments(
-            arguments,
-            ["string", "string[]", "number", "object[]", "regex", null],
-            ["object", null]
-        );
+        this._ensureArguments(arguments, [
+            "string",
+            "string[]",
+            "number",
+            "object[]",
+            "regex",
+            null,
+        ]);
 
         const expectsValue = !isNil(value);
 
@@ -2055,12 +2011,44 @@ export class Matcher {
     }
 
     /**
+     * Validates the given `arguments` object, with an implicitly added `options`
+     * validator at the end (optional).
+     *
+     * Flags are then modified based on these options, and the current stack is
+     * saved for error reporting.
+     *
+     * @private
+     * @param {any[]} argumentsObject
+     * @param {...(ArgumentType | ArgumentType[])} argumentsDefs
+     */
+    _ensureArguments(argumentsObject, ...argumentsDefs) {
+        unconsumedMatchers.delete(this);
+
+        const args = [...argumentsObject];
+        ensureArguments(args, ...argumentsDefs, ["object", null]);
+
+        const options = args[argumentsDefs.length] || {};
+        for (const flag in FLAGS) {
+            if (flag in options) {
+                if (options[flag]) {
+                    this._flags |= FLAGS[flag];
+                } else {
+                    this._flags &= ~FLAGS[flag];
+                }
+            }
+        }
+
+        if (!(this._flags & FLAGS.headless)) {
+            currentStack = getStack(1);
+        }
+    }
+
+    /**
      * @private
      * @param {() => MatcherSpecifications<R, A>} specCallback
-     * @returns {Async extends true ? Promise<void> : void}
+     * @returns {Async extends true ? Promise<boolean> : boolean}
      */
     _resolve(specCallback) {
-        unconsumedMatchers.delete(this);
         const isAsync = this._flags & (FLAGS.rejects | FLAGS.resolves);
         if (this._flags & FLAGS.error) {
             // Prevent further assertions in error state
@@ -2079,9 +2067,10 @@ export class Matcher {
                             ],
                             pass: false,
                         });
+                        return false;
                     } else {
                         this._received = result;
-                        this._resolveFinalResult(specCallback);
+                        return this._resolveFinalResult(specCallback);
                     }
                 },
                 /** @param {PromiseRejectedResult} reason */
@@ -2095,21 +2084,22 @@ export class Matcher {
                             ],
                             pass: false,
                         });
+                        return false;
                     } else {
                         this._received = reason;
-                        this._resolveFinalResult(specCallback);
+                        return this._resolveFinalResult(specCallback);
                     }
                 }
             );
         } else {
-            this._resolveFinalResult(specCallback);
+            return this._resolveFinalResult(specCallback);
         }
     }
 
     /**
      * @private
      * @param {() => MatcherSpecifications<R, A>} specCallback
-     * @returns {void}
+     * @returns {boolean}
      */
     _resolveFinalResult(specCallback) {
         const { acceptedType, name, failedDetails, message, predicate } = specCallback(
@@ -2130,26 +2120,22 @@ export class Matcher {
         if (not) {
             pass = !pass;
         }
-        const assertion = {
-            label: name,
-            message,
-            flags: this._flags,
-            pass,
-        };
-        if (!pass) {
-            assertion.failedDetails = failedDetails().filter(Boolean);
-            assertion.stack = currentStack;
-        }
-        this._result.registerEvent("assertion", assertion);
-    }
 
-    /**
-     * @private
-     */
-    _saveStack() {
-        if (!this._flags & FLAGS.headless) {
-            currentStack = getStack(1);
+        if (!(this._flags & FLAGS.silent)) {
+            const assertion = {
+                label: name,
+                message,
+                flags: this._flags,
+                pass,
+            };
+            if (!pass) {
+                assertion.failedDetails = failedDetails().filter(Boolean);
+                assertion.stack = currentStack;
+            }
+            this._result.registerEvent("assertion", assertion);
         }
+
+        return pass;
     }
 
     /**
@@ -2160,8 +2146,6 @@ export class Matcher {
      * @param {ExpectOptions & FormatXmlOptions} [options]
      */
     _toHaveHTML(name, property, expected, options) {
-        ensureArguments(arguments, "string", "string", ["string", "regex"], ["object", null]);
-
         options = { type: "html", ...options };
         if (!(expected instanceof RegExp)) {
             expected = formatXml(expected, options);

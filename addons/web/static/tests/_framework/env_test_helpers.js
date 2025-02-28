@@ -78,16 +78,20 @@ export function getService(name) {
  * Makes a mock environment along with a mock server
  *
  * @param {Partial<OdooEnv>} [partialEnv]
+ * @param {{
+ *  lazy?: boolean;
+ *  makeNew?: boolean;
+ * }} [options]
  */
-export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
-    if (currentEnv && !makeNew) {
+export async function makeMockEnv(partialEnv, options) {
+    if (currentEnv && !options?.makeNew) {
         throw new Error(
             `cannot create mock environment: a mock environment has already been declared`
         );
     }
 
     if (!MockServer.current) {
-        await makeMockServer();
+        await makeMockServer({ lazy: options?.lazy ?? true });
     }
 
     currentEnv = makeEnv();
