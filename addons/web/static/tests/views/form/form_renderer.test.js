@@ -171,3 +171,41 @@ test("compile a button with id on mobile", async () => {
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     expect(`button[id=action_button]`).toHaveCount(1);
 });
+
+test.tags("desktop");
+test("compile a button with disabled on desktop", async () => {
+    Partner._views = {
+        form: /*xml*/ `
+            <form>
+                <button id="action_button" string="ActionButton" name="action_button" type="object" disabled="disabled"/>
+            </form>
+        `,
+    };
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        resId: 1,
+    });
+    expect(`button[id=action_button]`).toHaveAttribute("disabled")
+});
+
+test.tags("mobile");
+test("compile a button with disabled on mobile", async () => {
+    Partner._views = {
+        form: /*xml*/ `
+            <form>
+                <button id="action_button" string="ActionButton" name="action_button" type="object" disabled="disabled"/>
+            </form>
+        `,
+    };
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        resId: 1,
+    });
+
+    expect(`button[id=action_button]`).toHaveCount(1);
+    expect(`button[name=action_button]`).not.toBeEnabled();
+});
