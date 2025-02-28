@@ -1,11 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import os
-
-from odoo import api, fields, models, _
+from odoo import api, models, _
 from odoo.exceptions import UserError
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools.misc import format_date
 
 
 class IrAttachment(models.Model):
@@ -53,18 +49,7 @@ class IrAttachment(models.Model):
             and attachment.res_field in ('invoice_pdf_report_file', 'ubl_cii_xml_file')
             and attachment.company_id.account_fiscal_country_id.code == 'DE'
         )
-        if invoice_pdf_attachments:
-            # only detach the document from the field, but keep it in the database for the audit trail
-            # it shouldn't be an issue as there aren't any security group on the fields as it is the public report
-            invoice_pdf_attachments.res_field = False
-            today = format_date(self.env, fields.Date.context_today(self))
-            for attachment in invoice_pdf_attachments:
-                attachment_name, attachment_extension = os.path.splitext(attachment.name)
-                attachment.name = _(
-                    '%(attachment_name)s (detached by %(user)s on %(date)s)%(attachment_extension)s',
-                    attachment_name=attachment_name,
-                    attachment_extension=attachment_extension,
-                    user=self.env.user.name,
-                    date=today,
-                )
+        # this detachment is done to keep attachments in DB for audit trail
+        # it shouldn't be an issue as there aren't any security group on the fields as it is the public report
+        invoice_pdf_attachments._detach()
         return super(IrAttachment, self - invoice_pdf_attachments).unlink()
