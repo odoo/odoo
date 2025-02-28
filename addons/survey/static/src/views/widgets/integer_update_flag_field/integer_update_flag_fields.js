@@ -2,7 +2,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { integerField, IntegerField } from "@web/views/fields/integer/integer_field";
 
-import { useEffect, useRef } from "@odoo/owl";
+import { onWillStart, useEffect, useRef } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 
 /**
@@ -21,7 +22,7 @@ export class IntegerUpdateFlagField extends IntegerField {
     static props= {
         ...IntegerField.props,
         flagFieldName: { type: String },
-        referenceValue: { type: Number },
+        surveyId: { type: Number },
     }
     /**
      * @override
@@ -31,7 +32,7 @@ export class IntegerUpdateFlagField extends IntegerField {
         const inputRef = useRef("numpadDecimal");
         const onChange = async () => {
             await this.props.record._update({
-                [this.props.flagFieldName]: parseInt(this.formattedValue) !== this.props.referenceValue}
+                [this.props.flagFieldName]: parseInt(this.formattedValue) !== this.referenceValue}
             );
         }
         useEffect(
@@ -45,6 +46,14 @@ export class IntegerUpdateFlagField extends IntegerField {
             },
             () => [inputRef.el]
         );
+        this.orm = useService("orm");
+        onWillStart(async () => {
+            this.orm.searchRead(
+                "survey.survey",
+                [["id", "=", this.props.surveyId]],
+                ["session_speed_rating_time_limit"]
+            );
+        });
     }
 }
 
@@ -52,11 +61,11 @@ export const integerUpdateFlagField = {
     ...integerField,
     component: IntegerUpdateFlagField,
     displayName: _t("Integer updating comparison flag"),
-    extractProps ({ attrs, options }, { context: { referenceValue } }) {
+    extractProps ({ attrs, options }, { context: { surveyId } }) {
         return {
             ...integerField.extractProps(...arguments),
             flagFieldName: options.flagFieldName,
-            referenceValue: referenceValue,
+            surveyId: surveyId,
         }
     }
 };
