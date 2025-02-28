@@ -331,6 +331,13 @@ export class SelfOrder extends Reactive {
         if (lineToMerge) {
             lineToMerge.qty += newLine.qty;
             newLine.delete();
+            lineToMerge.set_unit_price(
+                lineToMerge.product_id.get_price(
+                    this.currentOrder.pricelist_id,
+                    lineToMerge.get_quantity(),
+                    lineToMerge.get_price_extra()
+                )
+            );
         }
     }
     async confirmationPage(screen_mode, device, access_token = "") {
@@ -434,6 +441,7 @@ export class SelfOrder extends Reactive {
             fiscal_position_id: fiscalPosition,
         });
         this.selectedOrderUuid = newOrder.uuid;
+        newOrder.set_pricelist(this.config.pricelist_id);
 
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
@@ -463,6 +471,75 @@ export class SelfOrder extends Reactive {
                 }
             );
         }
+
+        const pricelistItems = this.models["product.pricelist.item"]
+            .getAll()
+            .filter((item) => item.pricelist_id === this.config.pricelist_id);
+        const pricelistRules = {};
+        const date = luxon.DateTime.now();
+        for (const item of pricelistItems) {
+            if (
+                (item.date_start && item.date_start > date) ||
+                (item.date_end && item.date_end < date)
+            ) {
+                continue;
+            }
+            const pricelistId = item.pricelist_id.id;
+
+            if (!pricelistRules[pricelistId]) {
+                pricelistRules[pricelistId] = {
+                    productItems: {},
+                    productTmlpItems: {},
+                    categoryItems: {},
+                    globalItems: [],
+                };
+            }
+
+            const productId = item.raw.product_id;
+            const pushItem = (targetArray, key, item) => {
+                if (!targetArray[key]) {
+                    targetArray[key] = [];
+                }
+                targetArray[key].push(item);
+            };
+
+            if (productId) {
+                pushItem(pricelistRules[pricelistId].productItems, productId, item);
+                continue;
+            }
+            const productTmplId = item.raw.product_tmpl_id;
+            if (productTmplId) {
+                pushItem(pricelistRules[pricelistId].productTmlpItems, productTmplId, item);
+                continue;
+            }
+            const categId = item.raw.categ_id;
+            if (categId) {
+                pushItem(pricelistRules[pricelistId].categoryItems, categId, item);
+            } else {
+                pricelistRules[pricelistId].globalItems.push(item);
+            }
+        }
+
+        for (const product of this.models["product.product"].getAll()) {
+            const applicableRules = product.getApplicablePricelistRules(pricelistRules);
+            for (const pricelistId in applicableRules) {
+                if (product.cachedPricelistRules[pricelistId]) {
+                    const existingRuleIds = product.cachedPricelistRules[pricelistId].map(
+                        (rule) => rule.id
+                    );
+                    const newRules = applicableRules[pricelistId].filter(
+                        (rule) => !existingRuleIds.includes(rule.id)
+                    );
+                    product.cachedPricelistRules[pricelistId] = [
+                        ...newRules,
+                        ...product.cachedPricelistRules[pricelistId],
+                    ];
+                } else {
+                    product.cachedPricelistRules[pricelistId] = applicableRules[pricelistId];
+                }
+            }
+        }
+
         const productWoCat = this.models["product.product"].filter(
             (p) => p.pos_categ_ids.length === 0 && !isSpecialProduct(p)
         );
