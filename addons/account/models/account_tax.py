@@ -2315,6 +2315,9 @@ class AccountTax(models.Model):
     # TAX LINES GENERATION
     # -------------------------------------------------------------------------
 
+    def _should_keep_zero_lines(self, record):
+        return False
+
     @api.model
     def _prepare_tax_lines(self, base_lines, company, tax_lines=None):
         """ Prepare the tax journal items for the base lines.
@@ -2384,8 +2387,10 @@ class AccountTax(models.Model):
             k: v
             for k, v in tax_lines_mapping.items()
             if (
-                k.get('currency_id') and not self.env['res.currency'].browse(k['currency_id']).is_zero(v['amount_currency'])
-                or not company.currency_id.is_zero(v['balance'])
+                self._should_keep_zero_lines(base_lines and base_lines[0].get('record')) or (
+                    k.get('currency_id') and not self.env['res.currency'].browse(k['currency_id']).is_zero(v['amount_currency'])
+                    or not company.currency_id.is_zero(v['balance'])
+                )
             )
         }
 
