@@ -140,6 +140,7 @@ export const uploadService = {
                             'is_image': !!isImage,
                             'width': 0,
                             'quality': 0,
+                            'mimetype': dataURL.split(';')[0].split(':')[1],
                         }, {xhr});
                         if (attachment.error) {
                             file.hasError = true;
