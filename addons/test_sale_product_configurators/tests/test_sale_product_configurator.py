@@ -22,6 +22,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
             password='salesman',
             groups='sales_team.group_sale_salesman',
         )
+        cls.salesman.group_ids += cls.env.ref('product.group_product_manager')
 
         # Setup partner since user salesman don't have the right to create it on the fly
         cls.env['res.partner'].create({'name': 'Tajine Saucisse'})
