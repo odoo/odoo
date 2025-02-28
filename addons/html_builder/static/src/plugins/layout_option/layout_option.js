@@ -2,7 +2,7 @@ import { useDomState, useIsActiveItem } from "@html_builder/core/building_blocks
 import { areColsCustomized } from "@html_builder/utils/column_layout_utils";
 import { isMobileView } from "@html_builder/utils/utils";
 import { Component } from "@odoo/owl";
-import { defaultBuilderComponents } from "../core/default_builder_components";
+import { defaultBuilderComponents } from "../../core/default_builder_components";
 import { AddElementOption } from "./add_element_option";
 import { SpacingOption } from "./spacing_option_plugin";
 
