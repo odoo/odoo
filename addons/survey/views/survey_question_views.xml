@@ -271,11 +271,11 @@
                                         <field name="is_time_limited" nolabel="1" class="oe_inline"
                                             widget="boolean_update_flag"
                                             options="{'flagFieldName': 'is_time_customized'}"
-                                            context="{'referenceValue': parent.session_speed_rating}"/>
+                                            context="{'surveyId': survey_id}"/>
                                         <field name="time_limit" nolabel="1" class="oe_inline"
                                             widget="integer_update_flag"
                                             options="{'flagFieldName': 'is_time_customized'}"
-                                            context="{'referenceValue': parent.session_speed_rating_time_limit}"
+                                            context="{'surveyId': survey_id}"
                                             invisible="not is_time_limited" />
                                     </div>
                                 </group>
