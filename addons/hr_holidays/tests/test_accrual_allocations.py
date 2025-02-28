@@ -1357,7 +1357,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 5,
             })],
         })
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(UserError):
             accrual_plan.level_ids[0].write({
                 'cap_accrued_time_yearly': True,
                 'maximum_leave_yearly': 0,
@@ -1670,6 +1670,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'date_from': '2023-04-20',
             })
             allocation.action_approve()
+
+        with freeze_time("2023-05-20"):
+            allocation._update_accrual()
 
         with freeze_time("2024-04-20"):
             allocation._update_accrual()
