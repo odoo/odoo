@@ -88,8 +88,9 @@ function target(selectionData) {
         el.matches(baseContainerGlobalSelector) &&
         isEmptyBlock(el)
     ) {
-        return el;
+        return [el];
     }
+    return [];
 }
 
 /**

@@ -34,12 +34,13 @@ export class HintPlugin extends Plugin {
                             selectionData.documentSelectionIsInEditable ||
                             childNodes(editable).length !== 1
                         ) {
-                            return;
+                            return [];
                         }
                         const el = editable.firstChild;
                         if (isEmptyBlock(el) && el.matches(baseContainerGlobalSelector)) {
-                            return el;
+                            return [el];
                         }
+                        return [];
                     },
                 },
             ],
@@ -47,7 +48,6 @@ export class HintPlugin extends Plugin {
     };
 
     setup() {
-        this.hint = null;
         this.updateHints(this.editable);
     }
 
@@ -62,26 +62,35 @@ export class HintPlugin extends Plugin {
     updateHints() {
         const selectionData = this.dependencies.selection.getSelectionData();
         const editableSelection = selectionData.editableSelection;
-        if (this.hint) {
-            const blockEl = closestBlock(editableSelection.anchorNode);
-            this.removeHint(this.hint);
-            this.removeHint(blockEl);
-        }
+        const blockEl = closestBlock(editableSelection.anchorNode);
+        this.removeHint(blockEl);
+        this.clearHints();
         if (editableSelection.isCollapsed) {
-            for (const hint of this.getResource("hints")) {
+            const hints = this.getResource("hints");
+            for (const hint of hints) {
                 if (hint.selector) {
-                    const el = closestBlock(editableSelection.anchorNode);
-                    if (el && el.matches(hint.selector) && !isProtected(el) && isEmptyBlock(el)) {
-                        this.makeHint(el, hint.text);
-                        this.hint = el;
+                    if (
+                        blockEl?.matches(hint.selector) &&
+                        !isProtected(blockEl) &&
+                        isEmptyBlock(blockEl)
+                    ) {
+                        this.makeHint(blockEl, hint.text);
                     }
                 } else {
-                    const target = hint.target(selectionData, this.editable);
-                    // Do not replace an existing empty block hint by a temp hint.
-                    if (target && !target.classList.contains("o-we-hint")) {
-                        this.makeHint(target, hint.text);
-                        this.hint = target;
-                        return;
+                    const targets = hint.target(selectionData, this.editable);
+                    for (const target of targets) {
+                        const nodeHint =
+                            target.tagName === "P"
+                                ? hint.text
+                                : hints.find((h) => target.matches(h.selector))?.text ?? hint.text;
+                        if (
+                            target &&
+                            !target.classList.contains("o-we-hint") &&
+                            nodeHint &&
+                            isEmptyBlock(target)
+                        ) {
+                            this.makeHint(target, nodeHint);
+                        }
                     }
                 }
             }
@@ -98,9 +107,6 @@ export class HintPlugin extends Plugin {
         el.removeAttribute("placeholder");
         removeClass(el, "o-we-hint");
         this.getResource("system_style_properties").forEach((n) => el.style.removeProperty(n));
-        if (this.hint === el) {
-            this.hint = null;
-        }
     }
 
     clearHints(root = this.editable) {
