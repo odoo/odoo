@@ -15,6 +15,8 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
 """,
     'depends': ['sale_management', 'hr_expense'],
     'data': [
+        'security/ir.model.access.csv',
+        'security/sale_expense_security.xml',
         'data/sale_expense_data.xml',
         'views/product_view.xml',
         'views/hr_expense_views.xml',
