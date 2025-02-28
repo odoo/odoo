@@ -562,9 +562,9 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
                 {
                     "name": "Partner A",
                     "child_ids": [
-                        (0, 0, {"name": "Child A1", "state_id": state_us_1.id}),
-                        (0, 0, {"name": "Child A2", "state_id": state_us_2.id}),
-                        (0, 0, {"name": "Child A2", "state_id": state_us_3.id}),
+                        (0, 0, {"name": "Child A1", "state_id": state_us_1.id, "type": "other"}),
+                        (0, 0, {"name": "Child A2", "state_id": state_us_2.id, "type": "other"}),
+                        (0, 0, {"name": "Child A2", "state_id": state_us_3.id, "type": "other"}),
                     ]
                 },
                 {
@@ -1469,8 +1469,8 @@ class TestAutoJoin(TransactionExpressionCase):
         p_a = partner_obj.create({'name': 'test__A', 'state_id': states[0].id})
         p_b = partner_obj.create({'name': 'test__B', 'state_id': states[1].id})
         p_c = partner_obj.create({'name': 'test__C', 'state_id': False})
-        p_aa = partner_obj.create({'name': 'test__AA', 'parent_id': p_a.id, 'state_id': states[0].id})
-        p_ab = partner_obj.create({'name': 'test__AB', 'parent_id': p_a.id, 'state_id': states[1].id})
+        p_aa = partner_obj.create({'name': 'test__AA', 'parent_id': p_a.id, 'state_id': states[0].id, 'type': 'other'})
+        p_ab = partner_obj.create({'name': 'test__AB', 'parent_id': p_a.id, 'state_id': states[1].id, 'type': 'other'})
         p_ba = partner_obj.create({'name': 'test__BA', 'parent_id': p_b.id, 'state_id': states[0].id})
         b_aa = bank_obj.create({'acc_number': '123', 'acc_type': 'bank', 'partner_id': p_aa.id})
         b_ab = bank_obj.create({'acc_number': '456', 'acc_type': 'bank', 'partner_id': p_ab.id})
