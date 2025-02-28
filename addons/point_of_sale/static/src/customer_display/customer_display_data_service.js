@@ -8,19 +8,6 @@ export const CustomerDisplayDataService = {
     dependencies: ["bus_service", "notification"],
     async start(env, { bus_service, notification }) {
         const data = reactive({});
-        if (session.type === "local") {
-            new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY").onmessage = (event) => {
-                Object.assign(data, event.data);
-            };
-        }
-        if (session.type === "remote") {
-            getOnNotified(bus_service, session.access_token)(
-                "UPDATE_CUSTOMER_DISPLAY",
-                (payload) => {
-                    Object.assign(data, payload);
-                }
-            );
-        }
         if (session.proxy_ip) {
             const intervalId = setInterval(async () => {
                 try {
@@ -55,6 +42,16 @@ export const CustomerDisplayDataService = {
                     clearInterval(intervalId);
                 }
             }, 1000);
+        } else {
+            new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY").onmessage = (event) => {
+                Object.assign(data, event.data);
+            };
+            getOnNotified(bus_service, session.access_token)(
+                "UPDATE_CUSTOMER_DISPLAY",
+                (payload) => {
+                    Object.assign(data, payload);
+                }
+            );
         }
         return data;
     },

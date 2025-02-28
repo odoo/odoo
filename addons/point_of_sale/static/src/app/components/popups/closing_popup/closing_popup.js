@@ -192,8 +192,8 @@ export class ClosePosPopup extends Component {
     }
     async closeSession() {
         this.pos._resetConnectedCashier();
-        if (this.pos.config.customer_display_type === "proxy") {
-            const proxyIP = this.pos.getDisplayDeviceIP();
+        const proxyIP = this.pos.getDisplayDeviceIP();
+        if (proxyIP) {
             fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
                 method: "POST",
                 headers: {
