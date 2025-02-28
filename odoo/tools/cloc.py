@@ -26,15 +26,19 @@ MAX_FILE_SIZE = 25 * 2**20 # 25 MB
 MAX_LINE_SIZE = 100000
 VALID_EXTENSION = ['.py', '.js', '.xml', '.css', '.scss']
 
-def fnmatch_patterns(glob_patterns):
-    """Yield fnmatch equivalent patterns for the given glob patterns iterable"""
-    for pattern in glob_patterns:
-        yield pattern
-        # '**' in glob patterns should match zero depth too, but
-        # fnmatch doesn't treat it so, so add it explicitly.
-        if pattern.endswith('**/*'):
-            # a/b/c/**.* => a/b/c/*
-            yield pattern[:-4] + "*"
+def glob_match(path, pattern):
+    """Convert a glob pattern to a regex pattern, then return True if it matches `path`"""
+    # TODO: as of Python 3.13, use `glob.translate()` instead
+
+    # First escape regex special chars, then convert glob wildcards **, *, and ?
+    pattern = re.escape(pattern)
+    # `**/` = match zero or more directories
+    pattern = pattern.replace(r"\*\*/", "(.*/)?")
+    # `*` = match anything
+    pattern = pattern.replace(r"\*", "[^/]*")
+    # `?` = match a single character
+    pattern = pattern.replace(r"\?", "[^/]")
+    return re.match(f"^{pattern}$", path) is not None
 
 class Cloc(object):
     def __init__(self):
@@ -151,7 +155,7 @@ class Cloc(object):
                 file_path = os.path.join(root, file_name)
 
                 relative_path = str(pathlib.Path(file_path).relative_to(path))
-                if any(fnmatch.fnmatch(relative_path, pattern) for pattern in fnmatch_patterns(exclude_list)):
+                if any(glob_match(relative_path, pattern) for pattern in exclude_list):
                     continue
 
                 ext = os.path.splitext(file_path)[1].lower()

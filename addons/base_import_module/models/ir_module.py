@@ -22,7 +22,7 @@ from odoo.osv.expression import is_leaf
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory, ormcache
-from odoo.tools.cloc import fnmatch_patterns
+from odoo.tools.cloc import glob_match
 from odoo.tools.translate import get_po_paths_env, TranslationImporter
 
 _logger = logging.getLogger(__name__)
@@ -140,7 +140,7 @@ class IrModule(models.Model):
                         convert_sql_import(self.env, fp)
                     elif ext == '.xml':
                         convert_xml_import(self.env, module, fp, idref, mode, noupdate)
-                        if any(fnmatch.fnmatch(filename, pattern) for pattern in fnmatch_patterns(glob_patterns)):
+                        if any(glob_match(filename, pattern) for pattern in glob_patterns):
                             for key, value in idref.items():
                                 xml_id = f"{module}.{key}" if '.' not in key else key
                                 name = xml_id.replace('.', '_')
@@ -188,7 +188,7 @@ class IrModule(models.Model):
                             'res_id': attachment.id,
                         })
                         relative_path = str(pathlib.Path(full_path).relative_to(base_dir))
-                        if any((fnmatch.fnmatch(relative_path, pattern)) for pattern in fnmatch_patterns(glob_patterns)):
+                        if any(glob_match(relative_path, pattern) for pattern in glob_patterns):
                             self.env['ir.model.data'].create({
                                 'name': f"cloc_exclude_attachment_{url_path}".replace('.', '_').replace(' ', '_'),
                                 'model': 'ir.attachment',
