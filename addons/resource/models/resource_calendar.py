@@ -440,7 +440,6 @@ class ResourceCalendar(models.Model):
             self.friday_hours = 8
             self.saturday_hours = 8
             self.sunday_hours = 8
-            self.hours_per_day = 8
 
     @api.constrains('attendance_ids')
     def _check_attendance(self):
