@@ -659,3 +659,46 @@ class TestSaleMrpKitBom(TransactionCase):
         sol.with_user(user_admin).write({'product_uom_qty': 5})
 
         self.assertEqual(sum(sol.move_ids.mapped('product_uom_qty')), 5)
+
+    def test_inter_company_qty_delivered_with_kit(self):
+        """
+        Test that the delivered quantity is updated on a sale order line when selling a kit
+        through an inter-company transaction.
+        """
+        # Create the kit product and BoM
+        kit_product = self._create_product('Kit', 'product', 1)
+        component_product = self._create_product('Component', 'product', 1)
+        self.env['mrp.bom'].create({
+            'product_id': kit_product.id,
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': component_product.id, 'product_qty': 1})]
+        })
+
+        # Create the sale order with a partner that uses the inter company location
+        inter_comp_location = self.env.ref('stock.stock_location_inter_company')
+        partner = self.env['res.partner'].create({'name': 'Testing Partner'})
+        partner.property_stock_customer = inter_comp_location
+        partner.property_stock_supplier = inter_comp_location
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 1.0,
+                })
+            ]
+        })
+        so.action_confirm()
+
+        self.assertTrue(so.picking_ids)
+        self.assertEqual(so.order_line.qty_delivered, 0)
+
+        picking = so.picking_ids
+        picking.move_ids.write({'quantity': 1, 'picked': True})
+        picking.button_validate()
+
+        self.assertEqual(so.order_line.qty_delivered, 1)
