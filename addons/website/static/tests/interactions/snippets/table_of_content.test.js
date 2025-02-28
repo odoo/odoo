@@ -95,8 +95,8 @@ const getTemplate = function (headerType) {
     <main>
         ${tableTemplate}
     </main>
-    `
-}
+    `;
+};
 
 const HEADER_SIZE = 50;
 const DEFAULT_OFFSET = 20;
@@ -110,11 +110,12 @@ const checkVisibility = function (aEls, h2Els, wrapEl) {
         isElementVerticallyInViewportOf(aEls[0], wrapEl),
         isElementVerticallyInViewportOf(aEls[1], wrapEl),
         isElementVerticallyInViewportOf(h2Els[0], wrapEl),
-        isElementVerticallyInViewportOf(h2Els[1], wrapEl)
+        isElementVerticallyInViewportOf(h2Els[1], wrapEl),
     ];
-}
+};
 
-test.tags("desktop")("table_of_content is correctly started (desktop)", async () => {
+test.tags("desktop");
+test("table_of_content is correctly started (desktop)", async () => {
     const { core } = await startInteractions(`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
@@ -129,7 +130,8 @@ test.tags("desktop")("table_of_content is correctly started (desktop)", async ()
     expect(checkVisibility(aEls, h2Els, wrapEl)).toEqual([true, true, true, false]);
 });
 
-test.tags("mobile")("table_of_content is correctly started (mobile)", async () => {
+test.tags("mobile");
+test("table_of_content is correctly started (mobile)", async () => {
     const { core } = await startInteractions(`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
@@ -143,7 +145,8 @@ test.tags("mobile")("table_of_content is correctly started (mobile)", async () =
     expect(checkVisibility(aEls, h2Els, wrapEl)).toEqual([true, true, true, false]);
 });
 
-test.tags("desktop")("table_of_content scrolls to targetted location (desktop)", async () => {
+test.tags("desktop");
+test("table_of_content scrolls to targetted location (desktop)", async () => {
     await startInteractions(`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
@@ -159,7 +162,8 @@ test.tags("desktop")("table_of_content scrolls to targetted location (desktop)",
     expect(checkVisibility(aEls, h2Els, wrapEl)).toEqual([true, true, false, true]);
 });
 
-test.tags("mobile")("table_of_content scrolls to targetted location (mobile)", async () => {
+test.tags("mobile");
+test("table_of_content scrolls to targetted location (mobile)", async () => {
     await startInteractions(`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
@@ -174,7 +178,8 @@ test.tags("mobile")("table_of_content scrolls to targetted location (mobile)", a
     expect(checkVisibility(aEls, h2Els, wrapEl)).toEqual([true, true, false, true]);
 });
 
-test.tags("desktop")("table_of_content highlights reached header (desktop)", async () => {
+test.tags("desktop");
+test("table_of_content highlights reached header (desktop)", async () => {
     await startInteractions(`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
@@ -190,7 +195,8 @@ test.tags("desktop")("table_of_content highlights reached header (desktop)", asy
     expect(checkVisibility(aEls, h2Els, wrapEl)).toEqual([true, true, false, true]);
 });
 
-test.tags("mobile")("table_of_content highlights reached header (mobile)", async () => {
+test.tags("mobile");
+test("table_of_content highlights reached header (mobile)", async () => {
     await startInteractions(`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${tableTemplate}
@@ -205,7 +211,8 @@ test.tags("mobile")("table_of_content highlights reached header (mobile)", async
     expect(checkVisibility(aEls, h2Els, wrapEl)).toEqual([true, true, false, true]);
 });
 
-test.tags("desktop")("table_of_content updates titles position with a o_header_standard", async () => {
+test.tags("desktop");
+test("table_of_content updates titles position with a o_header_standard", async () => {
     const { core } = await startInteractions(getTemplate("o_header_standard"));
     expect(core.interactions).toHaveLength(2);
     const wrapwrap = queryOne("#wrapwrap");
@@ -221,7 +228,8 @@ test.tags("desktop")("table_of_content updates titles position with a o_header_s
     }
 });
 
-test.tags("desktop")("table_of_content updates titles position with a o_header_fixed", async () => {
+test.tags("desktop");
+test("table_of_content updates titles position with a o_header_fixed", async () => {
     const { core } = await startInteractions(getTemplate("o_header_fixed"));
     expect(core.interactions).toHaveLength(2);
     // We force the header to never be consider "atTop", so that its
@@ -237,7 +245,8 @@ test.tags("desktop")("table_of_content updates titles position with a o_header_f
     }
 });
 
-test.tags("desktop")("table_of_content updates titles position with a o_header_disappears", async () => {
+test.tags("desktop");
+test("table_of_content updates titles position with a o_header_disappears", async () => {
     const { core } = await startInteractions(getTemplate("o_header_disappears"));
     expect(core.interactions).toHaveLength(2);
     const wrapwrap = queryOne("#wrapwrap");
@@ -255,7 +264,8 @@ test.tags("desktop")("table_of_content updates titles position with a o_header_d
     }
 });
 
-test.tags("desktop")("table_of_content updates titles position with a o_header_fade_out", async () => {
+test.tags("desktop");
+test("table_of_content updates titles position with a o_header_fade_out", async () => {
     const { core } = await startInteractions(getTemplate("o_header_fade_out"));
     expect(core.interactions).toHaveLength(2);
     const wrapwrap = queryOne("#wrapwrap");

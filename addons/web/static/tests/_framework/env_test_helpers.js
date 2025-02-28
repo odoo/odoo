@@ -153,12 +153,16 @@ export function mockService(name, serviceFactory) {
         name,
         {
             ...originalService,
-            async start(env, dependencies) {
+            start(env, dependencies) {
                 if (typeof serviceFactory === "function") {
                     return serviceFactory(env, dependencies);
                 } else {
-                    const service = await originalService.start(env, dependencies);
-                    patch(service, serviceFactory);
+                    const service = originalService.start(env, dependencies);
+                    if (service instanceof Promise) {
+                        service.then((value) => patch(value, serviceFactory));
+                    } else {
+                        patch(service, serviceFactory);
+                    }
                     return service;
                 }
             },

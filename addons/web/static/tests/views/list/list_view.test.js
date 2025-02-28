@@ -5218,8 +5218,6 @@ test(`custom delete confirmation dialog`, async () => {
 });
 
 test(`deleting record which throws UserError should close confirmation dialog`, async () => {
-    expect.errors(1);
-
     onRpc("unlink", () => {
         throw makeServerError({ message: "Odoo Server Error" });
     });
@@ -5237,9 +5235,12 @@ test(`deleting record which throws UserError should close confirmation dialog`, 
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1, { message: "should have open the confirmation dialog" });
 
+    expect.errors(1);
+
     await contains(`.modal footer button.btn-primary`).click();
-    await waitFor(".modal");
-    expect(`.modal .modal-title`).toHaveText("Invalid Operation");
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+
+    expect.verifyErrors(["Odoo Server Error"]);
 });
 
 test.tags("desktop");
@@ -11340,8 +11341,6 @@ test(`editable list view: many2one with readonly modifier`, async () => {
 
 test.tags("desktop");
 test(`editable list view: multi edition server error handling`, async () => {
-    expect.errors(1);
-
     onRpc("write", () => {
         throw makeServerError();
     });
@@ -11360,8 +11359,11 @@ test(`editable list view: multi edition server error handling`, async () => {
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_selected_row [name=foo] input`).edit("abc");
     await contains(`.o_list_view`).click();
+
+    expect.errors(1);
     await contains(`.modal .btn-primary`).click();
-    // Server error: if there was a crash manager, there would be an open error at this point...
+    expect.verifyErrors(["RPC_ERROR"]);
+
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("yop", {
         message: "first cell should have discarded any change",
     });
@@ -15904,8 +15906,6 @@ test(`view widgets are rendered in list view`, async () => {
 });
 
 test(`edit a record then select another record with a throw error when saving`, async () => {
-    expect.errors(1);
-
     onRpc("web_save", () => {
         throw makeServerError({ message: "Can't write" });
     });
@@ -15919,8 +15919,10 @@ test(`edit a record then select another record with a throw error when saving`, 
     await contains(`[name=foo] input`).edit("plop", { confirm: false });
     expect(`[name=foo] input`).toHaveCount(1);
 
+    expect.errors(1);
     await contains(`.o_data_cell:eq(0)`).click();
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(`.o_error_dialog`).toHaveCount(1);
 
     await contains(`.o_error_dialog .btn-primary.o-default-button`).click();
@@ -17515,7 +17517,8 @@ test("two pages, go page 2, record deleted meanwhile (grouped case)", async () =
     expect(".o_group_header .o_pager").toHaveCount(0);
 });
 
-test.tags("desktop")("select records range with shift click on several page", async () => {
+test.tags("desktop");
+test("select records range with shift click on several page", async () => {
     await mountView({
         resModel: "foo",
         type: "list",
