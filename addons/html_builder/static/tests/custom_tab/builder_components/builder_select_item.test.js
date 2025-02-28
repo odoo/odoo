@@ -1,6 +1,13 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryAllTexts, queryFirst, runAllTimers } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    click,
+    press,
+    queryAllTexts,
+    queryFirst,
+    runAllTimers,
+} from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -227,4 +234,74 @@ test("do not put inline style on an element which already has this style through
     await contains(".we-bg-options-container .dropdown").click();
     await contains(".o-dropdown--menu  div:contains('inset')").click();
     expect(":iframe hr").not.toHaveStyle("border-top-style");
+});
+test("revert a preview when cancelling a BuilderSelect by clicking outside of it", async () => {
+    addOption({
+        selector: ".test",
+        template: xml`
+                <BuilderSelect dataAttributeAction="'choice'">
+                    <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
+                    <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
+                </BuilderSelect>`,
+    });
+    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await contains(":iframe .test").click();
+    expect(":iframe .test").not.toHaveAttribute("data-choice");
+    await contains(".we-bg-options-container .dropdown").click();
+    await contains(".o-dropdown--menu  div:contains('0')").hover();
+    expect(":iframe .test").toHaveAttribute("data-choice", "0");
+    await click(".we-bg-options-container");
+    expect(":iframe .test").not.toHaveAttribute("data-choice");
+});
+test("revert a preview when cancelling a BuilderSelect with escape", async () => {
+    addOption({
+        selector: ".test",
+        template: xml`
+                <BuilderSelect dataAttributeAction="'choice'">
+                    <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
+                    <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
+                </BuilderSelect>`,
+    });
+    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await contains(":iframe .test").click();
+    expect(":iframe .test").not.toHaveAttribute("data-choice");
+    await contains(".we-bg-options-container .dropdown").click();
+    await contains(".o-dropdown--menu  div:contains('0')").hover();
+    expect(":iframe .test").toHaveAttribute("data-choice", "0");
+    await press("escape");
+    expect(":iframe .test").not.toHaveAttribute("data-choice");
+});
+test("preview when cycling through options with the keyboard", async () => {
+    addOption({
+        selector: ".test",
+        template: xml`
+                <BuilderSelect dataAttributeAction="'choice'">
+                    <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
+                    <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
+                </BuilderSelect>`,
+    });
+    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await contains(":iframe .test").click();
+    expect(":iframe .test").not.toHaveAttribute("data-choice");
+    await contains(".we-bg-options-container .dropdown").press("enter");
+    await press("arrowdown");
+    expect(":iframe .test").toHaveAttribute("data-choice", "0");
+});
+test("revert a preview selected with the keyboard when cancelling with escape", async () => {
+    addOption({
+        selector: ".test",
+        template: xml`
+                <BuilderSelect dataAttributeAction="'choice'">
+                    <BuilderSelectItem dataAttributeActionValue="'0'">0</BuilderSelectItem>
+                    <BuilderSelectItem dataAttributeActionValue="'1'">1</BuilderSelectItem>
+                </BuilderSelect>`,
+    });
+    await setupWebsiteBuilder(`<div class="test">Test</div>`);
+    await contains(":iframe .test").click();
+    expect(":iframe .test").not.toHaveAttribute("data-choice");
+    await contains(".we-bg-options-container .dropdown").press("enter");
+    await press("arrowdown");
+    expect(".o-dropdown--menu  div:contains('0')").toBeFocused();
+    await press("escape");
+    expect(":iframe .test").not.toHaveAttribute("data-choice");
 });
