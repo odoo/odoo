@@ -369,14 +369,16 @@ class Base_ImportImport(models.TransientModel):
 
             if field['type'] in ('many2many', 'many2one'):
                 field_value['fields'] = [
-                    dict(field_value, name='id', string=_("External ID"), type='id'),
-                    dict(field_value, name='.id', string=_("Database ID"), type='id'),
+                    dict(field_value, model_name=field['relation'], name='id', string=_("External ID"), type='id'),
+                    dict(field_value, model_name=field['relation'], name='.id', string=_("Database ID"), type='id'),
                 ]
                 field_value['comodel_name'] = field['relation']
             elif field['type'] == 'one2many':
                 field_value['fields'] = self.get_fields_tree(field['relation'], depth=depth-1)
                 if self.env.user.has_group('base.group_no_one'):
-                    field_value['fields'].append({'id': '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': [], 'type': 'id'})
+                    field_value['fields'].append(
+                        dict(field_value, model_name=field['relation'], fields=[], name='.id', string=_("Database ID"), type='id')
+                    )
                 field_value['comodel_name'] = field['relation']
 
             importable_fields.append(field_value)
