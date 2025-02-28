@@ -69,11 +69,11 @@
                             <field class="text-break" name="event_id"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
                             <field name="slot_id" invisible="not is_multi_slots" required="is_multi_slots"
-                                   options="{'no_create': True}"
-                                   domain="[('is_sold_out', '=', False)]"/>
+                                   context="{'name_with_seats_availability': True, 'availability_for_ticket': event_ticket_id}"
+                                   options="{'no_create': True}"/>
                             <field name="barcode" groups="base.group_no_one"/>
                             <field name="event_ticket_id" invisible="not event_id"
-                                   context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"
+                                   context="{'name_with_seats_availability': True, 'availability_for_slot': slot_id}" options="{'no_open': True, 'no_create': True}"
                                    domain="[('event_id', '=', event_id)]"/>
                             <field name="partner_id"/>
                             <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
