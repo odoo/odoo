@@ -107,12 +107,14 @@ export class PortalSecurity extends Interaction {
         });
     }
     async onRemoveApiKeyClick(ev) {
-        await handleCheckIdentity(
-            this.waitFor(
-                this.services.orm.call("res.users.apikeys", "remove", [parseInt(ev.target.id)])
-            ),
-            this.services.orm,
-            this.services.dialog
+        await this.waitFor(
+            await handleCheckIdentity(
+                this.waitFor(
+                    this.services.orm.call("res.users.apikeys", "remove", [parseInt(ev.target.id)])
+                ),
+                this.services.orm,
+                this.services.dialog
+            )
         );
         window.location.reload();
     }
