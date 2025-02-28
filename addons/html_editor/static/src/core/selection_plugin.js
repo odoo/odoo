@@ -5,6 +5,7 @@ import {
     isProtected,
     isProtecting,
     isUnprotecting,
+    isSelfClosingElement,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
 import {
@@ -19,7 +20,6 @@ import { Plugin } from "../plugin";
 import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
-    normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
@@ -154,6 +154,7 @@ export class SelectionPlugin extends Plugin {
         "focusEditable",
         // "collapseIfZWS",
         "isSelectionInEditable",
+        "normalizeCursorPosition",
     ];
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
@@ -265,12 +266,12 @@ export class SelectionPlugin extends Plugin {
                 // inside a protected zone.
                 return this.activeSelection;
             }
-            [anchorNode, anchorOffset] = normalizeCursorPosition(
+            [anchorNode, anchorOffset] = this.normalizeCursorPosition(
                 anchorNode,
                 anchorOffset,
                 direction ? "left" : "right"
             );
-            [focusNode, focusOffset] = normalizeCursorPosition(
+            [focusNode, focusOffset] = this.normalizeCursorPosition(
                 focusNode,
                 focusOffset,
                 direction ? "right" : "left"
@@ -456,10 +457,10 @@ export class SelectionPlugin extends Plugin {
             throw new Error("Selection is not in editor");
         }
         const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
-        [focusNode, focusOffset] = normalizeCursorPosition(focusNode, focusOffset, "right");
+        [focusNode, focusOffset] = this.normalizeCursorPosition(focusNode, focusOffset, "right");
         [anchorNode, anchorOffset] = isCollapsed
             ? [focusNode, focusOffset]
-            : normalizeCursorPosition(anchorNode, anchorOffset, "left");
+            : this.normalizeCursorPosition(anchorNode, anchorOffset, "left");
         if (normalize) {
             // normalize selection
             [anchorNode, anchorOffset] = normalizeDeepCursorPosition(anchorNode, anchorOffset);
@@ -777,6 +778,32 @@ export class SelectionPlugin extends Plugin {
         }
         this.activeSelection = this.makeActiveSelection(selection);
         return this.activeSelection;
+    }
+
+    normalizeSelfClosingElement(node, offset) {
+        if (isSelfClosingElement(node)) {
+            // Cannot put cursor inside those elements, put it after instead.
+            [node, offset] = rightPos(node);
+        }
+        return [node, offset];
+    }
+
+    normalizeNotEditableNode(node, offset, position = "right") {
+        let closest = closestElement(node);
+        while (closest && closest !== this.editable && !closest.isContentEditable) {
+            [node, offset] = position === "right" ? rightPos(node) : leftPos(node);
+            closest = node;
+        }
+        return [node, offset];
+    }
+
+    normalizeCursorPosition(node, offset, position = "right") {
+        [node, offset] = this.normalizeSelfClosingElement(node, offset);
+        [node, offset] = this.normalizeNotEditableNode(node, offset, position);
+        // todo @phoenix: we should maybe remove it
+        // // Be permissive about the received offset.
+        // offset = Math.min(Math.max(offset, 0), nodeSize(node));
+        return [node, offset];
     }
 
     /**

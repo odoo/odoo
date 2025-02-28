@@ -37,7 +37,6 @@ import {
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
-import { normalizeCursorPosition } from "@html_editor/utils/selection";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 /**
@@ -428,7 +427,11 @@ export class DomPlugin extends Plugin {
             isListElement(currentNode)
                 ? rightPos(lastLeaf(currentNode))
                 : rightPos(currentNode);
-        lastPosition = normalizeCursorPosition(lastPosition[0], lastPosition[1], "right");
+        lastPosition = this.dependencies.selection.normalizeCursorPosition(
+            lastPosition[0],
+            lastPosition[1],
+            "right",
+        );
 
         if (!this.config.allowInlineAtRoot && this.isEditionBoundary(lastPosition[0])) {
             // Correct the position if it happens to be in the editable root.
