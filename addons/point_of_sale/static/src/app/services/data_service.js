@@ -710,17 +710,7 @@ export class PosData extends Reactive {
         if (this.queue.length > 0) {
             throw new Error("There are unsynced changes in the queue.");
         }
-        // FIXME: the first item of args is the id of the record.
-        // This can cause a problem:
-        // Steps:
-        // 1. Create a record in the frontend
-        // 2. because calls to flush are debounced, it will take 1 sec to sync the record with the server
-        // 3. this means that if you call `call` in the meantime, the record will not have a server id, but only a uuid.
-        // 4. this will cause the call to fail because the server expects an id.
-        // args[0] =
-        //     typeof args[0] === "number"
-        //         ? args[0]
-        //         : this.models[model].find((x) => x.uuid === args[0])?.id;
+        // TODO: check api.model methods
         let ids;
         if (typeof args[0] === "number") {
             ids = args[0];

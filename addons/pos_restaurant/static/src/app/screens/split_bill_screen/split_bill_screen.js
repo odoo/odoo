@@ -99,7 +99,7 @@ export class SplitBillScreen extends Component {
         if (this.getNumberOfProducts() > 0) {
             const originalOrder = this.currentOrder;
             await this.createSplittedOrder();
-            originalOrder.setScreenData({ name: "SplitBillScreen" });
+            this.pos.setOrderScreen(originalOrder, "SplitBillScreen");
         }
         this.pos.pay();
     }
@@ -182,7 +182,7 @@ export class SplitBillScreen extends Component {
         }
 
         originalOrder.customer_count -= 1;
-        originalOrder.setScreenData({ name: "ProductScreen" });
+        this.pos.setOrderScreen(originalOrder, "ProductScreen");
         this.pos.selectedOrderUuid = null;
         this.pos.setOrder(newOrder);
         this.back();

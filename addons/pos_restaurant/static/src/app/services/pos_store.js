@@ -470,7 +470,7 @@ patch(PosStore.prototype, {
         this.setOrder(floatingOrder);
 
         const props = {};
-        const screenName = floatingOrder.getScreenData().name;
+        const screenName = this.getOrderScreen(floatingOrder);
         if (screenName === "PaymentScreen") {
             props.orderUuid = floatingOrder.uuid;
         }
@@ -505,10 +505,10 @@ patch(PosStore.prototype, {
         if (orders.length > 0) {
             this.setOrder(orders[0]);
             const props = {};
-            if (orders[0].getScreenData().name === "PaymentScreen") {
+            if (this.getOrderScreen(orders[0]) === "PaymentScreen") {
                 props.orderUuid = orders[0].uuid;
             }
-            this.showScreen(orders[0].getScreenData().name, props);
+            this.showScreen(this.getOrderScreen(orders[0]), props);
         } else {
             this.addNewOrder({ table_id: table });
             this.showScreen("ProductScreen");

@@ -746,36 +746,8 @@ export class PosOrder extends Base {
         return card_payment_line ? card_payment_line.cardholder_name : "";
     }
 
-    /* ---- Screen Status --- */
-    // the order also stores the screen status, as the PoS supports
-    // different active screens per order. This method is used to
-    // store the screen status.
-    setScreenData(value) {
-        this.uiState.screen_data["value"] = value;
-    }
-
     getCurrentScreenData() {
         return this.uiState.screen_data["value"] ?? { name: "ProductScreen" };
-    }
-
-    //see setScreenData
-    getScreenData() {
-        const screen = this.uiState?.screen_data["value"];
-        // If no screen data is saved
-        //   no payment line -> product screen
-        //   with payment line -> payment screen
-        if (!screen) {
-            if (!this.finalized && this.payment_ids.length > 0) {
-                return { name: "PaymentScreen" };
-            } else if (!this.finalized) {
-                return { name: "ProductScreen" };
-            }
-        }
-        if (!this.finalized && this.payment_ids.length > 0) {
-            return { name: "PaymentScreen" };
-        }
-
-        return screen || { name: "" };
     }
 
     waitForPushOrder() {

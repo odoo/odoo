@@ -371,25 +371,26 @@ export class TicketScreen extends Component {
     get isOrderSynced() {
         return (
             this.getSelectedOrder()?.finalized &&
-            (this.getSelectedOrder().getScreenData().name === "" || this.state.filter === "SYNCED")
+            (this.pos.getOrderScreen(this.getSelectedOrder()) === "" ||
+                this.state.filter === "SYNCED")
         );
     }
     activeOrderFilter(o) {
         const screen = ["ReceiptScreen", "TipScreen"];
-        const oScreen = o.getScreenData();
-        return (!o.finalized || screen.includes(oScreen.name)) && o.isDisplayed();
+        const oScreen = this.pos.getOrderScreen(o);
+        return (!o.finalized || screen.includes(oScreen)) && o.isDisplayed();
     }
     getFilteredOrderList() {
         const orderModel = this.pos.models["pos.order"];
         let orders =
             this.state.filter === "SYNCED"
                 ? orderModel.filter((o) => o.finalized && o.isDisplayed())
-                : orderModel.filter(this.activeOrderFilter);
+                : orderModel.filter((o) => this.activeOrderFilter(o));
 
         if (this.state.filter && !["ACTIVE_ORDERS", "SYNCED"].includes(this.state.filter)) {
             orders = orders.filter((order) => {
-                const screen = order.getScreenData();
-                return this._getScreenToStatusMap()[screen.name] === this.state.filter;
+                const screen = this.pos.getOrderScreen(order);
+                return this._getScreenToStatusMap()[screen] === this.state.filter;
             });
         }
 
@@ -453,21 +454,18 @@ export class TicketScreen extends Component {
         return order.employee_id ? order.employee_id.name : "";
     }
     getStatus(order) {
-        if (
-            order.uiState?.locked &&
-            (order.getScreenData().name === "" || this.state.filter === "SYNCED")
-        ) {
+        if (order.uiState?.locked && this.state.filter === "SYNCED") {
             return _t("Paid");
         } else {
-            const screen = order.getScreenData();
-            return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name])?.text;
+            const screen = this.pos.getOrderScreen(order);
+            return this._getOrderStates().get(this._getScreenToStatusMap()[screen])?.text;
         }
     }
     /**
      * If the order is the only order and is empty
      */
     isDefaultOrderEmpty(order) {
-        const status = this._getScreenToStatusMap()[order.getScreenData().name];
+        const status = this._getScreenToStatusMap()[this.pos.getOrderScreen(order)];
         const productScreenStatus = this._getScreenToStatusMap().ProductScreen;
         return (
             order.getOrderlines().length === 0 &&

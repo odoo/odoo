@@ -980,6 +980,22 @@ export class PosStore extends WithLazyGetterTrap {
         this.mobile_pane = "right";
         return order;
     }
+
+    /* ---- Screen Status --- */
+    // the order also stores the screen status, as the PoS supports
+    // different active screens per order. This method is used to
+    // store the screen status.
+    getOrderScreen(order) {
+        return order.finalized
+            ? ""
+            : this.orderScreenMap?.[order.id] || order.payment_ids.length > 0
+            ? "PaymentScreen"
+            : "ProductScreen";
+    }
+    setOrderScreen(order, screen) {
+        this.orderScreenMap ||= {};
+        this.orderScreenMap[order.id] = screen;
+    }
     createOrderIfNeeded(data) {
         return this.createNewOrder(data);
     }
@@ -1071,7 +1087,7 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
         this.mobile_pane = "right";
-        currentOrder.setScreenData({ name: "PaymentScreen", props: {} });
+        this.setOrderScreen(currentOrder, "PaymentScreen");
         this.showScreen("PaymentScreen", {
             orderUuid: this.selectedOrderUuid,
         });
@@ -1224,8 +1240,8 @@ export class PosStore extends WithLazyGetterTrap {
         }
         this.mainScreen = { component, props };
         // Save the screen to the order so that it is shown again when the order is selected.
-        if (component.storeOnOrder ?? true) {
-            this.getOrder()?.setScreenData({ name, props });
+        if ((component.storeOnOrder ?? true) && this.getOrder()) {
+            this.setOrderScreen(this.getOrder(), name);
         }
         if (newOrder) {
             this.addNewOrder();
@@ -1264,11 +1280,11 @@ export class PosStore extends WithLazyGetterTrap {
     showOrderScreen(forceEmpty = false) {
         this.addOrderIfEmpty(forceEmpty);
         if (this.mainScreen.component === PaymentScreen) {
-            this.getOrder().setScreenData({ name: "PaymentScreen", props: {} });
+            this.setOrderScreen(this.getOrder(), "PaymentScreen");
             this.showScreen("ProductScreen");
             return;
         }
-        const { name: screenName } = this.getOrder().getScreenData();
+        const screenName = this.getOrderScreen(this.getOrder());
         const props = {};
         if (screenName === "PaymentScreen") {
             props.orderUuid = this.selectedOrderUuid;
