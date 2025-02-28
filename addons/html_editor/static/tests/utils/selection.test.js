@@ -140,7 +140,7 @@ describe("getTraversedNodes", () => {
                 const p2 = editable.lastChild;
                 const firstBr = p2.firstChild;
                 const cd = firstBr.nextSibling;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([p1, ab, p2, firstBr, cd]);
             },
         });
@@ -156,7 +156,7 @@ describe("getTraversedNodes", () => {
                 const br1 = p2.firstChild;
                 const cd = br1.nextSibling;
                 const br2 = cd.nextSibling;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([p1, ab, p2, br1, cd, br2]);
             },
         });
@@ -172,7 +172,7 @@ describe("getTraversedNodes", () => {
                 const br1 = p2.firstChild;
                 const cd = br1.nextSibling;
                 const br2 = cd.nextSibling;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([p1, ab, p2, br1, cd, br2]);
             },
         });
@@ -187,7 +187,7 @@ describe("getTraversedNodes", () => {
                 const p2 = editable.firstChild.nextSibling;
                 const cd = p2.firstChild;
                 const br1 = cd.nextSibling;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([p1, ab, p2, cd, br1]);
             },
         });
@@ -203,7 +203,7 @@ describe("getTraversedNodes", () => {
                 const cd = br.nextSibling;
                 const p2 = editable.lastChild;
                 const ef = p2.firstChild;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([p1, br, cd, p2, ef]);
             },
         });
@@ -219,7 +219,7 @@ describe("getTraversedNodes", () => {
                 const cd = br.nextSibling;
                 const p2 = editable.lastChild;
                 const ef = p2.firstChild;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([p1, ab, br, cd, p2, ef]);
             },
         });
@@ -231,7 +231,7 @@ describe("getTraversedNodes", () => {
                 const editable = editor.editable;
                 const p2 = editable.lastChild;
                 const cd = p2.firstChild;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([p2, cd]);
             },
         });
@@ -247,7 +247,7 @@ describe("getTraversedNodes", () => {
                 const cd = br.nextSibling;
                 const p2 = editable.lastChild;
                 const ef = p2.firstChild;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([p1, cd, p2, ef]);
             },
         });
@@ -264,7 +264,7 @@ describe("getTraversedNodes", () => {
                 const cd = br2.nextSibling;
                 const p2 = editable.firstChild.nextSibling;
                 const ef = p2.firstChild;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([p1, br2, cd, p2, ef]);
             },
         });
@@ -279,7 +279,7 @@ describe("getTraversedNodes", () => {
                 const abcde = td1.firstChild;
                 const td2 = td1.nextSibling;
                 const fg = td2.firstChild;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([td1, abcde, td2, fg]);
             },
         });
@@ -298,7 +298,7 @@ describe("getTraversedNodes", () => {
                 const e = br2.nextSibling;
                 const td2 = td1.nextSibling;
                 const fg = td2.firstChild;
-                const result = editor.shared.selection.getTraversedNodes(editable);
+                const result = editor.shared.selection.getTraversedNodes();
                 expect(result).toEqual([td1, abcd, br1, br2, e, td2, fg]);
             },
         });
