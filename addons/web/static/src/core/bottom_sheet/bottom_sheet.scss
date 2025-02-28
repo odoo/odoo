@@ -1,0 +1,137 @@
+.o_bottom_sheet .offcanvas {
+    .list-group {
+        --list-group-border-radius: #{$border-radius-lg};
+        --list-group-item-padding-y: #{map-get($spacers, 3)};
+        --list-group-item-padding-x: #{map-get($spacers, 3)};
+
+        box-shadow: inset 0 $border-width 0 rgba(#FFF, 0.1);
+        border-width: 0 0 $border-width;
+    }
+
+    --list-group-color: #{$list-group-color};
+    --list-group-bg: #{$list-group-bg};
+    --list-group-border-color: #{$list-group-border-color};
+    --list-group-border-width: #{$list-group-border-width};
+    --list-group-item-padding-x: #{$list-group-item-padding-x};
+    --list-group-item-padding-y: #{$list-group-item-padding-y};
+    --list-group-action-color: #{$list-group-action-color};
+    --list-group-action-hover-color: #{$list-group-action-hover-color};
+    --list-group-action-hover-bg: #{$list-group-hover-bg};
+    --list-group-action-active-color: #{$list-group-action-active-color};
+    --list-group-action-active-bg: #{$list-group-action-active-bg};
+    --list-group-disabled-color: #{$list-group-disabled-color};
+    --list-group-disabled-bg: #{$list-group-disabled-bg};
+    --list-group-active-color: #{$list-group-active-color};
+    --list-group-active-bg: #{$list-group-active-bg};
+    --list-group-active-border-color: #{$list-group-active-border-color};
+}
+
+// Bottom Sheet Component
+.o_bottom_sheet {
+    // Progress variable functions
+    // For positive progress (extending): maps 0 to 1 -> min to max
+    // For negative progress (dismissing): returns min
+    @function progress-scale($min, $max) {
+        @return calc(#{$min} + (max(0, var(--BottomSheet_progress, 0)) * (#{$max} - #{$min})));
+    }
+
+    // For negative progress (dismissing): maps -1 to 0 -> min to max
+    // For positive progress (extending): returns max
+    @function dismiss-scale($min, $max) {
+        @return calc(#{$min} + ((1 + min(0, var(--BottomSheet_progress, 0))) * (#{$max} - #{$min})));
+    }
+
+    // Derived variables - calculated from the base progress variable
+    --blur-amount: calc(max(0, var(--BottomSheet_progress, 0)) * 10px);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100dvw + 20px);
+    height: 100dvh;
+    z-index: 1050;
+    display: block;
+    overflow: auto;
+    scroll-snap-type: y mandatory;
+    touch-action: pan-y;
+
+    // Hide the scrollbar
+    padding-right: 20px;
+
+    @at-root .bottom-sheet-open {
+        // Default progress is 0 (initial position)
+        --BottomSheet_progress: -1;
+
+        .o_navbar, .o_action_manager {
+            // Scale background from 1 (normal) to 0.9 (extended)
+            transform: scale(#{progress-scale(1, 0.9)}) translateZ(0);
+            transform-origin: center top;
+            transition: none;
+        }
+    }
+
+    // Backdrop
+    &_backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1040;
+        background-color: RGBA(#{to-rgb($modal-backdrop-bg)}, #{dismiss-scale(0, $modal-backdrop-opacity)});
+        backdrop-filter: blur(var(--blur-amount));
+        --webkit-backdrop-filter: blur(var(--blur-amount));
+        touch-action: none;
+    }
+
+    &_spacer {
+        height: var(--spacer-height, 60dvh);
+        touch-action: none;
+    }
+
+    &_dismiss {
+        height: var(--dismiss-height, 30dvh);
+    }
+
+    // Sheet container
+    &_sheet.offcanvas {
+        transition: none;
+        visibility: visible;
+        bottom: 0 !important;
+        top: auto !important;
+        width: 100%;
+        max-width: map-get($grid-breakpoints, sm);
+        max-height: var(--sheet-max-height);
+        margin: 0 auto;
+        height: var(--sheet-height, auto);
+        transform: none;
+        overflow: hidden;
+        // opacity: #{dismiss-scale(0.25, 1)};
+        opacity: 1;
+        box-sizing: content-box;
+        touch-action: pan-y;
+
+        .offcanvas-header {
+            padding-top: 0;
+        }
+
+        // List group styling
+        .list-group {
+            box-shadow: inset 0 $border-width 0 rgba(#FFF, 0.1);
+            border-width: 0 0 $border-width;
+        }
+    }
+
+    // Handle styles
+    .o_bottom_sheet_handle_bar {
+        background-color: currentColor;
+    }
+
+    &.o_bottom_sheet_ready {
+        .o_bottom_sheet_dismiss, .o_bottom_sheet_spacer, .o_bottom_sheet_sheet {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
+    }
+
+    &.o_inactive_bottom_sheet {
+        display: none;
+    }
+}
