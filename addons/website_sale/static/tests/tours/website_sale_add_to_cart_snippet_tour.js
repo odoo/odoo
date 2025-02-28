@@ -1,5 +1,17 @@
+<<<<<<< saas-18.1
 import { assertPathName, clickOnEditAndWaitEditMode, clickOnElement, clickOnSave, clickOnSnippet, insertSnippet, registerWebsitePreviewTour, selectElementInWeSelectWidget } from '@website/js/tours/tour_utils';
 import { assertCartContains, goToCart } from '@website_sale/js/tours/tour_utils';
+||||||| 370de95190cf07f17281f0ed6365b6806663cac2
+/** @odoo-module **/
+
+import { goToCart, assertCartContains } from '@website_sale/js/tours/tour_utils';
+import { registerWebsitePreviewTour, clickOnEditAndWaitEditMode, clickOnSnippet, insertSnippet, selectElementInWeSelectWidget, clickOnSave, clickOnElement, assertPathName } from '@website/js/tours/tour_utils';
+=======
+/** @odoo-module **/
+
+import { assertCartContains } from '@website_sale/js/tours/tour_utils';
+import { registerWebsitePreviewTour, clickOnEditAndWaitEditMode, clickOnSnippet, insertSnippet, selectElementInWeSelectWidget, clickOnSave, clickOnElement } from '@website/js/tours/tour_utils';
+>>>>>>> e00df18a6f7a70d6a2347ffeea5ee424dcd674e1
 
 
 function editAddToCartSnippet() {
@@ -40,16 +52,14 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...editAddToCartSnippet(),
         ...selectElementInWeSelectWidget('product_template_picker_opt', 'Product No Variant', true),
         ...selectElementInWeSelectWidget('action_picker_opt', 'Buy Now'),
+        // At this point the "Add to cart" button was changed to a "Buy Now" button
         ...clickOnSave(),
-        clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
+        clickOnElement('"Buy Now" button', ':iframe .s_add_to_cart_btn'),
         {
             // wait for the page to load, as the next check was sometimes too fast
-            content: "Wait for the redirection to the payment page",
+            content: "Wait for the redirection to the cart page",
             trigger: ":iframe h3:contains(order overview)",
         },
-        assertPathName('/shop/payment', ':iframe a[href="/shop/cart"]'),
-
-        goToCart({quantity: 4, backend: true}),
         assertCartContains({productName: 'Product No Variant', backend: true}),
         assertCartContains({productName: 'Product Yes Variant 1 (Red)', backend: true}),
         assertCartContains({productName: 'Product Yes Variant 2 (Pink)', backend: true}),
