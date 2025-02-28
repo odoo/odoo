@@ -5,10 +5,6 @@ import { childNodes, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
-function isMutationRecordSavable(record) {
-    return !(record.type === "attributes" && record.attributeName === "placeholder");
-}
-
 export class HintPlugin extends Plugin {
     static id = "hint";
     static dependencies = ["history", "selection"];
@@ -19,12 +15,12 @@ export class HintPlugin extends Plugin {
             this.clearHints();
             this.updateHints();
         },
-        clean_handlers: this.clearHints.bind(this),
+        normalize_handlers: this.normalize.bind(this),
         clean_for_save_handlers: ({ root }) => this.clearHints(root),
         content_updated_handlers: this.updateHints.bind(this),
 
-        savable_mutation_record_predicates: isMutationRecordSavable,
         system_classes: ["o-we-hint"],
+        system_attributes: ["o-we-hint-text"],
         ...(this.config.placeholder && {
             hints: [
                 {
@@ -54,6 +50,12 @@ export class HintPlugin extends Plugin {
     destroy() {
         super.destroy();
         this.clearHints();
+    }
+
+    normalize() {
+        this.hint = null;
+        this.clearHints();
+        this.updateHints();
     }
 
     /**
@@ -90,12 +92,12 @@ export class HintPlugin extends Plugin {
 
     makeHint(el, text) {
         this.dispatchTo("make_hint_handlers", el);
-        el.setAttribute("placeholder", text);
+        el.setAttribute("o-we-hint-text", text);
         el.classList.add("o-we-hint");
     }
 
     removeHint(el) {
-        el.removeAttribute("placeholder");
+        el.removeAttribute("o-we-hint-text");
         removeClass(el, "o-we-hint");
         this.getResource("system_style_properties").forEach((n) => el.style.removeProperty(n));
         if (this.hint === el) {

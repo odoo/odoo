@@ -2,8 +2,10 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
-import { isVisibleTextNode } from "@html_editor/utils/dom_info";
+import { isParagraphRelatedElement, isVisibleTextNode } from "@html_editor/utils/dom_info";
 import {
+    ancestors,
+    childNodes,
     closestElement,
     createDOMPathGenerator,
     descendants,
@@ -253,6 +255,9 @@ export class FontPlugin extends Plugin {
         ],
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
+
+        /** Processors */
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
     };
 
     setup() {
@@ -488,5 +493,29 @@ export class FontPlugin extends Plugin {
     updateFontParams() {
         this.font.displayName = this.fontName;
         this.fontSize.displayName = this.fontSizeName;
+    }
+
+    processContentForClipboard(clonedContents, selection) {
+        const commonAncestorElement = closestElement(selection.commonAncestorContainer);
+        if (commonAncestorElement && !isBlock(clonedContents.firstChild)) {
+            // Get the list of ancestor elements starting from the provided
+            // commonAncestorElement up to the block-level element.
+            const blockEl = closestBlock(commonAncestorElement);
+            const ancestorsList = [
+                commonAncestorElement,
+                ...ancestors(commonAncestorElement, blockEl),
+            ];
+            // Wrap rangeContent with clones of their ancestors to keep the styles.
+            for (const ancestor of ancestorsList) {
+                // Keep the formatting by keeping inline ancestors and paragraph
+                // related ones like headings etc.
+                if (!isBlock(ancestor) || isParagraphRelatedElement(ancestor)) {
+                    const clone = ancestor.cloneNode();
+                    clone.append(...childNodes(clonedContents));
+                    clonedContents.appendChild(clone);
+                }
+            }
+        }
+        return clonedContents;
     }
 }

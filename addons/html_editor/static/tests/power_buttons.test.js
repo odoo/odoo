@@ -66,7 +66,7 @@ describe("buttons", () => {
         const { el } = await setupEditor("<p>[]<br></p>");
         await click(".o_we_power_buttons .power_button.fa-list-ol");
         expect(getContent(el)).toBe(
-            `<ol><li placeholder="List" class="o-we-hint">[]<br></li></ol>`
+            `<ol><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ol>`
         );
     });
 
@@ -74,7 +74,7 @@ describe("buttons", () => {
         const { el } = await setupEditor("<p>[]<br></p>");
         await click(".o_we_power_buttons .power_button.fa-list-ul");
         expect(getContent(el)).toBe(
-            `<ul><li placeholder="List" class="o-we-hint">[]<br></li></ul>`
+            `<ul><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`
         );
     });
 
@@ -82,7 +82,7 @@ describe("buttons", () => {
         const { el } = await setupEditor("<p>[]<br></p>");
         await click(".o_we_power_buttons .power_button.fa-check-square-o");
         expect(getContent(el)).toBe(
-            `<ul class="o_checklist"><li placeholder="List" class="o-we-hint">[]<br></li></ul>`
+            `<ul class="o_checklist"><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`
         );
     });
 

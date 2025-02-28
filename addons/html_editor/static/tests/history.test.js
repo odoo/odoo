@@ -37,7 +37,7 @@ describe("reset", () => {
         await animationFrame();
         expect(".o-we-tablepicker").toHaveCount(1);
         expect(getContent(el)).toBe(
-            `<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
         );
         const historyPlugin = plugins.get("history");
         expect(historyPlugin.currentStep.mutations.length).toBe(0);

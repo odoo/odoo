@@ -60,11 +60,12 @@ export class MediaPlugin extends Plugin {
         power_buttons: withSequence(1, { commandId: "insertMedia" }),
 
         /** Handlers */
-        clean_handlers: this.clean.bind(this),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalizeMedia.bind(this),
 
         unsplittable_node_predicates: isIconElement, // avoid merge
+        clipboard_content_processors: this.clean.bind(this),
+        clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
     };
 
     get recordInfo() {

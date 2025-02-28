@@ -93,7 +93,7 @@ export class TablePlugin extends Plugin {
 
         /** Handlers */
         selectionchange_handlers: this.updateSelectionTable.bind(this),
-        clean_handlers: this.deselectTable.bind(this),
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
         clean_for_save_handlers: ({ root }) => this.deselectTable(root),
         before_line_break_handlers: this.resetTableSelection.bind(this),
         before_split_block_handlers: this.resetTableSelection.bind(this),
@@ -1048,5 +1048,61 @@ export class TablePlugin extends Plugin {
             focusNode: anchorTD.lastChild,
             focusOffset: nodeSize(anchorTD.lastChild),
         });
+    }
+
+    /**
+     * @param {DocumentFragment} clonedContents
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     */
+    processContentForClipboard(clonedContents, selection) {
+        if (
+            clonedContents.firstChild.nodeName === "TR" ||
+            clonedContents.firstChild.nodeName === "TD"
+        ) {
+            // We enter this case only if selection is within single table.
+            const table = closestElement(selection.commonAncestorContainer, "table");
+            const tableClone = table.cloneNode(true);
+            // A table is considered fully selected if it is nested inside a
+            // cell that is itself selected, or if all its own cells are
+            // selected.
+            const isTableFullySelected =
+                (table.parentElement &&
+                    !!closestElement(table.parentElement, "td.o_selected_td")) ||
+                getTableCells(table).every((td) => td.classList.contains("o_selected_td"));
+            if (!isTableFullySelected) {
+                for (const td of tableClone.querySelectorAll("td:not(.o_selected_td)")) {
+                    if (closestElement(td, "table") === tableClone) {
+                        // ignore nested
+                        td.remove();
+                    }
+                }
+                const trsWithoutTd = Array.from(tableClone.querySelectorAll("tr")).filter(
+                    (row) => !row.querySelector("td")
+                );
+                for (const tr of trsWithoutTd) {
+                    if (closestElement(tr, "table") === tableClone) {
+                        // ignore nested
+                        tr.remove();
+                    }
+                }
+            }
+            // If it is fully selected, clone the whole table rather than
+            // just its rows.
+            clonedContents = tableClone;
+        }
+        const startTable = closestElement(selection.startContainer, "table");
+        if (clonedContents.firstChild.nodeName === "TABLE" && startTable) {
+            // Make sure the full leading table is copied.
+            clonedContents.firstChild.after(startTable.cloneNode(true));
+            clonedContents.firstChild.remove();
+        }
+        const endTable = closestElement(selection.endContainer, "table");
+        if (clonedContents.lastChild.nodeName === "TABLE" && endTable) {
+            // Make sure the full trailing table is copied.
+            clonedContents.lastChild.before(endTable.cloneNode(true));
+            clonedContents.lastChild.remove();
+        }
+        this.deselectTable(clonedContents);
+        return clonedContents;
     }
 }
