@@ -186,7 +186,7 @@ def il_encoding_encode(data, columns=6, security_level=2, encoding="utf-8"):
 
     # Convert data to code words and split into rows
     code_words = il_encoding_encode_high(data_bytes, num_cols, security_level)
-    rows = list(chunks(code_words, num_cols))
+    rows = list(il_util_chunks(code_words, num_cols))
 
     return list(il_encoding_encode_rows(rows, num_cols, security_level))
 
@@ -205,9 +205,9 @@ def il_encoding_encode_row(row_no, row_words, left, right):
     table_idx = row_no % 3
 
     # Convert high level code words to low level code words
-    left_low = map_code_word(table_idx, left)
-    right_low = map_code_word(table_idx, right)
-    row_words_low = [map_code_word(table_idx, word) for word in row_words]
+    left_low = il_codes_map_code_word(table_idx, left)
+    right_low = il_codes_map_code_word(table_idx, right)
+    row_words_low = [il_codes_map_code_word(table_idx, word) for word in row_words]
 
     return [START_CHARACTER, left_low] + row_words_low + [right_low, STOP_CHARACTER]
 
@@ -220,7 +220,7 @@ def il_encoding_encode_high(data, columns, security_level):
     """
 
     # Encode data to code words
-    data_words = list(compact(data))
+    data_words = list(il___init___compact(data))
     data_count = len(data_words)
 
     # Get the padding to align data to column count
@@ -648,7 +648,7 @@ Rate compaction: 1.2 byte per code word
 
 def il_byte_compact_bytes(data):
     """Encodes data into code words using the Byte compaction mode."""
-    compacted_chunks = (il_byte__compact_chunk(chunk) for chunk in chunks(data, size=6))
+    compacted_chunks = (il_byte__compact_chunk(chunk) for chunk in il_util_chunks(data, size=6))
     return chain(*compacted_chunks)
 
 
@@ -682,7 +682,7 @@ def il_numeric__compact_chunk(chunk):
 
 def il_numeric_compact_numbers(data):
     """Encodes data into code words using the Numeric compaction mode."""
-    compacted_chunks = (il_numeric__compact_chunk(chunk) for chunk in chunks(data, size=44))
+    compacted_chunks = (il_numeric__compact_chunk(chunk) for chunk in il_util_chunks(data, size=44))
     return chain(*compacted_chunks)
 
 
@@ -697,17 +697,17 @@ def il_optimizations_replace_short_numeric_chunks(chunks):
 
     for prev, chunk, next in iterate_prev_next(chunks):
         is_short_numeric_chunk = (
-            chunk.compact_fn == compact_numbers
+            chunk.compact_fn == il_numeric_compact_numbers
             and len(chunk.data) < 13
         )
 
         borders_text_chunk = (
-            (prev and prev.compact_fn == compact_text) or
-            (next and next.compact_fn == compact_text)
+            (prev and prev.compact_fn == il_text_compact_text) or
+            (next and next.compact_fn == il_text_compact_text)
         )
 
         if is_short_numeric_chunk and borders_text_chunk:
-            yield Chunk(chunk.data, compact_text)
+            yield Chunk(chunk.data, il_text_compact_text)
         else:
             yield chunk
 
@@ -783,7 +783,7 @@ def il_text__compact_chunk(chunk):
 def il_text_compact_text(data):
     """Encodes data into code words using the Text compaction mode."""
     interim_codes = il_text_compact_text_interim(data)
-    return (il_text__compact_chunk(chunk) for chunk in chunks(interim_codes, 2))
+    return (il_text__compact_chunk(chunk) for chunk in il_util_chunks(interim_codes, 2))
 
 
 # Codes for switching between compacting modes
@@ -801,8 +801,8 @@ Chunk = namedtuple("Chunk", ["data", "compact_fn"])
 def il___init___compact(data):
     """Encodes given data into an array of PDF417 code words."""
     chunks = il___init____split_to_chunks(data)
-    chunks = optimizations.replace_short_numeric_chunks(chunks)
-    chunks = optimizations.merge_chunks_with_same_compact_fn(chunks)
+    chunks = il_optimizations_replace_short_numeric_chunks(chunks)
+    chunks = il_optimizations_merge_chunks_with_same_compact_fn(chunks)
     return il___init____compact_chunks(chunks)
 
 
@@ -817,7 +817,7 @@ def il___init____compact_chunk(ordinal, chunk):
     code_words = []
 
     # Add the switch code if required
-    add_switch_code = ordinal > 0 or chunk.compact_fn != compact_text
+    add_switch_code = ordinal > 0 or chunk.compact_fn != il_text_compact_text
     if add_switch_code:
         code_words.append(il___init___get_switch_code(chunk))
 
@@ -837,22 +837,22 @@ def il___init____split_to_chunks(data):
 
 def il___init___get_optimal_compactor_fn(char):
     if 48 <= char <= 57:
-        return compact_numbers
+        return il_numeric_compact_numbers
 
     if char in CHARACTERS_LOOKUP:
-        return compact_text
+        return il_text_compact_text
 
-    return compact_bytes
+    return il_byte_compact_bytes
 
 
 def il___init___get_switch_code(chunk):
-    if chunk.compact_fn == compact_text:
+    if chunk.compact_fn == il_text_compact_text:
         return TEXT_LATCH
 
-    if chunk.compact_fn == compact_bytes:
+    if chunk.compact_fn == il_byte_compact_bytes:
         return BYTE_LATCH_ALT if len(chunk.data) % 6 == 0 else BYTE_LATCH
 
-    if chunk.compact_fn == compact_numbers:
+    if chunk.compact_fn == il_numeric_compact_numbers:
         return NUMERIC_LATCH
 
     assert False, "Nonexistant compaction function"
