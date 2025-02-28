@@ -466,6 +466,7 @@
             <field name="email_to">{{ object._get_attendee_emails() }}</field>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="description">Used to manually notify attendees</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
                 <div>
                     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
