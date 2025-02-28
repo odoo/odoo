@@ -305,13 +305,14 @@
         </t>
         <t t-elif="tx.state == 'done'">
             <t t-set="alert_style" t-value="'success'"/>
-            <t t-if="not is_processing" t-set="status_heading">
+            <t t-set="success_heading">
                 <p>Thank you!</p>
             </t>
+            <t t-if="not is_processing and tx._get_tx_time_difference()" t-set="status_heading" t-value="success_heading"/>
             <t t-if="tx.operation == 'validation'" t-set="status_message">
                 <p>Your payment method has been saved.</p>
             </t>
-            <t t-else="" t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
+            <t t-elif="tx._get_tx_time_difference()" t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
         </t>
         <t t-elif="tx.state == 'cancel'">
             <t t-set="alert_style" t-value="'danger'"/>
