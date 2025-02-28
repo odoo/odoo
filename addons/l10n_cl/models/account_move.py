@@ -125,8 +125,9 @@ class AccountMove(models.Model):
 
             param['company_id'] = self.company_id.id or False
             param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
-            param['move_type'] = (('in_invoice', 'in_refund') if
-                  self.l10n_latam_document_type_id._is_doc_type_vendor() else ('out_invoice', 'out_refund'))
+            param['move_type'] = (('in_invoice', 'in_refund')
+                if self.l10n_latam_document_type_id._is_doc_type_vendor() and self.is_purchase_document()
+                else ('out_invoice', 'out_refund'))
         return where_string, param
 
     def _get_name_invoice_report(self):
@@ -175,9 +176,13 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.l10n_latam_document_type_id.code in ['39', '41', '110', '111', '112', '34']
 
+    def _l10n_cl_reverse_electronic_invoice(self):
+        self.ensure_one()
+        return self.reversed_entry_id.l10n_latam_document_type_id.code == '33'
+
     def _is_manual_document_number(self):
         if self.journal_id.company_id.country_id.code == 'CL':
-            return self.journal_id.type == 'purchase' and not self.l10n_latam_document_type_id._is_doc_type_vendor()
+            return self.journal_id.type == 'purchase' and (not self.l10n_latam_document_type_id._is_doc_type_vendor() or self._l10n_cl_reverse_electronic_invoice())
         return super()._is_manual_document_number()
 
     def _l10n_cl_get_amounts(self):
