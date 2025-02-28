@@ -1,6 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import tempfile
+
+from os import path
+
 from odoo.tools import cloc
 from odoo.tests import TransactionCase, tagged
+
+from . import test_module
 
 XML_TEST = """<!-- Comment -->
 <?xml version="1.0" encoding="UTF-8"?>
@@ -259,3 +265,80 @@ class TestClocStdNoCusto(TransactionCase):
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('odoo/studio', 0), 0, 'Module should not generate customization in database')
+
+class TestClocExcludeManifest(test_module.TestModuleManifest):
+    def setUp(self):
+        super().setUp()
+        self.data_dir = tempfile.mkdtemp(prefix='data', dir=self.module_root)
+        self.sub_data_dir = tempfile.mkdtemp(prefix='subdir', dir=self.data_dir)
+        self.model_dir = tempfile.mkdtemp(prefix='models', dir=self.module_root)
+        with open(path.join(self.data_dir, 'data.xml'), 'w') as file:
+            file.write(XML_TEST)
+        with open(path.join(self.data_dir, 'data2.xml'), 'w') as file:
+            file.write(XML_TEST)
+        with open(path.join(self.sub_data_dir, 'subdata.xml'), 'w') as file:
+            file.write(XML_TEST)
+        with open(path.join(self.module_root, '__init__.py'), 'w') as file:
+            file.write('from . import models')
+        with open(path.join(self.model_dir, 'models.py'), 'w') as file:
+            file.write(PY_TEST)
+
+    def save_manifest(self, cloc_exclude=None):
+        manifest = str({
+            'name': f'Temp {self.module_name}', 
+            'license': 'MIT',
+            'data': [
+                f'{self.dirname(self.data_dir)}/data.xml',
+                f'{self.dirname(self.data_dir)}/data2.xml',
+                f'{self.dirname(self.data_dir)}/{self.dirname(self.sub_data_dir)}/subdata.xml',
+            ],
+            'cloc_exclude': cloc_exclude or [],
+        })
+        with open(path.join(self.module_root, '__manifest__.py'), 'w') as file:
+            file.write(manifest)
+
+    def dirname(self, dir):
+        return path.basename(dir)
+
+    def get_cloc(self):
+        cl = cloc.Cloc()
+        cl.count_path(self.module_root)
+        res = cl.code.get(self.module_name)
+        return res
+
+    def test_exclude_nothing(self):
+        self.save_manifest([])
+        self.assertEqual(self.get_cloc(), 62, 'All code should be counted')
+
+    def test_exclude_everything(self):
+        self.save_manifest(['**/*'])
+        self.assertEqual(self.get_cloc(), 0, 'All code should be ignored')
+
+    def test_exclude_all_python(self):
+        self.save_manifest(['**/*.py'])
+        # Should exclude __init__.py, models.py -> 62 - 8
+        self.assertEqual(self.get_cloc(), 54, 'All python code should be ignored')
+
+    def test_exclude_all_data(self):
+        self.save_manifest([f'{self.dirname(self.data_dir)}/**/*'])
+        # Should exclude data.xml and data2.xml, subdata.xml -> 62 - 54
+        self.assertEqual(self.get_cloc(), 8, 'All data should be ignored')
+
+    def test_exclude_sub_data(self):
+        self.save_manifest([f'{self.dirname(self.data_dir)}/{self.dirname(self.sub_data_dir)}/*'])
+        # Should exclude subdata.xml -> 62 - 18
+        self.assertEqual(self.get_cloc(), 44)
+
+    def test_exclude_multiple_file(self):
+        self.save_manifest([
+            f'{self.dirname(self.data_dir)}/data.xml',
+            f'{self.dirname(self.model_dir)}/models.py',
+        ])
+        self.assertEqual(self.get_cloc(), 37)
+
+    def test_exclude_all_data_file(self):
+        self.save_manifest([f'{self.dirname(self.data_dir)}/*'])
+        # Should exclude data.xml and data2.xml -> 62 - 36
+        self.assertEqual(self.get_cloc(), 26, 'All data should be ignored')
+
+
