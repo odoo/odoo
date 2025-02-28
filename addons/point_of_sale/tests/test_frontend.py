@@ -1442,7 +1442,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin_percent, 0)
 
     def test_customer_display_as_public(self):
-        self.main_pos_config.customer_display_type = 'remote'
         self.main_pos_config.customer_display_bg_img = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
         response = self.url_open(f"/web/image/pos.config/{self.main_pos_config.id}/customer_display_bg_img")
         self.assertEqual(response.status_code, 200)

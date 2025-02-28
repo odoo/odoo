@@ -42,7 +42,6 @@ class ResConfigSettings(models.TransientModel):
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False, check_company=True)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
     is_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
-    pos_customer_display_type = fields.Selection(related="pos_config_id.customer_display_type", readonly=False)
     pos_customer_display_bg_img = fields.Image(related='pos_config_id.customer_display_bg_img', readonly=False)
     pos_customer_display_bg_img_name = fields.Char(related='pos_config_id.customer_display_bg_img_name', readonly=False)
 

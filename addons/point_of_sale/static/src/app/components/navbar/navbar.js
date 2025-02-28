@@ -20,7 +20,7 @@ import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
+import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils";
 
 const { DateTime } = luxon;
 
@@ -110,7 +110,7 @@ export class Navbar extends Component {
         this.pos.scanning = !this.pos.scanning;
     }
     get customerFacingDisplayButtonIsShown() {
-        return this.pos.config.customer_display_type !== "none" && !isMobileOS();
+        return !isMobileOS();
     }
     get showCashMoveButton() {
         return this.pos.showCashMoveButton;
@@ -133,7 +133,15 @@ export class Navbar extends Component {
     }
 
     openCustomerDisplay() {
-        if (this.pos.config.customer_display_type === "local") {
+        const proxyIP = this.pos.getDisplayDeviceIP();
+        if (proxyIP) {
+            openProxyCustomerDisplay(
+                proxyIP,
+                this.pos.config.access_token,
+                this.pos.config.id,
+                this.notification
+            );
+        } else {
             window.open(
                 `/pos_customer_display/${this.pos.config.id}/${this.pos.config.access_token}`,
                 "newWindow",
@@ -141,17 +149,6 @@ export class Navbar extends Component {
             );
             this.notification.add(_t("PoS Customer Display opened in a new window"));
         }
-        if (this.pos.config.customer_display_type === "remote") {
-            this.notification.add(
-                _t("Navigate to your PoS Customer Display on the other computer")
-            );
-        }
-        openCustomerDisplay(
-            this.pos.getDisplayDeviceIP(),
-            this.pos.config.access_token,
-            this.pos.config.id,
-            this.notification
-        );
     }
 
     get showCreateProductButton() {
