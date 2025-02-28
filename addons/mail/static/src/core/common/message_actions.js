@@ -104,7 +104,9 @@ messageActionsRegistry
         sequence: 40,
     })
     .add("reactions", {
-        condition: (component) => component.message.reactions.length,
+        condition: (component) =>
+            component.props.message.canAddReaction(component.props.thread) &&
+            component.message.reactions.length,
         icon: "fa fa-smile-o",
         title: _t("View Reactions"),
         onClick: (component) => component.openReactionMenu(),
