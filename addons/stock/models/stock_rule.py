@@ -143,6 +143,21 @@ class StockRule(models.Model):
         if self.picking_type_id.warehouse_id.company_id != self.route_id.company_id:
             self.picking_type_id = False
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        Orderpoint = self.env['stock.warehouse.orderpoint']
+        self.env.add_to_compute(Orderpoint._fields.get('rule_ids'), Orderpoint.sudo().search([]))
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        Orderpoint = self.env['stock.warehouse.orderpoint']
+        watched_fields = {'action', 'sequence', 'warehouse_id', 'location_dest_id', 'location_src_id', 'route_id'}
+        if watched_fields.intersection(vals.keys()):
+            self.env.add_to_compute(Orderpoint._fields.get('rule_ids'), Orderpoint.sudo().search([]))
+        return res
+
     def _get_message_values(self):
         """ Return the source, destination and picking_type applied on a stock
         rule. The purpose of this function is to avoid code duplication in
