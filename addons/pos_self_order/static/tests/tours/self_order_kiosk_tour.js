@@ -191,3 +191,22 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_qty_max_fre
         Utils.clickBtn("Add to cart"),
     ],
 });
+
+registry.category("web_tour.tours").add("test_self_order_pricelist", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        CategoryPage.clickKioskCategory("Miscellaneous"),
+        ProductPage.clickKioskProduct("Coca-Cola"),
+        ProductPage.clickKioskProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkKioskProduct("Coca-Cola", "5.06", "2"),
+        CartPage.clickBack(),
+        ProductPage.clickKioskProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkKioskProduct("Coca-Cola", "3.45", "3"),
+        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Close"),
+        Utils.checkIsNoBtn("My Order"),
+    ],
+});
