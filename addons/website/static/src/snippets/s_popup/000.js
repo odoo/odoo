@@ -107,8 +107,9 @@ const PopupWidget = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
+        this.is_cookie_policy_page = window.location.pathname === "/cookie-policy";
         this._popupAlreadyShown = !!getCookie(this.$el.attr('id'));
-        if (!this._popupAlreadyShown) {
+        if (!this._popupAlreadyShown || this.is_cookie_policy_page) {
             this._bindPopup();
         }
         return this._super(...arguments);
@@ -166,7 +167,7 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _showPopup: function () {
-        if (this._popupAlreadyShown || !this._canShowPopup()) {
+        if (this._popupAlreadyShown || this.is_cookie_policy_page || !this._canShowPopup()) {
             return;
         }
         this.$target.find('.modal').modal('show');
@@ -367,6 +368,17 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         'click #cookies-consent-essential, #cookies-consent-all': '_onAcceptClick',
     }),
 
+    start() {
+        this._super(...arguments);
+        // TODO: Remove this is master and the cookie policy link in copyright
+        // footer with XML
+        const copyrightFooterContainerEl = document.querySelector(".o_footer_copyright .container");
+        const cookiePolicyLinkEl = cloneContentEls(`
+            <a href="/cookie-policy">Cookie Policy</a>
+            `).firstElementChild;
+        copyrightFooterContainerEl.insertAdjacentElement("beforeend", cookiePolicyLinkEl);
+    },
+
     /**
      * @override
      */
@@ -387,15 +399,13 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      */
     _showPopup() {
         this._super(...arguments);
-        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
-        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
+        if (this.is_cookie_policy_page) {
             this.toggleEl = cloneContentEls(`
             <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex align-items-center position-fixed pe-auto">
-                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
+                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label">${_t("Show the cookies bar")}</span>
             </button>
             `).firstElementChild;
             this.el.insertAdjacentElement("beforebegin", this.toggleEl);
-            this._toggleCookiesBar();
             this._onToggleCookiesBar = this._toggleCookiesBar.bind(this);
             this.toggleEl.addEventListener("click", this._onToggleCookiesBar);
         }
@@ -408,16 +418,22 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
     _toggleCookiesBar() {
         const popupEl = this.el.querySelector(".modal");
         $(popupEl).modal("toggle");
-        // As we're using Bootstrap's events, the PopupWidget prevents the modal
-        // from being shown after hiding it: override that behavior.
-        this._popupAlreadyShown = false;
-        deleteCookie(this.el.id);
 
+        this._setToggleButtonState();
+    },
+    /**
+     * Updates the toggle button state and postion based on the visibility of
+     * the cookie bar.
+     */
+    _setToggleButtonState() {
+        const popupEl = this.el.querySelector(".modal");
         const hidden = !popupEl.classList.contains("show");
+
         this.toggleEl.querySelector(".fa").className = `fa ${hidden ? "fa-eye" : "fa-eye-slash"}`;
         this.toggleEl.querySelector(".o_cookies_bar_toggle_label").innerText = hidden
             ? _t("Show the cookies bar")
             : _t("Hide the cookies bar");
+
         if (hidden || !popupEl.classList.contains("s_popup_bottom")) {
             this.toggleEl.style.removeProperty("--cookies-bar-toggle-inset-block-end");
         } else {
@@ -453,7 +469,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
             document.dispatchEvent(new Event("optionalCookiesAccepted"));
         }
         this._onHideModal();
-        this.toggleEl && this.toggleEl.remove();
+        this._setToggleButtonState();
     },
     /**
      * @override
@@ -473,7 +489,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
             }
         }
         setUtmsHtmlDataset();
-    }
+    },
 });
 
 return PopupWidget;
