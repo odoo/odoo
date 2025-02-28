@@ -114,6 +114,9 @@
            <xpath expr="//kanban" position="attributes">
                 <attribute name="js_class">hr_fleet_kanban_view</attribute>
             </xpath>
+            <xpath expr="//t/a[@download='']" position="before">
+                <a role="menuitem" class="dropdown-item" type="object" name="action_preview_attachment">Preview</a>
+            </xpath>
        </field>
    </record>
 </odoo>

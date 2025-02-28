@@ -8,4 +8,5 @@ from . import fleet_vehicle
 from . import fleet_vehicle_log_contract
 from . import fleet_vehicle_log_services
 from . import fleet_vehicle_odometer
+from . import fleet_attachment_preview
 from . import mail_activity_plan_template
