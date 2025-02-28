@@ -311,14 +311,11 @@ class HrApplicant(models.Model):
         Returns:
             Domain()
         """
-        self.ensure_one()
-        domain = Domain("id", "=", self.id)
-        if self.email_normalized:
-            domain |= Domain("email_normalized", "=", self.email_normalized)
-        if self.partner_phone_sanitized:
-            domain |= Domain("partner_phone_sanitized", "=", self.partner_phone_sanitized)
-        if self.linkedin_profile:
-            domain |= Domain("linkedin_profile", "=", self.linkedin_profile)
+        domain = Domain('id', 'in', self.ids)
+        domain |= Domain('email_normalized', 'in', [email for email in self.mapped('email_normalized') if email])
+        domain |= Domain('partner_phone_sanitized', 'in', [phone for phone in self.mapped('partner_phone_sanitized') if phone])
+        domain |= Domain("linkedin_profile", "in", [linkedin_profile for linkedin_profile in self.mapped('linkedin_profile') if linkedin_profile])
+        domain &= Domain('company_id', 'in', self.mapped('company_id.id'))
         if ignore_talent:
             domain &= Domain("talent_pool_ids", "=", False)
         if only_talent:
@@ -525,21 +522,26 @@ class HrApplicant(models.Model):
         if not all(v in valid_statuses or v is False for v in value):
             raise UserError(_('Some values do not exist in the application status'))
 
+        positive_operator = True
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            positive_operator = False
+        
         # Map statuses to domain filters
+        domain = Domain([])
         for status in value:
             if status == 'refused':
-                domain = [('refuse_reason_id', '!=', None)]
+                refused_domain = Domain('refuse_reason_id', '!=', None)
+                domain &= refused_domain if positive_operator else ~refused_domain
             elif status == 'hired':
-                domain = [('date_closed', '!=', False)]
+                hired_domain = Domain('date_closed', '!=', False)
+                domain &= hired_domain if positive_operator else ~hired_domain
             elif status == 'archived' or status is False:
-                domain = [('active', '=', False)]
+                archived_domain = Domain('active', '=', False) 
+                domain &= archived_domain if positive_operator else ~archived_domain
             elif status == 'ongoing':
-                domain = ['&', ('active', '=', True), ('date_closed', '=', False)]
+                ongoing_domain = Domain(['&', ('active', '=', True), ('date_closed', '=', False)])
+                domain &= ongoing_domain if positive_operator else ~ongoing_domain
 
-        # Invert the domain for '!=' and 'not in' operators
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            domain.insert(0, expression.NOT_OPERATOR)
-            domain = expression.distribute_not(domain)
         return domain
 
     def _get_attachment_number(self):
@@ -696,11 +698,6 @@ class HrApplicant(models.Model):
                     record_name=self.display_name,
                     model_description="Applicant",
                 )
-        if vals.get('date_closed'):
-            for applicant in self:
-                if applicant.job_id.date_to:
-                    applicant.availability = applicant.job_id.date_to + relativedelta(days=1)
-
         return res
 
     def get_empty_list_help(self, help_message):
@@ -711,18 +708,10 @@ class HrApplicant(models.Model):
         else:
             hr_job = self.env['hr.job']
 
-        nocontent_body = Markup("""<p class="o_view_nocontent_smiling_face">%(help_title)s</p>""") % {
-            'help_title': _("No application found. Let's create one !"),
-        }
-
-        if hr_job:
-            pattern = r'(.*)<a>(.*?)<\/a>(.*)'
-            match = re.fullmatch(pattern, _('Have you tried to <a>add skills to your job position</a> and search into the Reserve ?'))
-            nocontent_body += Markup("""<p>%(para_1)s<a href="%(link)s">%(para_2)s</a>%(para_3)s</p>""") % {
-            'para_1': match[1],
-            'para_2': match[2],
-            'para_3': match[3],
-            'link': f'/odoo/recruitment/{hr_job.id}',
+        nocontent_body = Markup("""
+<p class="o_view_nocontent_smiling_face">%(help_title)s</p>
+""") % {
+            'help_title': _("No applications found."),
         }
 
         if hr_job.alias_email:
