@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.ecpay</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//app[@name='account']" position="inside">
+                    <block title="Taiwan Electronic Invoicing" id="taiwan_edi" invisible="country_code != 'TW'">
+                        <setting class="col-lg-12" string="Ecpay Setting" company_dependent="1">
+                            <div>
+                                <label for="l10n_tw_edi_ecpay_staging_mode"/>
+                                <field name="l10n_tw_edi_ecpay_staging_mode"/>
+                            </div>
+                            <div>
+                                <label for="l10n_tw_edi_ecpay_merchant_id" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_tw_edi_ecpay_merchant_id"/>
+                                <label for="l10n_tw_edi_ecpay_hashkey" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_tw_edi_ecpay_hashkey"/>
+                                <label for="l10n_tw_edi_ecpay_hashIV" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_tw_edi_ecpay_hashIV"/>
+                                <label for="l10n_tw_edi_ecpay_seller_identifier" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_tw_edi_ecpay_seller_identifier"/>
+                            </div>
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
