@@ -13,7 +13,7 @@ import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Component, onPatched, onWillDestroy, onWillPatch, useRef, useState } from "@odoo/owl";
+import { Component, onWillDestroy, useRef, useState } from "@odoo/owl";
 import { evaluateExpr } from "@web/core/py_js/py";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
@@ -129,7 +129,11 @@ export class KanbanRenderer extends Component {
         }
 
         useBounceButton(this.rootRef, (clickedEl) => {
-            if (this.props.list.isGrouped ? !this.props.list.recordCount : !this.props.list.count || this.props.list.model.useSampleModel) {
+            if (
+                this.props.list.isGrouped
+                    ? !this.props.list.recordCount
+                    : !this.props.list.count || this.props.list.model.useSampleModel
+            ) {
                 return clickedEl.matches(
                     [
                         ".o_kanban_renderer",
@@ -196,14 +200,6 @@ export class KanbanRenderer extends Component {
         useHotkey("ArrowDown", ({ area }) => this.focusNextCard(area, "down"), arrowsOptions);
         useHotkey("ArrowLeft", ({ area }) => this.focusNextCard(area, "left"), arrowsOptions);
         useHotkey("ArrowRight", ({ area }) => this.focusNextCard(area, "right"), arrowsOptions);
-
-        let previousScrollTop = 0;
-        onWillPatch(() => {
-            previousScrollTop = this.rootRef.el.scrollTop;
-        });
-        onPatched(() => {
-            this.rootRef.el.scrollTop = previousScrollTop;
-        });
     }
 
     // ------------------------------------------------------------------------
