@@ -13,6 +13,7 @@ _lt = LazyTranslate(__name__)
 CART_SESSION_CACHE_KEY = 'sale_order_id'
 FISCAL_POSITION_SESSION_CACHE_KEY = 'fiscal_position_id'
 PRICELIST_SESSION_CACHE_KEY = 'website_sale_current_pl'
+PRICELIST_SELECTED_SESSION_CACHE_KEY = 'website_sale_selected_pl_id'
 
 
 class Website(models.Model):
@@ -481,6 +482,7 @@ class Website(models.Model):
         request.session.pop('website_sale_cart_quantity', None)
         request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
         request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
+        request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
 
     @api.model
     def action_dashboard_redirect(self):
