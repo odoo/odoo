@@ -277,7 +277,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @override
      * @private
      */
-    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newImages, isCombinationPossible) {
+    _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newImages) {
         let $images = $productContainer.find(this._getProductImageContainerSelector());
         // When using the web editor, don't reload this or the images won't
         // be able to be edited depending on if this is done loading before
@@ -299,7 +299,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             // fix issue with carousel height
             this.trigger_up('widgets_start_request', {$target: $images});
         }
-        $images.toggleClass('css_not_available', !isCombinationPossible);
     },
     /**
      * @private

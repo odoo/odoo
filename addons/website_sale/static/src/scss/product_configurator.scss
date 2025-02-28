@@ -37,29 +37,6 @@
     }
 }
 
-.css_not_available_msg {
-    display: none;
-}
-
-.css_not_available.js_product {
-    .css_quantity {
-        display: none !important;
-    }
-
-    .css_not_available_msg {
-        display: block;
-    }
-
-    .availability_messages {
-        display: none;
-    }
-
-    .oe_price,
-    .oe_default_price {
-        display: none;
-    }
-}
-
 .css_quantity {
     width: initial; // We don't want the quantity form to be full-width
 
@@ -110,6 +87,7 @@ select.form-select.css_attribute_select {
 label, .o_variant_pills {
     &.css_not_available {
         opacity: 0.6;
+        pointer-events: none;
     }
 }
 
