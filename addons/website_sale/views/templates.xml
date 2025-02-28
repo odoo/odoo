@@ -2151,6 +2151,14 @@
                                 <strong t-out="product.with_context(display_default_code=False).display_name"/>
                             </a>
                         </div>
+                        <a
+                            t-if="not product.website_published"
+                            role="button"
+                            class="btn btn-sm btn-danger"
+                            title="This product is unpublished."
+                        >
+                            Unpublished
+                        </a>
                         <div class="d-none d-md-block text-muted" t-field="product.description_sale"/>
                     </div>
                     <div class="d-flex flex-column align-items-end">
