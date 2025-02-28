@@ -122,6 +122,31 @@ test("Edit message (mobile)", async () => {
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
+test.tags("mobile");
+test("Can add reaction to a message on an ipad", async () => {
+    // most ipad users have large screen (landscape) but touch device, thus should use mobile UI/UX
+    patchUiSize({ size: SIZES.LG });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello world",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await click(".o-mail-Message [title='Expand']");
+    await click("button:contains('Add a Reaction')");
+    await click(".o-EmojiPicker-content .o-Emoji:contains('😀')");
+    await contains(".o-mail-MessageReaction:contains('😀\n1')");
+});
+
 test("Editing message keeps the mentioned channels", async () => {
     const pyEnv = await startServer();
     const channelId1 = pyEnv["discuss.channel"].create({
