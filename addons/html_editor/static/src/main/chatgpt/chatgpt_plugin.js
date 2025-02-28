@@ -7,6 +7,18 @@ import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
 import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
+import { isBlock } from "@html_editor/utils/blocks";
+
+/**
+ * @param {EditorSelection} selection
+ */
+function isReplaceableByAI(selection) {
+    const isEmpty = !selection.textContent().replace(/\s+/g, "");
+    const crossBlocks = [...selection.commonAncestorContainer.childNodes].find(
+        (el) => isBlock(el) && el.isContentEditable
+    );
+    return crossBlocks || isEmpty;
+}
 
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
@@ -32,12 +44,14 @@ export class ChatGPTPlugin extends Plugin {
                 isAvailable: (selection) => {
                     return !selection.isCollapsed && user.userId;
                 },
+                isDisabled: isReplaceableByAI,
                 Component: LanguageSelector,
                 props: {
                     onSelected: (language) => this.openDialog({ language }),
                     isDisabled: () => {
-                        const sel = this.document.getSelection();
-                        return !sel.toString().replace(/\s+/g, "");
+                        return isReplaceableByAI(
+                            this.dependencies.selection.getEditableSelection()
+                        );
                     },
                 },
             },
@@ -46,7 +60,7 @@ export class ChatGPTPlugin extends Plugin {
                 groupId: "ai",
                 commandId: "openChatGPTDialog",
                 text: "AI",
-                isDisabled: (sel) => !sel.textContent().replace(/\s+/g, ""),
+                isDisabled: isReplaceableByAI,
             },
         ],
 
