@@ -9,6 +9,7 @@
     <record id="group_project_user" model="res.groups">
         <field name="name">User</field>
         <field name="comment">User can user the your employees' schedule</field>
+        <field name="sequence">10</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="category_id" ref="base.module_category_services_project"/>
     </record>
@@ -16,6 +17,7 @@
     <record id="group_project_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="comment">Administrator can manage the employees' schedule</field>
+        <field name="sequence">20</field>
         <field name="category_id" ref="base.module_category_services_project"/>
         <field name="implied_ids" eval="[(4, ref('project.group_project_user')), (4, ref('mail.group_mail_canned_response_admin'))]"/>
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>

@@ -7,12 +7,14 @@
 
         <record id="im_livechat_group_user" model="res.groups">
             <field name="name">User</field>
+            <field name="sequence">10</field>
             <field name="category_id" ref="base.module_category_website_live_chat"/>
             <field name="comment">The user will be able to join support channels.</field>
         </record>
 
         <record id="im_livechat_group_manager" model="res.groups">
             <field name="name">Administrator</field>
+            <field name="sequence">20</field>
             <field name="comment">The user will be able to delete support channels.</field>
             <field name="category_id" ref="base.module_category_website_live_chat"/>
             <field name="implied_ids" eval="[(4, ref('im_livechat.im_livechat_group_user')), (4, ref('mail.group_mail_canned_response_admin'))]"/>
