@@ -11,13 +11,17 @@ class WebsiteSaleCollect(WebsiteSale):
     def _prepare_product_values(self, product, category, search, **kwargs):
         """ Override of `website_sale` to include the selected pickup location and zip code. """
         res = super()._prepare_product_values(product, category, search, **kwargs)
-        if request.website.sudo().in_store_dm_id:
+        if in_store_dm := request.website.sudo().in_store_dm_id:
             order_sudo = request.cart
             if (
                 order_sudo.carrier_id.delivery_type == 'in_store'
                 and order_sudo.pickup_location_data
             ):
                 res['selected_wh_location'] = order_sudo.pickup_location_data
+            elif len(in_store_dm.warehouse_ids) == 1:
+                res['selected_wh_location'] = (
+                    in_store_dm.warehouse_ids[0]._format_pickup_location_values()
+                )
             res['zip_code'] = (  # Define the zip code.
                 order_sudo.partner_shipping_id.zip
                 or res.get('selected_wh_location', {}).get('zip_code')
