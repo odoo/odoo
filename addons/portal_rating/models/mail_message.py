@@ -39,13 +39,17 @@ class MailMessage(models.Model):
             rating['message_id'][0]: self._portal_message_format_rating(rating)
             for rating in related_rating
         }
+        ratings_stats = {}
+        for res_model_name, messages in self.grouped('model').items():
+            recordset = self.env[res_model_name].browse(messages.mapped('res_id'))
+            if not hasattr(recordset, 'rating_get_stats'):
+                continue
+            ratings_stats.update(recordset.sudo().rating_get_stats())
 
         for message, values in zip(self, vals_list):
             values["rating"] = message_to_rating.get(message.id, {})
-
-            record = self.env[message.model].browse(message.res_id)
-            if hasattr(record, 'rating_get_stats'):
-                values['rating_stats'] = record.sudo().rating_get_stats()
+            if ratings_stats.get(message.res_id):
+                values['rating_stats'] = ratings_stats.get(message.res_id)
 
         return vals_list
 
