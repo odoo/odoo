@@ -78,6 +78,18 @@ test("should not display the table ui menu if we leave the editor content", asyn
     expect(".o-we-table-menu").toHaveCount(0);
 });
 
+test("should display the table ui menu when hovering on TH", async () => {
+    const { el } = await setupEditor(`
+        <table><tbody><tr>
+            <th>11[]</th>
+        </tr></tbody></table>`);
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    await hover(el.querySelector("th"));
+    await animationFrame();
+    expect(".o-we-table-menu").toHaveCount(2);
+});
+
 test.tags("desktop");
 test("should display the resizeCursor if the table element isContentEditable=true", async () => {
     const { el } = await setupEditor(`
