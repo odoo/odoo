@@ -1,3 +1,4 @@
+import { convertNumericToUnit } from "@html_editor/utils/formatting";
 import { Component } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
@@ -23,14 +24,67 @@ export class BuilderNumberInput extends Component {
     static components = { BuilderComponent };
 
     setup() {
+        if (this.props.saveUnit && !this.props.unit) {
+            throw new Error("'unit' must be defined to use the 'saveUnit' props");
+        }
+
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
             defaultValue: this.props.default === undefined ? undefined : `${this.props.default}`,
+            formatRawValue: this.formatRawValue.bind(this),
+            parseDisplayValue: this.parseDisplayValue.bind(this),
         });
         this.commit = commit;
         this.preview = preview;
         this.state = state;
+    }
+
+    /**
+     * @param {string | number} values - Values separated by spaces or a number
+     * @param {(string) => string} convertSingleValueFn - Convert a single value
+     */
+    convertSpaceSplitValues(values, convertSingleValueFn) {
+        if (typeof values === "number") {
+            return convertSingleValueFn(values.toString());
+        }
+        if (!values) {
+            return "";
+        }
+        return values.split(/\s+/g).map(convertSingleValueFn).join(" ");
+    }
+
+    formatRawValue(rawValue) {
+        return this.convertSpaceSplitValues(rawValue, (value) => {
+            const unit = this.props.unit;
+            const saveUnit = this.props.saveUnit;
+            // Remove the unit
+            value = value.match(/[\d.e+-]+/g)[0];
+            if (saveUnit) {
+                // Convert value from saveUnit to unit
+                value = convertNumericToUnit(value, saveUnit, unit);
+            }
+            return value;
+        });
+    }
+
+    parseDisplayValue(displayValue) {
+        return this.convertSpaceSplitValues(displayValue, (value) => {
+            const unit = this.props.unit;
+            const saveUnit = this.props.saveUnit;
+            if (unit && saveUnit) {
+                // Convert value from unit to saveUnit
+                value = convertNumericToUnit(value, unit, saveUnit);
+            }
+            if (unit) {
+                if (saveUnit || saveUnit === "") {
+                    value = value + saveUnit;
+                } else {
+                    value = value + unit;
+                }
+            }
+            return value;
+        });
     }
 
     onChange(e) {
@@ -40,6 +94,10 @@ export class BuilderNumberInput extends Component {
 
     onInput(e) {
         this.preview(e.target.value);
+    }
+
+    get displayValue() {
+        return this.formatRawValue(this.state.value);
     }
 
     // TODO: use this.preview or this.commit?
