@@ -86,6 +86,7 @@ class ProductCatalogMixin(models.AbstractModel):
                 'quantity': float (optional)
                 'productType': string
                 'price': float
+                'uom': dict
                 'readOnly': bool (optional)
             }
         """
@@ -93,16 +94,26 @@ class ProductCatalogMixin(models.AbstractModel):
         default_data = self._default_order_line_values(child_field)
 
         for product, record_lines in self._get_product_catalog_record_lines(product_ids, child_field=child_field, **kwargs).items():
+            uom = {
+                'display_name': product.uom_id.display_name,
+                'id': product.uom_id.id,
+            }
             order_line_info[product.id] = {
                **record_lines._get_product_catalog_lines_data(parent_record=self, **kwargs),
                'productType': product.type,
+               'uom': uom,
             }
             product_ids.remove(product.id)
 
         products = self.env['product.product'].browse(product_ids)
         product_data = self._get_product_catalog_order_data(products, **kwargs)
         for product_id, data in product_data.items():
-            order_line_info[product_id] = {**default_data, **data}
+            product = self.env['product.product'].browse(product_id)
+            order_line_info[product_id] = {
+                **default_data,
+                **data,
+                'uom': {'display_name': product.uom_id.display_name, 'id': product.uom_id.id},
+            }
         return order_line_info
 
     def _get_action_add_from_catalog_extra_context(self):
