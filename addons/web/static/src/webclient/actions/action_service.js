@@ -150,11 +150,12 @@ export function makeActionManager(env, router = _router) {
 
     env.bus.addEventListener("CLEAR-CACHES", () => {
         actionCache = {};
+        // browser.sessionStorage.removeItem("current_action"); // doesn't work
     });
     rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
         const { model, method } = ev.detail.data.params;
         if (model === "ir.actions.act_window" && UPDATE_METHODS.includes(method)) {
-            actionCache = {};
+            env.bus.trigger("CLEAR-CACHES");
             const virtualStack = await _controllersFromState();
             const nextStack = [...virtualStack, controllerStack[controllerStack.length - 1]];
             nextStack[nextStack.length - 1].config.breadcrumbs.splice(

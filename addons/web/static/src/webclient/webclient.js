@@ -11,6 +11,8 @@ import { Component, onMounted, onWillStart, useExternalListener, useState } from
 import { router, routerBus } from "@web/core/browser/router";
 import { browser } from "@web/core/browser/browser";
 
+const CACHED_ROUTES = ["/web/action/load", /\/web\/dataset\/call_kw\/[^/]+\/get_views/];
+
 export class WebClient extends Component {
     static template = "web.WebClient";
     static props = {};
@@ -46,13 +48,16 @@ export class WebClient extends Component {
         });
         useBus(this.env.bus, "WEBCLIENT:LOAD_DEFAULT_APP", this._loadDefaultApp);
         onMounted(() => {
-            this.loadRouterState();
+            console.log("wc mounted");
+            this.loadRouterState().then(() => console.log("router state loaded"));
             // the chat window and dialog services listen to 'web_client_ready' event in
             // order to initialize themselves:
             this.env.bus.trigger("WEB_CLIENT_READY");
         });
         useExternalListener(window, "click", this.onGlobalClick, { capture: true });
         onWillStart(this.registerServiceWorker);
+
+        useBus(this.env.bus, "CLEAR-CACHES", () => this.clearServiceWorkerCache?.());
     }
 
     async loadRouterState() {
@@ -116,6 +121,7 @@ export class WebClient extends Component {
             // If no action => falls back to the default app
             await this._loadDefaultApp();
         }
+        console.timeEnd("webclient startup");
     }
 
     _loadDefaultApp() {
@@ -145,10 +151,38 @@ export class WebClient extends Component {
         }
     }
 
-    registerServiceWorker() {
+    async registerServiceWorker() {
+        router.addLockedKey("nocache");
+        if ("nocache" in router.current) {
+            document.body.style["border-bottom"] = "4px solid red";
+            return;
+        }
         if (navigator.serviceWorker) {
+            console.log("sw available!");
+            // (await navigator.serviceWorker.getRegistration()).unregister(); // TO TRY
             navigator.serviceWorker
                 .register("/web/service-worker.js", { scope: "/odoo" })
+                .then(() => {
+                    navigator.serviceWorker.ready.then((registration) => {
+                        console.log("sw ready!");
+                        registration.active.postMessage({
+                            type: "INITIALIZE-CACHES",
+                            version: odoo.info.server_version,
+                            cachedRoutes: CACHED_ROUTES,
+                        });
+                        this.clearServiceWorkerCache = () => {
+                            registration.active.postMessage({ type: "CLEAR-CACHES" });
+                        };
+                        navigator.serviceWorker.addEventListener("message", (event) => {
+                            if (event.data.type === "CACHE_INVALIDATION") {
+                                // this.env.bus.trigger("CLEAR-CACHES"); // FIXME: loop
+                                this.env.services.notification.add("Consider reloading the page", {
+                                    title: "Client out of date",
+                                });
+                            }
+                        });
+                    });
+                })
                 .catch((error) => {
                     console.error("Service worker registration failed, error:", error);
                 });
