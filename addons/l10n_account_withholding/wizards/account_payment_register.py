@@ -2,7 +2,7 @@
 import json
 from collections import defaultdict
 
-from odoo import Command, api, fields, models
+from odoo import Command, api, fields, models, _
 from odoo.exceptions import UserError
 
 
@@ -62,7 +62,10 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('withholding_line_ids.amount', 'amount')
     def _compute_withholding_net_amount(self):
         for wizard in self:
-            wizard.withholding_net_amount = wizard.amount - sum(wizard.withholding_line_ids.mapped('amount'))
+            if wizard.can_edit_wizard:
+                wizard.withholding_net_amount = wizard.amount - sum(wizard.withholding_line_ids.mapped('amount'))
+            else:
+                wizard.withholding_net_amount = 0.0
 
     @api.depends('withholding_line_ids.tax_id')
     def _compute_hide_withholding_number_col(self):
@@ -123,45 +126,43 @@ class AccountPaymentRegister(models.TransientModel):
         super()._compute_from_lines()
 
         for wizard in self:
-            if wizard.country_code == 'AR':
-                wizard.withholding_line_ids = False
+            if wizard.country_code == 'AR' or not wizard.can_edit_wizard:
+                wizard.withholding_line_ids = []
                 continue
 
+            batch = wizard.batches[0]
             withholding_line_creation_vals = []
-            if wizard.can_edit_wizard:
-                withholding_line_amounts = defaultdict(int)
-                batch_result = wizard.batches[0]
-                for move in batch_result['lines'].move_id:
-                    for line in move.invoice_line_ids:
-                        domain = self.env['account.withholding.line']._get_withholding_tax_domain(company=move.company_id, payment_type=self.payment_type)
-                        withholding_taxes = line.tax_ids.filtered_domain(domain)
+            withholding_line_amounts = defaultdict(int)
+            for move in batch['lines'].move_id:
+                for line in move.invoice_line_ids:
+                    domain = self.env['account.withholding.line']._get_withholding_tax_domain(company=move.company_id, payment_type=wizard.payment_type)
+                    withholding_taxes = line.tax_ids.filtered_domain(domain)
 
-                        # For each line, we will compute the tax details as if the withholding taxes were part of the line.
-                        # This way, we can apply is_base_affected/include_base_amount for taxes that would be on the line before we sum it all up for the wizard.
-                        # We update the context of the base_line's tax_ids to trigger computation of the withholding taxes.
-                        base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
-                        base_line['tax_ids'] = base_line['tax_ids'].with_context(include_withholding_taxes=True)
-                        self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
+                    # For each line, we will compute the tax details as if the withholding taxes were part of the line.
+                    # This way, we can apply is_base_affected/include_base_amount for taxes that would be on the line before we sum it all up for the wizard.
+                    # We update the context of the base_line's tax_ids to trigger computation of the withholding taxes.
+                    base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
+                    self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
 
-                        base_account = line.company_id.withholding_tax_base_account_id or line.account_id
+                    base_account = line.company_id.withholding_tax_base_account_id or line.account_id
 
-                        # We want to generate one line per group. A group is defined by a tax, account, and an analytic distribution.
-                        for withholding_tax in withholding_taxes:
-                            base_amount = 0
-                            if tax_data := [d for d in base_line['tax_details']['taxes_data'] if d['tax'] == withholding_tax][:1]:
-                                base_amount = tax_data[0]['raw_base_amount']  # We want the amount in company currency
-                            # Check if the move has a fiscal position and apply if needed.
-                            if move.fiscal_position_id:
-                                withholding_tax = move.fiscal_position_id.map_tax(withholding_tax)
-                            withholding_line_amounts[(json.dumps(base_line['analytic_distribution']), base_account, withholding_tax)] += base_amount
+                    # We want to generate one line per group. A group is defined by a tax, account, and an analytic distribution.
+                    for withholding_tax in withholding_taxes:
+                        base_amount = 0
+                        if tax_data := [d for d in base_line['tax_details']['taxes_data'] if d['tax'] == withholding_tax][:1]:
+                            base_amount = tax_data[0]['raw_base_amount']  # We want the amount in company currency
+                        # Check if the move has a fiscal position and apply if needed.
+                        if move.fiscal_position_id:
+                            withholding_tax = move.fiscal_position_id.map_tax(withholding_tax)
+                        withholding_line_amounts[(json.dumps(base_line['analytic_distribution']), base_account, withholding_tax)] += base_amount
 
-                for (analytic_distribution, base_account, withholding_tax), withholding_line_amount in withholding_line_amounts.items():
-                    withholding_line_creation_vals.append(Command.create({
-                        'tax_id': withholding_tax.id,
-                        'analytic_distribution': json.loads(analytic_distribution),
-                        'original_base_amount': withholding_line_amount,
-                        'tax_base_account_id': base_account.id,
-                    }))
+            for (analytic_distribution, base_account, withholding_tax), withholding_line_amount in withholding_line_amounts.items():
+                withholding_line_creation_vals.append(Command.create({
+                    'tax_id': withholding_tax.id,
+                    'analytic_distribution': json.loads(analytic_distribution),
+                    'original_base_amount': withholding_line_amount,
+                    'tax_base_account_id': base_account.id,
+                }))
             wizard.withholding_line_ids = withholding_line_creation_vals
 
     @api.depends('withholding_line_ids')
@@ -240,36 +241,21 @@ class AccountPaymentRegister(models.TransientModel):
     # ----------------
 
     def _create_payment_vals_from_wizard(self, batch_result):
-        # EXTEND account to apply the withholding logic to the payment record when creating it.
+        # EXTEND 'account'
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
+        if not self.withholding_line_ids or not self.withhold_tax:
+            return payment_vals
 
         if self.withholding_net_amount < 0:
-            raise UserError(self.env._('The net amount cannot be negative.'))
+            raise UserError(_("The withholding net amount cannot be negative."))
 
-        if not self.withholding_line_ids or not self.withhold_tax:
-            return payment_vals  # Nothing to do if we are not working with withholding taxes.
-
-        # The payment amount is the base amount set in the wizard, minus the sum of the withholding line amounts.
-        payment_vals['amount'] = self.withholding_net_amount
-        # We set the outstanding account in the vals if it is provided. If not, it means that it will come from the payment method line.
-        if self.outstanding_account_id:
-            payment_vals['outstanding_account_id'] = self.outstanding_account_id.id
-
-        sign = 1 if self.payment_type == 'inbound' else -1
-        payment_vals['withholding_line_ids'] = []
-        for withholding_line in self.withholding_line_ids:
-            if not withholding_line.name and not withholding_line.tax_id.withholding_sequence_id:
-                raise UserError(self.env._('Please enter the withholding number for the tax %(tax_name)s', tax_name=withholding_line.tax_id.name))
-
-            payment_vals['withholding_line_ids'].append(Command.create({
-                'name': withholding_line.name,
-                'analytic_distribution': withholding_line.analytic_distribution,
-                'tax_id': withholding_line.tax_id.id,
-                'base_amount': withholding_line.base_amount,
-                'amount': sign * withholding_line.amount,
-                'tax_base_account_id': withholding_line.tax_base_account_id.id,
-            }))
-
+        withholding_write_off_line_vals = self.withholding_line_ids._prepare_withholding_line_vals()
+        payment_vals['amount'] -= sum(
+            line_vals['amount_currency']
+            for line_vals in withholding_write_off_line_vals
+            if line_vals.get('tax_repartition_line_id')
+        )
+        payment_vals['write_off_line_vals'] += withholding_write_off_line_vals
         return payment_vals
 
 # todo display account_id if we don't use the default setting
