@@ -1105,3 +1105,22 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             [project.partner_id.id, project.reinvoiced_sale_order_id.id, project.sale_line_id.id],
             [sale_order.partner_id.id, sale_order.id, sale_order.order_line[0].id],
         )
+
+    def test_sale_order_project_smartbutton(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+
+        project = self.env['project.project'].create({
+            'name': 'Project X',
+            'partner_id': self.partner.id,
+            'allow_billable': True,
+            'reinvoiced_sale_order_id':sale_order.id
+        })
+        self.assertEqual(sale_order.project_count, 1, msg="The Project Smart Button must be visible.")
