@@ -1,232 +1,130 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-file_exists () {
-    [[ -f $1 ]];
+file_exists() {
+    [ -f "$1" ];
 }
 
-create_partition () {
-    mount -o remount,rw /
+change_boot_priority() {
+    FROM="$1"
+    TO="$2"
+    BOOT=${3:-"/boot"}
 
-    if  [ -f start_upgrade ]
-    then
-        echo "Error_Upgrade_Already_Started"
-        exit 0
-    fi
-
-    touch start_upgrade
-
-    echo "Fdisking"
-
-    PARTITION=$(lsblk | awk 'NR==2 {print $1}')
-    PARTITION="/dev/${PARTITION}"
-    SECTORS_SIZE=$(fdisk -l "${PARTITION}" | awk 'NR==1 {print $7}')
-
-    if [ "${SECTORS_SIZE}" -lt 15583488 ] # self-flash not permited if SD size < 16gb
-    then
-        rm start_upgrade
-        echo "Error_Card_Size"
-        exit 0
-    fi
-
-    PART_ODOO_ROOT=$(fdisk -l | tail -n 1 | awk '{print $1}')
-    START_OF_ODOO_ROOT_PARTITION=$(fdisk -l | tail -n 1 | awk '{print $2}')
-    END_OF_ODOO_ROOT_PARTITION=$((START_OF_ODOO_ROOT_PARTITION + 11714061)) # sectors to have a partition of ~5.6Go
-    START_OF_UPGRADE_ROOT_PARTITION=$((END_OF_ODOO_ROOT_PARTITION + 1)) # sectors to have a partition of ~7.0Go
-    (echo 'p';                                  # print
-     echo 'd';                                  # delete partition
-     echo '2';                                  #   number 2
-     echo 'n';                                  # create new partition
-     echo 'p';                                  #   primary
-     echo '2';                                  #   number 2
-     echo "${START_OF_ODOO_ROOT_PARTITION}";    #   starting at previous offset
-     echo "${END_OF_ODOO_ROOT_PARTITION}";      #   ending at ~9.9Go
-     echo 'n';                                  # create new partition
-     echo 'p';                                  #   primary
-     echo '3';                                  #   number 3
-     echo "${START_OF_UPGRADE_ROOT_PARTITION}"; #   starting at previous offset
-     echo '';                                   #   ending at default (fdisk should propose max) ~7.0Go
-     echo 'p';                                  # print
-     echo 'w') |fdisk "${PARTITION}"       # write and quit
-
-    PART_RASPIOS_ROOT=$(sudo fdisk -l | tail -n 1 | awk '{print $1}')
-    sleep 5
-
-    # Clean partition
-    mount -o remount,rw /
-    partprobe # apply changes to partitions
-    resize2fs "${PART_ODOO_ROOT}"
-    mkfs.ext4 -Fv "${PART_RASPIOS_ROOT}" # change file sytstem
-
-    echo "end fdisking"
+    echo "Changing boot priority from $FROM to $TO"
+    PARTUUID_CURRENT=$(blkid -s PARTUUID -o value $FROM)
+    PARTUUID_NEW=$(blkid -s PARTUUID -o value $TO)
+    sed -i "s/${PARTUUID_CURRENT}/${PARTUUID_NEW}/" "${BOOT}/cmdline.txt"
 }
 
-download_raspios () {
-    if  [ ! -f *raspios*.img ] ; then
-        # download latest Raspios image and check integrity
-        LATEST_RASPIOS=$(curl -LIsw %{url_effective} http://downloads.raspberrypi.org/raspios_lite_armhf_latest | tail -n 1)
-        wget -c "${LATEST_RASPIOS}"
-        RASPIOS=$(echo *raspios*.zip)
-        wget -c "${LATEST_RASPIOS}".sha256
-        CHECK=$(sha256sum -c "${RASPIOS}".sha256)
-        if [ "${CHECK}" != "${RASPIOS}: OK" ]
-        then
-            # Checksum is not correct so clean and reset self-flashing
-            mount -o remount,rw /
-            # Clean raspios img
-            rm "${RASPIOS}" "${RASPIOS}".sha256
+prepare_upgrade () {
+    # This method is called from the IoT Box Homepage to
+    # prepare the upgrade process, then reboot on the recovery
+    # partition to execute the upgrade method
 
-            rm start_upgrade
-            echo "Error_Raspios_Download"
-            exit 0
-        fi
-        unzip "${RASPIOS}"
+    # Download latest IoT Box image
+    set -- *iotbox*.zip # set the first match to $1
+    if ! file_exists "$1"; then
+        wget "https://nightly.odoo.com/master/iotbox/iotbox-latest.zip"
     fi
+    IMAGE=$(echo *iotbox*.img)
+    echo "Using image ${IMAGE}"
 
-    echo "end dowloading raspios"
-}
+    # Mount the recovery partition and copy this script and odoo.conf file to it
+    echo "Sending script and configuration to the recovery partition"
+    mount /dev/mmcblk0p2 /mnt
+    # copy the current script and `odoo.conf` to the recovery partition
+    cp $0 /home/pi/odoo.conf /mnt
 
-copy_raspios () {
-    umount -v /boot
+    # Unmount the recovery partition
+    umount /mnt
 
-    # mapper raspios
-    PART_RASPIOS_ROOT=$(fdisk -l | tail -n 1 | awk '{print $1}')
-    PART_ODOO_ROOT=$(fdisk -l | tail -n 2 | awk 'NR==1 {print $1}')
-    PART_BOOT=$(fdisk -l | tail -n 3 | awk 'NR==1 {print $1}')
-    RASPIOS=$(echo *raspios*.img)
-    LOOP_RASPIOS=$(kpartx -avs "${RASPIOS}")
-    LOOP_RASPIOS_ROOT=$(echo "${LOOP_RASPIOS}" | tail -n 1 | awk '{print $3}')
-    LOOP_RASPIOS_ROOT="/dev/mapper/${LOOP_RASPIOS_ROOT}"
-    LOOP_BOOT=$(echo "${LOOP_RASPIOS}" | tail -n 2 | awk 'NR==1 {print $3}')
-    LOOP_BOOT="/dev/mapper/${LOOP_BOOT}"
-
-    mount -o remount,rw /
-    # copy raspios
-    dd if="${LOOP_RASPIOS_ROOT}" of="${PART_RASPIOS_ROOT}" bs=4M status=progress
-    e2fsck -fv "${PART_RASPIOS_ROOT}" # resize2fs requires clean fs
-
-    # Modify startup
-    mkdir -v raspios
-    mount -v "${PART_RASPIOS_ROOT}" raspios
-    resize2fs "${PART_RASPIOS_ROOT}"
-    chroot raspios/ /bin/bash -c "sudo apt-get -y update"
-    chroot raspios/ /bin/bash -c "sudo apt-get -y install kpartx"
-    PATH_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    cp -v "${PATH_DIR}"/upgrade.sh raspios/home/pi/
-    NBR_LIGNE=$(sed -n -e '$=' raspios/etc/rc.local)
-    sed -ie "${NBR_LIGNE}"'i\. /home/pi/upgrade.sh; copy_iot' raspios/etc/rc.local
-    cp -v /etc/fstab raspios/etc/fstab
-    sed -ie "s/$(echo ${PART_ODOO_ROOT} | sed -e 's/\//\\\//g')/$(echo ${PART_RASPIOS_ROOT} | sed -e 's/\//\\\//g')/g" raspios/etc/fstab
-    mkdir raspios/home/pi/config
-    find /home/pi -maxdepth 1 -type f ! -name ".*" -exec cp {} raspios/home/pi/config/ \;
-
-    # download latest IoT Box image and check integrity
-    wget -c 'https://nightly.odoo.com/master/iotbox/iotbox-latest.zip' -O raspios/iotbox-latest.zip
-    wget -c 'https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt' -O raspios/SHA1SUMS.txt
-    cd raspios/
-    CHECK=$(sha1sum -c --ignore-missing SHA1SUMS.txt)
-    cd ..
-
-    umount -v raspios
-    if [ "${CHECK}" != "iotbox-latest.zip: OK" ]
-    then
-        # Checksum is not correct so clean and reset self-flashing
-        rm start_upgrade
-        echo "Error_Iotbox_Download"
-        exit 0
-    fi
-
-    # copy boot
-    mkfs.ext4 -Fv "${PART_BOOT}" # format /boot file sytstem
-    e2fsck -fv "${PART_BOOT}" # clean /boot fs
-    dd if="${LOOP_BOOT}" of="${PART_BOOT}" bs=4M status=progress
-
-    # Modify boot file
-    mkdir -v boot
-    mount -v "${PART_BOOT}" boot
-    PART_IOT_BOOT_ID=$(grep -oP '(?<=root=).*(?=rootfstype)' boot/cmdline.txt)
-    sed -ie "s/$(echo ${PART_IOT_BOOT_ID} | sed -e 's/\//\\\//g')/$(echo ${PART_RASPIOS_ROOT} | sed -e 's/\//\\\//g')/g" boot/cmdline.txt
-    umount -v boot
-
-    kpartx -dv "${RASPIOS}"
-    rm -v "${RASPIOS}"
+    # Set the recovery partition as the partition to boot from
+    echo "Setting boot priority to recovery partition"
+    change_boot_priority "/dev/mmcblk0p3" "/dev/mmcblk0p2"
 
     reboot
 }
 
-copy_iot () {
-    mount -o remount,rw /
+upgrade () {
+    # This method is called from the recovery partition to
+    # upgrade the IoT Box system
+    # Current FS: | boot | recovery | system |
 
-    PART_IOTBOX_ROOT=$(fdisk -l | tail -n 2 | awk 'NR==1 {print $1}')
-    PART_BOOT=$(fdisk -l | tail -n 3 | awk 'NR==1 {print $1}')
+    # Tiny Core `/root` partition is mounted as readonly,
+    # so we need to mount it as read-write
+    mount -o remount,rw /root
 
-    # unzip latest IoT Box image
-    unzip iotbox-latest.zip
-    rm -v iotbox-latest.zip
-    IOTBOX=$(echo *iotbox*.img)
+    # Shrink system partition to free space to create a storage partition to store the IoT Box image
+    # To do so: shrink the `iotboxfs` partition filesystem, then the `iotboxfs` partition itself.
+    echo "Shrinking system partition"
+    e2fsck -fy /dev/mmcblk0p3 # Check and fix the file system before resizing
+    resize2fs /dev/mmcblk0p3 13G # Set a lower size to avoid issues with `parted` (https://askubuntu.com/q/1293505)
+    # Avoid auto exit when using `-s` while shrinking (see: https://unix.stackexchange.com/a/780563)
+    echo -e "resizepart 3 15G\nyes\nquit" | parted /dev/mmcblk0 ---pretend-input-tty
+    resize2fs /dev/mmcblk0p3 # extend filesystem to the limits of resized partition (https://askubuntu.com/q/1293505)
 
-    # mapper IoTBox
-    LOOP_IOTBOX=$(kpartx -avs "${IOTBOX}")
-    LOOP_IOTBOX_ROOT=$(echo "${LOOP_IOTBOX}" | tail -n 1 | awk '{print $3}')
-    LOOP_IOTBOX_ROOT="/dev/mapper/${LOOP_IOTBOX_ROOT}"
-    LOOP_BOOT=$(echo "${LOOP_IOTBOX}" | tail -n 2 | awk 'NR==1 {print $3}')
-    LOOP_BOOT="/dev/mapper/${LOOP_BOOT}"
+    # Create another partition to store the IoT Box image
+    echo "Creating partition to store the IoT Box image"
+    parted -s /dev/mmcblk0 mkpart primary ext4 15G 100% # use remaining space
 
-    umount -v /boot
-    sleep 5
+    # As Tiny Core busybox doesn't contain `mkfs.ext4` or `mkfs` to create an ext4 filesystem,
+    # we force the creation of the filesystem by copying the recovery partition (very small)
+    # to the storage partition, then check-fix and resize the filesystem
+    # We also increase the block size (4M) to speed up the process.
+    dd if=/dev/mmcblk0p2 of=/dev/mmcblk0p4 bs=4M # status=progress unavailable in busybox
+    e2fsck -fy /dev/mmcblk0p4
+    resize2fs /dev/mmcblk0p4
 
-    echo "----------------------------------"
-    echo "Flash in progress - Please wait..."
-    echo "----------------------------------"
-    # copy new IoT Box
-    dd if="${LOOP_IOTBOX_ROOT}" of="${PART_IOTBOX_ROOT}" bs=4M status=progress
-    # copy boot of new IoT Box
-    dd if="${LOOP_BOOT}" of="${PART_BOOT}" bs=4M status=progress
+    # Current FS: | boot | recovery | system | image storage |
 
-    mount -v "${PART_BOOT}" /boot
+    # Mount system and storage partitions to copy the IoT Box image
+    mkdir -p /tmp/iotboxfs /tmp/storagefs
+    mount /dev/mmcblk0p3 /tmp/iotboxfs
+    mount -o noatime /dev/mmcblk0p4 /tmp/storagefs
 
-    # Modify boot file
-    PART_BOOT_ID=$(grep -oP '(?<=root=).*(?=rootfstype)' /boot/cmdline.txt)
-    sed -ie "s/$(echo ${PART_BOOT_ID} | sed -e 's/\//\\\//g')/$(echo ${PART_IOTBOX_ROOT} | sed -e 's/\//\\\//g')/g" /boot/cmdline.txt
-    sed -i 's| init=/usr/lib/raspi-config/init_resize.sh||' /boot/cmdline.txt
+    echo "Moving image to new storage partition"
+    IMAGE="/tmp/storagefs/iotbox.zip"
+#    mv "/tmp/iotboxfs/home/pi/odoo/addons/iot_box_image/configuration/iotbox-latest.zip" "$IMAGE"
+    dd if=/tmp/iotboxfs/home/pi/odoo/addons/iot_box_image/configuration/iotbox-latest.zip of=/tmp/storagefs/iotbox.zip bs=1G
+    echo "Unzipping image"
+    ionice -c 2 -n 0 unzip -q "$IMAGE" -d /tmp/storagefs
+    IMAGE="/tmp/storagefs/iotbox_beta.img"
 
-    # Modify startup
-    mkdir -v odoo
-    mount -v "${PART_IOTBOX_ROOT}" odoo
-    cp -v /home/pi/upgrade.sh odoo/home/pi/
-    NBR_LIGNE=$(sed -n -e '$=' odoo/etc/rc.local)
-    sed -ie "${NBR_LIGNE}"'i\. /home/pi/upgrade.sh; clean_local' odoo/etc/rc.local
-    find /home/pi/config -maxdepth 1 -type f ! -name ".*" -exec cp {} odoo/home/pi/ \;
+    # Map the IoT Box image to loop devices
+    losetup -Pf ${IMAGE}
+    LOOP_IMAGE_BOOT="/dev/loop0p1"
+    LOOP_IMAGE_ROOT="/dev/loop0p3"
+    echo "Loop devices: ${LOOP_IMAGE_BOOT} ${LOOP_IMAGE_ROOT}"
 
-    reboot
+    # Copy the boot partition (probably not necessary, but in case raspberry pi foundation updates the boot partition)
+    echo "Copying boot partition"
+    dd if="${LOOP_IMAGE_BOOT}" of=/dev/mmcblk0p1 bs=1M
+
+    # Copy the system partition
+    echo "Copying system partition"
+    dd if="${LOOP_IMAGE_ROOT}" of=/dev/mmcblk0p3 bs=2G
+    mv odoo.conf /mnt/iotboxfs/home/pi/ # Add the saved `odoo.conf` to the new system
+
+    # Cleanup
+    umount /tmp/iotboxfs /tmp/storagefs # Unmount the partitions
+    losetup -d /dev/loop0 # Unmap the loop device
+    parted -s /dev/mmcblk0 rm 4 # remove the storage partition
+
+    # Set the recovery partition as the partition to boot from
+    echo "Setting boot priority to system partition"
+    mount /dev/mmcblk0p1 /tmp
+    change_boot_priority "/dev/mmcblk0p2" "/dev/mmcblk0p3" "/tmp"
+    umount /tmp
+
+    # Reboot the device (`-f` is required to exit `initramfs` system)
+    reboot -f
 }
 
-cleanup () {
-    # clean partitions
-    PART_RASPIOS_ROOT=$(fdisk -l | tail -n 1 | awk '{print $1}')
-    mkfs.ext4 -Fv "${PART_RASPIOS_ROOT}" # format file sytstem
-    wipefs -a "${PART_RASPIOS_ROOT}"
-
-    PARTITION=$(echo "${PART_RASPIOS_ROOT}" | sed 's/..$//')
-
-    (echo 'p';                                  # print
-     echo 'd';                                  # delete partition
-     echo '3';                                  #   number 3
-     echo 'p';                                  # print
-     echo 'w') |fdisk "${PARTITION}"            # write and quit
-
-    echo "end cleanup"
-}
-
-clean_local () {
-    mount -o remount,rw /
-    mount -o remount,rw /root_bypass_ramdisks/
-    cleanup
-    NBR_LIGNE=$(sed -n -e '$=' /root_bypass_ramdisks/etc/rc.local)
-    DEL_LIGNE=$((NBR_LIGNE - 1))
-    sed -i "${DEL_LIGNE}"'d' /root_bypass_ramdisks/etc/rc.local
-
-    rm /home/pi/upgrade.sh
-
-    mount -o remount,ro /
-    mount -o remount,ro /root_bypass_ramdisks/
-}
+# Execute based on the argument
+if [ "$#" -eq 1 ] && [ "$1" = "--prepare-upgrade" ]; then
+    prepare_upgrade
+elif [ "$#" -eq 1 ] && [ "$1" = "--upgrade" ]; then
+    upgrade
+else
+    echo "Invalid arguments or no arguments provided"
+    exit 1
+fi

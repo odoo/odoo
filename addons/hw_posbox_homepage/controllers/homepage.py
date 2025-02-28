@@ -215,12 +215,15 @@ class IotBoxOwlHomePage(http.Controller):
             return
         last_available_commit = last_available_commit.stdout.split()[0].strip()
 
+        new_image_version = helpers.check_image()
+
         return json.dumps({
             'status': 'success',
             # Checkout requires db to align with its version (=branch)
             'odooIsUpToDate': current_commit == last_available_commit or not bool(helpers.get_odoo_server_url()),
-            'imageIsUpToDate': not bool(helpers.check_image()),
+            'imageIsUpToDate': not bool(new_image_version),
             'currentCommitHash': current_commit,
+            'newImageVersion': new_image_version,
         })
 
     @http.route('/hw_posbox_homepage/log_levels', auth="none", type="http", cors='*')
@@ -418,6 +421,22 @@ class IotBoxOwlHomePage(http.Controller):
             'status': 'success',
             'message': 'Successfully updated the IoT Box',
         }
+
+    @http.route('/hw_posbox_homepage/flash_image', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    def flash_image(self):
+        try:
+            with helpers.writable():
+                subprocess.run([
+                    'sudo',
+                    helpers.path_file('odoo', 'addons', 'iot_box_image', 'configuration', 'upgrade.sh'),
+                    '--prepare-upgrade'
+                ], check=False)
+        except subprocess.CalledProcessError:
+            _logger.exception('Failed to run the IoT Box flashing script')
+            return {
+                'status': 'error',
+                'message': 'Failed to update the IoT Box image',
+            }
 
     # ---------------------------------------------------------- #
     # Utils                                                      #
