@@ -57,7 +57,7 @@ class MailMail(models.Model):
         view links by email-specific links. Also add headers to allow
         unsubscribe from email managers. """
         email_list = super()._prepare_outgoing_list(recipients_follower_status)
-        if not self.res_id or not self.mailing_id:
+        if (not self.res_id and self.res_id != 0) or not self.mailing_id:
             return email_list
 
         base_url = self.mailing_id.get_base_url()
