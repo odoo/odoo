@@ -510,3 +510,59 @@ test("replace an image with a caption", async () => {
         ),
     });
 });
+
+test("previewing an image with a caption shows the caption as title", async () => {
+    await setupEditorWithEmbeddedCaption(`<img class="img-fluid test-image" src="${base64Img}">`);
+
+    // Preview without a caption shows the file name.
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar button[name='image_preview']");
+    await animationFrame();
+    let titleSpan = await queryOne(".o-FileViewer .o-FileViewer-header span.text-truncate");
+    expect(titleSpan.textContent).toBe(base64Img.replaceAll("\n", "%0A"));
+    await click(".o-FileViewer-headerButton[title='Close (Esc)']");
+    await animationFrame();
+
+    // Add a caption
+    await toggleCaption("Hello");
+
+    // Preview with a caption show the caption.
+    await click("img");
+    await waitFor(".o-we-toolbar button[name='image_preview']");
+    await click(".o-we-toolbar button[name='image_preview']");
+    await animationFrame();
+    titleSpan = await queryOne(".o-FileViewer .o-FileViewer-header span.text-truncate");
+    expect(titleSpan.textContent).toBe("Hello");
+});
+
+test("previewing an image without caption doesn't show the caption as title (even if data-caption exists)", async () => {
+    await setupEditorWithEmbeddedCaption(`<img class="img-fluid test-image" src="${base64Img}">`);
+
+    // Preview without a caption shows the file name.
+    await click("img");
+    await waitFor(".o-we-toolbar button[name='image_preview']");
+    await click(".o-we-toolbar button[name='image_preview']");
+    await animationFrame();
+    let titleSpan = await queryOne(".o-FileViewer .o-FileViewer-header span.text-truncate");
+    expect(titleSpan.textContent).toBe(base64Img.replaceAll("\n", "%0A"));
+    await click(".o-FileViewer-headerButton[title='Close (Esc)']");
+    await animationFrame();
+
+    // Add a caption
+    await toggleCaption("Hello");
+
+    // Remove the caption
+    await toggleCaption();
+    const image = await queryOne("img");
+    expect(image.getAttribute("data-caption")).toBe("Hello");
+    expect("figure").toHaveCount(0);
+
+    // Preview without a caption still shows the file name.
+    await click("img");
+    await waitFor(".o-we-toolbar button[name='image_preview']");
+    await click(".o-we-toolbar button[name='image_preview']");
+    await animationFrame();
+    titleSpan = await queryOne(".o-FileViewer .o-FileViewer-header span.text-truncate");
+    expect(titleSpan.textContent).toBe(base64Img.replaceAll("\n", "%0A"));
+});
