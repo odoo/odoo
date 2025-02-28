@@ -1,4 +1,5 @@
 import { Component, onMounted, useRef } from "@odoo/owl";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { clickableBuilderComponentProps, useSelectableItemComponent } from "./utils";
 import { BuilderComponent } from "./builder_component";
 
@@ -32,11 +33,32 @@ export class BuilderSelectItem extends Component {
             getLabel,
         });
         this.state = state;
-        this.onClick = () => {
-            this.env.onSelectItem();
-            operation.commit();
-        };
-        this.onMouseenter = operation.preview;
-        this.onMouseleave = operation.revert;
+        this.operation = operation;
+
+        this.onFocusin = this.operation.preview;
+        this.onFocusout = this.operation.revert;
+    }
+
+    onClick() {
+        this.env.onSelectItem();
+        this.operation.commit();
+        this.removeKeydown?.();
+    }
+    onKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "escape") {
+            this.operation.revert();
+            this.removeKeydown?.();
+        }
+    }
+    onMouseenter() {
+        this.operation.preview();
+        const _onKeydown = this.onKeydown.bind(this);
+        document.addEventListener("keydown", _onKeydown);
+        this.removeKeydown = () => document.removeEventListener("keydown", _onKeydown);
+    }
+    onMouseleave() {
+        this.operation.revert();
+        this.removeKeydown();
     }
 }
