@@ -114,9 +114,9 @@ class AccountMove(models.Model):
         xml_invoice = self.env['account.edi.xml.ubl_21.jo']._export_invoice(self)[0]
         params = {'invoice': base64.b64encode(xml_invoice).decode()}
 
-        # Unset old one because otherwise `_compute_linked_attachment_id()` will set the oldest
+        # detach old one because otherwise `_compute_linked_attachment_id()` will set the oldest
         # attachment, not this new one.
-        self.l10n_jo_edi_xml_attachment_id.res_field = False
+        self.l10n_jo_edi_xml_attachment_id._detach()
         self.env["ir.attachment"].create(
             {
                 "res_model": "account.move",
