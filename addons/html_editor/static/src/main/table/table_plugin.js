@@ -883,7 +883,7 @@ export class TablePlugin extends Plugin {
             .filter((node) => node.nodeName === "TABLE")
             .pop();
 
-        const traversedNodes = this.dependencies.selection.getTraversedNodes({ deep: true });
+        const traversedNodes = this.dependencies.selection.getTraversedNodes();
         if ((startTd !== endTd || selectSingleCell) && startTable === endTable) {
             if (!isProtected(startTable) && !isProtecting(startTable)) {
                 // The selection goes through at least two different cells ->
