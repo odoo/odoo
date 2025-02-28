@@ -13,7 +13,12 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
-import { getOnNotified, constructFullProductName, deduceUrl } from "@point_of_sale/utils";
+import {
+    getOnNotified,
+    constructFullProductName,
+    deduceUrl,
+    computeProductPricelistCache,
+} from "@point_of_sale/utils";
 import { computeComboLines } from "@point_of_sale/app/models/utils/compute_combo_lines";
 import {
     getTaxesAfterFiscalPosition,
@@ -223,6 +228,7 @@ export class SelfOrder extends Reactive {
             note: customer_note || "",
             price_unit: product.lst_price,
             price_extra: 0,
+            price_type: "original",
         };
 
         if (Object.entries(selectedValues).length > 0) {
@@ -329,7 +335,7 @@ export class SelfOrder extends Reactive {
         );
 
         if (lineToMerge) {
-            lineToMerge.qty += newLine.qty;
+            lineToMerge.set_quantity(qty + newLine.qty);
             newLine.delete();
         }
     }
@@ -434,6 +440,7 @@ export class SelfOrder extends Reactive {
             fiscal_position_id: fiscalPosition,
         });
         this.selectedOrderUuid = newOrder.uuid;
+        newOrder.set_pricelist(this.config.pricelist_id);
 
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
@@ -463,6 +470,9 @@ export class SelfOrder extends Reactive {
                 }
             );
         }
+
+        computeProductPricelistCache(this);
+
         const productWoCat = this.models["product.product"].filter(
             (p) => p.pos_categ_ids.length === 0 && !isSpecialProduct(p)
         );
