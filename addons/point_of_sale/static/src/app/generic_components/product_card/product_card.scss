@@ -20,6 +20,18 @@
     }
 }
 
+.pos-product-card {
+    aspect-ratio: 3 / 4;
+}
+
+.product-name-without-img {
+    aspect-ratio: 4 / 3;
+    
+    .product-name.no-image {
+        -webkit-line-clamp: 3;
+    }
+}
+
 .product-name {
 
     box-sizing: border-box;
@@ -29,7 +41,6 @@
 
     &.no-image {
         -webkit-line-clamp: 7;
-        aspect-ratio: 4 / 3;
     }
 }
 
