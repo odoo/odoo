@@ -61,6 +61,8 @@ export class AddSnippetDialog extends Component {
         this.state = useState({
             groupSelected: [],
             search: "",
+            hasNoSearchResults: false,
+            isIframeContentLoaded: false,
         });
 
         onMounted(async () => {
@@ -138,6 +140,7 @@ export class AddSnippetDialog extends Component {
                     || strMatches(snippet.displayName)
                     || strMatches(snippet.data.oeKeywords || '');
             });
+            this.state.hasNoSearchResults = !Boolean(snippetsToDisplay.length);
             // Make sure to show the snippets that "better" match first
             if (selectorSearch) {
                 snippetsToDisplay.sort((snippetA, snippetB) => {
@@ -363,6 +366,7 @@ export class AddSnippetDialog extends Component {
                 for (const el of colItemEls) {
                     colEl.appendChild(el);
                     el.classList.remove("invisible");
+                    this.state.isIframeContentLoaded = true;
                 }
             }
 

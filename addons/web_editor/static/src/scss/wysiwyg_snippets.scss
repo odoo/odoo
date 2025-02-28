@@ -2887,6 +2887,17 @@ we-select.o_grid we-toggler {
 }
 
 // Add snippets dialog iframe.
+.o_add_snippet_dialog_iframe_loader {
+    // This loader will appear after a 1s delay, ensuring it doesn't disrupt the
+    // experience for users with a good connection.
+    visibility: hidden;
+    animation: showLoader 0s 1s forwards;
+}
+@keyframes showLoader {
+    to {
+        visibility: visible;
+    }
+}
 .o_add_snippets_preview {
     overflow: hidden;
 
