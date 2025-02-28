@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { click, hover, press } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -105,5 +105,29 @@ test("apply custom action", async () => {
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container .o_we_color_preview").click();
     await contains(".o-overlay-item [data-color='#FF0000']").click();
-    expect.verifySteps(["load", "apply rgb(255, 0, 0)", "load", "apply rgb(255, 0, 0)"]);
+    // 3 times for hover (preview), focus (preview), click
+    expect.verifySteps([
+        "load",
+        "apply rgb(255, 0, 0)",
+        "load",
+        "apply rgb(255, 0, 0)",
+        "load",
+        "apply rgb(255, 0, 0)",
+    ]);
+});
+
+test("should revert preview on escape", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'background-color'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(":iframe .test-options-target").toHaveStyle({ "background-color": "rgba(0, 0, 0, 0)" });
+    expect(".options-container").toBeDisplayed();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await hover(".o-overlay-item [data-color='#FF0000']");
+    expect(":iframe .test-options-target").toHaveStyle({ "background-color": "rgb(255, 0, 0)" });
+    await press("escape");
+    expect(":iframe .test-options-target").toHaveStyle({ "background-color": "rgba(0, 0, 0, 0)" });
 });
