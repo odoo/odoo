@@ -215,6 +215,7 @@ export class SelfOrder extends Reactive {
             note: customer_note || "",
             price_unit: productPrice.pricelist_price,
             price_extra: 0,
+            price_type: "original",
         };
 
         if (Object.entries(selectedValues).length > 0) {
@@ -317,7 +318,7 @@ export class SelfOrder extends Reactive {
 
         if (lineToMerge) {
             lineToMerge.setDirty();
-            lineToMerge.qty += newLine.qty;
+            lineToMerge.setQuantity(lineToMerge.qty + newLine.qty);
             newLine.delete();
         } else {
             newLine.setDirty();
@@ -420,7 +421,7 @@ export class SelfOrder extends Reactive {
 
         const pricelist = autoSelectedPresets
             ? this.config.default_preset_id?.pricelist_id
-            : this.config.default_pricelist_id;
+            : this.config.pricelist_id;
 
         const newOrder = this.models["pos.order"].create({
             company_id: this.company,
@@ -841,7 +842,7 @@ export class SelfOrder extends Reactive {
     getProductPriceInfo(productTemplate, product) {
         const pricelist = this.config.use_presets
             ? this.currentOrder.preset_id?.pricelist_id
-            : this.config.default_pricelist_id;
+            : this.config.pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
 
         let taxes = productTemplate.taxes_id;
