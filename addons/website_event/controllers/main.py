@@ -163,11 +163,16 @@ class WebsiteEventController(http.Controller):
             'event': event,
         }
 
+        base_page_name = page
         if '.' not in page:
             page = 'website_event.%s' % page
 
         view = request.env["website.event.menu"].sudo().search([
-            ("event_id", "=", event.id), ("view_id.key", "ilike", page)], limit=1).view_id
+            ("event_id", "=", event.id),
+            '|',
+              ("view_id.key", "ilike", page),
+              ("view_id.key", "ilike", f'website_event.{event.name}-{base_page_name.split("/")[-1]}'),
+        ], limit=1).view_id
 
         try:
             # Every event page view should have its own SEO.

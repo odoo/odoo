@@ -42,9 +42,18 @@ class WebsiteEventMenu(models.Model):
                 'website_id': view.website_id.id,
             })
             self._copy_children_views(new_menu.view_id, view.inherit_children_ids, old_menu.event_id.website_id.id)
-            new_menu.menu_id = old_menu.menu_id.copy({
-                'url': f"/event/{self.env['ir.http']._slug(new_menu.event_id)}/page/{new_menu.view_id.key.split('.')[-1]}"
-            })
+            new_url = f"/event/{self.env['ir.http']._slug(new_menu.event_id)}/page/{new_menu.view_id.key.split('.')[-1]}"
+            new_menu_defaults = {
+                'url': new_url
+            }
+
+            if old_menu.menu_id.page_id:
+                new_page = old_menu.menu_id.page_id.copy({
+                    'url': new_url
+                })
+                new_menu_defaults['page_id'] = new_page.id
+
+            new_menu.menu_id = old_menu.menu_id.copy(new_menu_defaults)
         return new_menus
 
     @api.model
