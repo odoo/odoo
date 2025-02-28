@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { PublicRoot } from "@web/legacy/js/public/public_root";
 import { Colibri } from "@web/public/colibri";
+import { Interaction } from "@web/public/interaction";
 import { patch } from "@web/core/utils/patch";
 
 export function buildEditableInteractions(builders) {
@@ -133,6 +134,43 @@ patch(Colibri.prototype, {
         wysiwyg?.odooEditor.observerUnactive(name);
         super.applyTOut(...arguments);
         wysiwyg?.odooEditor.observerActive(name);
+    },
+});
+
+// Patch Interaction.
+
+function wrapPostAsync(name, fn) {
+    return () => {
+        // TODO No jQuery ?
+        const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
+        wysiwyg?.odooEditor.observerUnactive(name);
+        const result = fn(...arguments);
+        wysiwyg?.odooEditor.observerActive(name);
+        return result;
+    };
+}
+
+patch(Interaction.prototype, {
+    waitFor(promise, thenFn) {
+        if (thenFn) {
+            thenFn = wrapPostAsync(`${this.constructor.name}/waitFor`, thenFn.bind(this));
+        }
+        return super.waitFor(promise, thenFn);
+    },
+    waitForTimeout(fn, delay) {
+        return super.waitForTimeout(wrapPostAsync(`${this.constructor.name}/waitForTimeout`, fn.bind(this)), delay);
+    },
+    waitForAnimationFrame(fn) {
+        return super.waitForAnimationFrame(wrapPostAsync(`${this.constructor.name}/waitForAnimationFrame`, fn.bind(this)));
+    },
+    debounced(fn, delay) {
+        return super.debounced(wrapPostAsync(`${this.constructor.name}/debounced`, fn.bind(this)), delay);
+    },
+    throttled(fn) {
+        return super.throttled(wrapPostAsync(`${this.constructor.name}/throttled`, fn.bind(this)));
+    },
+    locked(fn, useLoadingAnimation) {
+        return super.locked(wrapPostAsync(`${this.constructor.name}/locked`, fn.bind(this)), useLoadingAnimation);
     },
 });
 
