@@ -93,6 +93,13 @@
         <field name="tax_dest_id" ref="l10n_ee_vat_out_0_eu_g"/>
     </record>
 
+    <!-- Sales of Goods 24% -> Sales of Goods in EU 0% IC -->
+    <record id="afptt_eu_ic_1_24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_eu_ic"/>
+        <field name="tax_src_id" ref="l10n_ee_vat_out_24_g"/>
+        <field name="tax_dest_id" ref="l10n_ee_vat_out_0_eu_g"/>
+    </record>
+
     <!-- Sales of Services 20% -> Sales of Services in EU 0% IC -->
     <record id="afptt_eu_ic_2" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="afpt_eu_ic"/>
@@ -104,6 +111,13 @@
     <record id="afptt_eu_ic_2_22" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="afpt_eu_ic"/>
         <field name="tax_src_id" ref="l10n_ee_vat_out_22_s"/>
+        <field name="tax_dest_id" ref="l10n_ee_vat_out_0_eu_s"/>
+    </record>
+
+    <!-- Sales of Services 24% -> Sales of Services in EU 0% IC -->
+    <record id="afptt_eu_ic_2_24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_eu_ic"/>
+        <field name="tax_src_id" ref="l10n_ee_vat_out_24_s"/>
         <field name="tax_dest_id" ref="l10n_ee_vat_out_0_eu_s"/>
     </record>
 
@@ -163,6 +177,21 @@
         <field name="tax_dest_id" ref="l10n_ee_vat_in_0_eu_g_22"/>
     </record>
 
+    <!-- Purchase of Goods 22% -> Purchase of Goods in EU 0% IC -->
+    <record id="afptt_eu_ic_19" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_eu_ic"/>
+        <field name="tax_src_id" ref="l10n_ee_vat_in_22_g"/>
+        <field name="tax_dest_id" ref="l10n_ee_vat_in_0_eu_g_22"/>
+    </record>
+
+    <!-- Purchase of Goods 24% -> Purchase of Goods in EU 0% IC -->
+    <record id="afptt_eu_ic_20" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_eu_ic"/>
+        <field name="tax_src_id" ref="l10n_ee_vat_in_24_g"/>
+        <field name="tax_dest_id" ref="l10n_ee_vat_in_0_eu_g_24"/>
+    </record>
+
+
     <!-- Purchase of Services 20% -> Purchase of Services in EU 0% IC -->
     <record id="afptt_eu_ic_10" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="afpt_eu_ic"/>
@@ -175,6 +204,13 @@
         <field name="position_id" ref="afpt_eu_ic"/>
         <field name="tax_src_id" ref="l10n_ee_vat_in_22_s"/>
         <field name="tax_dest_id" ref="l10n_ee_vat_in_0_eu_s_22"/>
+    </record>
+
+    <!-- Purchase of Services 24% -> Purchase of Services in EU 0% IC -->
+    <record id="afptt_eu_ic_10_24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_eu_ic"/>
+        <field name="tax_src_id" ref="l10n_ee_vat_in_24_s"/>
+        <field name="tax_dest_id" ref="l10n_ee_vat_in_0_eu_s_24"/>
     </record>
 
     <!-- Purchase of Services 13% -> Purchase of Services in EU 0% IC -->
@@ -242,6 +278,13 @@
         <field name="tax_dest_id" ref="l10n_ee_vat_out_0_exp_g"/>
     </record>
 
+    <!-- Sales of Goods 24% -> Export of Goods 0% -->
+    <record id="afptt_imp_exp_1_24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ee_vat_out_24_g"/>
+        <field name="tax_dest_id" ref="l10n_ee_vat_out_0_exp_g"/>
+    </record>
+
     <!-- Sales of Services 20% -> Export of Services 0% -->
     <record id="afptt_imp_exp_2" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="afpt_imp_exp"/>
@@ -253,6 +296,13 @@
     <record id="afptt_imp_exp_2_22" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="afpt_imp_exp"/>
         <field name="tax_src_id" ref="l10n_ee_vat_out_22_s"/>
+        <field name="tax_dest_id" ref="l10n_ee_vat_out_0_exp_s"/>
+    </record>
+
+    <!-- Sales of Services 24% -> Export of Services 0% -->
+    <record id="afptt_imp_exp_2_24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ee_vat_out_24_s"/>
         <field name="tax_dest_id" ref="l10n_ee_vat_out_0_exp_s"/>
     </record>
 
@@ -319,6 +369,13 @@
         <field name="tax_dest_id" ref="l10n_ee_vat_in_22_imp_kms_38"/>
     </record>
 
+    <!-- Purchase of Goods 24% -> Import 24% -->
+    <record id="afptt_imp_exp_9_24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ee_vat_in_24_g"/>
+        <field name="tax_dest_id" ref="l10n_ee_vat_in_24_imp_kms_38"/>
+    </record>
+
     <!-- Purchase of Services 20% -> Import 20% -->
     <record id="afptt_imp_exp_10" model="account.fiscal.position.tax.template">
         <field name="position_id" ref="afpt_imp_exp"/>
@@ -331,6 +388,13 @@
         <field name="position_id" ref="afpt_imp_exp"/>
         <field name="tax_src_id" ref="l10n_ee_vat_in_22_s"/>
         <field name="tax_dest_id" ref="l10n_ee_vat_in_22_imp_kms_38"/>
+    </record>
+
+    <!-- Purchase of Services 24% -> Import 24% -->
+    <record id="afptt_imp_exp_10_24" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="afpt_imp_exp"/>
+        <field name="tax_src_id" ref="l10n_ee_vat_in_24_s"/>
+        <field name="tax_dest_id" ref="l10n_ee_vat_in_24_imp_kms_38"/>
     </record>
 
     <!-- Purchase of Services 13% -> Import 13% -->
