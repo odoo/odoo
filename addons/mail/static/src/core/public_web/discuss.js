@@ -43,6 +43,7 @@ export class Discuss extends Component {
     };
     static props = {
         hasSidebar: { type: Boolean, optional: true },
+        thread: { optional: true },
     };
     static defaultProps = { hasSidebar: true };
     static template = "mail.Discuss";
@@ -121,7 +122,7 @@ export class Discuss extends Component {
     }
 
     get thread() {
-        return this.store.discuss.thread;
+        return this.props.thread || this.store.discuss.thread;
     }
 
     async onFileUploaded(file) {
