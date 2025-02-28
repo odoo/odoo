@@ -3,9 +3,9 @@
 <templates xml:space="preserve">
 
     <t t-name="purchase.PurchaseProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
-        <xpath expr="//button[@t-if='hasExternalButton']" position="before">
+        <xpath expr="//Many2One" position="after">
             <button
-                t-if="isConfigurableTemplate"
+                t-if="!props.readonly and isConfigurableTemplate"
                 type="button"
                 class="btn btn-link fa fa-pencil px-2"
                 tabindex="-1"

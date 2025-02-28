@@ -1,9 +1,14 @@
 import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
 import { x2ManyCommands } from "@web/core/orm_service";
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 
 patch(SaleOrderLineProductField.prototype, {
+    setup() {
+        super.setup();
+        this.action = useService("action");
+    },
 
     async _onProductUpdate() {
         super._onProductUpdate(...arguments);

@@ -1,9 +1,9 @@
+import { Component, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import { many2OneField, Many2OneField } from "../many2one/many2one_field";
-
-import { Component, useState } from "@odoo/owl";
+import { computeM2OProps, Many2One } from "../many2one/many2one";
+import { extractM2OFieldProps, Many2OneField } from "../many2one/many2one_field";
 
 /**
  * @typedef ReferenceValue
@@ -35,16 +35,11 @@ import { Component, useState } from "@odoo/owl";
  */
 export class ReferenceField extends Component {
     static template = "web.ReferenceField";
-    static components = {
-        Many2OneField,
-    };
+    static components = { Many2One };
     static props = {
         ...Many2OneField.props,
         hideModel: { type: Boolean, optional: true },
         modelField: { type: String, optional: true },
-    };
-    static defaultProps = {
-        ...Many2OneField.defaultProps,
     };
 
     setup() {
@@ -79,25 +74,18 @@ export class ReferenceField extends Component {
 
     get m2oProps() {
         const value = this.getValue();
-        const p = {
-            ...this.props,
+        return {
+            ...computeM2OProps(this.props),
             relation: this.getRelation(),
             value: value && [value.resId, value.displayName],
             update: this.updateM2O.bind(this),
         };
-        delete p.hideModel;
-        delete p.modelField;
-        return p;
     }
     get selection() {
         if (!this._isCharField(this.props) && !this.hideModelSelector) {
             return this.props.record.fields[this.props.name].selection;
         }
         return [];
-    }
-
-    get relation() {
-        return this.getRelation();
     }
 
     get hideModelSelector() {
@@ -141,8 +129,7 @@ export class ReferenceField extends Component {
         this.props.record.update({ [this.props.name]: false });
     }
 
-    updateM2O(data) {
-        const value = data[this.props.name];
+    updateM2O(value) {
         const resModel = this.state.currentRelation || this.getRelation();
         this.props.record.update({
             [this.props.name]: value && {
@@ -250,7 +237,7 @@ export const referenceField = {
 
         We want to display the model selector only in the 4th case.
         */
-        const props = many2OneField.extractProps(...arguments);
+        const props = extractM2OFieldProps(...arguments);
         props.hideModel = !!options.hide_model;
         props.modelField = options.model_field;
         return props;

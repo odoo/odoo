@@ -32,21 +32,16 @@
             t-on-click="onSearchMore"
             t-on-barcode-search="onBarcodeSearch"
         />
-        <AutoComplete t-else=""
-            value="props.value"
-            id="props.id"
-            placeholder="props.placeholder"
-            autocomplete="'off'"
-            sources="sources"
-            autoSelect="props.autoSelect"
-            onSelect.bind="onSelect"
-            onInput.bind="onInput"
-            onChange.bind="onChange"
-            dropdown="props.dropdown"
-            autofocus="props.autofocus"
-            resetOnSelect="props.value === ''"
-            onCancel.bind="onCancel"
-        />
+        <AutoComplete t-else="" t-props="autoCompleteProps">
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <t t-if="optionScope.option.record">
+                    <t t-slot="autoCompleteItem" t-props="optionScope.option"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="optionScope.option.label"/>
+                </t>
+            </t>
+        </AutoComplete>
         <span class="o_dropdown_button" />
     </div>
 </t>

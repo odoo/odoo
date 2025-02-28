@@ -1,73 +1,52 @@
+import { AvatarEmployee } from "@hr/components/avatar_employee/avatar_employee";
+import { Component, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import {
-    Many2OneAvatarUserField,
-    KanbanMany2OneAvatarUserField,
-    many2OneAvatarUserField,
-    kanbanMany2OneAvatarUserField,
-} from "@mail/views/web/fields/many2one_avatar_user_field/many2one_avatar_user_field";
-import { EmployeeFieldRelationMixin } from "@hr/views/fields/employee_field_relation_mixin";
+    buildM2OFieldDescription,
+    extractM2OFieldProps,
+    Many2OneField,
+} from "@web/views/fields/many2one/many2one_field";
 
-export class Many2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
-    Many2OneAvatarUserField
-) {
-    get displayAvatarCard() {
-        return (
-            (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
-            super.displayAvatarCard
-        );
+export class Many2OneAvatarEmployeeField extends Component {
+    static template = "hr.Many2OneAvatarEmployeeField";
+    static components = { AvatarEmployee, Many2One };
+    static props = {
+        ...Many2OneField.props,
+        relation: { type: String, optional: true },
+    };
+
+    setup() {
+        onWillStart(async () => {
+            this.isHrUser = await user.hasGroup("hr.group_hr_user");
+        });
     }
 
-    get many2OneProps() {
+    get m2oProps() {
         return {
-            ...super.many2OneProps,
+            ...computeM2OProps(this.props),
+            canQuickCreate: false,
             relation: this.relation,
         };
     }
+
+    get relation() {
+        return this.props.relation ?? (this.isHrUser ? "hr.employee" : "hr.employee.public");
+    }
 }
 
-export const many2OneAvatarEmployeeField = {
-    ...many2OneAvatarUserField,
-    component: Many2OneAvatarEmployeeField,
+registry.category("fields").add("many2one_avatar_employee", {
+    ...buildM2OFieldDescription(Many2OneAvatarEmployeeField),
     additionalClasses: [
-        ...many2OneAvatarUserField.additionalClasses,
+        "o_field_many2one_avatar",
+        "o_field_many2one_avatar_kanban",
         "o_field_many2one_avatar_user",
     ],
-    extractProps: (fieldInfo, dynamicInfo) => ({
-        ...many2OneAvatarUserField.extractProps(fieldInfo, dynamicInfo),
-        canQuickCreate: false,
-        relation: fieldInfo.options?.relation,
-    }),
-};
-
-registry.category("fields").add("many2one_avatar_employee", many2OneAvatarEmployeeField);
-
-export class KanbanMany2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
-    KanbanMany2OneAvatarUserField
-) {
-    get displayAvatarCard() {
-        return (
-            (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
-            super.displayAvatarCard
-        );
-    }
-    get many2OneProps() {
+    extractProps(staticInfo, dynamicInfo) {
         return {
-            ...super.many2OneProps,
-            relation: this.relation,
+            ...extractM2OFieldProps(staticInfo, dynamicInfo),
+            relation: staticInfo.options.relation,
         };
-    }
-}
-
-export const kanbanMany2OneAvatarEmployeeField = {
-    ...kanbanMany2OneAvatarUserField,
-    component: KanbanMany2OneAvatarEmployeeField,
-    extractProps: (fieldInfo, dynamicInfo) => ({
-        ...kanbanMany2OneAvatarUserField.extractProps(fieldInfo, dynamicInfo),
-        relation: fieldInfo.options?.relation,
-    }),
-};
-
-registry
-    .category("fields")
-    .add("kanban.many2one_avatar_employee", kanbanMany2OneAvatarEmployeeField)
-    .add("activity.many2one_avatar_employee", kanbanMany2OneAvatarEmployeeField);
+    },
+});

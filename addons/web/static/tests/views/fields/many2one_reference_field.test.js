@@ -177,7 +177,7 @@ test("Many2OneReferenceField set value with search more", async () => {
     expect.verifySteps([
         "get_views", // form view
         "web_read", // partner id 1
-        "name_search", // many2one
+        "web_name_search", // many2one
         "get_views", // Search More...
         "web_search_read", // SelectCreateDialog
         "has_group",
@@ -210,7 +210,7 @@ test("Many2OneReferenceField: quick create a value", async () => {
     ).toHaveCount(1);
     await clickFieldDropdownItem("res_id", `Create "new value"`);
     expect(".o_field_widget input").toHaveValue("new value");
-    expect.verifySteps(["get_views", "web_read", "name_search", "name_create"]);
+    expect.verifySteps(["get_views", "web_read", "web_name_search", "name_create"]);
 });
 
 test("Many2OneReferenceField with no_create option", async () => {

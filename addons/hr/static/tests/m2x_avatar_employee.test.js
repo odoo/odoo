@@ -206,10 +206,12 @@ test("many2one without hr.group_hr_user", async () => {
     env["m2x.avatar.employee"].create({});
     env["hr.employee"].create({ name: "babar" });
     env["hr.employee.public"].create({ name: "babar" });
-    onRpc("name_search", (args) => {
+    onRpc("web_name_search", (args) => {
+        expect.step("web_name_search");
         expect(args.model).toBe("hr.employee.public");
     });
     onRpc("web_search_read", (args) => {
+        expect.step("web_search_read");
         expect(args.model).toBe("hr.employee.public");
     });
     onRpc("has_group", () => false);
@@ -221,8 +223,11 @@ test("many2one without hr.group_hr_user", async () => {
 
     await waitFor(".o-autocomplete--input.o_input");
     await contains(".o-autocomplete--input.o_input").click();
+    expect.verifySteps(["web_name_search"]);
+
     await waitFor(".o_m2o_dropdown_option_search_more");
     await contains(".o_m2o_dropdown_option_search_more").click();
+    expect.verifySteps(["web_search_read"]);
 });
 
 test("many2one in form view", async () => {
