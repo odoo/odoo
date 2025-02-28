@@ -1,11 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
-import { many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import {
-    ProductLabelSectionAndNoteField
+    ProductLabelSectionAndNoteField,
+    productLabelSectionAndNoteField,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 
 export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteField {
@@ -105,7 +105,7 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
 }
 
 export const purchaseOrderLineProductField = {
-    ...many2OneField,
+    ...productLabelSectionAndNoteField,
     component: PurchaseOrderLineProductField,
 };
 

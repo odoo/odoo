@@ -158,6 +158,7 @@ class PurchaseOrder(models.Model):
         store=True,
         precompute=True,
     )
+    duplicated_order_ids = fields.Many2many(comodel_name='purchase.order', compute='_compute_duplicated_order_ids')
 
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
@@ -271,6 +272,46 @@ class PurchaseOrder(models.Model):
         order_by_product = {p: set(o_ids) for p, o_ids in line_groupby_product}
         for record in self:
             record.show_comparison = any(set(record.ids) != order_by_product[p] for p in record.order_line.product_id if p in order_by_product)
+
+    @api.depends('partner_ref', 'date_order', 'origin', 'partner_id')
+    def _compute_duplicated_order_ids(self):
+        """Compute duplicated purchase orders based on key fields."""
+        order_to_duplicate_orders = self._fetch_duplicate_orders()
+        for order in self:
+            duplicate_ids = order_to_duplicate_orders.get(order.id, [])
+            order.duplicated_order_ids = [(6, 0, duplicate_ids)]
+
+    def _fetch_duplicate_orders(self):
+        orders = self.filtered(lambda order: order.id and order.partner_ref)
+        if not orders:
+            return {}
+
+        self.env['purchase.order'].flush_model([
+            'company_id', 'partner_id', 'partner_ref', 'origin',
+            'date_order', 'state'
+        ])
+
+        result = self.env.execute_query(SQL("""
+            SELECT
+                po.id AS order_id,
+                array_agg(duplicate_po.id) AS duplicate_ids
+            FROM purchase_order po
+            JOIN purchase_order AS duplicate_po
+                ON po.company_id = duplicate_po.company_id
+                AND po.id != duplicate_po.id
+                AND duplicate_po.state != 'cancel'
+                AND po.partner_id = duplicate_po.partner_id
+                AND po.date_order = duplicate_po.date_order
+                AND po.partner_ref = duplicate_po.partner_ref
+                AND (
+                    po.origin = duplicate_po.origin
+                    OR (po.origin IS NULL AND duplicate_po.origin IS NULL)
+                )
+            WHERE po.id IN %(orders)s
+            GROUP BY po.id
+        """, orders=tuple(orders.ids)))
+
+        return {order_id: set(duplicate_ids) for order_id, duplicate_ids in result}
 
     @api.onchange('date_planned')
     def onchange_date_planned(self):
@@ -1246,5 +1287,10 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         return self.state == 'cancel'
 
+    # EDI #
+
     def _get_edi_builders(self):
         return []
+
+    def _get_record_ubl_builder_from_xml_tree(self, file_data):
+        return None
