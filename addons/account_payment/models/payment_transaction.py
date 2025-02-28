@@ -163,8 +163,8 @@ class PaymentTransaction(models.Model):
             **extra_create_values,
         }
 
-        if self.invoice_ids:
-            next_payment_values = self.invoice_ids._get_invoice_next_payment_values()
+        for invoice in self.invoice_ids:
+            next_payment_values = invoice._get_invoice_next_payment_values()
             if next_payment_values['installment_state'] == 'epd' and self.amount == next_payment_values['amount_due']:
                 aml = next_payment_values['epd_line']
                 epd_aml_values_list = [({

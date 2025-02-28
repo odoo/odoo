@@ -7,9 +7,18 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { renderToString } from "@web/core/utils/render";
+import { debounce } from "@web/core/utils/timing";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-import { Component, useState, onWillStart, useRef, useEffect } from "@odoo/owl";
+import {
+    Component,
+    useState,
+    onWillStart,
+    useRef,
+    useEffect,
+    useExternalListener,
+    status,
+} from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
@@ -70,6 +79,8 @@ export class NameAndSignature extends Component {
             },
             () => [this.signatureRef.el]
         );
+
+        useExternalListener(window, "resize", debounce(this.onResize, 250));
     }
 
     /**
@@ -207,6 +218,13 @@ export class NameAndSignature extends Component {
         this.drawCurrentName();
     }
 
+    onResize() {
+        // May happen since this is debounced
+        if (status(this) !== "destroyed") {
+            this.resizeSignature();
+        }
+    }
+
     /**
      * Displays the given image in the signature field.
      * If needed, resizes the image to fit the existing area.
@@ -289,6 +307,9 @@ export class NameAndSignature extends Component {
     }
 
     resizeSignature() {
+        if (!this.signatureRef.el) {
+            return;
+        }
         // recompute size based on the current width
         this.signatureRef.el.style.width = "unset";
         const width = this.signatureRef.el.clientWidth;
