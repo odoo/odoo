@@ -24,15 +24,6 @@ if typing.TYPE_CHECKING:
     from .res_country import ResCountry, ResCountryState
     from .res_company import ResCompany
 
-# Global variables used for the warning fields declared on the res.partner
-# in the following modules : sale, purchase, account, stock
-WARNING_MESSAGE = [
-                   ('no-message','No Message'),
-                   ('warning','Warning'),
-                   ('block','Blocking Message')
-                   ]
-WARNING_HELP = 'Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.'
-
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 @api.model
