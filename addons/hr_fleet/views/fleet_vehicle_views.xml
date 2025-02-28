@@ -113,6 +113,8 @@
        <field name="arch" type="xml">
            <xpath expr="//kanban" position="attributes">
                 <attribute name="js_class">hr_fleet_kanban_view</attribute>
+                <attribute name="type">object</attribute>
+                <attribute name="action">action_preview_attachment</attribute>
             </xpath>
             <t t-name="menu">
                 <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
