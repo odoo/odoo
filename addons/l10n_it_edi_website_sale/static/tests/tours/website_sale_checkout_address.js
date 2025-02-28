@@ -43,3 +43,62 @@ registry.category("web_tour.tours").add('shop_checkout_address', {
         },
     ]
 });
+
+registry.category("web_tour.tours").add('shop_checkout_address_create_partner', {
+    test: true,
+    url: '/shop',
+    steps: () => [
+        ...tourUtils.addToCart({ productName: "Storage Box" }),
+        tourUtils.goToCart(),
+        {
+            content: "go to address form",
+            trigger: 'a[href="/shop/checkout?express=1"]',
+        },
+        {
+            content: "Fill address form with VAT",
+            trigger: 'select[name="country_id"]',
+            run: function () {
+                $('input[name="name"]').val('abc');
+                $('input[name="phone"]').val('99999999');
+                $('input[name="email"]').val('abc@odoo.com');
+                $('input[name="vat"]').val('IT12345670017');
+                $('input[name="street"]').val('SO1 Billing Street, 33');
+                $('input[name="city"]').val('SO1BillingCity');
+                $('input[name="zip"]').val('10000');
+            },
+        },
+        {
+            content: "Select country with code 'IT' to trigger compute of Codice Fiscale",
+            trigger: "select[name='country_id']",
+            run: function () {
+                const countrySelect = $("select[name='country_id']");
+                countrySelect.find('option[code="IT"]').attr('selected', true);
+                countrySelect.trigger('change');
+            }
+        },
+        {
+            content: "Check if the Codice Fiscale value matches",
+            trigger: "input[name='l10n_it_codice_fiscale']",
+            run: function () {
+                if ($("input[name='l10n_it_codice_fiscale']").val() !== "12345670017") {
+                    console.error('Expected "12345670017" for Codice Fiscale.');
+                }
+            }
+        },
+        {
+            content: "Add state",
+            trigger: 'select[name="state_id"]',
+            run: function () {
+                $('#state_id option:contains(Cremona)').attr('selected', true);
+            },
+        },
+        {
+            content: "Click on next button",
+            trigger: '.oe_cart .btn:contains("Continue checkout")',
+        },
+        {
+            content: "Check selected billing address is same as typed in previous step",
+            trigger: '#shipping_and_billing:contains(SO1 Billing Street, 33):contains(SO1BillingCity)',
+            run: function () {}, // it's a check
+        },
+]});
