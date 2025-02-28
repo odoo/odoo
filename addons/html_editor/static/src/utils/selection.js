@@ -77,33 +77,6 @@ const rightLeafOnlyInScopeNotBlockEditablePath = createDOMPathGenerator(DIRECTIO
     stopFunction: (node) => isNotEditableNode(node) || isBlock(node),
 });
 
-export function normalizeSelfClosingElement(node, offset) {
-    if (isSelfClosingElement(node)) {
-        // Cannot put cursor inside those elements, put it after instead.
-        [node, offset] = rightPos(node);
-    }
-    return [node, offset];
-}
-
-export function normalizeNotEditableNode(node, offset, position = "right") {
-    const editable = closestElement(node, ".odoo-editor-editable");
-    let closest = closestElement(node);
-    while (closest && closest !== editable && !closest.isContentEditable) {
-        [node, offset] = position === "right" ? rightPos(node) : leftPos(node);
-        closest = node;
-    }
-    return [node, offset];
-}
-
-export function normalizeCursorPosition(node, offset, position = "right") {
-    [node, offset] = normalizeSelfClosingElement(node, offset);
-    [node, offset] = normalizeNotEditableNode(node, offset, position);
-    // todo @phoenix: we should maybe remove it
-    // // Be permissive about the received offset.
-    // offset = Math.min(Math.max(offset, 0), nodeSize(node));
-    return [node, offset];
-}
-
 export function normalizeFakeBR(node, offset) {
     const prevNode = node.nodeType === Node.ELEMENT_NODE && node.childNodes[offset - 1];
     if (prevNode && prevNode.nodeName === "BR" && isFakeLineBreak(prevNode)) {
