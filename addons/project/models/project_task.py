@@ -147,8 +147,10 @@ class ProjectTask(models.Model):
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
     description = fields.Html(string='Description', sanitize_attributes=False)
     priority = fields.Selection([
-        ('0', 'Low'),
-        ('1', 'High'),
+        ('0', 'Low priority'),
+        ('1', 'Medium priority'),
+        ('2', 'High priority'),
+        ('3', 'Urgent'),
     ], default='0', index=True, string="Priority", tracking=True)
     sequence = fields.Integer(string='Sequence', default=10, export_string_translation=False)
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
