@@ -1283,6 +1283,14 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
 
+        if self.product_id.type == 'combo':
+            # If the quantity to invoice is a whole number, format it as an integer (with no decimal point)
+            qty_to_invoice = int(self.qty_to_invoice) if self.qty_to_invoice == int(self.qty_to_invoice) else self.qty_to_invoice
+            return {
+                'display_type': 'line_section',
+                'sequence': self.sequence,
+                'name': f'{self.product_id.name} x {qty_to_invoice}',
+            }
         res = {
             'display_type': self.display_type or 'product',
             'sequence': self.sequence,
