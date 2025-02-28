@@ -10,6 +10,13 @@ class ResGroups(models.Model):
     visible = fields.Boolean(related='category_id.visible', readonly=True)
     color = fields.Integer(string='Color Index')
 
+    # Field used for the widget to define the default group.
+
+    view_group_hierarchy = fields.Json(string='Technical field for default group setting', compute='_compute_view_group_hierarchy')
+
+    def _compute_view_group_hierarchy(self):
+        self.view_group_hierarchy = self._get_view_group_hierarchy()
+
     @api.model
     @tools.ormcache()
     def _get_view_group_hierarchy(self):

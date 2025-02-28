@@ -26,10 +26,6 @@
 
     <data noupdate="1">
 
-    <record id="base.default_user" model="res.users">
-        <field name="group_ids" eval="[(4,ref('hr_holidays.group_hr_holidays_manager'))]"/>
-    </record>
-
     <record id="hr_leave_rule_employee" model="ir.rule">
         <field name="name">Time Off base.group_user read</field>
         <field name="model_id" ref="model_hr_leave"/>

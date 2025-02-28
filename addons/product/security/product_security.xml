@@ -18,10 +18,6 @@
         <field name="category_id" ref="base.module_category_usability"/>
     </record>
 
-    <record id="base.default_user" model="res.users">
-        <field name="group_ids" eval="[Command.link(ref('group_product_manager'))]"/>
-    </record>
-
 <data noupdate="1">
 
     <record id="product_comp_rule" model="ir.rule">

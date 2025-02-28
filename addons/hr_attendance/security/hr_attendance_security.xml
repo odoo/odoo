@@ -27,10 +27,6 @@
         <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
     </record>
 
-    <record id="base.default_user" model="res.users">
-        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
-    </record>
-
     <data noupdate="1">
 
         <!-- Attendances -->
