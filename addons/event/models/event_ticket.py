@@ -136,10 +136,13 @@ class EventTicket(models.Model):
             if ticket.seats_max > 0:
                 ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
 
-    @api.depends('seats_limited', 'seats_available')
+    @api.depends('seats_limited', 'seats_available', 'event_id.event_registrations_sold_out')
     def _compute_is_sold_out(self):
         for ticket in self:
-            ticket.is_sold_out = ticket.seats_limited and not ticket.seats_available
+            ticket.is_sold_out = (
+                (ticket.seats_limited and not ticket.seats_available)
+                or ticket.event_id.event_registrations_sold_out
+            )
 
     @api.constrains('start_sale_datetime', 'end_sale_datetime')
     def _constrains_dates_coherency(self):
