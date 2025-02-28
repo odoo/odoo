@@ -1,10 +1,10 @@
 import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
-import { debounce } from "@web/core/utils/timing";
 import { _t } from "@web/core/l10n/translation";
-import { fuzzyLookup } from "@web/core/utils/search";
-import { KeepLast } from "@web/core/utils/concurrency";
 import { sortBy } from "@web/core/utils/arrays";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { debounce } from "@web/core/utils/timing";
 
 class Page {
     constructor(resModel, fieldDefs, options = {}) {
@@ -269,7 +269,11 @@ export class ModelFieldSelectorPopover extends Component {
                     const focusedFieldName = this.state.page.focusedFieldName;
                     if (focusedFieldName) {
                         const fieldDef = this.state.page.fieldDefs[focusedFieldName];
-                        if (fieldDef.relation || fieldDef.type === "properties") {
+                        if (
+                            fieldDef.relation ||
+                            fieldDef.type === "properties" ||
+                            fieldDef.type === "datetime"
+                        ) {
                             this.followRelation(fieldDef);
                         }
                     }
