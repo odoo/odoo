@@ -3,8 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 
-export class ModalAttendeesRegistration extends Interaction {
-    static selector = "#modal_attendees_registration";
+export class ModalRegistration extends Interaction {
+    static selector = "#modal_registration";
     dynamicContent = {
         "form": {
             "t-on-submit": this.onSubmit,
@@ -72,4 +72,4 @@ export class ModalAttendeesRegistration extends Interaction {
 
 registry
     .category("public.interactions")
-    .add("website_event.modal_attendees_registration", ModalAttendeesRegistration);
+    .add("website_event.modal_registration", ModalRegistration);

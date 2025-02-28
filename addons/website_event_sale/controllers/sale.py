@@ -11,6 +11,7 @@ class WebsiteEventSale(WebsiteSale):
         values = super(WebsiteEventSale,
                        self)._prepare_shop_payment_confirmation_values(order)
         values['events'] = order.order_line.event_id
+        values['slot'] = order.order_line.registration_ids.slot_id
         attendee_per_event_read_group = request.env['event.registration'].sudo()._read_group(
             [('sale_order_id', '=', order.id), ('state', 'in', ['open', 'done'])],
             groupby=['event_id'],
@@ -18,7 +19,7 @@ class WebsiteEventSale(WebsiteSale):
         )
         values['attendee_ids_per_event'] = dict(attendee_per_event_read_group)
         values['urls_per_event'] = {
-            event.id: event._get_event_resource_urls()
+            event.id: event._get_event_resource_urls(values.get('slot'))
             for event in values['events']
         }
 
