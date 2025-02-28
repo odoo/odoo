@@ -448,7 +448,10 @@ class SaleOrder(models.Model):
             self._prepare_order_line_values(product_id, quantity, **kwargs)
         )
 
-        line._check_validity()
+        # The validity of a combo product line can only be checked after creating all of its combo
+        # item lines.
+        if line.product_type != 'combo':
+            line._check_validity()
         return line
 
     def _prepare_order_line_values(

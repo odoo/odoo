@@ -2,10 +2,11 @@
 
 from werkzeug.exceptions import NotFound
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.http import request, route
 from odoo.tools import consteq
+from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
@@ -178,6 +179,12 @@ class Cart(PaymentPortal):
                     **kwargs,
                 )
                 line_ids[product_data['product_template_id']] = product_values['line_id']
+
+        # The validity of a combo product line can only be checked after creating all of its combo
+        # item lines.
+        main_product_line = request.env['sale.order.line'].browse(values['line_id'])
+        if main_product_line.product_type == 'combo':
+            main_product_line._check_validity()
 
         values['notification_info'] = self._get_cart_notification_information(
             order_sudo, line_ids.values()

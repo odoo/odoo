@@ -64,18 +64,17 @@ class SaleOrderLine(models.Model):
 
     def _get_cart_display_price(self):
         self.ensure_one()
-        is_combo = self.product_type == 'combo'
         price_type = (
             'price_subtotal'
             if self.order_id.website_id.show_line_subtotals_tax_selection == 'tax_excluded'
             else 'price_total'
         )
-        return sum(self.linked_line_ids.mapped(price_type)) if is_combo else self[price_type]
+        return sum(self._get_lines_with_price().mapped(price_type))
 
     def _check_validity(self):
         if (
-            self.product_template_id.type != 'combo'
-            and self.price_unit == 0
+            not self.combo_item_id
+            and sum(self._get_lines_with_price().mapped('price_unit')) == 0
             and self.order_id.website_id.prevent_zero_price_sale
             and self.product_template_id.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
         ):
