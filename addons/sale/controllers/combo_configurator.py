@@ -70,7 +70,7 @@ class SaleComboConfiguratorController(Controller):
                        currency,
                        pricelist,
                        **kwargs,
-                   ) for combo_item in combo.combo_item_ids
+                   ) for combo_item in combo.combo_item_ids if combo_item.product_id.active
                 ],
             } for combo in product_template.combo_ids.sudo()],
             'currency_id': currency_id,
