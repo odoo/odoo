@@ -220,7 +220,7 @@ def il_encoding_encode_high(data, columns, security_level):
     """
 
     # Encode data to code words
-    data_words = list(il___init___compact(data))
+    data_words = list(il_init_compact(data))
     data_count = len(data_words)
 
     # Get the padding to align data to column count
@@ -798,44 +798,44 @@ NUMERIC_LATCH = 902
 Chunk = namedtuple("Chunk", ["data", "compact_fn"])
 
 
-def il___init___compact(data):
+def il_init_compact(data):
     """Encodes given data into an array of PDF417 code words."""
-    chunks = il___init____split_to_chunks(data)
+    chunks = il_init__split_to_chunks(data)
     chunks = il_optimizations_replace_short_numeric_chunks(chunks)
     chunks = il_optimizations_merge_chunks_with_same_compact_fn(chunks)
-    return il___init____compact_chunks(chunks)
+    return il_init__compact_chunks(chunks)
 
 
-def il___init____compact_chunks(chunks):
+def il_init__compact_chunks(chunks):
     compacted_chunks = (
-        il___init____compact_chunk(ordinal, chunk) for ordinal, chunk in enumerate(chunks))
+        il_init__compact_chunk(ordinal, chunk) for ordinal, chunk in enumerate(chunks))
 
     return chain(*compacted_chunks)
 
 
-def il___init____compact_chunk(ordinal, chunk):
+def il_init__compact_chunk(ordinal, chunk):
     code_words = []
 
     # Add the switch code if required
     add_switch_code = ordinal > 0 or chunk.compact_fn != il_text_compact_text
     if add_switch_code:
-        code_words.append(il___init___get_switch_code(chunk))
+        code_words.append(il_init_get_switch_code(chunk))
 
     code_words.extend(chunk.compact_fn(chunk.data))
 
     return code_words
 
 
-def il___init____split_to_chunks(data):
+def il_init__split_to_chunks(data):
     """
     Splits a string into chunks which can be compacted with the same compacting
     function.
     """
-    for fn, chunk in groupby(data, key=il___init___get_optimal_compactor_fn):
+    for fn, chunk in groupby(data, key=il_init_get_optimal_compactor_fn):
         yield Chunk(list(chunk), fn)
 
 
-def il___init___get_optimal_compactor_fn(char):
+def il_init_get_optimal_compactor_fn(char):
     if 48 <= char <= 57:
         return il_numeric_compact_numbers
 
@@ -845,7 +845,7 @@ def il___init___get_optimal_compactor_fn(char):
     return il_byte_compact_bytes
 
 
-def il___init___get_switch_code(chunk):
+def il_init_get_switch_code(chunk):
     if chunk.compact_fn == il_text_compact_text:
         return TEXT_LATCH
 
