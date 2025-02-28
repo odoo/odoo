@@ -118,6 +118,12 @@ patch(AttendeeCalendarModel.prototype, {
         return this.data.worklocations;
     },
 
+    get isResourceBasedApppointment() {
+        // To check if we traverse through appointment (which is resources based), then we don't show Set Location
+        // Technical: 'calendar_event_action_view_bookings_resources' action has context 'appointment_booking_gantt_domain'
+        return this.data.filterSections.partner_ids.context.appointment_booking_gantt_domain?.length === 1;
+    },
+
     mapPartnersToColor(data) {
         return data.filterSections.partner_ids.filters
             .filter(filter => filter.type !== "all" && filter.value)
