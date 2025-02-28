@@ -76,6 +76,8 @@ export function getDomainDisplayedOperators(fieldDef) {
             return ["=", "!=", "ilike", "not ilike", "set", "not_set"];
         case "properties":
             return ["set", "not_set"];
+        case "datetime_option":
+            return ["=", "!=", ">", ">=", "<", "<=", "between", "set", "not_set"];
         case undefined:
             return ["="];
         default:

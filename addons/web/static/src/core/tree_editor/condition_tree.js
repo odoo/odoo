@@ -1,7 +1,8 @@
 import { Domain } from "@web/core/domain";
+import { parseTime } from "@web/core/l10n/time";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
-import { deepCopy, deepEqual } from "../utils/objects";
+import { deepCopy, deepEqual } from "@web/core/utils/objects";
 
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -853,6 +854,144 @@ function createWithinOperators(tree, options = {}) {
     return newTree;
 }
 
+function splitPath(path) {
+    const pathParts = typeof path === "string" ? path.split(".") : [];
+    const lastPart = pathParts.pop();
+    const initalPath = pathParts.join(".");
+    return { initalPath, lastPart };
+}
+
+/**
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
+function createTimeOptions(tree) {
+    if (["condition", "complex_condition"].includes(tree.type)) {
+        return tree;
+    }
+    const processedChildren = tree.children.map(createTimeOptions);
+    const children = [];
+    for (let i = 0; i < processedChildren.length; i++) {
+        const child1 = processedChildren[i];
+        const child2 = processedChildren[i + 1];
+        const child3 = processedChildren[i + 2];
+        const splitPath1 = splitPath(child1.path);
+        const splitPath2 = splitPath(child2?.path);
+        const splitPath3 = splitPath(child3?.path);
+        const value1 = Number.isInteger(child1.value)
+            ? child1.value
+            : child1.value === false
+            ? false
+            : null;
+        const value2 = Number.isInteger(child2?.value)
+            ? child2.value
+            : child2?.value === false
+            ? false
+            : null;
+        const value3 = Number.isInteger(child3?.value)
+            ? child3.value
+            : child3?.value === false
+            ? false
+            : null;
+        const value = `${value1}:${value2}:${value3}`;
+        const time = parseTime(value, true);
+
+        if (
+            child1.type === "condition" &&
+            child2?.type === "condition" &&
+            child3?.type === "condition" &&
+            splitPath1.initalPath === splitPath2.initalPath &&
+            splitPath2.initalPath === splitPath3.initalPath &&
+            splitPath1.lastPart === "hour_number" &&
+            splitPath2.lastPart === "minute_number" &&
+            splitPath3.lastPart === "second_number" &&
+            ["=", "!="].includes(child1.operator) &&
+            child1.operator === child2.operator &&
+            child2.operator === child3.operator &&
+            value1 === false &&
+            value1 === value2 &&
+            value2 === value3
+        ) {
+            children.push(condition(`${splitPath1.initalPath}.__time`, child1.operator, false));
+            i += 2;
+        } else if (
+            child1.type === "condition" &&
+            child2?.type === "condition" &&
+            child3?.type === "condition" &&
+            splitPath1.initalPath === splitPath2.initalPath &&
+            splitPath2.initalPath === splitPath3.initalPath &&
+            splitPath1.lastPart === "hour_number" &&
+            splitPath2.lastPart === "minute_number" &&
+            splitPath3.lastPart === "second_number" &&
+            child1.operator === child2.operator &&
+            child2.operator === child3.operator &&
+            time &&
+            (child1.operator === "!=" ? tree.value === "|" : tree.value === "&")
+        ) {
+            children.push(
+                condition(`${splitPath1.initalPath}.__time`, child1.operator, time.toString(true))
+            );
+            i += 2;
+        } else {
+            children.push(child1);
+        }
+    }
+    if (children.length === 1) {
+        return { ...children[0] };
+    }
+    return { ...tree, children };
+}
+
+/**
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
+export function removeTimeOptions(tree) {
+    if (tree.type === "complex_condition") {
+        return tree;
+    }
+    if (tree.type === "condition") {
+        const { negate, operator, path, value } = tree;
+        const { initalPath, lastPart } = splitPath(path);
+        if (
+            initalPath &&
+            lastPart === "__time" &&
+            value === false &&
+            ["=", "!="].includes(operator)
+        ) {
+            return connector(
+                "&",
+                [
+                    condition(`${initalPath}.hour_number`, operator, false),
+                    condition(`${initalPath}.minute_number`, operator, false),
+                    condition(`${initalPath}.second_number`, operator, false),
+                ],
+                negate
+            );
+        }
+        const time = typeof value === "string" ? parseTime(value, true) : null;
+        if (!initalPath || lastPart !== "__time" || !time) {
+            return tree;
+        }
+        return connector(
+            operator === "!=" ? "|" : "&",
+            [
+                condition(`${initalPath}.hour_number`, operator, time.hour),
+                condition(`${initalPath}.minute_number`, operator, time.minute),
+                condition(`${initalPath}.second_number`, operator, time.second),
+            ],
+            negate
+        );
+    }
+    const processedChildren = tree.children.map(removeTimeOptions);
+    const newTree = { ...tree, children: [] };
+    // after processing a child might have become a connector "&" or a "|" --> normalize
+    for (let i = 0; i < processedChildren.length; i++) {
+        addChild(newTree, processedChildren[i]);
+    }
+    return newTree;
+}
+
 /**
  * @param {Tree} tree
  * @returns {Tree}
@@ -1029,6 +1168,13 @@ function removeComplexConditions(tree) {
 //    expression <-> tree
 ////////////////////////////////////////////////////////////////////////////////
 
+function applyTransformations(fns, transformed, ...fixedParams) {
+    for (const fn of fns) {
+        transformed = fn(transformed, ...fixedParams);
+    }
+    return transformed;
+}
+
 /**
  * @param {string} expression
  * @param {Options} [options={}]
@@ -1037,8 +1183,9 @@ function removeComplexConditions(tree) {
 export function treeFromExpression(expression, options = {}) {
     const ast = parseExpr(expression);
     const tree = _treeFromAST(ast, options);
-    return createVirtualOperators(
-        createWithinOperators(createBetweenOperators(tree), options),
+    return applyTransformations(
+        [createBetweenOperators, createWithinOperators, createVirtualOperators],
+        tree,
         options
     );
 }
@@ -1049,8 +1196,14 @@ export function treeFromExpression(expression, options = {}) {
  * @returns {string} an expression
  */
 export function expressionFromTree(tree, options = {}) {
-    const simplifiedTree = createComplexConditions(
-        removeBetweenOperators(removeWithinOperators(removeVirtualOperators(tree)))
+    const simplifiedTree = applyTransformations(
+        [
+            removeVirtualOperators,
+            removeWithinOperators,
+            removeBetweenOperators,
+            createComplexConditions,
+        ],
+        tree
     );
     return _expressionFromTree(simplifiedTree, options, true);
 }
@@ -1060,8 +1213,15 @@ export function expressionFromTree(tree, options = {}) {
  * @returns {string} a string representation of a domain
  */
 export function domainFromTree(tree) {
-    const simplifiedTree = removeBetweenOperators(
-        removeWithinOperators(removeVirtualOperators(removeComplexConditions(tree)))
+    const simplifiedTree = applyTransformations(
+        [
+            removeComplexConditions,
+            removeVirtualOperators,
+            removeWithinOperators,
+            removeBetweenOperators,
+            removeTimeOptions,
+        ],
+        tree
     );
     const domainAST = {
         type: 4,
@@ -1079,8 +1239,9 @@ export function treeFromDomain(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options); // a simple tree
-    return createVirtualOperators(
-        createWithinOperators(createBetweenOperators(tree), options),
+    return applyTransformations(
+        [createTimeOptions, createBetweenOperators, createWithinOperators, createVirtualOperators],
+        tree,
         options
     );
 }

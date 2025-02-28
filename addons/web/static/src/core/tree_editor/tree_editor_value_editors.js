@@ -16,6 +16,9 @@ import { Input, Select, List, Range, Within } from "@web/core/tree_editor/tree_e
 import { connector, formatValue, isTree } from "@web/core/tree_editor/condition_tree";
 import { getResModel, disambiguate, isId } from "@web/core/tree_editor/utils";
 import { Domain } from "@web/core/domain";
+import { TimePicker } from "@web/core/time_picker/time_picker";
+import { parseTime } from "@web/core/l10n/time";
+import { localization } from "@web/core/l10n/localization";
 
 const { DateTime } = luxon;
 
@@ -57,6 +60,39 @@ const STRING_EDITOR = {
     isSupported: (value) => typeof value === "string",
     defaultValue: () => "",
 };
+
+function range(length, startAtZero = false) {
+    return new Array(length).fill(0).map((_, index) => (startAtZero ? index : index + 1));
+}
+
+// we have to wait localization service -> better way to do this?
+let DATETIME_OPTIONS_WITH_SELECT;
+function get_DATETIME_OPTIONS_WITH_SELECT() {
+    if (!DATETIME_OPTIONS_WITH_SELECT) {
+        const { weekStart } = localization;
+        DATETIME_OPTIONS_WITH_SELECT = {
+            month_number: range(12).map((month) => [
+                month,
+                luxon.DateTime.now().set({ month }).toFormat("MMMM"),
+            ]),
+            quarter_number: range(4).map((quarter) => [
+                quarter,
+                _t("Quarter %(quarter)s", { quarter }),
+            ]),
+            day_of_week: range(7, true).map((weekday) => [
+                (weekday + weekStart) % 7,
+                luxon.DateTime.now()
+                    .set({ weekday: (weekday + weekStart) % 7 })
+                    .toFormat("cccc"),
+            ]),
+            hour_number: range(24, true).map((hour) => [hour, hour]),
+            minute_number: range(60, true).map((minute) => [minute, minute]),
+            second_number: range(60, true).map((second) => [second, second]),
+            day_of_month: range(31, true).map((day) => [day, day + 1]),
+        };
+    }
+    return DATETIME_OPTIONS_WITH_SELECT;
+}
 
 function makeSelectEditor(options, params = {}) {
     const getOption = (value) => options.find(([v]) => v === value) || null;
@@ -321,6 +357,40 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "selection": {
             const options = fieldDef.selection || [];
             return makeSelectEditor(options, params);
+        }
+        case "datetime_option": {
+            if (fieldDef.name in get_DATETIME_OPTIONS_WITH_SELECT()) {
+                const options = get_DATETIME_OPTIONS_WITH_SELECT()[fieldDef.name];
+                return makeSelectEditor(options, params);
+            } else if (fieldDef.name === "__time") {
+                return {
+                    component: TimePicker,
+                    extractProps: ({ value, update }) => ({
+                        value: parseTime(value, true),
+                        onChange: (time) => update(time.toString(true)),
+                        showSeconds: true,
+                    }),
+                    isSupported: (value) => typeof value === "string" && parseTime(value, true),
+                    defaultValue: () =>
+                        params.forBetween
+                            ? {
+                                  start: "00:00:00",
+                                  end: "23:59:59",
+                              }
+                            : "00:00:00",
+                };
+            }
+            return {
+                component: Input,
+                extractProps: ({ value, update }) => ({
+                    value: String(value),
+                    update: (value) => update(parseValue("integer", value)),
+                    startEmpty: params.startEmpty,
+                }),
+                isSupported: () => true,
+                defaultValue: () => 1,
+                shouldResetValue: (value) => parseValue("integer", value) === value,
+            };
         }
         case undefined: {
             const options = [[1, "1"]];
