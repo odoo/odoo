@@ -205,8 +205,8 @@ class UserInputSession(http.Controller):
             'is_first_question': is_first_question,
             'is_session_closed': not survey.session_state,
         }
-
-        values.update(self._prepare_question_results_values(survey, request.env['survey.user_input.line']))
+        if survey.session_question_id:
+            values.update(self._prepare_question_results_values(survey, request.env['survey.user_input.line']))
 
         return values
 
