@@ -1,6 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< saas-18.2
 
 from odoo.http import route
+||||||| 62ca36f5a347a230eda3cec2d31797fef0c7a13d
+
+from odoo.http import request, route
+=======
+from odoo import _
+from odoo.exceptions import UserError
+from odoo.http import request, route
+>>>>>>> e8e2c0e62ee41cc168244bcb0698484dbe4fc180
 
 from odoo.addons.sale.controllers.combo_configurator import (
     SaleComboConfiguratorController,
@@ -31,3 +40,126 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
     def website_sale_combo_configurator_get_price(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
         return super().sale_combo_configurator_get_price(*args, **kwargs)
+<<<<<<< saas-18.2
+||||||| 62ca36f5a347a230eda3cec2d31797fef0c7a13d
+
+    @route(
+        route='/website_sale/combo_configurator/update_cart',
+        type='json',
+        auth='public',
+        methods=['POST'],
+        website=True,
+    )
+    def website_sale_combo_configurator_update_cart(
+        self, combo_product_id, quantity, selected_combo_items, **kwargs
+    ):
+        """ Add the provided combo product and selected combo items to the cart.
+
+        :param int combo_product_id: The combo product to add, as a `product.template` id.
+        :param int quantity: The quantity to add.
+        :param list(dict) selected_combo_items: The selected combo items to add.
+        :param dict kwargs: Locally unused data passed to `_cart_update`.
+        :rtype: dict
+        :return: A dict containing information about the cart update.
+        """
+        order_sudo = request.website.sale_get_order(force_create=True)
+        if order_sudo.state != 'draft':
+            request.session['sale_order_id'] = None
+            order_sudo = request.website.sale_get_order(force_create=True)
+
+        values = order_sudo._cart_update(
+            product_id=combo_product_id,
+            line_id=False,  # Always create a new line for combo products.
+            set_qty=quantity,
+            **kwargs,
+        )
+        line_ids = [values['line_id']]
+
+        if selected_combo_items and values['line_id']:
+            for combo_item in selected_combo_items:
+                item_values = order_sudo._cart_update(
+                    product_id=combo_item['product_id'],
+                    line_id=False,
+                    set_qty=quantity,
+                    product_custom_attribute_values=combo_item['product_custom_attribute_values'],
+                    no_variant_attribute_value_ids=[
+                        int(value_id) for value_id in combo_item['no_variant_attribute_value_ids']
+                    ],
+                    linked_line_id=values['line_id'],
+                    combo_item_id=combo_item['combo_item_id'],
+                    **kwargs,
+                )
+                line_ids.append(item_values['line_id'])
+
+        values['notification_info'] = self._get_cart_notification_information(order_sudo, line_ids)
+        values['cart_quantity'] = order_sudo.cart_quantity
+        request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity
+
+        return values
+=======
+
+    @route(
+        route='/website_sale/combo_configurator/update_cart',
+        type='json',
+        auth='public',
+        methods=['POST'],
+        website=True,
+    )
+    def website_sale_combo_configurator_update_cart(
+        self, combo_product_id, quantity, selected_combo_items, **kwargs
+    ):
+        """ Add the provided combo product and selected combo items to the cart.
+
+        :param int combo_product_id: The combo product to add, as a `product.template` id.
+        :param int quantity: The quantity to add.
+        :param list(dict) selected_combo_items: The selected combo items to add.
+        :param dict kwargs: Locally unused data passed to `_cart_update`.
+        :rtype: dict
+        :return: A dict containing information about the cart update.
+        """
+        order_sudo = request.website.sale_get_order(force_create=True)
+        if order_sudo.state != 'draft':
+            request.session['sale_order_id'] = None
+            order_sudo = request.website.sale_get_order(force_create=True)
+
+        values = order_sudo._cart_update(
+            product_id=combo_product_id,
+            line_id=False,  # Always create a new line for combo products.
+            set_qty=quantity,
+            **kwargs,
+        )
+        line_ids = [values['line_id']]
+
+        if selected_combo_items and values['line_id']:
+            for combo_item in selected_combo_items:
+                item_values = order_sudo._cart_update(
+                    product_id=combo_item['product_id'],
+                    line_id=False,
+                    set_qty=quantity,
+                    product_custom_attribute_values=combo_item['product_custom_attribute_values'],
+                    no_variant_attribute_value_ids=[
+                        int(value_id) for value_id in combo_item['no_variant_attribute_value_ids']
+                    ],
+                    linked_line_id=values['line_id'],
+                    combo_item_id=combo_item['combo_item_id'],
+                    **kwargs,
+                )
+                line_ids.append(item_values['line_id'])
+
+        # The price of a combo product (and thus whether it can be added to the cart) can only be
+        # computed after creating all of its combo item lines.
+        combo_product_line = request.env['sale.order.line'].browse(values['line_id'])
+        if (
+            combo_product_line
+            and sum(combo_product_line._get_lines_with_price().mapped('price_unit')) == 0
+            and combo_product_line.order_id.website_id.prevent_zero_price_sale
+        ):
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
+        values['notification_info'] = self._get_cart_notification_information(order_sudo, line_ids)
+        values['cart_quantity'] = order_sudo.cart_quantity
+        request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity
+
+        return values
+>>>>>>> e8e2c0e62ee41cc168244bcb0698484dbe4fc180
