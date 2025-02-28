@@ -50,6 +50,12 @@ class EventRegistration(models.Model):
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=4)
     company_name = fields.Char(
         string='Company Name', compute='_compute_company_name', readonly=False, store=True, tracking=5)
+    # slots
+    is_multi_slots = fields.Boolean(string="Is Event Multi Slots", related="event_id.is_multi_slots")
+    slot_id = fields.Many2one(
+        "event.slot", string="Slot", ondelete="cascade",
+        compute="_compute_slot_id", store=True, readonly=False,
+        domain="[('event_id', '=', event_id)]")
     # organization
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
@@ -158,6 +164,12 @@ class EventRegistration(models.Model):
     def _compute_date_range(self):
         for registration in self:
             registration.event_date_range = registration.event_id._get_date_range_str(registration.partner_id.lang)
+
+    @api.depends('event_id')
+    def _compute_slot_id(self):
+        for registration in self:
+            if registration.event_id != registration.slot_id.event_id:
+                registration.slot_id = False
 
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):
