@@ -5,7 +5,7 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
-import { prettifyMessageContent } from "@mail/utils/common/format";
+import { prettifyMessageContent, isEmpty } from "@mail/utils/common/format";
 import { htmlJoin } from "@mail/utils/common/html";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -190,7 +190,7 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
-                if (this.fakeTextarea.el.scrollHeight) {
+                if (this.fakeTextarea.el?.scrollHeight) {
                     this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
                 }
                 this.saveContentDebounced();
@@ -208,8 +208,8 @@ export class Composer extends Component {
             () => [this.props.composer.forceCursorMove]
         );
         onMounted(() => {
-            this.ref.el.scrollTo({ top: 0, behavior: "instant" });
-            if (!this.props.composer.text) {
+            this.ref.el?.scrollTo({ top: 0, behavior: "instant" });
+            if (this.props.composer.isBodyEmpty()) {
                 this.restoreContent();
             }
         });
@@ -334,7 +334,7 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (!this.props.composer.text && attachments.length === 0) ||
+            (this.props.composer.isBodyEmpty() && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -402,7 +402,7 @@ export class Composer extends Component {
                         classList: "o-mail-Composer-suggestion",
                     })),
                 };
-            case "mail.canned.response":
+            case "CannedResponse":
                 return {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionCannedResponse",
@@ -413,7 +413,7 @@ export class Composer extends Component {
                         classList: "o-mail-Composer-suggestion",
                     })),
                 };
-            case "emoji":
+            case "Emoji":
                 return {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionEmoji",
@@ -426,7 +426,7 @@ export class Composer extends Component {
                 return props;
         }
     }
-
+    onInput(ev) {}
     onDropFile(ev) {
         if (isDragSourceExternalFile(ev.dataTransfer)) {
             for (const file of ev.dataTransfer.files) {
@@ -466,7 +466,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         switch (ev.key) {
             case "ArrowUp":
-                if (this.props.messageEdition && composer.text === "") {
+                if (this.props.messageEdition && composer.isBodyEmpty()) {
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         this.props.messageEdition.editingMessage = messageToEdit;
@@ -474,7 +474,11 @@ export class Composer extends Component {
                 }
                 break;
             case "Enter": {
-                if (isEventHandled(ev, "NavigableList.select") || !this.state.active) {
+                if (
+                    isEventHandled(ev, "NavigableList.select") ||
+                    document.querySelector(".o-mail-SuggestionList") ||
+                    !this.state.active
+                ) {
                     ev.preventDefault();
                     return;
                 }
@@ -491,7 +495,10 @@ export class Composer extends Component {
                 break;
             }
             case "Escape":
-                if (isEventHandled(ev, "NavigableList.close")) {
+                if (
+                    isEventHandled(ev, "NavigableList.close") ||
+                    document.querySelector(".o-mail-SuggestionList")
+                ) {
                     return;
                 }
                 if (this.props.onDiscardCallback) {
@@ -528,12 +535,15 @@ export class Composer extends Component {
             }
         }
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
-        const body = this.props.composer.text;
+        const body = this.props.composer.text || this.props.composer.htmlBody;
         const validMentions = this.store.getMentionsFromText(body, {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
         });
-        let default_body = await prettifyMessageContent(body, { validMentions });
+        let default_body = await prettifyMessageContent(body, {
+            isHtmlBody: !this.props.composer.text,
+            validMentions,
+        });
         if (!default_body) {
             const composer = toRaw(this.props.composer);
             // Reset signature when recovering an empty body.
@@ -643,14 +653,14 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        const el = this.ref.el;
         const attachments = this.props.composer.attachments;
         if (attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
         } else if (
-            this.props.composer.text.trim() ||
+            this.props.composer.text?.trim() ||
+            !isEmpty(this.props.composer.htmlBody) ||
             attachments.length > 0 ||
             (this.message && this.message.attachment_ids.length > 0)
         ) {
@@ -658,13 +668,23 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.text);
+            if (this.props.composer.text) {
+                await cb({
+                    body: this.props.composer.text,
+                    isHtmlBody: false,
+                });
+            } else {
+                await cb({
+                    body: this.props.composer.htmlBody,
+                    isHtmlBody: true,
+                });
+            }
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
             this.clear();
             this.state.active = true;
-            el.focus();
+            this.props.composer.forceCursorMove = true;
         }
     }
 
@@ -729,7 +749,7 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.text || composer.message.attachment_ids.length > 0) {
+        if (!composer.isBodyEmpty() || composer.message.attachment_ids.length > 0) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
