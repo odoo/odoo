@@ -31,7 +31,7 @@ export class BuilderNumberInput extends Component {
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
-            defaultValue: this.props.default === undefined ? undefined : `${this.props.default}`,
+            defaultValue: this.props.default?.toString(),
             formatRawValue: this.formatRawValue.bind(this),
             parseDisplayValue: this.parseDisplayValue.bind(this),
         });
@@ -101,22 +101,22 @@ export class BuilderNumberInput extends Component {
     }
 
     // TODO: use this.preview or this.commit?
-    handleKeydown(event) {
-        if (!["ArrowUp", "ArrowDown"].includes(event.key)) {
+    onKeydown(e) {
+        if (!["ArrowUp", "ArrowDown"].includes(e.key)) {
             return;
         }
-        const values = event.target.value.split(" ").map((number) => parseFloat(number) || 0);
-        if (event.key === "ArrowUp") {
+        const values = e.target.value.split(" ").map((number) => parseFloat(number) || 0);
+        if (e.key === "ArrowUp") {
             values.forEach((value, i) => {
                 values[i] = value + (this.props.step || 1);
             });
-        } else if (event.key === "ArrowDown") {
+        } else if (e.key === "ArrowDown") {
             values.forEach((value, i) => {
                 values[i] = value - (this.props.step || 1);
             });
         }
-        event.target.value = values.join(" ");
+        e.target.value = values.join(" ");
         // OK because it only uses event.target.value.
-        this.onChange(event);
+        this.onChange(e);
     }
 }

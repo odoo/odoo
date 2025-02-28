@@ -5,15 +5,16 @@
     <BuilderComponent>
         <div class="d-flex flex-row flex-nowrap align-items-center"
             t-att-data-action-id="props.action"
-            t-att-data-action-param="props.actionParam" >
+            t-att-data-action-param="props.actionParam"
+        >
             <input
                 type="text"
                 autocomplete="chrome-off"
                 class="text-end"
-                t-on-change="this.onChange"
-                t-on-input="this.onInput"
+                t-on-change="onChange"
+                t-on-input="onInput"
                 t-att-value="displayValue"
-                t-on-keydown="this.handleKeydown"
+                t-on-keydown="onKeydown"
                 t-att-placeholder="props.placeholder"
                 t-att-style="props.style"
             />
