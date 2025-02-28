@@ -164,6 +164,12 @@ class WebsiteEventController(http.Controller):
         view = request.env["website.event.menu"].sudo().search([
             ("event_id", "=", event.id), ("view_id.key", "ilike", page)], limit=1).view_id
 
+        if not view:
+            # pages can be linked to menus but can also be created manually through the editor
+            # -> look for a page matching the path
+            view = request.env["website.page"].sudo().search([
+                ('url', '=', request.httprequest.path)], limit=1).view_id
+
         try:
             # Every event page view should have its own SEO.
             page = view.key if view else page
