@@ -38,7 +38,9 @@ export class Plugin {
     setup() {}
 
     isValidTargetForDomListener(ev) {
-        return !isProtecting(ev.target) && (!isProtected(ev.target) || isUnprotecting(ev.target));
+        return (
+            !isProtecting(ev.target) && (!isProtected(ev.target) || isUnprotecting(ev.target))
+        ) || this.getResource("editable_node_predicates").some(predicate => predicate(ev.target));
     }
 
     addDomListener(target, eventName, fn, capture = false) {

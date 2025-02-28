@@ -5,6 +5,7 @@ import { setupEditor } from "./_helpers/editor";
 import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
+import { unformat } from "./_helpers/format";
 
 test("Can replace an image", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
@@ -121,5 +122,70 @@ describe("Powerbox search keywords", () => {
                 press("backspace");
             }
         }
+    });
+});
+
+describe("Editable media", () => {
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
+        return [
+            {
+                id: 1,
+                name: "logo",
+                mimetype: "image/png",
+                image_src: "/web/static/img/logo2.png",
+                access_token: false,
+                public: true,
+            },
+        ];
+    });
+    test("Can replace a media with the editable media class in a non-editable element", async () => {
+        const env = await makeMockEnv();
+        await setupEditor(unformat(
+            `<div contenteditable="false">
+                <img src="/web/static/img/logo.png" class="o_editable_media">
+            </div>`
+        ), { env });
+        await click("img");
+        await waitFor(".o-we-toolbar");
+        await click("button[name='replace_image']");
+        await waitFor(".o_select_media_dialog");
+        await click("img.o_we_attachment_highlight");
+        await animationFrame();
+        expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+        expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
+    });
+
+    test("Can replace a media without the editable media class in an editable element", async () => {
+        const env = await makeMockEnv();
+        await setupEditor(unformat(
+            `<div contenteditable="true">
+                <img src="/web/static/img/logo.png">
+            </div>`
+        ), { env });
+        await click("img");
+        await waitFor(".o-we-toolbar");
+        await click("button[name='replace_image']");
+        await waitFor(".o_select_media_dialog");
+        await click("img.o_we_attachment_highlight");
+        await animationFrame();
+        expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+        expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
+    });
+
+    test("Can replace a media with the editable media class in an editable element", async () => {
+        const env = await makeMockEnv();
+        await setupEditor(unformat(
+            `<div contenteditable="true">
+                <img src="/web/static/img/logo.png" class="o_editable_media">
+            </div>`
+        ), { env });
+        await click("img");
+        await waitFor(".o-we-toolbar");
+        await click("button[name='replace_image']");
+        await waitFor(".o_select_media_dialog");
+        await click("img.o_we_attachment_highlight");
+        await animationFrame();
+        expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+        expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
     });
 });
