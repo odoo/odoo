@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
         run: "click",
         expectUnloadPage: true,
 }, {
-    trigger: 'a.js_add_cart_json:has(i.fa-plus)',
+    trigger: 'a.js_add_cart_json:has(i.oi-plus)',
     run: 'click',
 }, {
     trigger: 'span.oe_currency_value:contains(750)',

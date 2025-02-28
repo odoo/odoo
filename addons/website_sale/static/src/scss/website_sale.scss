@@ -588,12 +588,6 @@ $input-border-color: $gray-400;
         font-weight: $font-weight-bold;
     }
 
-    // Extra price badge
-    .text-bg-light .variant_price_extra.text-muted {
-        // Needed to be visible on a dark <body> background.
-        color: adjust-color-to-background($text-muted, $light, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
-    }
-
     input.js_quantity {
         min-width: 48px;
         text-align: center;
@@ -1196,12 +1190,24 @@ a.no-decoration {
     }
 }
 
+#o_wsale_cta_wrapper {
+    &.o_wsale_cta_wrapper_boxed {
+        max-width: 26rem;
+    }
+
+    &.o_wsale_cta_wrapper_large .css_quantity {
+        border-radius: $btn-border-radius-lg;
+    }
+
+    &:not(.o_wsale_cta_wrapper_boxed) #product_option_block:has(button:only-child) {
+        @include media-breakpoint-up(lg) {
+            flex-grow: 0 !important;
+        }
+    }
+}
+
 #o-carousel-product {
     transition: top 200ms;
-
-    &.css_not_available {
-        opacity: 0.2;
-    }
 
     .carousel-inner {
         img {
