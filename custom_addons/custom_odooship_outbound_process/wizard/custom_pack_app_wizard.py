@@ -193,7 +193,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             if line.picking_id.id not in picking_orders:
                 picking_orders[line.picking_id.id] = []
             picking_orders[line.picking_id.id].append(line)
-
+        # for picking in self.picking_ids:
+        #     if picking.sale_id:
+        #         sale_order = picking.sale_id
+        #         related_orders = self.env['stock.picking'].search([('origin', '=', sale_order.name)])
+        #
+        #         for order in related_orders:
+        #             _logger.info(f"Validating related Picking Order ID: {order.id} for Sale Order: {sale_order.name}")
+        #             order.button_validate()
         # Determine API endpoint
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
         if self.site_code_id.name == "FC3":
@@ -307,6 +314,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "incoterm_location": line.incoterm_location or "N/A",
                     "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
                     "carrier":line.picking_id.sale_id.carrier or "N/A",
+                    "hs_code": line.product_id.hs_code or "N/A",
+                    "cost_price": line.product_id.standard_price or "0.0",
+                    "sale_price": line.product_id.list_price or "0.0",
                 }
 
             grouped_lines[sku_code]["quantity"] += line.quantity
@@ -403,7 +413,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
             "incoterm_location": line.sale_order_id.packaging_source_type if line.sale_order_id else "N/A",
             "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
-            "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A"
+            "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
+            "hs_code": line.product_id.hs_code or "N/A",
+            "cost_price": line.product_id.standard_price or "0.0",
+            "sale_price": line.product_id.list_price or "0.0",
         }]
 
         payload = {
