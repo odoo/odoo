@@ -1,20 +1,9 @@
-
-
 from datetime import datetime
 from xml.etree.ElementTree import ElementTree
 
 import pytest
 from mock import patch
-from pdf417gen.console import console
-from pdf417gen.compaction import (
-    NUMERIC_LATCH, TEXT_LATCH, Chunk, _split_to_chunks, compact, compact_bytes, compact_numbers,
-    compact_text, optimizations
-)
-from pdf417gen.compaction.text import compact_text_interim
-from pdf417gen.data import SWITCH_CODE_LOOKUP
-from pdf417gen.encoding import encode, encode_high, to_bytes
-from pdf417gen.error_correction import compute_error_correction_code_words
-from pdf417gen.rendering import barcode_size, rgb_to_hex, render_image, render_svg
+
 from PIL.Image import Image
 
 ZEN = """
