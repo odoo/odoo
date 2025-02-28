@@ -218,9 +218,9 @@ class StockPickingType(models.Model):
 
     @api.model
     def _search_is_favorite(self, operator, value):
-        if operator not in ['=', '!='] or not isinstance(value, bool):
-            raise NotImplementedError(_('Operation not supported'))
-        return [('favorite_user_ids', 'in' if (operator == '=') == value else 'not in', self.env.uid)]
+        if operator != 'in':
+            raise NotImplementedError
+        return [('favorite_user_ids', operator, self.env.uid)]
 
     def _compute_is_favorite(self):
         for picking_type in self:
@@ -299,9 +299,16 @@ class StockPickingType(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         # Try to reverse the `display_name` structure
+        if operator == 'in':
+            return expression.OR(self._search_display_name('=', v) for v in value)
+        if operator == 'not in':
+            raise NotImplementedError
         parts = isinstance(value, str) and value.split(': ')
         if parts and len(parts) == 2:
             return ['&', ('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
+        if operator == '=':
+            operator = 'in'
+            value = [value]
         return super()._search_display_name(operator, value)
 
     @api.depends('code')
@@ -734,12 +741,12 @@ class StockPicking(models.Model):
             picking.has_deadline_issue = picking.date_deadline and picking.date_deadline < picking.scheduled_date or False
 
     def _search_date_category(self, operator, value):
-        if operator != '=':
-            raise NotImplementedError(_('Operation not supported'))
-        search_domain = self.date_category_to_domain(value)
-        return expression.AND([
-            [('scheduled_date', operator, value)] for operator, value in search_domain
-        ])
+        if operator != 'in':
+            raise NotImplementedError
+        return expression.OR(
+            self.date_category_to_domain('scheduled_date', item)
+            for item in value
+        )
 
     @api.depends('move_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -993,17 +1000,28 @@ class StockPicking(models.Model):
         self.show_next_pickings = len(self._get_next_transfers()) != 0
 
     def _search_products_availability_state(self, operator, value):
+        if operator != 'in':
+            raise NotImplementedError
+
+        invalid_states = ('done', 'cancel', 'draft')
+        if False in value:
+            return ['|', ('state', 'in', invalid_states), *self._search_products_availability_state('in', value - {False})]
+        value = set(self._fields['products_availability_state'].get_values(self.env)) & value
+        if not value:
+            return expression.FALSE_DOMAIN
+
         def _get_comparison_date(move):
             return move.picking_id.scheduled_date
 
-        if not value:
-            raise UserError(_('Search not supported without a value.'))
+        def _filter_picking_moves(picking):
+            try:
+                return picking.move_ids._match_searched_availability(operator, value, _get_comparison_date)
+            except UserError:
+                # invalid value for search
+                return False
 
-        selected_picking_ids = []
-        for picking in self.env['stock.picking'].search([('state', 'not in', ('done', 'cancel', 'draft'))]):
-            if picking.move_ids._match_searched_availability(operator, value, _get_comparison_date):
-                selected_picking_ids.append(picking.id)
-        return [('id', 'in', selected_picking_ids)]
+        pickings = self.env['stock.picking'].search([('state', 'not in', invalid_states)], order='id').filtered(_filter_picking_moves)
+        return [('id', 'in', pickings.ids)]
 
     def _get_show_allocation(self, picking_type_id):
         """ Helper method for computing "show_allocation" value.
@@ -1838,7 +1856,7 @@ class StockPicking(models.Model):
         return date_category
 
     @api.model
-    def date_category_to_domain(self, date_category):
+    def date_category_to_domain(self, field_name, date_category):
         """
         Given a date category, returns a list of tuples of operator and value
         that can be used in a domain to filter records based on their scheduled date.
@@ -1872,12 +1890,12 @@ class StockPicking(models.Model):
         start_day_3 = start_today + timedelta(days=3)
 
         date_category_to_search_domain = {
-            "before": [("<", start_yesterday)],
-            "yesterday": [(">=", start_yesterday), ("<", start_today)],
-            "today": [(">=", start_today), ("<", start_day_1)],
-            "day_1": [(">=", start_day_1), ("<", start_day_2)],
-            "day_2": [(">=", start_day_2), ("<", start_day_3)],
-            "after": [(">=", start_day_3)],
+            "before": [(field_name, "<", start_yesterday)],
+            "yesterday": [(field_name, ">=", start_yesterday), (field_name, "<", start_today)],
+            "today": [(field_name, ">=", start_today), (field_name, "<", start_day_1)],
+            "day_1": [(field_name, ">=", start_day_1), (field_name, "<", start_day_2)],
+            "day_2": [(field_name, ">=", start_day_2), (field_name, "<", start_day_3)],
+            "after": [(field_name, ">=", start_day_3)],
         }
 
         return date_category_to_search_domain.get(date_category)

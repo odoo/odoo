@@ -657,9 +657,6 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
         comodel = model.env[self.comodel_name]
 
         # update the operator to 'any'
-        if operator in ('=', '!='):
-            operator = 'in' if operator == '=' else 'not in'
-            value = [value]
         if operator in ('in', 'not in'):
             operator = 'any' if operator == 'in' else 'not any'
         assert operator in ('any', 'not any'), \

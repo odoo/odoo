@@ -138,8 +138,6 @@ class WebsiteVisitor(models.Model):
             visitor.page_count = visitor_info['page_count']
 
     def _search_page_ids(self, operator, value):
-        if operator not in ('like', 'ilike', 'not like', 'not ilike', '=like', '=ilike', '=', '!='):
-            raise ValueError(_('This operator is not supported'))
         return [('website_track_ids.page_id.name', operator, value)]
 
     @api.depends('website_track_ids.page_id')
