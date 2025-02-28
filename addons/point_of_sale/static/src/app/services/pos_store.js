@@ -693,7 +693,10 @@ export class PosStore extends WithLazyGetterTrap {
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         if (productTemplate.isConfigurable() && configure) {
-            const payload = await this.openConfigurator(productTemplate);
+            const payload =
+                vals?.payload && Object.keys(vals?.payload).length
+                    ? vals.payload
+                    : await this.openConfigurator(productTemplate);
 
             if (payload) {
                 // Find candidate based on instantly created variants.
@@ -764,9 +767,12 @@ export class PosStore extends WithLazyGetterTrap {
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         if (values.product_tmpl_id.isCombo() && configure) {
-            const payload = await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
-                productTemplate: values.product_tmpl_id,
-            });
+            const payload =
+                vals?.payload && Object.keys(vals?.payload).length
+                    ? vals.payload
+                    : await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
+                          productTemplate: values.product_tmpl_id,
+                      });
 
             if (!payload) {
                 return;
