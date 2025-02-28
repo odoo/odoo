@@ -544,7 +544,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
 
     function open(ref, openProps) {
         state.isOpen = true;
-        if (ui.isSmall) {
+        if (ui.isSmall || isMobileOS()) {
             const def = new Deferred();
             const pickerMobileProps = {
                 PickerComponent,
