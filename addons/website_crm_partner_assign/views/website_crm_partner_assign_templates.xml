@@ -8,7 +8,7 @@
         <div id="wrap">
             <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS</t>
             <div class="oe_structure oe_empty" id="oe_structure_website_crm_partner_assign_layout_1" t-att-data-editor-message="editor_message"/>
-            <div class="container my-4">
+            <div class="container mb-3">
                 <t t-out="0" />
             </div>
             <div class="oe_structure oe_empty" id="oe_structure_website_crm_partner_assign_layout_2" t-att-data-editor-message="editor_message"/>
@@ -18,16 +18,16 @@
 
 <template id="index" name="Find Resellers">
     <t t-call="website_crm_partner_assign.layout">
-        <div class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
-            <h4 class="my-0 me-auto pe-sm-4">
+        <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
+            <h2 class="me-auto mb-0 h4">
                 Find a reseller <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
-            </h4>
+            </h2>
             <div class="dropdown d-none d-lg-block">
-                <a role="button" href="#" data-bs-toggle="dropdown" class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open categories dropdown">
+                <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
                     <t t-foreach="grades" t-as="grade">
                         <span t-if="grade['active']" t-out="grade['grade_id'][1]"/>
                     </t>
-                </a>
+                </button>
                 <div class="dropdown-menu">
                     <t t-foreach="grades" t-as="grade">
                         <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
@@ -36,11 +36,11 @@
                 </div>
             </div>
             <div class="dropdown d-none d-lg-block">
-                <a role="button" href="#" data-bs-toggle="dropdown" class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open countries dropdown">
+                <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
                     <t t-foreach="countries" t-as="country">
                         <span t-if="country['active']" t-out="country['country_id'][1]"/>
                     </t>
-                </a>
+                </button>
                 <div class="dropdown-menu">
                     <t t-foreach="countries" t-as="country" t-if="country['country_id']">
                         <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
@@ -48,7 +48,7 @@
                     </t>
                 </div>
             </div>
-            <div class="o_wcrm_search d-flex w-100 w-lg-auto">
+            <div class="o_wcrm_search d-flex w-100 w-lg-25">
                 <form class="flex-grow-1" action="" method="get">
                     <input t-if="country_all" type="hidden" name="country_all" value="True" />
                     <div class="input-group" role="search">
@@ -64,7 +64,7 @@
                     <i class="fa fa-sliders"/>
                 </button>
             </div>
-        </div>
+        </section>
         <!-- Off canvas filters on mobile-->
         <div id="o_wcrm_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
             <div class="offcanvas-header">
@@ -104,7 +104,7 @@
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button border-top collapsed"
+                            <button class="accordion-button collapsed"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target=".o_wcrm_offcanvas_country"
@@ -147,7 +147,7 @@
             <t t-set="last_grade" t-value="None"/>
             <t t-foreach="partners" t-as="partner">
                 <t t-if="last_grade != partner.grade_id.id">
-                    <h5 class="mt-4 mb-2 col-12">
+                    <h5 class="mt-3 mb-2 col-12">
                         <span t-field="partner.grade_id"/> Resellers
                         <t t-call="website.publish_management">
                             <t t-set="object" t-value="partner.grade_id"/>
@@ -233,7 +233,7 @@
 
 <template id="partner" name="Partner Detail">
     <t t-call="website_crm_partner_assign.layout">
-        <div t-if="not edit_page" class="mb-3">
+        <div t-if="not edit_page" class="mt-4 mb-3">
             <a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to resellers list"><i class="fa fa-chevron-left me-2"/>Back to resellers</a>
         </div>
         <t t-call="website_partner.partner_detail">
