@@ -169,7 +169,7 @@ export class Interaction {
      * has not been destroyed, and will also call updateContent after the calling
      * code has acted.
      */
-    waitFor(promise) {
+    waitFor(promise, thenFn) {
         const prom = new Promise((resolve, reject) => {
             promise
                 .then((result) => {
@@ -178,6 +178,9 @@ export class Interaction {
                         prom.then(() => {
                             if (this.isReady) {
                                 this.updateContent();
+                                if (thenFn) {
+                                    thenFn(result);
+                                }
                             }
                         });
                     }
