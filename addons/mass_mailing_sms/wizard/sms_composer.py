@@ -18,10 +18,10 @@ class SmsComposer(models.TransientModel):
     # Mass mode specific
     # ------------------------------------------------------------
 
-    def _get_unsubscribe_url(self, res_id, trace_code, number):
+    def _get_unsubscribe_url(self, mailing_id, trace_code):
         return werkzeug.urls.url_join(
             self.get_base_url(),
-            '/sms/%s/%s' % (self.mailing_id.id, trace_code)
+            '/sms/%s/%s' % (mailing_id, trace_code)
         )
 
     @api.model
@@ -47,7 +47,7 @@ class SmsComposer(models.TransientModel):
             trace_values['trace_status'] = 'cancel'
         else:
             if self.mass_sms_allow_unsubscribe:
-                stop_sms = self._get_unsubscribe_info(self._get_unsubscribe_url(record.id, trace_code, sms_values['number']))
+                stop_sms = self._get_unsubscribe_info(self._get_unsubscribe_url(self.mailing_id.id, trace_code))
                 sms_values['body'] = '%s\n%s' % (sms_values['body'] or '', stop_sms)
         return trace_values
 
