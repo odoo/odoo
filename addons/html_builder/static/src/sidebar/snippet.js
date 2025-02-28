@@ -12,4 +12,12 @@ export class Snippet extends Component {
     get snippet() {
         return this.props.snippet;
     }
+
+    onInstallableHover(ev) {
+        if (this.snippet.isInstallable) {
+            ev.currentTarget
+                .querySelector(".o_install_btn")
+                .classList.toggle("visually-hidden-focusable", ev.type !== "mouseover");
+        }
+    }
 }

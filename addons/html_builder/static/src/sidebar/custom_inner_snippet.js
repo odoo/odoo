@@ -1,4 +1,5 @@
 import { Component, useState, useRef } from "@odoo/owl";
+import { useAutofocus } from "@web/core/utils/hooks";
 
 export class CustomInnerSnippet extends Component {
     static template = "html_builder.CustomInnerSnippet";
@@ -11,6 +12,8 @@ export class CustomInnerSnippet extends Component {
 
     setup() {
         this.renameInputRef = useRef("rename-input");
+        useAutofocus({ refName: "rename-input" });
+
         this.state = useState({ isRenaming: false });
     }
 

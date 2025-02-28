@@ -44,6 +44,18 @@
                     background-position: top center;
                     overflow: hidden;
                 }
+
+                .o_snippet_thumbnail_area {
+                    position: absolute;
+                    inset: 0;
+                    background: transparent;
+                    border: none;
+                    cursor: inherit;
+
+                    &:focus-visible {
+                        border: 2px solid $o-brand-primary;
+                    }
+                }
             }
 
             &.o_disabled {
@@ -58,10 +70,6 @@
                 .o_install_btn {
                     @include o-position-absolute($top: 10px);
                     z-index: 1;
-                }
-
-                &:not(:hover) .o_install_btn {
-                    display: none;
                 }
             }
 
@@ -118,7 +126,7 @@
             padding-right: $o-we-sidebar-content-field-button-group-button-spacing;
         }
 
-        &:not(:hover), &.o_disabled:hover {
+        &:not(:hover, :focus-within), &.o_disabled:hover {
             .rename-delete-buttons button {
                 display: none;
             }
