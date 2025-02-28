@@ -33,9 +33,5 @@
             <field name="color">2</field>
             <field name="identification">address</field>
         </record>
-
-        <record id="base.group_user" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
-        </record>
     </data>
 </odoo>
