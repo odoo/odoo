@@ -55,10 +55,12 @@ class StockValuationLayerRevaluation(models.TransientModel):
     product_uom_name = fields.Char("Unit", related='product_id.uom_id.name')
     current_value_svl = fields.Float("Current Value", compute='_compute_current_value_svl')
     current_quantity_svl = fields.Float("Current Quantity", compute='_compute_current_value_svl')
+    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', help="All concerned lot/serial number")
 
     added_value = fields.Monetary("Added value", required=True)
     new_value = fields.Monetary("New value", compute='_compute_new_value')
     new_value_by_qty = fields.Monetary("New value by quantity", compute='_compute_new_value')
+    adjusted_value_per_unit = fields.Monetary("New adjusted value per unit", compute='_compute_new_value')
     reason = fields.Char("Reason", help="Reason of the revaluation")
 
     account_journal_id = fields.Many2one('account.journal', "Journal", check_company=True)
@@ -71,8 +73,9 @@ class StockValuationLayerRevaluation(models.TransientModel):
             reval.new_value = reval.current_value_svl + reval.added_value
             if not float_is_zero(reval.current_quantity_svl, precision_rounding=self.product_id.uom_id.rounding):
                 reval.new_value_by_qty = reval.new_value / reval.current_quantity_svl
+                reval.adjusted_value_per_unit = reval.added_value / reval.current_quantity_svl
             else:
-                reval.new_value_by_qty = 0.0
+                reval.new_value_by_qty = reval.adjusted_value_per_unit = 0.0
 
     @api.depends('product_id.quantity_svl', 'product_id.value_svl', 'adjusted_layer_ids', 'lot_id')
     def _compute_current_value_svl(self):
@@ -80,12 +83,22 @@ class StockValuationLayerRevaluation(models.TransientModel):
             if reval.adjusted_layer_ids:
                 reval.current_quantity_svl = sum(reval.adjusted_layer_ids.mapped('remaining_qty'))
                 reval.current_value_svl = sum(reval.adjusted_layer_ids.mapped('remaining_value'))
-            if reval.lot_id:
+            elif reval.lot_id:
                 reval.current_quantity_svl = reval.lot_id.quantity_svl
                 reval.current_value_svl = reval.lot_id.value_svl
             else:
                 reval.current_quantity_svl = reval.product_id.quantity_svl
                 reval.current_value_svl = reval.product_id.value_svl
+
+    @api.depends('lot_id', 'adjusted_layer_ids')
+    def _compute_lot_ids(self):
+        for reval in self:
+            if reval.adjusted_layer_ids:
+                reval.lot_ids = reval.adjusted_layer_ids.lot_id.ids
+            elif reval.lot_id:
+                reval.lot_ids = reval.lot_id.ids
+            else:
+                reval.lot_ids = reval.product_id.stock_valuation_layer_ids.lot_id.ids
 
     def action_validate_revaluation(self):
         """ Adjust the valuation of layers `self.adjusted_layer_ids` for
