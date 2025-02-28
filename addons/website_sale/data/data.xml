@@ -87,7 +87,7 @@ response = DynamicFilter._get_products('latest_sold')
             </field>
         </record>
         <record id="dynamic_snippet_latest_viewed_products_action" model="ir.actions.server">
-            <field name="name">Recently Viewed Products</field>
+            <field name="name">Recently Viewed Products (per user)</field>
             <field name="model_id" ref="model_product_product"/>
             <field name="state">code</field>
             <field name="code">
@@ -142,7 +142,8 @@ response = DynamicFilter._get_products('alternative_products', product_template_
             <field name="action_server_id" ref="website_sale.dynamic_snippet_latest_viewed_products_action"/>
             <field name="field_names">display_name,description_sale,image_512</field>
             <field name="limit" eval="16"/>
-            <field name="name">Recently Viewed Products</field>
+            <field name="name">Recently Viewed Products (per user)</field>
+            <field name="help">The building block will remain empty until the user visits a product page.</field>
         </record>
         <record id="dynamic_filter_cross_selling_accessories" model="website.snippet.filter">
             <field name="action_server_id" ref="website_sale.dynamic_snippet_accessories_action"/>
