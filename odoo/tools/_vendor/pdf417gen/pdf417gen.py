@@ -24,13 +24,24 @@
 """
 
 
+from .data import ERROR_CORRECTION_FACTORS
+from PIL import Image, ImageColor, ImageOps
+from PIL.Image import Resampling
 from argparse import ArgumentParser
+from builtins import range, bytes, str, zip
+from collections import namedtuple
+from itertools import tee, islice, chain, chain, chain, chain, groupby, chain, groupby
 from pdf417gen import encode, render_image
 from pdf417gen.codes import map_code_word
-from pdf417gen.compaction import compact
+from pdf417gen.compaction import compact, optimizations
+from pdf417gen.compaction.byte import compact_bytes
+from pdf417gen.compaction.numeric import compact_numbers, compact_numbers
+from pdf417gen.compaction.text import compact_text, compact_text
+from pdf417gen.data import CHARACTERS_LOOKUP, SWITCH_CODES, Submode, CHARACTERS_LOOKUP
 from pdf417gen.error_correction import compute_error_correction_code_words
-from pdf417gen.util import chunks, to_bytes
-from typing import List
+from pdf417gen.util import chunks, to_bytes, switch_base, chunks, to_base, chunks, iterate_prev_next, chunks
+from typing import List, Any, Generator, Iterable, Iterator, List, Optional, Tuple, TypeVar
+from xml.etree.ElementTree import ElementTree, Element, SubElement
 import math
 import sys
 
@@ -298,3 +309,561 @@ def il_encoding_get_padding(data_count, ec_count, num_cols):
     mod = total_count % num_cols
 
     return [PADDING_CODE_WORD] * (num_cols - mod) if mod > 0 else []
+
+
+# Text encoder submodes
+UPPER = 'UPPER'
+LOWER = 'LOWER'
+MIXED = 'MIXED'
+PUNCT = 'PUNCT'
+
+CHARACTERS_LOOKUP = {
+    9:   {MIXED: 12, PUNCT: 12},               # \t
+    10:  {PUNCT: 15},                          # \n
+    13:  {MIXED: 11, PUNCT: 11},               # \r
+    32:  {UPPER: 26, LOWER: 26, MIXED: 26},    # SPACE
+    33:  {PUNCT: 10},                          # !
+    34:  {PUNCT: 20},                          # "
+    35:  {MIXED: 15},                          # #
+    36:  {MIXED: 18, PUNCT: 18},               # $
+    37:  {MIXED: 21},                          # %
+    38:  {MIXED: 10},                          # &
+    39:  {PUNCT: 28},                          # '
+    40:  {PUNCT: 23},                          # (
+    41:  {PUNCT: 24},                          # )
+    42:  {MIXED: 22, PUNCT: 22},               # *
+    43:  {MIXED: 20},                          # +
+    44:  {MIXED: 13, PUNCT: 13},               # ,
+    45:  {MIXED: 16, PUNCT: 16},               # -
+    46:  {MIXED: 17, PUNCT: 17},               # .
+    47:  {MIXED: 19, PUNCT: 19},               # /
+    48:  {MIXED: 0},                           # 0
+    49:  {MIXED: 1},                           # 1
+    50:  {MIXED: 2},                           # 2
+    51:  {MIXED: 3},                           # 3
+    52:  {MIXED: 4},                           # 4
+    53:  {MIXED: 5},                           # 5
+    54:  {MIXED: 6},                           # 6
+    55:  {MIXED: 7},                           # 7
+    56:  {MIXED: 8},                           # 8
+    57:  {MIXED: 9},                           # 9
+    58:  {MIXED: 14, PUNCT: 14},               # :
+    59:  {PUNCT: 0},                           # ;
+    60:  {PUNCT: 1},                           # <
+    61:  {MIXED: 23},                          # =
+    62:  {PUNCT: 2},                           # >
+    63:  {PUNCT: 25},                          # ?
+    64:  {PUNCT: 3},                           # @
+    65:  {UPPER: 0},                           # A
+    66:  {UPPER: 1},                           # B
+    67:  {UPPER: 2},                           # C
+    68:  {UPPER: 3},                           # D
+    69:  {UPPER: 4},                           # E
+    70:  {UPPER: 5},                           # F
+    71:  {UPPER: 6},                           # G
+    72:  {UPPER: 7},                           # H
+    73:  {UPPER: 8},                           # I
+    74:  {UPPER: 9},                           # J
+    75:  {UPPER: 10},                          # K
+    76:  {UPPER: 11},                          # L
+    77:  {UPPER: 12},                          # M
+    78:  {UPPER: 13},                          # N
+    79:  {UPPER: 14},                          # O
+    80:  {UPPER: 15},                          # P
+    81:  {UPPER: 16},                          # Q
+    82:  {UPPER: 17},                          # R
+    83:  {UPPER: 18},                          # S
+    84:  {UPPER: 19},                          # T
+    85:  {UPPER: 20},                          # U
+    86:  {UPPER: 21},                          # V
+    87:  {UPPER: 22},                          # W
+    88:  {UPPER: 23},                          # X
+    89:  {UPPER: 24},                          # Y
+    90:  {UPPER: 25},                          # Z
+    91:  {PUNCT: 4},                           # [
+    92:  {PUNCT: 5},                           # \
+    93:  {PUNCT: 6},                           # ]
+    94:  {MIXED: 24},                          # ^
+    95:  {PUNCT: 7},                           # _
+    96:  {PUNCT: 8},                           # `
+    97:  {LOWER: 0},                           # a
+    98:  {LOWER: 1},                           # b
+    99:  {LOWER: 2},                           # c
+    100: {LOWER: 3},                           # d
+    101: {LOWER: 4},                           # e
+    102: {LOWER: 5},                           # f
+    103: {LOWER: 6},                           # g
+    104: {LOWER: 7},                           # h
+    105: {LOWER: 8},                           # i
+    106: {LOWER: 9},                           # j
+    107: {LOWER: 10},                          # k
+    108: {LOWER: 11},                          # l
+    109: {LOWER: 12},                          # m
+    110: {LOWER: 13},                          # n
+    111: {LOWER: 14},                          # o
+    112: {LOWER: 15},                          # p
+    113: {LOWER: 16},                          # q
+    114: {LOWER: 17},                          # r
+    115: {LOWER: 18},                          # s
+    116: {LOWER: 19},                          # t
+    117: {LOWER: 20},                          # u
+    118: {LOWER: 21},                          # v
+    119: {LOWER: 22},                          # w
+    120: {LOWER: 23},                          # x
+    121: {LOWER: 24},                          # y
+    122: {LOWER: 25},                          # z
+    123: {PUNCT: 26},                          # {
+    124: {PUNCT: 21},                          # |
+    125: {PUNCT: 27},                          # }
+    126: {PUNCT: 9},                           # ~
+}
+
+# Switch codes between submodes
+SWITCH_CODE_LOOKUP = {
+    UPPER: {LOWER: 27, MIXED: 28},
+    LOWER: {MIXED: 28},
+    MIXED: {PUNCT: 25, LOWER: 27, UPPER: 28},
+    PUNCT: {UPPER: 29},
+}
+
+SINGLE_SWITCH_CODE_LOOKUP = {
+    UPPER: {PUNCT: 29},
+    LOWER: {UPPER: 27, PUNCT: 29},
+    MIXED: {PUNCT: 29},
+}
+
+# How to switch between submodes (can require two switch codes). */
+SWITCH_CODES = {
+    LOWER: {
+        UPPER: [SWITCH_CODE_LOOKUP[LOWER][MIXED],
+                SWITCH_CODE_LOOKUP[MIXED][UPPER]],
+        MIXED: [SWITCH_CODE_LOOKUP[LOWER][MIXED]],
+        PUNCT: [SWITCH_CODE_LOOKUP[LOWER][MIXED],
+                SWITCH_CODE_LOOKUP[MIXED][PUNCT]],
+    },
+    UPPER: {
+        LOWER: [SWITCH_CODE_LOOKUP[UPPER][LOWER]],
+        MIXED: [SWITCH_CODE_LOOKUP[UPPER][MIXED]],
+        PUNCT: [SWITCH_CODE_LOOKUP[UPPER][MIXED],
+                SWITCH_CODE_LOOKUP[MIXED][PUNCT]],
+    },
+    MIXED: {
+        LOWER: [SWITCH_CODE_LOOKUP[MIXED][LOWER]],
+        UPPER: [SWITCH_CODE_LOOKUP[MIXED][UPPER]],
+        PUNCT: [SWITCH_CODE_LOOKUP[MIXED][PUNCT]],
+    },
+    PUNCT: {
+        LOWER: [SWITCH_CODE_LOOKUP[PUNCT][UPPER],
+                SWITCH_CODE_LOOKUP[UPPER][LOWER]],
+        UPPER: [SWITCH_CODE_LOOKUP[PUNCT][UPPER]],
+        MIXED: [SWITCH_CODE_LOOKUP[PUNCT][UPPER],
+                SWITCH_CODE_LOOKUP[UPPER][MIXED]],
+    },
+}
+
+
+class Submode:
+    UPPER = UPPER
+    LOWER = LOWER
+    MIXED = MIXED
+    PUNCT = PUNCT
+
+
+# Reed solomon error correction factors, per level 0-8
+ERROR_CORRECTION_FACTORS = [
+    [27, 917],
+    [522, 568, 723, 809],
+    [237, 308, 436, 284, 646, 653, 428, 379],
+    [274, 562, 232, 755, 599, 524, 801, 132, 295, 116, 442, 428, 295, 42, 176, 65],
+    [361, 575, 922, 525, 176, 586, 640, 321, 536, 742, 677, 742, 687, 284, 193, 517, 273, 494, 263, 147, 593, 800, 571, 320, 803, 133, 231, 390, 685, 330, 63, 410],
+    [539, 422, 6, 93, 862, 771, 453, 106, 610, 287, 107, 505, 733, 877, 381, 612, 723, 476, 462, 172, 430, 609, 858, 822, 543, 376, 511, 400, 672, 762, 283, 184, 440, 35, 519, 31, 460, 594, 225, 535, 517, 352, 605, 158, 651, 201, 488, 502, 648, 733, 717, 83, 404, 97, 280, 771, 840, 629, 4, 381, 843, 623, 264, 543],
+    [521, 310, 864, 547, 858, 580, 296, 379, 53, 779, 897, 444, 400, 925, 749, 415, 822, 93, 217, 208, 928, 244, 583, 620, 246, 148, 447, 631, 292, 908, 490, 704, 516, 258, 457, 907, 594, 723, 674, 292, 272, 96, 684, 432, 686, 606, 860, 569, 193, 219, 129, 186, 236, 287, 192, 775, 278, 173, 40, 379, 712, 463, 646, 776, 171, 491, 297, 763, 156, 732, 95, 270, 447, 90, 507, 48, 228, 821, 808, 898, 784, 663, 627, 378, 382, 262, 380, 602, 754, 336, 89, 614, 87, 432, 670, 616, 157, 374, 242, 726, 600, 269, 375, 898, 845, 454, 354, 130, 814, 587, 804, 34, 211, 330, 539, 297, 827, 865, 37, 517, 834, 315, 550, 86, 801, 4, 108, 539],
+    [524, 894, 75, 766, 882, 857, 74, 204, 82, 586, 708, 250, 905, 786, 138, 720, 858, 194, 311, 913, 275, 190, 375, 850, 438, 733, 194, 280, 201, 280, 828, 757, 710, 814, 919, 89, 68, 569, 11, 204, 796, 605, 540, 913, 801, 700, 799, 137, 439, 418, 592, 668, 353, 859, 370, 694, 325, 240, 216, 257, 284, 549, 209, 884, 315, 70, 329, 793, 490, 274, 877, 162, 749, 812, 684, 461, 334, 376, 849, 521, 307, 291, 803, 712, 19, 358, 399, 908, 103, 511, 51, 8, 517, 225, 289, 470, 637, 731, 66, 255, 917, 269, 463, 830, 730, 433, 848, 585, 136, 538, 906, 90, 2, 290, 743, 199, 655, 903, 329, 49, 802, 580, 355, 588, 188, 462, 10, 134, 628, 320, 479, 130, 739, 71, 263, 318, 374, 601, 192, 605, 142, 673, 687, 234, 722, 384, 177, 752, 607, 640, 455, 193, 689, 707, 805, 641, 48, 60, 732, 621, 895, 544, 261, 852, 655, 309, 697, 755, 756, 60, 231, 773, 434, 421, 726, 528, 503, 118, 49, 795, 32, 144, 500, 238, 836, 394, 280, 566, 319, 9, 647, 550, 73, 914, 342, 126, 32, 681, 331, 792, 620, 60, 609, 441, 180, 791, 893, 754, 605, 383, 228, 749, 760, 213, 54, 297, 134, 54, 834, 299, 922, 191, 910, 532, 609, 829, 189, 20, 167, 29, 872, 449, 83, 402, 41, 656, 505, 579, 481, 173, 404, 251, 688, 95, 497, 555, 642, 543, 307, 159, 924, 558, 648, 55, 497, 10],
+    [352, 77, 373, 504, 35, 599, 428, 207, 409, 574, 118, 498, 285, 380, 350, 492, 197, 265, 920, 155, 914, 299, 229, 643, 294, 871, 306, 88, 87, 193, 352, 781, 846, 75, 327, 520, 435, 543, 203, 666, 249, 346, 781, 621, 640, 268, 794, 534, 539, 781, 408, 390, 644, 102, 476, 499, 290, 632, 545, 37, 858, 916, 552, 41, 542, 289, 122, 272, 383, 800, 485, 98, 752, 472, 761, 107, 784, 860, 658, 741, 290, 204, 681, 407, 855, 85, 99, 62, 482, 180, 20, 297, 451, 593, 913, 142, 808, 684, 287, 536, 561, 76, 653, 899, 729, 567, 744, 390, 513, 192, 516, 258, 240, 518, 794, 395, 768, 848, 51, 610, 384, 168, 190, 826, 328, 596, 786, 303, 570, 381, 415, 641, 156, 237, 151, 429, 531, 207, 676, 710, 89, 168, 304, 402, 40, 708, 575, 162, 864, 229, 65, 861, 841, 512, 164, 477, 221, 92, 358, 785, 288, 357, 850, 836, 827, 736, 707, 94, 8, 494, 114, 521, 2, 499, 851, 543, 152, 729, 771, 95, 248, 361, 578, 323, 856, 797, 289, 51, 684, 466, 533, 820, 669, 45, 902, 452, 167, 342, 244, 173, 35, 463, 651, 51, 699, 591, 452, 578, 37, 124, 298, 332, 552, 43, 427, 119, 662, 777, 475, 850, 764, 364, 578, 911, 283, 711, 472, 420, 245, 288, 594, 394, 511, 327, 589, 777, 699, 688, 43, 408, 842, 383, 721, 521, 560, 644, 714, 559, 62, 145, 873, 663, 713, 159, 672, 729, 624, 59, 193, 417, 158, 209, 563, 564, 343, 693, 109, 608, 563, 365, 181, 772, 677, 310, 248, 353, 708, 410, 579, 870, 617, 841, 632, 860, 289, 536, 35, 777, 618, 586, 424, 833, 77, 597, 346, 269, 757, 632, 695, 751, 331, 247, 184, 45, 787, 680, 18, 66, 407, 369, 54, 492, 228, 613, 830, 922, 437, 519, 644, 905, 789, 420, 305, 441, 207, 300, 892, 827, 141, 537, 381, 662, 513, 56, 252, 341, 242, 797, 838, 837, 720, 224, 307, 631, 61, 87, 560, 310, 756, 665, 397, 808, 851, 309, 473, 795, 378, 31, 647, 915, 459, 806, 590, 731, 425, 216, 548, 249, 321, 881, 699, 535, 673, 782, 210, 815, 905, 303, 843, 922, 281, 73, 469, 791, 660, 162, 498, 308, 155, 422, 907, 817, 187, 62, 16, 425, 535, 336, 286, 437, 375, 273, 610, 296, 183, 923, 116, 667, 751, 353, 62, 366, 691, 379, 687, 842, 37, 357, 720, 742, 330, 5, 39, 923, 311, 424, 242, 749, 321, 54, 669, 316, 342, 299, 534, 105, 667, 488, 640, 672, 576, 540, 316, 486, 721, 610, 46, 656, 447, 171, 616, 464, 190, 531, 297, 321, 762, 752, 533, 175, 134, 14, 381, 433, 717, 45, 111, 20, 596, 284, 736, 138, 646, 411, 877, 669, 141, 919, 45, 780, 407, 164, 332, 899, 165, 726, 600, 325, 498, 655, 357, 752, 768, 223, 849, 647, 63, 310, 863, 251, 366, 304, 282, 738, 675, 410, 389, 244, 31, 121, 303, 263],
+]
+
+
+def il_error_correction_compute_error_correction_code_words(data_words, level):
+    assert 0 <= level <= 8
+
+    # Correction factors for the given level
+    factors = ERROR_CORRECTION_FACTORS[level]
+
+    # Number of EC words
+    count = 2 ** (level + 1)
+
+    # Correction code words list, prepopulated with zeros
+    ec_words = [0] * count
+
+    # Do the math
+    for data_word in data_words:
+        temp = (data_word + ec_words[-1]) % 929
+
+        for x in range(count - 1, -1, -1):
+            word = ec_words[x - 1] if x > 0 else 0
+            ec_words[x] = (word + 929 - (temp * factors[x]) % 929) % 929
+
+    return [929 - x if x > 0 else x for x in reversed(ec_words)]
+
+
+def il_rendering_barcode_size(codes):
+    """Returns the barcode size in modules."""
+    num_rows = len(codes)
+    num_cols = len(codes[0])
+
+    # 17 bodules per column, last column has an additional module
+    width = num_cols * 17 + 1
+    height = num_rows
+
+    return width, height
+
+
+def il_rendering_modules(codes):
+    """Iterates over codes and yields barcode moudles as (y, x) tuples."""
+
+    for row_id, row in enumerate(codes):
+        col_id = 0
+        for value in row:
+            for digit in format(value, 'b'):
+                if digit == "1":
+                    yield col_id, row_id
+                col_id += 1
+
+
+def il_rendering_parse_color(color):
+    return ImageColor.getrgb(color)
+
+
+def il_rendering_rgb_to_hex(color):
+    return '#{0:02x}{1:02x}{2:02x}'.format(*color)
+
+
+def il_rendering_render_image(codes, scale=3, ratio=3, padding=20, fg_color="#000", bg_color="#FFF"):
+    width, height = il_rendering_barcode_size(codes)
+
+    # Translate hex code colors to RGB tuples
+    bg_color = il_rendering_parse_color(bg_color)
+    fg_color = il_rendering_parse_color(fg_color)
+
+    # Construct the image
+    image = Image.new("RGB", (width, height), bg_color)
+
+    # Draw the pixle grid
+    px = image.load()
+    for x, y in il_rendering_modules(codes):
+        px[x, y] = fg_color
+
+    # Scale and add padding
+    image = image.resize((scale * width, scale * height * ratio), resample=Resampling.NEAREST)
+    image = ImageOps.expand(image, padding, bg_color)
+
+    return image
+
+
+def il_rendering_render_svg(codes, scale=3, ratio=3, color="#000", description=None):
+    # Barcode size in modules
+    width, height = il_rendering_barcode_size(codes)
+
+    # Size of each module
+    scale_x = scale
+    scale_y = scale * ratio
+
+    color = il_rendering_rgb_to_hex(il_rendering_parse_color(color))
+
+    root = Element('svg', {
+        "version": "1.1",
+        "xmlns": "http://www.w3.org/2000/svg",
+        "width": str(width * scale_x),
+        "height": str(height * scale_y),
+    })
+
+    if description:
+        description_element = SubElement(root, 'description')
+        description_element.text = description
+
+    group = SubElement(root, 'g', {
+        "id": "barcode",
+        "fill": color,
+        "stroke": "none"
+    })
+
+    # Generate the barcode modules
+    for col_id, row_id in il_rendering_modules(codes):
+        SubElement(group, 'rect', {
+            "x": str(col_id * scale_x),
+            "y": str(row_id * scale_y),
+            "width": str(scale_x),
+            "height": str(scale_y),
+        })
+
+    return ElementTree(element=root)
+
+T = TypeVar("T")
+
+
+def il_util_from_base(digits: List[int], base: int) -> int:
+    return sum(v * (base ** (len(digits) - k - 1)) for k, v in enumerate(digits))
+
+
+def il_util_to_base(value: int, base: int) -> List[int]:
+    digits: List[int] = []
+
+    while value > 0:
+        digits.insert(0, value % base)
+        value //= base
+
+    return digits
+
+
+def il_util_switch_base(digits: List[int], source_base: int, target_base: int) -> List[int]:
+    return il_util_to_base(il_util_from_base(digits, source_base), target_base)
+
+
+def il_util_chunks(iterable: Iterable[T], size: int) -> Generator[Tuple[T, ...], None, None]:
+    """Generator which chunks data into chunks of given size."""
+    it = iter(iterable)
+    while True:
+        chunk = tuple(islice(it, size))
+        if not chunk:
+            return
+        yield chunk
+
+
+def il_util_to_bytes(input: Any, encoding: str = "utf-8") -> bytes:
+    if isinstance(input, bytes):
+        return input
+
+    if isinstance(input, str):
+        return bytes(input, encoding)
+
+    raise ValueError("Invalid input, expected string or bytes")
+
+
+def il_util_iterate_prev_next(iterable: Iterable[T]) -> Iterator[Tuple[Optional[T], T, Optional[T]]]:
+    """
+    Creates an iterator which provides previous, current and next item.
+    """
+    prevs, items, nexts = tee(iterable, 3)
+    prevs = chain([None], prevs)
+    nexts = chain(islice(nexts, 1, None), [None])
+    return zip(prevs, items, nexts)
+
+
+"""
+Byte Compaction Mode (BC)
+
+Can encode: ASCII 0 to 255
+Rate compaction: 1.2 byte per code word
+"""
+
+
+def il_byte_compact_bytes(data):
+    """Encodes data into code words using the Byte compaction mode."""
+    compacted_chunks = (il_byte__compact_chunk(chunk) for chunk in chunks(data, size=6))
+    return chain(*compacted_chunks)
+
+
+def il_byte__compact_chunk(chunk):
+    """
+    Chunks of exactly 6 bytes are encoded into 5 codewords by using a base 256
+    to base 900 transformation. Smaller chunks are left unchanged.
+    """
+    digits = [i for i in chunk]
+
+    if len(chunk) == 6:
+        base900 = switch_base(digits, 256, 900)
+        return [0] * (5 - len(base900)) + base900
+
+    return digits
+
+
+"""
+Numeric Compaction Mode (NC)
+
+Can encode: Digits 0-9, ASCII
+Rate compaction: 2.9 bytes per code word
+"""
+
+
+def il_numeric__compact_chunk(chunk):
+    number = "".join(chr(x) for x in chunk)
+    value = int("1" + number)
+    return to_base(value, 900)
+
+
+def il_numeric_compact_numbers(data):
+    """Encodes data into code words using the Numeric compaction mode."""
+    compacted_chunks = (il_numeric__compact_chunk(chunk) for chunk in chunks(data, size=44))
+    return chain(*compacted_chunks)
+
+
+def il_optimizations_replace_short_numeric_chunks(chunks):
+    """
+    The Numeric Compaction mode can pack almost 3 digits (2.93) into a symbol
+    character. Though Numeric Compaction mode can be invoked at any digit
+    length, it is recommended to use Numeric Compaction mode when there are
+    more than 13 consecutive digits. Otherwise, use Text Compaction mode.
+    """
+    from pdf417gen.compaction import Chunk
+
+    for prev, chunk, next in iterate_prev_next(chunks):
+        is_short_numeric_chunk = (
+            chunk.compact_fn == compact_numbers
+            and len(chunk.data) < 13
+        )
+
+        borders_text_chunk = (
+            (prev and prev.compact_fn == compact_text) or
+            (next and next.compact_fn == compact_text)
+        )
+
+        if is_short_numeric_chunk and borders_text_chunk:
+            yield Chunk(chunk.data, compact_text)
+        else:
+            yield chunk
+
+
+def il_optimizations_merge_chunks_with_same_compact_fn(chunks):
+    from pdf417gen.compaction import Chunk
+
+    for compact_fn, group in groupby(chunks, key=lambda x: x[1]):
+        data = chain.from_iterable(chunk.data for chunk in group)
+        yield Chunk(list(data), compact_fn)
+
+
+"""
+Text Compaction Mode (TC)
+
+Can encode: ASCII 9, 10, 13 and 32-126
+Rate compaction: 2 bytes per code word
+"""
+
+
+def il_text__exists_in_submode(char, submode):
+    return char in CHARACTERS_LOOKUP and submode in CHARACTERS_LOOKUP[char]
+
+
+def il_text__get_submode(char):
+    if char not in CHARACTERS_LOOKUP:
+        raise ValueError("Cannot encode char: {}".format(char))
+
+    submodes = CHARACTERS_LOOKUP[char].keys()
+
+    preference = [Submode.LOWER, Submode.UPPER, Submode.MIXED, Submode.PUNCT]
+
+    for submode in preference:
+        if submode in submodes:
+            return submode
+
+    raise ValueError("Cannot encode char: {}".format(char))
+
+
+def il_text_compact_text_interim(data):
+    """Encodes text data to interim code words."""
+
+    def _interim_text_generator(chars):
+        # By default, encoding starts in uppercase submode
+        submode = Submode.UPPER
+
+        for char in chars:
+            # Switch submode if needed
+            if not il_text__exists_in_submode(char, submode):
+                prev_submode = submode
+                submode = il_text__get_submode(char)
+                for code in SWITCH_CODES[prev_submode][submode]:
+                    yield code
+
+            yield CHARACTERS_LOOKUP[char][submode]
+
+    return _interim_text_generator(data)
+
+
+# Since each code word consists of 2 characters, a padding value is
+# needed when encoding a single character. 29 is used as padding because
+# it's a switch in all 4 submodes, and doesn't add any data.
+PADDING_INTERIM_CODE = 29
+
+
+def il_text__compact_chunk(chunk):
+    if len(chunk) == 1:
+        chunk = (chunk[0], PADDING_INTERIM_CODE)
+
+    return 30 * chunk[0] + chunk[1]
+
+
+def il_text_compact_text(data):
+    """Encodes data into code words using the Text compaction mode."""
+    interim_codes = il_text_compact_text_interim(data)
+    return (il_text__compact_chunk(chunk) for chunk in chunks(interim_codes, 2))
+
+
+# Codes for switching between compacting modes
+TEXT_LATCH = 900
+BYTE_LATCH = 901
+BYTE_LATCH_ALT = 924
+BYTE_SWITCH = 913
+NUMERIC_LATCH = 902
+
+
+# A chunk of barcode data with accompanying compaction function
+Chunk = namedtuple("Chunk", ["data", "compact_fn"])
+
+
+def il___init___compact(data):
+    """Encodes given data into an array of PDF417 code words."""
+    chunks = il___init____split_to_chunks(data)
+    chunks = optimizations.replace_short_numeric_chunks(chunks)
+    chunks = optimizations.merge_chunks_with_same_compact_fn(chunks)
+    return il___init____compact_chunks(chunks)
+
+
+def il___init____compact_chunks(chunks):
+    compacted_chunks = (
+        il___init____compact_chunk(ordinal, chunk) for ordinal, chunk in enumerate(chunks))
+
+    return chain(*compacted_chunks)
+
+
+def il___init____compact_chunk(ordinal, chunk):
+    code_words = []
+
+    # Add the switch code if required
+    add_switch_code = ordinal > 0 or chunk.compact_fn != compact_text
+    if add_switch_code:
+        code_words.append(il___init___get_switch_code(chunk))
+
+    code_words.extend(chunk.compact_fn(chunk.data))
+
+    return code_words
+
+
+def il___init____split_to_chunks(data):
+    """
+    Splits a string into chunks which can be compacted with the same compacting
+    function.
+    """
+    for fn, chunk in groupby(data, key=il___init___get_optimal_compactor_fn):
+        yield Chunk(list(chunk), fn)
+
+
+def il___init___get_optimal_compactor_fn(char):
+    if 48 <= char <= 57:
+        return compact_numbers
+
+    if char in CHARACTERS_LOOKUP:
+        return compact_text
+
+    return compact_bytes
+
+
+def il___init___get_switch_code(chunk):
+    if chunk.compact_fn == compact_text:
+        return TEXT_LATCH
+
+    if chunk.compact_fn == compact_bytes:
+        return BYTE_LATCH_ALT if len(chunk.data) % 6 == 0 else BYTE_LATCH
+
+    if chunk.compact_fn == compact_numbers:
+        return NUMERIC_LATCH
+
+    assert False, "Nonexistant compaction function"

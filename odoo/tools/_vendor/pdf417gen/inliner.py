@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import re
+import shutil
 import sys
 from io import StringIO
 from collections import defaultdict
@@ -71,7 +72,7 @@ with path.open("r") as infile:
             continue
         for old, new in repo.items():
             if old in line:
-                after = re.sub(old + '\(', new + '(', line)
+                after = re.sub(old + r'\(', new + '(', line)
                 print(f'{old} -> {new}  {line.rstrip()}')
                 line = after
         out.write(line.rstrip() + '\n')
@@ -111,3 +112,5 @@ with outpath.open("w") as outfile:
         empty_count = write(empty_count, line)
 
 print(">>> Inlining done.")
+
+shutil.move(filename, './__backup/')
