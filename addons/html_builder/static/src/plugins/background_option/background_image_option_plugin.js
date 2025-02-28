@@ -75,6 +75,7 @@ class BackgroundImageOptionPlugin extends Plugin {
                     this.applyReplaceBackgroundImage.bind(this)({
                         editingElement: editingElement,
                         loadResult: "",
+                        param: { forceClean: true },
                     });
                 },
             },
@@ -107,8 +108,13 @@ class BackgroundImageOptionPlugin extends Plugin {
             onClose.then(resolve);
         });
     }
-    applyReplaceBackgroundImage({ editingElement, loadResult: imageSrc }) {
-        if (!imageSrc) {
+    applyReplaceBackgroundImage({
+        editingElement,
+        loadResult: imageSrc,
+        param: { forceClean = false },
+    }) {
+        if (!forceClean && !imageSrc) {
+            // Do nothing: no images has been selected on the media dialog
             return;
         }
         this.setImageBackground(editingElement, imageSrc);
