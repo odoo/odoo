@@ -31,6 +31,15 @@ class StockMove(models.Model):
         distinct_fields.append('sale_line_id')
         return distinct_fields
 
+    def _is_qty_incoming(self):
+        self.ensure_one()
+        return (super()._is_qty_incoming() or (
+            self.sale_line_id and (
+                self.location_dest_id.usage == 'customer' or (
+                self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id)
+            ))
+        )
+
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
         related to this stock move.
