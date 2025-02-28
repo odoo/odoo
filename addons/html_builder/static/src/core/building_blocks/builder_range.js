@@ -30,11 +30,31 @@ export class BuilderRange extends Component {
 
     setup() {
         useBuilderComponent();
-        const { state, commit, preview } = useInputBuilderComponent({ id: this.props.id });
+        const { state, commit, preview } = useInputBuilderComponent({
+            id: this.props.id,
+            formatRawValue: this.formatRawValue.bind(this),
+            parseDisplayValue: this.parseDisplayValue.bind(this),
+        });
 
         this.commit = commit;
         this.preview = preview;
         this.state = state;
+    }
+
+    formatRawValue(value) {
+        if (this.props.unit) {
+            // Remove the unit
+            value = value.slice(0, -this.props.unit.length);
+        }
+        return value;
+    }
+
+    parseDisplayValue(value) {
+        if (this.props.unit) {
+            // Add the unit
+            value = `${value}${this.props.unit}`;
+        }
+        return value;
     }
 
     onChange(e) {
@@ -46,9 +66,15 @@ export class BuilderRange extends Component {
         this.preview(e.target.value);
     }
 
-    getOutput(value) {
-        // TODO: adapt when agau's PR that adapts `useInputBuilderComponent` is
-        // merged.
-        return this.props.computedOutput ? this.props.computedOutput(value) : value;
+    get rangeInputValue() {
+        return this.state.value ? this.formatRawValue(this.state.value) : "";
+    }
+
+    get displayValue() {
+        let value = this.rangeInputValue;
+        if (this.props.computedOutput) {
+            value = this.props.computedOutput(value);
+        }
+        return value;
     }
 }
