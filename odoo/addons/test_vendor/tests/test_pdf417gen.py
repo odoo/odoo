@@ -1,11 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 # from mock import patch
 from xml.etree.ElementTree import ElementTree
 
 from PIL.Image import Image
 
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools._vendor.pdf417gen import (
+from odoo.tools._vendor.pdf417gen.pdf417gen import (
     Bytes,
     Chunk,
     # Console,
@@ -52,8 +52,7 @@ Namespaces are one honking great idea -- let's do more of those!
         for _ in range(cycles):
             Encoding.encode(self.ZEN)
         duration = datetime.now() - start
-        print("Encode x{}: {}".format(cycles, duration))
-
+        self.assertLess(duration, timedelta(milliseconds=500))
 
     def test_render_image(self, cycles=100):
         codes = Encoding.encode(self.ZEN)
@@ -61,8 +60,7 @@ Namespaces are one honking great idea -- let's do more of those!
         for _ in range(cycles):
             Rendering.render_image(codes)
         duration = datetime.now() - start
-        print("Render image x{}: {}".format(cycles, duration))
-
+        self.assertLess(duration, timedelta(milliseconds=500))
 
     def test_render_svg(self, cycles=100):
         codes = Encoding.encode(self.ZEN)
@@ -70,7 +68,8 @@ Namespaces are one honking great idea -- let's do more of those!
         for _ in range(cycles):
             Rendering.render_svg(codes)
         duration = datetime.now() - start
-        print("Render SVG x{}: {}".format(cycles, duration))
+        self.assertLess(duration, timedelta(seconds=2))
+
 
 @tagged('-at_install', 'post_install')
 class CompactionTest(TransactionCase):
@@ -170,7 +169,7 @@ class CompactionTest(TransactionCase):
 
 @tagged('-at_install', 'post_install')
 class InitTest(TransactionCase):
-    def test_split_to_chunks(self, data, expected):
+    def test_split_to_chunks(self):
         def chars(string):
             return [i for i in Util.to_bytes(string)]
 
@@ -191,7 +190,7 @@ class InitTest(TransactionCase):
 
 @tagged('-at_install', 'post_install')
 class OptimizationsTest(TransactionCase):
-    def test_optimizations(self, data, expected):
+    def test_optimizations(self):
         def chars(string):
             return [i for i in Util.to_bytes(string)]
 
@@ -414,24 +413,24 @@ class EncodingTest(TransactionCase):
         # Data too long
         with self.assertRaises(ValueError) as ex:
             Encoding.encode("x" * 1854, columns=16, security_level=6)
-        self.assertEqual(str(ex.value), "Data too long. Generated bar code has length descriptor of 944. Maximum is 928.")
+            self.assertEqual(str(ex.value), "Data too long. Generated bar code has length descriptor of 944. Maximum is 928.")
 
         # Too few rows
         with self.assertRaises(ValueError) as ex:
             Encoding.encode("x", columns=16, security_level=1)
-        self.assertEqual(str(ex.value), "Generated bar code has 1 rows. Minimum is 3 rows. Try decreasing column count.")
+            self.assertEqual(str(ex.value), "Generated bar code has 1 rows. Minimum is 3 rows. Try decreasing column count.")
 
         # Too many rows
         with self.assertRaises(ValueError) as ex:
             Encoding.encode("x" * 1853, columns=8, security_level=6)
-        self.assertEqual(str(ex.value), "Generated bar code has 132 rows. Maximum is 90 rows. Try increasing column count.")
+            self.assertEqual(str(ex.value), "Generated bar code has 132 rows. Maximum is 90 rows. Try increasing column count.")
 
 
 @tagged('-at_install', 'post_install')
 class RenderingTest(TransactionCase):
     codes = Encoding.encode("hello world!")
     
-    def modules(codes):
+    def modules(self, codes):
         """Iterates over barcode codes and yields barcode moudles.
 
         Yields: column number (int), row number (int), module visibility (bool).

@@ -1026,7 +1026,7 @@ class Numeric:
         return Util.to_base(value, 900)
 
 
-    def _compact_numbers(data):
+    def compact_numbers(data):
         """Encodes data into code words using the Numeric compaction mode."""
         compacted_chunks = (Numeric._compact_chunk(chunk) for chunk in Util.chunks(data, size=44))
         return chain(*compacted_chunks)
@@ -1043,7 +1043,7 @@ class Optimizations:
         """
         for prev, chunk, next in Util.iterate_prev_next(chunks):
             is_short_numeric_chunk = (
-                chunk.compact_fn == Numeric._compact_numbers
+                chunk.compact_fn == Numeric.compact_numbers
                 and len(chunk.data) < 13
             )
 
@@ -1152,7 +1152,7 @@ class Init:
 
         return code_words
 
-    def split_to_chunks(data):
+    def _split_to_chunks(data):
         """
         Splits a string into chunks which can be compacted with the same compacting
         function.
