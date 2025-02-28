@@ -10,8 +10,8 @@
             t-att-max="props.max"
             t-att-step="props.step"
             t-att-value="rangeInputValue"
-            t-on-change="this.onChange"
-            t-on-input="this.onInput" />
+            t-on-change="onChange"
+            t-on-input="onInput" />
             <output t-if="props.displayRangeValue" t-out="displayValue" />
         </div>
     </BuilderComponent>
