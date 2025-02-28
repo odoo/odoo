@@ -1,7 +1,11 @@
 import { Domain } from "@web/core/domain";
+import { parseDate, serializeDate } from "@web/core/l10n/dates";
+import { parseTime } from "@web/core/l10n/time";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
-import { deepCopy, deepEqual } from "@web/core/utils/objects";
+import { deepCopy, deepEqual, pick } from "@web/core/utils/objects";
+
+const { DateTime } = luxon;
 
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -774,6 +778,13 @@ function getFieldType(path, options) {
     return options.getFieldDef?.(path)?.type;
 }
 
+export function splitPath(path) {
+    const pathParts = typeof path === "string" ? path.split(".") : [];
+    const lastPart = pathParts.pop() || "";
+    const initialPath = pathParts.join(".");
+    return { initialPath, lastPart };
+}
+
 function allEqual(...values) {
     return values.slice(1).every((v) => v === values[0]);
 }
@@ -889,6 +900,206 @@ function _removeBetweenOperator(c) {
         return connector(
             "|",
             [condition(path, "<", value[0]), condition(path, ">", value[1])],
+            negate
+        );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// special paths
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @param {Condition} c
+ * @param {Options} [options={}]
+ */
+function _createSpecialPath(c, options = {}) {
+    const { negate, path, operator, value } = c;
+    const { initialPath, lastPart } = splitPath(path);
+    const { lastPart: previousPart } = splitPath(initialPath);
+    if (!["__date", "__time", ""].includes(previousPart) && lastPart) {
+        if (getFieldType(initialPath, options) === "datetime") {
+            const pathFieldType = getFieldType(path, options);
+            if (pathFieldType === "date_option") {
+                const newPath = [initialPath, "__date", lastPart].join(".");
+                return condition(newPath, operator, value, negate);
+            }
+            if (pathFieldType === "time_option") {
+                const newPath = [initialPath, "__time", lastPart].join(".");
+                return condition(newPath, operator, value, negate);
+            }
+        }
+    }
+}
+
+/**
+ * @param {Condition} c
+ */
+function _removeSpecialPath(c) {
+    const { negate, path, operator, value } = c;
+    const { initialPath, lastPart } = splitPath(path);
+    const { initialPath: subPath, lastPart: previousPart } = splitPath(initialPath);
+    if (["__date", "__time"].includes(previousPart) && lastPart) {
+        return condition([subPath, lastPart].join("."), operator, value, negate);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// __time - __date
+////////////////////////////////////////////////////////////////////////////////
+
+function parseDateCustom(value) {
+    try {
+        return parseDate(value);
+    } catch {
+        return null;
+    }
+}
+
+function extractOperator(o1, o2, o3) {
+    if (allEqual(o1, o2, o3)) {
+        return { success: true, operator: o1 };
+    }
+    return {};
+}
+
+function extractPath(p1, p2, p3, options) {
+    const { initialPath: ip1, lastPart: lp1 } = splitPath(p1);
+    const { initialPath: ip2, lastPart: lp2 } = splitPath(p2);
+    const { initialPath: ip3, lastPart: lp3 } = splitPath(p3);
+    if (!allEqual(ip1, ip2, ip3) || ip1 === "" || getFieldType(ip1, options) !== "datetime") {
+        return {};
+    }
+    if (lp1 === "year_number" && lp2 === "month_number" && lp3 === "day_of_month") {
+        return { success: true, option: "__date", path: ip1 };
+    }
+    if (lp1 === "hour_number" && lp2 === "minute_number" && lp3 === "second_number") {
+        return { success: true, option: "__time", path: ip1 };
+    }
+    return {};
+}
+
+function extractValue(v1, v2, v3, option) {
+    if (allEqual(false, v1, v2, v3)) {
+        return { success: true, value: false };
+    }
+    if ([v1, v2, v3].some((v) => !Number.isInteger(v))) {
+        return {};
+    }
+    if (option === "__date") {
+        const date = parseDateCustom(`${v1}-${v2 < 10 ? `0${v2}` : v2}-${v3 < 10 ? `0${v3}` : v3}`);
+        if (date) {
+            return { success: true, value: serializeDate(date) };
+        }
+    } else if (option === "__time") {
+        const time = parseTime(`${v1}:${v2}:${v3}`, true);
+        if (time) {
+            return {
+                success: true,
+                value: DateTime.fromObject(pick(time, "hour", "minute", "second")).toFormat(
+                    "HH:mm:ss"
+                ),
+            };
+        }
+    }
+    return {};
+}
+
+/**
+ * @param {Connector} c
+ * @param {[Condition, Condition, Condition]} param
+ * @param {Options} [options={}]
+ */
+function _createDatetimeOption(c, [child1, child2, child3], options = {}) {
+    const { operator } = extractOperator(child1.operator, child2.operator, child3.operator);
+    if (!operator) {
+        return;
+    }
+    const { option, path } = extractPath(child1.path, child2.path, child3.path, options);
+    if (!option) {
+        return;
+    }
+    const { success, value } = extractValue(child1.value, child2.value, child3.value, option);
+    if (!success) {
+        return;
+    }
+    if (value === false) {
+        if (["=", "!="].includes(operator)) {
+            return condition(`${path}.${option}`, operator, false);
+        }
+        return;
+    }
+    if (operator === "!=" ? c.value === "|" : c.value === "&") {
+        return condition(`${path}.${option}`, operator, value);
+    }
+}
+
+function extractPaths(path) {
+    const { initialPath, lastPart } = splitPath(path);
+    if (!initialPath) {
+        return {};
+    }
+    if (lastPart === "__date") {
+        return {
+            option: "__date",
+            path1: `${initialPath}.year_number`,
+            path2: `${initialPath}.month_number`,
+            path3: `${initialPath}.day_of_month`,
+        };
+    }
+    if (lastPart === "__time") {
+        return {
+            option: "__time",
+            path1: `${initialPath}.hour_number`,
+            path2: `${initialPath}.minute_number`,
+            path3: `${initialPath}.second_number`,
+        };
+    }
+    return {};
+}
+
+function extractValues(value, option) {
+    if (value === false) {
+        return { success: true, value1: false, value2: false, value3: false };
+    }
+    if (option === "__time") {
+        const time = typeof value === "string" ? parseTime(value, true) : null;
+        if (time) {
+            return { success: true, value1: time.hour, value2: time.minute, value3: time.second };
+        }
+    } else if (option === "__date") {
+        const date = typeof value === "string" ? parseDateCustom(value) : null;
+        if (date) {
+            return { success: true, value1: date.year, value2: date.month, value3: date.day };
+        }
+    }
+    return {};
+}
+
+/**
+ * @param {Condition} c
+ */
+function _removeDatetimeOption(c) {
+    const { negate, operator, path, value } = c;
+    if (!["=", "!=", ">", ">=", "<", "<=", "between"].includes(operator)) {
+        return;
+    }
+    const { option, path1, path2, path3 } = extractPaths(path);
+    if (!option) {
+        return;
+    }
+    if (value === false && !["=", "!="].includes(operator)) {
+        return;
+    }
+    const { success, value1, value2, value3 } = extractValues(value, option);
+    if (success) {
+        return connector(
+            operator === "!=" ? "|" : "&",
+            [
+                condition(path1, operator, value1),
+                condition(path2, operator, value2),
+                condition(path3, operator, value3),
+            ],
             negate
         );
     }
@@ -1041,6 +1252,28 @@ function removeBetweenOperators(tree) {
 
 /**
  * @param {Tree} tree
+ * @param {Options} [options={}]
+ * @returns {Tree}
+ */
+function createDatetimeOptions(tree, options = {}) {
+    return operate(
+        (connector) => rewriteNConsecutiveConditions(_createDatetimeOption, connector, options, 3),
+        tree,
+        options,
+        "connector"
+    );
+}
+
+/**
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
+function removeDatetimeOptions(tree) {
+    return operate(_removeDatetimeOption, tree);
+}
+
+/**
+ * @param {Tree} tree
  * @param {Options} [options=[]]
  * @returns {Tree}
  */
@@ -1054,6 +1287,23 @@ export function createVirtualOperators(tree, options = {}) {
  */
 export function removeVirtualOperators(tree) {
     return operate(_removeVirtualOperator, tree);
+}
+
+/**
+ * @param {Tree} tree
+ * @param {Options} [options=[]]
+ * @returns {Tree}
+ */
+function createSpecialPaths(tree, options = {}) {
+    return operate(_createSpecialPath, tree, options);
+}
+
+/**
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
+function removeSpecialPaths(tree) {
+    return operate(_removeSpecialPath, tree);
 }
 
 /**
@@ -1109,7 +1359,13 @@ export function expressionFromTree(tree, options = {}) {
  */
 export function domainFromTree(tree) {
     const simplifiedTree = applyTransformations(
-        [removeBetweenOperators, removeVirtualOperators, removeComplexConditions],
+        [
+            removeDatetimeOptions,
+            removeSpecialPaths,
+            removeBetweenOperators,
+            removeVirtualOperators,
+            removeComplexConditions,
+        ],
         tree
     );
     const domainAST = {
@@ -1128,7 +1384,11 @@ export function treeFromDomain(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options); // a simple tree
-    return applyTransformations([createVirtualOperators, createBetweenOperators], tree, options);
+    return applyTransformations(
+        [createVirtualOperators, createBetweenOperators, createSpecialPaths, createDatetimeOptions],
+        tree,
+        options
+    );
 }
 
 /**

@@ -5,18 +5,20 @@ import { Component, useState, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
-    Partner,
-    Product,
     Country,
+    Partner,
+    Player,
+    Product,
     Stage,
     Team,
-    Player,
     addNewRule,
     clearNotSupported,
     clickOnButtonAddBranch,
     clickOnButtonAddNewRule,
     clickOnButtonDeleteNode,
+    clickPrev,
     editValue,
+    followRelation,
     getConditionText,
     getCurrentOperator,
     getCurrentPath,
@@ -1037,6 +1039,7 @@ test("support properties", async () => {
                 "is lower",
                 "is lower or equal",
                 "is between",
+                "is not between",
                 "contains",
                 "does not contain",
                 "set",
@@ -2693,4 +2696,446 @@ test("don't show avatar for expressions", async () => {
     await contains(SELECTORS.debugArea).edit(`[("user_id", "=", uid)]`);
     expect(".o_record_selector input").toHaveValue("uid");
     expect(".o_record_selector img").toHaveCount(0);
+});
+
+test("datetime options (readonly)", async () => {
+    const parent = await makeDomainSelector({
+        readonly: true,
+        domain: `[]`,
+    });
+    const toTest = [
+        {
+            domain: `[
+                ("datetime.year_number", "=", False),
+                ("datetime.month_number", "=", False),
+                ("datetime.day_of_month", "=", False),
+            ]`,
+            text: `Datetime ➔ Date not set`,
+        },
+        {
+            domain: `[
+                ("datetime.year_number", "!=", False),
+                ("datetime.month_number", "!=", False),
+                ("datetime.day_of_month", "!=", False),
+            ]`,
+            text: `Datetime ➔ Date set`,
+        },
+        {
+            domain: `[
+                ("datetime.year_number", "=", 2025),
+                ("datetime.month_number", "=", 3),
+                ("datetime.day_of_month", "=", 20),
+            ]`,
+            text: `Datetime ➔ Date is equal 03/20/2025`,
+        },
+        {
+            domain: `[
+                "|",
+                "|",
+                ("datetime.year_number", "!=", 2025),
+                ("datetime.month_number", "!=", 3),
+                ("datetime.day_of_month", "!=", 20),
+            ]`,
+            text: `Datetime ➔ Date is not equal 03/20/2025`,
+        },
+        {
+            domain: `[
+                ("datetime.year_number", "=", a),
+                ("datetime.month_number", "=", 3),
+                ("datetime.day_of_month", "=", 20),
+            ]`,
+            text: `Datetime ➔ Date ➔ Year is equal a`, // first line here
+        },
+        {
+            domain: `[
+                "&",
+                "&",
+                "&",
+                "&",
+                "&",
+                ("datetime.year_number", ">=", 2025),
+                ("datetime.month_number", ">=", 3),
+                ("datetime.day_of_month", ">=", 20),
+                ("datetime.year_number", "<=", 2026),
+                ("datetime.month_number", "<=", 7),
+                ("datetime.day_of_month", "<=", 15),
+            ]`,
+            text: `Datetime ➔ Date is between 03/20/2025 and 07/15/2026`,
+        },
+        {
+            domain: `[
+                ("datetime.hour_number", "=", False),
+                ("datetime.minute_number", "=", False),
+                ("datetime.second_number", "=", False),
+            ]`,
+            text: `Datetime ➔ Time not set`,
+        },
+        {
+            domain: `[
+                ("datetime.hour_number", "!=", False),
+                ("datetime.minute_number", "!=", False),
+                ("datetime.second_number", "!=", False),
+            ]`,
+            text: `Datetime ➔ Time set`,
+        },
+        {
+            domain: `[
+                ("datetime.hour_number", "=", 15),
+                ("datetime.minute_number", "=", 4),
+                ("datetime.second_number", "=", 3),
+            ]`,
+            text: `Datetime ➔ Time is equal 15:40:30`,
+        },
+        {
+            domain: `[
+                "|",
+                "|",
+                ("datetime.hour_number", "!=", 15),
+                ("datetime.minute_number", "!=", 40),
+                ("datetime.second_number", "!=", 30),
+            ]`,
+            text: `Datetime ➔ Time is not equal 15:40:30`,
+        },
+        {
+            domain: `[
+                "&",
+                "&",
+                "&",
+                "&",
+                "&",
+                ("datetime.hour_number", ">=", 15),
+                ("datetime.minute_number", ">=", 40),
+                ("datetime.second_number", ">=", 30),
+                ("datetime.hour_number", "<=", 17),
+                ("datetime.minute_number", "<=", 20),
+                ("datetime.second_number", "<=", 00),
+            ]`,
+            text: `Datetime ➔ Time is between 15:40:30 and 17:20:00`,
+        },
+        {
+            domain: `[
+                ("datetime.hour_number", "=", a),
+                ("datetime.minute_number", "=", 40),
+                ("datetime.second_number", "=", 20),
+            ]`,
+            text: `Datetime ➔ Time ➔ Hour is equal a`, // first line here
+        },
+        {
+            domain: `[("datetime.year_number", "=", False)]`,
+            text: `Datetime ➔ Date ➔ Year not set`,
+        },
+        {
+            domain: `[("datetime.year_number", "=", 2026)]`,
+            text: `Datetime ➔ Date ➔ Year is equal 2026`,
+        },
+        {
+            domain: `[("datetime.quarter_number", "=", False)]`,
+            text: `Datetime ➔ Date ➔ Quarter not set`,
+        },
+        {
+            domain: `[("datetime.quarter_number", "=", 1)]`,
+            text: `Datetime ➔ Date ➔ Quarter is equal Quarter 1`,
+        },
+        {
+            domain: `[("datetime.month_number", "=", False)]`,
+            text: `Datetime ➔ Date ➔ Month not set`,
+        },
+        {
+            domain: `[("datetime.month_number", "=", 3)]`,
+            text: `Datetime ➔ Date ➔ Month is equal March`,
+        },
+        {
+            domain: `[("datetime.iso_week_number", "=", False)]`,
+            text: `Datetime ➔ Date ➔ Week number not set`,
+        },
+        {
+            domain: `[("datetime.iso_week_number", "=", 3)]`,
+            text: `Datetime ➔ Date ➔ Week number is equal 3`,
+        },
+        {
+            domain: `[("datetime.day_of_year", "=", False)]`,
+            text: `Datetime ➔ Date ➔ Day of year not set`,
+        },
+        {
+            domain: `[("datetime.day_of_year", "=", 3)]`,
+            text: `Datetime ➔ Date ➔ Day of year is equal 3`,
+        },
+        {
+            domain: `[("datetime.day_of_month", "=", False)]`,
+            text: `Datetime ➔ Date ➔ Day of month not set`,
+        },
+        {
+            domain: `[("datetime.day_of_month", "=", 3)]`,
+            text: `Datetime ➔ Date ➔ Day of month is equal 3`,
+        },
+        {
+            domain: `[("datetime.day_of_week", "=", False)]`,
+            text: `Datetime ➔ Date ➔ Weekday not set`,
+        },
+        {
+            domain: `[("datetime.day_of_week", "=", 3)]`,
+            text: `Datetime ➔ Date ➔ Weekday is equal Wednesday`,
+        },
+        {
+            domain: `[("datetime.hour_number", "=", False)]`,
+            text: `Datetime ➔ Time ➔ Hour not set`,
+        },
+        {
+            domain: `[("datetime.hour_number", "=", 3)]`,
+            text: `Datetime ➔ Time ➔ Hour is equal 3`,
+        },
+        {
+            domain: `[("datetime.minute_number", "=", False)]`,
+            text: `Datetime ➔ Time ➔ Minute not set`,
+        },
+        {
+            domain: `[("datetime.minute_number", "=", 3)]`,
+            text: `Datetime ➔ Time ➔ Minute is equal 3`,
+        },
+        {
+            domain: `[("datetime.second_number", "=", False)]`,
+            text: `Datetime ➔ Time ➔ Second not set`,
+        },
+        {
+            domain: `[("datetime.second_number", "=", 3)]`,
+            text: `Datetime ➔ Time ➔ Second is equal 3`,
+        },
+    ];
+    for (const { domain, text } of toTest) {
+        await parent.set(domain);
+        expect(getConditionText()).toBe(text);
+    }
+});
+
+test("datetime options (edit)", async () => {
+    mockDate("2025-03-24 17:00:00");
+    let expectStep = true;
+    await makeDomainSelector({
+        domain: `[]`,
+        update(domain) {
+            if (expectStep) {
+                expect.step(domain);
+            }
+        },
+    });
+    await addNewRule();
+    expect.verifySteps(['[("id", "=", 1)]']);
+    await openModelFieldSelectorPopover();
+    await contains(".o_model_field_selector_popover_item_name:contains('Datetime')").click();
+    expect.verifySteps(['[("datetime", "=", "2025-03-23 23:00:00")]']);
+
+    await openModelFieldSelectorPopover();
+    await followRelation(2);
+    await contains(".o_model_field_selector_popover_item_name:contains('Date')").click();
+    expect.verifySteps([
+        '["&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "=", 24)]',
+    ]);
+
+    await contains(".o_datetime_input").click();
+    await contains(getPickerCell("26")).click();
+    expect(getCurrentValue()).toBe("03/26/2025");
+    expect.verifySteps([
+        '["&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "=", 26)]',
+    ]);
+
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "set",
+        "not set",
+    ]);
+
+    await selectOperator("between");
+    expect(SELECTORS.condition).toHaveCount(1);
+    expect(getCurrentOperator()).toBe("is between");
+    expect(SELECTORS.valueEditor).toHaveCount(1);
+    expect(SELECTORS.valueEditor + " " + SELECTORS.editor).toHaveCount(2);
+    expect(SELECTORS.clearNotSupported).toHaveCount(0);
+    expect(`${SELECTORS.editor} .o_datetime_input`).toHaveCount(2);
+    expect.verifySteps([
+        `["&", "&", "&", "&", "&", ("datetime.year_number", ">=", 2025), ("datetime.month_number", ">=", 3), ("datetime.day_of_month", ">=", 24), ("datetime.year_number", "<=", 2025), ("datetime.month_number", "<=", 3), ("datetime.day_of_month", "<=", 24)]`,
+    ]);
+
+    await openModelFieldSelectorPopover();
+    await followRelation();
+    await contains(".o_model_field_selector_popover_item_name:contains('Weekday')").click();
+    expect.verifySteps([`[("datetime.day_of_week", "=", 1)]`]);
+    await selectValue(5);
+    expect(getCurrentValue()).toBe("Friday");
+    expect.verifySteps([`[("datetime.day_of_week", "=", 5)]`]);
+
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "set",
+        "not set",
+    ]);
+
+    await openModelFieldSelectorPopover();
+    await clickPrev();
+    expectStep = false; // we don't want to control minutes/seconds.
+    await contains(".o_model_field_selector_popover_item_name:contains('Time')").click();
+    expectStep = true;
+
+    await editValue("12:15:00");
+    expect(getCurrentValue()).toBe("12:15:00");
+    expect.verifySteps([
+        '["&", "&", ("datetime.hour_number", "=", 12), ("datetime.minute_number", "=", 15), ("datetime.second_number", "=", 0)]',
+    ]);
+
+    await openModelFieldSelectorPopover();
+    await followRelation(1);
+    expectStep = false;
+    await contains(".o_model_field_selector_popover_item_name:contains('Hour')").click();
+    expectStep = true;
+    await editValue("15");
+    expect.verifySteps(['[("datetime.hour_number", "=", 15)]']);
+
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "set",
+        "not set",
+    ]);
+});
+
+test("date options (readonly)", async () => {
+    const parent = await makeDomainSelector({
+        readonly: true,
+        domain: `[]`,
+    });
+    const toTest = [
+        {
+            domain: `[
+                ("date.year_number", "=", False),
+                ("date.month_number", "=", False),
+                ("date.day_of_month", "=", False),
+            ]`,
+            text: `Date ➔ Year not set`, // first line here
+        },
+        {
+            domain: `[
+                ("date.hour_number", "=", False),
+                ("date.minute_number", "=", False),
+                ("date.second_number", "=", False),
+            ]`,
+            text: `Date ➔ hour_number is equal false`, // first line here
+        },
+        {
+            domain: `[("date.year_number", "=", False)]`,
+            text: `Date ➔ Year not set`,
+        },
+        {
+            domain: `[("date.year_number", "=", 2026)]`,
+            text: `Date ➔ Year is equal 2026`,
+        },
+        {
+            domain: `[("date.quarter_number", "=", False)]`,
+            text: `Date ➔ Quarter not set`,
+        },
+        {
+            domain: `[("date.quarter_number", "=", 1)]`,
+            text: `Date ➔ Quarter is equal Quarter 1`,
+        },
+        {
+            domain: `[("date.month_number", "=", False)]`,
+            text: `Date ➔ Month not set`,
+        },
+        {
+            domain: `[("date.month_number", "=", 3)]`,
+            text: `Date ➔ Month is equal March`,
+        },
+        {
+            domain: `[("date.iso_week_number", "=", False)]`,
+            text: `Date ➔ Week number not set`,
+        },
+        {
+            domain: `[("date.iso_week_number", "=", 3)]`,
+            text: `Date ➔ Week number is equal 3`,
+        },
+        {
+            domain: `[("date.day_of_year", "=", False)]`,
+            text: `Date ➔ Day of year not set`,
+        },
+        {
+            domain: `[("date.day_of_year", "=", 3)]`,
+            text: `Date ➔ Day of year is equal 3`,
+        },
+        {
+            domain: `[("date.day_of_month", "=", False)]`,
+            text: `Date ➔ Day of month not set`,
+        },
+        {
+            domain: `[("date.day_of_month", "=", 3)]`,
+            text: `Date ➔ Day of month is equal 3`,
+        },
+        {
+            domain: `[("date.day_of_week", "=", False)]`,
+            text: `Date ➔ Weekday not set`,
+        },
+        {
+            domain: `[("date.day_of_week", "=", 3)]`,
+            text: `Date ➔ Weekday is equal Wednesday`,
+        },
+    ];
+    for (const { domain, text } of toTest) {
+        await parent.set(domain);
+        expect(getConditionText()).toBe(text);
+    }
+});
+
+test("date options (edit)", async () => {
+    mockDate("2025-03-24 17:00:00");
+    await makeDomainSelector({
+        domain: `[]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    await addNewRule();
+    expect.verifySteps(['[("id", "=", 1)]']);
+    await openModelFieldSelectorPopover();
+    await contains(".o_model_field_selector_popover_item_name:contains('Date')").click();
+    expect.verifySteps(['[("date", "=", "2025-03-24")]']);
+
+    await openModelFieldSelectorPopover();
+    await followRelation(1);
+    await contains(".o_model_field_selector_popover_item_name:contains('Month')").click();
+
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "is not between",
+        "set",
+        "not set",
+    ]);
+    expect.verifySteps([`[("date.month_number", "=", 3)]`]);
+    expect(getCurrentValue()).toBe("March");
+
+    await selectValue(5);
+    expect(getCurrentValue()).toBe("May");
+    expect.verifySteps([`[("date.month_number", "=", 5)]`]);
 });

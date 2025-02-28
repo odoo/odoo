@@ -1,10 +1,11 @@
 import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
-import { debounce } from "@web/core/utils/timing";
 import { _t } from "@web/core/l10n/translation";
-import { fuzzyLookup } from "@web/core/utils/search";
-import { KeepLast } from "@web/core/utils/concurrency";
 import { sortBy } from "@web/core/utils/arrays";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { debounce } from "@web/core/utils/timing";
+import { MODEL_SYMBOLS } from "@web/core/field_service";
 
 class Page {
     constructor(resModel, fieldDefs, options = {}) {
@@ -14,7 +15,9 @@ class Page {
         this.previousPage = previousPage;
         this.selectedName = selectedName;
         this.isDebugMode = isDebugMode;
-        this.sortedFieldNames = sortBy(Object.keys(fieldDefs), (key) => fieldDefs[key].string);
+        this.sortedFieldNames = MODEL_SYMBOLS.has(resModel)
+            ? Object.keys(fieldDefs)
+            : sortBy(Object.keys(fieldDefs), (key) => fieldDefs[key].string);
         this.fieldNames = this.sortedFieldNames;
         this.query = "";
         this.focusedFieldName = null;
@@ -146,10 +149,26 @@ export class ModelFieldSelectorPopover extends Component {
         return this.props.showDebugInput ?? this.props.isDebugMode;
     }
 
-    filter(fieldDefs, path) {
-        const filteredKeys = Object.keys(fieldDefs).filter((k) =>
-            this.props.filter(fieldDefs[k], path)
+    canFollowRelationFor(fieldDef) {
+        if (fieldDef.type === "properties") {
+            return true;
+        }
+        if (!this.props.followRelations || fieldDef.is_property) {
+            return false;
+        }
+        return (
+            fieldDef.relation ||
+            // fields that are not groupable are in general not searchable
+            (fieldDef.groupable && (fieldDef.type === "datetime" || fieldDef.type === "date")) ||
+            fieldDef.type === "datetime_option"
         );
+    }
+
+    filter(fieldDefs, path) {
+        const filteredKeys =
+            "__date" in fieldDefs
+                ? ["__date", "__time"]
+                : Object.keys(fieldDefs).filter((k) => this.props.filter(fieldDefs[k], path));
         return Object.fromEntries(filteredKeys.map((k) => [k, fieldDefs[k]]));
     }
 
@@ -269,7 +288,7 @@ export class ModelFieldSelectorPopover extends Component {
                     const focusedFieldName = this.state.page.focusedFieldName;
                     if (focusedFieldName) {
                         const fieldDef = this.state.page.fieldDefs[focusedFieldName];
-                        if (fieldDef.relation || fieldDef.type === "properties") {
+                        if (this.canFollowRelationFor(fieldDef)) {
                             this.followRelation(fieldDef);
                         }
                     }

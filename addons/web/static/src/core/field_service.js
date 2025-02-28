@@ -1,6 +1,8 @@
-import { Cache } from "@web/core/utils/cache";
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Cache } from "@web/core/utils/cache";
+import { deepCopy } from "@web/core/utils/objects";
 
 /**
  * @typedef {Object} LoadFieldsOptions
@@ -8,19 +10,85 @@ import { registry } from "@web/core/registry";
  * @property {string[]} [attributes]
  */
 
+const MODEL_DATETIME_PROPERTIES = Symbol("__model__datetime_PROPERTIES__");
+const DATETIME_PROPERTIES = Object.fromEntries(
+    Object.entries({
+        __date: { string: _t("Date") }, // virtual: defined via year_number, month_number, and day_of_month
+        __time: { string: _t("Time") }, // virtual: defined via hour_number, minute_number, and second_number
+    }).map(([name, o]) => [name, { ...o, searchable: true, name, type: "datetime_option" }])
+);
+
+const MODEL_TIME_PROPERTIES = Symbol("__model__time_PROPERTIES__");
+const TIME_PROPERTIES = Object.fromEntries(
+    Object.entries({
+        hour_number: { string: _t("Hour") },
+        minute_number: { string: _t("Minute") },
+        second_number: { string: _t("Second") },
+    }).map(([name, o]) => [name, { ...o, searchable: true, name, type: "time_option" }])
+);
+
+const MODEL_DATE_PROPERTIES = Symbol("__model__date_PROPERTIES__");
+const DATE_PROPERTIES = Object.fromEntries(
+    Object.entries({
+        year_number: { string: _t("Year") },
+        quarter_number: { string: _t("Quarter") },
+        month_number: { string: _t("Month") },
+        iso_week_number: { string: _t("Week number") },
+        day_of_year: { string: _t("Day of year") },
+        day_of_month: { string: _t("Day of month") },
+        day_of_week: { string: _t("Weekday") },
+    }).map(([name, o]) => [name, { ...o, searchable: true, name, type: "date_option" }])
+);
+
+export const MODEL_SYMBOLS = new Set([
+    MODEL_DATETIME_PROPERTIES,
+    MODEL_DATE_PROPERTIES,
+    MODEL_TIME_PROPERTIES,
+]);
+function getSpecialModelFields(resModel) {
+    switch (resModel) {
+        case MODEL_DATETIME_PROPERTIES:
+            return Object.assign(
+                {},
+                deepCopy(DATETIME_PROPERTIES),
+                deepCopy(DATE_PROPERTIES),
+                deepCopy(TIME_PROPERTIES)
+            );
+        case MODEL_DATE_PROPERTIES:
+            return deepCopy(DATE_PROPERTIES);
+        case MODEL_TIME_PROPERTIES:
+            return deepCopy(TIME_PROPERTIES);
+    }
+}
+
+function getRelation(fieldDef) {
+    if (fieldDef.relation) {
+        return fieldDef.relation;
+    }
+    if (fieldDef.type === "datetime") {
+        return MODEL_DATETIME_PROPERTIES;
+    }
+    if (fieldDef.type === "date" || fieldDef.name === "__date") {
+        return MODEL_DATE_PROPERTIES;
+    }
+    if (fieldDef.name === "__time") {
+        return MODEL_TIME_PROPERTIES;
+    }
+    return null;
+}
+
 export const fieldService = {
     dependencies: ["orm"],
     async: ["loadFields", "loadPath", "loadPropertyDefinitions"],
     start(env, { orm }) {
         const cache = new Cache(
-            (resModel, options) => {
-                return orm
+            (resModel, options) =>
+                orm
                     .call(resModel, "fields_get", [options.fieldNames, options.attributes])
                     .catch((error) => {
                         cache.clear(resModel, options);
                         return Promise.reject(error);
-                    });
-            },
+                    }),
             (resModel, options) =>
                 JSON.stringify([resModel, options.fieldNames, options.attributes])
         );
@@ -28,11 +96,14 @@ export const fieldService = {
         env.bus.addEventListener("CLEAR-CACHES", () => cache.invalidate());
 
         /**
-         * @param {string} resModel
+         * @param {string|Symbol} resModel
          * @param {LoadFieldsOptions} [options]
          * @returns {Promise<object>}
          */
         async function loadFields(resModel, options = {}) {
+            if (typeof resModel === "symbol" && MODEL_SYMBOLS.has(resModel)) {
+                return getSpecialModelFields(resModel);
+            }
             if (typeof resModel !== "string" || !resModel) {
                 throw new Error(`Invalid model name: ${resModel}`);
             }
@@ -52,6 +123,7 @@ export const fieldService = {
             } = fieldDefs[name];
             const definitionRecordModel = fieldDefs[definitionRecord].relation;
 
+            // @ts-ignore
             domain = Domain.and([[[definitionRecordField, "!=", false]], domain]).toList();
 
             const result = await orm.webSearchRead(definitionRecordModel, domain, {
@@ -90,7 +162,7 @@ export const fieldService = {
         }
 
         /**
-         * @param {string|null} resModel valid model name or null (case virtual)
+         * @param {string|Symbol|null} resModel valid model name or null (case virtual)
          * @param {Object|null} fieldDefs
          * @param {string[]} names
          */
@@ -115,12 +187,9 @@ export const fieldService = {
             }
 
             let subResult;
-            if (fieldDef.relation) {
-                subResult = await _loadPath(
-                    fieldDef.relation,
-                    await loadFields(fieldDef.relation),
-                    remainingNames
-                );
+            const relation = getRelation(fieldDef);
+            if (relation) {
+                subResult = await _loadPath(relation, await loadFields(relation), remainingNames);
             } else if (fieldDef.type === "properties") {
                 subResult = await _loadPath(
                     "*",
@@ -146,7 +215,7 @@ export const fieldService = {
         /**
          * Note: the symbol * can be used at the end of path (e.g path="*" or path="user_id.*").
          * It says to load the fields of the appropriate model.
-         * @param {string} resModel
+         * @param {string|Symbol} resModel
          * @param {string} path
          * @returns {Promise<Object>}
          */
