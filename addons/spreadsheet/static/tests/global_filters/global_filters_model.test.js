@@ -2564,3 +2564,67 @@ test("Updating the list domain should keep the global filter domain", async () =
         `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
     );
 });
+
+test("Can add a boolean filter", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "boolean",
+        defaultValue: [],
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true] });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual([true]);
+});
+
+test("Add a boolean filter with a default value", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "boolean",
+        defaultValue: [true],
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual([true]);
+});
+
+test("Can set a boolean filter with both true and false", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "boolean",
+        defaultValue: [],
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true, false] });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual([true, false]);
+});
+
+test("Check boolean filter domain", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "boolean",
+        defaultValue: [],
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [] });
+    const fieldMatching = { chain: "active", type: "boolean" };
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual("[]");
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true] });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("active", "=", True)]`
+    );
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [false] });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("active", "=", False)]`
+    );
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "42", value: [true, false] });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `["|", ("active", "=", True), ("active", "=", False)]`
+    );
+});
