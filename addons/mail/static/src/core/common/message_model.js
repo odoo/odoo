@@ -459,6 +459,7 @@ export class Message extends Record {
         });
         this.body = "";
         this.attachment_ids = [];
+        this.partner_ids = [];  
     }
 
     async setDone() {
