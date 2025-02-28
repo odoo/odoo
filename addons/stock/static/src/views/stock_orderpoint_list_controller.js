@@ -11,6 +11,10 @@ export class StockOrderpointListController extends ListController {
         DropdownItem,
     }
 
+    get nbSelected() {
+        return this.model.root.selection.length;
+    }
+
     async onClickOrder(force_to_max) {
         const resIds = await this.model.root.getResIds(true);
         const action = await this.model.orm.call(this.props.resModel, 'action_replenish', [resIds], {
