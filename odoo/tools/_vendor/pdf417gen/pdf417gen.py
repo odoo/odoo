@@ -24,23 +24,12 @@
 """
 
 
-from .data import ERROR_CORRECTION_FACTORS
 from PIL import Image, ImageColor, ImageOps
 from PIL.Image import Resampling
 from argparse import ArgumentParser
-from builtins import range, bytes, str, zip
 from collections import namedtuple
-from itertools import tee, islice, chain, chain, chain, chain, groupby, chain, groupby
-from pdf417gen import encode, render_image
-from pdf417gen.codes import map_code_word
-from pdf417gen.compaction import compact, optimizations
-from pdf417gen.compaction.byte import compact_bytes
-from pdf417gen.compaction.numeric import compact_numbers, compact_numbers
-from pdf417gen.compaction.text import compact_text, compact_text
-from pdf417gen.data import CHARACTERS_LOOKUP, SWITCH_CODES, Submode, CHARACTERS_LOOKUP
-from pdf417gen.error_correction import compute_error_correction_code_words
-from pdf417gen.util import chunks, to_bytes, switch_base, chunks, to_base, chunks, iterate_prev_next, chunks
-from typing import List, Any, Generator, Iterable, Iterator, List, Optional, Tuple, TypeVar
+from itertools import tee, islice, chain, groupby
+from typing import List, Any, Generator, Iterable, Iterator, Optional, Tuple, TypeVar
 from xml.etree.ElementTree import ElementTree, Element, SubElement
 import math
 import sys
@@ -135,14 +124,14 @@ def il_console_do_encode(raw_args: List[str]):
         return
 
     try:
-        codes = encode(
+        codes = il_encoding_encode(
             text,
             columns=args.columns,
             security_level=args.security_level,
             encoding=args.encoding,
         )
 
-        image = render_image(
+        image = il_rendering_render_image(
             codes,
             scale=args.scale,
             ratio=args.ratio,
