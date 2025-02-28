@@ -45,6 +45,7 @@ class Website(main.Website):
         # If we are logging in, clear the current pricelist to be able to find
         # the pricelist that corresponds to the user afterwards.
         request.session.pop('website_sale_current_pl', None)
+        request.session.pop('website_sale_selected_pl_id', None)
         return super()._login_redirect(uid, redirect=redirect)
 
     @route()
