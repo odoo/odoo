@@ -706,7 +706,10 @@ export class Thread extends Record {
         }
         await this.store.chatHub.initPromise;
         const cw = this.store.ChatWindow.insert(
-            assignDefined({ thread: this }, { fromMessagingMenu })
+            assignDefined(
+                { thread: this, bypassChathubCompact: fromMessagingMenu },
+                { fromMessagingMenu }
+            )
         );
         cw.open({ focus: focus });
         if (isMobileOS()) {

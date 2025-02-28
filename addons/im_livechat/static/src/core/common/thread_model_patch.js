@@ -37,9 +37,6 @@ patch(Thread.prototype, {
             },
         });
     },
-    get autoOpenChatWindowOnNewMessage() {
-        return this.channel_type === "livechat" || super.autoOpenChatWindowOnNewMessage;
-    },
     get showCorrespondentCountry() {
         if (this.channel_type === "livechat") {
             return (
