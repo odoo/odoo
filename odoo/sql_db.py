@@ -277,6 +277,11 @@ class Cursor(BaseCursor):
         self.cache = {}
         self._now = None
 
+        # optional hooks for performance and tracing analysis
+        current_thread = threading.current_thread()
+        for hook in getattr(current_thread, 'init_hooks', ()):
+            hook(self)
+
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
 
