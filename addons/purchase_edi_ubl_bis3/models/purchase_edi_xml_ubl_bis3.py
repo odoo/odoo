@@ -179,9 +179,30 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
     def _add_purchase_order_line_item_nodes(self, line_node, vals):
         self._add_document_line_item_nodes(line_node, vals)
 
-        line = vals['base_line']['record']
-        if line_name := line.name and line.name.replace('\n', ' '):
-            line_node['cac:Item']['cbc:Description'] = {'_text': line_name}
+        line_item_node = line_node['cac:Item']
+        order_line = vals['base_line']['record']
+        product = order_line.product_id
+        order = order_line.order_id
+        supplier_info = product.variant_seller_ids.filtered(lambda s:
+            s.partner_id == order.partner_id
+            and (
+                s.product_id == product
+                or (not s.product_id and s.product_tmpl_id == product.product_tmpl_id)
+            ) and (s.product_code or s.product_name),
+        )[:1]
+
+        # Prefer the seller's product name over our (buyer) product name
+        if supplier_info.product_name:
+            line_item_node['cbc:Name']['_text'] = supplier_info.product_name
+
+        # When generating purchase order (PO) we are not considered as the seller of the sale but
+        # buyer. The `SellersItemIdentification` is therefore the PO's partner product ID.
+        line_item_node['cac:SellersItemIdentification']['cbc:ID'] = {
+            '_text': supplier_info.product_code,
+        }
+
+        if line_name := order_line.name and order_line.name.replace('\n', ' '):
+            line_item_node['cbc:Description'] = {'_text': line_name}
 
     def _add_purchase_order_line_price_nodes(self, line_node, vals):
         self._add_document_line_price_nodes(line_node, vals)
