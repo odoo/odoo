@@ -6,9 +6,7 @@ export const discussCorePublic = {
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
-    start(env, services) {
-        services.bus_service.start();
-    },
+    start(env, services) {},
 };
 
 registry.category("services").add("discuss.core.public", discussCorePublic);
