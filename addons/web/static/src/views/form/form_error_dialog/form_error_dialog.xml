@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormErrorDialog">
-        <Dialog header="false" size="'md'" contentClass="'o_error_dialog'">
+        <Dialog header="false" size="'md'" contentClass="'o_error_dialog o_form_error_dialog'">
             <div role="alert">
                 <h1 class="text-danger">Oh snap!</h1>
                 <p t-esc="props.message" class="text-prewrap"/>
