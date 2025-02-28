@@ -807,6 +807,13 @@ class Website(models.Model):
         # coverage. But if the target lang is en_XX it's ok to have en_US text.
         text_must_be_translated_for_openai = not text_generation_target_lang.startswith('en_')
         generated_content = {}
+        # Modify the footer content
+        footer_view = self.env["ir.ui.view"].search([("key", "=", "website.footer_custom")])[1]
+        footer_arch = etree.fromstring(footer_view.arch_db)
+        about_us_paragraph = footer_arch.xpath("//div[contains(@class, 'col-lg-5')]/p")[0]
+        footer_text = ''.join(about_us_paragraph.itertext()).replace("\n", "").strip()
+        generated_content[footer_text] = ""
+
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = configurator_snippets.get(page_code, [])
             for snippet in snippet_list:
@@ -831,6 +838,15 @@ class Website(models.Model):
                     'industry': industry,
                     'database_id': database_id,
                 })
+
+                if footer_text in response and response[footer_text]:
+                    updated_about_us_description = response[footer_text]
+                    sentences = updated_about_us_description.split(". ")
+                    if len(sentences) >= 3:
+                        sentences[2] = "<br/><br/>" + sentences[2]
+                    updated_about_us_description = ". ".join(sentences)
+                    footer_view.save(updated_about_us_description, xpath="//div[@class='col-lg-5 pt24 pb24']/p")
+
                 name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
                 for key in generated_content:
                     if response.get(key):
