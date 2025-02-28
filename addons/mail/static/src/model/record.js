@@ -415,6 +415,47 @@ export class Record {
     }
 
     toData() {
+        const seenRecords = new Set();
+        const storeData = {};
+        this._toData(storeData, seenRecords);
+        return storeData;
+    }
+    toIdData(storeData, seenRecords) {
+        const data = this.Model._retrieveIdFromData(this);
+        if (!seenRecords.has(this.localId)) {
+            this._toData(storeData, seenRecords);
+        }
+        for (const [name, val] of Object.entries(data)) {
+            if (isRecord(val)) {
+                data[name] = val.toIdData(storeData, seenRecords);
+            }
+        }
+        return data;
+    }
+    _cleanupData(data) {
+        const fieldsToDelete = [
+            "_",
+            "_fieldsValue",
+            "_proxy",
+            "_proxyInternal",
+            "_raw",
+            "env",
+            "Model",
+        ];
+        fieldsToDelete.forEach((field) => delete data[field]);
+    }
+    _getPyModelName() {
+        let name = this.Model.getName();
+        if (name === "Persona") {
+            name = this.type === "partner" ? "res.partner" : "mail.guest";
+        }
+        if (name === "Thread") {
+            name = this.model === "discuss.channel" ? "discuss.channel" : "mail.thread";
+        }
+        return name;
+    }
+    _toData(storeData, seenRecords) {
+        seenRecords.add(this.localId);
         const recordProxy = this;
         const record = toRaw(recordProxy)._raw;
         const Model = record.Model;
@@ -423,11 +464,15 @@ export class Record {
             if (isMany(Model, name)) {
                 data[name] = record._proxyInternal[name].map((recordProxy) => {
                     const record = toRaw(recordProxy)._raw;
-                    return record.toIdData.call(record._proxyInternal);
+                    return record.toIdData.call(record._proxyInternal, storeData, seenRecords);
                 });
             } else if (isOne(Model, name)) {
                 const otherRecord = toRaw(record._proxyInternal[name])?._raw;
-                data[name] = otherRecord?.toIdData.call(otherRecord._proxyInternal);
+                data[name] = otherRecord?.toIdData.call(
+                    otherRecord._proxyInternal,
+                    storeData,
+                    seenRecords
+                );
             } else {
                 // Record.attr()
                 const value = recordProxy[name];
@@ -440,22 +485,10 @@ export class Record {
                 }
             }
         }
-        delete data._;
-        delete data._fieldsValue;
-        delete data._proxy;
-        delete data._proxyInternal;
-        delete data._raw;
-        delete data.Model;
-        return data;
-    }
-    toIdData() {
-        const data = this.Model._retrieveIdFromData(this);
-        for (const [name, val] of Object.entries(data)) {
-            if (isRecord(val)) {
-                data[name] = val.toIdData();
-            }
-        }
-        return data;
+        this._cleanupData(data);
+        const pyModelName = record._getPyModelName();
+        storeData[pyModelName] = storeData[pyModelName] || [];
+        storeData[pyModelName].push(data);
     }
 }
 Record.register();
