@@ -155,6 +155,19 @@ describe("Editable media", () => {
         expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
     });
 
+    test("Can't replace a media without the editable media class in a non-editable element", async () => {
+        await setupEditor(unformat(
+            `<p><br></p>
+            <div contenteditable="false">
+                <img src="/web/static/img/logo.png">
+            </div>
+            <p><br></p>`
+        ));
+        await click("img");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(0);
+    });
+
     test("Can replace a media without the editable media class in an editable element", async () => {
         const env = await makeMockEnv();
         await setupEditor(unformat(

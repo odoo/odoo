@@ -192,7 +192,7 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.addDomListener(this.editable, "pointerup", (e) => {
-            if (e.target.tagName === "IMG") {
+            if (e.target.tagName === "IMG" && this.getResource("editable_node_predicates").some(p => p(e.target))) {
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
                 this.dependencies.selection.setSelection({
                     anchorNode,
