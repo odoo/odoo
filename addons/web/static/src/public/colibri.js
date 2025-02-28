@@ -345,4 +345,14 @@ export class Colibri {
         this.isDestroyed = true;
         this.isReady = false;
     }
+
+    /**
+     * Patchable mechanism to handle context-specific protection of a specific
+     * chunk of synchronous code after returning from an asynchronous one.
+     * This should typically be used around code that follows an
+     * await waitFor(...).
+     */
+    protectSyncAfterAsync(interaction, name, fn) {
+        return fn.bind(interaction);
+    }
 }
