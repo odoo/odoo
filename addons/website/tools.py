@@ -21,6 +21,7 @@ def MockRequest(
         website=None, remote_addr=HOST, environ_base=None, url_root=None,
         # website_sale
         sale_order_id=None, website_sale_current_pl=None,
+        website_sale_selected_pl_id=None,
 ):
 
     lang_code = context.get('lang', env.context.get('lang', 'en_US'))
@@ -53,6 +54,7 @@ def MockRequest(
             odoo.http.get_default_session(),
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
+            website_sale_selected_pl_id=website_sale_selected_pl_id,
             context={'lang': ''},
         ),
         geoip=odoo.http.GeoIP('127.0.0.1'),

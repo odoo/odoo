@@ -10,6 +10,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, TransactionCaseWithUserDemo
+from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
@@ -415,6 +416,41 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             so._cart_update(product_id=product.id, line_id=sol.id, set_qty=2)
             self.assertEqual(sol.price_unit, 80.0, 'Reduction should be applied')
             self.assertEqual(sol.price_total, 160)
+
+    def test_pricelist_anonymous_user(self):
+        list_benelux_2 = self.list_benelux.sudo().copy({
+            'name': 'Benelux 2',
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'percentage',
+                    'base': 'list_price',
+                    'percent_price': 20,
+                }),
+            ]
+        })
+        order_sudo = self.env['sale.order'].sudo().create({
+            'partner_id': self.public_partner.id,
+            'pricelist_id': list_benelux_2.id,
+            'order_line': [Command.create({
+                'name': self.product.name,
+                'product_id': self.product.id,
+                'tax_id': False,
+            })],
+        })
+        # Creating partner with address of belgium
+        partner = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'company_id': False,
+            'country_id': self.env.ref('base.be').id,
+        })
+        website = self.website.with_user(self.public_user)
+        with MockRequest(
+            website.env, website=website,
+            website_sale_current_pl=list_benelux_2.id,
+            website_sale_selected_pl_id=list_benelux_2.id
+        ) as request:
+            order_sudo._update_address({'partner_id': partner.id})
+        self.assertEqual(order_sudo.pricelist_id, list_benelux_2)
 
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods
