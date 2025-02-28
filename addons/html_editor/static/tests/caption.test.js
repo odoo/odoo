@@ -502,7 +502,7 @@ test("replace an image with a caption", async () => {
     });
 });
 
-test.skip("add a link to an image with a caption", async () => {
+test("add a link to an image with a caption", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: unformat(
@@ -566,7 +566,7 @@ test("add a caption to an image with a link", async () => {
     });
 });
 
-test.skip("add a caption then a link to an image surrounded by text", async () => {
+test("add a caption then a link to an image surrounded by text", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: `<p>ab<img class="img-fluid test-image" src="${base64Img}">cd</p>`,
@@ -591,7 +591,7 @@ test.skip("add a caption then a link to an image surrounded by text", async () =
     });
 });
 
-test.skip("add a link then a caption to an image surrounded by text", async () => {
+test("add a link then a caption to an image surrounded by text", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: `<p>ab<img class="img-fluid test-image" src="${base64Img}">cd</p>`,

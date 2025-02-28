@@ -346,6 +346,10 @@ export class LinkPlugin extends Plugin {
      * @param {HTMLElement} [linkElement]
      */
     openLinkTools(linkElement, type) {
+        // Warning this is a separate fix for a separate commit.
+        if (this.overlay.isOpen && this.linkInDocument === linkElement) {
+            return;
+        }
         this.closeLinkTools();
         if (!this.isLinkAllowedOnSelection()) {
             return this.services.notification.add(
