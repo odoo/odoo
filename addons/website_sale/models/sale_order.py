@@ -455,7 +455,7 @@ class SaleOrder(models.Model):
             values['product_custom_attribute_value_ids'] = [
                 fields.Command.create({
                     'custom_product_template_attribute_value_id': custom_value['custom_product_template_attribute_value_id'],
-                    'custom_value': custom_value['custom_value'],
+                    'custom_value': custom_value.get('custom_value', ''),
                 }) for custom_value in custom_values
             ]
 
