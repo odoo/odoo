@@ -15957,8 +15957,8 @@ test(`Search more in a many2one`, async () => {
 
 test.tags("desktop");
 test(`view's context is passed down as evalContext`, async () => {
-    onRpc("name_search", ({ kwargs }) => {
-        expect.step(`name_search`);
+    onRpc("web_name_search", ({ kwargs }) => {
+        expect.step(`web_name_search`);
         expect(kwargs.domain).toEqual([["someField", "=", "some_value"]]);
     });
 
@@ -15976,7 +15976,7 @@ test(`view's context is passed down as evalContext`, async () => {
     });
     await contains(`.o_data_row:eq(0) td.o_list_many2one`).click();
     await contains(`.o_field_many2one_selection .o-autocomplete--input`).click();
-    expect.verifySteps(["name_search"]);
+    expect.verifySteps(["web_name_search"]);
 });
 
 test(`list view with default_group_by`, async () => {
@@ -17130,7 +17130,7 @@ test(`context keys not passed down the stack and not to fields`, async () => {
     expect.verifySteps([
         {
             model: "bar",
-            method: "name_search",
+            method: "web_name_search",
             context: { lang: "en", tz: "taht", uid: 7, allowed_company_ids: [1] },
         },
     ]);
@@ -17168,7 +17168,7 @@ test(`search nested many2one field with early option selection`, async () => {
     defineModels([Parent]);
 
     const deferred = new Deferred();
-    onRpc("name_search", () => deferred);
+    onRpc("web_name_search", () => deferred);
 
     await mountView({
         resModel: "parent",

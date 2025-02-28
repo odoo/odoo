@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="mail.Many2OneAvatarUserField" t-inherit="web.Many2OneAvatarField" t-inherit-mode="primary">
-        <xpath expr="//span[hasclass('o_m2o_avatar')]" position="attributes">
-            <attribute name="t-on-click.stop.prevent">onClickAvatar</attribute>
-        </xpath>
+
+    <t t-name="mail.Many2OneAvatarUserField">
+        <div class="d-flex align-items-center gap-1">
+            <t t-if="value !== false">
+                <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value[0]" noSpacing="true"/>
+            </t>
+            <Many2One t-props="m2oProps" cssClass="'w-100'">
+                <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                    <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
+                        <Avatar resModel="relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
+                        <t t-esc="autoCompleteItemScope.record.display_name"/>
+                    </div>
+                </t>
+            </Many2One>
+        </div>
     </t>
-    
-    <t t-name="mail.KanbanMany2OneAvatarUserField" t-inherit="web.KanbanMany2OneAvatarField" t-inherit-mode="primary">
-        <xpath expr="//span[hasclass('o_m2o_avatar')]" position="attributes">
-            <attribute name="t-on-click.stop.prevent">onClickAvatar</attribute>
-        </xpath>
-        <xpath expr="//t[@t-call='web.Many2OneField']" position="attributes">
-            <attribute name="t-if">props.readonly and props.displayAvatarName</attribute>
-        </xpath>
-    </t>
+
 </templates>
