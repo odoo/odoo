@@ -3713,3 +3713,48 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         bill.invoice_date = fields.Date.today()
         bill.action_post()
         self.assertEqual(avco_prod.standard_price, pre_bill_cost)
+
+    def test_manual_non_standard_cost_bill_post(self):
+        """ With manual valuation (+ continental accounting), receiving some product with a
+        non-standard cost method, consuming the available qty, and then invoicing that product at
+        different `price_unit` than the receipt should not create pdiff AccountMoveLines.
+        """
+        self.env.company.anglo_saxon_accounting = False
+        self.product1.categ_id.write({
+            'property_valuation': 'manual_periodic',
+            'property_cost_method': 'average',
+        })
+        product = self.product1
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 10,
+                'price_unit': 100,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.picking_ids.button_validate()
+        with Form(self.env['stock.scrap']) as scrap_form:
+            scrap_form.product_id = product
+            scrap_form.scrap_qty = 10
+            scrap = scrap_form.save()
+        scrap.action_validate()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_line_ids.price_unit = 120
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        expense_account, tax_paid_account, account_payable_account = (
+            self.company_data['default_account_expense'],
+            self.company_data['default_account_tax_purchase'],
+            self.company_data['default_account_payable'],
+        )
+        self.assertRecordValues(
+            bill.line_ids,
+            [
+                {'account_id': expense_account.id,           'debit': 1200.0,   'credit': 0.0},
+                {'account_id': tax_paid_account.id,          'debit': 180.0,    'credit': 0.0},
+                {'account_id': account_payable_account.id,   'debit': 0.0,      'credit': 1380.0},
+            ]
+        )

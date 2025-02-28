@@ -3457,6 +3457,7 @@ class BaseModel(metaclass=MetaModel):
         if parent_path_compute:
             self._parent_store_compute()
 
+    @api.private
     def init(self):
         """ This method is called after :meth:`~._auto_init`, and may be
             overridden to create or modify a model's database schema.
@@ -6210,6 +6211,7 @@ class BaseModel(metaclass=MetaModel):
     # Conversion methods
     #
 
+    @api.private
     def ensure_one(self) -> Self:
         """Verify that the current recordset holds a single record.
 
@@ -6223,6 +6225,7 @@ class BaseModel(metaclass=MetaModel):
         except ValueError:
             raise ValueError("Expected singleton: %s" % self)
 
+    @api.private
     def with_env(self, env: api.Environment) -> Self:
         """Return a new version of this recordset attached to the provided environment.
 
@@ -6234,6 +6237,7 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.__class__(env, self._ids, self._prefetch_ids)
 
+    @api.private
     def sudo(self, flag=True) -> Self:
         """ sudo([flag=True])
 
@@ -6262,6 +6266,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(su=flag))
 
+    @api.private
     def with_user(self, user) -> Self:
         """ with_user(user)
 
@@ -6273,6 +6278,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(user=user, su=False))
 
+    @api.private
     def with_company(self, company) -> Self:
         """ with_company(company)
 
@@ -6307,6 +6313,7 @@ class BaseModel(metaclass=MetaModel):
 
         return self.with_context(allowed_company_ids=allowed_company_ids)
 
+    @api.private
     def with_context(self, *args, **kwargs) -> Self:
         """ with_context([context][, **overrides]) -> Model
 
@@ -6346,6 +6353,7 @@ class BaseModel(metaclass=MetaModel):
             context['allowed_company_ids'] = self._context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
+    @api.private
     def with_prefetch(self, prefetch_ids=None) -> Self:
         """ with_prefetch([prefetch_ids]) -> records
 
@@ -6423,6 +6431,7 @@ class BaseModel(metaclass=MetaModel):
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []
 
+    @api.private
     def mapped(self, func):
         """Apply ``func`` on all records in ``self``, and return the result as a
         list or a recordset (if ``func`` return recordsets). In the latter
@@ -6461,6 +6470,7 @@ class BaseModel(metaclass=MetaModel):
         else:
             return self._mapped_func(func)
 
+    @api.private
     def filtered(self, func) -> Self:
         """Return the records in ``self`` satisfying ``func``.
 
@@ -6483,6 +6493,7 @@ class BaseModel(metaclass=MetaModel):
                 return self.browse(rec.id for rec in self if rec[func])
         return self.browse(rec.id for rec in self if func(rec))
 
+    @api.private
     def grouped(self, key):
         """Eagerly groups the records of ``self`` by the ``key``, returning a
         dict from the ``key``'s result to recordsets. All the resulting
@@ -6510,6 +6521,7 @@ class BaseModel(metaclass=MetaModel):
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}
 
+    @api.private
     def filtered_domain(self, domain) -> Self:
         """Return the records in ``self`` satisfying the domain and keeping the same order.
 
@@ -6666,6 +6678,7 @@ class BaseModel(metaclass=MetaModel):
         [result_ids] = stack
         return self.browse(id_ for id_ in self._ids if id_ in result_ids)
 
+    @api.private
     def sorted(self, key=None, reverse=False) -> Self:
         """Return the recordset ``self`` ordered by ``key``.
 
@@ -6697,6 +6710,7 @@ class BaseModel(metaclass=MetaModel):
         for name, value in values.items():
             self[name] = value
 
+    @api.private
     def flush_model(self, fnames=None):
         """ Process the pending computations and database updates on ``self``'s
         model.  When the parameter is given, the method guarantees that at least
@@ -6708,6 +6722,7 @@ class BaseModel(metaclass=MetaModel):
         self._recompute_model(fnames)
         self._flush(fnames)
 
+    @api.private
     def flush_recordset(self, fnames=None):
         """ Process the pending computations and database updates on the records
         ``self``.   When the parameter is given, the method guarantees that at
@@ -6791,6 +6806,7 @@ class BaseModel(metaclass=MetaModel):
     #
 
     @api.model
+    @api.private
     def new(self, values=None, origin=None, ref=None) -> Self:
         """ new([values], [origin], [ref]) -> record
 
@@ -6873,6 +6889,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the concatenation of two recordsets. """
         return self.concat(other)
 
+    @api.private
     def concat(self, *args) -> Self:
         """ Return the concatenation of ``self`` with all the arguments (in
             linear time complexity).
@@ -6917,6 +6934,7 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.union(other)
 
+    @api.private
     def union(self, *args) -> Self:
         """ Return the union of ``self`` with all the arguments (in linear time
             complexity, with first occurrence order preserved).
@@ -7044,6 +7062,7 @@ class BaseModel(metaclass=MetaModel):
         # the sake of code simplicity.
         return self.browse(ids)
 
+    @api.private
     def invalidate_model(self, fnames=None, flush=True):
         """ Invalidate the cache of all records of ``self``'s model, when the
         cached values no longer correspond to the database values.  If the
@@ -7058,6 +7077,7 @@ class BaseModel(metaclass=MetaModel):
             self.flush_model(fnames)
         self._invalidate_cache(fnames)
 
+    @api.private
     def invalidate_recordset(self, fnames=None, flush=True):
         """ Invalidate the cache of the records in ``self``, when the cached
         values no longer correspond to the database values.  If the parameter
