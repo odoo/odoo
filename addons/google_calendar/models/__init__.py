@@ -8,3 +8,4 @@ from . import calendar_recurrence_rule
 from . import res_users
 from . import calendar_attendee
 from . import google_credentials
+from . import calendar_alarm_manager
