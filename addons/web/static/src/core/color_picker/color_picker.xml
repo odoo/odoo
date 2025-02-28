@@ -21,13 +21,17 @@
                     title="Reset"
                     t-on-click="onColorApply"
                     t-on-mouseover="onColorHover"
-                    t-on-mouseout="onColorHoverOut"/>
+                    t-on-mouseout="onColorHoverOut"
+                    t-on-focusin="onColorHover"
+                    t-on-focusout="onColorHoverOut"/>
         </div>
         <t t-if="state.activeTab==='solid'">
             <div class="p-1"
                 t-on-click="onColorApply"
                 t-on-mouseover="onColorHover"
-                t-on-mouseout="onColorHoverOut">
+                t-on-mouseout="onColorHoverOut"
+                t-on-focusin="onColorHover"
+                t-on-focusout="onColorHoverOut">
                 <div class="o_colorpicker_section">
                     <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn o_color_button"/>
                     <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn o_color_button"/>
@@ -47,13 +51,13 @@
         </t>
         <t t-if="state.activeTab==='custom'">
             <div class="p-1">
-                <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
+                <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorHover" t-on-focusout="onColorHoverOut">
                     <t t-foreach="this.usedCustomColors" t-as="color" t-key="color_index">
                         <button t-if="color !== this.state.currentCustomColor?.toLowerCase()" class="o_color_button btn" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                     </t>
                     <button class="o_color_button btn selected" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
                 </div>
-                <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
+                <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorHover" t-on-focusout="onColorHoverOut">
                     <button data-color="black" class="btn o_color_button bg-black"></button>
                     <button data-color="900" class="o_color_button btn" style="background-color: var(--900)"></button>
                     <button data-color="800" class="o_color_button btn" style="background-color: var(--800)"></button>
@@ -72,7 +76,7 @@
             </div>
         </t>
         <t t-if="state.activeTab==='gradient'">
-            <div class="o_colorpicker_sections p-2" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
+            <div class="o_colorpicker_sections p-2" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorHover" t-on-focusout="onColorHoverOut">
                 <t t-foreach="this.DEFAULT_GRADIENT_COLORS" t-as="gradient" t-key="gradient">
                     <button class="w-50 m-0 o_color_button btn" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
                 </t>
