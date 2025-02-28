@@ -265,6 +265,12 @@ class EventEvent(models.Model):
             default_menu_values = {'event_id': new_event.id}
             new_event.menu_id = old_event.menu_id.copy({'name': new_event.name, 'website_id': new_event.website_id.id})
             new_event.introduction_menu_ids = old_event.introduction_menu_ids.copy(default_menu_values)
+            custom_page_menus = old_event.community_menu_ids.filtered(lambda menu: menu.view_id)
+            if custom_page_menus:
+                # workaround for stable, 'regular' community menus are not supposed to be duplicated
+                # remove this if in master, see 'website.menu#save' method override
+                custom_page_menus.copy(default_menu_values)
+
             new_event.location_menu_ids = old_event.location_menu_ids.copy(default_menu_values)
             (new_event.introduction_menu_ids + new_event.location_menu_ids + new_event.community_menu_ids + new_event.register_menu_ids).menu_id.parent_id = new_event.menu_id
 
