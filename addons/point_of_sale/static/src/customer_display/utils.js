@@ -1,7 +1,7 @@
 import { deduceUrl } from "@point_of_sale/utils";
 import { _t } from "@web/core/l10n/translation";
 
-export function openCustomerDisplay(
+export function openProxyCustomerDisplay(
     displayDeviceIp,
     accessToken,
     configId,
