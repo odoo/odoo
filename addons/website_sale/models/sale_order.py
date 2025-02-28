@@ -244,9 +244,34 @@ class SaleOrder(models.Model):
             self._recompute_taxes()
 
         if self.pricelist_id != pricelist_before or fpos_changed:
-            # Pricelist may have been recomputed by the `partner_id` field update
-            # we need to recompute the prices to match the new pricelist if it changed
-            self._recompute_prices()
+            # Check if the previous pricelist is still valid for the country group
+            # because of `partner_id` field update in SO recomputes pricelist,
+            # which indirectly calls _get_partner_pricelist_multi() which returns first 
+            # pricelist of the country group
+            pl_domain = self.env[
+                'product.pricelist'
+            ]._get_partner_pricelist_multi_search_domain_hook(self.env.company.id)
+            valid_pricelist = self.env['product.pricelist'].search(
+                pl_domain
+                + [
+                    (
+                        'country_group_ids.country_ids',
+                        '=',
+                        self.partner_id.country_id.id,
+                    ),
+                    ('id', '=', pricelist_before.id),
+                ]
+            )
+
+            if valid_pricelist:
+                # Restore previous pricelist if still valid
+                self.pricelist_id = pricelist_before
+                self.env['res.partner'].browse(partner_id).write(
+                    {"property_product_pricelist": self.pricelist_id.id}
+                )
+            else:
+                # Recompute prices if the previous pricelist is invalid
+                self._recompute_prices()
 
             request.session['website_sale_current_pl'] = self.pricelist_id.id
             self.website_id.invalidate_recordset(['pricelist_id'])
