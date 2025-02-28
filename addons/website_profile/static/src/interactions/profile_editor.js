@@ -7,9 +7,6 @@ import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFrom
 export class ProfileEditor extends Interaction {
     static selector = ".o_wprofile_editor_form";
     dynamicContent = {
-        ".o_forum_file_upload": { "t-on-change": this.onFileChange },
-        ".o_forum_profile_pic_edit": { "t-on-click.prevent": this.onEditProfilePicClick },
-        ".o_forum_profile_pic_clear": { "t-on-click": this.onClearProfilePicClick },
         ".o_forum_profile_bio_edit": {
             "t-on-click.prevent": () => this.isEditingBio = true,
             "t-att-class": () => ({ "d-none": this.isEditingBio }),
@@ -41,37 +38,10 @@ export class ProfileEditor extends Interaction {
         if (this.textareaEl.attributes.placeholder) {
             this.options.placeholder = this.textareaEl.attributes.placeholder.value;
         }
-
-        this.fileUploadEl = this.el.querySelector(".o_forum_file_upload");
-        this.avatarImgEl = this.el.querySelector(".o_wforum_avatar_img");
     }
 
     async willStart() {
         await loadWysiwygFromTextarea(this, this.textareaEl, this.options);
-    }
-
-    onEditProfilePicClick() {
-        this.fileUploadEl.click();
-    }
-
-    onClearProfilePicClick() {
-        this.fileUploadEl.value = null;
-        this.avatarImgEl.src = "/web/static/img/placeholder.png";
-        const inputElement = document.createElement("input");
-        inputElement.setAttribute("name", "clear_image");
-        inputElement.setAttribute("id", "forum_clear_image");
-        inputElement.setAttribute("type", "hidden");
-        this.insert(inputElement);
-    }
-
-    onFileChange() {
-        if (!this.fileUploadEl.files.length) {
-            return;
-        }
-        const reader = new window.FileReader();
-        reader.readAsDataURL(this.fileUploadEl.files[0]);
-        this.addListener(reader, "load", (ev) => this.avatarImgEl.src = ev.target.result);
-        this.el.querySelector("#forum_clear_image")?.remove();
     }
 }
 
