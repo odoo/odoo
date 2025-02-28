@@ -133,6 +133,30 @@ class AccountInvoiceReport(models.Model):
                 AND line.display_type = 'product'
         '''
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+        This is a hack to allow us to correctly calculate the average price.
+        """
+        if 'price_average:avg' in fields:
+            fields.extend(['aggregated_quantity:array_agg(quantity)'])
+            fields.extend(['aggregated_price_average:array_agg(price_average)'])
+
+        res = super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+
+        if 'price_average:avg' in fields:
+            agg_qties = 'aggregated_quantity'
+            agg_average = 'aggregated_price_average'
+            for data in res:
+                if data[agg_average] and data[agg_qties]:
+                    total_unit_price = sum(float(value) * float(qty) for value, qty in zip(data[agg_average], data[agg_qties]) if qty and value)
+                    total_qty = sum(float(qty) for qty in data[agg_qties] if qty)
+                    data['price_average'] = (total_unit_price / total_qty) if total_qty else 0
+                del data[agg_average]
+                del data[agg_qties]
+
+        return res
+
 
 class ReportInvoiceWithoutPayment(models.AbstractModel):
     _name = 'report.account.report_invoice'
