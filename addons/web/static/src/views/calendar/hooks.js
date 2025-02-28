@@ -97,6 +97,29 @@ export function useFullCalendar(refName, params) {
         } catch (e) {
             throw new Error(`Cannot instantiate FullCalendar\n${e.message}`);
         }
+
+        // Add custom time dot
+        const todayCol = ref.el.querySelector(".fc-day-today.fc-timegrid-col");
+        const indicatorLine = ref.el.querySelector(".fc-timegrid-now-indicator-line");
+
+        if (todayCol && indicatorLine) {
+            const indicatorToday = document.createElement("div");
+            indicatorToday.className = "o_calendar_time_indicator_today";
+            todayCol.appendChild(indicatorToday);
+
+            const updateindicatorToday = () => {
+                const indicatorLineStyles = window.getComputedStyle(indicatorLine);
+                indicatorToday.style.top = indicatorLineStyles.getPropertyValue('top');
+            };
+
+            updateindicatorToday();
+
+            const observer = new MutationObserver(updateindicatorToday);
+            observer.observe(indicatorLine, {
+                attributes: true,
+                attributeFilter: ['style']
+            });
+        }
     });
 
     onPatched(() => {
