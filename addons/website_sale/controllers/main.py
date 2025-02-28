@@ -1272,10 +1272,30 @@ class WebsiteSale(payment_portal.PaymentPortal):
         country = request.env["res.country"].search([
             ('code', '=', address.pop('country')),
         ], limit=1)
+<<<<<<< saas-18.2
         state_id = False
         if state_code := address.pop('state', False):
             state_id = country.state_ids.filtered(lambda state: state.code == state_code).id
         address.update(country_id=country.id, state_id=state_id)
+||||||| 6a2284ef1e04e9576e44a4be2376f5449bf29dc7
+        if state_code := address.pop('state'):
+            state = request.env['res.country.state'].search([
+                ('code', '=', state_code),
+                ('country_id', '=', country.id),
+            ], limit=1)
+        else:
+            state = request.env['res.country.state']
+        address.update(country_id=country.id, state_id=state.id)
+=======
+        if state_code := address.pop('state', None):
+            state = request.env['res.country.state'].search([
+                ('code', '=', state_code),
+                ('country_id', '=', country.id),
+            ], limit=1)
+        else:
+            state = request.env['res.country.state']
+        address.update(country_id=country.id, state_id=state.id)
+>>>>>>> d6c1c678dfc079c662de276b22ca8a464fdaf80b
 
     @route('/shop/update_address', type='jsonrpc', auth='public', website=True)
     def shop_update_address(self, partner_id, address_type='billing', **kw):
