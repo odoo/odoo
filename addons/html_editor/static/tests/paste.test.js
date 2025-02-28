@@ -2326,67 +2326,74 @@ describe("Special cases", () => {
 });
 
 describe("pasting within blockquote", () => {
-    test("should paste paragraph related elements within blockquote", async () => {
+    test("should paste plain text inside blockquote", async () => {
         await testEditor({
-            contentBefore: "<blockquote>[]<br></blockquote>",
+            contentBefore: "<h1>[abc</h1><h2>def</h2><h3>ghi]</h3><blockquote><br></blockquote>",
             stepFunction: async (editor) => {
-                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+                const clipboardData = new DataTransfer();
+                await press(["ctrl", "c"], { dataTransfer: clipboardData });
+                const blockquote = document.querySelector("blockquote");
+                setSelection({ anchorNode: blockquote, anchorOffset: 0 });
+                await animationFrame();
+                const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
+                editor.editable.dispatchEvent(pasteEvent);
             },
-            contentAfter: "<blockquote><h1>abc</h1><h2>def</h2><h3>ghi[]</h3></blockquote>",
+            contentAfter:
+                "<h1>abc</h1><h2>def</h2><h3>ghi</h3><blockquote>abc<br>def<br>ghi[]</blockquote>",
         });
+    });
+
+    test("should paste plain text inside blockquote even when copying styled content", async () => {
         await testEditor({
-            contentBefore: "<blockquote>x[]</blockquote>",
+            contentBefore:
+                '<h1><strong>[abc</strong></h1><h2><font style="color: red"><em>def</em></font></h2><h3>ghi]</h3><blockquote><br></blockquote>',
             stepFunction: async (editor) => {
-                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+                const clipboardData = new DataTransfer();
+                await press(["ctrl", "c"], { dataTransfer: clipboardData });
+                const blockquote = document.querySelector("blockquote");
+                setSelection({ anchorNode: blockquote, anchorOffset: 0 });
+                await animationFrame();
+                const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
+                editor.editable.dispatchEvent(pasteEvent);
             },
-            contentAfter: "<blockquote>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3></blockquote>",
-        });
-        await testEditor({
-            contentBefore: "<blockquote>[]x</blockquote>",
-            stepFunction: async (editor) => {
-                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
-            },
-            contentAfter: "<blockquote><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>x</blockquote>",
-        });
-        await testEditor({
-            contentBefore: "<blockquote>x[]y</blockquote>",
-            stepFunction: async (editor) => {
-                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
-            },
-            contentAfter: "<blockquote>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3>y</blockquote>",
+            contentAfter:
+                '<h1><strong>abc</strong></h1><h2><font style="color: red"><em>def</em></font></h2><h3>ghi</h3><blockquote>abc<br>def<br>ghi[]</blockquote>',
         });
     });
 });
 
 describe("pasting within pre", () => {
-    test("should paste paragraph releted elements within pre", async () => {
+    test("should paste plain text inside pre", async () => {
         await testEditor({
-            contentBefore: "<pre>[]<br></pre>",
+            contentBefore: "<h1>[abc</h1><h2>def</h2><h3>ghi]</h3><pre><br></pre>",
             stepFunction: async (editor) => {
-                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+                const clipboardData = new DataTransfer();
+                await press(["ctrl", "c"], { dataTransfer: clipboardData });
+                const pre = document.querySelector("pre");
+                setSelection({ anchorNode: pre, anchorOffset: 0 });
+                await animationFrame();
+                const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
+                editor.editable.dispatchEvent(pasteEvent);
             },
-            contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
+            contentAfter: "<h1>abc</h1><h2>def</h2><h3>ghi</h3><pre>abc<br>def<br>ghi[]</pre>",
         });
+    });
+
+    test("should paste plain text inside pre even when copying styled content", async () => {
         await testEditor({
-            contentBefore: "<pre>x[]</pre>",
+            contentBefore:
+                '<h1><strong>[abc</strong></h1><h2><font style="color: red"><em>def</em></font></h2><h3>ghi]</h3><pre><br></pre>',
             stepFunction: async (editor) => {
-                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
+                const clipboardData = new DataTransfer();
+                await press(["ctrl", "c"], { dataTransfer: clipboardData });
+                const pre = document.querySelector("pre");
+                setSelection({ anchorNode: pre, anchorOffset: 0 });
+                await animationFrame();
+                const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
+                editor.editable.dispatchEvent(pasteEvent);
             },
-            contentAfter: "<pre>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
-        });
-        await testEditor({
-            contentBefore: "<pre>[]x</pre>",
-            stepFunction: async (editor) => {
-                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
-            },
-            contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>x</pre>",
-        });
-        await testEditor({
-            contentBefore: "<pre>x[]y</pre>",
-            stepFunction: async (editor) => {
-                pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
-            },
-            contentAfter: "<pre>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3>y</pre>",
+            contentAfter:
+                '<h1><strong>abc</strong></h1><h2><font style="color: red"><em>def</em></font></h2><h3>ghi</h3><pre>abc<br>def<br>ghi[]</pre>',
         });
     });
 });

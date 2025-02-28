@@ -242,12 +242,15 @@ export class ClipboardPlugin extends Plugin {
         this.dispatchTo("before_paste_handlers", selection);
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
-
-        this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
-            this.handlePasteOdooEditorHtml(ev.clipboardData) ||
-            this.handlePasteHtml(selection, ev.clipboardData) ||
+        // If the data is being pasted in content blocks, paste it as normal text
+        if (closestElement(selection.anchorNode, "BLOCKQUOTE, PRE")) {
             this.handlePasteText(selection, ev.clipboardData);
-
+        } else {
+            this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
+                this.handlePasteOdooEditorHtml(ev.clipboardData) ||
+                this.handlePasteHtml(selection, ev.clipboardData) ||
+                this.handlePasteText(selection, ev.clipboardData);
+        }
         this.dependencies.history.addStep();
     }
     /**
@@ -353,7 +356,8 @@ export class ClipboardPlugin extends Plugin {
                 const block = closestBlock(selection.anchorNode);
                 if (
                     this.dependencies.split.isUnsplittable(block) ||
-                    closestElement(selection.anchorNode).tagName === "PRE"
+                    closestElement(selection.anchorNode).tagName === "PRE" ||
+                    closestElement(selection.anchorNode).tagName === "BLOCKQUOTE"
                 ) {
                     this.dependencies.lineBreak.insertLineBreak();
                 } else {
