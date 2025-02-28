@@ -154,10 +154,11 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async _selectPickupLocation(ev) {
-        const { zipCode, locationId } = ev.currentTarget.dataset;
+        const { zipCode, countryCode, locationId } = ev.currentTarget.dataset;
         const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
         this.call('dialog', 'add', LocationSelectorDialog, {
             zipCode: zipCode,
+            countryCode: countryCode,
             selectedLocationId: locationId,
             isFrontend: true,
             save: async location => {
@@ -196,6 +197,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         editPickupLocationButton.dataset.locationId = location.id;
         editPickupLocationButton.dataset.zipCode = location.zip_code;
         editPickupLocationButton.dataset.pickupLocationData = jsonLocation;
+        editPickupLocationButton.dataset.countryCode = location.country_code;
         pickupLocation.querySelector(
             '[name="o_pickup_location_details"]'
         ).classList.remove('d-none');
@@ -504,14 +506,18 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     },
 
     /**
-     * Set the pickup location on the order.
+     * Set the pickup location on the order and update the cart in case the fiscal position changed.
      *
      * @private
      * @param {String} pickupLocationData - The pickup location's data to set.
      * @return {void}
      */
     async _setPickupLocation(pickupLocationData) {
-        await rpc('/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData});
+        let result = await rpc(
+            '/website_sale/set_pickup_location',
+            { pickup_location_data: pickupLocationData }
+        );
+        this._updateCartSummary(result);
     },
 
     // #=== GETTERS & SETTERS ===#

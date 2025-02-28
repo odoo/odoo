@@ -23,6 +23,11 @@ class WebsiteSaleCollect(WebsiteSale):
                 or res.get('selected_wh_location', {}).get('zip_code')
                 or request.geoip.postal.code
             )
+            res['country_code'] = (
+                order_sudo.partner_shipping_id.country_id.code
+                or res.get('selected_wh_location', {}).get('country_code')
+                or request.geoip.country_code
+            )
         return res
 
     def _prepare_checkout_page_values(self, order_sudo, **query_params):

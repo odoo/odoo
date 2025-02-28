@@ -103,12 +103,26 @@ class SaleOrder(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        # Force selected country code from the dropdown
+        selected_country_code = kwargs.pop(
+            'selected_country_code',
+            self.partner_shipping_id.country_code
+        )
+        country = self.env['res.country'].search(
+             [('code', '=', selected_country_code)],
+            limit=1,
+        )
         if zip_code:
             assert country  # country is required if zip_code is provided.
             partner_address = self.env['res.partner'].new({
                 'active': False,
                 'country_id': country.id,
                 'zip': zip_code,
+            })
+        elif country:
+            partner_address = self.env['res.partner'].new({
+                'active': False,
+                'country_id': country.id,
             })
         else:
             partner_address = self.partner_shipping_id
@@ -120,7 +134,28 @@ class SaleOrder(models.Model):
             pickup_locations = getattr(self.carrier_id, function_name)(partner_address, **kwargs)
             if not pickup_locations:
                 return error
-            return {'pickup_locations': pickup_locations}
+
+            if (
+                not country or
+                any([location['country_code'] != country.code for location in pickup_locations])
+            ):
+                country = self.env['stock.warehouse'].browse(
+                    pickup_locations[0]['id']
+                ).partner_id.country_id
+                pickup_locations = [
+                    location for location in pickup_locations
+                    if location['country_code'] == country.code
+                ]
+
+            return {
+                'pickup_locations': pickup_locations,
+                'selected_country': {
+                    'name': country.name,
+                    'code': country.code,
+                    'image_url': country.image_url,
+                    'fields': country.get_address_fields(),
+                },
+            }
         except UserError as e:
             return {'error': str(e)}
 
