@@ -4,15 +4,16 @@
 <t t-name="html_builder.CustomInnerSnippet">
     <t t-set="disabledTooltip">This block cannot be dropped anywhere on this page.</t>
     <div class="o_snippet"
-        t-att-class="{'o_disabled': snippet.isDisabled, 'o_draggable': !snippet.isDisabled and !snippet.isRenaming}"
+        t-att-class="{'o_disabled': snippet.isDisabled, 'o_draggable': !snippet.isDisabled and !state.isRenaming}"
         t-att-name="snippet.title"
         t-att-data-id="snippet.id"
         t-att-data-tooltip="snippet.isDisabled and props.disabledTooltip">
-        <div class="o_snippet_thumbnail" t-on-click="props.onClickHandler">
+        <div class="o_snippet_thumbnail">
+            <button t-if="!snippet.isInstallable" class="o_snippet_thumbnail_area" t-on-click="props.onClickHandler" title="Insert snippet"/>
             <img t-if="snippet.isDisabled" src="/html_builder/static/img/snippet_disabled.svg" class="o_snippet_undroppable"/>
             <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/>
             <t t-if="state.isRenaming">
-                <div class="rename-input w-100 mx-1">
+                <div class="rename-input w-100 mx-1 z-1">
                     <input t-ref="rename-input" type="text" autocomplete="chrome-off" t-att-value="snippet.title" class="text-start" t-on-pointerdown.stop=""/>
                     <button class="o_we_text_success fa fa-check btn btn-outline-success border-0"
                             data-tooltip="Confirm"
@@ -26,7 +27,7 @@
                 <span class="o_snippet_thumbnail_title" t-esc="snippet.title"/>
             </t>
         </div>
-        <div t-if="!state.isRenaming" class="rename-delete-buttons float-end">
+        <div t-if="!state.isRenaming" class="rename-delete-buttons float-end z-1">
             <button class="fa fa-pencil btn o_we_hover_success btn-outline-info border-0"
                     t-attf-data-tooltip="Rename {{snippet.title}}"
                     t-on-click.stop="toggleRenamingState"/>
