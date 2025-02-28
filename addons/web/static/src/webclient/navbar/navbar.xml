@@ -68,7 +68,9 @@
             'border-top': !isNested &amp;&amp; subMenu_index != 0,
             'py-2': isNested,
         }">
-        <t t-esc="section.name"/>
+        <div style="width: fit-content;">
+            <t t-esc="section.name"/>
+        </div>
     </li>
   </t>
 
