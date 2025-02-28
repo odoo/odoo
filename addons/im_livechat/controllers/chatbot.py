@@ -79,7 +79,7 @@ class LivechatChatbotScriptController(http.Controller):
         store.add_model_values(
             "ChatbotStep",
             {
-                "id": (next_step.id, discuss_channel.id),
+                "id": (next_step.id, posted_message.id),
                 "isLast": next_step._is_last_step(discuss_channel),
                 "message": posted_message.id,
                 "operatorFound": next_step.is_forward_operator
@@ -91,7 +91,7 @@ class LivechatChatbotScriptController(http.Controller):
             "Chatbot",
             {
                 "currentStep": {
-                    "id": (next_step.id, discuss_channel.id),
+                    "id": (next_step.id, posted_message.id),
                     "scriptStep": next_step.id,
                     "message": posted_message.id,
                 },
