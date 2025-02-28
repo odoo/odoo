@@ -338,7 +338,7 @@ export class SelfOrder extends Reactive {
             return;
         }
 
-        order = await this.sendDraftOrderToServer();
+        order = await this.sendDraftOrderToServer(paymentMethods.length > 0);
 
         if (!order) {
             return;
@@ -606,7 +606,7 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    async sendDraftOrderToServer() {
+    async sendDraftOrderToServer(to_pay_on_kiosk = false) {
         if (
             Object.keys(this.currentOrder.changes).length === 0 ||
             this.currentOrder.lines.length === 0
@@ -616,10 +616,12 @@ export class SelfOrder extends Reactive {
 
         try {
             this.currentOrder.recomputeOrderData();
+            const orderData = this.currentOrder.serialize({ orm: true });
+            orderData["to_pay_on_kiosk"] = to_pay_on_kiosk; // to remove in master
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
-                    order: this.currentOrder.serialize({ orm: true }),
+                    order: orderData,
                     access_token: this.access_token,
                     table_identifier: this.currentOrder?.table_id?.identifier || false,
                 }
