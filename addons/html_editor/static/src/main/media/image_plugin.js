@@ -264,10 +264,16 @@ export class ImagePlugin extends Plugin {
         if (!selectedImg) {
             return;
         }
+        let imageName;
+        // Keep the result from the first predicate that returns something.
+        this.getResource("image_name_predicates").find((p) => {
+            imageName = p(selectedImg);
+            return imageName;
+        });
         const fileModel = {
             isImage: true,
             isViewable: true,
-            name: selectedImg.src,
+            name: imageName || selectedImg.src,
             defaultSource: selectedImg.src,
             downloadUrl: selectedImg.src,
         };
