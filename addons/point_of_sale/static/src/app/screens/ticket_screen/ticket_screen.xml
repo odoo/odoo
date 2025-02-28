@@ -38,7 +38,7 @@
                                 <tbody>
                                     <t t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                         <tr class="order-row" t-attf-class="{{ isHighlighted(order) ? 'highlight active': '' }}"
-                                            t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this._setOrder(order)" >
+                                            t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.finalized ? ()=>{} : this._setOrder(order)" >
                                             <td>
                                                 <div class="fs-6 fw-bolder"><t t-esc="getDate(order)"></t></div>
                                                 <div class="small text-muted"><t t-esc="getTime(order)"></t></div>
@@ -86,7 +86,7 @@
                             </table>
                             <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                 <div class="mobileOrderList order-row d-flex flex-row ps-1" t-attf-class="{{ isHighlighted(order) ? 'highlight': '' }}"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.uiState.locked ? ()=>{} : this._setOrder(order)" >
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.finalized ? ()=>{} : this._setOrder(order)" >
                                     <div class="p-2">
                                             <div class="fw-bolder"><t t-esc="getDate(order)"></t></div>
                                             <div class="small text-muted"><t t-esc="getTime(order)"></t></div>
@@ -128,7 +128,7 @@
                         <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                         <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3"
                             t-att-disabled="!_selectedSyncedOrder"
-                            t-if="!isOrderSynced"
+                            t-if="!_selectedSyncedOrder.finalized"
                             t-on-click="() => this._setOrder(_selectedSyncedOrder)">
                             <span class="d-block">Load Order</span>
                         </button>
@@ -142,7 +142,7 @@
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
                     <t t-if="_selectedSyncedOrder?.getOrderlines()?.length" > 
-                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-view text-center">
+                        <div t-if="_selectedSyncedOrder.finalized" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-view text-center">
                             Select the product(s) to refund and set the quantity
                         </div>
                         <OrderDisplay order="_selectedSyncedOrder" t-if="_selectedSyncedOrder" t-slot-scope="scope">

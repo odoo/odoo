@@ -28,7 +28,7 @@ export class OrderTabs extends Component {
     }
     selectFloatingOrder(order) {
         this.pos.setOrder(order);
-        const previousOrderScreen = order.getScreenData();
+        const previousOrderScreen = this.pos.getOrderScreen(order);
 
         const props = {};
         if (previousOrderScreen?.name === "PaymentScreen") {

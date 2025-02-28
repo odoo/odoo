@@ -11,7 +11,7 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -26,7 +26,6 @@ import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_
 import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
-import { ConnectionLostError } from "@web/core/network/rpc";
 
 const NBR_BY_PAGE = 30;
 const { DateTime } = luxon;
@@ -85,22 +84,6 @@ export class TicketScreen extends Component {
         Object.assign(this.state, this.props.stateOverride || {});
 
         onMounted(this.onMounted);
-        onWillStart(async () => {
-            if (!this.pos.loadingOrderState) {
-                try {
-                    this.pos.loadingOrderState = true;
-                    await this.pos.getServerOrders();
-                } catch (error) {
-                    if (error instanceof ConnectionLostError) {
-                        Promise.reject(error);
-                        return error;
-                    }
-                    throw error;
-                } finally {
-                    this.pos.loadingOrderState = false;
-                }
-            }
-        });
     }
     onMounted() {
         setTimeout(() => {
@@ -183,7 +166,7 @@ export class TicketScreen extends Component {
     onClickOrder(clickedOrder) {
         this.setSelectedOrder(clickedOrder);
         this.numberBuffer.reset();
-        if ((!clickedOrder || clickedOrder.uiState.locked) && !this.getSelectedOrderlineId()) {
+        if ((!clickedOrder || clickedOrder.finalized) && !this.getSelectedOrderlineId()) {
             // Automatically select the first orderline of the selected order.
             const firstLine = this.getSelectedOrder().getOrderlines()[0];
             if (firstLine) {
@@ -212,7 +195,7 @@ export class TicketScreen extends Component {
         this.setSelectedOrder(order);
     }
     onClickOrderline(orderline) {
-        if (this.getSelectedOrder()?.uiState.locked) {
+        if (this.getSelectedOrder()?.finalized) {
             const order = this.getSelectedOrder();
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
@@ -387,26 +370,27 @@ export class TicketScreen extends Component {
     }
     get isOrderSynced() {
         return (
-            this.getSelectedOrder()?.uiState.locked &&
-            (this.getSelectedOrder().getScreenData().name === "" || this.state.filter === "SYNCED")
+            this.getSelectedOrder()?.finalized &&
+            (this.pos.getOrderScreen(this.getSelectedOrder()) === "" ||
+                this.state.filter === "SYNCED")
         );
     }
     activeOrderFilter(o) {
         const screen = ["ReceiptScreen", "TipScreen"];
-        const oScreen = o.getScreenData();
-        return (!o.finalized || screen.includes(oScreen.name)) && o.uiState.displayed;
+        const oScreen = this.pos.getOrderScreen(o);
+        return (!o.finalized || screen.includes(oScreen)) && o.isDisplayed();
     }
     getFilteredOrderList() {
         const orderModel = this.pos.models["pos.order"];
         let orders =
             this.state.filter === "SYNCED"
-                ? orderModel.filter((o) => o.finalized && o.uiState.displayed)
-                : orderModel.filter(this.activeOrderFilter);
+                ? orderModel.filter((o) => o.finalized && o.isDisplayed())
+                : orderModel.filter((o) => this.activeOrderFilter(o));
 
         if (this.state.filter && !["ACTIVE_ORDERS", "SYNCED"].includes(this.state.filter)) {
             orders = orders.filter((order) => {
-                const screen = order.getScreenData();
-                return this._getScreenToStatusMap()[screen.name] === this.state.filter;
+                const screen = this.pos.getOrderScreen(order);
+                return this._getScreenToStatusMap()[screen] === this.state.filter;
             });
         }
 
@@ -470,21 +454,18 @@ export class TicketScreen extends Component {
         return order.employee_id ? order.employee_id.name : "";
     }
     getStatus(order) {
-        if (
-            order.uiState?.locked &&
-            (order.getScreenData().name === "" || this.state.filter === "SYNCED")
-        ) {
+        if (order.uiState?.locked && this.state.filter === "SYNCED") {
             return _t("Paid");
         } else {
-            const screen = order.getScreenData();
-            return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name])?.text;
+            const screen = this.pos.getOrderScreen(order);
+            return this._getOrderStates().get(this._getScreenToStatusMap()[screen])?.text;
         }
     }
     /**
      * If the order is the only order and is empty
      */
     isDefaultOrderEmpty(order) {
-        const status = this._getScreenToStatusMap()[order.getScreenData().name];
+        const status = this._getScreenToStatusMap()[this.pos.getOrderScreen(order)];
         const productScreenStatus = this._getScreenToStatusMap().ProductScreen;
         return (
             order.getOrderlines().length === 0 &&
@@ -654,9 +635,6 @@ export class TicketScreen extends Component {
     }
 
     async _setOrder(order) {
-        if (this.pos.config.isShareable) {
-            await this.pos.syncAllOrders();
-        }
         this.pos.setOrder(order);
         this.closeTicketScreen();
     }
