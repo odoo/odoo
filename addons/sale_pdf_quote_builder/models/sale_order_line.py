@@ -22,6 +22,14 @@ class SaleOrderLine(models.Model):
         readonly=False,
     )
 
+    # === ONCHANGE METHODS === #
+
+    @api.onchange('product_id', 'product_template_id')
+    def _onchange_product(self):
+        for line in self:
+            # Ensure selected documents are still in the available documents
+            line.product_document_ids &= line.available_product_document_ids
+
     # === COMPUTE METHODS === #
 
     @api.depends('product_id', 'product_template_id')
