@@ -9,6 +9,7 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -73,39 +74,28 @@ class MercadoPagoController(http.Controller):
         x = requests.get('https://api.mercadopago.com/v1/payment_methods', params=None, headers=headers, timeout=10)
         print(x)
 
-    @http.route('/mercado_pago/create_preference', type='jsonrpc', auth='public')
-    def mercado_pago_preference(self, partner_id, amount, currency, payment_method, provider_id):
 
-        #get the list of mercado pago payment methods
-
+    @http.route('/payment/mercado_pago/payments', type='jsonrpc', auth='public')
+    def make_mp_transacton(self, payment_method_id, payer, provider_id, reference, transaction_amount, token=None, issuer_id=None):
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
-        partner_sudo = partner_id and request.env['res.partner'].sudo().browse(partner_id).exists()
-        #search trhotugh payment methods to find the one with this id
+        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+        headers = {'Content-Type': 'application/json',
+                   'Authorization': f'Bearer {provider_sudo.mercado_pago_access_token}',
+                   'X-Idempotency-Key': payment_utils.generate_idempotency_key(tx_sudo)}
 
-        y = provider_sudo.payment_method_ids.filtered(lambda l: l.id != payment_method)
-        excluded_payment_methods = []
-        # for z in y:
-        #     excluded_payment_methods.append({'id': z.code})
-        excluded_payment_methods.append({"id": "credit_card"})
-        x = {
-            'items': [{
-                'title':'Test',
-                'quantity': 1,
-                'currency_id': currency,
-                'unit_price': amount,
-                'id': "3",
-            }],
-            'payment_methods': {
-                'excluded_payment_types': [
-        { "id": "ticket" }
-    ],
-
-            },
+        payload = {
+            "transaction_amount": transaction_amount,
+            "description": reference,
+            "installments": 1,
+            "payment_method_id": payment_method_id,
+            "payer": payer,
+            **self.card_payment_values(token, issuer_id)
         }
+        response = requests.post('https://api.mercadopago.com/v1/payments',  json=payload, headers=headers, timeout=10)
+        print(response)
 
-        headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {provider_sudo.mercado_pago_access_token}' }
 
-        f =  requests.post('https://api.mercadopago.com/checkout/preferences', json=x,
-                         headers=headers, timeout=10).json()
-
-        return f.get('id')
+    def card_payment_values(self, token, issuer_id):
+        if token and issuer_id:
+            return {"token": token, "issuer_id": issuer_id}
+        return {}

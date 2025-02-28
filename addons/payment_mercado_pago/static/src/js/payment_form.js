@@ -87,7 +87,6 @@ paymentForm.include({
                         },
                         paymentMethods: {
                             ...item,
-                            //bank_transfer: 'all',
                             maxInstallments: 1
                         },
 
@@ -95,27 +94,6 @@ paymentForm.include({
                     callbacks: {
                         onReady: () => {
 
-                        },
-                        onSubmit: ({selectedPaymentMethod, formData}) => {
-                            // callback when sending data button is clicked
-                            return new Promise((resolve, reject) => {
-                                fetch("/process_payment", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify(formData),
-                                })
-                                    .then((response) => response.json())
-                                    .then((response) => {
-                                        // receive payment result
-                                        resolve();
-                                    })
-                                    .catch((error) => {
-                                        // manage the error answer when trying to create a payment
-                                        reject();
-                                    });
-                            });
                         },
                         onError: (error) => {
                             // callback called to all error cases related to the Brick
@@ -164,15 +142,48 @@ paymentForm.include({
         // Trigger form validation and wallet collection.
         const _super = this._super.bind(this);
         try {
-            await this.mercadoPagoCheckout.getFormData().then(({formData}) =>{
-                console.log(formData)
-            });
+            const response = await this.mercadoPagoCheckout.getFormData()
+            if (!response){
+                this._displayErrorDialog(_t("Incorrect payment details"));
+                return
+            }
+            this._mercadoPagoSubmitTransaction(response)
         } catch (error) {
             this._displayErrorDialog(_t("Incorrect payment details"), error.message);
             this._enableButton();
             return
         }
+
         return await _super(...arguments);
+    },
+
+    _mercadoPagoSubmitTransaction(formData){
+        rpc(
+            this.paymentContext['transactionRoute'],
+            this._prepareTransactionRouteParams(),
+        ).then(processingValues => {
+            // Initiate the payment.
+            return rpc('/payment/mercado_pago/payments', {
+                'payer': formData.payer || formData.formData.payer,
+                'payment_method_id': formData.payment_method_id || formData.formData.payment_method_id,
+                'transaction_amount': processingValues.amount,
+                'currency_id': processingValues.currency_id,
+                'partner_id': processingValues.partner_id,
+                'token': formData.token,
+                'provider_id': processingValues.provider_id,
+                'reference': processingValues.reference,
+                'issuer_id': formData.issuer_id,
+            });
+        }).then(paymentResponse => {
+                window.location = '/payment/status';
+        }).catch((error) => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._enableButton();
+            } else {
+                return Promise.reject(error);
+            }
+        });
     },
 
     _renderPaymentBrick(brick)  {
