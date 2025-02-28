@@ -187,7 +187,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
         ])
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Leave Type',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': 'yes',
             'leave_validation_type': 'hr',
             'request_unit': 'day',
@@ -284,7 +284,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
 
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Leave Type',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': 'yes',
             'leave_validation_type': 'hr',
             'request_unit': 'day',
