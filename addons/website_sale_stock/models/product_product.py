@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from pytz import UTC
+
 from odoo import models, fields, _
+from odoo.http import request
 
 
 class ProductProduct(models.Model):
@@ -66,3 +70,20 @@ class ProductProduct(models.Model):
                 availability = 'https://schema.org/OutOfStock'
             markup_data['offers']['availability'] = availability
         return markup_data
+
+    def _prepare_gmc_items(self):
+        """Prepare Google Merchant Center items' fields.
+
+        See [Google](https://support.google.com/merchants/answer/7052112)'s documentation for more
+        information about each field.
+
+        :return: a dictionary for each non-service product in this recordset.
+        :rtype: list[dict]
+        """
+        all_product_items = super()._prepare_gmc_items()
+        for product in self.filtered(
+            lambda p: not p.allow_out_of_stock_order and p in all_product_items
+        ):
+            if product._is_sold_out():
+                all_product_items[product]['availability'] = 'out_of_stock'
+        return all_product_items

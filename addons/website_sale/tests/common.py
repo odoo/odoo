@@ -2,6 +2,7 @@
 
 from contextlib import contextmanager
 
+
 from odoo.fields import Command
 from odoo.tools import lazy
 
