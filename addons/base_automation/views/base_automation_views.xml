@@ -9,14 +9,19 @@
                 <form string="Automation Rule">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_webhook_logs" type="object" string="Logs" class="oe_stat_button" icon="fa-list" invisible="trigger != 'on_webhook'">
-                            </button>
+                            <button groups="base.group_no_one" invisible="trigger != 'on_webhook'"
+                                type="object"
+                                name="action_view_webhook_logs"
+                                string="Logs"
+                                class="oe_stat_button"
+                                icon="fa-list"
+                            />
                         </div>
                         <field name="active" invisible="1" />
                         <field name="model_name" invisible="1" force_save="True" />
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
                         <div class="oe_title">
-                            <h1><field name="name" placeholder="e.g. Support flow"/></h1>
+                            <h1><field name="name" placeholder="Set an explicit name"/></h1>
                         </div>
                         <group groups="!base.group_no_one" invisible="context.get('default_model_id')">
                             <group>
@@ -34,6 +39,11 @@
                                 <div>
                                     <div class="d-flex flex-row">
                                         <field name="trigger" widget="base_automation_trigger_selection" class="oe_inline me-3"/>
+                                        <field name="trg_date_id" class="oe_inline" placeholder="Select a date field..."
+                                            options="{'no_open': True, 'no_create': True}"
+                                            context="{'hide_model': 1}"
+                                            invisible="trigger != 'on_time'"
+                                            required="trigger == 'on_time'"/>
                                         <field name="trg_selection_field_id" placeholder="Select a value..." class="oe_inline"
                                             options="{'no_open': True, 'no_create': True}"
                                             invisible="trigger not in ['on_state_set', 'on_priority_set']"
@@ -48,36 +58,35 @@
                                     </div>
                                     <div class="text-muted" invisible="trigger != 'on_change'"><i class="fa fa-warning"/> Automation rules triggered by UI changes will be executed <em>every time</em> the watched fields change, <em>whether you save or not</em>.</div>
                                 </div>
-                                <label for="url" string="URL" invisible="trigger != 'on_webhook'"/>
-                                <div invisible="trigger != 'on_webhook'">
-                                    <field name="url" widget="CopyClipboardURL"  placeholder="URL will be created once the rule is saved."/>
-                                    <div class="alert alert-warning" role="status">
-                                        <strong><i class="fa fa-lock"/> Keep it secret, keep it safe.</strong>
-                                        <p>Your webhook URL contains a secret. Don't share it online or carelessly.</p>
-                                        <button class="btn btn-seconadry" type="object" name="action_rotate_webhook_uuid" string="Rotate Secret" icon="fa-refresh" help="Change the URL's secret if you think the URL is no longer secure. You will have to update any automated system that calls this webhook to the new URL."/>
-                                    </div>
+                                <label for="url" string="Secret URL" invisible="trigger != 'on_webhook'"/>
+                                <div class="d-flex flex-row" invisible="trigger != 'on_webhook'">
+                                    <field name="url" class="oe_inline mb-0" widget="CopyClipboardURL"/>
+                                    <button groups="base.group_no_one"
+                                        type="object"
+                                        name="action_rotate_webhook_uuid"
+                                        class="oe_inline btn btn-link flex-shrink-0 px-1 py-0"
+                                        icon="fa-refresh"
+                                        string="Renew"
+                                        help="If renewed, update the secret URL in the third-party app that calls this webhook."
+                                    />
                                 </div>
+                                <field name="log_webhook_calls" widget="boolean_toggle" invisible="trigger != 'on_webhook'" groups="base.group_no_one"/>
                                 <label for="trg_date_range" string="Delay" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
                                 <div class="d-flex flex-row gap-2" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']">
-                                    <field name="trg_date_range" class="oe_inline" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
+                                    <field name="trg_date_range" class="oe_inline o_input_3ch" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
                                     <field name="trg_date_range_type" class="oe_inline" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
-                                    <span invisible="trigger != 'on_time_created'">after creation</span>
-                                    <span invisible="trigger != 'on_time_updated'">after last update</span>
-                                    <span invisible="trigger != 'on_time'">after</span>
-                                    <field name="trg_date_id" class="oe_inline" string="Date Field" placeholder="Select a date field..."
-                                        options="{'no_open': True, 'no_create': True}"
-                                        context="{'hide_model': 1}"
-                                        invisible="trigger != 'on_time'"
-                                        required="trigger in ['on_time', 'on_time_created', 'on_time_updated']"/>
+                                    <button
+                                        type="object"
+                                        name="action_open_scheduled_action"
+                                        string="Scheduled action"
+                                        icon="oi-arrow-right"
+                                        class="oe_inline btn-link mt-n1"
+                                        groups="base.group_no_one"
+                                    />
                                 </div>
-                                <field name="log_webhook_calls" widget="boolean_toggle" invisible="trigger != 'on_webhook'"/>
                                 <field name="trg_date_calendar_id" class="oe_inline"
                                     options="{'no_open': True, 'no_create': True}"
                                     invisible="not trg_date_id or trg_date_range_type != 'day'"/>
-                                <label for="least_delay_msg" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg" string="" />
-                                <div class="alert alert-info" role="alert" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated'] or not least_delay_msg">
-                                    <field name="least_delay_msg"/>
-                                </div>
                                 <field name="filter_pre_domain" widget="domain" groups="base.group_no_one"
                                        options="{'model': 'model_name', 'in_dialog': True}"
                                        invisible="trigger in [
@@ -95,15 +104,7 @@
                                     options="{'model': 'model_name', 'in_dialog': True}"
                                     invisible="trigger in ['on_webhook']"
                                 />
-                                <label for="filter_domain" groups="!base.group_no_one"
-                                    invisible="trigger not in ['on_create', 'on_create_or_write', 'on_change', 'on_unlink']"
-                                />
-                                <label for="filter_domain" groups="!base.group_no_one"
-                                    string="Extra Conditions"
-                                    invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"
-                                />
-                                <field name="filter_domain" nolabel="1" widget="domain"
-                                    groups="!base.group_no_one"
+                                <field name="filter_domain" widget="domain" groups="!base.group_no_one"
                                     options="{'model': 'model_name', 'in_dialog': False, 'foldable': True}"
                                     invisible="trigger not in ['on_create', 'on_create_or_write', 'on_change', 'on_unlink', 'on_time', 'on_time_created', 'on_time_updated']"
                                 />
