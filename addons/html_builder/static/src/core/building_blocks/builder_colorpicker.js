@@ -95,15 +95,21 @@ export class BuilderColorPicker extends Component {
         const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent();
         this.colorButton = useRef("colorButton");
         this.state = state;
-        useColorPicker("colorButton", {
-            state,
-            applyColor: onApply,
-            applyColorPreview: onPreview,
-            applyColorResetPreview: onPreviewRevert,
-            getUsedCustomColors: this.props.getUsedCustomColors,
-            colorPrefix: "color-prefix-",
-            noTransparency: this.props.noTransparency,
-        });
+        useColorPicker(
+            "colorButton",
+            {
+                state,
+                applyColor: onApply,
+                applyColorPreview: onPreview,
+                applyColorResetPreview: onPreviewRevert,
+                getUsedCustomColors: this.props.getUsedCustomColors,
+                colorPrefix: "color-prefix-",
+                noTransparency: this.props.noTransparency,
+            },
+            {
+                onClose: onPreviewRevert,
+            }
+        );
     }
 
     getSelectedColorStyle() {
