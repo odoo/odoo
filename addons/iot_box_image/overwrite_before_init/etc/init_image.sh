@@ -234,5 +234,6 @@ create_ramdisk_dir "/etc"
 create_ramdisk_dir "/tmp"
 mkdir -v /root_bypass_ramdisks
 
-echo "password"
-echo ${password}
+echo ""
+echo "--- DEFAULT PASSWORD: ${password} ---"
+echo ""
