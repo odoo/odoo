@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_uom.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath expr="//SelectPartnerButton" position="after">
+            <button t-att-class="buttonClass" t-on-click="onClickAddQuantity" t-att-disabled="!currentOrder.get_selected_orderline()">
+                <span>Add Quantity</span>
+            </button>
+        </xpath>
+    </t>
+</templates>
