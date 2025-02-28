@@ -2164,17 +2164,24 @@
                             <span class="d-md-none fa fa-shopping-cart"/>
                             <span class="d-none d-md-inline">Add to cart</span>
                         </a>
-                        <div class="mb-0 h-6 fw-bold text-end d-flex"
-                             name="website_sale_suggested_product_price">
-                            <t t-set="combination_info"
-                               t-value="product._get_combination_info_variant()"/>
-                            <del t-attf-class="text-muted mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                                 t-esc="combination_info['list_price']"
-                                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                                 style="white-space: nowrap;"/>
-                            <span t-esc="combination_info['price']"
-                                  t-options="{'widget': 'monetary','display_currency': website.currency_id}"
-                                  style="white-space: nowrap;"/>
+                        <div
+                            class="mb-0 h-6 fw-bold text-end d-flex"
+                            name="suggested_product_price_container"
+                        >
+                            <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                            <del
+                                name="suggested_product_list_price"
+                                t-attf-class="text-muted mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                t-esc="combination_info['list_price']"
+                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                style="white-space: nowrap;"
+                            />
+                            <span
+                                name="suggested_product_price"
+                                t-esc="combination_info['price']"
+                                t-options="{'widget': 'monetary','display_currency': website.currency_id}"
+                                style="white-space: nowrap;"
+                            />
                         </div>
                     </div>
                 </div>
