@@ -76,7 +76,7 @@ export class SeparatorPlugin extends Plugin {
 
     handleSelectionInHr() {
         this.deselectHR();
-        const traversedNodes = this.dependencies.selection.getTraversedNodes({ deep: true });
+        const traversedNodes = this.dependencies.selection.getTraversedNodes();
         for (const node of traversedNodes) {
             if (node.nodeName === "HR") {
                 node.classList.toggle("o_selected_hr", true);
