@@ -23,7 +23,7 @@ This module add completed courses to resume for employees.
     'assets': {
         'web.assets_backend': [
             'hr_skills_slides/static/src/scss/**/*',
-            'hr_skills_slides/static/src/xml/**/*',
+            'hr_skills_slides/static/src/fields/**/*',
         ],
     },
     'author': 'Odoo S.A.',
