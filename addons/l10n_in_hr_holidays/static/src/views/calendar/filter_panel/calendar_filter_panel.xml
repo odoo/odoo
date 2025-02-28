@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="hr_holidays.CalendarFilterPanel" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('mandatory_day')]" position="after">
+            <div class="d-flex flex-column mt-4" t-if="leaveState.exceptionalHoliday.length">
+                <h5>Exceptional Days</h5>
+                <ul class="ps-0">
+                    <li t-foreach="leaveState.exceptionalHoliday" t-as="exceptional" t-key="exceptional.id" class="mt-2 list-unstyled">
+                        <strong
+                            t-esc="getFormattedDateSpan(exceptional.start, exceptional.end)"
+                            t-att-class="'hr_mandatory_day_'+exceptional.colorIndex"/>
+                        : <t t-esc="exceptional.title"/>
+                    </li>
+                </ul>
+            </div>
+        </xpath>
+    </t>
+</templates>
