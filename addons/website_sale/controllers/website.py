@@ -11,6 +11,7 @@ from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
+    PRICELIST_SELECTED_SESSION_CACHE_KEY
 )
 
 
@@ -49,6 +50,7 @@ class Website(main.Website):
         # the pricelist that corresponds to the user afterwards.
         request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
         request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
+        request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
         return super()._login_redirect(uid, redirect=redirect)
 
     @route()
