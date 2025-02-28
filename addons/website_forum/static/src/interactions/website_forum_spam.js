@@ -30,7 +30,7 @@ export class WebsiteForumSpam extends Interaction {
      */
     async onSpamSearchInput(ev) {
         const toSearch = ev.target.value;
-        const posts = await this.keepLast.add(
+        const posts = await this.waitFor(this.keepLast.add(
             this.waitFor(this.services.orm.searchRead(
                 "forum.post",
                 [["id", "in", this.spamIDs],
@@ -39,7 +39,7 @@ export class WebsiteForumSpam extends Interaction {
                 ["content", "ilike", toSearch]],
                 ["name", "content"]
             ))
-        );
+        ));
         const postSpamEl = this.el.querySelector("div.post_spam");
         const postSpamElContent = postSpamEl.children;
         postSpamEl.replaceChildren();

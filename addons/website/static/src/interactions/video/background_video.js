@@ -46,7 +46,7 @@ export class BackgroundVideo extends Interaction {
         const promise = setupAutoplay(this.videoSrc, !!this.el.dataset.needCookiesApproval);
         if (promise) {
             this.videoSrc += "&enablejsapi=1";
-            this.waitFor(promise).then(() => this.appendBgVideo());
+            this.waitFor(promise).then(this.protectSyncAfterAsync(this.appendBgVideo));
         }
     }
 
