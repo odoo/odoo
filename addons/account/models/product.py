@@ -291,18 +291,21 @@ class ProductProduct(models.Model):
             domains.append([('default_code', '=', default_code)])
         if barcode:
             domains.append([('barcode', '=', barcode)])
+        if extra_domain is None:
+            extra_domain = []
 
         # Search for the product with the exact name, then ilike the name
         name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
         company = company or self.env.company
         for name_domain in name_domains:
-            for extra_domain in (
+            for company_domain in (
                 [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
                 [('company_id', '=', False)],
             ):
                 product = self.env['product.product'].search(
                     expression.AND([
                         expression.OR(domains + [name_domain]),
+                        company_domain,
                         extra_domain,
                     ]),
                     limit=1,
