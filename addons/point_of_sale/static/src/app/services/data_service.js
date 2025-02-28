@@ -557,13 +557,13 @@ export class PosData extends Reactive {
                 {},
                 false
             );
-            for (const [model, uuid, id] of idUpdates) {
-                this.baseData[model][id] = this.models[model].find((x) => x.uuid === uuid);
-                this.baseData[model][id].id = id;
-                delete this.baseData[model][uuid];
-                // find((x) => x.uuid === uuid).id = id;
-                // baseData[model][vals.id] = vals;
-            }
+            this.idUpdates ||= [];
+            this.idUpdates.push(...idUpdates);
+            // for (const [model, uuid, id] of idUpdates) {
+            // this.baseData[model][id] = this.models[model].find((x) => x.uuid === uuid);
+            // this.baseData[model][id].id = id;
+            // delete this.baseData[model][uuid];
+            // }
             this.queue = [];
             console.log("Queue flushed");
             return true;
@@ -721,7 +721,21 @@ export class PosData extends Reactive {
         //     typeof args[0] === "number"
         //         ? args[0]
         //         : this.models[model].find((x) => x.uuid === args[0])?.id;
-        return await this.orm.call(model, method, args, kwargs);
+        let ids;
+        if (typeof args[0] === "number") {
+            ids = args[0];
+        } else if (typeof args[0] === "string") {
+            // const record = this.models[model].find((x) => x.uuid === args[0]);
+            ids = this.idUpdates.find((x) => x[1] === args[0])?.[2];
+        } else if (args[0] instanceof Array) {
+            ids = args[0].map((id) => {
+                if (typeof id === "number") {
+                    return id;
+                }
+                return this.idUpdates.find((x) => x[1] === id)?.[2];
+            });
+        }
+        return await this.orm.call(model, method, [ids, ...args.slice(1)], kwargs);
     }
 
     // In a silent call we ignore the error and return false instead
