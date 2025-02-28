@@ -12,7 +12,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import format_amount
+from odoo.tools import email_normalize_all, format_amount
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -167,11 +167,13 @@ class PaymentTransaction(models.Model):
 
             # Duplicate partner values.
             partner = self.env['res.partner'].browse(values['partner_id'])
+            # partner_email must be unique
+            partner_email = email_normalize_all(partner.email)[0] if partner.email else None
             values.update({
                 # Use the parent partner as fallback if the invoicing address has no name.
                 'partner_name': partner.name or partner.parent_id.name,
                 'partner_lang': partner.lang,
-                'partner_email': partner.email,
+                'partner_email': partner_email,
                 'partner_address': payment_utils.format_partner_address(
                     partner.street, partner.street2
                 ),
