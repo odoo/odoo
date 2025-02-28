@@ -17,6 +17,8 @@ export class ModelInternal {
     fieldsCompute = new Map();
     /** @type {Map<string, boolean>} */
     fieldsEager = new Map();
+    /** @type {Map<string, function>} */
+    fieldsIgnoreUpdateWhen = new Map();
     /** @type {Map<string, string>} */
     fieldsInverse = new Map();
     /** @type {Map<string, () => void>} */
@@ -68,6 +70,10 @@ export class ModelInternal {
                 }
                 case "sort": {
                     this.fieldsSort.set(fieldName, value);
+                    break;
+                }
+                case "ignoreUpdateWhen": {
+                    this.fieldsIgnoreUpdateWhen.set(fieldName, value);
                     break;
                 }
                 case "inverse": {

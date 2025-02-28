@@ -154,6 +154,7 @@ export class StoreInternal extends RecordInternal {
         const Model = record.Model;
         const fieldType = Model._.fieldsType.get(fieldName);
         const fieldHtml = Model._.fieldsHtml.get(fieldName);
+        const ignoreUpdateWhen = Model._.fieldsIgnoreUpdateWhen.get(fieldName);
         // ensure each field write goes through the proxy exactly once to trigger reactives
         const targetRecord = record._.proxyUsed.has(fieldName) ? record : record._proxy;
         let shouldChange = record[fieldName] !== value;
@@ -177,9 +178,13 @@ export class StoreInternal extends RecordInternal {
             newValue = typeof value === "string" ? markup(value) : value;
         }
         if (shouldChange) {
-            record._.updatingAttrs.set(fieldName, true);
-            targetRecord[fieldName] = newValue;
-            record._.updatingAttrs.delete(fieldName);
+            if (!ignoreUpdateWhen || !ignoreUpdateWhen.call(record, newValue)) {
+                record._.updatingAttrs.set(fieldName, true);
+                targetRecord[fieldName] = newValue;
+                record._.updatingAttrs.delete(fieldName);
+            } else {
+                console.warn(`ignoring update of field ${fieldName} with value`, newValue);
+            }
         }
     }
     /**
