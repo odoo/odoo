@@ -95,10 +95,18 @@ test("selects a date and properly applies it", async () => {
     await contains(".we-bg-options-container input").click();
     await contains(".o_date_item_cell.o_today + .o_date_item_cell").click();
     await contains(".options-container").click();
-    expect(".we-bg-options-container input").toHaveValue(formatDateTime(expectedDateTime));
+
+    // To avoid indeterminism, don't check last digit of seconds
+    const formattedDateTime = formatDateTime(expectedDateTime);
+    expect(".we-bg-options-container input").toHaveValue(
+        new RegExp(`^${formattedDateTime.slice(0, -1)}`)
+    );
+
+    // To avoid indeterminism, don't check last digit of the timestamp
+    const timestamp = expectedDateTime.toUnixInteger().toString();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-date",
-        expectedDateTime.toUnixInteger().toString()
+        new RegExp(`^${timestamp.slice(0, -1)}`)
     );
 });
 
