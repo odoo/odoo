@@ -416,9 +416,6 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Click submit button to show edit popover",
             trigger: 'iframe .s_website_form_send',
         }, {
-            content: "Click on Edit Link in Popover",
-            trigger: 'iframe .o_edit_menu_popover .o_we_edit_link',
-        }, {
             content: "Check that no URL field is suggested",
             trigger: '#toolbar:has(#url_row:hidden)',
             run: () => null,
@@ -436,6 +433,18 @@ odoo.define('website.tour.form_editor', function (require) {
         }, {
             content: "Check the resulting button",
             trigger: 'iframe .s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',
+            run: () => null,
+        },
+        // Checks "remove link" button of linkDialog is disabled for submit button.
+        {
+            content: "Click submit button to show edit popover",
+            trigger: "iframe .s_website_form_send",
+        }, {
+            content: "Click on Remove Link in Popover",
+            trigger: "iframe .o_edit_menu_popover .o_we_remove_link",
+        }, {
+            content: "Check the resulting button",
+            trigger: "iframe .s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle",
             run: () => null,
         },
         // Add a default value to a auto-fillable field.
