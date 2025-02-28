@@ -23,7 +23,7 @@
         </div>
     </template>
 
-    <template id="product_page_click_and_collect" inherit_id="website_sale.product">
+    <template id="product_page_click_and_collect" inherit_id="website_sale.cta_wrapper">
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
             <owl-component
                 t-if="combination_info.get('show_click_and_collect_availability')"

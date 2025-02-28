@@ -835,7 +835,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         const isGrid = !!this.productDetailMain.querySelector('#o-grid-product');
         switch (widgetName) {
             case 'o_wsale_thumbnail_pos':
-                return Boolean(this.productPageCarousel) && hasImages;
+                return Boolean(this.productPageCarousel) && hasImages && multipleImages;
             case 'o_wsale_grid_spacing':
                 return isGrid && multipleImages;
             case 'o_wsale_grid_columns':
