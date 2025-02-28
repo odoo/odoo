@@ -1502,3 +1502,9 @@ class SaleOrderLine(models.Model):
                 [('product_id', 'not in', discount_products_ids)],
             ])
         return domain
+
+    def _get_lines_with_price(self):
+        """ A combo product line always has a zero price (by design). The actual price of the combo
+        product can be computed by summing the prices of its combo items (i.e. its linked lines).
+        """
+        return self.linked_line_ids if self.product_type == 'combo' else self

@@ -515,7 +515,9 @@ class SaleOrder(models.Model):
     def _verify_cart_after_update(self, order_line):
         if (
             order_line
+            # Combo product lines will be checked after creating all of their combo item lines.
             and order_line.product_template_id.type != 'combo'
+            and not order_line.combo_item_id
             and order_line.price_unit == 0
             and self.website_id.prevent_zero_price_sale
             and order_line.product_template_id.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()

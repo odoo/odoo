@@ -2,10 +2,11 @@
 
 from werkzeug.exceptions import NotFound
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.http import request, route
 from odoo.tools import consteq
+from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
@@ -178,6 +179,19 @@ class Cart(PaymentPortal):
                     **kwargs,
                 )
                 line_ids[product_data['product_template_id']] = product_values['line_id']
+
+        # The price of a combo product (and thus whether it can be added to the cart) can only be
+        # computed after creating all of its combo item lines.
+        main_product_line = request.env['sale.order.line'].browse(values['line_id'])
+        if (
+            main_product_line
+            and main_product_line.product_type == 'combo'
+            and sum(main_product_line._get_lines_with_price().mapped('price_unit')) == 0
+            and main_product_line.order_id.website_id.prevent_zero_price_sale
+        ):
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
 
         values['notification_info'] = self._get_cart_notification_information(
             order_sudo, line_ids.values()
