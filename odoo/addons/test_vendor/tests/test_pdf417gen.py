@@ -4,7 +4,7 @@ from xml.etree.ElementTree import ElementTree
 from PIL.Image import Image
 
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools._vendor.pdf417gen.pdf417gen import (
+from odoo.tools._vendor.pdf417gen import (
     Bytes,
     Chunk,
     Encoding,

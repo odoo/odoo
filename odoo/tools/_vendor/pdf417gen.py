@@ -25,16 +25,17 @@
 
 
 import math
-import sys
-
-from argparse import ArgumentParser
 from collections import namedtuple
 from itertools import chain, groupby, islice, tee
 from typing import Any, Generator, Iterable, Iterator, List, Optional, Tuple, TypeVar
 from xml.etree.ElementTree import Element, ElementTree, SubElement
 
+try:
+    from PIL.Image import Resampling
+except ImportError:
+    from PIL import Image as Resampling
 from PIL import Image, ImageColor, ImageOps
-from PIL.Image import Resampling
+
 
 
 T = TypeVar("T")
