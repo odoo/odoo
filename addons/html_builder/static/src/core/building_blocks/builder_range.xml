@@ -9,10 +9,10 @@
             t-att-min="props.min"
             t-att-max="props.max"
             t-att-step="props.step"
-            t-att-value="state.value"
+            t-att-value="rangeInputValue"
             t-on-change="this.onChange"
             t-on-input="this.onInput" />
-            <output t-if="props.displayRangeValue" t-out="getOutput(state.value)" />
+            <output t-if="props.displayRangeValue" t-out="displayValue" />
         </div>
     </BuilderComponent>
 </t>

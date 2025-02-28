@@ -1,5 +1,4 @@
 import { isTextNode } from "@html_editor/utils/dom_info";
-import { convertNumericToUnit } from "@html_editor/utils/formatting";
 import {
     onMounted,
     onWillDestroy,
@@ -378,43 +377,15 @@ export function useInputBuilderComponent({
     parseDisplayValue = (displayValue) => displayValue,
 } = {}) {
     const comp = useComponent();
-    // TODO: replace saveUnit and unit by formatRawValue and parseDisplayValue?
-    if (comp.props.saveUnit && !comp.props.unit) {
-        throw new Error("'unit' must be defined to use the 'saveUnit' props");
-    }
     const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const state = useDomState(getState);
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation((applySpecs) => {
         for (const applySpec of applySpecs) {
-            const actionValue =
-                applySpec.actionValue === undefined
-                    ? undefined
-                    : applySpec.actionValue
-                          .split(/\s+/g)
-                          .map((singleValue) => {
-                              if (comp.props.unit && comp.props.saveUnit) {
-                                  // Convert value from unit to saveUnit
-                                  singleValue = convertNumericToUnit(
-                                      singleValue,
-                                      comp.props.unit,
-                                      comp.props.saveUnit
-                                  );
-                              }
-                              if (comp.props.unit) {
-                                  if (comp.props.saveUnit || comp.props.saveUnit === "") {
-                                      singleValue = singleValue + comp.props.saveUnit;
-                                  } else {
-                                      singleValue = singleValue + comp.props.unit;
-                                  }
-                              }
-                              return singleValue;
-                          })
-                          .join(" ");
             applySpec.apply({
                 editingElement: applySpec.editingElement,
                 param: applySpec.actionParam,
-                value: actionValue,
+                value: applySpec.actionValue,
                 loadResult: applySpec.loadResult,
                 dependencyManager: comp.env.dependencyManager,
             });
@@ -429,25 +400,7 @@ export function useInputBuilderComponent({
             ({ actionId }) => getAction(actionId).getValue
         );
         const { actionId, actionParam } = actionWithGetValue;
-        let actionValue = getAction(actionId).getValue({ editingElement, param: actionParam });
-        if (comp.props.unit && actionValue) {
-            actionValue = actionValue
-                .split(/\s+/g)
-                .map((singleValue) => {
-                    // Remove the unit
-                    singleValue = singleValue.match(/\d+/g)[0];
-                    if (comp.props.saveUnit) {
-                        // Convert value from saveUnit to unit
-                        singleValue = convertNumericToUnit(
-                            singleValue,
-                            comp.props.saveUnit,
-                            comp.props.unit
-                        );
-                    }
-                    return singleValue;
-                })
-                .join(" ");
-        }
+        const actionValue = getAction(actionId).getValue({ editingElement, param: actionParam });
         return {
             value: actionValue,
         };
