@@ -30,7 +30,7 @@ export class MediaVideo extends Interaction {
         if (iframeEl.hasAttribute('src')) {
             const promise = setupAutoplay(iframeEl.getAttribute('src'), !!this.el.dataset.needCookiesApproval);
             if (promise) {
-                this.waitFor(promise).then(() => triggerAutoplay(iframeEl));
+                this.waitFor(promise).then(this.protectSyncAfterAsync(() => triggerAutoplay(iframeEl)));
             }
         }
     }
