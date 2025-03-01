@@ -1,4 +1,5 @@
 import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class ProductCard extends Component {
     static template = "point_of_sale.ProductCard";
@@ -22,4 +23,11 @@ export class ProductCard extends Component {
         class: "",
         showWarning: false,
     };
+
+    setup() {
+        this.pos = usePos();
+        this.qty_precision = this.pos.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Unit of Measure"
+        ).digits;
+    }
 }
