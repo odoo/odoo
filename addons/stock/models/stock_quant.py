@@ -12,7 +12,7 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.osv import expression
-from odoo.tools import SQL, check_barcode_encoding, format_list, groupby
+from odoo.tools import SQL, check_barcode_encoding, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -1469,7 +1469,7 @@ class StockQuant(models.Model):
                                 'before its corresponding receipt operation is validated. In this case the issue will be solved '
                                 'automatically once all steps are completed. Otherwise, the serial number should be corrected to '
                                 'prevent inconsistent data.',
-                                serial_number=lot_id.name, location_list=format_list(self.env, sn_locations.mapped('display_name')))
+                                serial_number=lot_id.name, location_list=sn_locations.mapped('display_name'))
 
                 elif source_location_id and source_location_id not in sn_locations:
                     # using an existing SN in the wrong location
@@ -1489,14 +1489,14 @@ class StockQuant(models.Model):
                                     'Source location for this move will be changed to %(recommended_location)s',
                                     serial_number=lot_id.name,
                                     source_location=source_location_id.display_name,
-                                    other_locations=format_list(self.env, sn_locations.mapped('display_name')),
+                                    other_locations=sn_locations.mapped('display_name'),
                                     recommended_location=recommended_location.display_name)
                     else:
                         message = _('Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n'
                                     'Please correct this to prevent inconsistent data.',
                                     serial_number=lot_id.name,
                                     source_location=source_location_id.display_name,
-                                    other_locations=format_list(self.env, sn_locations.mapped('display_name')))
+                                    other_locations=sn_locations.mapped('display_name'))
                         recommended_location = None
         return message, recommended_location
 

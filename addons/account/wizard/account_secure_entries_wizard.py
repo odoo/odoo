@@ -3,7 +3,6 @@ from datetime import timedelta
 from odoo import Command, api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import format_list
 
 
 class AccountSecureEntriesWizard(models.TransientModel):
@@ -150,7 +149,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                 warnings['account_unreconciled_bank_statement_line_ids'] = {
                     'message': _("There are still unreconciled bank statement lines before the selected date. "
                                  "The entries from journal prefixes containing them will not be secured: %(prefix_info)s",
-                                 prefix_info=format_list(self.env, ignored_sequence_prefixes)),
+                                 prefix_info=ignored_sequence_prefixes),
                     'level': 'danger',
                     'action_text': _("Review"),
                     'action': wizard.company_id._get_unreconciled_statement_lines_redirect_action(wizard.unreconciled_bank_statement_line_ids),

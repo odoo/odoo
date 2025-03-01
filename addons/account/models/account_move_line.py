@@ -7,7 +7,7 @@ import re
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
-from odoo.tools import frozendict, float_compare, format_list, Query, SQL
+from odoo.tools import frozendict, float_compare, Query, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -1517,7 +1517,7 @@ class AccountMoveLine(models.Model):
             raise UserError(_(
                 "You cannot edit the following fields: %(fields)s.\n"
                 "The following entries are already hashed:\n%(entries)s",
-                fields=format_list(self.env, [f['string'] for f in self.fields_get(violated_fields).values()]),
+                fields=[f['string'] for f in self.fields_get(violated_fields).values()],
                 entries='\n'.join(hashed_moves.mapped('name')),
             ))
 

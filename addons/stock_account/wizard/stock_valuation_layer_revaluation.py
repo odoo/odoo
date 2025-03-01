@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_is_zero, format_list
+from odoo.tools import float_compare, float_is_zero
 
 
 class StockValuationLayerRevaluation(models.TransientModel):
@@ -206,7 +206,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         if self.adjusted_layer_ids:
             adjusted_layer_descriptions = [f"{layer.reference} (id: {layer.id})" for layer in self.adjusted_layer_ids]
-            move_description += _("\nAffected valuation layers: %s", format_list(self.env, adjusted_layer_descriptions))
+            move_description += _("\nAffected valuation layers: %s", adjusted_layer_descriptions)
 
         move_vals = [{
             'journal_id': self.account_journal_id.id or accounts['stock_journal'].id,

@@ -5,7 +5,6 @@ import ast
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import format_list
 
 
 class SurveySurvey(models.Model):
@@ -36,7 +35,7 @@ class SurveySurvey(models.Model):
                 _(
                     "- %(certification)s (Courses - %(courses)s)",
                     certification=certi.title,
-                    courses=format_list(self.env, certi.slide_channel_ids.mapped("name")),
+                    courses=certi.slide_channel_ids.mapped("name"),
                 )
                 for certi in certifications
             ]

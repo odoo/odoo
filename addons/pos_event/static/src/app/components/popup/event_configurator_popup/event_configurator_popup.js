@@ -32,13 +32,13 @@ export class EventConfiguratorPopup extends Component {
     }
     get dialogTitle() {
         const event = this.props.tickets[0].event_id;
-        let title = _t("Select tickets for %s", [event.name]);
-
         if (event.seats_limited) {
-            title += _t(" (%s seats available)", [event.seats_available]);
+            return _t("Select tickets for %(event)s (%(seats)s seats available)", {
+                event: event.name,
+                seats: event.seats_available,
+            });
         }
-
-        return title;
+        return _t("Select tickets for %(event)s", { event: event.name });
     }
     getTicketMaxQty(ticket) {
         const event = ticket.event_id;

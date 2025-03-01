@@ -5,7 +5,6 @@ from lxml import etree
 from datetime import datetime
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
-from odoo.tools import format_list
 
 
 class AccountEdiFormat(models.Model):
@@ -426,14 +425,14 @@ class AccountEdiFormat(models.Model):
             errors.append(
                 _(
                     "- Please, set the following fields on the Supplier: %(missing_fields)s",
-                    missing_fields=format_list(self.env, supplier_missing_info),
+                    missing_fields=supplier_missing_info,
                 )
             )
         if customer_missing_info:
             errors.append(
                 _(
                     "- Please, set the following fields on the Customer: %(missing_fields)s",
-                    missing_fields=format_list(self.env, customer_missing_info),
+                    missing_fields=customer_missing_info,
                 )
             )
         if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
