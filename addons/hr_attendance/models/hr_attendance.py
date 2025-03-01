@@ -12,7 +12,7 @@ from random import randint
 
 from odoo.http import request
 from odoo import models, fields, api, exceptions, _
-from odoo.addons.resource.models.utils import Intervals
+from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
@@ -682,6 +682,17 @@ class HrAttendance(models.Model):
         })
 
     def _cron_auto_check_out(self):
+        def get_work_intervals_to_now(attendance):
+            calendar = attendance._get_employee_calendar()
+            resource = attendance.employee_id.resource_id
+            tz = timezone(resource.tz) if not calendar else timezone(calendar.tz)
+            start = attendance.check_in.astimezone(tz)
+            end = fields.Datetime.now().astimezone(tz)
+            lunch_intervals = []
+            if not attendance.employee_id.is_flexible:
+                lunch_intervals = attendance.employee_id._employee_attendance_intervals(start, end, lunch=True)
+            return Intervals([(start, end, attendance)]) - lunch_intervals
+
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True)]
@@ -705,18 +716,31 @@ class HrAttendance(models.Model):
         for company in all_companies:
             max_tol = company.auto_check_out_tolerance
             to_verify_company = to_verify.filtered(lambda a: a.employee_id.company_id.id == company.id)
+            body = _(
+                'This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
 
-            # Attendances where Last open attendance worked time + previously worked time on that day + tolerance greater than the planned worked hours in his calendar
-            to_check_out = to_verify_company.filtered(lambda a: (fields.Datetime.now() - a.check_in).seconds / 3600 + mapped_previous_duration[a.employee_id][a.check_in.date()] - max_tol > (sum(a.employee_id.resource_calendar_id.attendance_ids.filtered(lambda att: att.dayofweek == str(a.check_in.weekday())).mapped('duration_hours'))))
-            body = _('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
+            for attendance in to_verify_company:
+                work_intervals = list(get_work_intervals_to_now(attendance))
+                previous_attendances_hours = mapped_previous_duration[attendance.employee_id][attendance.check_in.date()]
+                expected_worked_hours = sum(attendance.employee_id.resource_calendar_id.attendance_ids.filtered(lambda att: att.dayofweek == str(attendance.check_in.weekday())).mapped('duration_hours'))
+                attendance_hours = expected_worked_hours - previous_attendances_hours
+                # Check out if the work intervals (lunch are excluded) are longer than the expected worked hours - previous worked hours + company's tolerance
+                if not sum_intervals(work_intervals) > attendance_hours + max_tol:
+                    continue
 
-            for att in to_check_out:
-                delta_duration = max(1, (sum(att.employee_id.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == str(att.check_in.weekday())).mapped('duration_hours')) + max_tol - mapped_previous_duration[att.employee_id][att.check_in.date()]) * 3600)
-                att.write({
-                    "check_out": att.check_in + relativedelta(seconds=delta_duration),
+                # Find the first existing work intervals greater than the expected hours of the attendance
+                while sum_intervals(work_intervals[:-1]) > attendance_hours:
+                    work_intervals.pop()
+                if work_intervals:
+                    check_out_time = (work_intervals[-1][1] - relativedelta(hours=sum_intervals(work_intervals) - attendance_hours)).astimezone(pytz.utc).replace(tzinfo=None)
+                else:
+                    check_out_time = attendance.check_in + relativedelta(seconds=1)
+
+                attendance.write({
+                    "check_out": check_out_time + relativedelta(hours=max_tol),
                     "out_mode": "auto_check_out"
                 })
-                att.message_post(body=body)
+                attendance.message_post(body=body)
 
     def _cron_absence_detection(self):
         """
