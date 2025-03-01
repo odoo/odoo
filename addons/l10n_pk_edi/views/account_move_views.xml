@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id='invoice_form_inherit_l10n_pk_edi' model='ir.ui.view'>
+        <field name='name'>account.move.form.inherit.l10n_pk_edi</field>
+        <field name='model'>account.move</field>
+        <field name='inherit_id' ref='account.view_move_form'/>
+        <field name='arch' type='xml'>
+            <xpath expr='//header' position='inside'>
+                <field name='l10n_pk_edi_show_send_to_fbr' invisible='1'/>
+                <button
+                    type='object'
+                    string="Send to FBR"
+                    name='action_l10n_pk_edi_send'
+                    invisible='not l10n_pk_edi_show_send_to_fbr'/>
+            </xpath>
+            <xpath expr='//sheet' position='before'>
+                <div 
+                    role='alert'
+                    class='alert alert-danger'
+                    invisible='(
+                        not l10n_pk_edi_header or state == "draft"
+                        or l10n_pk_edi_state in (False, "sent")
+                    )'
+                >
+                    <div class='p-0 m-0'>
+                        <i role='img' class='fa fa-warning' title='EDI (Pakistan)'/>
+                        <span class='mx-1'>E-invoicing (Pakistan)</span>
+                    </div>
+                    <field name='l10n_pk_edi_header'/>
+                </div>
+            </xpath>
+            <xpath expr='//page[@name="other_info"]' position='after'>
+                <page
+                    name='electronic_invoicing'
+                    string="Electronic Invoicing"
+                    invisible='(
+                        move_type not in ("out_invoice", "out_refund", "in_invoice", "in_refund")
+                        or country_code != "PK"
+                    )'
+                >
+                    <group>
+                        <group readonly='1'>
+                            <field name='l10n_pk_edi_fbr_inv_ref'/>
+                            <field name='l10n_pk_edi_attachment_id'/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr='//div[@name="journal_div"]' position='after'>
+                <label for='l10n_pk_edi_state' invisible='not l10n_pk_edi_state'/>
+                <div class='d-flex' invisible='not l10n_pk_edi_state'>
+                    <field name='l10n_pk_edi_state' class='oe_inline'/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
