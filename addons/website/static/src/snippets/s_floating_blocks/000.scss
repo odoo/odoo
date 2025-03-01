@@ -1,0 +1,47 @@
+.s_floating_blocks {
+    --floating-boxes-box-ratio-mobile: 0.6;
+    --floating-boxes-box-ratio-desktop: 2;
+    --floating-boxes-box-ratio-desktop-small: 1.6;
+
+    --floating-boxes-box-padding-x-small: #{map-get($spacers, 4)};
+    --floating-boxes-box-padding-x-large: #{map-get($spacers, 5)};
+
+    .s_floating_blocks_wrapper {
+        &.s_floating_blocks_wrapper_shadow {
+            box-shadow: 0px 1vh 2vh rgba($black, .175);
+        }
+    }
+
+    .o_block {
+        //Inherited form s_floating_blocks_wrapper
+        border-radius: inherit;
+        box-shadow: inherit;
+
+        top: 0;
+        max-height: calc(100vh - #{map-get($spacers, 5) * 2}) !important;
+        transition: top .4s;
+        will-change: transform;
+        transform-origin: center top;
+        padding-left: var(--floating-boxes-box-padding-x, var(--floating-boxes-box-padding-x-small));
+        padding-right: var(--floating-boxes-box-padding-x, var(--floating-boxes-box-padding-x-small));
+        aspect-ratio: var(--floating-boxes-box-ratio, var(--floating-boxes-box-ratio-mobile));
+    }
+
+    @include media-breakpoint-up(lg) {
+        // Either .container OR .container-fluid
+        > div:where(:not(.o_container_small)) {
+            --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-desktop);
+            --floating-boxes-box-padding-x: var(--floating-boxes-box-padding-x-large);
+        }
+
+        > .o_container_small {
+            --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-desktop-small);
+        }
+
+        > .container-fluid > div {
+            padding-left: map-get($spacers, 5);
+            padding-right: map-get($spacers, 5);
+        }
+
+    }
+}
