@@ -11,10 +11,10 @@
 # Levent Karakaş <levent@mektup.at>, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
+# Tugay Hatıl <tugayh@projetgrup.com>, 2024
 # Ediz Duman <neps1192@gmail.com>, 2024
 # Murat Kaplan <muratk@projetgrup.com>, 2024
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2024
-# Tugay Hatıl <tugayh@projetgrup.com>, 2024
 # Martin Trigaux, 2024
 # Melih Melik Sonmez, 2025
 # 
@@ -36,7 +36,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "%(product)s: %(quantity)s already out"
-msgstr "%(product)s:%(quantity)sçoktan çıkarıldı"
+msgstr "%(product)s:%(quantity)s çıkışı önceden yapılmıştı"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
@@ -46,7 +46,7 @@ msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Değerleme</span>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
@@ -86,7 +86,7 @@ msgstr "Aktivite Türü İmgesi"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Additional Costs"
-msgstr "Ek Maliyet"
+msgstr "Ek Maliyetler"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
@@ -145,7 +145,7 @@ msgstr "Şirketler"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__company_id
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -191,14 +191,14 @@ msgstr "Maliyet Yükleme Oluştur"
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr "Yeni bir maliyet oluştur"
+msgstr "Yeni bir maliyet yüklemesi oluştur"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_uid
 msgid "Created by"
-msgstr "Tarafından oluşturuldu"
+msgstr "Oluşturan"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_date
@@ -212,7 +212,7 @@ msgstr "Oluşturuldu"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__currency_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__currency_id
 msgid "Currency"
-msgstr "Kur"
+msgstr "Para Birimi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__date
@@ -236,7 +236,7 @@ msgstr "Varsayılan Bölme Yöntemi"
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr "İthalat Maliyeti için kullanıldığında Varsayılan Bölme Yöntemi"
+msgstr "Maliyeti yüklemesi için kullanıldığında Varsayılan Bölme Yöntemi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -249,13 +249,13 @@ msgstr "Açıklama"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
 msgid "Display Name"
-msgstr "İsim Göster"
+msgstr "Görünüm Adı"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Done"
-msgstr "Yapıldı"
+msgstr "Biten"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__draft
@@ -278,6 +278,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"Eşit: Maliyet eşit olarak ayrılır.\n"
+"Miktar: Maliyet ürünlerin miktarına göre ayrılır.\n"
+"Mevcut Maliyet: Maliyet ürünlerin mevcut maliyetine göre ayrılır.\n"
+"Ağırlık: Maliyet ağırlığa bağlı olarak ayrılır.\n"
+"Hacim: Maliyet hacme bağlı olarak ayrılır."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -305,6 +310,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Ürünler sağladığınız ticari ve somut materyallerdir. \n"
+"Sağladığınız bir servis ise materyal olmayan ürünlerinizdir."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -342,7 +349,7 @@ msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
+msgstr "İşaretliyse, bazı mesajlar bir gönderi hatası içerir."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
@@ -351,7 +358,7 @@ msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
-"Ürünün ithalat maliyeti olup olmadığını gösterir: Bir tedarikçi faturası "
+"Ürünün maliyeti yüklemesi olup olmadığını gösterir: Bir tedarikçi faturası "
 "alırken, bu maliyeti önceki transferlere tahsis edebilirsiniz."
 
 #. module: stock_landed_costs
@@ -368,7 +375,7 @@ msgstr "Maliyet Yükleme Satırı Mı?"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr "Bir maliyet yüklemesi"
+msgstr "Bir Maliyet Yüklemesi Mi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
@@ -416,12 +423,12 @@ msgstr "Maliyet Yüklemeleri"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
 msgid "Landed Costs Visible"
-msgstr "Maliyet Yükleme Görülebilir"
+msgstr "Görülebilir Maliyet Yüklemeleri "
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr "Onaylı maliyet yüklemesi"
+msgstr "Maliyet yüklemesi onaylandı"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
@@ -429,6 +436,8 @@ msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
+"Yüklenmiş maliyetler size ürünlerin maliyetlerine ek maliyetler (nakliye, "
+"sigorta,gümrük bedelleri,vs.) ekleme imkanı sağlar."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -452,7 +461,7 @@ msgstr "Geciken Aktiviteler"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
 msgid "Lc Journal"
-msgstr "Lc Yevmiye"
+msgstr "M.y. Yevmiye"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
@@ -467,7 +476,7 @@ msgstr "Mesajlar"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Aktivite Son Tarihim"
+msgstr "Aktivite Zaman Sınırım"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__name
@@ -494,7 +503,7 @@ msgstr "Sonraki Aktivite Takvimi Etkinliği"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Sonraki Aktivite Son Tarihi"
+msgstr "Sonraki Aktivite Zaman Sınırı"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
@@ -504,7 +513,7 @@ msgstr "Sonraki Aktivite Özeti"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_id
 msgid "Next Activity Type"
-msgstr "Sonraki Aktivitie Türü"
+msgstr "Sonraki Aktivite Türü"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
@@ -530,7 +539,7 @@ msgstr "Teslimat hatası olan mesaj adedi"
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Only draft landed costs can be validated"
-msgstr "Sadece taslak maliyet yüklemeler onaylanabilir"
+msgstr "Sadece taslak maliyet yüklemeleri onaylanabilir"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
@@ -540,13 +549,13 @@ msgstr "Orijinal değeri"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Picking"
-msgstr "Toplama"
+msgstr "Teslimat"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 msgid "Please configure Stock Expense Account for product: %s."
-msgstr "%s ürünü için lütfen stok gider hesabını tanımlayın."
+msgstr "%s ürünü için lütfen Stok Gider Hesabını tanımlayın."
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -557,7 +566,7 @@ msgstr "Lütfen bu ek maliyetlerin uygulanacağı %s'yi tanımlayın."
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
 msgid "Posted"
-msgstr "Onaylanmış"
+msgstr "İşlenmiş"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_product_template
@@ -604,12 +613,12 @@ msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
 msgid "Split Method"
-msgstr "Bölme Metodu"
+msgstr "Bölme Yöntemi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
 msgid "State"
-msgstr "İl/Eyalet"
+msgstr "Durumu"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -625,9 +634,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Aktivitelere göre durum \n"
-"Gecikmiş\\: Son tarih geçmiş\n"
-"Bugün\\: Aktivite tarihi bugün\n"
-"Planlanmış\\: Gelecek Aktiviteler."
+"Gecikmiş: Son ödeme tarihi geçmiş\n"
+"Bugün: Aktivite tarihi bugün\n"
+"Planlanmış: Gelecek Aktiviteler."
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
@@ -670,12 +679,12 @@ msgstr "Transferler"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Kayıtlardaki istisna etkinliğinin türü."
+msgstr "Kayıtlardaki istisna aktivitesi türü."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
-msgstr "Doğrula"
+msgstr "Onayla"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -690,7 +699,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr "Envanter Değerleme Satırları"
+msgstr "Değerleme Düzeltme Satırları"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -730,8 +739,8 @@ msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
-"İthalat maliyetlerini seçilen %s (lere) uygulayamazsınız. İthalat "
-"maliyetleri sadece FIFO veya ortalama maliyet yöntemine sahip ürünler için "
+"Maliyet yüklemelerini seçilen %s (lere) uygulayamazsınız. Maliyet "
+"yüklemeleri sadece FIFO veya Ortalama Maliyet yöntemine sahip ürünler için "
 "uygulanabilir."
 
 #. module: stock_landed_costs
@@ -742,4 +751,4 @@ msgid ""
 " product is used in an account move line."
 msgstr ""
 "Ürün bir yevmiye kaleminde kullanıldığından, ürün türünü değiştiremez veya "
-"ithalat maliyeti seçeneğini devre dışı bırakamazsınız."
+"maliyet yüklemesi seçeneğini devre dışı bırakamazsınız."

@@ -9,7 +9,6 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2024
 # Buket Şeker <buket_skr@hotmail.com>, 2024
 # 27cb721235bc771895826f594ae4f6eb_a256844 <219b303f361cd550c2362fb7cee8b2e6_513839>, 2024
-# Melih Melik Sonmez, 2024
 # Ömer ABA <omeraba93@gmail.com>, 2024
 # Ertan Atay, 2024
 # Gökhan Yüksel <yg_yuksel@hotmail.com>, 2024
@@ -40,6 +39,8 @@
 # Wil Odoo, 2025
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2025
 # Halil, 2025
+# Melih Melik Sonmez, 2025
+# Hakan Türkün, 2025
 # 
 msgid ""
 msgstr ""
@@ -47,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Halil, 2025\n"
+"Last-Translator: Hakan Türkün, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2154,7 +2155,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion Rate"
-msgstr "Dönüşüm oranı"
+msgstr "Dönüştürme oranı"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
@@ -3131,7 +3132,7 @@ msgstr "Bitirmeye zorla"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
-msgstr "Zorunlu Ödenmemiş Hesap"
+msgstr "Zorunlu Bekleyen Hesap"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
@@ -3888,10 +3889,10 @@ msgid ""
 "Only cash and bank journals are allowed."
 msgstr ""
 "Müşterinin alacak hesabını kullanmak için boş bırakın.\n"
-"Oturumu kapattıktan sonra birikmiş ödemelerin (veya Müşteriyi Tanımla doğruysa bireysel ödemenin) nerede rezerve edileceği günlüğü tanımlar.\n"
-"Nakit günlüğü için, ekstre satırları aracılığıyla doğrudan dergideki varsayılan hesaba yazıyoruz.\n"
-"Banka yevmiyesi için, bu ödeme yönteminde belirtilen ödenmemiş hesaba yazarız.\n"
-"Sadece nakit ve banka günlüklerine izin verilir."
+"Oturumu kapattıktan sonra birikmiş ödemelerin (veya Müşteriyi Tanımla doğruysa bireysel ödemenin) nerede kaydedileceği günlüğü tanımlar.\n"
+"Nakit yevmiyesi için, ekstre satırları aracılığıyla doğrudan dergideki varsayılan hesaba yazıyoruz.\n"
+"Banka yevmiyesi için, bu ödeme yönteminde belirtilen bekleyen hesaba yazarız.\n"
+"Sadece nakit ve banka yevmiyelerine izin verilir."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.letter_tray_product_template
@@ -8968,7 +8969,7 @@ msgstr "devam etmeden önce."
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 msgid "by Email"
-msgstr ""
+msgstr "eposta ile"
 
 #. module: point_of_sale
 #. odoo-javascript
