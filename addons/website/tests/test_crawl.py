@@ -25,16 +25,6 @@ class Crawler(HttpCaseWithUserDemo):
 
     def setUp(self):
         super(Crawler, self).setUp()
-        self.env.ref('website.default_website').write({
-            'social_facebook': "https://www.facebook.com/Odoo",
-            'social_twitter': 'https://twitter.com/Odoo',
-            'social_linkedin': 'https://www.linkedin.com/company/odoo',
-            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
-            'social_github': 'https://github.com/odoo',
-            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
-            'social_tiktok': 'https://www.tiktok.com/@odoo',
-        })
-
         if hasattr(self.env['res.partner'], 'grade_id'):
             # Create at least one published parter, so that /partners doesn't
             # return a 404
