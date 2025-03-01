@@ -153,35 +153,53 @@ class Project(models.Model):
             )
             if invoice_lines:
                 amount_invoiced = amount_to_invoice = 0.0
+                amount_billed = amount_to_bill = 0.0
                 purchase_order_line_invoice_line_ids.extend(invoice_lines.ids)
                 for line in invoice_lines:
                     price_subtotal = line.currency_id._convert(line.price_subtotal, self.currency_id, self.company_id)
+                    expense_policy = line.product_id.expense_policy
+                    revenue = 0.0
                     # an analytic account can appear several time in an analytic distribution with different repartition percentage
                     analytic_contribution = sum(
                         percentage for ids, percentage in line.analytic_distribution.items()
                         if str(self.account_id.id) in ids.split(',')
                     ) / 100.
                     cost = price_subtotal * analytic_contribution * (-1 if line.is_refund else 1)
+                    if expense_policy == 'cost':
+                        revenue = cost
+                    elif expense_policy == 'sales_price':
+                        revenue = line.product_id.list_price * line.quantity
                     if line.parent_state == 'posted':
-                        amount_invoiced -= cost
+                        amount_billed -= cost
+                        amount_invoiced += revenue
                     else:
-                        amount_to_invoice -= cost
+                        amount_to_bill -= cost
+                        amount_invoiced += revenue
+
+                revenues = profitability_items['revenues']
                 costs = profitability_items['costs']
                 section_id = 'purchase_order'
-                purchase_order_costs = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
+                purchase_order_revenues = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'invoiced': amount_invoiced, 'to_invoice': amount_to_invoice}
+                purchase_order_costs = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_billed, 'to_bill': amount_to_bill}
                 if with_action:
                     args = [section_id, [('id', 'in', invoice_lines.purchase_line_id.ids)]]
                     if len(invoice_lines.purchase_line_id) == 1:
                         args.append(invoice_lines.purchase_line_id.id)
                     action = {'name': 'action_profitability_items', 'type': 'object', 'args': json.dumps(args)}
+                    purchase_order_revenues['action'] = action
                     purchase_order_costs['action'] = action
+                if amount_invoiced or amount_to_invoice:
+                    revenues['data'].append(purchase_order_revenues)
+                    revenues['total']['invoiced'] += amount_invoiced
+                    revenues['total']['to_invoice'] += amount_to_invoice
                 costs['data'].append(purchase_order_costs)
-                costs['total']['billed'] += amount_invoiced
-                costs['total']['to_bill'] += amount_to_invoice
+                costs['total']['billed'] += amount_billed
+                costs['total']['to_bill'] += amount_to_bill
             domain = [
                 ('move_id.move_type', 'in', ['in_invoice', 'in_refund']),
                 ('parent_state', 'in', ['draft', 'posted']),
                 ('id', 'not in', purchase_order_line_invoice_line_ids),
             ]
+            self._get_revenue_items_from_purchase(domain, profitability_items, with_action=with_action)
             self._get_costs_items_from_purchase(domain, profitability_items, with_action=with_action)
         return profitability_items
