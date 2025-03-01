@@ -98,3 +98,38 @@ class TestRecruitmentInterviewer(MailCommon):
 
         with self.assertRaises(UserError):
             applicant.with_user(self.interviewer_user).create_employee_from_applicant()
+
+    def test_update_interviewer_for_multiple_applicants(self):
+        """
+            Test that assigning interviewer to multiple applicants.
+        """
+        interviewer_user_1 = new_test_user(self.env, 'sma',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            name='Recruitment Interviewer1', email='sma@example.com')
+
+        interviewer_user_2 = new_test_user(self.env, 'jab',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            name='Recruitment Interviewer2', email='jab@example.com')
+
+        interviewer_user_3 = new_test_user(self.env, 'aad',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
+            name='Recruitment Interviewer3', email='aad@example.com')
+
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Applicant',
+            'job_id': self.job.id,
+            'interviewer_ids': [(6, 0, [interviewer_user_1.id])]
+        })
+        applicants = applicant + applicant.copy({'interviewer_ids': [(6, 0, [interviewer_user_2.id])]})
+
+        # update interviewer to multiple applicants.
+        applicants.write({'interviewer_ids': [(4, interviewer_user_3.id)]})
+
+        # Ensure all interviewers are assigned
+        self.assertCountEqual(
+            applicants.interviewer_ids.ids, [interviewer_user_1.id, interviewer_user_2.id, interviewer_user_3.id]
+        )
+
+        # Checked that notification message is created
+        message = self.env['mail.message'].search([('res_id', '=', applicant.id)], limit=1)
+        self.assertEqual(message.subject, f"You have been assigned as an interviewer for {applicant.display_name}")
