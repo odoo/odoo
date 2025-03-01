@@ -191,11 +191,11 @@ class AccountMoveSend(models.AbstractModel):
                 invoice.peppol_move_state = 'error'
                 invoice_data['error'] = e.message
         else:
-            if response.get('error'):
+            if error_vals := response.get('error'):
                 # at the moment the only error that can happen here is ParticipantNotReady error
                 for invoice, invoice_data in invoices_data_peppol.items():
                     invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = response['error']['message']
+                    invoice_data['error'] = edi_user._get_peppol_error_message(error_vals)
             else:
                 # the response only contains message uuids,
                 # so we have to rely on the order to connect peppol messages to account.move
