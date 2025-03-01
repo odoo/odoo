@@ -24,13 +24,13 @@ class TestWebsiteResUsers(TransactionCase):
 
     def test_no_website(self):
         new_test_user(self.env, login='Pou', website_id=False)
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
             new_test_user(self.env, login='Pou', website_id=False)
 
     def test_websites_set_null(self):
         user_1 = new_test_user(self.env, login='Pou', website_id=self.website_1.id, groups='base.group_portal')
         user_2 = new_test_user(self.env, login='Pou', website_id=self.website_2.id, groups='base.group_portal')
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
             (user_1 | user_2).write({'website_id': False})
 
     def test_null_and_website(self):
@@ -46,7 +46,7 @@ class TestWebsiteResUsers(TransactionCase):
     def test_change_login_no_website(self):
         new_test_user(self.env, login='Pou', website_id=False)
         user_belle = new_test_user(self.env, login='Belle', website_id=False)
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(psycopg2.errors.UniqueViolation), mute_logger('odoo.sql_db'):
             user_belle.login = 'Pou'
 
     def test_same_website_message(self):
