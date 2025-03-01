@@ -1131,6 +1131,9 @@ export class PosStore extends Reactive {
         if (this.get_order()) {
             this.get_order().updateSavedQuantity();
         }
+        if (this.isOpenOrderShareable()) {
+            this.syncAllOrders();
+        }
 
         const order = this.createNewOrder(data);
         this.selectedOrderUuid = order.uuid;
