@@ -176,6 +176,12 @@ class ProjectProject(models.Model):
             self._ensure_sale_order_linked([sol_id])
         return project
 
+    def copy(self, default=None):
+        default = dict(default or {})
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            default['reinvoiced_sale_order_id'] = False
+        return super().copy(default=default)
+
     def action_view_sols(self):
         self.ensure_one()
         all_sale_order_lines = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]})
