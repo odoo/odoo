@@ -203,6 +203,10 @@ export class Record extends DataPoint {
         });
     }
 
+    getChanges({ withReadonly } = {}) {
+        return this._getChanges(this._changes, { withReadonly });
+    }
+
     async isDirty() {
         await this.model._askChanges();
         return this.dirty;

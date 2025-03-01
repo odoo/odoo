@@ -15,6 +15,7 @@ import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { Cache } from "@web/core/utils/cache";
 import { useDebounced } from "@web/core/utils/timing";
+import { groupBy } from "@web/core/utils/arrays";
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
@@ -40,6 +41,7 @@ export class CalendarModel extends Model {
             range: null,
             records: {},
             unusualDays: [],
+            quickCreateValuesCallback: () => new Object(),
         };
 
         const debouncedLoadDelay = this.constructor.DEBOUNCED_LOAD_DELAY;
@@ -117,6 +119,14 @@ export class CalendarModel extends Model {
     }
     get hasEditDialog() {
         return this.meta.hasEditDialog;
+    }
+    get hasQuick() {
+        // FIXME: rename
+        // Disable the QuickMode on small screen
+        if (this.env.isSmall) {
+            return false;
+        }
+        return Object.keys(this.meta.quickFields).length > 0;
     }
     get hasQuickCreate() {
         return this.meta.quickCreate;
@@ -199,6 +209,33 @@ export class CalendarModel extends Model {
         await this.orm.create(this.meta.resModel, [rawRecord], { context });
         await this.load();
     }
+
+    async createRecordNoInteraction(dates) {
+        const proms = [];
+        this.bus.trigger("ASK_QUICK_CREATE_FIELD_CHANGES", { proms });
+        await Promise.all(proms);
+        const extraFields = this.data.quickCreateValuesCallback();
+
+        const [section] = this.filterSections;
+        const records = [];
+        for (const filter of section.filters) {
+            if (filter.active && filter.type === "record") {
+                for (const date of dates) {
+                    const rawRecord = this.buildRawRecord({ start: date });
+                    records.push({
+                        ...rawRecord,
+                        ...extraFields,
+                        [section.fieldName]: filter.value,
+                    });
+                }
+            }
+        }
+        if (records.length) {
+            await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
+            await this.load();
+        }
+    }
+
     async unlinkFilter(fieldName, recordId) {
         const info = this.meta.filtersInfo[fieldName];
         const section = this.data.filterSections[fieldName];
@@ -216,6 +253,14 @@ export class CalendarModel extends Model {
         await this.orm.unlink(this.meta.resModel, [recordId]);
         await this.load();
     }
+
+    async unlinkRecords(recordsId) {
+        if (recordsId.length) {
+            await this.orm.unlink(this.meta.resModel, recordsId);
+            await this.load();
+        }
+    }
+
     async updateFilters(fieldName, filters, active) {
         // update filters directly, to provide a direct feedback to the user
         this.keepLast.add(Promise.resolve());
@@ -366,6 +411,16 @@ export class CalendarModel extends Model {
         }
 
         await unusualDaysProm;
+
+        // Compute filter counts
+        if (this.hasQuick) {
+            for (const [fieldName, { filters }] of Object.entries(data.filterSections)) {
+                const counters = this.computeCounters(fieldName, data);
+                for (const filter of filters) {
+                    filter.count = counters[filter.value] || 0;
+                }
+            }
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -398,6 +453,25 @@ export class CalendarModel extends Model {
     }
 
     //--------------------------------------------------------------------------
+
+    computeCounters(fieldName, data = this.data) {
+        const records = Object.values(data.records);
+        const groups = groupBy(records, ({ rawRecord }) => {
+            const rawValue = rawRecord[fieldName];
+            const fieldType = this.meta.fields[fieldName].type;
+            // FIXME: make this robust
+            return fieldType === "many2one" ? rawValue?.[0] : rawValue;
+        });
+        const counters = {};
+        for (const group in groups) {
+            if (this.meta.aggregate) {
+                counters[group] = groups[group].reduce((acc, r) => r[this.meta.aggregate] + acc, 0);
+            } else {
+                counters[group] = groups[group].length;
+            }
+        }
+        return counters;
+    }
 
     /**
      * @protected
@@ -702,6 +776,7 @@ export class CalendarModel extends Model {
         const previousFilters = previousSection ? previousSection.filters : [];
 
         const rawFilters = Object.values(data.records).reduce((filters, record) => {
+            // FIXME: doesn't work for many2many/one2Many
             const rawValues = ["many2many", "one2many"].includes(field.type)
                 ? record.rawRecord[fieldName]
                 : [record.rawRecord[fieldName]];

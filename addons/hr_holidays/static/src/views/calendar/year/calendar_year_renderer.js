@@ -4,7 +4,6 @@ import { useService } from "@web/core/utils/hooks";
 import { useMandatoryDays } from "../../hooks";
 import { useCalendarPopover } from "@web/views/calendar/hooks";
 import { TimeOffCalendarYearPopover } from "./calendar_year_popover";
-import { useEffect } from "@odoo/owl";
 
 export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
     setup() {
@@ -13,22 +12,6 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         this.mandatoryDays = useMandatoryDays(this.props);
         this.mandatoryDaysList = [];
         this.mandatoryDayPopover = useCalendarPopover(TimeOffCalendarYearPopover);
-
-        useEffect(
-            (el) => {
-                for (const lastWeek of el) {
-                    // Remove the week if the week is empty.
-                    // FullCalendar always displays 6 weeks even when empty.
-                    if (!lastWeek.querySelector("[data-date]")) {
-                        lastWeek.remove();
-                    }
-                }
-            },
-            () => [
-                this.rootRef.el &&
-                    this.rootRef.el.querySelectorAll(".fc-scrollgrid-sync-table tr:nth-child(6)"),
-            ]
-        );
     }
 
     get options() {

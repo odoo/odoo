@@ -3,7 +3,7 @@ import {
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -20,7 +20,12 @@ import { browser } from "@web/core/browser/browser";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useChildSubEnv, useState } from "@odoo/owl";
+
+import { parseXML } from "@web/core/utils/xml";
+import { Record } from "@web/model/record";
+import { FormArchParser } from "@web/views/form/form_arch_parser";
+import { FormRenderer } from "@web/views/form/form_renderer";
 
 const { DateTime } = luxon;
 
@@ -29,6 +34,12 @@ export const SCALE_LABELS = {
     week: _t("Week"),
     month: _t("Month"),
     year: _t("Year"),
+};
+
+export const CALENDAR_MODE = {
+    normal: "NORMAL",
+    quick_add: "QUICK_ADD",
+    quick_remove: "QUICK_REMOVE",
 };
 
 function useUniqueDialog() {
@@ -42,6 +53,16 @@ function useUniqueDialog() {
     };
 }
 
+export class CalendarQuickCreateForm extends FormRenderer {
+    setup() {
+        super.setup();
+
+        useBus(this.env.calendarModel.bus, "ASK_QUICK_CREATE_FIELD_CHANGES", ({ detail }) => {
+            this.props.record.model.bus.trigger("NEED_LOCAL_CHANGES", { proms: detail.proms });
+        });
+    }
+}
+
 export class CalendarController extends Component {
     static components = {
         DatePicker: DateTimePicker,
@@ -53,6 +74,8 @@ export class CalendarController extends Component {
         SearchBar,
         ViewScaleSelector,
         CogMenu,
+        Record,
+        CalendarQuickCreateForm,
     };
     static template = "web.CalendarController";
     static props = {
@@ -97,6 +120,7 @@ export class CalendarController extends Component {
             showSideBar:
                 !this.env.isSmall &&
                 Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
+            calendarMode: CALENDAR_MODE.normal,
         });
 
         this.searchBarToggler = useSearchBarToggler();
@@ -107,6 +131,35 @@ export class CalendarController extends Component {
             editRecord: this.editRecord.bind(this),
             setDate: this.setDate.bind(this),
         };
+
+        // Quick Month
+        useChildSubEnv({
+            calendarModel: this.model,
+        });
+        this.CALENDAR_MODE = CALENDAR_MODE;
+
+        const resModel = this.props.resModel;
+        const quickFormModels = { [resModel]: { fields: this.props.fields } };
+        this.quickCreateFields = this.model.meta.quickFields;
+
+        const archFields = Object.entries(this.quickCreateFields)
+            .map(
+                ([name, field]) =>
+                    `<field name="${name}" widget="${field.widget ?? ""}" invisible="${
+                        field.invisible ?? ""
+                    }" />`
+            )
+            .join("\n");
+
+        const arch = `
+            <form>
+                <group class="mb-0">
+                    ${archFields}
+                </group>
+            </form>
+        `;
+        console.log(arch);
+        this.archInfo = new FormArchParser().parse(parseXML(arch), quickFormModels, resModel);
     }
 
     get currentDate() {
@@ -175,6 +228,7 @@ export class CalendarController extends Component {
             ...this._baseRendererProps,
             model: this.model,
             isWeekendVisible: this.model.scale === "day" || this.state.isWeekendVisible,
+            calendarMode: this.state.calendarMode,
         };
     }
     get containerProps() {
@@ -411,5 +465,30 @@ export class CalendarController extends Component {
     toggleWeekendVisibility() {
         this.state.isWeekendVisible = !this.state.isWeekendVisible;
         browser.localStorage.setItem("calendar.isWeekendVisible", this.state.isWeekendVisible);
+    }
+
+    // quick Month
+
+    get showQuickCreate() {
+        return this.model.meta.scale === "month" && this.state.isQuickCreateMode;
+    }
+
+    get quickFieldsValues() {
+        return Object.fromEntries(Object.keys(this.quickCreateFields).map((name) => [name, false]));
+    }
+
+    onQuickCreateRootLoaded(record) {
+        console.log(record);
+        this.model.data.quickCreateValuesCallback = record.getChanges.bind(record);
+    }
+
+    setMode(mode) {
+        if (Object.values(CALENDAR_MODE).includes(mode)) {
+            this.state.calendarMode = mode;
+        }
+    }
+
+    isMode(mode) {
+        return this.state.calendarMode === mode;
     }
 }

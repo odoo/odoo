@@ -172,7 +172,7 @@ export class RelationalModel extends Model {
         const data = await this.keepLast.add(this._loadData(config));
         this.root = this._createRoot(config, data);
         this.config = config;
-        return this.hooks.onRootLoaded();
+        return this.hooks.onRootLoaded(this.root);
     }
 
     // -------------------------------------------------------------------------
@@ -638,7 +638,7 @@ export class RelationalModel extends Model {
             commit(data);
         }
         if (reload && config.isRoot) {
-            return this.hooks.onRootLoaded();
+            return this.hooks.onRootLoaded(this.root);
         }
     }
 
@@ -680,10 +680,12 @@ export class RelationalModel extends Model {
         const groupBy = config.groupBy[0];
         const aggregates = [
             "__count",
-            ...getAggregateSpecifications(pick(
-                config.fields,
-                ...Object.keys(config.activeFields).filter(fname => fname != groupBy)
-            )),
+            ...getAggregateSpecifications(
+                pick(
+                    config.fields,
+                    ...Object.keys(config.activeFields).filter((fname) => fname != groupBy)
+                )
+            ),
         ];
         const orderBy = [];
         let groupByInsideOrder = false;

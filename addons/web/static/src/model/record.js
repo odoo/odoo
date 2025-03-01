@@ -40,6 +40,7 @@ class _Record extends Component {
                 onRecordSaved: this.props.info.onRecordSaved || (() => {}),
                 onWillSaveRecord: this.props.info.onWillSaveRecord || (() => {}),
                 onRecordChanged: this.props.info.onRecordChanged || (() => {}),
+                onRootLoaded: this.props.info.onRootLoaded || (() => {}),
             },
         };
         const modelServices = Object.fromEntries(
@@ -164,6 +165,7 @@ export class Record extends Component {
         "context?",
         "onRecordChanged?",
         "onRecordSaved?",
+        "onRootLoaded?",
         "onWillSaveRecord?",
     ];
     static defaultProps = {

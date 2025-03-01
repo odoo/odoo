@@ -41,6 +41,8 @@ export class CalendarArchParser {
         let monthOverflow = true;
         const popoverFieldNodes = {};
         const filtersInfo = {};
+        const quickFields = {};
+        let aggregate;
 
         visitXML(arch, (node) => {
             switch (node.tagName) {
@@ -178,16 +180,46 @@ export class CalendarArchParser {
 
                     break;
                 }
+                case "QuickCreate": {
+                    aggregate = node.getAttribute("aggregate"); // FIXME: need to support the method? (sum, avg...)
+                    for (const childNode of node.children) {
+                        if (childNode.tagName === "field") {
+                            if (childNode.hasAttribute("name")) {
+                                const fieldName = childNode.getAttribute("name");
+                                // const aggregate = childNode.getAttribute("aggregate");
+                                // const scope = childNode.getAttribute("scope");
+                                fieldNames.add(fieldName);
+
+                                const parseFieldNode = Field.parseFieldNode(
+                                    childNode,
+                                    models,
+                                    modelName,
+                                    "quick_create_calendar",
+                                    jsClass
+                                );
+
+                                if (["many2one", "selection"].includes(parseFieldNode.type)) {
+                                    parseFieldNode.widget = "calendar_radio";
+                                }
+
+                                quickFields[fieldName] = parseFieldNode;
+                            }
+                        }
+                    }
+                    return false;
+                }
             }
         });
 
         return {
+            aggregate,
             canCreate,
             canDelete,
             canEdit,
             eventLimit,
             fieldMapping,
             fieldNames: [...fieldNames],
+            quickFields,
             filtersInfo,
             formViewId,
             hasEditDialog,
