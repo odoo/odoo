@@ -1584,6 +1584,8 @@ export class PosStore extends Reactive {
         if (component.storeOnOrder ?? true) {
             this.get_order()?.set_screen_data({ name, props });
         }
+
+        return true;
     }
     orderExportForPrinting(order) {
         const headerData = this.getReceiptHeaderData(order);
