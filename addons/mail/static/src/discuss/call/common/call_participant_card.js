@@ -33,7 +33,9 @@ export class CallParticipantCard extends Component {
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
         this.rootHover = useHover("root");
-        this.state = useState({ drag: false, dragPos: undefined });
+        this.dragPos = undefined;
+        this.isDrag = false;
+        this.parentBoundingRect = undefined;
         onMounted(() => {
             if (!this.rtcSession) {
                 return;
@@ -128,8 +130,8 @@ export class CallParticipantCard extends Component {
         if (isEventHandled(ev, "CallParticipantCard.clickVolumeAnchor")) {
             return;
         }
-        if (this.state.drag) {
-            this.state.drag = false;
+        if (this.isDrag) {
+            this.isDrag = false;
             return;
         }
         if (this.rtcSession) {
@@ -183,6 +185,7 @@ export class CallParticipantCard extends Component {
         const onMousemove = (ev) => this.drag(ev);
         const onMouseup = () => {
             const insetEl = this.root.el;
+            const bottomOffset = this.env.inChatWindow ? window.innerHeight * 0.05 : 0; // 5vh in pixels
             if (parseInt(insetEl.style.left) < insetEl.parentNode.offsetWidth / 2) {
                 insetEl.style.left = "1vh";
                 insetEl.style.right = "";
@@ -190,13 +193,18 @@ export class CallParticipantCard extends Component {
                 insetEl.style.left = "";
                 insetEl.style.right = "1vh";
             }
-            if (parseInt(insetEl.style.top) < insetEl.parentNode.offsetHeight / 2) {
+            if (
+                parseInt(insetEl.style.top) <
+                (insetEl.parentNode.offsetHeight - bottomOffset) / 2
+            ) {
                 insetEl.style.top = "1vh";
                 insetEl.style.bottom = "";
             } else {
-                insetEl.style.bottom = "1vh";
-                insetEl.style.top = "";
+                insetEl.style.bottom = this.env.inChatWindow ? "5vh" : "1vh";
+                insetEl.style.top = "unset";
             }
+            this.dragPos = undefined;
+            this.parentBoundingRect = undefined;
             document.removeEventListener("mouseup", onMouseup);
             document.removeEventListener("mousemove", onMousemove);
         };
@@ -212,34 +220,25 @@ export class CallParticipantCard extends Component {
     }
 
     drag(ev) {
-        this.state.drag = true;
+        this.isDrag = true;
         const insetEl = this.root.el;
         const parent = insetEl.parentNode;
-        const clientX = ev.clientX ?? ev.touches[0].clientX;
-        const clientY = ev.clientY ?? ev.touches[0].clientY;
-        if (!this.state.dragPos) {
-            this.state.dragPos = { posX: clientX, posY: clientY };
+        const boundingRect =
+            this.parentBoundingRect || (this.parentBoundingRect = parent.getBoundingClientRect());
+        const bottomOffset = this.env.inChatWindow ? window.innerHeight * 0.05 : 0; // 5vh in pixels
+        const clientX = Math.max((ev.clientX ?? ev.touches[0].clientX) - boundingRect.left, 0);
+        const clientY = Math.max((ev.clientY ?? ev.touches[0].clientY) - boundingRect.top, 0);
+        if (!this.dragPos) {
+            this.dragPos = { posX: clientX, posY: clientY };
         }
-        const dX = this.state.dragPos.posX - clientX;
-        const dY = this.state.dragPos.posY - clientY;
-        this.state.dragPos.posX = Math.min(
-            Math.max(clientX, parent.offsetLeft),
-            parent.offsetLeft + parent.offsetWidth - insetEl.clientWidth
-        );
-        this.state.dragPos.posY = Math.min(
-            Math.max(clientY, parent.offsetTop),
-            parent.offsetTop + parent.offsetHeight - insetEl.clientHeight
-        );
-        insetEl.style.left =
-            Math.min(
-                Math.max(insetEl.offsetLeft - dX, 0),
-                parent.offsetWidth - insetEl.clientWidth
-            ) + "px";
-        insetEl.style.top =
-            Math.min(
-                Math.max(insetEl.offsetTop - dY, 0),
-                parent.offsetHeight - insetEl.clientHeight
-            ) + "px";
+        const dX = this.dragPos.posX - clientX;
+        const dY = this.dragPos.posY - clientY;
+        const widthOffset = parent.offsetWidth - insetEl.clientWidth;
+        const heightOffset = parent.offsetHeight - insetEl.clientHeight - bottomOffset;
+        this.dragPos.posX = Math.min(clientX, widthOffset);
+        this.dragPos.posY = Math.min(clientY, heightOffset);
+        insetEl.style.left = Math.min(Math.max(insetEl.offsetLeft - dX, 0), widthOffset) + "px";
+        insetEl.style.top = Math.min(Math.max(insetEl.offsetTop - dY, 0), heightOffset) + "px";
     }
 
     onFullScreenChange() {

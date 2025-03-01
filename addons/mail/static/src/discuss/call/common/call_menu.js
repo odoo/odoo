@@ -11,6 +11,7 @@ export class CallMenu extends Component {
         super.setup();
         this.rtc = useState(useService("discuss.rtc"));
         this.callActions = useCallActions();
+        this.isEnterprise = odoo.info && odoo.info.isEnterprise;
     }
 
     get icon() {

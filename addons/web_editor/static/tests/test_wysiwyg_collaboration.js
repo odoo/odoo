@@ -378,7 +378,7 @@ QUnit.module('web_editor', {
                 await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
 
                 assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
-                assert.equal(await peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
+                assert.equal(await peers.p2.getValue(), `<p>a[]b</p>`, 'p2 should have the same document as p1');
                 assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the document changed');
 
                 removePeers(peers);
@@ -400,7 +400,7 @@ QUnit.module('web_editor', {
                 await peers.p1.openDataChannel(peers.p2);
 
                 assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
-                assert.equal(await peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
+                assert.equal(await peers.p2.getValue(), `<p>a[]b</p>`, 'p2 should have the same document as p1');
                 assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the document changed because it has not focused');
 
                 removePeers(peers);
@@ -429,7 +429,7 @@ QUnit.module('web_editor', {
                     assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
 
                     assert.equal(peers.p2.wysiwyg._isDocumentStale, false, 'p2 should not have a stale document');
-                    assert.equal(await peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
+                    assert.equal(await peers.p2.getValue(), `<p>a[]b</p>`, 'p2 should have the same document as p1');
 
                     assert.equal(peers.p3.wysiwyg._isDocumentStale, true, 'p3 should have a stale document');
                     assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
@@ -479,16 +479,16 @@ QUnit.module('web_editor', {
                         assert.equal(peers.p1.wysiwyg._historyShareId, peers.p3.wysiwyg._historyShareId, 'p1 and p3 should have the same _historyShareId');
 
                         assert.equal(await peers.p1.getValue(), `<p>a[]</p>`, 'p1 should have the same document as p2');
-                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `<p>a[]</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should have the same document as p1');
 
                         await peers.p3.setOffline();
 
                         await peers.p1.wysiwyg.odooEditor.execCommand('insert', 'b');
 
                         assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
-                        assert.equal(await peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `<p>a[]b</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
 
                         await peers.p1.writeToServer();
                         assert.equal(peers.p1.wysiwyg._isDocumentStale, false, 'p1 should not have a stale document');
@@ -503,8 +503,8 @@ QUnit.module('web_editor', {
                         assert.equal(p3Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p3 _resetFromServerAndResyncWithClients should not have been called');
 
                         assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 should have the same document as p2');
-                        assert.equal(await peers.p2.getValue(), `<p>[]ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]ab</p>`, 'p3 should have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `<p>a[]b</p>`, 'p2 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]b</p>`, 'p3 should have the same document as p1');
 
                         removePeers(peers);
                     });
@@ -547,8 +547,8 @@ QUnit.module('web_editor', {
                         await peers.p1.writeToServer();
 
                         assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should not have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `<p>a[]</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
 
                         peers.p1.destroyEditor();
 
@@ -559,7 +559,7 @@ QUnit.module('web_editor', {
 
                         await peers.p2.setOnline();
                         assert.equal(await peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 1, 'p2 _recoverFromStaleDocument should have been called once');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 1, 'p2 _resetFromServerAndResyncWithClients should have been called once');
@@ -567,7 +567,7 @@ QUnit.module('web_editor', {
                         assert.equal(p2Spies._applySnapshot.callCount, 0, 'p2 _applySnapshot should not have been called');
 
                         await peers.p3.setOnline();
-                        assert.equal(await peers.p3.getValue(), `[]<p>ab</p>`, 'p3 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]b</p>`, 'p3 should have the same document as p1');
                         assert.equal(p3Spies._recoverFromStaleDocument.callCount, 1, 'p3 _recoverFromStaleDocument should have been called once');
                         assert.equal(p3Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p3 _resetFromServerAndResyncWithClients should not have been called');
                         assert.equal(p3Spies._processMissingSteps.callCount, 1, 'p3 _processMissingSteps should have been called once');
@@ -614,8 +614,8 @@ QUnit.module('web_editor', {
                         peers.p1.setOffline();
 
                         assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should not have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `<p>a[]</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 0, 'p2 _recoverFromStaleDocument should not have been called');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p2 _resetFromServerAndResyncWithClients should not have been called');
@@ -624,7 +624,7 @@ QUnit.module('web_editor', {
 
                         await peers.p2.setOnline();
                         assert.equal(await peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 1, 'p2 _recoverFromStaleDocument should have been called once');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 1, 'p2 _resetFromServerAndResyncWithClients should have been called once');
@@ -632,7 +632,7 @@ QUnit.module('web_editor', {
                         assert.equal(p2Spies._applySnapshot.callCount, 0, 'p2 _applySnapshot should not have been called');
 
                         await peers.p3.setOnline();
-                        assert.equal(await peers.p3.getValue(), `[]<p>ab</p>`, 'p3 should have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]b</p>`, 'p3 should have the same document as p1');
                         assert.equal(p3Spies._recoverFromStaleDocument.callCount, 1, 'p3 _recoverFromStaleDocument should have been called once');
                         assert.equal(p3Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p3 _resetFromServerAndResyncWithClients should have been called once');
                         assert.equal(p3Spies._processMissingSteps.callCount, 1, 'p3 _processMissingSteps should have been called once');
@@ -684,8 +684,8 @@ QUnit.module('web_editor', {
                         await peers.p1.writeToServer();
 
                         assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should not have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `<p>a[]</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
 
                         peers.p1.destroyEditor();
 
@@ -741,7 +741,7 @@ QUnit.module('web_editor', {
                         await peers.p1.writeToServer();
 
                         assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(await peers.p2.getValue(), `[]<p>a</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `<p>a[]</p>`, 'p2 should not have the same document as p1');
 
                         peers.p1.destroyEditor();
 
@@ -795,8 +795,8 @@ QUnit.module('web_editor', {
                         peers.p1.setOffline();
 
                         assert.equal(await peers.p1.getValue(), `<p>ab[]</p>`, 'p1 have inserted char b');
-                        assert.equal(await peers.p2.getValue(), `<p>[]a</p>`, 'p2 should not have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p2.getValue(), `<p>a[]</p>`, 'p2 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 0, 'p2 _recoverFromStaleDocument should not have been called');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 0, 'p2 _resetFromServerAndResyncWithClients should not have been called');
@@ -806,7 +806,7 @@ QUnit.module('web_editor', {
 
                         await peers.p2.setOnline();
                         assert.equal(await peers.p2.getValue(), `[]<p>ab</p>`, 'p2 should have the same document as p1');
-                        assert.equal(await peers.p3.getValue(), `<p>[]a</p>`, 'p3 should not have the same document as p1');
+                        assert.equal(await peers.p3.getValue(), `<p>a[]</p>`, 'p3 should not have the same document as p1');
 
                         assert.equal(p2Spies._recoverFromStaleDocument.callCount, 1, 'p2 _recoverFromStaleDocument should have been called once');
                         assert.equal(p2Spies._resetFromServerAndResyncWithClients.callCount, 1, 'p2 _resetFromServerAndResyncWithClients should have been called once');

@@ -4,6 +4,8 @@ import { user } from "@web/core/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { PeerToPeer, RequestError } from "./PeerToPeer";
+import { ancestors } from "@html_editor/utils/dom_traversal";
+import { childNodeIndex } from "@html_editor/utils/position";
 
 /**
  * @typedef {Object} CollaborationSelection
@@ -726,11 +728,21 @@ export class CollaborationOdooPlugin extends Plugin {
         if (this.historySyncAtLeastOnce) {
             return;
         }
+        const selection = this.dependencies.selection.getEditableSelection();
+        let anchorNodeIndexPath = this._getNodeIndexPath(selection.anchorNode);
+        let anchorOffset = selection.anchorOffset;
+        if (selection.anchorNode === this.editable) {
+            anchorNodeIndexPath = this._getNodeIndexPath(this.editable.firstChild);
+            anchorOffset = 0;
+        }
         const applied = this.applySnapshot(snapshot);
         if (!applied) {
             return;
         }
-        this.dependencies.selection.setCursorStart(this.editable.firstChild);
+        this.dependencies.selection.setSelection({
+            anchorNode: this._getNodeFromIndexPath(anchorNodeIndexPath),
+            anchorOffset,
+        });
         this.historySyncFinished = true;
         // In case there are steps received in the meantime, process them.
         if (this.historyStepsBuffer.length) {
@@ -789,6 +801,30 @@ export class CollaborationOdooPlugin extends Plugin {
         if (firstChild) {
             firstChild.setAttribute("data-last-history-steps", historyIds);
         }
+    }
+
+    /**
+     * Generates the path to a node as an array of indices, relative to a given ancestor.
+     *
+     * @param {Node} node - The node to trace the path for.
+     * @returns {number[]} The path as an array of child indices.
+     */
+    _getNodeIndexPath(node) {
+        return [node, ...ancestors(node, this.editable)].map((ancestor) =>
+            childNodeIndex(ancestor)
+        );
+    }
+    /**
+     * Finds a node in the DOM based on a path of child indices.
+     *
+     * @param {number[]} indexPath - The path as an array of child indices.
+     * @returns {Node|undefined} The node at the specified path, or null if not found.
+     */
+    _getNodeFromIndexPath(indexPath) {
+        return indexPath.reduceRight(
+            (node, index) => node?.childNodes?.[index],
+            this.editable.parentElement
+        );
     }
 }
 
