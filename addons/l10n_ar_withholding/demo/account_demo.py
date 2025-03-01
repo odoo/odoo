@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models
+import re
 
 
 class AccountChartTemplate(models.AbstractModel):
@@ -32,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
             self.env['l10n_ar.partner.tax'].create({'tax_id': arba_wth_applied.id, 'partner_id': self.env.ref('l10n_ar.res_partner_mipyme').id, 'company_id': company.id})
 
             # Because in demo we want to skip the config, while in data we want to require them to configure
-            self.env['account.tax'].search([('l10n_ar_withholding_payment_type', '!=', False), ('l10n_ar_tax_type', 'in', ('iibb_untaxed', 'iibb_total'))]).copy(default={'amount_type': 'percent', 'amount': 1})
+            for tax in self.env['account.tax'].search([('l10n_ar_withholding_payment_type', '!=', False), ('l10n_ar_tax_type', 'in', ('iibb_untaxed', 'iibb_total'))]):
+                name = re.sub(r'\b\d+(\.\d+)?\s*%', '1%', tax.name)
+                tax.copy(default={'amount_type': 'percent', 'amount': 1, 'name': name})
         return result
