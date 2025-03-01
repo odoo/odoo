@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.2a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-29 09:15+0000\n"
-"PO-Revision-Date: 2023-11-29 09:15+0000\n"
+"POT-Creation-Date: 2025-01-30 17:23+0000\n"
+"PO-Revision-Date: 2025-01-30 17:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_es_pos
-#: model_terms:ir.ui.view,arch_db:l10n_es_pos.res_config_settings_view_form
-msgid "Above this limit the simplified invoice won't be made"
+#: model:ir.model,name:l10n_es_pos.model_res_company
+msgid "Companies"
 msgstr ""
 
 #. module: l10n_es_pos
@@ -31,24 +31,33 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: l10n_es_pos
-#: model:ir.model.fields,field_description:l10n_es_pos.field_res_config_settings__pos_is_spanish
-msgid ""
-"Consider the specific spanish legislation, such as the use of simplified "
-"invoices"
-msgstr ""
-
-#. module: l10n_es_pos
 #. odoo-javascript
-#: code:addons/l10n_es_pos/static/src/overrides/components/receipt_header/receipt_header.xml:0
-#, python-format
+#: code:addons/l10n_es_pos/static/src/app/screens/receipt_screen/receipt_header/receipt_header.xml:0
 msgid "Customer:"
 msgstr ""
 
 #. module: l10n_es_pos
+#: model:ir.model.fields,field_description:l10n_es_pos.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_es_pos.field_pos_config__display_name
+#: model:ir.model.fields,field_description:l10n_es_pos.field_pos_order__display_name
+#: model:ir.model.fields,field_description:l10n_es_pos.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_es_pos.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_es_pos
 #. odoo-javascript
-#: code:addons/l10n_es_pos/static/src/overrides/components/payment_screen/payment_screen.js:0
-#, python-format
+#: code:addons/l10n_es_pos/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Error"
+msgstr ""
+
+#. module: l10n_es_pos
+#: model:ir.model.fields,field_description:l10n_es_pos.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_es_pos.field_pos_config__id
+#: model:ir.model.fields,field_description:l10n_es_pos.field_pos_order__id
+#: model:ir.model.fields,field_description:l10n_es_pos.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_es_pos.field_res_config_settings__id
+msgid "ID"
 msgstr ""
 
 #. module: l10n_es_pos
@@ -64,17 +73,9 @@ msgstr ""
 
 #. module: l10n_es_pos
 #. odoo-javascript
-#: code:addons/l10n_es_pos/static/src/overrides/components/payment_screen/payment_screen.js:0
-#, python-format
+#: code:addons/l10n_es_pos/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
 "Order amount is too large for a simplified invoice, use an invoice instead."
-msgstr ""
-
-#. module: l10n_es_pos
-#: model:ir.model.fields,help:l10n_es_pos.field_pos_config__l10n_es_simplified_invoice_limit
-#: model:ir.model.fields,help:l10n_es_pos.field_res_config_settings__pos_l10n_es_simplified_invoice_limit
-msgid ""
-"Over this amount is not legally possible to create a simplified invoice"
 msgstr ""
 
 #. module: l10n_es_pos
@@ -88,38 +89,14 @@ msgid "Point of Sale Orders"
 msgstr ""
 
 #. module: l10n_es_pos
-#: model:ir.model,name:l10n_es_pos.model_pos_session
-msgid "Point of Sale Session"
-msgstr ""
-
-#. module: l10n_es_pos
 #: model_terms:ir.ui.view,arch_db:l10n_es_pos.res_config_settings_view_form
 msgid "Simplified Invoice"
 msgstr ""
 
 #. module: l10n_es_pos
-#: model_terms:ir.ui.view,arch_db:l10n_es_pos.res_config_settings_view_form
-msgid "Simplified Invoice Limit"
-msgstr ""
-
-#. module: l10n_es_pos
-#: model:ir.model.fields,field_description:l10n_es_pos.field_pos_config__l10n_es_simplified_invoice_limit
-#: model:ir.model.fields,field_description:l10n_es_pos.field_res_config_settings__pos_l10n_es_simplified_invoice_limit
-msgid "Simplified Invoice limit amount"
-msgstr ""
-
-#. module: l10n_es_pos
-#. odoo-python
-#: code:addons/l10n_es_pos/models/pos_config.py:0
-#, python-format
-msgid "Simplified Invoices"
-msgstr ""
-
-#. module: l10n_es_pos
 #. odoo-javascript
-#: code:addons/l10n_es_pos/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#: code:addons/l10n_es_pos/static/src/app/screens/receipt_screen/receipt_header/receipt_header.xml:0
 #: model:ir.model.fields,field_description:l10n_es_pos.field_pos_order__is_l10n_es_simplified_invoice
-#, python-format
 msgid "Simplified invoice"
 msgstr ""
 
@@ -131,4 +108,10 @@ msgstr ""
 #. module: l10n_es_pos
 #: model:ir.model.fields,field_description:l10n_es_pos.field_pos_config__simplified_partner_id
 msgid "Simplified invoice partner"
+msgstr ""
+
+#. module: l10n_es_pos
+#. odoo-javascript
+#: code:addons/l10n_es_pos/static/src/app/screens/receipt_screen/receipt_header/receipt_header.xml:0
+msgid "Tax ID"
 msgstr ""
