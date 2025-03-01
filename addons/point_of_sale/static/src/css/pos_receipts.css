@@ -1,12 +1,42 @@
 .pos-receipt-print {
     width: 512px;
-    font-size: 27px;
+    font-size: 24px;
     color: #000000;
+
+    .pos-receipt{
+        padding: 0 !important;
+    }
+}
+
+.pos-receipt{
+    --dark-rgb: #111827;
+}
+
+.pos-receipt-preview-container {
+    width: 350px;
+    border: 2px solid lightgrey;
+}
+
+#wrapwrap {
+    font-size: 0.875rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-right: 17px;
+    box-sizing: content-box;
 }
 
 .pos-receipt .pos-receipt-right-align {
     float: right;
     display: flex;
+}
+
+.pos-receipt-background-image {
+    position: absolute;
+    width: 85%;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    opacity: 0.25;
 }
 
 .pos-receipt .pos-receipt-center-align {
@@ -39,13 +69,24 @@
 }
 
 .pos-receipt .pos-receipt-amount {
-    font-size: 125%;
+    width: 60%;
     text-align: start;
+}
+
+.pos-receipt .pos-receipt-total-container, .pos-receipt-payment-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pos-receipt .pos-receipt-total-qty {
+    text-align: start;
+    width: 40%;
 }
 
 .pos-receipt .pos-receipt-title {
     font-weight: bold;
-    font-size: 125%;
+    font-size: 110%;
     text-align: center;
 }
 
@@ -82,7 +123,78 @@
     flex-direction: column;
 }
 
-.pos-receipt .orderlines {
-    /*rtl:ignore*/
-    direction: ltr;
+.pos-receipt-amount > span:first-child, .pos-receipt-amount > div > span:first-child {
+    font-weight: bolder;
+}
+
+.unit-price, .price{
+    text-align: end;
+}
+
+.tax-table th, .tax-table td {
+    padding: 2px 4px !important;
+}
+
+.tax-table th {
+    font-weight: bolder;
+}
+
+/* Layout releted styles */
+.pos-receipt-light-layout {
+    .receipt-total, .paymentlines{
+        font-size: 110%;
+    }
+    .pos-receipt-amount {
+        width: 100%;
+    }
+    .orderline td {
+        padding: 4px;
+    }
+}
+
+.pos-receipt-boxes-layout {
+    .pos-receipt-amount{
+        border: 1px solid var(--dark-rgb);
+        padding: 0.5rem 0.35rem;
+        border-top: none;
+    }
+    .pos-receipt-amount-container {
+        border-bottom: none;
+        border-right: none;
+    }
+    .total-qty{
+        padding: 0.5rem 0.35rem;
+        border: none
+    }
+    .orderline .product-name{
+        font-weight: bolder;
+    }
+    td, th {
+        padding: 4px;
+    }
+    .orderline {
+        border-top: 1px solid var(--dark-rgb);
+        border-bottom: 1px solid var(--dark-rgb);
+    }
+    .pos-receipt-total-container {
+        border: 1px solid var(--dark-rgb);
+        border-top: none;
+    }
+}
+
+.pos-receipt-lined-layout {
+    .pos-receipt-amount {
+        padding: 8px;
+        padding-top: 0;
+    }
+    .receipt-total {
+        border-top: 1px dashed var(--dark-rgb);
+        padding-top: 8px;
+    }
+    .total-qty {
+        padding: 8px;
+    }
+    td, th {
+        padding: 8px 2px;
+    }
 }
