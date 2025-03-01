@@ -90,6 +90,10 @@ class SaleOrderLine(models.Model):
             pos_lines = sale_line.pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
             sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines], 0)
 
+    def get_lot_names(self):
+        self.ensure_one()
+        return self.move_ids.move_line_ids.lot_id.mapped('name')
+
     def _get_sale_order_fields(self):
         return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]
 
