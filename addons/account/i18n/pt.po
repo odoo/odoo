@@ -3,7 +3,6 @@
 # 	* account
 # 
 # Translators:
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2025
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2025
 # Samuel Afonso, 2025
 # Antonio Daniel, 2025
@@ -18,9 +17,10 @@
 # NumerSpiral HBG, 2025
 # Pilar Vargas, 2025
 # Rita Bastos, 2025
-# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # Maitê Dietze, 2025
 # Wil Odoo, 2025
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2025
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,6 +104,17 @@ msgstr "Faturas Reconciliadas"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr "# Linhas de Extrato Reconciliadas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "nr.º Faturas de Fornecedor"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
+msgid "# of Digits"
+msgstr "Dígitos"
 
 #. module: account
 #. odoo-python
@@ -12673,6 +12684,11 @@ msgid "Reconciliation Parts"
 msgstr "Partes de Reconciliação"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "Registar uma nova fatura de fornecedor"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Record"
 msgstr "Registo"
@@ -17252,10 +17268,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__counterpart_type__purchase
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 msgid "Vendor Bills"
@@ -17304,6 +17322,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "Fornecedores"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
 
 #. module: account
 #. odoo-javascript

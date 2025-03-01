@@ -4,7 +4,6 @@
 # 
 # Translators:
 # yotam katzuni, 2024
-# Lilach Gilliam <lilach@apprcase.com>, 2024
 # Mor Kir <morki@013.net.il>, 2024
 # yacov mosbacher <ymosba@gmail.com>, 2024
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2024
@@ -32,11 +31,12 @@
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
 # Martin Trigaux, 2025
 # Netta Waizer, 2025
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025
 # Hed Shefer <hed@laylinetech.com>, 2025
 # Ha Ketem <haketem@gmail.com>, 2025
 # Sagi Ahiel, 2025
 # or balmas, 2025
+# Lilach Gilliam <lilach@apprcase.com>, 2025
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: or balmas, 2025\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,6 +120,17 @@ msgstr "# חשבוניות לקוח מותאמות"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr "מספר שורות שהותאמו"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "מס' חשבונית ספק "
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
+msgid "# of Digits"
+msgstr "# ספרות"
 
 #. module: account
 #. odoo-python
@@ -6682,7 +6693,7 @@ msgstr "שלח חשבוניות באמצעות מייל"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "דומיין דוא\"ל, למשל, 'example.com' ב-'odoo@example.com'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_template_id
@@ -11656,7 +11667,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Method:"
-msgstr "צורת תשלום:"
+msgstr "שיטת תשלום:"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_method
@@ -12527,6 +12538,11 @@ msgid "Reconciliation Parts"
 msgstr "חלקי השלמה"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "רשום חשבונית ספק חדש"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Record"
 msgstr "רשומה"
@@ -12998,7 +13014,7 @@ msgstr "חוק להצעת כניסת נגד"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr "כללים למודל הפיוס"
+msgstr "כללים למודל התאמות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
@@ -17014,10 +17030,12 @@ msgstr "חשבונית ספק נוצרה"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__counterpart_type__purchase
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 msgid "Vendor Bills"
@@ -17066,6 +17084,15 @@ msgstr "ספק:"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "ספקים"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -18246,7 +18273,7 @@ msgstr "למשל: https://www.odoo.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "למשל, e.g. mycompany.com"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format

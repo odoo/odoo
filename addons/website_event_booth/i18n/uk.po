@@ -191,9 +191,12 @@ msgid "Go back"
 msgstr "Поверніться"
 
 #. module: website_event_booth
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
-msgid "It's no longer possible to book a booth."
-msgstr "Більше неможливо забронювати стенд."
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#, python-format
+msgid "It looks like your email is linked to an existing account."
+msgstr ""
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
@@ -219,6 +222,11 @@ msgstr "Тип меню"
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "Phone"
 msgstr "Телефон"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
+msgid "Please Sign In."
+msgstr ""
 
 #. module: website_event_booth
 #. odoo-javascript

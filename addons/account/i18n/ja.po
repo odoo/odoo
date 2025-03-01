@@ -7,8 +7,9 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Andy Yiu, 2025
-# Wil Odoo, 2025
 # Junko Augias, 2025
+# Martin Trigaux, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,6 +108,17 @@ msgstr "消込済請求書数"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr "消込済明細書明細数"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "仕入先請求書数"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
+msgid "# of Digits"
+msgstr "桁数"
 
 #. module: account
 #. odoo-python
@@ -12519,6 +12531,11 @@ msgid "Reconciliation Parts"
 msgstr "消込パーツ"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "仕入先請求書を新規作成してください"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Record"
 msgstr "レコード"
@@ -16070,7 +16087,7 @@ msgstr "マージ時に勘定科目を名前でグループ化したい場合は
 #: model:digest.tip,name:account.digest_tip_account_0
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
-msgstr "ヒント：印刷したり、封筒に入れたり、請求書を投稿したりする必要はありません。"
+msgstr "ヒント: 請求書を印刷して、封筒に入れ、投函する必要はありません"
 
 #. module: account
 #: model:digest.tip,name:account.digest_tip_account_1
@@ -16792,8 +16809,8 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
-"請求書を自動的に郵送するには、「<i>郵送</i>」 オプションを使用してください。切手の費用に対して、私たちに任せてください: "
-"請求書は正しい国で印刷され、封筒に入れられ、普通郵便で送られます。リスト表示からこの機能を使用して、何百もの請求書をまとめて郵送します。 "
+"請求書を自動的に郵送するには、”郵送” "
+"オプションを使用して下さい。国内用切手1枚分の費用で、面倒な作業はすべてお任せ下さい。請求書は適切な国で印刷され、封筒に入れられ、郵送されます。リストビューからこの機能を使用すれば、数百枚の請求書を一括で郵送できます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__quick_edit_total_amount
@@ -17014,10 +17031,12 @@ msgstr "仕入先請求書が作成されました"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__counterpart_type__purchase
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 msgid "Vendor Bills"
@@ -17066,6 +17085,20 @@ msgstr "仕入先:"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "仕入先"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
+"仕入先請求書は、購買オーダまたは入荷伝票に\n"
+"                基づいて事前に作成することができます。これにより、\n"
+"                Odoo内のドラフトドキュメントに従って\n"
+"仕入先から受け取る請求書を、\n"
+"                管理することができます。"
 
 #. module: account
 #. odoo-javascript
