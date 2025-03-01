@@ -21,6 +21,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
+import { Deferred } from "@web/core/utils/concurrency";
 import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
@@ -67,6 +68,12 @@ export class Thread extends Component {
     };
     static template = "mail.Thread";
 
+    /** @type {Deferred} */
+    smoothScrollingDeferred;
+    /** @type {number} */
+    smoothScrollingTimeout;
+    isSmoothScrolling = false;
+
     setup() {
         super.setup();
         this.escape = escape;
@@ -87,9 +94,13 @@ export class Thread extends Component {
             ? useState(this.env.messageHighlight)
             : null;
         this.scrollingToHighlight = false;
-        this.refByMessageId = reactive(new Map(), () => this.scrollToHighlighted());
+        this.refByMessageId = reactive(new Map(), () => {
+            this.scrollToHighlighted();
+        });
         useEffect(
-            () => this.scrollToHighlighted(),
+            () => {
+                this.scrollToHighlighted();
+            },
             () => [this.messageHighlight?.highlightedMessageId]
         );
         this.present = useRef("load-newer");
@@ -109,7 +120,10 @@ export class Thread extends Component {
         this.loadOlderState = useVisible(
             "load-older",
             async () => {
-                await this.messageHighlight?.scrollPromise;
+                await Promise.all([
+                    this.messageHighlight?.scrollPromise,
+                    this.smoothScrollingDeferred,
+                ]);
                 if (this.loadOlderState.isVisible) {
                     toRaw(this.props.thread).fetchMoreMessages();
                 }
@@ -119,7 +133,10 @@ export class Thread extends Component {
         this.loadNewerState = useVisible(
             "load-newer",
             async () => {
-                await this.messageHighlight?.scrollPromise;
+                await Promise.all([
+                    this.messageHighlight?.scrollPromise,
+                    this.smoothScrollingDeferred,
+                ]);
                 if (this.loadNewerState.isVisible) {
                     toRaw(this.props.thread).fetchMoreMessages("newer");
                 }
@@ -143,20 +160,7 @@ export class Thread extends Component {
         useEffect(
             () => {
                 if (this.props.jumpPresent !== this.lastJumpPresent) {
-                    this.messageHighlight?.clearHighlight();
-                    if (this.props.thread.loadNewer) {
-                        this.jumpToPresent();
-                    } else {
-                        if (this.props.order === "desc") {
-                            this.scrollableRef.el.scrollTop = 0;
-                        } else {
-                            this.scrollableRef.el.scrollTop =
-                                this.scrollableRef.el.scrollHeight -
-                                this.scrollableRef.el.clientHeight;
-                        }
-                        this.props.thread.scrollTop = "bottom";
-                    }
-                    this.lastJumpPresent = this.props.jumpPresent;
+                    this.jumpToPresent({ immediate: true });
                 }
             },
             () => [this.props.jumpPresent]
@@ -399,7 +403,9 @@ export class Thread extends Component {
             (this.props.order === "desc" && olderMessages) ||
             (this.props.order === "asc" &&
                 newerMessages &&
-                (this.loadNewer || thread.scrollTop !== "bottom"));
+                (this.loadNewer ||
+                    typeof thread.scrollTop !== "string" ||
+                    !thread.scrollTop?.includes("bottom")));
         if (this.snapshot && messagesAtTop) {
             this.setScroll(
                 this.snapshot.scrollTop +
@@ -413,7 +419,7 @@ export class Thread extends Component {
             thread.scrollTop !== undefined
         ) {
             let value;
-            if (thread.scrollTop === "bottom") {
+            if (typeof thread.scrollTop === "string" && thread.scrollTop?.includes("bottom")) {
                 value =
                     this.props.order === "asc"
                         ? this.scrollableRef.el.scrollHeight - this.scrollableRef.el.clientHeight
@@ -426,8 +432,15 @@ export class Thread extends Component {
                           thread.scrollTop -
                           this.scrollableRef.el.clientHeight;
             }
-            if (this.lastSetValue === undefined || Math.abs(this.lastSetValue - value) > 1) {
-                this.setScroll(value);
+            if (
+                (this.lastSetValue === undefined || Math.abs(this.lastSetValue - value) > 1) &&
+                !this.isSmoothScrolling
+            ) {
+                this.setScroll(value, {
+                    smooth:
+                        typeof thread.scrollTop === "string" &&
+                        thread.scrollTop?.includes("smooth"),
+                });
             }
         }
     }
@@ -486,12 +499,14 @@ export class Thread extends Component {
             : "";
     }
 
-    async jumpToPresent() {
+    async jumpToPresent({ immediate = false } = {}) {
         this.messageHighlight?.clearHighlight();
-        await this.props.thread.loadAround();
-        this.props.thread.loadNewer = false;
-        this.props.thread.scrollTop = "bottom";
-        this.state.showJumpPresent = false;
+        if (!immediate || this.props.thread.loadNewer) {
+            await this.props.thread.loadAround();
+            this.props.thread.loadNewer = false;
+            this.state.showJumpPresent = false;
+        }
+        this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
     }
 
     registerMessageRef(message, ref) {
@@ -552,26 +567,59 @@ export class Thread extends Component {
         }
     }
 
-    scrollToHighlighted() {
+    async scrollToHighlighted() {
         if (!this.messageHighlight?.highlightedMessageId || this.scrollingToHighlight) {
             return;
         }
         const el = this.refByMessageId.get(this.messageHighlight.highlightedMessageId)?.el;
         if (el) {
             this.scrollingToHighlight = true;
+            await this.messageHighlight.startupDeferred;
             this.messageHighlight.scrollTo(el).then(() => (this.scrollingToHighlight = false));
         }
     }
 
     get orderedMessages() {
-        return this.props.order === "asc"
-            ? [...this.props.thread.messages]
-            : [...this.props.thread.messages].reverse();
+        const messages = this.state.mountedAndLoaded
+            ? this.props.thread.messages
+            : this.props.thread.phantomMessages;
+        return this.props.order === "asc" ? [...messages] : [...messages].reverse();
     }
 
-    setScroll(value) {
-        this.scrollableRef.el.scrollTop = value;
+    get showLoadOlder() {
+        return (
+            this.props.thread.loadOlder &&
+            this.props.thread.isLoaded &&
+            !this.props.thread.isTransient &&
+            !this.props.thread.hasLoadingFailed &&
+            !this.messageHighlight.initiated &&
+            !this.messageHighlight.highlightedMessageId
+        );
+    }
+
+    setScroll(value, { smooth = false } = {}) {
+        if (smooth) {
+            clearTimeout(this.smoothScrollingTimeout);
+            this.isSmoothScrolling = true;
+            this.smoothScrollingDeferred = new Deferred();
+            const onSmoothScrollingEnd = () => {
+                this.smoothScrollingDeferred.resolve();
+                this.smoothScrollingDeferred = undefined;
+                this.isSmoothScrolling = false;
+            };
+            if ("onscrollend" in window) {
+                document.addEventListener("scrollend", onSmoothScrollingEnd, {
+                    capture: true,
+                    once: true,
+                });
+            } else {
+                // To remove when safari will support the "scrollend" event.
+                this.smoothScrollingTimeout = setTimeout(onSmoothScrollingEnd, 250);
+            }
+        }
+        this.scrollableRef.el.scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });
         this.lastSetValue = value;
+        this.messageHighlight?.startupDeferred?.resolve();
         this.saveScroll();
     }
 }

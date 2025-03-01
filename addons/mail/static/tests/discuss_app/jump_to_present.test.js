@@ -1,6 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryFirst, tick } from "@odoo/hoot-dom";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { animationFrame, Deferred, press, queryFirst, tick } from "@odoo/hoot-dom";
+import {
+    asyncStep,
+    patchWithCleanup,
+    serverState,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 import {
     SIZES,
@@ -259,4 +264,50 @@ test("show jump to present banner after scrolling up 10 messages", async () => {
     // scroll to around 10th message before newest
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollTop - 5 * messageHeight);
     await contains("[title='Jump to Present']");
+});
+
+test("when triggering jump to present, keeps showing old messages until recent ones are loaded", async () => {
+    // make scroll behavior instantaneous.
+    patchWithCleanup(Element.prototype, {
+        scrollIntoView() {
+            return super.scrollIntoView(true);
+        },
+        scrollTo(...args) {
+            if (typeof args[0] === "object" && args[0]?.behavior === "smooth") {
+                return super.scrollTo({ ...args[0], behavior: "instant" });
+            }
+            return super.scrollTo(...args);
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 60; i++) {
+        pyEnv["mail.message"].create({
+            body: i === 0 ? "first-message" : "Non Empty Body ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+            pinned_at: i === 0 ? "2020-02-12 08:30:00" : undefined,
+        });
+    }
+    let slowMessageFetchDeferred;
+    onRpcBefore("/discuss/channel/messages", async () => {
+        asyncStep("/discuss/channel/messages");
+        await slowMessageFetchDeferred;
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitForSteps(["/discuss/channel/messages"]);
+    await click("[title='Pinned Messages']");
+    await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
+    await contains(".o-mail-Thread .o-mail-Message", { text: "first-message" });
+    await animationFrame();
+    slowMessageFetchDeferred = new Deferred();
+    await click("[title='Jump to Present']");
+    await animationFrame();
+    await waitForSteps(["/discuss/channel/messages"]);
+    await contains(".o-mail-Thread .o-mail-Message", { text: "first-message" });
+    slowMessageFetchDeferred.resolve();
+    await contains(".o-mail-Thread .o-mail-Message", { text: "first-message", count: 0 });
+    await contains(".o-mail-Thread", { scroll: "bottom" });
 });
