@@ -21,6 +21,7 @@
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
 # Adriano Prado <adrianojprado@gmail.com>, 2023
+# Daian Douglas Paiva de Souza, 2025
 # Maitê Dietze, 2025
 # Wil Odoo, 2025
 # 
@@ -101,6 +102,12 @@ msgstr "# Faturas Reconciliadas"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr "# Linhas de extrato reconciliadas"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "Nº de faturas de fornecedor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -687,7 +694,7 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
 "('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
 "True)]}\">Draft</span>"
-msgstr ""
+msgstr "Minuta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -11852,6 +11859,11 @@ msgstr ""
 " "
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "Registrar uma nova fatura de fornecedor"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
@@ -16331,8 +16343,10 @@ msgstr "Conta de Fornecedor Criada"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
@@ -16392,6 +16406,19 @@ msgstr "Fornecedor:"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Vendors"
 msgstr "Fornecedores"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
+"Faturas de fornecedores podem ser previamente geradas com base no pedido\n"
+"                    de compra ou em recibos. Isto possibilita controlar faturas\n"
+"                    recebidas do seu fornecedor de acordo com o documento\n"
+"                    em rascunho no Odoo."
 
 #. module: account
 #. odoo-javascript
@@ -17318,8 +17345,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You cannot switch the type of a posted document."
-msgstr "Não é possível alterar o tipo de um documento lançado."
+msgid "You cannot switch the type of a document which has been posted once."
+msgstr ""
 
 #. module: account
 #. odoo-python

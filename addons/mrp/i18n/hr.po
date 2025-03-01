@@ -27,8 +27,8 @@
 # etoimene, 2024
 # Gordana Bilas, 2024
 # Vladimir Vrgoč, 2024
-# Luka Carević <luka@uvid.hr>, 2025
 # Bole <bole@dajmi5.com>, 2025
+# Luka Carević <luka@uvid.hr>, 2025
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2025\n"
+"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -820,6 +820,10 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
+"Prosječno vrijeme izrade u danima za proizvodnju ovog proizvoda. U slučaju "
+"višerazinskog BOM-a, vremena izrade komponenti će se zbrajati. Ako je "
+"proizvod podugovoren, ovo se može koristiti za određivanje datuma kada "
+"komponente treba poslati podugovaraču."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -1036,7 +1040,7 @@ msgstr "BoM Stavke"
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Overview"
-msgstr "Pregled sastvanice"
+msgstr "Pregled sastavnice"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -1157,7 +1161,7 @@ msgstr "Kapacitet mora biti pozitivan broj"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_reported_from_previous_wo
 msgid "Carried Quantity"
-msgstr ""
+msgstr "Prenesena količina"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
@@ -1809,7 +1813,7 @@ msgstr "Prikaži prečac do serijskih brojeva na kretanjima"
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.xml:0
 #, python-format
 msgid "Display:"
-msgstr ""
+msgstr "Prikaz:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2144,7 +2148,7 @@ msgstr "Slobodno"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Free to Use / On Hand"
-msgstr ""
+msgstr "Slobodno za korištenje / Na stanju"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2921,7 +2925,7 @@ msgstr "Proizvodnja"
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #, python-format
 msgid "Manufacturing Forecast"
-msgstr "PRedviđanje proizvodnja"
+msgstr "Predviđanje proizvodnje"
 
 #. module: mrp
 #. odoo-python
@@ -3670,7 +3674,7 @@ msgstr "Planiranje"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Planning Issues"
-msgstr ""
+msgstr "Kašnjenja"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
@@ -4121,7 +4125,7 @@ msgstr "Spremno"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Ready to Produce"
-msgstr ""
+msgstr "Spremno za proizvodnju"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_real_duration
@@ -4315,7 +4319,7 @@ msgstr "Planirani datum po mjesecu"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date: Last 365 Days"
-msgstr ""
+msgstr "Zakazani datum: Posljednjih 365 dana"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
@@ -5404,7 +5408,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Unbuilt"
-msgstr ""
+msgstr "Rastavljeni"
 
 #. module: mrp
 #. odoo-javascript
@@ -5486,7 +5490,7 @@ msgstr "Poništi rezervaciju"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "UoM"
-msgstr "UoM"
+msgstr "Jedinica mjere"
 
 #. module: mrp
 #. odoo-javascript
@@ -5886,7 +5890,7 @@ msgstr "Radni list"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 msgid "Work center"
-msgstr ""
+msgstr "Radni centar"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders

@@ -96,6 +96,12 @@ msgid "# Reconciled Statement Lines"
 msgstr "# บรรทัดคำสั่งที่กระทบยอด"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "# ใบเรียกเก็บเงินผู้จำหน่าย"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
 msgstr "จำนวนของตัวเลข"
@@ -11630,6 +11636,11 @@ msgid "Reconciliation Parts"
 msgstr "การพิสูจน์ยอด"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "บันทึกบิลผู้ขายใหม่"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
@@ -16023,8 +16034,10 @@ msgstr "สร้างบิลผู้ขาย"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
@@ -16084,6 +16097,19 @@ msgstr "ผู้จำหน่าย:"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Vendors"
 msgstr "ผู้ขาย"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
+"สามารถสร้างใบเรียกเก็บเงินของผู้ขายล่วงหน้าตามใบสั่งซื้อหรือ\n"
+"                    ใบเสร็จรับเงินได้ สิ่งนี้ช่วยให้คุณควบคุมใบเรียกเก็บเงิน\n"
+"                    ที่คุณได้รับจากผู้ขายของคุณตามเอกสารร่าง\n"
+"                    ใน Odoo ได้"
 
 #. module: account
 #. odoo-javascript
@@ -16978,8 +17004,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You cannot switch the type of a posted document."
-msgstr "คุณไม่สามารถเปลี่ยนประเภทของเอกสารที่ผ่านรายการได้"
+msgid "You cannot switch the type of a document which has been posted once."
+msgstr ""
 
 #. module: account
 #. odoo-python
