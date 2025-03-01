@@ -68,7 +68,7 @@ class OdooTestResult(object):
     _previousTestClass = None
     _moduleSetUpFailed = False
 
-    def __init__(self, stream=None, descriptions=None, verbosity=None):
+    def __init__(self, stream=None, descriptions=None, verbosity=None, global_report=None):
         self.failures_count = 0
         self.errors_count = 0
         self.testsRun = 0
@@ -80,6 +80,8 @@ class OdooTestResult(object):
         self._soft_fail = False
         self.had_failure = False
         self.stats = collections.defaultdict(Stat)
+        self.global_report = global_report
+        self.fail_fast = False
 
     def printErrors(self):
         "Called by TestRunner after test run"
