@@ -630,7 +630,7 @@ class PosSession(models.Model):
     def _get_diff_vals(self, payment_method_id, diff_amount):
         payment_method = self.env['pos.payment.method'].browse(payment_method_id)
         diff_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)
-        source_account = payment_method.outstanding_account_id
+        source_account = payment_method.outstanding_account_id or self.env.context.get('outstanding_account_id')
         destination_account = self.env['account.account']
 
         if (diff_compare_to_zero > 0):
@@ -1111,6 +1111,10 @@ class PosSession(models.Model):
         return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == self._get_receivable_account(payment_method))
 
     def _apply_diff_on_account_payment_move(self, account_payment, payment_method, diff_amount):
+        #TODO master: create attribute
+        context = dict(self.env.context)
+        context.update({'outstanding_account_id': account_payment.outstanding_account_id})
+        self.env.context = context
         diff_vals = self._get_diff_vals(payment_method.id, diff_amount)
         if not diff_vals:
             return
@@ -1128,6 +1132,7 @@ class PosSession(models.Model):
                 })
             ]
         })
+        account_payment.amount = new_balance
         account_payment.move_id.action_post()
 
     def _create_split_account_payment(self, payment, amounts):
