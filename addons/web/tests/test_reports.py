@@ -60,7 +60,8 @@ class TestReports(odoo.tests.HttpCase):
         report = report.with_user(admin)
         with MockRequest(report.env) as mock_request:
             mock_request.session = self.authenticate(admin.login, admin.login)
-            report.with_context(force_report_rendering=True)._render_qweb_pdf(report.id, [partner_id])
+            with odoo.tests.patch_savepoint():
+                report.with_context(force_report_rendering=True)._render_qweb_pdf(report.id, [partner_id])
         # Check that no device logs have been generated
         admin_device_log_count_after = self.env['res.device.log'].search_count([('user_id', '=', admin.id)])
         self.assertFalse(admin_device_log_count_after - admin_device_log_count_before)

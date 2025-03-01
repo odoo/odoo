@@ -105,7 +105,7 @@ class TestMailTemplate(MailCommon):
     def test_mail_template_abstract_model(self):
         """Check abstract models cannot be set on templates."""
         # create
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             self.env['mail.template'].create({
                 'name': 'Test abstract template',
                 'model_id': self.env['ir.model']._get('mail.thread').id, # abstract model
@@ -115,7 +115,7 @@ class TestMailTemplate(MailCommon):
             'name': 'Test abstract template',
             'model_id': self.env['ir.model']._get('res.partner').id,
         })
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             template.write({
                 'name': 'Test abstract template',
                 'model_id': self.env['ir.model']._get('mail.thread').id,

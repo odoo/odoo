@@ -133,7 +133,8 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
         self.assertRecordValues(wizard.wizard_line_ids, expected_wizard_line_vals)
 
         # 3. Perform the merge
-        wizard.action_merge()
+        with self.patched_savepoints():
+            wizard.action_merge()
 
         # 4. Check that the accounts other than the ones to merge into are deleted.
         self.assertFalse(self.accounts[2:].exists())
@@ -240,7 +241,8 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
         self.assertRecordValues(wizard.wizard_line_ids, expected_wizard_line_vals)
 
         # 2. Perform the merge
-        wizard.action_merge()
+        with self.patched_savepoints():
+            wizard.action_merge()
 
         # 3. Check that the non-hashed account is deleted.
         self.assertFalse(self.accounts[0].exists())
@@ -276,7 +278,8 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
         payable_accounts = self.env['account.account'].search([('name', '=', 'Account Payable')])
         self.assertEqual(len(payable_accounts), 2)
         wizard = self._create_account_merge_wizard(payable_accounts)
-        wizard.action_merge()
+        with self.patched_savepoints():
+            wizard.action_merge()
         payable_accounts = self.env['account.account'].search([('name', '=', 'Account Payable')])
         self.assertEqual(len(payable_accounts), 1)
         for company in self.env.companies:

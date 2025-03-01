@@ -1177,7 +1177,7 @@ class TestBoM(TestMrpCommon):
             line.product_id = finished
             line.product_uom_id = uom_unit
             line.product_qty = 5
-        with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
+        with self.assertRaises(exceptions.ValidationError):
             bom_finished = bom_finished.save()
 
     def test_validate_no_bom_line_with_same_product_variant(self):
@@ -1193,7 +1193,7 @@ class TestBoM(TestMrpCommon):
             line.product_id = self.product_7_3
             line.product_uom_id = uom_unit
             line.product_qty = 5
-        with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
+        with self.assertRaises(exceptions.ValidationError):
             bom_finished = bom_finished.save()
 
     def test_validate_bom_line_with_different_product_variant(self):

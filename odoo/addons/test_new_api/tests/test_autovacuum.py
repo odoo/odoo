@@ -9,7 +9,7 @@ class TestAutovacuum(common.TransactionCase):
         self.assertTrue(instance.exists())
 
         # Run the autovacuum cron
-        with self.enter_registry_test_mode():
+        with self.enter_registry_test_mode(), self.patched_savepoints():
             self.env.ref('base.autovacuum_job').method_direct_trigger()
 
         # Check the record has been vacuumed.

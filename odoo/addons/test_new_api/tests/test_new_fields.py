@@ -2877,7 +2877,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(image_data_uri(record.image_256)[:30], 'data:image/png;base64,iVBORw0K')
 
         # ensure invalid image raises
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             record.write({
                 'image': 'invalid image',
             })
@@ -3258,7 +3258,7 @@ class TestX2many(TransactionExpressionCase):
             'a_restricted_b_ids': [Command.set(record_b.ids)],
         })
         with self.assertRaises(psycopg2.IntegrityError):
-            with mute_logger('odoo.sql_db'), self.cr.savepoint():
+            with mute_logger('odoo.sql_db'):
                 record_a.unlink()
         # Test B is still cascade.
         record_b.unlink()
@@ -3272,7 +3272,7 @@ class TestX2many(TransactionExpressionCase):
             'b_restricted_b_ids': [Command.set(record_b.ids)],
         })
         with self.assertRaises(psycopg2.IntegrityError):
-            with mute_logger('odoo.sql_db'), self.cr.savepoint():
+            with mute_logger('odoo.sql_db'):
                 record_b.unlink()
         # Test A is still cascade.
         record_a.unlink()
