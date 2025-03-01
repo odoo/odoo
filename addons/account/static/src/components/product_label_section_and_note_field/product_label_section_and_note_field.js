@@ -142,7 +142,11 @@ export class ProductLabelSectionAndNoteField extends Component {
 
     updateLabel(value) {
         this.props.record.update({
-            name: value ? value : this.productName,
+            name: (
+                this.productName && value && this.productName.concat("\n", value)
+                || !value && this.productName
+                || value
+            ),
         });
     }
 }
