@@ -276,8 +276,6 @@
                 <filter string="Future" name="filter_date_deadline_future"
                         domain="[('date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
-                <separator/>
-                <filter string="Done" name="filter_archived" domain="[('active', '=', False)]"/>
                 <separator />
                 <group expand="0" string="Group By">
                     <filter string="Deadline" name="date_deadline" context="{'group_by': 'date_deadline'}"/>
