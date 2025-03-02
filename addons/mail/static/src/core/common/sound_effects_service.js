@@ -20,7 +20,7 @@ export class SoundEffects {
                 defaultVolume: 0.15,
                 path: "/mail/static/src/audio/call-invitation",
             },
-            "new-message": { path: "/mail/static/src/audio/new-message", defaultVolume: 0.5 },
+            "new-message": { defaultVolume: 1, path: "/mail/static/src/audio/new-message" },
             "screen-sharing": {
                 defaultVolume: 0.75,
                 path: "/mail/static/src/audio/screen-sharing",
