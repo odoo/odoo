@@ -1220,10 +1220,8 @@ test("can open messaging menu even if messaging is not initialized", async () =>
     patchBrowserNotification("default");
     await startServer();
     const def = new Deferred();
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            await def;
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", async () => {
+        await def;
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");

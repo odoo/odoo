@@ -1390,3 +1390,5 @@ export async function withUser(userId, fn) {
     }
     return result;
 }
+
+mockRpcRegistry.add("/web/dataset/call_kw/ir.http/lazy_session_info", () => ({}));

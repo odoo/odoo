@@ -88,13 +88,22 @@ test("Only necessary requests are made when creating a new chat", async () => {
     await start({ authenticateAs: false });
     await contains(".o-livechat-LivechatButton");
     await waitForSteps([
+        // lazy_session_info is called because mail/core/web is loaded in test bundle
+        `/web/dataset/call_kw/ir.http/lazy_session_info - ${JSON.stringify({
+            model: "ir.http",
+            method: "lazy_session_info",
+            args: [[]],
+            kwargs: {
+                context: {
+                    lang: "en",
+                    tz: "taht",
+                    uid: serverState.userId,
+                    allowed_company_ids: [1],
+                },
+            },
+        })}`,
         `/mail/action - ${JSON.stringify({
-            fetch_params: [
-                "failures", // called because mail/core/web is loaded in test bundle
-                "systray_get_activities", // called because mail/core/web is loaded in test bundle
-                "init_messaging",
-                ["init_livechat", livechatChannelId],
-            ],
+            fetch_params: [["init_livechat", livechatChannelId]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -137,19 +146,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 temporary_id: 0.8200000000000001,
             },
         })}`,
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures", // called because mail/core/web is loaded in test bundle
-                "systray_get_activities", // called because mail/core/web is loaded in test bundle
-                "init_messaging",
-            ],
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
-            },
-        })}`,
     ]);
 });
 
@@ -157,8 +153,8 @@ test("do not create new thread when operator answers to visitor", async () => {
     const pyEnv = await startServer();
     const livechatChannelId = await loadDefaultEmbedConfig();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    onRpc("/im_livechat/get_session", async () => asyncStep("/im_livechat/get_session"));
-    onRpc("/mail/message/post", async () => asyncStep("/mail/message/post"));
+    onRpc("/im_livechat/get_session", () => asyncStep("/im_livechat/get_session"));
+    onRpc("/mail/message/post", () => asyncStep("/mail/message/post"));
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),

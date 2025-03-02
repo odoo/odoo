@@ -42,17 +42,18 @@ defineMailModels();
 test("sanity check", async () => {
     await startServer();
     onRpcBefore((route, args) => {
-        if (route.startsWith("/mail") || route.startsWith("/discuss")) {
+        if (route === "/mail/data" && args?.fetch_params?.includes("channels_as_member")) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
+        }
+        if (route.startsWith("/mail/inbox") || route.startsWith("/discuss")) {
+            asyncStep(`${route} - ${JSON.stringify(args)}`);
+        }
+        if (route.endsWith("lazy_session_info")) {
+            asyncStep("lazy_session_info");
         }
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitForSteps([`lazy_session_info`]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
@@ -1094,10 +1095,8 @@ test("out-of-focus notif on needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("init_messaging");
     });
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
@@ -1139,10 +1138,8 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             }
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("init_messaging");
     });
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
@@ -1182,10 +1179,8 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("init_messaging");
     });
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
@@ -1312,10 +1307,8 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("init_messaging");
     });
     await start();
     await openDiscuss();
@@ -1351,10 +1344,8 @@ test("out-of-focus notif on needaction message in group chat contributes only on
         channel_type: "group",
     });
     mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("init_messaging");
     });
     await start();
     await openDiscuss();
@@ -1387,10 +1378,8 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
     mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("init_messaging");
     });
     patchWithCleanup(OutOfFocusService.prototype, {
         _playSound() {
@@ -1440,14 +1429,12 @@ test("receive new message plays sound", async () => {
             return super.play(soundEffectName, ...args);
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("lazy_session_info");
     });
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
-    await waitForSteps(["init_messaging"]);
+    await waitForSteps(["lazy_session_info"]);
     // simulate receiving a new message with odoo out-of-focused
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1478,10 +1465,8 @@ test("should auto-pin chat when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("init_messaging");
     });
     await start();
     await openDiscuss();
