@@ -192,9 +192,12 @@ msgid "Get A Booth"
 msgstr "부스 예약하기"
 
 #. module: website_event_booth
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
-msgid "It's no longer possible to book a booth."
-msgstr "지금은 부스를 예약할 수 없습니다."
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#, python-format
+msgid "It looks like your email is linked to an existing account."
+msgstr ""
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
@@ -220,6 +223,11 @@ msgstr "메뉴 유형"
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "Phone"
 msgstr "전화번호"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
+msgid "Please Sign In."
+msgstr ""
 
 #. module: website_event_booth
 #. odoo-javascript

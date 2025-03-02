@@ -26,12 +26,12 @@
 # Irina Fedulova <istartlin@gmail.com>, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Martin Trigaux, 2023
-# Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Collex100, 2024
 # Nadia Martynova, 2024
 # Larissa Manderfeld, 2024
-# Wil Odoo, 2024
-# Ilya Rozhkov, 2024
+# Ilya Rozhkov, 2025
+# Wil Odoo, 2025
+# Сергей Шебанин <sergey@shebanin.ru>, 2025
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ilya Rozhkov, 2024\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,6 +103,17 @@ msgstr "# Выверенные счета-фактуры"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr "# Строки выверенного отчета"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "# счета поставщиков"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
+msgid "# of Digits"
+msgstr "Кол-во цифр"
 
 #. module: account
 #. odoo-python
@@ -11959,6 +11970,11 @@ msgid "Reconciliation Parts"
 msgstr "Части выверки"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "Создать новый счет от поставщика"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
@@ -16461,9 +16477,11 @@ msgstr "Созданный счет поставщика"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
@@ -16529,6 +16547,19 @@ msgstr "Продавец:"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "Продавцы"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
+"Счета поставщиков можно заранее создать на основе \n"
+"                заказов на закупку или накладных. Это помогает \n"
+"                контролировать счета от поставщика по черновым \n"
+"                документам в Odoo."
 
 #. module: account
 #. odoo-javascript
