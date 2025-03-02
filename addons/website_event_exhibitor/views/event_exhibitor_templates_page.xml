@@ -64,41 +64,6 @@
                 <span t-else="">Join us there to meet <b t-out="sponsor.partner_name"/>!</span>
             </div>
         </t>
-        <!-- SPONSOR JITSI + CLOSED/FULL ALERTS -->
-        <div t-if="sponsor.exhibitor_type == 'online' and sponsor.event_id.is_ongoing and sponsor.chat_room_id" class="d-flex flex-column">
-            <t t-if="not sponsor.is_in_opening_hours">
-                <div class="col-12 alert alert-warning rounded-0 text-center" role="alert">
-                    <span>Oops! This room is currently closed</span><br />
-                    Come back between
-                    <strong>
-                        <t t-out="sponsor.hour_from" t-options="{'widget': 'time'}"/>
-                        -
-                        <t t-out="sponsor.hour_to" t-options="{'widget': 'time'}"/>
-                    </strong> <span t-if="website_visitor_timezone != sponsor.event_id.date_tz">(<t t-out="event.date_tz"/>)</span>
-                    to meet them!
-                </div>
-            </t>
-            <t t-elif="sponsor.room_is_full">
-                <div class="col-12 alert alert-warning rounded-0 text-center" role="alert">
-                    <span>Oops! This room is full</span><br />Come back later to have a chat with us!
-                </div>
-            </t>
-            <t t-else="">
-                <div id="o_wsponsor_jitsi_iframe"/>
-                <div class="d-flex flex-row-reverse">
-                    <t t-call="website_jitsi.chat_room_join_button">
-                        <t t-set="_classes" t-value="'d-none'"/>
-                        <t t-set="room_name" t-value="sponsor.room_name"/>
-                        <t t-set="chat_room_id" t-value="sponsor.chat_room_id.id"/>
-                        <t t-set="auto_open" t-value="1"/>
-                        <t t-set="attach_to" t-value="'#o_wsponsor_jitsi_iframe'"/>
-                        <t t-set="max_capacity" t-value="sponsor.room_max_capacity"/>
-                        <t t-set="check_full" t-value="int(not option_can_edit)"/>
-                        <t t-set="jitsi_server_domain" t-value="sponsor.chat_room_id.jitsi_server_domain"/>
-                    </t>
-                </div>
-            </t>
-        </div>
         <!-- SPONSOR DESCRIPTION -->
         <div class="h5 m-3">
             About <t t-out="sponsor.name"/>

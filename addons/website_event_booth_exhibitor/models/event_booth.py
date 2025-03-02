@@ -42,10 +42,6 @@ class EventBooth(models.Model):
             # If confirmed from backend, we don't have _prepare_booth_registration_values
             if not values.get('name'):
                 values['name'] = self.partner_id.name
-            if self.booth_category_id.exhibitor_type == 'online':
-                values.update({
-                    'room_name': 'odoo-exhibitor-%s' % self.partner_id.name,
-                })
             sponsor_id = self.env['event.sponsor'].sudo().create(values)
         return sponsor_id.id
 
