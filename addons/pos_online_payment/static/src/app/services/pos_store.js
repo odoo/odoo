@@ -107,4 +107,17 @@ patch(PosStore.prototype, {
 
         return opData;
     },
+    async setPartnerToCurrentOrder(partner) {
+        super.setPartnerToCurrentOrder(partner);
+        // Only sync if it is an online payment
+        if (this.getOrder().online_payment_method_id) {
+            this.addPendingOrder([this.getOrder().id]);
+            await this.syncAllOrders({ partnerSync: true });
+        }
+    },
+    getSyncAllOrdersContext(orders, options = {}) {
+        const context = super.getSyncAllOrdersContext(...arguments);
+        context.partner_sync = options?.partnerSync;
+        return context;
+    },
 });

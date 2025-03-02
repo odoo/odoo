@@ -11,7 +11,7 @@ patch(PaymentScreen.prototype, {
         if (paymentMethod.is_online_payment) {
             this.currentOrder.date_order = luxon.DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
             this.pos.addPendingOrder([this.currentOrder.id]);
-            await this.pos.syncAllOrders();
+            await this.pos.syncAllOrders({ partnerSync: true });
         }
         return await super.addNewPaymentLine(...arguments);
     },
