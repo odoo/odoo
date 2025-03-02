@@ -58,7 +58,6 @@ msgid ""
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
 "הפקודת הייצור (MO) עדיין לא אושרה.\n"
-"\n"
 "מאושרת: הפקודת ייצור אושרה, חוקי המלאי והזמנת הרכיבים מופעלים.\n"
 "בתהליך: הייצור התחיל (על הפקודת ייצור או על פקודת העבודה - WO).\n"
 "לסגירה: הייצור הושלם, הפקודת ייצור צריכה להיסגר.\n"
@@ -109,7 +108,7 @@ msgstr "מס' עצי המוצר שהיו בשימוש"
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "%(producible_qty)s Ready"
-msgstr "מוכן"
+msgstr "%(producible_qty)s מוכן"
 
 #. module: mrp
 #. odoo-python
@@ -178,7 +177,7 @@ msgstr "'Work Order - %s' % object.name"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "(in"
-msgstr "בתוך"
+msgstr "(בתוך"
 
 #. module: mrp
 #. odoo-python
@@ -310,7 +309,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Backorders</span>"
-msgstr "<span class=\"o_stat_text\">Backorders</span>"
+msgstr "<span class=\"o_stat_text\">הזמנות חוזרות</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -320,7 +319,7 @@ msgstr "<span class=\"o_stat_text\">BoM Overview</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr "<span class=\"o_stat_text\">Child MO</span>"
+msgstr "<span class=\"o_stat_text\">הוראת יצור - בן</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -367,7 +366,7 @@ msgstr "<span class=\"o_stat_text\">ביצועים</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr "<span class=\"o_stat_text\">Product Moves</span>"
+msgstr "<span class=\"o_stat_text\">תנועות מוצר</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -378,17 +377,17 @@ msgstr "<span class=\"o_stat_text\">פסולים</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
-msgstr "<span class=\"o_stat_text\">Source MO</span>"
+msgstr "<span class=\"o_stat_text\">הוראת ייצור - אב</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr "<span class=\"o_stat_text\">Traceability</span>"
+msgstr "<span class=\"o_stat_text\">מעקב</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Unbuilds</span>"
-msgstr "<span class=\"o_stat_text\">Unbuilds</span>"
+msgstr "<span class=\"o_stat_text\">פרק</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -397,9 +396,8 @@ msgid ""
 "modify the quantities of components to consume for this manufacturing "
 "order.</span>"
 msgstr ""
-"<span class=\"text-muted\">Modifying the quantity to produce will also "
-"modify the quantities of components to consume for this manufacturing "
-"order.</span>"
+"<span class=\"text-muted\">שינוי הכמות לייצור ישנה גם את הכמויות של רכיבים "
+"לצריכה עבור הזמנה זו לייצור.</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -409,7 +407,7 @@ msgid ""
 "        </span>"
 msgstr ""
 "<span>\n"
-"            Components\n"
+"            רכיבים\n"
 "        </span>"
 
 #. module: mrp
@@ -465,17 +463,17 @@ msgstr "<strong class=\"mr8 oe_inline\">אל</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Actual Duration (minutes)</strong>"
-msgstr "<strong>Actual Duration (minutes)</strong>"
+msgstr "<strong>זמן בפועל (דקות)</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Barcode</strong>"
-msgstr "<strong>Barcode</strong>"
+msgstr "<strong>ברקוד</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Deadline:</strong><br/>"
-msgstr "<strong>Deadline:</strong><br/>"
+msgstr "<strong>מועד אחרון :</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -485,7 +483,7 @@ msgstr "<strong>תיאור:</strong><br/>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Duration (minutes)</strong>"
-msgstr "<strong>Duration (minutes)</strong>"
+msgstr "<strong>משך זמן (דקות)</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
@@ -515,12 +513,12 @@ msgstr "<strong>פעולה</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Product:</strong><br/>"
-msgstr "<strong>Product:</strong><br/>"
+msgstr "<strong>מוצר:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Quantity Producing:</strong><br/>"
-msgstr "<strong>Quantity Producing:</strong><br/>"
+msgstr "<strong>כמות מיוצרת:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
@@ -583,8 +581,8 @@ msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
 "                                Instead, it is used to decompose a BoM into its components when:"
 msgstr ""
-"A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
-"                                Instead, it is used to decompose a BoM into its components when:"
+"לא מייצרים מסמך הנדסי (BoM) מסוג ערכה באמצעות הזמנה לייצור.<br/>\n"
+"במקום זאת, הוא משמש לפירוק מסמך הנדסי לרכיביו כאשר:"
 
 #. module: mrp
 #. odoo-python
@@ -599,8 +597,7 @@ msgstr "הוראת ייצור כבר בוצעה או בוטלה."
 #, python-format
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr ""
-"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr " לא ניתן להגדיר כללי הזמנה אוטומטיים עבור מוצר עם עץ מוצר מסוג ערכה."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -723,17 +720,17 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Allocation"
-msgstr "Allocation"
+msgstr "הקצאה"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report"
-msgstr "Allocation Report"
+msgstr "דוח הקצאות"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report Labels"
-msgstr "Allocation Report Labels"
+msgstr "תוויות דוח הקצאה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_reception_report
@@ -775,7 +772,7 @@ msgstr "מותר"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr "Allowed to Reserve Production"
+msgstr "מותר לשמר ייצור "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
@@ -800,8 +797,7 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
-"Alternative workcenters that can be substituted to this one in order to "
-"dispatch production"
+"עמדות עבודה אלטרנטיביות שניתן להחליף לעמדות עבודה אלו על מנת לשלוח ייצור"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild

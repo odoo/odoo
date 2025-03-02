@@ -12,7 +12,6 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Claudia Baisan, 2024
-# Martin Trigaux, 2024
 # Larisa_nexterp, 2024
 # Corina Calin, 2024
 # Maria Muntean, 2024
@@ -22,9 +21,10 @@
 # Betty Keresztesi, 2024
 # Lyall Kindmurr, 2024
 # Larisa Pop, 2024
-# Wil Odoo, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2025
+# Wil Odoo, 2025
+# Martin Trigaux, 2025
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2025\n"
+"Last-Translator: Martin Trigaux, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,6 +96,17 @@ msgstr "# Facturi reconciliate"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr "Linii de extras reconciliate"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "# Facturi furnizor"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
+msgid "# of Digits"
+msgstr "# de Cifre"
 
 #. module: account
 #. odoo-python
@@ -11955,6 +11966,11 @@ msgid "Reconciliation Parts"
 msgstr "Părți Reconciliere"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "Înregistrați o nouă factură furnizor"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
@@ -16445,9 +16461,11 @@ msgstr "Factură furnizor creată"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
@@ -16513,6 +16531,15 @@ msgstr "Furnizor:"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "Furnizori"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
