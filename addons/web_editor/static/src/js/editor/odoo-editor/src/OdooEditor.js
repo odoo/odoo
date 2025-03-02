@@ -5016,29 +5016,41 @@ export class OdooEditor extends EventTarget {
         ev.stopPropagation();
     }
     _onTableMoveUpClick() {
-        if (this._rowUiTarget.previousSibling) {
+        const targetRow = this._rowUiTarget;
+        const prevRow = targetRow.previousElementSibling;
+        
+        if (prevRow) {
             // When moving the second row up, copy the widths of first row's td
             // elements to second row's td elements, as td widths are only
             // applied to the first row.
-            if (!this._rowUiTarget.previousSibling.previousSibling) {
-                this._rowUiTarget.childNodes.forEach((cell, index) => {
-                    cell.style.width = this._rowUiTarget.previousSibling.childNodes[index].style.width;
-                });
+            if (!prevRow.previousElementSibling) {
+                for (const [index, cell] of Array.from(targetRow.children).entries()) {
+                    const prevCell = prevRow.children[index]
+                    if(prevCell){
+                        cell.style.width = prevCell.style.width || '';
+                    }
+                }
             }
-            this._rowUiTarget.previousSibling.before(this._rowUiTarget);
+            prevRow.before(targetRow);
         }
     }
     _onTableMoveDownClick() {
-        if (this._rowUiTarget.nextSibling) {
+        const targetRow = this._rowUiTarget;
+        const nextRow = targetRow.nextElementSibling;
+        
+        if (nextRow) {
             // When moving the first row down, copy the widths of its td
             // elements to second row's td elements, as td widths are only
             // applied to the first row.
-            if (!this._rowUiTarget.previousSibling) {
-                this._rowUiTarget.nextSibling.childNodes.forEach((cell, index) => {
-                    cell.style.width = this._rowUiTarget.childNodes[index].style.width;
-                });
+            if (!targetRow.previousElementSibling) {
+                for (const [index, cell] of Array.from(nextRow.children).entries()) {
+                    const targetCell = targetRow.children[index]
+                    if(targetCell){
+                        cell.style.width = targetCell.style.width || '';
+                    }
+                }
             }
-            this._rowUiTarget.nextSibling.after(this._rowUiTarget);
+            nextRow.after(targetRow);
         }
     }
     _onTableMoveRightClick() {
