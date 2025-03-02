@@ -3,6 +3,7 @@
 # 	* account
 # 
 # Translators:
+# Martin Trigaux, 2025
 # Larissa Manderfeld, 2025
 # Wil Odoo, 2025
 # 
@@ -73,6 +74,17 @@ msgstr "# Abgestimmte Ausgangsrechnungen"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr "# Abgestimmte Kontoauszugszeilen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "# Lieferantenrechnungen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
+msgid "# of Digits"
+msgstr "# Nachkommastellen"
 
 #. module: account
 #. odoo-python
@@ -192,6 +204,8 @@ msgstr "%s (Kopie)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
 
@@ -6670,7 +6684,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "False"
-msgstr "Falsch"
+msgstr "False"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_aml_ir_filters
@@ -7677,7 +7691,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"Wenn das aktive Feld auf Falsch gesetzt ist, können Sie die "
+"Wenn das aktive Feld auf False gesetzt ist, können Sie die "
 "Zahlungsbedingungen ausblenden, ohne sie zu entfernen."
 
 #. module: account
@@ -12041,6 +12055,11 @@ msgid "Reconciliation Parts"
 msgstr "Abstimmungsteile"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "Eine neue Lieferantenrechnung erfassen"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Record"
 msgstr "Datensatz"
@@ -13154,14 +13173,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
-"Setzen Sie Aktiv auf Falsch, um das Konto-Stichwort auszublenden, ohne es zu"
-" entfernen."
+"Setzen Sie Aktiv auf False, um das Konto-Stichwort auszublenden, ohne es zu "
+"entfernen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
-"Setzen Sie Aktiv auf Falsch, um das Journal auszublenden, ohne es zu "
+"Setzen Sie Aktiv auf False, um das Journal auszublenden, ohne es zu "
 "entfernen."
 
 #. module: account
@@ -13169,7 +13188,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr ""
-"Setzen Sie Aktiv auf Falsch, um die Steuer auszublenden, ohne sie zu "
+"Setzen Sie Aktiv auf False, um die Steuer auszublenden, ohne sie zu "
 "entfernen."
 
 #. module: account
@@ -16086,7 +16105,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "True"
-msgstr "Wahr"
+msgstr "True"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -16638,9 +16657,11 @@ msgstr "Lieferantenrechnung erstellt"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 msgid "Vendor Bills"
@@ -16697,6 +16718,19 @@ msgstr "Lieferant:"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "Lieferanten"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
+"Lieferantenrechnungen können vorab auf Grundlage\n"
+"                von Bestellungen oder Lieferungen erstellt werden. Dies\n"
+"                ermöglicht Ihnen die Kontrolle über die Rechnungen,\n"
+"                die Sie von Lieferanten auf Grundlage der Rechnungsentwürfe in Odoo erhalten."
 
 #. module: account
 #. odoo-javascript
@@ -17585,8 +17619,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a posted document."
-msgstr "Sie können die Art eines gebuchten Dokuments nicht ändern."
+msgid "You cannot switch the type of a document which has been posted once."
+msgstr ""
+"Sie können die Art eines Dokuments nicht ändern, wenn es bereits gebucht "
+"wurde."
 
 #. module: account
 #. odoo-python

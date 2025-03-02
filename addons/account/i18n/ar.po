@@ -3,8 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2025
+# Martin Trigaux, 2025
 # Malaz Abuidris <msea@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,6 +76,17 @@ msgstr "عدد فواتير المبيعات التي تمت تسويتها "
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr "عدد بنود كشف الحساب المسواة "
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "عدد فواتير الموردين"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
+msgid "# of Digits"
+msgstr "عدد خانات الأرقام"
 
 #. module: account
 #. odoo-python
@@ -194,6 +206,8 @@ msgstr "%s (نسخة)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
 
@@ -11863,6 +11877,11 @@ msgid "Reconciliation Parts"
 msgstr "أجزاء التسوية"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "تسجيل فاتورة مورد جديدة"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Record"
 msgstr "السجل"
@@ -15761,6 +15780,10 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"تشغيل التنبيهات عند إنشاء الفواتير وأوامر المبيعات للشركاء الذين يتجاوز "
+"إجمالي المبالغ المستحقة القبض حداً معيناً."
+"                                      قم بتعيين قيمة أكبر من 0.0 لتفعيل "
+"التحقق من حد الائتمان "
 
 #. module: account
 #. odoo-python
@@ -16312,9 +16335,11 @@ msgstr "تم إنشاء فاتورة المورد "
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 msgid "Vendor Bills"
@@ -16371,6 +16396,19 @@ msgstr "المورد: "
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "الموردين"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
+"يمكن إنشاء فواتير الموردين مسبقاً حسب أوامر\n"
+"                الشراء أو الإيصالات. يتيح لك ذلك التحكم في الفواتير\n"
+"                التي تتلقاها من موردك وفقاً للمستند المسودة في أودو\n"
+"                في أودو. "
 
 #. module: account
 #. odoo-javascript
@@ -17184,8 +17222,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a posted document."
-msgstr "لا يمكنك تغيير نوع مستند مرحل. "
+msgid "You cannot switch the type of a document which has been posted once."
+msgstr ""
 
 #. module: account
 #. odoo-python

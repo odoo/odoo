@@ -4,12 +4,12 @@
 # 
 # Translators:
 # ILMIR <karamov@it-projects.info>, 2024
-# Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
 # Nadia Martynova, 2024
 # Martin Trigaux, 2025
-# Ilya Rozhkov, 2025
 # Collex100, 2025
+# Сергей Шебанин <sergey@shebanin.ru>, 2025
+# Ilya Rozhkov, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
@@ -71,6 +71,17 @@ msgstr "# Выверенные счета-фактуры"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr "# Строки выверенного отчета"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "# счета поставщиков"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
+msgid "# of Digits"
+msgstr "Кол-во цифр"
 
 #. module: account
 #. odoo-python
@@ -191,6 +202,8 @@ msgstr "%s (копировать)"
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
 
@@ -11957,6 +11970,11 @@ msgid "Reconciliation Parts"
 msgstr "Части выверки"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "Создать новый счет от поставщика"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Record"
 msgstr "Запись"
@@ -16496,9 +16514,11 @@ msgstr "Созданный счет поставщика"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 msgid "Vendor Bills"
@@ -16555,6 +16575,19 @@ msgstr "Продавец:"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "Продавцы"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
+"Счета поставщиков можно заранее создать на основе \n"
+"                заказов на закупку или накладных. Это помогает \n"
+"                контролировать счета от поставщика по черновым \n"
+"                документам в Odoo."
 
 #. module: account
 #. odoo-javascript
@@ -17422,8 +17455,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a posted document."
-msgstr "Вы не можете изменить тип размещенного документа."
+msgid "You cannot switch the type of a document which has been posted once."
+msgstr ""
 
 #. module: account
 #. odoo-python

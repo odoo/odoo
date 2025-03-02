@@ -8,7 +8,7 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2024
 # Josep Anton Belchi, 2024
 # marcescu, 2024
-# Quim - eccit <quim@eccit.com>, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
 # Ivan Espinola, 2024
 # jabiri7, 2024
@@ -196,8 +196,11 @@ msgid "Go back"
 msgstr "Tornar enrere"
 
 #. module: website_event_booth
+#. odoo-javascript
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
-msgid "It's no longer possible to book a booth."
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#, python-format
+msgid "It looks like your email is linked to an existing account."
 msgstr ""
 
 #. module: website_event_booth
@@ -224,6 +227,11 @@ msgstr "Tipus de menú"
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "Phone"
 msgstr "Telèfon"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
+msgid "Please Sign In."
+msgstr ""
 
 #. module: website_event_booth
 #. odoo-javascript

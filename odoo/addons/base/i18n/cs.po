@@ -6,9 +6,10 @@
 # Tomáš Píšek, 2024
 # Tereza Mokrá, 2024
 # Marta Wacławek, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2025
-# Jiří Podhorecký <jirka.p@volny.cz>, 2025
 # Wil Odoo, 2025
+# Stanislav Kurinec, 2025
+# Jiří Podhorecký <jirka.p@volny.cz>, 2025
+# Aleš Fiala <f.ales1@seznam.cz>, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -948,14 +949,10 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll_account
 msgid ""
 "\n"
-"Accounting Data for KSA Payroll Rules.\n"
+"Accounting Data for Saudi Arabia Payroll Rules.\n"
 "=======================================================\n"
 "\n"
 msgstr ""
-"\n"
-"Účetní data pro mzdové pravidla KSA.\n"
-"=============================================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll_account
@@ -1172,9 +1169,9 @@ msgstr ""
 msgid ""
 "\n"
 "Accounting reports for Bangladesh\n"
+"============================================\n"
+"- Corporate tax report\n"
 msgstr ""
-"\n"
-"Účetní výkazy pro Bangladéš\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -1473,10 +1470,8 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_pk_reports
 msgid ""
 "\n"
-"Accounting reports for Pakistan\n"
+"Accounting Reports for Pakistan (Profit and Loss report and Balance Sheet)\n"
 msgstr ""
-"\n"
-"Účetní výkazy pro Pákistán\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_reports
@@ -2735,7 +2730,9 @@ msgid ""
 "\n"
 "Bangladesh Payroll Rules.\n"
 "=========================\n"
-"\n"
+"- Salary rules calculation\n"
+"- Income tax credits handling\n"
+"- Introduced the income tax slabs calculations\n"
 msgstr ""
 
 #. module: base
@@ -4128,7 +4125,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_edi_pos
 msgid ""
 "\n"
-"E-invoice implementation for the Kingdom of Saudi Arabia (PoS)\n"
+"E-invoice implementation for Saudi Arabia; Integration with ZATCA (POS)\n"
 msgstr ""
 
 #. module: base
@@ -4335,7 +4332,12 @@ msgid ""
 "\n"
 "Egypt Payroll and End of Service rules.\n"
 "=======================================\n"
-"\n"
+"- Basic calculation\n"
+"- End of service calculation\n"
+"- Other inputs (overtime, salary attachments, etc.)\n"
+"- Social insurance calculation\n"
+"- End of service provisions\n"
+"- Tax break calculations and deductions\n"
 msgstr ""
 
 #. module: base
@@ -4938,6 +4940,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Funkční\n"
+"----------\n"
+"\n"
+"Tento modul přidává účetní funkce pro argentinskou lokalizaci, které představují minimální konfiguraci potřebnou pro fungování společnosti v Argentině a podle předpisů a směrnic AFIP (Administración Federal de Ingresos Públicos).\n"
+"\n"
+"Postupujte podle dalších kroků konfigurace pro výrobu:\n"
+"\n"
+"1. Přejděte do své společnosti a nakonfigurujte své DIČ a typ odpovědnosti AFIP.\n"
+"2. Přejděte do Účetnictví / Nastavení a nastavte účtový rozvrh, který budete chtít používat.\n"
+"3. Vytvořte si prodejní deníky s přihlédnutím k informacím o AFIP pokladně.\n"
+"\n"
+"Ukázková data pro testování:\n"
+"\n"
+"* Byly vytvořeny 3 společnosti, jedna pro každý typ odpovědnosti AFIP s nainstalovanou příslušnou účtovou osnovou. Vyberte si společnost, která vás opravňuje, abyste mohli provést testy:\n"
+"\n"
+"  * (AR) Responsable Inscripto\n"
+"  * (AR) Exento\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* Deník prodejů nastavený na Předtištěné faktury a faktury Expo ve všech společnostech\n"
+"* Příklady faktur a dalších dokladů již ověřených ve společnosti “(AR) Responsable Inscripto”.\n"
+"* Příklad partnerů pro různé typy odpovědnosti:\n"
+"\n"
+"  * ADHOC (IVA Responsable Inscripto)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
+"  * Odoo (Proveedor del Exterior)\n"
+"\n"
+"Nejdůležitější informace:\n"
+"\n"
+"* Účtová osnova nebude nainstalována automaticky, každá šablona CoA závisí na AFIP Odpovědnost společnosti, budete muset nainstalovat CoA pro vaše potřeby.\n"
+"* Při instalaci CoA se nebudou generovat žádné prodejní deníky, deníky si budete muset nastavit ručně.\n"
+"* Při vytváření faktury bude správně předvolen typ dokladu v závislosti na fiskální odpovědnosti vystavitele a příjemce dokladu a souvisejícího deníku.\n"
+"* Byl přidán typ účtu CBU a také ověření platnosti CBU.\n"
+"\n"
+"\n"
+"Technická stránka\n"
+"---------\n"
+"\n"
+"Tento modul přidává vzory i pole, které budou nakonec použity pro modul elektronické faktury. Zde je shrnutí hlavních funkcí:\n"
+"\n"
+"Kmenová data:\n"
+"\n"
+"* Účetní osnova: jedna pro každou odpovědnost AFIP, která se vztahuje k právnické osobě:\n"
+"\n"
+"  * Responsable Inscripto (RI)\n"
+"  * Exento (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* Argentinské daně a skupiny účtů (daně z přidané hodnoty s existujícími alikvotními částmi a dalšími typy).\n"
+"* Typy odpovědnosti AFIP\n"
+"* Daňové pozice (pro mapování daní)\n"
+"* Typy právních dokladů v Argentině\n"
+"* Typy identifikačních dokladů platné v Argentině.\n"
+"* Kódy AFIP zemí a kódy DPH zemí pro právnické osoby, fyzické osoby a další.\n"
+"* Kódy měny AFIP\n"
+"* Kódy měrných jednotek AFIP\n"
+"* Partneři: a AFIP, které jsou uvedeny v příloze č. 1.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -5691,12 +5754,9 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_pos
 msgid ""
 "\n"
-"K.S.A. POS Localization\n"
-"=======================================================\n"
+"Saudi Arabia POS Localization\n"
+"===========================================================\n"
 msgstr ""
-"\n"
-"Lokalizace PoS pro Spojené arabské emiráty\n"
-"=======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr_recruitment
@@ -5745,13 +5805,15 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
 msgid ""
 "\n"
-"Kingdom of Saudi Arabia Payroll and End of Service rules.\n"
+"Saudi Arabia Payroll and End of Service rules.\n"
 "===========================================================\n"
-"\n"
+"- Basic Calculation\n"
+"- End of Service Calculation\n"
+"- Other Input Rules (Overtime, Salary Attachments, etc.)\n"
+"- Split Structures for EOS and Monthly Salaries\n"
+"- GOSI Employee Deduction\n"
+"- Unpaid leaves\n"
 msgstr ""
-"\n"
-"Mzdová pravidla a pravidla ukončení služby pro Království saudské Arábie.\n"
-"====================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -6708,8 +6770,30 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa
 msgid ""
 "\n"
-"Odoo Arabic localization for most Saudi Arabia.\n"
+"Saudi Arabia Accounting Module\n"
+"===========================================================\n"
+"Saudi Arabia Accounting Basic Charts and Localization\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Vat Filling Report\n"
+"- Withholding Tax Report\n"
+"- Fiscal Positions\n"
 msgstr ""
+"\n"
+"Účetní modul Saúdská Arábie\n"
+"===========================================================\n"
+"Saúdská Arábie Základní tabulky a lokalizace účetnictví\n"
+"\n"
+"Aktiva:\n"
+"\n"
+"- Účtová osnova\n"
+"- Daně\n"
+"- Výkaz o plnění DPH\n"
+"- Výkaz o srážkové dani\n"
+"- Fiskální pozice\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -6881,6 +6965,8 @@ msgid ""
 "\n"
 "Pakistan Payroll and End of Service rules\n"
 "=========================================\n"
+"- Basic salaries calculations.\n"
+"- Tax bracket calculations/deductions\n"
 msgstr ""
 
 #. module: base
@@ -7446,6 +7532,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"Španělské účetní tabulky (PGCE 2008).\n"
+"=======================================\n"
+"\n"
+"* Definuje následující tabulku šablon účtů:\n"
+"* Španělská obecná účtová osnova 2008\n"
+"* Španělská obecná účtová osnova 2008 pro malé a střední společnosti\n"
+"* Španělská obecná účetní závěrka za rok 2008 pro sdružení\n"
+"* Definuje šablony DPH pro prodej a nákup \n"
+"* Definuje daňové šablony\n"
+"* Definuje fiskální pozice pro španělskou fiskální legislativu\n"
+"* Definuje daňové přiznání mod 111, 115 a 303\n"
+"\n"
+"5.3: Aktualizujte daně od 4. čtvrtletí 2024 podle BOE-A-2024-12944 (královský dekret 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -7998,8 +8098,19 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_eg
 msgid ""
 "\n"
-"This is the base module to manage the accounting chart for Egypt in Odoo.\n"
+"Egypt Accounting Module\n"
 "==============================================================================\n"
+"Egypt Accounting Basic Charts and Localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- VAT Return\n"
+"- Withholding Tax Report\n"
+"- Schedule Tax Report\n"
+"- Other Taxes Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 
 #. module: base
@@ -9432,9 +9543,20 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
 msgid ""
 "\n"
-"This module integrate with the ETA Portal to automatically sign and send your invoices to the tax Authority.\n"
-"Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
+"Egypt Tax Authority Invoice Integration\n"
+"==============================================================================\n"
+"Integrates with the ETA portal to automatically send and sign the Invoices to the Tax Authority.\n"
 msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
+msgid ""
+"\n"
+"            Egyptian Tax Authority Invoice Integration\n"
+"        "
+msgstr ""
+"\n"
+"Integrace faktur egyptského finančního úřadu"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_edi_tremol
@@ -9829,6 +9951,7 @@ msgid ""
 "\n"
 "United Arab Emirates Corporate Tax Report\n"
 "=======================================================\n"
+"Adds the Corporate Tax Report which can be accessed by going to Accounting > Reporting > Corporate Tax Report\n"
 msgstr ""
 
 #. module: base
@@ -9837,6 +9960,8 @@ msgid ""
 "\n"
 "United Arab Emirates Payroll and End of Service rules.\n"
 "=======================================================\n"
+"- Basic Salary Calculations\n"
+"- EOS Calculations\n"
 "\n"
 msgstr ""
 
@@ -9844,8 +9969,16 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_ae
 msgid ""
 "\n"
-"United Arab Emirates accounting chart and localization.\n"
+"United Arab Emirates Accounting Module\n"
 "=======================================================\n"
+"United Arab Emirates accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 
 #. module: base
@@ -16547,7 +16680,7 @@ msgstr "Britské území Indického oceánu"
 #: model:ir.model.fields,field_description:base.field_res_device__browser
 #: model:ir.model.fields,field_description:base.field_res_device_log__browser
 msgid "Browser"
-msgstr ""
+msgstr "Prohlížeč"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -20091,8 +20224,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
-msgid "E-Invoicing, Universal Business Language"
-msgstr "E-Faktura, Universal Business Language"
+msgid ""
+"\n"
+"        E-Invoicing, Universal Business Language\n"
+"    "
+msgstr ""
+"\n"
+"        E-Faktura, Universal Business Language\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_my_edi
@@ -20269,12 +20408,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
-msgid "Egyptian E-Invoice Integration"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
-msgid "Egyptian Tax Authority Invoice Integration"
+msgid "Egypt E-Invoicing"
 msgstr ""
 
 #. module: base
@@ -25489,13 +25623,13 @@ msgstr "K - FINANČNÍ A POJIŠŤOVACÍ ČINNOSTI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
-msgid "K.S.A. - Payroll"
-msgstr "K.S.A. - Mzdy"
+msgid "Saudi Arabia - Payroll"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
-msgid "K.S.A. - Payroll with Accounting"
-msgstr "K.S.A. - Mzdy s účetnictvím"
+msgid "Saudi Arabia - Payroll with Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
@@ -38146,18 +38280,33 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bd
 msgid ""
-"This is the base module to manage chart of accounts and localization for the"
-" Bangladesh "
+"\n"
+"This is the base module to manage the accounting chart for Bangladesh in Odoo\n"
+"============================\n"
+"Bangladesh accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of accounts\n"
+"- Taxes\n"
+"- Tax report\n"
 msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pk
 msgid ""
-"This is the base module to manage chart of accounts and localization for the"
-" Pakistan "
+"\n"
+"Pakistan Accounting Module\n"
+"=======================================================\n"
+"Pakistan accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+"- Withholding Tax Report\n"
 msgstr ""
-"Toto je základní modul pro správu účtové osnovy a účetní lokalizace pro "
-"Pákistán."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment
@@ -39209,13 +39358,18 @@ msgstr "U - ČINNOST EXTRATERITORÁLNÍCH ORGANIZACÍ A ORGÁNŮ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
-msgid "U.A.E. - Payroll"
-msgstr "U.A.E. - Mzdy"
+msgid "United Arab Emirates - Payroll"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
-msgid "U.A.E. - Payroll with Accounting"
-msgstr "U.A.E. - Mzdy s účetnictvím"
+msgid "United Arab Emirates - Payroll with Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ae_corporate_tax_report
+msgid "United Arab Emirates - Corporate Tax Report"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__uct
@@ -39546,11 +39700,6 @@ msgstr "Spojené arabské emiráty - účetnictví"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_reports
 msgid "United Arab Emirates - Accounting Reports"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_ae_corporate_tax_report
-msgid "United Arab Emirates - Corporate Tax Report"
 msgstr ""
 
 #. module: base
