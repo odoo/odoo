@@ -18,7 +18,7 @@
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
-        'web.assets_frontend': [
+        'web.assets_frontend_lazy': [
             'payment_authorize/static/src/scss/payment_authorize.scss',
             'payment_authorize/static/src/js/payment_form.js',
         ],
