@@ -34,7 +34,9 @@ import {
 
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { rpc } from "@web/core/network/rpc";
-import { press } from "@odoo/hoot-dom";
+import { press, waitFor } from "@odoo/hoot-dom";
+import { EventBus } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1448,7 +1450,7 @@ test("receive new message plays sound", async () => {
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await waitForSteps(["init_messaging"]);
-    // simulate receiving a new message with odoo out-of-focused
+    // simulate receiving a new message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -1459,6 +1461,87 @@ test("receive new message plays sound", async () => {
             thread_model: "discuss.channel",
         })
     );
+    await waitForSteps(["sound:new-message"]);
+});
+
+test("message sound on receiving new message (push notif enabled)", async () => {
+    // Simulate push notification allowed
+    patchWithCleanup(window.navigator, {
+        serviceWorker: Object.assign(new EventBus(), {
+            register: () => Promise.resolve(),
+            getRegistration: async () => ({
+                get pushManager() {
+                    return Promise.resolve({ getSubscription: async () => ({}) });
+                },
+            }),
+        }),
+    });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    mockService("mail.sound_effects", {
+        play(soundEffectName, ...args) {
+            asyncStep(`sound:${soundEffectName}`);
+            return super.play(soundEffectName, ...args);
+        },
+    });
+    onRpcBefore("/mail/data", async (args) => {
+        if (args.fetch_params.includes("init_messaging")) {
+            asyncStep("init_messaging");
+        }
+    });
+    await start();
+    await contains(".o_menu_systray i[aria-label='Messages']");
+    await waitForSteps(["init_messaging"]);
+    // simulate receiving a new message
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "New message",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await waitFor(".o-mail-ChatBubble .badge:contains(1)");
+    await waitForSteps(["sound:new-message"]);
+    // simulate message sound settings turned off
+    browser.localStorage.setItem("mail.user_setting.message_sound", false);
+    await animationFrame();
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "New message2",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await waitFor(".o-mail-ChatBubble .badge:contains(2)");
+    expect.verifySteps([]);
+    // simulate message sound settings turned on
+    browser.localStorage.setItem("mail.user_setting.message_sound", null);
+    browser.localStorage.removeItem("mail.user_setting.message_sound");
+    await withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "New message",
+                message_type: "comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await waitFor(".o-mail-ChatBubble .badge:contains(3)");
     await waitForSteps(["sound:new-message"]);
 });
 
