@@ -306,3 +306,52 @@ class TestRobustness(TransactionCase):
         self.assertEqual(receipt.state, 'done')
         self.assertEqual(move1.state, 'done')
         self.assertEqual(move2.state, 'done')
+
+    def test_clean_quants_synch(self):
+        """ Ensure the _clean_reservaion method align the quants on stock.move.line """
+        product_reservation_too_high = self.env['product.product'].create({
+            'name': 'Product Reservation',
+            'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.env['stock.quant']._update_available_quantity(product_reservation_too_high, self.stock_location, 10)
+        quant = self.env['stock.quant']._gather(product_reservation_too_high, self.stock_location)
+
+        move = self.env['stock.move'].create({
+            'name': 'test_clean_quants_synch',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product_reservation_too_high.id,
+            'product_uom_qty': 5,
+        })
+        move._action_confirm()
+        move._action_assign()
+
+        self.env['stock.quant']._update_reserved_quantity(product_reservation_too_high, self.stock_location, 2)
+        self.assertEqual(quant.reserved_quantity, 7)
+        self.env['stock.quant']._clean_reservations()
+        self.assertEqual(quant.reserved_quantity, 5)
+
+        self.env['stock.quant']._update_reserved_quantity(product_reservation_too_high, self.stock_location, -2)
+        self.assertEqual(quant.reserved_quantity, 3)
+        self.env['stock.quant']._clean_reservations()
+        self.assertEqual(quant.reserved_quantity, 5)
+
+        self.env['stock.quant']._update_reserved_quantity(product_reservation_too_high, self.stock_location, -2)
+        self.assertEqual(quant.reserved_quantity, 3)
+        move.picked = True
+        move._action_done()
+        self.assertEqual(quant.reserved_quantity, 0)        
+
+        product_without_move = self.env['product.product'].create({
+            'name': 'Product reserved without move',
+            'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.env['stock.quant']._update_available_quantity(product_without_move, self.stock_location, 10)
+        quant = self.env['stock.quant']._gather(product_without_move, self.stock_location)
+        self.env['stock.quant']._update_reserved_quantity(product_without_move, self.stock_location, 2)
+        
+        self.assertEqual(quant.reserved_quantity, 2)
+        self.env['stock.quant']._clean_reservations()
+        self.assertEqual(quant.reserved_quantity, 0)

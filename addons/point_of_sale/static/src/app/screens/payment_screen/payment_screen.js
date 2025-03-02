@@ -139,7 +139,10 @@ export class PaymentScreen extends Component {
         }
         if (result) {
             this.numberBuffer.reset();
-            if (paymentMethod.use_payment_terminal) {
+            if (
+                paymentMethod.use_payment_terminal &&
+                (paymentMethod.payment_terminal?.fast_payments ?? true)
+            ) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
             }

@@ -304,6 +304,14 @@ patch(PosOrder.prototype, {
             ) {
                 continue;
             }
+            if (
+                claimedReward.reward.program_id.program_type === "coupons" &&
+                this.lines.find(
+                    (rewardline) => rewardline.reward_id?.id === claimedReward.reward.id
+                )
+            ) {
+                continue;
+            }
             this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
         }
     },
@@ -749,6 +757,13 @@ patch(PosOrder.prototype, {
             const points = this._getRealCouponPoints(couponProgram.coupon_id);
             for (const reward of program.reward_ids) {
                 if (points < reward.required_points) {
+                    continue;
+                }
+                // Skip if the reward program is of type 'coupons' and there is already an reward orderline linked to the current reward to avoid multiple reward apply
+                if (
+                    reward.program_id.program_type === "coupons" &&
+                    this.lines.find((rewardline) => rewardline.reward_id?.id === reward.id)
+                ) {
                     continue;
                 }
                 if (auto && this.uiState.disabledRewards.has(reward.id)) {
