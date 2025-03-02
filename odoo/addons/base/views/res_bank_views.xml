@@ -94,6 +94,9 @@
                         </group>
                     </group>
                 </sheet>
+                <footer replace="0">
+                    <button name="action_archive_bank" type="object" string="Archive" class="btn btn-secondary"/>
+                </footer>
                 </form>
             </field>
         </record>
@@ -102,13 +105,14 @@
             <field name="name">res.partner.bank.list</field>
             <field name="model">res.partner.bank</field>
             <field name="arch" type="xml">
-                <list string="Bank Accounts" multi_edit="1">
+                <list string="Bank Accounts" multi_edit="1" decoration-muted="(not active)">
                     <field name="sequence" widget="handle"/>
                     <field name="acc_number"/>
-                    <field name="bank_name" string="Bank"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="partner_id"/>
-                    <field name="allow_out_payment" widget="boolean_toggle"/>
+                    <field name="bank_name" string="Bank" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="allow_out_payment" widget="boolean_toggle" optional="show"/>
+                    <field name="active" widget="boolean_toggle" optional="hide"/>
                 </list>
             </field>
         </record>
@@ -121,6 +125,8 @@
                     <field name="bank_name" filter_domain="['|', ('bank_name','ilike',self), ('acc_number','ilike',self)]" string="Bank Name"/>
                     <field name="company_id" invisible="context.get('company_hide', True)"/>
                     <field name="partner_id"/>
+                    <separator/>
+                    <filter name="inactive" string="Archived" domain="[('active','=',False)]" help="Show inactive bank account"/>
                 </search>
             </field>
         </record>

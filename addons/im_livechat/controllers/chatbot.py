@@ -70,7 +70,7 @@ class LivechatChatbotScriptController(http.Controller):
         store.add(
             "ChatbotStep",
             {
-                "id": (next_step.id, discuss_channel.id),
+                "id": (next_step.id, posted_message.id),
                 "isLast": next_step._is_last_step(discuss_channel),
                 "message": Store.one(posted_message, only_id=True),
                 "operatorFound": next_step.step_type == "forward_operator"

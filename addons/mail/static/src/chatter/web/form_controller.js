@@ -1,8 +1,11 @@
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
+
+import { useSubEnv } from "@odoo/owl";
+
+import { x2ManyCommands } from "@web/core/orm_service";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";
-import { x2ManyCommands } from "@web/core/orm_service";
-import { useSubEnv } from "@odoo/owl";
 
 patch(FormController.prototype, {
     setup() {
@@ -33,9 +36,8 @@ patch(FormController.prototype, {
 
     async onWillSaveRecord(record, changes) {
         if (record.resModel === "mail.compose.message") {
-            const parser = new DOMParser();
-            const htmlBody = parser.parseFromString(changes.body, "text/html");
-            const partnerElements = htmlBody.querySelectorAll('[data-oe-model="res.partner"]');
+            const doc = createDocumentFragmentFromContent(changes.body);
+            const partnerElements = doc.querySelectorAll('[data-oe-model="res.partner"]');
             const partnerIds = Array.from(partnerElements).map((element) =>
                 parseInt(element.dataset.oeId)
             );

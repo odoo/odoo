@@ -318,13 +318,16 @@ class TestAutoWaving(TransactionCase):
         self.assertEqual(len(wave_1.move_line_ids), 3)
         self.assertEqual(wave_1.picking_ids.partner_id, self.us_client)
         self.assertEqual(wave_1.move_line_ids.product_id, self.product_1)
-        # set quantity of a move line to 0 to check if it's correctly moved to another wave.
-        self.assertEqual(wave_1.move_line_ids.mapped('quantity'), [2.0, 3.0, 2.0])
-        modified_move_line = wave_1.move_line_ids[0]
+        # Set the quantity of the move line that is the only one in the picking to 0
+        # to check if it is correctly moved to another wave.
+        self.assertCountEqual(wave_1.move_line_ids.mapped('quantity'), [2.0, 3.0, 2.0])
+        modified_move_line = wave_1.picking_ids.filtered(lambda p: len(p.move_ids) == 1).move_line_ids
         modified_move_line.quantity = 0
-        self.assertEqual(wave_1.move_line_ids.mapped('quantity'), [0.0, 3.0, 2.0])
+        self.assertCountEqual(wave_1.move_line_ids.mapped('quantity'), [0.0, 3.0, 2.0])
         wave_1.action_done()
-        self.assertTrue(modified_move_line.batch_id.id not in [wave_1.id, False])
+        self.assertEqual(wave_1.state, 'done')
+        self.assertTrue(modified_move_line.batch_id.id)
+        self.assertNotEqual(modified_move_line.batch_id, wave_1)
 
         wave_2 = waves.filtered(lambda w: w.description == f'United States, {self.product_2.name}')
         self.assertEqual(len(wave_2), 1)

@@ -78,6 +78,9 @@ export class CallContextMenu extends Component {
             if (this.rtc.sfuClient) {
                 const { uploadStats, downloadStats, ...producerStats } =
                     await this.rtc.sfuClient.getStats();
+                if (!uploadStats || !downloadStats) {
+                    return;
+                }
                 const formattedUploadStats = {};
                 for (const value of uploadStats.values?.() || []) {
                     switch (value.type) {

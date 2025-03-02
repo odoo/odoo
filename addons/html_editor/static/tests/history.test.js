@@ -549,9 +549,10 @@ describe("shortcut", () => {
         expect.verifySteps([]);
         await insertText(editor, "a");
         expect.verifySteps([
+            // mutations for "a" insertion register new records for the current step
             "handleNewRecords",
             "contentUpdated",
-            "handleNewRecords",
+            // mutations for the hint removal are filtered out (no registered record)
             "contentUpdated",
             "onchange",
         ]);

@@ -941,9 +941,6 @@ class AccountTax(models.Model):
             incl_base_multiplicator = 1.0 if total_percentage == 1.0 else 1 - total_percentage
             return raw_base * self.amount / 100.0 / incl_base_multiplicator
 
-    def _eval_raw_base(self, quantity, price_unit, evaluation_context):
-        return quantity * price_unit
-
     def _get_tax_details(
         self,
         price_unit,
@@ -1039,11 +1036,7 @@ class AccountTax(models.Model):
                     'is_reverse_charge': True,
                 }
 
-        raw_base_evaluation_context = {
-            'taxes': sorted_taxes,
-            'precision_rounding': precision_rounding,
-        }
-        raw_base = self._eval_raw_base(quantity, price_unit, raw_base_evaluation_context)
+        raw_base = quantity * price_unit
         if rounding_method == 'round_per_line':
             raw_base = float_round(raw_base, precision_rounding=precision_rounding or self.env.company.currency_id.rounding)
 
@@ -1053,7 +1046,6 @@ class AccountTax(models.Model):
             'quantity': quantity,
             'raw_base': raw_base,
             'special_mode': special_mode,
-            'precision_rounding': precision_rounding,
         }
 
         # Define the order in which the taxes must be evaluated.
@@ -1089,6 +1081,11 @@ class AccountTax(models.Model):
                 base = manual_tax_amounts[str(tax.id)]['base_amount_currency']
             else:
                 total_tax_amount = sum(taxes_data[other_tax.id]['tax_amount'] for other_tax in tax_data['batch'])
+                total_tax_amount += sum(
+                    reverse_charge_taxes_data[other_tax.id]['tax_amount']
+                    for other_tax in taxes_data[tax.id]['batch']
+                    if other_tax.has_negative_factor
+                )
                 base = raw_base + tax_data['extra_base_for_base']
                 if tax_data['price_include'] and special_mode in (False, 'total_included'):
                     base -= total_tax_amount
@@ -1722,7 +1719,7 @@ class AccountTax(models.Model):
             'analytic_distribution': (
                 base_line_grouping_key['analytic_distribution']
                 if tax.analytic or not tax_rep.use_in_tax_closing
-                else {}
+                else False
             ),
             'account_id': tax_rep_data['account'].id or base_line_grouping_key['account_id'],
             'tax_ids': [Command.set(tax_rep_data['taxes'].ids)],
@@ -1847,7 +1844,7 @@ class AccountTax(models.Model):
                     index = (index + 1) % len(sorted_tax_reps_data)
 
         subsequent_taxes = self.env['account.tax']
-        subsequent_tags = self.env['account.account.tag']
+        subsequent_tags_per_tax = defaultdict(lambda: self.env['account.account.tag'])
         for tax_data in reversed(taxes_data):
             tax = tax_data['tax']
 
@@ -1861,7 +1858,9 @@ class AccountTax(models.Model):
                     tax_rep_data['tax_tags'] = tax_rep.tag_ids
                 if tax.include_base_amount:
                     tax_rep_data['taxes'] |= subsequent_taxes
-                    tax_rep_data['tax_tags'] |= subsequent_tags
+                    for other_tax, tags in subsequent_tags_per_tax.items():
+                        if tax != other_tax:
+                            tax_rep_data['tax_tags'] |= tags
 
                 # Add the accounting grouping_key to create the tax lines.
                 base_line_grouping_key = self._prepare_base_line_grouping_key(base_line)
@@ -1875,7 +1874,7 @@ class AccountTax(models.Model):
             if tax.is_base_affected:
                 subsequent_taxes |= tax
                 if include_caba_tags or tax.tax_exigibility == 'on_invoice':
-                    subsequent_tags |= tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'base').tag_ids
+                    subsequent_tags_per_tax[tax] |= tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'base').tag_ids
 
     @api.model
     def _add_accounting_data_in_base_lines_tax_details(self, base_lines, company, include_caba_tags=False):
@@ -2128,7 +2127,7 @@ class AccountTax(models.Model):
             tax_totals_summary['tax_amount_currency'] += values['tax_amount_currency']
             tax_totals_summary['tax_amount'] += values['tax_amount']
 
-        # Subtotals.
+        # Tax groups.
         untaxed_amount_subtotal_label = _("Untaxed Amount")
         subtotals = defaultdict(lambda: {
             'tax_groups': [],
@@ -2138,20 +2137,6 @@ class AccountTax(models.Model):
             'base_amount': 0.0,
         })
 
-        def subtotal_grouping_function(base_line, tax_data):
-            return tax_data['tax'].tax_group_id.preceding_subtotal or untaxed_amount_subtotal_label
-
-        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, subtotal_grouping_function)
-        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-        for preceding_subtotal, values in values_per_grouping_key.items():
-            preceding_subtotal = preceding_subtotal or untaxed_amount_subtotal_label
-            subtotal = subtotals[preceding_subtotal]
-            subtotal['base_amount_currency'] += values['total_excluded_currency']
-            subtotal['base_amount'] += values['total_excluded']
-            subtotal['tax_amount_currency'] += values['tax_amount_currency']
-            subtotal['tax_amount'] += values['tax_amount']
-
-        # Tax groups.
         def tax_group_grouping_function(base_line, tax_data):
             return tax_data['tax'].tax_group_id
 
@@ -2207,6 +2192,24 @@ class AccountTax(models.Model):
                 'group_label': tax_group.pos_receipt_label,
             })
 
+        # Subtotals.
+        if not subtotals:
+            subtotals[untaxed_amount_subtotal_label]
+
+        ordered_subtotals = sorted(subtotals.items(), key=lambda item: subtotals_order.get(item[0], 0))
+        accumulated_tax_amount_currency = 0.0
+        accumulated_tax_amount = 0.0
+        for subtotal_label, subtotal in ordered_subtotals:
+            subtotal['name'] = subtotal_label
+            subtotal['base_amount_currency'] = tax_totals_summary['base_amount_currency'] + accumulated_tax_amount_currency
+            subtotal['base_amount'] = tax_totals_summary['base_amount'] + accumulated_tax_amount
+            for tax_group in subtotal['tax_groups']:
+                subtotal['tax_amount_currency'] += tax_group['tax_amount_currency']
+                subtotal['tax_amount'] += tax_group['tax_amount']
+                accumulated_tax_amount_currency += tax_group['tax_amount_currency']
+                accumulated_tax_amount += tax_group['tax_amount']
+            tax_totals_summary['subtotals'].append(subtotal)
+
         # Cash rounding
         cash_rounding_lines = [base_line for base_line in base_lines if base_line['special_type'] == 'cash_rounding']
         if cash_rounding_lines:
@@ -2242,7 +2245,7 @@ class AccountTax(models.Model):
                     max_subtotal, max_tax_group = max(
                         [
                             (subtotal, tax_group)
-                            for subtotal in subtotals.values()
+                            for subtotal in tax_totals_summary['subtotals']
                             for tax_group in subtotal['tax_groups']
                         ],
                         key=lambda item: item[1]['tax_amount_currency'],
@@ -2253,12 +2256,6 @@ class AccountTax(models.Model):
                     max_subtotal['tax_amount'] += cash_rounding_base_amount
                     tax_totals_summary['tax_amount_currency'] += cash_rounding_base_amount_currency
                     tax_totals_summary['tax_amount'] += cash_rounding_base_amount
-
-        # Flat the subtotals.
-        ordered_subtotals = sorted(subtotals.items(), key=lambda item: subtotals_order.get(item[0], 0))
-        for subtotal_label, subtotal in ordered_subtotals:
-            subtotal['name'] = subtotal_label
-            tax_totals_summary['subtotals'].append(subtotal)
 
         # Subtract the cash rounding from the untaxed amounts.
         cash_rounding_base_amount_currency = tax_totals_summary.get('cash_rounding_base_amount_currency', 0.0)

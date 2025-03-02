@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.osv import expression
 from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
@@ -440,6 +440,18 @@ class ProductTemplate(models.Model):
                 combination_info,
             )
 
+        if (
+            product_or_template.type == 'combo'
+            and website.show_line_subtotals_tax_selection == 'tax_included'
+            and not all(
+                tax.price_include
+                for tax in product_or_template.combo_ids.combo_items_ids.product_id.taxes_id
+            )
+        ):
+            combination_info['tax_disclaimer'] = _(
+                "Final price may vary based on selection. Tax will be calculated at checkout."
+            )
+
         return combination_info
 
     def _get_additionnal_combination_info(self, product_or_template, quantity, date, website):
@@ -805,14 +817,14 @@ class ProductTemplate(models.Model):
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
-        monetary_options = {'display_currency': mapping['detail']['display_currency']}
         if combination_info.get('prevent_zero_price_sale'):
             website = self.env['website'].get_current_website()
-            price = website.prevent_zero_price_sale_text
-        else:
-            price = self.env['ir.qweb.field.monetary'].value_to_html(
-                combination_info['price'], monetary_options
-            )
+            return website.prevent_zero_price_sale_text, None
+
+        monetary_options = {'display_currency': mapping['detail']['display_currency']}
+        price = self.env['ir.qweb.field.monetary'].value_to_html(
+            combination_info['price'], monetary_options
+        )
         list_price = None
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(

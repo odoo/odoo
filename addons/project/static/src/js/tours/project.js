@@ -22,7 +22,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_project_kanban",
 },
 {
@@ -52,7 +51,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_group",
 },
 {
@@ -67,7 +65,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_group:eq(1)",
 },
 {
@@ -77,7 +74,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_project_tasks",
 },
 {
@@ -87,7 +83,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "edit Test",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_project_tasks",
 },
 {
@@ -97,7 +92,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_project_tasks",
 },
 {
@@ -107,7 +101,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "drag_and_drop(.o_kanban_group:eq(1))",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_kanban_project_tasks",
 },
 {
@@ -117,40 +110,32 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks",
 },
 {
-    trigger: ".o-mail-Chatter-topbar button:contains(Send message)",
+    trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-sendMessage",
     content: markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. Add new people to the followers' list to make them aware of the main changes about this task.")),
     tooltipPosition: "bottom",
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks",
 },
 {
-    trigger: "button:contains(Log note)",
+    trigger: "button.o-mail-Chatter-logNote",
     content: markup(_t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # <b>mentions</b> to reach an entire team.")),
     tooltipPosition: "bottom",
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks",
 },
 {
-    trigger: ".o-mail-Chatter-topbar button:contains(Activities)",
+    trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-activity",
     content: markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
     tooltipPosition: "bottom",
     run: "click",
 },
-{
-    trigger: ".o_form_project_tasks",
-    isActive: ["auto"],
-},
-
 {
     trigger: ".o_form_project_tasks",
 },
@@ -162,7 +147,6 @@ registry.category("web_tour.tours").add('project_tour', {
 },
 {
     trigger: ".o_form_project_tasks",
-    isActive: ["auto"],
 },
 {
     isActive: ["auto"],
@@ -205,7 +189,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "edit New Sub-task",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks .o_form_dirty",
 },
 {
@@ -216,7 +199,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_form_project_tasks",
 },
 {
@@ -231,7 +213,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".o_widget_subtask_kanban_list .subtask_list",
 },
 {
@@ -241,7 +222,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".subtask_create_input",
 },
 {
@@ -256,7 +236,6 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ".project_task_state_selection_menu.dropdown-menu",
 },
 {
@@ -265,7 +244,6 @@ registry.category("web_tour.tours").add('project_tour', {
     content: markup(_t("Mark the task as <b>Cancelled</b>")),
     run: "click",
 }, {
-    isActive: ["auto"],
     trigger: ".o-overlay-container:not(:visible):not(:has(.project_task_state_selection_menu))",
 }, {
     isActive: ["auto"],

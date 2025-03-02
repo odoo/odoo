@@ -35,7 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'chart_sk_646000',
                 'default_cash_difference_income_account_id': 'chart_sk_668000',
                 'default_cash_difference_expense_account_id': 'chart_sk_568000',
-                'account_sale_tax_id': 'vy_tuz_20',
-                'account_purchase_tax_id': 'vs_tuz_20',
+                'account_sale_tax_id': 'vy_tuz_23',
+                'account_purchase_tax_id': 'vs_tuz_23',
             },
         }

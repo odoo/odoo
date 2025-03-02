@@ -16,6 +16,10 @@
  *  | "string"
  *  | "symbol"
  *  | "undefined"} ArgumentPrimitive
+ *
+ * @typedef {[string, any[], any]} InteractionDetails
+ *
+ * @typedef {"interaction" | "query" | "server"} InteractionType
  */
 
 /**
@@ -45,15 +49,88 @@ const {
 
 const R_REGEX_PATTERN = /^\/(.*)\/([dgimsuvy]+)?$/;
 
+const interactionBus = new EventTarget();
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
 /**
+ * @param {Iterable<InteractionType>} types
+ * @param {(event: CustomEvent<InteractionDetails>) => any} callback
+ */
+export function addInteractionListener(types, callback) {
+    for (const type of types) {
+        interactionBus.addEventListener(type, callback);
+    }
+
+    return function removeInteractionListener() {
+        for (const type of types) {
+            interactionBus.removeEventListener(type, callback);
+        }
+    };
+}
+
+/**
+ * @param {InteractionType} type
+ * @param {string} name
+ * @param {any[]} args
+ * @param {any} returnValue
+ */
+export function dispatchInteraction(type, name, args, returnValue) {
+    interactionBus.dispatchEvent(
+        new CustomEvent(type, {
+            detail: [name, args, returnValue],
+        })
+    );
+    return returnValue;
+}
+
+const makeInteractorFn = (type, fn, name) =>
+    ({
+        [name](...args) {
+            const result = fn(...args);
+            if (result instanceof Promise) {
+                for (let i = 0; i < args.length; i++) {
+                    if (args[i] instanceof Promise) {
+                        // Get promise result for async arguments if possible
+                        args[i].then((result) => (args[i] = result));
+                    }
+                }
+                return result.then((promiseResult) =>
+                    dispatchInteraction(type, name, args, promiseResult)
+                );
+            } else {
+                return dispatchInteraction(type, name, args, result);
+            }
+        },
+    }[name]);
+
+/**
+ * @template {(...args: any[]) => any} T
+ * @param {InteractionType} type
+ * @param {T} fn
+ * @returns {T & {
+ *  as: (name: string) => T;
+ *  readonly silent: T;
+ * }}
+ */
+export function interactor(type, fn) {
+    return Object.assign(makeInteractorFn(type, fn, fn.name), {
+        as(alias) {
+            return makeInteractorFn(type, fn, alias);
+        },
+        get silent() {
+            return fn;
+        },
+    });
+}
+
+/**
  * @param {Node} node
  */
 export function getTag(node) {
-    return node?.nodeName.toLowerCase() || "";
+    return node?.nodeName?.toLowerCase() || "";
 }
 
 /**

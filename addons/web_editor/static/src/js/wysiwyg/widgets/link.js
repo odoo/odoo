@@ -238,11 +238,16 @@ export class Link extends Component {
      * @private
      */
     _correctLink(url) {
-        if (url.indexOf('tel:') === 0) {
-            url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
-        } else if (url && !url.startsWith('mailto:') && url.indexOf('://') === -1
-                    && url[0] !== '/' && url[0] !== '#' && url.slice(0, 2) !== '${') {
-            url = 'http://' + url;
+        if (
+            url &&
+            !url.startsWith("tel:") &&
+            !url.startsWith("mailto:") &&
+            !url.includes("://") &&
+            !url.startsWith("/") &&
+            !url.startsWith("#") &&
+            !url.startsWith("${")
+        ) {
+            url = "http://" + url;
         }
         return url;
     }
@@ -252,6 +257,10 @@ export class Link extends Component {
             // Text begins with a known protocol, accept it as valid URL.
             return text;
         } else {
+            const match = text.match(PHONE_REGEX);
+            if (match) {
+                return ("tel:" + match[0]).replace(/\s+/g, "");
+            }
             return deduceURLfromText(text, this.linkEl) || '';
         }
     }

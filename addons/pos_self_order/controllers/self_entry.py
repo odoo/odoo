@@ -12,12 +12,12 @@ class PosSelfKiosk(http.Controller):
         return request.render(
                 'pos_self_order.index',
                 {
+                    'access_token': config_access_token,
                     'session_info': {
                         **request.env["ir.http"].get_frontend_session_info(),
                         'currencies': request.env["ir.http"].get_currencies(),
                         'data': {
                             'config_id': pos_config.id,
-                            'access_token': config_access_token,
                             'self_ordering_mode': pos_config.self_ordering_mode,
                         },
                         "base_url": request.env['pos.session'].get_base_url(),

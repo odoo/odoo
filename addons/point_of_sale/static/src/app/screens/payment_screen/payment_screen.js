@@ -139,7 +139,10 @@ export class PaymentScreen extends Component {
         }
         if (result) {
             this.numberBuffer.reset();
-            if (paymentMethod.use_payment_terminal) {
+            if (
+                paymentMethod.use_payment_terminal &&
+                (paymentMethod.payment_terminal?.fast_payments ?? true)
+            ) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
             }
@@ -260,6 +263,14 @@ export class PaymentScreen extends Component {
         if (!this.check_cash_rounding_has_been_well_applied()) {
             return;
         }
+        const linesToRemove = this.currentOrder.lines.filter((line) => {
+            const rounding = line.product_id.uom_id.rounding;
+            const decimals = Math.max(0, Math.ceil(-Math.log10(rounding)));
+            return floatIsZero(line.qty, decimals);
+        });
+        for (const line of linesToRemove) {
+            this.currentOrder.removeOrderline(line);
+        }
         if (await this._isOrderValid(isForceValidate)) {
             // remove pending payments before finalizing the validation
             const toRemove = [];
@@ -301,8 +312,8 @@ export class PaymentScreen extends Component {
 
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
-                if (this.currentOrder.account_move) {
-                    await this.invoiceService.downloadPdf(this.currentOrder.account_move);
+                if (this.currentOrder.raw.account_move) {
+                    await this.invoiceService.downloadPdf(this.currentOrder.raw.account_move);
                 } else {
                     throw {
                         code: 401,

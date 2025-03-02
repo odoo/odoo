@@ -95,17 +95,12 @@ class AccountMoveSend(models.AbstractModel):
         if len(moves) > 1 and (partners_without_mail := moves.filtered(
                 lambda m: 'email' in moves_data[m]['sending_methods'] and not m.partner_id.email).partner_id
         ):
+            # should only appear in mass invoice sending
             alerts['account_missing_email'] = {
                 'level': 'warning',
                 'message': _("Partner(s) should have an email address."),
                 'action_text': _("View Partner(s)"),
                 'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)")),
-            }
-        if moves.invoice_pdf_report_id:
-            alerts['account_pdf_exist'] = {
-                'level': 'info',
-                'message': _("Some invoice(s) already have a generated pdf. The existing pdf will be used for sending. "
-                             "If you want to regenerate them, please delete the attachment from the invoice."),
             }
         return alerts
 
@@ -617,7 +612,7 @@ class AccountMoveSend(models.AbstractModel):
             self._prepare_invoice_pdf_report(batch)
 
         for invoice, invoice_data in invoices_data_pdf.items():
-            if not invoice_data.get('error'):
+            if not invoice_data.get('error') and not invoice.invoice_pdf_report_id:
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Cleanup the error if we don't want to block the regular pdf generation.

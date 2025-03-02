@@ -1,5 +1,6 @@
 import {
     Component,
+    markup,
     onMounted,
     onWillStart,
     onWillUnmount,
@@ -10,6 +11,8 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
+import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 
 export class HtmlViewer extends Component {
@@ -22,6 +25,7 @@ export class HtmlViewer extends Component {
     };
 
     setup() {
+        this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.iframeRef = useRef("iframe");
 
         this.state = useState({
@@ -95,12 +99,24 @@ export class HtmlViewer extends Component {
 
     /**
      * Allows overrides to process the value used in the Html Viewer.
+     * Typically, if the value comes from the html_field, it is already fixed
+     * (invalid and obsolete elements were replaced). If used as a standalone,
+     * the HtmlViewer has to handle invalid nodes and html upgrades.
      *
-     * @param { Markup } value
-     * @returns { Markup }
+     * @param { string | Markup } value
+     * @returns { string | Markup }
      */
     formatValue(value) {
-        return value;
+        if (this.props.config.isFixedValue) {
+            return value;
+        }
+        const newVal = this.htmlUpgradeManager.processForUpgrade(fixInvalidHTML(value), {
+            env: this.env,
+        });
+        if (instanceofMarkup(value)) {
+            return markup(newVal);
+        }
+        return newVal;
     }
 
     /**

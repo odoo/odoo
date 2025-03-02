@@ -374,7 +374,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
 
     def test_09_website_edit_link_popover(self):
-        self.start_tour('/@/', 'edit_link_popover', login='admin')
+        self.start_tour('/@/', 'edit_link_popover', login='admin', step_delay=500, timeout=180)
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
@@ -708,3 +708,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_website_font_family(self):
         self.start_tour("/", "website_font_family", login="admin")
+
+    def test_website_seo_notification(self):
+        self.start_tour(self.env['website'].get_client_action_url("/"), "website_seo_notification", login="admin")

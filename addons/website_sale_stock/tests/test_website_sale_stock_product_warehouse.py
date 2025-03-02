@@ -5,10 +5,13 @@ from odoo.tests import tagged
 
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
 from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleStockProductWarehouse(
+    TestSaleProductAttributeValueCommon, WebsiteSaleStockCommon
+):
 
     @classmethod
     def setUpClass(cls):
@@ -21,46 +24,23 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
         cls.website.company_id = cls.company
 
         # Set two warehouses (one was created on company creation)
-        cls.warehouse_1 = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)])
-        cls.warehouse_2 = cls.env['stock.warehouse'].create({
-            'name': 'Warehouse 2',
-            'code': 'WH2'
-        })
-
-        # Create two stockable products
-        cls.product_A = cls.env['product.product'].create({
-            'name': 'Product A',
-            'allow_out_of_stock_order': False,
-            'is_storable': True,
-            'default_code': 'E-COM1',
-        })
-
-        cls.product_B = cls.env['product.product'].create({
-            'name': 'Product B',
-            'allow_out_of_stock_order': False,
-            'is_storable': True,
-            'default_code': 'E-COM2',
-        })
-
+        cls.warehouse_1 = cls.env['stock.warehouse'].search([
+            ('company_id', '=', cls.company.id)
+        ])
+        cls.warehouse_2 = cls._create_warehouse()
+        cls.product_A = cls._create_product()
+        cls.product_B = cls._create_product()
         cls.test_env = cls.env['base'].with_context(
             website_id=cls.website.id,
             website_sale_stock_get_quantity=True,
         ).env
 
         # Add 10 Product A in WH1 and 15 Product 1 in WH2
-        quants = cls.env['stock.quant'].with_context(inventory_mode=True).create([{
-            'product_id': cls.product_A.id,
-            'inventory_quantity': qty,
-            'location_id': wh.lot_stock_id.id,
-        } for wh, qty in [(cls.warehouse_1, 10.0), (cls.warehouse_2, 15.0)]])
+        cls._add_product_qty_to_wh(cls.product_A.id, 10, cls.warehouse_1.lot_stock_id.id)
+        cls._add_product_qty_to_wh(cls.product_A.id, 15, cls.warehouse_2.lot_stock_id.id)
 
         # Add 10 Product 2 in WH2
-        quants |= cls.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': cls.product_B.id,
-            'inventory_quantity': 10.0,
-            'location_id': cls.warehouse_2.lot_stock_id.id,
-        })
-        quants.action_apply_inventory()
+        cls._add_product_qty_to_wh(cls.product_B.id, 10, cls.warehouse_2.lot_stock_id.id)
 
     def test_get_combination_info_free_qty_when_warehouse_is_set(self):
         self.website.warehouse_id = self.warehouse_2

@@ -51,11 +51,14 @@ publicWidget.registry.WebsiteSaleCheckout.include({
         }
         // TODO: move logic below to `_isDeliveryMethodReady` override on master
         const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
-        const deliveryContainer = this._getDeliveryMethodContainer(checkedRadio);
-        const hasWarning = (
-            checkedRadio.dataset.deliveryType === 'in_store'
-            && deliveryContainer.querySelector('[name="unavailable_products_warning"]')
-        );
+        let hasWarning = false;
+        if (checkedRadio) {
+            const deliveryContainer = this._getDeliveryMethodContainer(checkedRadio);
+            hasWarning = (
+                checkedRadio.dataset.deliveryType === 'in_store'
+                && deliveryContainer.querySelector('[name="unavailable_products_warning"]')
+            );
+        }
         return this._super.apply(this, arguments) && !hasWarning;
     },
 

@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import * as BillScreen from "@pos_restaurant/../tests/tours/utils/bill_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
@@ -13,6 +15,7 @@ import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -221,10 +224,16 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
         ].flat(),
 });
 
-const billScreenQRCode = {
-    content: "QR codes are shown",
-    trigger: ".pos-receipt #posqrcode",
-};
+const billScreenQRCodeData = [
+    {
+        content: "Unique code is shown",
+        trigger: ".pos-receipt .unique-code",
+    },
+    {
+        content: "Portal url is shown",
+        trigger: ".pos-receipt .portal-url",
+    },
+];
 
 registry.category("web_tour.tours").add("BillScreenTour", {
     steps: () =>
@@ -235,12 +244,12 @@ registry.category("web_tour.tours").add("BillScreenTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickControlButton("Bill"),
             // HACK: is_modal should be false so that the trigger can be found.
-            { ...negateStep(billScreenQRCode) },
+            billScreenQRCodeData.map(negateStep),
             BillScreen.closeBillPopup(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            billScreenQRCode,
+            ...billScreenQRCodeData,
         ].flat(),
 });
 
@@ -375,21 +384,244 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
 });
 
 registry.category("web_tour.tours").add("PreparationPrinterContent", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Product Test"),
+            Chrome.freezeDateTime(1739370000000),
             Dialog.confirm("Add"),
+            ProductScreen.totalAmountIs("10"),
+            {
+                content: "Check if order preparation contains always Variant",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.get_order();
+                    const data = posmodel.getOrderChanges();
+                    const changes = Object.values(data.orderlines);
+                    const printed = await posmodel.getRenderedReceipt(order, "New", changes);
+
+                    if (!printed.innerHTML.includes("Product Test (Value 1)")) {
+                        throw new Error("Product Test (Value 1) not found in printed receipt");
+                    }
+                    const receiptHeader = printed.querySelector(".receipt-header");
+                    if (!receiptHeader.innerHTML.includes("14:20")) {
+                        throw new Error(
+                            "Expected timestamp '14:20' not found in the printed receipt header"
+                        );
+                    }
+                },
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ComboSortedPreparationReceiptTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 5"),
+            combo.select("Combo Product 8"),
+            Dialog.confirm(),
+            {
+                content: "Check if order preparation has product correctly ordered",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.get_order();
+                    const data = posmodel.getOrderChanges();
+                    const changes = Object.values(data.orderlines);
+                    const printed = await posmodel.getRenderedReceipt(order, "New", changes);
+                    const orderLines = [...printed.querySelectorAll(".orderline")];
+                    const orderLinesInnerText = orderLines.map((orderLine) => orderLine.innerText);
+                    const expectedOrderLines = [
+                        "Office Combo",
+                        "Combo Product 2",
+                        "Combo Product 4",
+                        "Combo Product 6",
+                        "Office Combo",
+                        "Combo Product 1",
+                        "Combo Product 5",
+                        "Combo Product 8",
+                    ];
+                    for (let i = 0; i < orderLinesInnerText.length; i++) {
+                        if (!orderLinesInnerText[i].includes(expectedOrderLines[i])) {
+                            throw new Error("Order line mismatch");
+                        }
+                    }
+                },
+            },
+            ProductScreen.totalAmountIs("95.00"),
+            ProductScreen.clickPayButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange1", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            //Transfer sent product on table with same product sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
             ProductScreen.clickOrderButton(),
-            {
-                trigger:
-                    ".render-container .pos-receipt-body .product-name:contains('Product Test (Value 1)')",
-            },
-            {
-                trigger: ".render-container .pos-receipt-body .p-0:contains('Value 1')",
-            },
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange2", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Transfer sent product on table with same product not sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange3", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Transfer sent product on table without the same product
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange4", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Transfer not sent product on table with same product not sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.hasTable("5"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderLineHas("Product Test", "2"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderIsEmpty(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange5", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+
+            //Transfer not sent product on table with same product sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "1"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "1"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange6", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Transfer not sent product on table without the same product
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "1"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("MultiPreparationPrinter", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product 1"),
+            ProductScreen.clickOrderButton(),
+            Dialog.bodyIs("Failed in printing Detailed Receipt changes of the order"),
+            Dialog.confirm(),
         ].flat(),
 });

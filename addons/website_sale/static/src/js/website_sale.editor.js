@@ -622,7 +622,10 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         await new Promise(resolve => imgEl.addEventListener("load", resolve));
         const originalSize = Math.max(imgEl.width, imgEl.height);
         const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
-        const webpName = attachment.name.replace(/\.(jpe?g|png)$/i, ".webp");
+        const extension = attachment.name.match(/\.(jpe?|pn)g$/i)?.[0] ?? ".jpeg";
+        const webpName = attachment.name.replace(extension, ".webp");
+        const format = extension.substr(1).toLowerCase().replace(/^jpg$/, 'jpeg');
+        const mimetype = `image/${format}`;
         let referenceId = undefined;
         for (const size of [originalSize, ...smallerSizes]) {
             const ratio = size / originalSize;
@@ -630,7 +633,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             canvas.width = imgEl.width * ratio;
             canvas.height = imgEl.height * ratio;
             const ctx = canvas.getContext("2d");
-            ctx.fillStyle = "rgb(255, 255, 255)";
+            ctx.fillStyle = 'transparent';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(imgEl, 0, 0, imgEl.width, imgEl.height, 0, 0, canvas.width, canvas.height);
             const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [[{
@@ -649,12 +652,12 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             }
             referenceId = referenceId || resizedId; // Keep track of original.
             await this.orm.call("ir.attachment", "create_unique", [[{
-                name: webpName.replace(/\.webp$/, ".jpg"),
-                description: "format: jpeg",
-                datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
+                name: attachment.name,
+                description: `format: ${format}`,
+                datas: canvas.toDataURL(mimetype, 0.75).split(",")[1],
                 res_id: resizedId,
                 res_model: "ir.attachment",
-                mimetype: "image/jpeg",
+                mimetype: mimetype,
             }]]);
         }
     },

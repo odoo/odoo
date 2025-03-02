@@ -245,7 +245,9 @@ class PaymentTransaction(models.Model):
         if provider_code != 'worldline' or len(tx) == 1:
             return tx
 
-        payment_output = notification_data.get('payment', {}).get('paymentOutput', {})
+        # In case of failed payment, paymentResult could be given as a seperate key
+        payment_result = notification_data.get('paymentResult', notification_data)
+        payment_output = payment_result.get('payment', {}).get('paymentOutput', {})
         reference = payment_output.get('references', {}).get('merchantReference', '')
         if not reference:
             raise ValidationError(
@@ -273,8 +275,11 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'worldline':
             return
 
+        # In case of failed payment, paymentResult could be given as a seperate key
+        payment_result = notification_data.get('paymentResult', notification_data)
+        payment_data = payment_result.get('payment', {})
+
         # Update the provider reference.
-        payment_data = notification_data['payment']
         self.provider_reference = payment_data.get('id', '').rsplit('_', 1)[0]
 
         # Update the payment method.
@@ -309,15 +314,32 @@ class PaymentTransaction(models.Model):
             if self.tokenize and has_token_data:
                 self._worldline_tokenize_from_notification_data(payment_method_data)
             self._set_done()
-        else:  # Classify unsupported payment status as the `error` tx state.
-            _logger.info(
-                "Received data with invalid payment status (%(status)s) for transaction with"
-                " reference %(ref)s",
-                {'status': status, 'ref': self.reference},
-            )
-            self._set_error("Worldline: " + _(
-                "Received invalid transaction status %(status)s.", status=status
-            ))
+        else:
+            error_code = None
+            if errors := payment_data.get('statusOutput', {}).get('errors'):
+                error_code = errors[0].get('errorCode')
+            if status in const.PAYMENT_STATUS_MAPPING['cancel']:
+                self._set_canceled("Worldline: " + _(
+                    "Transaction cancelled with error code %(error_code)s.",
+                    error_code=error_code,
+                ))
+            elif status in const.PAYMENT_STATUS_MAPPING['declined']:
+                self._set_error("Worldline: " + _(
+                    "Transaction declined with error code %(error_code)s.",
+                    error_code=error_code,
+                ))
+            else:  # Classify unsupported payment status as the `error` tx state.
+                _logger.info(
+                    "Received data with invalid payment status (%(status)s) for transaction with "
+                    "reference %(ref)s.",
+                    {'status': status, 'ref': self.reference},
+                )
+                self._set_error("Worldline: " + _(
+                    "Received invalid transaction status %(status)s with error code "
+                    "%(error_code)s.",
+                    status=status,
+                    error_code=error_code,
+                ))
 
     def _worldline_tokenize_from_notification_data(self, pm_data):
         """ Create a new token based on the notification data.

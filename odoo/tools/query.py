@@ -77,7 +77,8 @@ class Query:
         # memoized result
         self._ids: tuple[int, ...] | None = None
 
-    def make_alias(self, alias: str, link: str) -> str:
+    @staticmethod
+    def make_alias(alias: str, link: str) -> str:
         """ Return an alias based on ``alias`` and ``link``. """
         return _generate_table_alias(alias, link)
 

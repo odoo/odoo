@@ -205,6 +205,11 @@
         .o_container_small .s_blog_posts_post_cover_col {
             display: none;
         }
+
+        // SCSS Fix for stable, to be removed on master.
+        div.dynamic_snippet_template div.row:last-child div.border-bottom {
+            border-bottom: none !important;
+        }
     }
 
     &.s_blog_post_card {

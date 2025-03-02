@@ -99,6 +99,9 @@ export class TablePlugin extends Plugin {
     setup() {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
+        this.addDomListener(this.editable, "keydown", (ev) => {
+            this._isKeyDown = true;
+        });
         this.onMousemove = this.onMousemove.bind(this);
     }
 
@@ -542,10 +545,15 @@ export class TablePlugin extends Plugin {
             // It will be retriggered with selectionchange
             return;
         }
-        this.deselectTable();
         const selection = selectionData.editableSelection;
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
+        if (!(startTd && startTd === endTd) || this._isKeyDown) {
+            delete this._isKeyDown;
+            // Prevent deselecting single cell unless selection changes
+            // through keyboard.
+            this.deselectTable();
+        }
         const startTable = ancestors(selection.startContainer, this.editable)
             .filter((node) => node.nodeName === "TABLE")
             .pop();

@@ -2,6 +2,7 @@ import logging
 import urllib.parse
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 
@@ -45,7 +46,11 @@ class ResPartner(models.Model):
     def _compute_nilvera_customer_status_and_alias_id(self):
         for partner in self:
             if partner.vat and partner.invoice_edi_format == 'ubl_tr':
-                partner.check_nilvera_customer()
+                try:
+                    partner.check_nilvera_customer()
+                except UserError:
+                    # In case of an internet connection issue, exit silently.
+                    continue
             else:
                 # Reset the alias if no VAT or UBL format changed.
                 partner.l10n_tr_nilvera_customer_status = 'not_checked'

@@ -319,6 +319,8 @@ export class PosOrder extends Base {
                 if (this.last_order_preparation_change.lines[line.preparationKey]) {
                     this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
                         line.get_quantity();
+                    this.last_order_preparation_change.lines[line.preparationKey]["note"] =
+                        line.getNote();
                 } else {
                     this.last_order_preparation_change.lines[line.preparationKey] = {
                         attribute_value_ids: line.attribute_value_ids.map((a) => ({

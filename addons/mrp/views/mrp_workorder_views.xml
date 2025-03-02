@@ -351,6 +351,8 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <kanban class="o_mrp_workorder_kanban" create="0" sample="1">
+                <field name="workcenter_id" invisible="True"/>
+                <field name="product_uom_id" invisible="True" force_save="True"/>
                 <field name="working_user_ids"/>
                 <field name="working_state"/>
                 <field name="date_start"/>

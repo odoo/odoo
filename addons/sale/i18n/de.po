@@ -2251,6 +2251,12 @@ msgid "Discount on lines"
 msgstr "Rabatt auf Auftragspositionen"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr "Rabatt - Auf Produkte mit den folgenden Steuern: %(taxes)s"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
 msgstr "Rabatt:"
@@ -2725,7 +2731,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr "Wenn wahr, kann die Verpackung für Verkaufsaufträge verwendet werden."
+msgstr "Wenn True, kann die Verpackung für Verkaufsaufträge verwendet werden."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2999,7 +3005,7 @@ msgstr "Ist das Produkt konfigurierbar?"
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
-"Ist wahr, wenn die Verkaufsauftragszeile aus einer Ausgabe oder einer "
+"Ist True, wenn die Verkaufsauftragszeile aus einer Ausgabe oder einer "
 "Lieferantenrechnung stammt."
 
 #. module: sale

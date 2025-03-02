@@ -1132,7 +1132,7 @@ export class MockServer {
                     case "day":
                         return date.toFormat("yyyy-MM-dd");
                     case "day_of_week":
-                        return date.weekday;
+                        return date.weekday % 7; // number of days after the first day of the week (assumed to be Sunday)
                     case "day_of_month":
                         return date.day;
                     case "day_of_year":
@@ -1170,7 +1170,7 @@ export class MockServer {
                     case "day":
                         return date.toFormat("yyyy-MM-dd");
                     case "day_of_week":
-                        return date.weekday;
+                        return date.weekday % 7; // number of days after the first day of the week (assumed to be Sunday)
                     case "day_of_month":
                         return date.day;
                     case "day_of_year":

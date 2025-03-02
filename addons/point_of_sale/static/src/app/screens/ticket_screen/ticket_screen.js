@@ -24,6 +24,7 @@ import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_ref
 import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
 import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 const NBR_BY_PAGE = 30;
 
@@ -77,10 +78,16 @@ export class TicketScreen extends Component {
 
         onMounted(this.onMounted);
         onWillStart(async () => {
-            if (this.pos._shouldLoadOrders()) {
+            if (this.pos._shouldLoadOrders() && !this.pos.loadingOrderState) {
                 try {
                     this.pos.setLoadingOrderState(true);
                     await this.pos.getServerOrders();
+                } catch (error) {
+                    if (error instanceof ConnectionLostError) {
+                        Promise.reject(error);
+                        return error;
+                    }
+                    throw error;
                 } finally {
                     this.pos.setLoadingOrderState(false);
                 }

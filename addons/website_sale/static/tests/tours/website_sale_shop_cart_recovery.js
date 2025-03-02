@@ -23,17 +23,28 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         },
     },
     {
+        content: "edit login input",
+        trigger: '.oe_login_form input[name="login"]',
+        run: "edit admin",
+    },
+    {
+        content: "edit password input",
+        trigger: '.oe_login_form input[name="password"]',
+        run: "edit admin",
+    },
+    {
+        content: "edit hidden redirect input",
+        trigger: '.oe_login_form input[name="redirect"]:hidden',
+        run() {
+            const orderId = browser.localStorage.getItem(orderIdKey);
+            const url = "/odoo/action-sale.action_orders/" + orderId;
+            this.anchor.value = url;
+        }
+    },
+    {
         content: "login as admin and go to the SO (backend)",
-        trigger: '.oe_login_form',
-        run: function () {
-            var orderId = browser.localStorage.getItem(orderIdKey);
-            var url = "/odoo/action-sale.action_orders/" + orderId;
-            var loginForm = document.querySelector('.oe_login_form');
-            loginForm.querySelector('input[name="login"]').value = "admin";
-            loginForm.querySelector('input[name="password"]').value = "admin";
-            loginForm.querySelector('input[name="redirect"]').value = url;
-            loginForm.submit();
-        },
+        trigger: ".oe_login_form .oe_login_buttons button:contains(log in)",
+        run: "click",
     },
     {
         content: "click action",
@@ -44,6 +55,10 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
         content: "click Send an Email",
         trigger: "span:contains(/^Send an email$/)",
         run: "click",
+    },
+    {
+        content: "Wait the modal is opened and form is fullfilled",
+        trigger: ".modal main .o_form_view_container [name=subject] input:value(/^S00/)",
     },
     {
         content: "select template",

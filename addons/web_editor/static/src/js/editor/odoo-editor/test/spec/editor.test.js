@@ -1813,7 +1813,7 @@ X[]
                             await deleteBackward(editor);
                             await insertText(editor, 'x');
                         },
-                        contentAfterEdit: '<div><p>cd</p><br><span class="a" data-oe-zws-empty-inline="">x[]\u200B</span></div>',
+                        contentAfterEdit: '<div><p>cd</p><br><span class="a">x[]</span></div>',
                         contentAfter: '<div><p>cd</p><br><span class="a">x[]</span></div>',
                     });
                 });
@@ -1835,7 +1835,7 @@ X[]
                             await deleteBackward(editor);
                             await insertText(editor, 'i');
                         },
-                        contentAfterEdit: '<p>uv<i style="color:red" data-oe-zws-empty-inline="">i[]\u200B</i>xy</p>',
+                        contentAfterEdit: '<p>uv<i style="color:red">i[]</i>xy</p>',
                         contentAfter: '<p>uv<i style="color:red">i[]</i>xy</p>',
                     });
                     await testEditor(BasicEditor, {
@@ -1854,7 +1854,7 @@ X[]
                             await deleteBackward(editor);
                             await insertText(editor, 'x');
                         },
-                        contentAfterEdit: '<p>ab<span class="style" data-oe-zws-empty-inline="">x[]\u200B</span>ef</p>',
+                        contentAfterEdit: '<p>ab<span class="style">x[]</span>ef</p>',
                         contentAfter: '<p>ab<span class="style">x[]</span>ef</p>',
                     });
                 });
@@ -2111,6 +2111,13 @@ X[]
                         contentBefore: `<p contenteditable="false">ab[]cdef</p>`,
                         stepFunction: deleteBackward,
                         contentAfter: `<p contenteditable="false">ab[]cdef</p>`,
+                    });
+                });
+                it('should delete only the button', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>a<a class="btn">[]</a></p>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<p>a[]</p>`,
                     });
                 });
             });
@@ -2964,7 +2971,7 @@ X[]
                         await deleteBackward(editor);
                         await insertText(editor, 'x');
                     },
-                    contentAfterEdit: '<div><p>ab <span class="style" data-oe-zws-empty-inline="">x[]\u200B</span> d</p></div>',
+                    contentAfterEdit: '<div><p>ab <span class="style">x[]</span> d</p></div>',
                     contentAfter: '<div><p>ab <span class="style">x[]</span> d</p></div>',
                 });
                 await testEditor(BasicEditor, {
@@ -2973,7 +2980,7 @@ X[]
                         await deleteBackward(editor);
                         await insertText(editor, 'x');
                     },
-                    contentAfterEdit: '<div><p>ab<span class="style" data-oe-zws-empty-inline="">x[]\u200B</span>d</p></div>',
+                    contentAfterEdit: '<div><p>ab<span class="style">x[]</span>d</p></div>',
                     contentAfter: '<div><p>ab<span class="style">x[]</span>d</p></div>',
                 });
                 await testEditor(BasicEditor, {
@@ -2982,7 +2989,7 @@ X[]
                         await deleteBackward(editor);
                         await insertText(editor, 'x');
                     },
-                    contentAfterEdit: '<div><p>ab <span class="style" data-oe-zws-empty-inline="">x[]\u200B</span> f</p></div>',
+                    contentAfterEdit: '<div><p>ab <span class="style">x[]</span> f</p></div>',
                     contentAfter: '<div><p>ab <span class="style">x[]</span> f</p></div>',
                 });
             });
@@ -5997,7 +6004,12 @@ X[]
                                             '<td>ef</td>' +
                                         '</tr></tbody></table>' +
                                         '<p>a]bc</p>',
-                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            stepFunction: async editor => {
+                                // Table selection happens on selectionchange
+                                // event which is fired in the next tick.
+                                await nextTick();
+                                editor.execCommand('applyColor', 'aquamarine', 'color');
+                            },
                             contentAfterEdit: unformat(`
                                 <p>
                                     a<font style="color: aquamarine;">[bc</font>
@@ -7813,6 +7825,11 @@ X[]
                         </div>
                     </div>
                     `),
+                    stepFunction: async (editor) => {
+                        // Table selection happens on selectionchange
+                        // event which is fired in the next tick.
+                        await nextTick();
+                    },
                     contentAfterEdit: unformat(`
                     <div data-oe-protected="true">
                         <div data-oe-protected="false">

@@ -58,6 +58,10 @@ class StockMove(models.Model):
             move.show_details_visible = True
         return res
 
+    def _compute_picked(self):
+       subcontracted_moves = self.filtered(lambda m: m.is_subcontract)
+       super(StockMove, self - subcontracted_moves)._compute_picked()
+
     def _set_quantity_done(self, qty):
         to_set_moves = self
         for move in self:
@@ -141,7 +145,7 @@ class StockMove(models.Model):
             for move in self:
                 if move.state in ('done', 'cancel') or not move.is_subcontract:
                     continue
-                move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel')).write({
+                move.move_orig_ids.production_id.with_context(from_subcontract=True).filtered(lambda p: p.state not in ('done', 'cancel')).write({
                     'date_start': move.date,
                     'date_finished': move.date,
                 })

@@ -16,13 +16,14 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, boundariesIn, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
+import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
     normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
+import { scrollTo } from "@web/core/utils/scrolling";
 
 /**
  * @typedef { Object } EditorSelection
@@ -157,7 +158,13 @@ export class SelectionPlugin extends Plugin {
 
     setup() {
         this.resetSelection();
-        this.addDomListener(this.document, "selectionchange", this.updateActiveSelection);
+        this.addDomListener(this.document, "selectionchange", () => {
+            this.updateActiveSelection();
+            const selection = this.document.getSelection();
+            if (selection.isCollapsed && this.isSelectionInEditable(selection)) {
+                scrollTo(closestElement(selection.focusNode));
+            }
+        });
         this.addDomListener(this.editable, "mousedown", (ev) => {
             if (ev.detail >= 3) {
                 this.correctTripleClick = true;
@@ -183,7 +190,8 @@ export class SelectionPlugin extends Plugin {
         const selection = this.getEditableSelection();
         const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
         const container = selection && closestElement(selection.anchorNode, containerSelector);
-        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(container);
+        const [anchorNode, anchorOffset] = getDeepestPosition(container, 0);
+        const [focusNode, focusOffset] = getDeepestPosition(container, nodeSize(container));
         this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
     }
 
@@ -386,17 +394,18 @@ export class SelectionPlugin extends Plugin {
     getSelectionData() {
         const selection = this.document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
-        const documentSelection = selection
-            ? Object.freeze({
-                  anchorNode: selection.anchorNode,
-                  anchorOffset: selection.anchorOffset,
-                  focusNode: selection.focusNode,
-                  focusOffset: selection.focusOffset,
-                  commonAncestorContainer: selection.rangeCount
-                      ? selection.getRangeAt(0).commonAncestorContainer
-                      : null,
-              })
-            : null;
+        const documentSelection =
+            selection?.anchorNode && selection?.focusNode
+                ? Object.freeze({
+                      anchorNode: selection.anchorNode,
+                      anchorOffset: selection.anchorOffset,
+                      focusNode: selection.focusNode,
+                      focusOffset: selection.focusOffset,
+                      commonAncestorContainer: selection.rangeCount
+                          ? selection.getRangeAt(0).commonAncestorContainer
+                          : null,
+                  })
+                : null;
         if (documentSelectionIsInEditable) {
             this.activeSelection = this.makeActiveSelection(selection);
         } else if (!this.activeSelection.anchorNode.isConnected) {
@@ -847,8 +856,10 @@ export class SelectionPlugin extends Plugin {
         }
     }
 
-    isSelectionInEditable({ anchorNode, focusNode }) {
+    isSelectionInEditable({ anchorNode, focusNode } = {}) {
         return (
+            !!anchorNode &&
+            !!focusNode &&
             this.editable.contains(anchorNode) &&
             (focusNode === anchorNode || this.editable.contains(focusNode))
         );
@@ -859,6 +870,8 @@ export class SelectionPlugin extends Plugin {
         if (documentSelectionIsInEditable) {
             return;
         }
+        // Manualy focusing the editable is necessary to avoid some non-deterministic error in the HOOT unit tests.
+        this.editable.focus();
         const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
         const selection = this.document.getSelection();
         if (selection) {

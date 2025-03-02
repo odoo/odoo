@@ -2235,6 +2235,12 @@ msgid "Discount on lines"
 msgstr "Sconti sulle righe"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+msgid "Discount- On products with the following taxes %(taxes)s"
+msgstr "Sconto - Su prodotti con le seguenti imposte %(taxes)s"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
 msgstr "Sconto:"
@@ -5934,9 +5940,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma'"
-" or 'Preventivo') or 'Ordine' }} {{ object.company_id.name }} (Ref {{ "
-"object.name or 'n/d' }})"
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

@@ -13,6 +13,7 @@ from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
 from odoo.tools import clean_context, float_round, groupby, lazy, single_email_re, str2bool, SQL
+from odoo.tools.image import image_data_uri
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
 
@@ -963,8 +964,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _get_additional_notification_information(self, line):
         # Only set the linked line id for combo items, not for optional products.
-        if line.combo_item_id:
-            return {'linked_line_id': line.linked_line_id.id}
+        if combo_item := line.combo_item_id:
+            infos = {'linked_line_id': line.linked_line_id.id}
+            # To sell a product type 'combo', one doesn't need to publish all combo choices. This
+            # causes an issue when public users access the image of each choice via the /web/image
+            # route. To bypass this access check, we send the raw image URL if the product is
+            # inaccessible to the current user.
+            if (
+                not combo_item.product_id.sudo(False).has_access('read')
+                and combo_item.product_id.image_128
+            ):
+                infos['image_url'] = image_data_uri(combo_item.product_id.image_128)
+            return infos
         return {}
 
     # ------------------------------------------------------
@@ -1694,11 +1705,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return None:
         """
         country = request.env["res.country"].search([
-            ('code', '=', address.pop('country'))
+            ('code', '=', address.pop('country')),
         ], limit=1)
-        state = request.env["res.country.state"].search([
-            ('code', '=', address.pop('state', ''))
-        ], limit=1)
+        if state_code := address.pop('state'):
+            state = request.env['res.country.state'].search([
+                ('code', '=', state_code),
+                ('country_id', '=', country.id),
+            ], limit=1)
+        else:
+            state = request.env['res.country.state']
         address.update(country_id=country.id, state_id=state.id)
 
     @route('/shop/update_address', type='json', auth='public', website=True)

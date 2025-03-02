@@ -423,6 +423,12 @@ class HolidaysRequest(models.Model):
             if not leave.date_from or not leave.date_to or not calendar:
                 result[leave.id] = (0, 0)
                 continue
+            if calendar.flexible_hours:
+                days = (leave.date_to - leave.date_from).days + (1 if not leave.request_unit_half else 0.5)
+                hours = min(leave.request_hour_to - leave.request_hour_from, calendar.hours_per_day) if leave.request_unit_hours \
+                    else ceil(days * calendar.hours_per_day)
+                result[leave.id] = (days, hours)
+                continue
             hours, days = (0, 0)
             if leave.employee_id:
                 if leave.employee_id.is_flexible and leave.leave_type_request_unit in ['day','half_day']:

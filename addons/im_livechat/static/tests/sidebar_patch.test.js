@@ -1,4 +1,4 @@
-import { waitForChannels, waitNotifications } from "@bus/../tests/bus_test_helpers";
+import { waitForChannels } from "@bus/../tests/bus_test_helpers";
 import {
     click,
     contains,
@@ -10,7 +10,7 @@ import {
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { asyncStep, Command, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
@@ -398,6 +398,9 @@ test("unknown livechat can be displayed and interacted with", async () => {
         livechat_operator_id: partnerId,
     });
     const env = await start();
+    env.services.bus_service.subscribe("discuss.channel/new_message", () =>
+        asyncStep("discuss.channel/new_message")
+    );
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
@@ -408,7 +411,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { text: "Hello" });
-    await waitNotifications([env, "discuss.channel/new_message"]);
+    await waitForSteps(["discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
     await click("[title='Unpin Conversation']", {

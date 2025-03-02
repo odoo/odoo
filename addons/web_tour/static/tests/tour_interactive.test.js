@@ -2,7 +2,7 @@
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, hover, leave, queryFirst, waitFor } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, disableAnimations, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
     contains,
@@ -58,18 +58,14 @@ beforeEach(() => {
             .at(0);
         return (nextTour && { name: nextTour.at(0) }) || false;
     });
-    onRpc("/web/dataset/call_kw/res.users/switch_tour_enabled", async () => {
-        return true;
-    });
-    onRpc("/web/dataset/call_kw/web_tour.tour/get_tour_json_by_name", async () => {
-        return {
-            name: "tour1",
-            steps: [
-                { trigger: "button.foo", run: "click" },
-                { trigger: "button.bar", run: "click" },
-            ],
-        };
-    });
+    onRpc("/web/dataset/call_kw/res.users/switch_tour_enabled", async () => true);
+    onRpc("/web/dataset/call_kw/web_tour.tour/get_tour_json_by_name", async () => ({
+        name: "tour1",
+        steps: [
+            { trigger: "button.foo", run: "click" },
+            { trigger: "button.bar", run: "click" },
+        ],
+    }));
 });
 
 test("points to next step", async () => {
@@ -349,11 +345,7 @@ test("perform edit on next step", async () => {
 });
 
 test("scrolling to next step should update the pointer's height", async (assert) => {
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView(options) {
-            super.scrollIntoView({ ...options, behavior: "instant" });
-        },
-    });
+    disableAnimations();
 
     const content = "Click this pretty button to increment this magnificent counter !";
     registry.category("web_tour.tours").add("tour_de_france", {
@@ -426,20 +418,20 @@ test("scrolling to next step should update the pointer's height", async (assert)
 });
 
 test("scroller pointer to reach next step", async () => {
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView(options) {
-            super.scrollIntoView({ ...options, behavior: "instant" });
-        },
-    });
+    disableAnimations();
 
     registry.category("web_tour.tours").add("tour_des_flandres", {
-        steps: () => [{ trigger: "button.inc", content: "Click to increment", run: "click" }],
+        steps: () => [
+            { trigger: "button.inc", content: "Click to increment", run: "click" },
+            { trigger: "button.test", run: "click" },
+        ],
     });
     class Root extends Component {
         static props = ["*"];
         static components = { Counter };
         static template = xml/*html*/ `
             <div class="scrollable-parent" style="overflow-y: scroll; height: 150px;">
+                <button class="test">Test me</button>
                 <div class="top-filler" style="height: 500px" />
                 <Counter />
                 <div class="bottom-filler" style="height: 500px" />
@@ -462,9 +454,72 @@ test("scroller pointer to reach next step", async () => {
     expect(".counter .value").toHaveText("0");
 
     await click("button.inc");
-    await animationFrame();
+    await advanceTime(1000);
 
     expect(".counter .value").toHaveText("1");
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await hover(".o_tour_pointer:empty");
+    await click(waitFor(".o_tour_pointer:contains(Scroll up to reach the next step.)"));
+    await advanceTime(1000);
+
+    await click("button.test");
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("scroller pointer to reach next step (X axis)", async () => {
+    patchWithCleanup(Element.prototype, {
+        scrollIntoView(options) {
+            super.scrollIntoView({ ...options, behavior: "instant" });
+        },
+    });
+
+    registry.category("web_tour.tours").add("tour_des_flandres", {
+        steps: () => [
+            { trigger: "button.inc", content: "Click to increment", run: "click" },
+            { trigger: "button.test", run: "click" },
+        ],
+    });
+    class Root extends Component {
+        static props = ["*"];
+        static components = { Counter };
+        static template = xml/*html*/ `
+            <div class="scrollable-parent d-flex flex-row" style="overflow-x: scroll; width: 300px;">
+                <button class="test">Test me</button>
+                <div class="left-filler" style="min-width: 500px" />
+                <Counter />
+                <div class="right-filler" style="min-width: 500px" />
+            </div>
+        `;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_des_flandres", { mode: "manual" });
+    await advanceTime(1000);
+
+    await hover(".o_tour_pointer:empty");
+    await click(waitFor(".o_tour_pointer:contains(Scroll right to reach the next step.)"));
+    await leave();
+    await advanceTime(1000);
+
+    await hover(".o_tour_pointer:empty");
+    await waitFor(".o_tour_pointer:contains(Click to increment)");
+
+    expect(".counter .value").toHaveText("0");
+
+    await click("button.inc");
+    await advanceTime(1000);
+
+    expect(".counter .value").toHaveText("1");
+    expect(".o_tour_pointer").toHaveCount(1);
+
+    await hover(".o_tour_pointer:empty");
+    await click(waitFor(".o_tour_pointer:contains(Scroll left to reach the next step.)"));
+    await advanceTime(1000);
+
+    await click("button.test");
+    await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
 });
 

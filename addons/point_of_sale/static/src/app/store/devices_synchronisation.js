@@ -123,7 +123,7 @@ export default class DevicesSynchronisation {
      * @param {Object} staticRecords - Records data that need to be synchronized.
      */
     processStaticRecords(staticRecords) {
-        return this.models.loadData(staticRecords, [], false, true);
+        return this.models.loadData(staticRecords, [], false);
     }
 
     /**
@@ -132,7 +132,7 @@ export default class DevicesSynchronisation {
      * @param {Object} dynamicRecords - Record write dates by ids and models.
      */
     processDynamicRecords(dynamicRecords) {
-        return this.models.loadData(dynamicRecords, [], false, true);
+        return this.models.loadData(dynamicRecords, [], false);
     }
 
     /**
@@ -143,7 +143,7 @@ export default class DevicesSynchronisation {
     processDeletedRecords(deletedRecords) {
         for (const [model, ids] of Object.entries(deletedRecords)) {
             const records = this.models[model].readMany(ids);
-            this.models[model].deleteMany(records, { silent: true });
+            this.models[model].deleteMany(records.filter(Boolean), { silent: true });
         }
     }
 

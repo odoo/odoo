@@ -12,10 +12,10 @@ class PosOrderLine(models.Model):
         if not bom:
             return super()._get_stock_moves_to_consider(stock_moves, product)
         boms, components = bom.explode(product, self.qty)
+        #Get a flat list of all bom_line_ids
+        bom_line_ids = [item for x in boms for item in x[0].bom_line_ids.ids]
         ml_product_to_consider = (product.bom_ids and [comp[0].product_id.id for comp in components]) or [product.id]
-        if len(boms) > 1:
-            return stock_moves.filtered(lambda ml: ml.product_id.id in ml_product_to_consider and ml.bom_line_id)
-        return stock_moves.filtered(lambda ml: ml.product_id.id in ml_product_to_consider and (ml.bom_line_id in bom.bom_line_ids))
+        return stock_moves.filtered(lambda ml: ml.product_id.id in ml_product_to_consider and (ml.bom_line_id.id in bom_line_ids))
 
 class PosOrder(models.Model):
     _inherit = "pos.order"

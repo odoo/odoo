@@ -367,82 +367,6 @@ const matchFilter = (filter, nodes, index) => {
 };
 
 /**
- * @param {string} query
- * @param {number} width
- * @param {number} height
- */
-const matchesQuery = (query, width, height) =>
-    query
-        .toLowerCase()
-        .split(/\s*,\s*/)
-        .some((orPart) =>
-            orPart
-                .split(/\s*\band\b\s*/)
-                .every((andPart) => matchesQueryPart(andPart, width, height))
-        );
-
-/**
- * @param {string} query
- * @param {number} width
- * @param {number} height
- */
-const matchesQueryPart = (query, width, height) => {
-    const [, key, value] = query.match(/\(\s*([\w-]+)\s*:\s*(.+)\s*\)/) || [];
-    let result = false;
-    if (key) {
-        switch (key) {
-            case "display-mode": {
-                result = value === mockedMatchMedia.DISPLAY_MODE;
-                break;
-            }
-            case "max-height": {
-                result = height <= $parseFloat(value);
-                break;
-            }
-            case "max-width": {
-                result = width <= $parseFloat(value);
-                break;
-            }
-            case "min-height": {
-                result = height >= $parseFloat(value);
-                break;
-            }
-            case "min-width": {
-                result = width >= $parseFloat(value);
-                break;
-            }
-            case "orientation": {
-                result = value === "landscape" ? width > height : width < height;
-                break;
-            }
-            case "pointer": {
-                switch (value) {
-                    case "coarse": {
-                        result = globalThis.ontouchstart !== undefined;
-                        break;
-                    }
-                    case "fine": {
-                        result = globalThis.ontouchstart === undefined;
-                        break;
-                    }
-                }
-                break;
-            }
-            case "prefers-color-scheme": {
-                result = value === mockedMatchMedia.COLOR_SCHEME;
-                break;
-            }
-            case "prefers-reduced-motion": {
-                result = value === mockedMatchMedia.REDUCED_MOTION;
-                break;
-            }
-        }
-    }
-
-    return query.startsWith("not") ? !result : result;
-};
-
-/**
  * @template T
  * @param {T} value
  * @param {(keyof T)[]} propsA
@@ -909,10 +833,6 @@ export function getCurrentDimensions() {
     return currentDimensions;
 }
 
-export function getDefaultRootNode() {
-    return getDefaultRoot();
-}
-
 /**
  * @param {Node} [node]
  * @returns {Document}
@@ -1186,37 +1106,6 @@ export function isNodeVisible(node) {
 }
 
 /**
- * @type {typeof matchMedia}
- */
-export function mockedMatchMedia(query) {
-    let onchange = null;
-    return {
-        addEventListener: (type, callback) => window.addEventListener("resize", callback),
-        get matches() {
-            return matchesQuery(query, window.innerWidth, window.innerHeight);
-        },
-        media: query,
-        get onchange() {
-            return onchange;
-        },
-        set onchange(value) {
-            value ||= null;
-            if (value) {
-                window.addEventListener("resize", value);
-            } else {
-                window.removeEventListener("resize", onchange);
-            }
-            onchange = value;
-        },
-        removeEventListener: (type, callback) => window.removeEventListener("resize", callback),
-    };
-}
-
-mockedMatchMedia.COLOR_SCHEME = "light";
-mockedMatchMedia.DISPLAY_MODE = "browser";
-mockedMatchMedia.REDUCED_MOTION = "reduce";
-
-/**
  * @param {Dimensions} dimensions
  * @returns {[number, number]}
  */
@@ -1304,19 +1193,45 @@ export function formatXml(value, options) {
 }
 
 /**
- * Returns the active element in the given document (or in the owner document of
- * the given node).
+ * Returns the active element in the given document. Further checks are performed
+ * in the following cases:
+ * - the given node is an iframe (checks in its content document);
+ * - the given node has a shadow root (checks in that shadow root document);
+ * - the given node is the body of an iframe (checks in the parent document).
  *
  * @param {Node} [node]
  */
 export function getActiveElement(node) {
-    const { activeElement } = getDocument(node);
-    if (activeElement.contentDocument) {
-        return getActiveElement(activeElement.contentDocument);
+    const document = getDocument(node);
+    const window = getWindow(node);
+    const { activeElement } = document;
+    const { contentDocument, shadowRoot } = activeElement;
+
+    if (contentDocument && contentDocument.activeElement !== contentDocument.body) {
+        // Active element is an "iframe" element (with an active element other than its own body):
+        if (contentDocument.activeElement === contentDocument.body) {
+            // Active element is the body of the iframe:
+            // -> returns that element
+            return contentDocument.activeElement
+        } else {
+            // Active element is something else than the body:
+            // -> get the active element inside the iframe document
+            return getActiveElement(contentDocument);
+        }
     }
-    if (activeElement.shadowRoot) {
-        return activeElement.shadowRoot.activeElement;
+
+    if (shadowRoot) {
+        // Active element has a shadow root:
+        // -> get the active element inside its root
+        return shadowRoot.activeElement;
     }
+
+    if (activeElement === document.body && window !== window.parent) {
+        // Active element is the body of an iframe:
+        // -> get the active element of its parent frame (recursively)
+        return getActiveElement(window.parent.document);
+    }
+
     return activeElement;
 }
 
@@ -1375,11 +1290,14 @@ export function getNextFocusableElement(options) {
  * @returns {HTMLIFrameElement | null}
  */
 export function getParentFrame(node) {
-    const nodeDocument = node.ownerDocument;
-    const view = nodeDocument.defaultView;
+    const document = getDocument(node);
+    if (!document) {
+        return null;
+    }
+    const view = document.defaultView;
     if (view !== view.parent) {
         for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
-            if (iframe.contentDocument === nodeDocument) {
+            if (iframe.contentWindow === view) {
                 return iframe;
             }
         }

@@ -221,6 +221,7 @@ test("properly handle case when action id does not exist", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction(4448);
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(`.modal .o_error_dialog`).toHaveCount(1);
     expect(".o_error_dialog .modal-body").toHaveText("The action 4448 does not exist");
 });
@@ -230,6 +231,7 @@ test("properly handle case when action path does not exist", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction("plop");
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(`.modal .o_error_dialog`).toHaveCount(1);
     expect(".o_error_dialog .modal-body").toHaveText('The action "plop" does not exist');
 });
@@ -239,6 +241,7 @@ test("properly handle case when action xmlId does not exist", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction("not.found.action");
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(`.modal .o_error_dialog`).toHaveCount(1);
     expect(".o_error_dialog .modal-body").toHaveText(
         'The action "not.found.action" does not exist'
@@ -631,7 +634,14 @@ test("action is removed while waiting for another action with selectMenu", async
             params: { description: "Id 1" },
         },
     ]);
-    defineMenus([{ id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" }]);
+    defineMenus([
+        {
+            id: 1,
+            name: "App1",
+            actionID: 1001,
+            xmlid: "menu_1",
+        },
+    ]);
 
     await mountWithCleanup(WebClient);
     // starting point: a kanban view

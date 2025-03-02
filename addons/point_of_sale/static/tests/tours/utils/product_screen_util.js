@@ -649,3 +649,14 @@ export function checkTaxAmount(amount) {
         trigger: `.tax:contains(${amount})`,
     };
 }
+
+export function addDiscount(discount) {
+    return [
+        Numpad.click("%"),
+        Numpad.isActive("%"),
+        discount
+            .toString()
+            .split("")
+            .flatMap((key) => Numpad.click(key)),
+    ].flat();
+}

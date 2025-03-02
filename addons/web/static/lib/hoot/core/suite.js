@@ -47,6 +47,11 @@ export class Suite extends Job {
         }
     }
 
+    cleanup() {
+        this.parent?.reporting.add({ suites: +1 });
+        this.callbacks.clear();
+    }
+
     increaseSuiteCount() {
         this.totalSuiteCount++;
         this.parent?.increaseSuiteCount();
@@ -57,14 +62,14 @@ export class Suite extends Job {
         this.parent?.increaseTestCount();
     }
 
-    resetIndex() {
+    reset() {
         this.currentJobIndex = 0;
 
         for (const job of this.jobs) {
             job.runCount = 0;
 
             if (job instanceof Suite) {
-                job.resetIndex();
+                job.reset();
             }
         }
     }
@@ -75,22 +80,5 @@ export class Suite extends Job {
     setCurrentJobs(jobs) {
         this.currentJobs = jobs;
         this.currentJobIndex = 0;
-    }
-
-    /**
-     * @override
-     * @type {Job["willRunAgain"]}
-     */
-    willRunAgain(child) {
-        if (this.config.multi) {
-            let count = this.runCount;
-            if (this.currentJobs.at(-1) === child) {
-                count++;
-            }
-            if (count < this.config.multi) {
-                return true;
-            }
-        }
-        return Boolean(this.parent?.willRunAgain(this));
     }
 }

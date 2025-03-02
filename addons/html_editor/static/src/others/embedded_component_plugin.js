@@ -183,6 +183,9 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     destroyRemovedComponents(infos) {
+        // Avoid registering mutations if removed hosts are handled in
+        // the same microtask as when they were removed.
+        this.dependencies.history.disableObserver();
         for (const info of infos) {
             if (!this.editable.contains(info.host)) {
                 const host = info.host;
@@ -206,6 +209,7 @@ export class EmbeddedComponentPlugin extends Plugin {
                 }
             }
         }
+        this.dependencies.history.enableObserver();
     }
 
     deepDestroyComponent({ host }) {

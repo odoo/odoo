@@ -33,7 +33,7 @@ class L10nBRWebsiteSale(WebsiteSale):
             }
             mandatory_fields -= {'street', 'city'}  # Brazil uses the base_extended_address fields added above
 
-        if 'vat' in mandatory_fields and not request.website._display_partner_b2b_fields():
+        if 'vat' in mandatory_fields:
             mandatory_fields -= {'vat', 'l10n_latam_identification_type_id'}
 
         return mandatory_fields

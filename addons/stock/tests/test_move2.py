@@ -2673,6 +2673,34 @@ class TestSinglePicking(TestStockCommon):
             ('Shell 2', 'LOT004', 2.0),
         ])
 
+    def test_onchange_picking_locations(self):
+        """
+        Check that changing the location/destination of a picking propagets the info
+        to the related moves.
+        """
+        new_location, new_destination = self.env['stock.location'].create([
+            {
+                'name': f'Super location',
+                'usage': 'internal',
+                'location_id': self.stock_location,
+            },
+            {
+                'name': f'Super destination',
+                'usage': 'internal',
+                'location_id': self.stock_location,
+            }
+        ])
+        with Form(self.env['stock.picking'].with_context(restricted_picking_type_code='internal')) as picking_form:
+            with picking_form.move_ids_without_package.new() as new_move:
+                new_move.product_id = self.product
+                new_move.product_uom_qty = 3.0
+            picking_form.location_id = new_location
+            picking_form.location_dest_id = new_destination
+        picking = picking_form.save()
+        self.assertRecordValues(picking.move_ids, [
+            { 'location_id': new_location.id, 'location_dest_id': new_destination.id }
+        ])
+
 
 class TestStockUOM(TestStockCommon):
     @classmethod
@@ -3626,3 +3654,26 @@ class TestAutoAssign(TestStockCommon):
         self.assertEqual(delivery_order_2.partner_id, partner_2)
         self.assertEqual(delivery_order_2.move_ids.mapped('product_id'), self.productA)
         self.assertEqual(delivery_order_2.move_ids.product_uom_qty, 1.0)
+
+    def test_description_picking_consistent_with_product_description(self):
+        """
+        Ensure the description_picking of a move matches the product template's
+        description in a multi-step reception process.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+
+        self.productA.product_tmpl_id.description_picking = 'transfer'
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'move_line_ids': [Command.create({
+                'product_id': self.productA.id,
+                'quantity': 1,
+                'description_picking': 'receipt',
+            })]
+        })
+        receipt.button_validate()
+
+        next_picking = receipt._get_next_transfers()
+        self.assertEqual(next_picking.move_ids.description_picking, 'transfer')

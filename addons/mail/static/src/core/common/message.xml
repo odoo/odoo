@@ -4,7 +4,7 @@
     <t t-name="mail.Message">
         <div t-if="message.isNotification" class="o-mail-NotificationMessage text-break mx-auto text-muted opacity-75 px-3 text-center smaller" t-on-click="onClickNotificationMessage"  t-att-class="props.className" t-ref="root">
             <i t-if="message.notificationIcon" t-attf-class="{{ message.notificationIcon }} me-1"/>
-            <span class="o-mail-NotificationMessage-author d-inline" t-if="message.author and !message.body.includes(escape(message.author.name))" t-esc="message.author.name"/> <t t-out="message.body"/>
+            <span class="o-mail-NotificationMessage-author d-inline" t-if="authorName and !message.body.includes(escape(authorName))" t-esc="authorName"/> <t t-out="message.body"/>
         </div>
         <ActionSwiper t-else="" onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative rounded-0"
@@ -197,8 +197,8 @@
 
 <t t-name="mail.Message.notification">
     <div t-if="message.thread?.eq(props.thread) and message.notifications.length > 0" class="mx-1">
-        <span class="o-mail-Message-notification cursor-pointer" t-att-class="message.failureNotifications.length > 0 ? 'text-danger' : text-600" role="button" tabindex="0" t-on-click="onClickNotification">
-            <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
+        <span class="o-mail-Message-notification cursor-pointer opacity-100-hover" t-att-class="message.failureNotifications.length > 0 ? 'text-danger opacity-75' : 'opacity-50'" role="button" tabindex="0" t-on-click="onClickNotification">
+            <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span class="fw-bold small" t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
         </span>
     </div>
 </t>

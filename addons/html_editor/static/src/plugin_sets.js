@@ -57,10 +57,10 @@ import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/colla
 import { CollaborationSelectionPlugin } from "./others/collaboration/collaboration_selection_plugin";
 import { DynamicPlaceholderPlugin } from "./others/dynamic_placeholder_plugin";
 import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
-import { ExcalidrawPlugin } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin";
 import { TableOfContentPlugin } from "@html_editor/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin";
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
+import { EditorVersionPlugin } from "./core/editor_version_plugin";
 
 /**
  * @typedef { Object } SharedMethods
@@ -106,6 +106,7 @@ export const CORE_PLUGINS = [
     DeletePlugin,
     DialogPlugin,
     DomPlugin,
+    EditorVersionPlugin,
     FormatPlugin,
     HistoryPlugin,
     InputPlugin,
@@ -168,7 +169,6 @@ export const COLLABORATION_PLUGINS = [
 
 export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedComponentPlugin,
-    ExcalidrawPlugin,
     TableOfContentPlugin,
     VideoPlugin,
 ];

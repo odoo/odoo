@@ -7,6 +7,8 @@ import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
+import { press } from "@odoo/hoot-dom";
+import { getContent } from "../_helpers/selection";
 
 test("should change the font size of a few characters", async () => {
     await testEditor({
@@ -178,4 +180,36 @@ test("should add style to a span parent of an inline", async () => {
             `[bc]`
         )}</span>d</p>`,
     });
+});
+
+test("should apply font size on top of `u` and `s` tags", async () => {
+    await testEditor({
+        contentBefore: `<p>a<u>[b]</u>c</p>`,
+        stepFunction: setFontSize("18px"),
+        contentAfter: `<p>a<span style="font-size: 18px;"><u>[b]</u></span>c</p>`,
+    });
+});
+
+test("should apply font size on topmost `u` or `s` tags if multiple applied", async () => {
+    await testEditor({
+        contentBefore: `<p>a<s><u>[b]</u></s>c</p>`,
+        stepFunction: setFontSize("18px"),
+        contentAfter: `<p>a<span style="font-size: 18px;"><s><u>[b]</u></s></span>c</p>`,
+    });
+});
+
+test("should add style to br except line-break br", async () => {
+    const { editor, el } = await setupEditor("<p>[]abc<br><br></p>");
+    await press(["ctrl", "a"]);
+    execCommand(editor, "formatFontSize", { size: "36px" });
+    expect(getContent(el)).toBe(`<p><span style="font-size: 36px;">[abc]</span><br><br></p>`);
+});
+
+test("should add style to br except line-break br (2)", async () => {
+    const { editor, el } = await setupEditor("<p>[]abc<br><br><br></p>");
+    await press(["ctrl", "a"]);
+    execCommand(editor, "formatFontSize", { size: "36px" });
+    expect(getContent(el)).toBe(
+        `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br>]</span><br></p>`
+    );
 });

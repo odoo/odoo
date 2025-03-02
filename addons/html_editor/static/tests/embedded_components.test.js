@@ -35,7 +35,7 @@ import { EmbeddedComponentPlugin } from "../src/others/embedded_component_plugin
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
-import { deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
+import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
 import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -1009,6 +1009,57 @@ describe("editable descendants", () => {
         );
     });
 
+    test("embedded components in editable descendants do not generate ghost mutations when they are destroyed", async () => {
+        const SimpleEmbeddedWrapper = EmbeddedWrapperMixin("deep");
+        const { el, editor, plugins } = await setupEditor(unformat(`<p>[]after</p>`), {
+            config: getConfig([
+                embedding("wrapper", SimpleEmbeddedWrapper, (host) => ({ host }), {
+                    getEditableDescendants,
+                }),
+            ]),
+        });
+        editor.shared.dom.insert(
+            parseHTML(
+                editor.document,
+                unformat(`
+                    <div data-embedded="wrapper">
+                        <div data-embedded-editable="deep">
+                            <div data-embedded="wrapper">
+                                <div data-embedded-editable="deep">
+                                    <p>deep</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `)
+            )
+        );
+        addStep(editor);
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+                    <div class="deep">
+                        <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                            <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+                                <div class="deep">
+                                    <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                                        <p>deep</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p>[]after</p>
+            `)
+        );
+        undo(editor);
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>[]after</p>`);
+        expect(plugins.get("history").currentStep.mutations.length).toBe(0);
+    });
+
     test("editable descendants are extracted and put back in place when a patch is changing the template shape", async () => {
         let wrapper;
         patchWithCleanup(EmbeddedWrapper.prototype, {
@@ -1298,6 +1349,31 @@ describe("Embedded state", () => {
         expect(getContent(editor.getElContent())).toBe(
             `<p><span data-embedded="counter" data-embedded-props="{}"></span></p>`
         );
+    });
+
+    test("Removing a non-existing property in the embedded state should do nothing", async () => {
+        let counter;
+        patchWithCleanup(SavedCounter.prototype, {
+            setup() {
+                super.setup();
+                counter = this;
+            },
+        });
+        const { el } = await setupEditor(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}'></span></p>`,
+            { config: getConfig([savedCounter]) }
+        );
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true" contenteditable="false"><span class="counter">Counter:1</span></span></p>`
+        );
+        delete counter.embeddedState.notValue;
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true" contenteditable="false"><span class="counter">Counter:1</span></span></p>`
+        );
+        expect(counter.embeddedState).toEqual({
+            value: 1,
+        });
     });
 
     test("Write on `data-embedded-state` should write on the state, re-render the component and write on `data-embedded-props` and the embedded state", async () => {

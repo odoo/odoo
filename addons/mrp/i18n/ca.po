@@ -11,14 +11,13 @@
 # Eugeni Chafer <eugeni@chafer.cat>, 2024
 # Albert Parera, 2024
 # Eric Antones <eantones@users.noreply.github.com>, 2024
-# Josep Sànchez <papapep@gmx.com>, 2024
+# Josep Sànchez <papapep@pinatell.net>, 2024
 # Iván Infantes Castarnado, 2024
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2024
 # Carles Antoli <carlesantoli@hotmail.com>, 2024
 # Óscar Fonseca <tecnico@pyming.com>, 2024
 # jabiri7, 2024
 # M Palau <mpalau@tda.ad>, 2024
-# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2024
 # Jonatan Gk, 2024
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # Arnau Ros, 2024
@@ -31,16 +30,17 @@
 # Martin Trigaux, 2024
 # Josep Anton Belchi, 2024
 # martioodo hola, 2024
-# Xavier, 2024
 # Wil Odoo, 2024
+# EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
+# Xavier, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Xavier, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +147,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(product_name)s (new) %(number_of_boms)s"
-msgstr ""
+msgstr "%(product_name)s (nou) %(number_of_boms)s"
 
 #. module: mrp
 #. odoo-python
@@ -329,17 +329,17 @@ msgstr "<span class=\"col-6\">En curs</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span class=\"col-6\">Late</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Tard</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span class=\"col-6\">To Close</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Per Tancar</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Esperant</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -427,7 +427,7 @@ msgstr "<span class=\"o_stat_text\">OP d'origen</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Traçabilitat</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -516,7 +516,7 @@ msgstr "<strong>Durada real (minuts)</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Barcode</strong>"
-msgstr ""
+msgstr "<strong>Codi de Barres</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1407,6 +1407,14 @@ msgstr "Canvia la quantitat de producció"
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Quantity To Produce"
 msgstr "Canviar quantitat a produir"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid ""
+"Changing the product or variant will permanently reset all previously "
+"encoded variant-related data."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3671,7 +3679,7 @@ msgstr "No disponible"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 msgid "Not Ready"
-msgstr ""
+msgstr "No està preparat"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4109,7 +4117,7 @@ msgstr "Selecció abans de la ubicació de fabricació"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Pieces"
-msgstr ""
+msgstr "Peces"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4269,7 +4277,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print when done"
-msgstr ""
+msgstr "Imprimeix quan estigui fet"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__priority
@@ -4317,7 +4325,7 @@ msgstr "Produeix"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produce All"
-msgstr ""
+msgstr "Produeix Tot"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_batch_produce

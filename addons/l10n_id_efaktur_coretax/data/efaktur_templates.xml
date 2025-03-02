@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="efaktur_coretax_invoice_line">
+            <GoodService>
+                <Opt t-out="line['Opt']"/>
+                <Code t-out="line['Code']"/>
+                <Name t-out="line['Name']"/>
+                <Unit t-out="line['Unit']"/>
+                <Price t-out="line['Price']"/>
+                <Qty t-out="line['Qty']"/>
+                <TotalDiscount t-out="line['TotalDiscount']"/>
+                <TaxBase t-out="line['TaxBase']"/>
+                <OtherTaxBase t-out="line['OtherTaxBase']"/>
+                <VATRate t-out="line['VATRate']"/>
+                <VAT t-out="line['VAT']"/>
+                <STLGRate t-out="line['STLGRate']"/>
+                <STLG t-out="line['STLG']"/>
+            </GoodService>
+        </template>
+
+        <template id="efaktur_coretax_invoice">
+            <TaxInvoice>
+                <TaxInvoiceDate t-out="move['TaxInvoiceDate']"/>
+                <TaxInvoiceOpt t-out="move['TaxInvoiceOpt']"/>
+                <TrxCode t-out="move['TrxCode']"/>
+                <AddInfo t-out="move['AddInfo']" />
+                <CustomDoc t-out="move['CustomDoc']"/>
+                <RefDesc t-out="move['RefDesc']"/>
+                <FacilityStamp t-out="move['FacilityStamp']"/>
+                <SellerIDTKU t-out="move['SellerIDTKU']"/>
+                <BuyerTin t-out="move['BuyerTin']"/>
+                <BuyerDocument t-out="move['BuyerDocument']"/>
+                <BuyerCountry t-out="move['BuyerCountry']"/>
+                <BuyerDocumentNumber t-out="move['BuyerDocumentNumber']"/>
+                <BuyerName t-out="move['BuyerName']"/>
+                <BuyerAdress t-out="move['BuyerAdress']"/>
+                <BuyerEmail t-out="move['BuyerEmail']"/>
+                <BuyerIDTKU t-out="move['BuyerIDTKU']"/>
+                <ListOfGoodService>
+                    <t t-foreach="move['lines']" t-as="line">
+                        <t t-call="l10n_id_efaktur_coretax.efaktur_coretax_invoice_line"/>
+                    </t>
+                </ListOfGoodService>
+            </TaxInvoice>
+        </template>
+
+        <template id="efaktur_coretax_template">
+            <TaxInvoiceBulk xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="TaxInvoice.xsd">
+                <TIN t-out="TIN"/>
+                <ListOfTaxInvoice>
+                    <!-- For each Invoice -->
+                    <t t-foreach="data" t-as="move">
+                        <t t-call="l10n_id_efaktur_coretax.efaktur_coretax_invoice"/>
+                    </t>
+                </ListOfTaxInvoice>
+            </TaxInvoiceBulk>
+        </template>
+    </data>
+</odoo>

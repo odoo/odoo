@@ -42,9 +42,12 @@ export class PosPrinterService extends PrinterService {
         }
     }
     async printHtmlAlternative(error, ...printArguments) {
+        if (error.body === undefined) {
+            console.error("An unknown error occured in printHtml:", error);
+        }
         const confirmed = await ask(this.dialog, {
             title: error.title || _t("Printing error"),
-            body: error.body + _t("Do you want to print using the web printer? "),
+            body: (error.body ?? "") + _t("Do you want to print using the web printer? "),
         });
         if (confirmed) {
             // We want to call the _printWeb when the dialog is fully gone

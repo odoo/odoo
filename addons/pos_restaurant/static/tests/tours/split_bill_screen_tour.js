@@ -92,6 +92,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             ProductScreen.addOrderline("Coca-Cola", "1", "2.0"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
+            Chrome.isSynced(),
             ProductScreen.clickControlButton("Split"),
 
             SplitBillScreen.clickOrderline("Water"),

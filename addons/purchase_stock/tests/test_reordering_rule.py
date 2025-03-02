@@ -1302,3 +1302,58 @@ class TestReorderingRule(TransactionCase):
         replenishment_info = self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id})
         supplier_info = replenishment_info.supplierinfo_ids
         self.assertEqual(supplier_info.last_purchase_date, dt.today().date(), "The last_purhchase_date should be set to the most recent date_order from the purchase orders")
+
+    def test_reordering_rule_multicurrency(self):
+        """
+            trigger a reordering rule in foreign currency
+        """
+        foreign_currency = self.env['res.currency'].create({
+            'name': 'Coin',
+            'symbol': '☺',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2019-01-01',
+            'rate': 0.50,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.product_01.write({
+            'variant_seller_ids': [
+                Command.clear(),
+                Command.create({
+                    'partner_id': self.partner.id,
+                    'price': 100,
+                    'currency_id': self.env.company.currency_id.id,
+                    'product_tmpl_id': self.product_01.product_tmpl_id.id,
+                }),
+                Command.create({
+                    'partner_id': self.partner.id,
+                    'price': 10,
+                    'currency_id': foreign_currency.id,
+                    'product_tmpl_id': self.product_01.product_tmpl_id.id,
+                }),
+            ],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+
+        po_line = self.env["purchase.order.line"].search(
+            [("product_id", "=", self.product_01.id)])
+        self.assertFalse(po_line)
+        self.env["procurement.group"].run(
+            [self.env["procurement.group"].Procurement(
+                self.product_01, 100, self.product_01.uom_id,
+                warehouse.lot_stock_id, "Test default vendor", "/",
+                self.env.company,
+                {
+                    "warehouse_id": warehouse,
+                    "date_planned": dt.today() + td(days=1),
+                    "rule_id": warehouse.buy_pull_id,
+                    "group_id": False,
+                    "route_ids": [],
+                }
+            )])
+        po_line = self.env["purchase.order.line"].search(
+            [("product_id", "=", self.product_01.id)])
+        self.assertTrue(po_line)
+        self.assertEqual(po_line.order_id.currency_id, foreign_currency)

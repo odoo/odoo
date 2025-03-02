@@ -2,6 +2,7 @@
 
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { user } from "@web/core/user";
 import { getColor } from "@web/views/calendar/colors";
 import { patch } from "@web/core/utils/patch";
 
@@ -18,6 +19,9 @@ patch(AttendeeCalendarModel.prototype, {
                 .filter(filter => filter.type !== "all" && filter.value && filter.active)
                 .map(filter => filter.value)
         }
+        if (!attendeeIds.includes(user.partnerId)) {
+            attendeeIds.push(user.partnerId);
+        }
         return this.orm.call('res.partner', "get_worklocation", [
             attendeeIds,
             serializeDateTime(data.range.start),
@@ -28,7 +32,9 @@ patch(AttendeeCalendarModel.prototype, {
     // returns a map of worklocations, display is used to mark the events that are to be shown in the view.
     async loadWorkLocations(data) {
         const res = await this.fetchEventLocation(data)
-        this.multiCalendar = Object.keys(res).length > 1;
+        this.multiCalendar = Object.values(res).some(location => location.user_id !== user.userId);
+        const filters = data.filterSections.partner_ids.filters;
+        data.userFilterActive = filters.filter(filter => filter.value === user.partnerId)[0]?.active || filters[filters.length - 1].type === "all" && filters[filters.length - 1].active;
         const events = {};
         let previousDay;
         const rangeInterval = Interval.fromDateTimes(data.range.start.startOf("day"), data.range.end.endOf("day")).splitBy({day: 1});

@@ -14,7 +14,6 @@ registerWebsitePreviewTour("test_01_admin_shop_tour", {
 },
 () => [
 {
-    isActive: ["auto"],
     trigger: ":iframe .js_sale",
 },
 {
@@ -39,7 +38,6 @@ registerWebsitePreviewTour("test_01_admin_shop_tour", {
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: "#oe_snippets.o_loaded",
 },
 {
@@ -50,7 +48,6 @@ registerWebsitePreviewTour("test_01_admin_shop_tour", {
     timeout: 30000,
 },
 {
-    isActive: ["auto"],
     trigger: ":iframe .product_price .o_dirty .oe_currency_value:not(:contains(/^1.00$/))",
 },
 {
@@ -67,7 +64,6 @@ registerWebsitePreviewTour("test_01_admin_shop_tour", {
 },
 goBackToBlocks(),
 {
-    isActive: ["auto"],
     trigger: "body:not(.modal-open)",
 },
 ...insertSnippet({
@@ -85,7 +81,6 @@ goBackToBlocks(),
     run: "click",
 },
 {
-    isActive: ["auto"],
     trigger: ":iframe body:not(.editor_enable)",
 },
 {

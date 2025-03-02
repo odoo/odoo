@@ -59,8 +59,7 @@ export class PosOrderline extends Base {
     }
 
     get preparationKey() {
-        const note = this.getNote();
-        return `${this.uuid} - ${note}`;
+        return this.uuid;
     }
 
     get quantityStr() {

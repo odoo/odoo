@@ -1076,3 +1076,19 @@ test("open channel in chat window from push notification", async () => {
     );
     await contains(".o-mail-ChatWindow", { text: "General" });
 });
+
+test("Ctrl+k opens the command palette", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        {
+            name: "General",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+            ],
+        },
+    ]);
+    await start();
+    await focus(".o-mail-ChatWindow", { text: "General" });
+    triggerHotkey("control+k");
+    await contains(".o_command_palette");
+});

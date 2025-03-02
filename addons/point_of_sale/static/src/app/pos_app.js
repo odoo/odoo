@@ -19,7 +19,13 @@ export class Chrome extends Component {
     static props = { disableLoader: Function };
     setup() {
         this.pos = usePos();
-        useIdleTimer(this.pos.idleTimeout, () => this.pos.showScreen(this.pos.firstScreen));
+        useIdleTimer(this.pos.idleTimeout, (ev) => {
+            const stopEventPropagation = ["mousedown", "click", "keypress"];
+            if (stopEventPropagation.includes(ev.type)) {
+                ev.stopPropagation();
+            }
+            this.pos.showScreen(this.pos.firstScreen);
+        });
         const reactivePos = reactive(this.pos);
         // TODO: Should we continue on exposing posmodel as global variable?
         window.posmodel = reactivePos;
@@ -28,12 +34,6 @@ export class Chrome extends Component {
         if (odoo.use_pos_fake_tours) {
             window.pos_fake_tour = useTours();
         }
-        // prevent backspace from performing a 'back' navigation
-        document.addEventListener("keydown", (ev) => {
-            if (ev.key === "Backspace" && !ev.target.matches("input, textarea")) {
-                ev.preventDefault();
-            }
-        });
 
         if (this.pos.config.iface_big_scrollbars) {
             const body = document.getElementsByTagName("body")[0];
@@ -47,45 +47,28 @@ export class Chrome extends Component {
         }
         this.customerDisplayChannel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
         effect(
-            batched(
-                ({
-                    selectedOrder,
-                    scaleData,
-                    scaleWeight,
-                    scaleTare,
-                    totalPriceOnScale,
-                    isScaleScreenVisible,
-                }) => {
-                    if (selectedOrder) {
-                        const allScaleData = {
-                            ...scaleData,
-                            weight: scaleWeight,
-                            tare: scaleTare,
-                            totalPriceOnScale,
-                            isScaleScreenVisible,
-                        };
-                        this.sendOrderToCustomerDisplay(selectedOrder, allScaleData);
-                    }
+            batched(({ selectedOrder, scale }) => {
+                if (selectedOrder) {
+                    const scaleData = scale.product
+                        ? {
+                              product: { ...scale.product },
+                              unitPrice: scale.unitPriceString,
+                              totalPrice: scale.totalPriceString,
+                              netWeight: scale.netWeightString,
+                              grossWeight: scale.grossWeightString,
+                              tare: scale.tareWeightString,
+                          }
+                        : null;
+                    this.sendOrderToCustomerDisplay(selectedOrder, scaleData);
                 }
-            ),
+            }),
             [this.pos]
         );
     }
 
     sendOrderToCustomerDisplay(selectedOrder, scaleData) {
         const customerDisplayData = selectedOrder.getCustomerDisplayData();
-        customerDisplayData.isScaleScreenVisible = scaleData.isScaleScreenVisible;
-        if (scaleData) {
-            customerDisplayData.scaleData = {
-                productName: scaleData.productName,
-                uomName: scaleData.uomName,
-                uomRounding: scaleData.uomRounding,
-                productPrice: scaleData.productPrice,
-            };
-        }
-        customerDisplayData.weight = scaleData.weight;
-        customerDisplayData.tare = scaleData.tare;
-        customerDisplayData.totalPriceOnScale = scaleData.totalPriceOnScale;
+        customerDisplayData.scaleData = scaleData;
 
         if (this.pos.config.customer_display_type === "local") {
             this.customerDisplayChannel.postMessage(customerDisplayData);
@@ -97,8 +80,8 @@ export class Chrome extends Component {
                 this.pos.config.access_token,
             ]);
         }
-        if (this.pos.config.customer_display_type === "proxy") {
-            const proxyIP = this.pos.getDisplayDeviceIP();
+        const proxyIP = this.pos.getDisplayDeviceIP();
+        if (proxyIP) {
             fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
                 method: "POST",
                 headers: {

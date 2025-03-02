@@ -10,7 +10,7 @@
                 class="buttonClass"
                 setter="(orderline, note) => orderline.setNote(note)" />
         </t>
-        <button class="btn btn-light btn-lg flex-shrink-0 ms-auto" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
+        <button class="more-btn btn btn-light btn-lg flex-shrink-0 ms-auto" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
             Actions
         </button>
         <!-- All these buttons will only be displayed in a dialog -->

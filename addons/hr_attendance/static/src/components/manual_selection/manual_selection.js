@@ -20,9 +20,10 @@ export class KioskManualSelection extends Component {
     };
     static props = {
         displayBackButton: { type: Boolean },
-        token: { type: Number },
+        token: { type: String },
         departments: { type: Array },
         onSelectEmployee: { type: Function },
+        onClickBack: { type: Function },
     };
 
     setup() {

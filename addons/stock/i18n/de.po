@@ -4052,7 +4052,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
-"Wenn das aktive Feld auf Falsch gesetzt ist, können Sie die Ansicht für den "
+"Wenn das aktive Feld auf False gesetzt ist, können Sie die Ansicht für den "
 "Beschaffungspunkt ausblenden."
 
 #. module: stock
@@ -4061,8 +4061,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
 msgstr ""
-"Wenn das aktive Feld auf Falsch gesetzt ist, können Sie die Route "
-"ausblenden, ohne sie zu entfernen"
+"Wenn das aktive Feld auf False gesetzt ist, können Sie die Route ausblenden,"
+" ohne sie zu entfernen"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
@@ -4239,12 +4239,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "Sofortiger Transfer"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-msgid "Import"
-msgstr "Importieren"
 
 #. module: stock
 #. odoo-javascript
@@ -6709,12 +6703,12 @@ msgstr "Anwesenheit hängt von der Art des Vorgangs ab."
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Drücken Sie auf die Schaltfläche ERSTELLEN, um die Mengen für jedes Produkt "
-"in Ihrem Lager zu definieren oder importieren Sie sie über Favoriten aus "
-"einer Tabellenkalkulation"
+"Drücken Sie auf die Schaltfläche „Neu“, um die Mengen für ein Produkt in "
+"Ihrem Lager zu definieren oder importieren Sie Mengen über eine "
+"Tabellenkalkulation über das Aktionsmenü."
 
 #. module: stock
 #. odoo-javascript
@@ -10856,11 +10850,11 @@ msgstr "Bei Produkteingang in"
 msgid ""
 "When products are needed in <b>%(destination)s</b>, <br> "
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
-"the need."
+"the need. %(suffix)s"
 msgstr ""
 "Wenn Produkte in <b>%(destination)s</b> benötigt werden, <br> "
 "werden<b>%(operation)s</b> aus <b>%(source_location)s</b> erstellt, um den "
-"Bedarf zu decken."
+"Bedarf zu decken. %(suffix)s"
 
 #. module: stock
 #. odoo-python

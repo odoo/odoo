@@ -27,6 +27,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.be').id,
             'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230'})],
             'ref': 'ref_partner_1',
+            'invoice_edi_format': 'ubl_bis3',
         })
 
         # buyer
@@ -39,6 +40,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.be').id,
             'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632'})],
             'ref': 'ref_partner_2',
+            'invoice_edi_format': 'ubl_bis3',
         })
 
         cls.tax_25 = cls.env['account.tax'].create({

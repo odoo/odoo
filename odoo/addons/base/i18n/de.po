@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 14:23+0000\n"
+"POT-Creation-Date: 2025-02-10 16:32+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -1214,12 +1214,12 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll_account
 msgid ""
 "\n"
-"Accounting Data for KSA Payroll Rules.\n"
+"Accounting Data for Saudi Arabia Payroll Rules.\n"
 "=======================================================\n"
 "\n"
 msgstr ""
 "\n"
-"Buchhaltungsdaten für KSA-Personalabrechnungsregeln.\n"
+"Buchhaltungsdaten für Personalabrechnungsregeln in Saudi-Arabien.\n"
 "=======================================================\n"
 "\n"
 
@@ -1457,9 +1457,9 @@ msgstr ""
 msgid ""
 "\n"
 "Accounting reports for Bangladesh\n"
+"============================================\n"
+"- Corporate tax report\n"
 msgstr ""
-"\n"
-"Buchhaltungsberichte für Bangladesch\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -1769,10 +1769,10 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_pk_reports
 msgid ""
 "\n"
-"Accounting reports for Pakistan\n"
+"Accounting Reports for Pakistan (Profit and Loss report and Balance Sheet)\n"
 msgstr ""
 "\n"
-"Buchhaltungsberichte für Pakistan\n"
+"Buchhaltungsberichte für Pakistan (Bilanzbogen und Gewinn- und Verlustrechnung)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_reports
@@ -3082,12 +3082,10 @@ msgid ""
 "\n"
 "Bangladesh Payroll Rules.\n"
 "=========================\n"
-"\n"
+"- Salary rules calculation\n"
+"- Income tax credits handling\n"
+"- Introduced the income tax slabs calculations\n"
 msgstr ""
-"\n"
-"Personalabrechnungsregeln für Bangladesch.\n"
-"=========================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -3513,6 +3511,19 @@ msgstr ""
 "EDI für brasilianische Buchhaltung für E-Commerce\n"
 "======================================\n"
 "Ermöglicht Steuerberechnung und EDI für E-Commerce-Benutzer.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_br_edi_stock
+msgid ""
+"\n"
+"Brazilian Accounting EDI for stock\n"
+"==================================\n"
+"Adds delivery-related information to the NF-e.\n"
+msgstr ""
+"\n"
+"EDI für brasilianische Buchhaltung für Bestand\n"
+"=================================\n"
+"Fügt lieferungsbezogene Informationen zur NF-e hinzu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -4597,6 +4608,24 @@ msgstr ""
 "Darüber hinaus wird die Rechnung im Zahlstatus auf „abgetreten“ markiert.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock_batch
+msgid ""
+"\n"
+"E-Transport implementation for Batch Pickings in Romania\n"
+msgstr ""
+"\n"
+"E-Transport-Implementierung für Stapelkommissionierungen für Rumänien\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ro_edi_stock
+msgid ""
+"\n"
+"E-Transport implementation for Romania\n"
+msgstr ""
+"\n"
+"E-Transport-Implementierung für Rumänien\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
 msgid ""
 "\n"
@@ -4636,10 +4665,10 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_edi_pos
 msgid ""
 "\n"
-"E-invoice implementation for the Kingdom of Saudi Arabia (PoS)\n"
+"E-invoice implementation for Saudi Arabia; Integration with ZATCA (POS)\n"
 msgstr ""
 "\n"
-"Implementierung der elektronischen Rechnungsstellung für das Königreich Saudi-Arabien (Kassensystem)\n"
+"Implementierung der elektronischen Rechnungsstellung für Saudi-Arabien. Integration mit ZATCA (Kassensystem)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -4926,12 +4955,14 @@ msgid ""
 "\n"
 "Egypt Payroll and End of Service rules.\n"
 "=======================================\n"
-"\n"
+"- Basic calculation\n"
+"- End of service calculation\n"
+"- Other inputs (overtime, salary attachments, etc.)\n"
+"- Social insurance calculation\n"
+"- End of service provisions\n"
+"- Tax break calculations and deductions\n"
+"- Master payroll export\n"
 msgstr ""
-"\n"
-"Ägypten - Regeln für die Personalabrechnung und das Ende der Dienstzeit.\n"
-"=======================================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi
@@ -5139,6 +5170,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_post_wizard
+#: model:ir.module.module,description:base.module_l10n_nl_reports_vat_pay_wizard
 msgid ""
 "\n"
 "Enable the VAT wizard when posting a tax return journal entry\n"
@@ -6543,22 +6575,23 @@ msgstr ""
 msgid ""
 "\n"
 "Jordan Payroll and Tax Rules\n"
-"============================\n"
-msgstr ""
+"========================================\n"
 "\n"
-"Jordanische Personalabrechnung und Steuerregeln\n"
-"============================\n"
+"- Supports basic calculation\n"
+"- Tax income brackets\n"
+"- National contribution tax and social security\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_pos
 msgid ""
 "\n"
-"K.S.A. POS Localization\n"
-"=======================================================\n"
+"Saudi Arabia POS Localization\n"
+"===========================================================\n"
 msgstr ""
 "\n"
-"K.S.A. Kassensystem-Lokalisierung\n"
-"=======================================================\n"
+"Kassensystem-Lokalisierung für Saudi-Arabien\n"
+"===========================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr_recruitment
@@ -6611,14 +6644,17 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
 msgid ""
 "\n"
-"Kingdom of Saudi Arabia Payroll and End of Service rules.\n"
+"Saudi Arabia Payroll and End of Service rules.\n"
 "===========================================================\n"
-"\n"
+"- Basic Calculation\n"
+"- End of Service Calculation\n"
+"- Other Input Rules (Overtime, Salary Attachments, etc.)\n"
+"- Split Structures for EOS and Monthly Salaries\n"
+"- GOSI Employee Deduction and company contributions\n"
+"- Unpaid leaves\n"
+"- WPS\n"
+"- Master Payroll Export\n"
 msgstr ""
-"\n"
-"Königreich Saudi-Arabien - Regeln für die Personalabrechnung und das Ende der Dienstzeit.\n"
-"===========================================================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -7844,10 +7880,30 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa
 msgid ""
 "\n"
-"Odoo Arabic localization for most Saudi Arabia.\n"
+"Saudi Arabia Accounting Module\n"
+"===========================================================\n"
+"Saudi Arabia Accounting Basic Charts and Localization\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Vat Filling Report\n"
+"- Withholding Tax Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 "\n"
-"Arabische Odoo-Lokalisierung für den Großteil Saudi-Arabiens.\n"
+"Buchhaltungsmodul für Saudi-Arabien\n"
+"===========================================================\n"
+"Allgemeiner Kontenplan und Lokalisierung für Saudi-Arabien\n"
+"\n"
+"Aktiviert:\n"
+"\n"
+"- Kontenplan\n"
+"- Steuern\n"
+"- MwSt.-Einreichungsbericht\n"
+"- Quellensteuerbericht\n"
+"- Steuerpositionen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -8073,11 +8129,9 @@ msgid ""
 "\n"
 "Pakistan Payroll and End of Service rules\n"
 "=========================================\n"
+"- Basic salaries calculations.\n"
+"- Tax bracket calculations/deductions\n"
 msgstr ""
-"\n"
-"Pakistan - Regeln für die Personalabrechnung und das Ende der Dienstzeit.\n"
-"=========================================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -8592,6 +8646,27 @@ msgstr ""
 "\n"
 "Senden Sie regelmäßige KPI-Übersichten\n"
 "============================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_envia
+msgid ""
+"\n"
+"Send your shippings through Envia and track them online\n"
+"=======================================================\n"
+"\n"
+"Envia is a provider of integrated shipping and tracking solutions for growing e-commerce businesses.\n"
+"Seamlessly integrating with a large range of couriers and platforms,\n"
+"you can streamline every step of your fulfilment process,\n"
+"reduce handling time and improve customer experience.\n"
+msgstr ""
+"\n"
+"Versand Ihrer Sendungen über Envia und Online-Verfolgung\n"
+"=======================================================\n"
+"\n"
+"Envia ist ein Anbieter von integrierten Versand- und Tracking-Lösungen für wachsende E-Commerce-Unternehmen.\n"
+"Durch die nahtlose Integration mit einer großen Anzahl von Zustellern und Plattformen\n"
+"können Sie jeden Schritt Ihres Abwicklungsprozesses rationalisieren,\n"
+"die Bearbeitungszeit verkürzen und die Kundenzufriedenheit verbessern.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_starshipit
@@ -9585,12 +9660,34 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_eg
 msgid ""
 "\n"
-"This is the base module to manage the accounting chart for Egypt in Odoo.\n"
+"Egypt Accounting Module\n"
 "==============================================================================\n"
+"Egypt Accounting Basic Charts and Localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- VAT Return\n"
+"- Withholding Tax Report\n"
+"- Schedule Tax Report\n"
+"- Other Taxes Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 "\n"
-"Dies ist das Basismodul zur Verwaltung des Kontenplans für Ägypten in Odoo.\n"
+"Buchhaltungsmodul für Ägypten\n"
 "==============================================================================\n"
+"llgemeiner Kontenplan und Lokalisierung für Ägypten.\n"
+"\n"
+"Aktiviert:\n"
+"\n"
+"- Kontenplan\n"
+"- Steuern\n"
+"- MwSt.-Erklärung\n"
+"- Quellensteuerbericht\n"
+"- Geplanter Steuerbericht \n"
+"- Andere Steuerberichte\n"
+"- Steuerpositionen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ee
@@ -10418,6 +10515,27 @@ msgstr ""
 "\n"
 "Dieses Modul fügt Stapeltransfers in der Lagerverwaltung hinzu\n"
 "==================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_cz_reports_2025
+msgid ""
+"\n"
+"This module adds the following reports for the Czech Republic:\n"
+"==============================================================\n"
+"1. VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
+msgstr ""
+"\n"
+"Dieses Modul fügt die folgende Bericht für die Tschechische Republik hinzu:\n"
+"==============================================================\n"
+"1. USt.-Kontrollerklärung (Erstellung und XML-Export). Weitere Informationen finden Sie unter https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení: MIAS-Bericht (Erstellung und XML-Export). Weitere Informationen finden Sie unter https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Steuerbericht (XML-Export). Weitere Informationen finden Sie unter https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
@@ -11629,12 +11747,25 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
 msgid ""
 "\n"
-"This module integrate with the ETA Portal to automatically sign and send your invoices to the tax Authority.\n"
-"Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
+"Egypt Tax Authority Invoice Integration\n"
+"==============================================================================\n"
+"Integrates with the ETA portal to automatically send and sign the Invoices to the Tax Authority.\n"
 msgstr ""
 "\n"
-"Dieses Modul lässt sich mit dem ETA-Portal integrieren, um Ihre Rechnungen automatisch zu signieren und an die Steuerbehörde zu senden..\n"
-"Besonderen Dank an Plementus <info@plementus.com> für die Hilfe bei der Entwicklung dieses Moduls.\n"
+"Integration der ägyptischen Steuerbehörde für Rechnungen\n"
+"==============================================================================\n"
+"Integriert mit dem ETA-Portal, um die Rechnungen automatisch an die Steuerbehörde zu senden und zu unterzeichnen.\n"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
+msgid ""
+"\n"
+"            Egyptian Tax Authority Invoice Integration\n"
+"        "
+msgstr ""
+"\n"
+"            Rechnungsintegration der Ägyptischen Steuerbehörde\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_swiggy
@@ -12216,10 +12347,8 @@ msgid ""
 "\n"
 "United Arab Emirates Corporate Tax Report\n"
 "=======================================================\n"
+"Adds the Corporate Tax Report which can be accessed by going to Accounting > Reporting > Corporate Tax Report\n"
 msgstr ""
-"\n"
-"Vereinigte Arabische Emirate - Bericht zur Unternehmenssteuer\n"
-"=======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll
@@ -12227,23 +12356,47 @@ msgid ""
 "\n"
 "United Arab Emirates Payroll and End of Service rules.\n"
 "=======================================================\n"
-"\n"
+"- Basic salary calculations\n"
+"- EOS calculations\n"
+"- Annual leaves provisions and EOS provisions\n"
+"- Social insurance rules for locals\n"
+"- Overtime rule for the other inputs case\n"
+"- Sick-leaves calculations\n"
+"- DEWS calculations\n"
+"- EOS calculations for free zones (DMCC)\n"
+"- Out of contract calculations\n"
+"- Calculation for unused leaves for EOS calculation\n"
+"- Additional other input rules for (bonus, commissions, arrears, etc.)\n"
+"- Master payroll export\n"
+"- WPS\n"
 msgstr ""
-"\n"
-"Vereinigte Arabische Emirate - Regeln für die Personalabrechnung und das Ende der Dienstzeit.\n"
-"===========================================================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
 msgid ""
 "\n"
-"United Arab Emirates accounting chart and localization.\n"
+"United Arab Emirates Accounting Module\n"
 "=======================================================\n"
+"United Arab Emirates accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 "\n"
-"Kontenplan und Lokalisierung für die Vereinigten Arabischen Emirate.\n"
+"Buchhaltungsmodul für die Vereinigten Arabische Emirate\n"
 "=======================================================\n"
+"Vereinigte Arabische Emirate: Grundlegende Tabellen und Lokalisierung der Buchhaltung.\n"
+"\n"
+"Aktiviert:\n"
+"\n"
+"- Kontenplan\n"
+"- Steuern\n"
+"- Steuerbericht\n"
+"- Steuerpositionen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_hr_payroll
@@ -18635,7 +18788,7 @@ msgstr "Belgien - Buchhaltungsberichte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_post_wizard
 msgid "Belgium - Accounting Reports (post wizard)"
-msgstr "Belgien - Buchhaltungsberichte (Post-Assistent)"
+msgstr "Belgien - Buchhaltungsberichte (Buchungsassistent)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_prorata
@@ -18959,6 +19112,11 @@ msgstr "EDI für brasilianische Buchhaltung für Verkauf"
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_website_sale
 msgid "Brazilian Accounting EDI for eCommerce"
 msgstr "EDI für brasilianische Buchhaltung für E-Commerce"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_stock
+msgid "Brazilian Accounting EDI for stock"
+msgstr "EDI für brasilianische Buchhaltung für Bestand"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
@@ -21704,6 +21862,11 @@ msgid "Czech Republic"
 msgstr "Tschechische Republik"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cz_reports_2025
+msgid "Czech Republic - Accounting Reports 2025"
+msgstr "Tschechische Republik - Buchhaltungsberichte 2025"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_reports
 msgid "Czech Republic- Accounting Reports"
 msgstr "Tschechische Republik - Buchhaltungsberichte"
@@ -22648,7 +22811,7 @@ msgstr "Das Länderbild anzeigen, wenn das Feld im Datensatz vorhanden ist."
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Display the phone icons even if no_marker is True"
 msgstr ""
-"Zeigen Sie die Telefonsymbole an, auch wenn no_marker auf Wahr gesetzt ist"
+"Zeigen Sie die Telefonsymbole an, auch wenn no_marker auf True gesetzt ist"
 
 #. module: base
 #. odoo-python
@@ -22996,8 +23159,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
-msgid "E-Invoicing, Universal Business Language"
-msgstr "Elektronische Rechnungsstellung, Universal Business Language"
+msgid ""
+"\n"
+"        E-Invoicing, Universal Business Language\n"
+"    "
+msgstr ""
+"\n"
+"        Elektronische Rechnungsstellung, Universal Business Language\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_my_edi
@@ -23181,15 +23350,8 @@ msgstr "Ägypten - Personalabrechnung mit Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
-msgid "Egyptian E-Invoice Integration"
-msgstr "Integration der ägyptischen elektronischen Rechnungsstellung"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
-msgid "Egyptian Tax Authority Invoice Integration"
-msgstr ""
-"Integration der elektronischen Rechnungsstellung der ägyptischen "
-"Steuerbehöre (ETA)"
+msgid "Egypt E-Invoicing"
+msgstr "Ägyptische elektronische Rechnungsstellung"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__eire
@@ -23564,6 +23726,11 @@ msgstr "Unterhaltung"
 #: model:ir.model.fields,field_description:base.field_ir_profile__entry_count
 msgid "Entry count"
 msgstr "Anzahl Einträge"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_envia
+msgid "Envia Shipping"
+msgstr "Envia-Versand"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -25740,6 +25907,16 @@ msgid "Gantt view for Time Off Dashboard"
 msgstr "Gantt-Ansicht für das Abwesenheitsdashboard"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato
+msgid "Gelato"
+msgstr "Gelato"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_gelato_stock
+msgid "Gelato/Stock bridge"
+msgstr "Brücke zwischen Gelato und Bestand"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
 msgstr "Allgemein"
@@ -27100,7 +27277,7 @@ msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
-"Wenn Wahr, dann wird die Aktion nicht in der rechten Werkzeugleiste einer "
+"Wenn True, dann wird die Aktion nicht in der rechten Werkzeugleiste einer "
 "Formularansicht angezeigt."
 
 #. module: base
@@ -27162,8 +27339,8 @@ msgid ""
 "         "
 msgstr ""
 "Wenn diese Ansicht abgeleitet wurde,\n"
-"* Wenn wahr, erweitert diese Ansicht immer die übergeordnete Ansicht\n"
-"* Wenn falsch, wird die übergeordnete Ansicht nicht erweitert, kann aber bei Bedarf wieder aktiviert werden\n"
+"* Wenn True, erweitert diese Ansicht immer die übergeordnete Ansicht\n"
+"* Wenn False, wird die übergeordnete Ansicht nicht erweitert, kann aber bei Bedarf wieder aktiviert werden\n"
 "             "
 
 #. module: base
@@ -28703,13 +28880,13 @@ msgstr "K - FINANZ- UND KREDITWESEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
-msgid "K.S.A. - Payroll"
-msgstr "K.S.A. - Personalabrechnung"
+msgid "Saudi Arabia - Payroll"
+msgstr "Saudi-Arabien - Personalabrechnung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
-msgid "K.S.A. - Payroll with Accounting"
-msgstr "Königreich Saudi-Arabien - Personalabrechnung mit Buchhaltung"
+msgid "Saudi Arabia - Payroll with Accounting"
+msgstr "Saudi-Arabien - Personalabrechnung mit Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
@@ -31738,6 +31915,11 @@ msgid "Netherlands - Accounting Reports"
 msgstr "Niederlande - Buchhaltungsberichte"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_vat_pay_wizard
+msgid "Netherlands - Accounting Reports (post wizard)"
+msgstr "Niederland - Buchhaltungsberichte (Buchungsassistent)"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_hr_payroll
 msgid "Netherlands - Payroll"
 msgstr "Niederlande - Personalabrechnung"
@@ -31932,7 +32114,7 @@ msgstr "Niue"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__false
 msgid "No (False)"
-msgstr "Nein (Falsch)"
+msgstr "Nein (False)"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -35972,6 +36154,11 @@ msgid "Pivot"
 msgstr "Pivot"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_gelato
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr "Bestellungen über Gelatos Dienst „Druck nach Bedarf“ aufgeben"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
 msgid "Plan your resources on project tasks"
 msgstr "Ihre Ressourcen auf Projektaufgaben planen"
@@ -38000,6 +38187,16 @@ msgid "Romania - Accounting Reports"
 msgstr "Rumänien - Buchhaltungsberichte"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock
+msgid "Romania - E-Transport"
+msgstr "Rumänien - E-Transport"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi_stock_batch
+msgid "Romania - E-Transport Batch Pickings"
+msgstr "Rumänien - E-Transport - Stapelkommissioneirungen"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_edi
 msgid "Romania - E-invoicing"
 msgstr "Rumänien - Elektronische Rechnungsstellung"
@@ -39158,7 +39355,7 @@ msgid "Send your shippings through UPS and track them online"
 msgstr "Versenden Sie Ihre Lieferungen über UPS und verfolgen Sie sie online."
 
 #. module: base
-#: model:ir.module.module,description:base.module_delivery_usps
+#: model:ir.module.module,description:base.module_delivery_usps_rest
 msgid "Send your shippings through USPS and track them online"
 msgstr ""
 "Versenden Sie Ihre Lieferungen über USPS und verfolgen Sie sie online."
@@ -42262,20 +42459,44 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bd
 msgid ""
-"This is the base module to manage chart of accounts and localization for the"
-" Bangladesh "
+"\n"
+"This is the base module to manage the accounting chart for Bangladesh in Odoo\n"
+"============================\n"
+"Bangladesh accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of accounts\n"
+"- Taxes\n"
+"- Tax report\n"
 msgstr ""
-"Dies ist das Basismodul zum Verwalten des Kontenplans und der Lokalisierung "
-"für Bangladesch "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pk
 msgid ""
-"This is the base module to manage chart of accounts and localization for the"
-" Pakistan "
+"\n"
+"Pakistan Accounting Module\n"
+"=======================================================\n"
+"Pakistan accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+"- Withholding Tax Report\n"
 msgstr ""
-"Dies ist das Basismodul zum Verwalten des Kontenplans und der Lokalisierung "
-"für Pakistan "
+"\n"
+"Buchhaltungsmodul für Pakistan\n"
+"=======================================================\n"
+"Pakistan: Grundlegende Tabellen und Lokalisierung der Buchhaltung.\n"
+"\n"
+"Aktiviert:\n"
+"\n"
+"- Kontenplan\n"
+"- Steuern\n"
+"- Steuerbericht\n"
+"- Quellensteuerbericht\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment
@@ -42322,6 +42543,17 @@ msgstr ""
 "          Bitte installieren Sie das neue Modul „UPS-Versand“ und "
 "deinstallieren Sie dieses Modul so schnell wie möglich. Diese Integration "
 "wird im Jahr 2024 nicht mehr funktionieren."
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_usps
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
+"Dies ist die veraltete Integration mit UPS. Bitte installieren Sie das neue "
+"Modul „Versand per United States Postal Service (USPS)“ und deinstallieren "
+"Sie dieses Modul so schnell wie möglich."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -43139,12 +43371,12 @@ msgstr "Übergangsmodell"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Transient: False"
-msgstr "Übergang: Falsch"
+msgstr "Übergang: False"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Transient: True"
-msgstr "Übergang: Wahr"
+msgstr "Übergang: True"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_transifex
@@ -43369,13 +43601,18 @@ msgstr "U - EXTRATERRITORIALE ORGANISATIONEN UND KÖRPERSCHAFTEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
-msgid "U.A.E. - Payroll"
-msgstr "VAE - Gehaltsabrechnung"
+msgid "United Arab Emirates - Payroll"
+msgstr "Vereinigte Arabische Emirate - Personalabrechnung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
-msgid "U.A.E. - Payroll with Accounting"
-msgstr "VAE - Personalabrechnung mit Buchhaltung"
+msgid "United Arab Emirates - Payroll with Accounting"
+msgstr "Vereinigte Arabische Emirate - Personalabrechnung mit Buchhaltung"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ae_corporate_tax_report
+msgid "United Arab Emirates - Corporate Tax Report"
+msgstr "Vereinigte Arabische Emirate - Körperschaftssteuerberichte"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__uct
@@ -43726,11 +43963,6 @@ msgid "United Arab Emirates - Accounting Reports"
 msgstr "Vereinigte Arabische Emirate - Buchhaltungsberichte"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_ae_corporate_tax_report
-msgid "United Arab Emirates - Corporate Tax Report"
-msgstr "Vereinigte Arabische Emirate - Körperschaftssteuerberichte"
-
-#. module: base
 #: model:res.country,name:base.uk
 msgid "United Kingdom"
 msgstr "Vereinigtes Königreich"
@@ -43776,9 +44008,14 @@ msgid "United States - Payroll with Accounting"
 msgstr "Vereinigte Staaten - Personalabrechnung mit Buchhaltung"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_delivery_usps
+#: model:ir.module.module,shortdesc:base.module_delivery_usps_rest
 msgid "United States Postal Service (USPS) Shipping"
 msgstr "United-States-Postal-Service-(USPS-)Versand"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_usps
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr "United-States-Postal-Service-(USPS-)Versand (geerbt)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -45379,7 +45616,7 @@ msgstr "Yen"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__true
 msgid "Yes (True)"
-msgstr "Ja (Wahr)"
+msgstr "Ja (True)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -46192,6 +46429,11 @@ msgid "eCommerce on appointments"
 msgstr "E-Commerce für Termine"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_gelato
+msgid "eCommerce/Gelato bridge"
+msgstr "Brücke zwischen E-Commerce und Gelato"
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
@@ -46212,7 +46454,7 @@ msgstr "externe ID"
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "false"
-msgstr "falsch"
+msgstr "False"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__float
@@ -46566,7 +46808,7 @@ msgstr "Text"
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "true"
-msgstr "wahr"
+msgstr "True"
 
 #. module: base
 #. odoo-python

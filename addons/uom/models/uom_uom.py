@@ -83,7 +83,7 @@ class UoM(models.Model):
     ]
 
     def _check_category_reference_uniqueness(self):
-        categ_res = self.read_group(
+        categ_res = self.with_context(active_test=False).read_group(
             [("category_id", "in", self.category_id.ids)],
             ["category_id", "uom_type"],
             ["category_id", "uom_type"],

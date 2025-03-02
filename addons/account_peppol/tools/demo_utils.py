@@ -90,7 +90,7 @@ def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
     self.ensure_one()
     old_value = self.peppol_verification_state
     company = kwargs.get('company') or self.env.company
-    endpoint, eas, edi_format = self.peppol_endpoint, self.peppol_eas, self.invoice_edi_format
+    endpoint, eas, edi_format = self.peppol_endpoint, self.peppol_eas, self._get_peppol_edi_format()
     state = _mock_get_peppol_verification_state(func, self, endpoint, eas, edi_format)
     self.with_company(company).peppol_verification_state = state
     self._log_verification_state_update(company, old_value, state)
