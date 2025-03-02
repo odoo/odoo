@@ -373,3 +373,37 @@ class TestWebPushNotification(SMSCommon):
                 partner_id=self.user_email.partner_id.id,
                 vapid_public_key=self.vapid_public_key,
             )
+
+    @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(**{'status_code': 201, 'text': 'Ok'}))
+    def test_push_notifications_truncate_payload(self, post):
+        """
+        Ensure that when we send large bodies, the final encrypted data (post-encryption)
+        never exceeds 4096 bytes. We verify this via the 'data' argument in the patched
+        Session.post call.
+
+        - First send a 4096-character body, which should definitely cause truncation.
+        - Then send a 3900-character body, which may or may not need heavy truncation
+        but should remain safely under 4096 bytes once encrypted.
+        """
+
+        too_big_body = 'X' * 4096
+        self.record_simple.with_user(self.user_email).message_notify(
+            partner_ids=self.user_inbox.partner_id.ids,
+            body=too_big_body,
+            subject='Test Big Payload',
+            record_name=self.record_simple._name,
+        )
+
+        data_sent = post.call_args.kwargs['data']
+        self.assertLess(len(data_sent), 4096, "Final encrypted payload should not exceed 4096 bytes for too_big_body.")
+
+        borderline_body = 'X' * 3900
+        self.record_simple.with_user(self.user_email).message_notify(
+            partner_ids=self.user_inbox.partner_id.ids,
+            body=borderline_body,
+            subject='Test Big Payload',
+            record_name=self.record_simple._name,
+        )
+
+        data_sent = post.call_args.kwargs['data']
+        self.assertLess(len(data_sent),4096, "Final encrypted payload should not exceed 4096 bytes for borderline_body.")
