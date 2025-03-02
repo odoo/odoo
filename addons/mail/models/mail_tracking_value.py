@@ -221,6 +221,14 @@ class MailTracking(models.Model):
                     result.append(f'{value}Z')
             elif field_type == 'boolean':
                 result.append(bool(value))
+            elif field_type == 'many2one':
+                record_id = record.new_value_integer if new else record.old_value_integer
+                if record_id and record.field_id.relation:
+                    value = self.env[record.field_id.relation].browse(record_id).display_name
+                    related_model = self.env[record.field_id.model]._fields[record.field_id.name].comodel_name
+                    translated_record = self.env[related_model].browse(record_id).with_context(lang=self.env.user.lang)
+                    value = translated_record.display_name
+                result.append(value)
             else:
                 result.append(value)
         return result
