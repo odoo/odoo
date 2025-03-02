@@ -56,6 +56,7 @@ class PaymentProvider(models.Model):
         :raise UserError: If the base URL is not in HTTPS.
         """
         base_url = self.get_base_url()
+        base_url = base_url.replace('http://', 'https://')
         if 'localhost' in base_url:
             raise UserError(
                 "PayPal: " + _("You must have an HTTPS connection to generate a webhook.")
