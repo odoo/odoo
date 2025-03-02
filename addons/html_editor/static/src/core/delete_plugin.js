@@ -2,6 +2,7 @@ import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import {
     isAllowedContent,
+    isButton,
     isContentEditable,
     isEditorTab,
     isEmpty,
@@ -14,6 +15,7 @@ import {
     isTextNode,
     isVisibleTextNode,
     isWhitespace,
+    isZwnbsp,
     isZWS,
     nextLeaf,
     previousLeaf,
@@ -1024,6 +1026,11 @@ export class DeletePlugin extends Plugin {
         // Protected nodes are always "visible" for the editor
         if (isProtected(textNode)) {
             // TODO ABD: add test
+            return true;
+        }
+        const isZwnbspLinkPad = (node) =>
+            isButton(node.previousSibling) || isButton(node.nextSibling);
+        if (isZwnbsp(textNode) && isZwnbspLinkPad(textNode)) {
             return true;
         }
         // ZWS and ZWNBSP are invisible.
