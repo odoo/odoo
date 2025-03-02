@@ -147,8 +147,17 @@ class AccountAnalyticLine(models.Model):
                 )
                 if map_entry:
                     return map_entry.sale_line_id
+                timesheet_entry = self._is_employee_in_task_timesheet()
+                if timesheet_entry:
+                    return timesheet_entry
                 return self.task_id.sale_line_id
         return False
+
+    def _is_employee_in_task_timesheet(self):
+        mapped_employees = self.project_id.sale_line_employee_ids.mapped('employee_id')
+        task_employees = self.task_id.timesheet_ids.mapped('employee_id')
+        if mapped_employees in task_employees:
+            return self.project_id.sale_line_employee_ids.sale_line_id
 
     def _timesheet_get_portal_domain(self):
         """ Only the timesheets with a product invoiced on delivered quantity are concerned.

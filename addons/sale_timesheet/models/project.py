@@ -589,6 +589,10 @@ class ProjectTask(models.Model):
     def _compute_sale_line(self):
         super()._compute_sale_line()
         for task in self:
+            timesheet_so_lines = task.timesheet_ids.mapped('so_line')
+            if not timesheet_so_lines and task.timesheet_ids and not task.parent_id.sale_line_id:
+                task.sale_line_id = False
+
             if task.allow_billable and not task.sale_line_id:
                 task.sale_line_id = task._get_last_sol_of_customer()
 
