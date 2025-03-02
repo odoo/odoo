@@ -44,7 +44,10 @@ patch(Thread.prototype, {
                         chatWindow.fold();
                     }
                 }
-                if (this.store.env.services["multi_tab"].isOnMainTab()) {
+                if (
+                    this.store.env.services["multi_tab"].isOnMainTab() &&
+                    this.store.settings.messageSound
+                ) {
                     this.store.env.services["mail.sound_effects"].play("new-message");
                 }
             }
