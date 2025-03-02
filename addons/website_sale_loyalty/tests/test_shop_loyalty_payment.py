@@ -27,7 +27,18 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
     def test_expired_reward_validation(self):
         """Ensure payments don't process if any applied reward is no longer valid."""
         order = self.empty_order
-        program = self.program_gift_card
+        program = self.env['loyalty.program'].create({
+            'name': "Gift Cards",
+            'applies_on': 'future',
+            'program_type': 'gift_card',
+            'trigger': 'auto',
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 1,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+            })]
+        })
 
         program.date_to = date.today()  # set program to expire after today
 
