@@ -50,6 +50,48 @@ class TestKarmaTrackingCommon(common.TransactionCase):
             old_value = new_value
             track_date = track_date + relativedelta(days=days_delta)
 
+    def test_computation_gain_with_grouping(self):
+        self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
+        self._create_trackings(self.test_user_2, 10, 20, self.test_date, days_delta=2)
+
+        results = (self.test_user | self.test_user_2)._get_tracking_karma_gain_position_per_grouping([])
+        self.assertEqual(results[0]['user_id'], self.test_user_2.id)
+        self.assertEqual(results[0]['karma_gain'], 200)
+        self.assertEqual(results[0]['position'], 1)
+        self.assertEqual(results[1]['user_id'], self.test_user.id)
+        self.assertEqual(results[1]['karma_gain'], 40)
+        self.assertEqual(results[1]['position'], 2)
+
+        results = (self.test_user | self.test_user_2)._get_tracking_karma_gain_position_per_grouping([], {'to_date': self.test_date + relativedelta(day=2)})
+        self.assertEqual(results[0]['user_id'], self.test_user.id)
+        self.assertEqual(results[0]['karma_gain'], 20)
+        self.assertEqual(results[0]['position'], 1)
+        self.assertEqual(results[1]['user_id'], self.test_user_2.id)
+        self.assertEqual(results[1]['karma_gain'], 10)
+        self.assertEqual(results[1]['position'], 2)
+
+        results = (self.test_user | self.test_user_2)._get_tracking_karma_gain_position_per_grouping([], {'from_date': self.test_date + relativedelta(months=1, day=1)})
+        self.assertEqual(results[0]['user_id'], self.test_user_2.id)
+        self.assertEqual(results[0]['karma_gain'], 50)
+        self.assertEqual(results[0]['position'], 1)
+        self.assertEqual(results[1]['user_id'], self.test_user.id)
+        self.assertEqual(results[1]['karma_gain'], 20)
+        self.assertEqual(results[1]['position'], 2)
+
+        results = (self.test_user | self.test_user_2)._get_tracking_karma_gain_position_per_grouping([], {'from_date': self.test_date + relativedelta(months=1, day=1), 'page': 2, 'users_per_page': 1})
+        self.assertEqual(results[0]['user_id'], self.test_user.id)
+        self.assertEqual(results[0]['karma_gain'], 20)
+        self.assertEqual(results[0]['position'], 2)
+
+        results = (self.test_user | self.test_user_2)._get_tracking_karma_gain_position_per_grouping([], {'current_user_id': self.test_user.id})
+        self.assertEqual(results[0]['user_id'], self.test_user.id)
+        self.assertEqual(results[0]['karma_gain'], 40)
+        self.assertEqual(results[0]['position'], 2)
+        self.assertEqual(len(results), 1)
+
+        results = self.env['res.users']._get_tracking_karma_gain_position_per_grouping([])
+        self.assertEqual(len(results), 5)
+
     def test_computation_gain(self):
         self._create_trackings(self.test_user, 20, 2, self.test_date, days_delta=30)
         self._create_trackings(self.test_user_2, 10, 20, self.test_date, days_delta=2)
