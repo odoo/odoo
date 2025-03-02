@@ -1572,7 +1572,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Check that the billing address is complete.
         invoice_partner_sudo = order_sudo.partner_invoice_id
         if (
-            not self._check_billing_address(invoice_partner_sudo)
+            not order_sudo.only_services
+            and not self._check_billing_address(invoice_partner_sudo)
             and invoice_partner_sudo._can_be_edited_by_current_customer(order_sudo=order_sudo)
         ):
             return request.redirect(

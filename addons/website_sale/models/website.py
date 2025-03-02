@@ -575,7 +575,7 @@ class Website(models.Model):
             'back_button':  _lt("Continue shopping"),
             'back_button_href': '/shop',
         }), (['website_sale.checkout', 'website_sale.address'], {
-            'name': _lt("Delivery"),
+            'name': _lt("Address"),
             'current_href': '/shop/checkout',
             'main_button': _lt("Confirm"),
             'main_button_href': f'{"/shop/extra_info" if is_extra_step_active else "/shop/confirm_order"}',
@@ -588,13 +588,13 @@ class Website(models.Model):
                 'current_href': '/shop/extra_info',
                 'main_button': _lt("Continue checkout"),
                 'main_button_href': '/shop/confirm_order',
-                'back_button':  _lt("Back to delivery"),
+                'back_button':  _lt("Back to Address"),
                 'back_button_href': '/shop/checkout',
             }))
         steps.append((['website_sale.payment'], {
             'name': _lt("Payment"),
             'current_href': '/shop/payment',
-            'back_button':  _lt("Back to delivery"),
+            'back_button':  _lt("Back to Address"),
             'back_button_href': '/shop/checkout',
         }))
         return steps
