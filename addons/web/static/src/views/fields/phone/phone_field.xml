@@ -25,6 +25,7 @@
                 t-if="props.record.data[props.name]"
                 t-att-href="phoneHref"
                 class="o_phone_form_link ms-3 d-inline-flex align-items-center"
+                t-on-click = "saveRecord"
             >
                 <i class="fa fa-phone"></i><small class="fw-bold ms-1">Call</small>
             </a>
