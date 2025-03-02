@@ -3,7 +3,7 @@
 
 {
     'name': 'HR Org Chart',
-    'category': 'Hidden',
+    'category': 'Human Resources',
     'version': '1.0',
     'description':
         """

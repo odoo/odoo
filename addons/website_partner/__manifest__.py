@@ -3,7 +3,7 @@
 
 {
     'name': 'Website Partner',
-    'category': 'Hidden',
+    'category': 'Website/Website',
     'summary': 'Partner module for website',
     'version': '0.1',
     'description': """

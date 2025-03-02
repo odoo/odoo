@@ -5,7 +5,7 @@
     'name': 'Finland - Sale',
     'version': '1.0',
     'description': """Finland Sale""",
-    'category': 'Localization',
+    'category': 'Sales/Sales',
     'depends': [
         'l10n_fi',
         'sale',

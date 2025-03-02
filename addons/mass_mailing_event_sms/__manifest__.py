@@ -3,7 +3,7 @@
 
 {
     'name': 'Event Attendees SMS Marketing',
-    'category': 'Hidden',
+    'category': 'Marketing/Email Marketing',
     'version': '1.0',
     'description':
         """

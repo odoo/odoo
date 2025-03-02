@@ -4,7 +4,7 @@
 {
     'name': 'Delivery - Stock',
     'version': '1.0',
-    'category': 'Inventory/Delivery',
+    'category': 'Shipping Connectors',
     'description': """
 Allows you to add delivery methods in pickings.
 ===============================================

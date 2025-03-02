@@ -3,7 +3,7 @@
 
 {
     'name': 'Mass mailing sms on sale orders',
-    'category': 'Hidden',
+    'category': 'Marketing/Email Marketing',
     'version': '1.0',
     'summary': 'Add sale order info on mass mailing sms',
     'description': """Mass mailing sms on sale orders""",

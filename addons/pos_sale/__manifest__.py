@@ -5,7 +5,7 @@
 {
     'name': 'POS - Sales',
     'version': '1.1',
-    'category': 'Hidden',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Link module between Point of Sale and Sales',
     'description': """

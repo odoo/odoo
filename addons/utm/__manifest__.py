@@ -3,7 +3,7 @@
 
 {
     'name': 'UTM Trackers',
-    'category': 'Hidden',
+    'category': 'Marketing',
     'description': """
 Enable management of UTM trackers: campaign, medium, source.
 """,
