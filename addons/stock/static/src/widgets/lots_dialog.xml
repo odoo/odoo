@@ -16,54 +16,53 @@
             </t>
             <div class="o_form_view o_form_nosheet">
                 <t t-if="props.mode === 'generate'">
-                    <div class="grid o_inner_group">
-                        <div class="d-flex d-sm-contents">
-                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                    <div class="container">
+                        <div class="row mb-2">
+                            <div class="col-3">
                                 <label class="o_form_label" for="next_serial_0">
                                     <t t-if="props.move.data.has_tracking === 'lot'">First Lot Number</t>
                                     <t t-else="">First Serial Number</t>
                                 </label>
                             </div>
-                            <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                            <div class="col-7">
                                 <div name="next_serial" class="o_field_widget o_field_char">
                                     <input placeholder="e.g. LOT-PR-00012" class="o_input" t-ref="nextSerial" id="next_serial_0" type="text"/>
                                 </div>
                             </div>
+                            <div class="col">
+                                <button class="btn btn-primary py-1" t-on-click="_onGenerateCustomSerial">New</button>
+                            </div>
                         </div>
-                        <div class="d-flex d-sm-contents">
-                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                        <div class="row mb-2">
+                            <div class="col">
                                 <label class="o_form_label" for="next_serial_count_0">
                                     <t t-if="props.move.data.has_tracking === 'lot'">Quantity per Lot</t>
                                     <t t-else="">Number of SN</t>
                                 </label>
                             </div>
-                            <div class="o_row">
-                                <div class="o_cell flex-grow-1 flex-sm-grow-0">
-                                    <div name="next_serial_count" class="o_field_widget o_field_integer">
-                                        <input inputmode="numeric" t-ref="nextSerialCount" class="o_input" id="next_serial_count_0" type="text"/>
-                                    </div>
+                            <div class="col-9">
+                                <div name="next_serial_count" class="o_field_widget o_field_integer">
+                                    <input inputmode="numeric" t-ref="nextSerialCount" class="o_input" id="next_serial_count_0" type="text"/>
                                 </div>
                                 <span t-if="props.move.data.has_tracking === 'lot'" t-esc="props.move.data.product_uom[1]"/>
                             </div>
                         </div>
-                        <div t-if="props.move.data.has_tracking === 'lot'" class="d-flex d-sm-contents">
-                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                        <div t-if="props.move.data.has_tracking === 'lot'" class="row mb-2">
+                            <div class="col">
                                 <label class="o_form_label" for="total_received_0">Quantity Received</label>
                             </div>
-                            <div class="o_row">
-                                <div class="o_cell flex-grow-1 flex-sm-grow-0">
-                                    <div name="total_received" class="o_field_widget o_field_integer">
-                                        <input inputmode="numeric" t-ref="totalReceived" class="o_input" id="total_received_0" type="text"/>
-                                    </div>
+                            <div class="col-9">
+                                <div name="total_received" class="o_field_widget o_field_integer">
+                                    <input inputmode="numeric" t-ref="totalReceived" class="o_input" id="total_received_0" type="text"/>
                                 </div>
                                 <span t-esc="props.move.data.product_uom[1]"/>
                             </div>
                         </div>
-                        <div class="d-flex d-sm-contents">
-                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                        <div class="row">
+                            <div class="col">
                                 <label class="o_form_label" for="keep_lines_0">Keep current lines</label>
                             </div>
-                            <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                            <div class="col-9">
                                 <div name="keep_lines">
                                     <input type="checkbox" t-ref="keepLines" id="keep_lines_0"/>
                                 </div>
