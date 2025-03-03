@@ -22,6 +22,7 @@ import { renderToString } from "@web/core/utils/render";
 import { batched } from "@web/core/utils/timing";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { EditListPopup } from "./select_lot_popup/select_lot_popup";
+import { unique } from "@web/core/utils/arrays";
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates
@@ -707,13 +708,7 @@ export class PosStore extends Reactive {
         if (!missingProductIds.size) {
             return;
         }
-        const products = await this.orm.call(
-            "pos.session",
-            "get_pos_ui_product_product_by_params",
-            [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }]
-        );
-        await this._loadMissingPricelistItems(products);
-        this._loadProductProduct(products);
+        this._addProducts([...missingProductIds], false);
     }
     async _loadMissingPricelistItems(products) {
         if (!products.length) {
@@ -1808,12 +1803,49 @@ export class PosStore extends Reactive {
                 }
             }
         }
-        const product = await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
+        const products = await this._loadProductByIds(ids);
+        const missingProductIds = await this._loadMissingPosCombos(products);
+        if (missingProductIds && missingProductIds.length) {
+            products.push(...(await this._loadProductByIds(missingProductIds)));
+        }
+        await this._loadMissingPricelistItems(products);
+        this._loadProductProduct(products);
+    }
+    async _loadProductByIds(productIds) {
+        return await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
             odoo.pos_session_id,
-            { domain: [["id", "in", ids]] },
+            { domain: [["id", "in", productIds]] },
         ]);
-        await this._loadMissingPricelistItems(product);
-        this._loadProductProduct(product);
+    }
+    async _loadMissingPosCombos(products) {
+        const missingComboIds = unique(
+            products
+                .flatMap((product) => product.combo_ids)
+                .filter((id) => !this.db.combo_by_id[id]),
+        );
+        if (!missingComboIds.length) {
+            return;
+        }
+        const combos = await this.orm.call("pos.combo", "search_read", [], {
+            fields: ["id", "name", "combo_line_ids", "base_price"],
+            domain: [["id", "in", missingComboIds]],
+        });
+        this.db.add_combos(combos);
+        const comboLines = await this.orm.call("pos.combo.line", "search_read", [], {
+            fields: ["id", "product_id", "combo_price", "combo_id"],
+            domain: [["combo_id", "in", missingComboIds]],
+        });
+        this.db.add_combo_lines(comboLines);
+        const missingProductIds = unique(
+            comboLines
+                .map((comboLine) => comboLine.product_id[0])
+                .filter(
+                    (id) =>
+                        !this.db.get_product_by_id(id) &&
+                        !products.map((product) => product.id).includes(id),
+                ),
+        );
+        return missingProductIds;
     }
     isOpenOrderShareable() {
         return this.config.trusted_config_ids.length > 0;

@@ -2238,7 +2238,11 @@
                                  t-if="website_sale_order and website_sale_order.website_order_line">
                                 <div class="card-body p-0 p-lg-4">
                                     <t t-call="website_sale.total"/>
-                                    <t t-call="payment.express_checkout"/>
+                                    <t
+                                        t-if="website.account_on_checkout != 'mandatory' or
+                                              not website.is_public_user()"
+                                        t-call="payment.express_checkout"
+                                    />
                                     <t t-call="website_sale.navigation_buttons"/>
                                 </div>
                             </div>

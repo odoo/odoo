@@ -2453,3 +2453,68 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2028-01-01"):
             allocation._update_accrual()
             self.assertAlmostEqual(allocation.number_of_days, 226, 1, 'Same as previous year + 100 days for 2028 (no specific level for this year, use last one)')
+
+    def test_accrual_allocation_with_virtual_future_leaves(self):
+        """ This test considers a case where the employee has an accrual plan with no carryover and
+        also has a virtual leave (leave that isn't validated). When we call the CRON to update the
+        time off based on the accrual allocation and ensure that it goes through successfully without
+        errors due to the pending virtual leaves. Example:
+        Accrual plan with no carryover that grants 8 days on Jan 1 of each year
+        - 8 days allocated on 2024-12-01 (to simulate initial 15day allocation)
+        - Request an unvalidated leave from 2025-01-03 to 2025-01-04 (lies after the carryover date)
+        - Run the CRON on 2025-01-05 to update the accrual allocation: (note how the CRON is run after the leave date)
+           1. The CRON would first make the allocation's number_of_days = 0 because of the carryover policy
+           2. Then it would add 8 days to the allocation's number_of_days
+        - Ensure that the CRON runs successfully without errors during (1) due to the pending virtual leave
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'hr',
+            'allocation_validation_type': 'officer',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan with no carryover',
+            'accrued_gain_time': 'start',
+            'carryover_date': 'year_start',
+            'level_ids': [Command.create({
+                'added_value': 8,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'lost',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+            })],
+        })
+
+        with freeze_time("2024-12-01"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'date_from': '2024-12-01',
+                'number_of_days': 8,
+                'allocation_type': 'accrual',
+                'nextcall': '2025-01-01',
+            })
+            allocation.action_validate()
+            # A virtual leave that is pending approval and will be taken after the carryover date
+            leave = self.env['hr.leave'].create({
+                'name': 'Virtual Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-12-23',
+                'request_date_to': '2024-12-24',
+            })
+            self.assertNotEqual(leave.state, 'validate', "The leave request should not be in the 'validate' state")
+
+        # This is a case where
+        # - the allocation had a next call day of Jan 1 to reset the leaves as per the accrual plan
+        # - the future leave is to scheduled for Jan 3rd to 4th (future because it comes after the carryover date of accrual)
+        # - the CRON to update the accrual allocation is run on Jan 5th (after the nextcall and requested leave date)
+        with freeze_time("2025-01-05"):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 8, "The number of days should be updated successfully")

@@ -222,15 +222,25 @@ class AccountMove(models.Model):
                 number_element = other_data_element.xpath("./RiferimentoNumero")
                 if not number_element:
                     continue
+
+                if price_subtotal:
+                    base_amount = price_subtotal
+                    target_lines = move_line_form
+                else:
+                    # In case it's found on a line with a price of 0.0,
+                    # ENASARCO pension fund contribution will be applied
+                    # on the total amount of the invoice instead.
+                    # When we do, then there is no need for the zero-priced line,
+                    # so we can unlink it.
+                    base_amount = move_line_form.move_id.amount_untaxed
+                    target_lines = move_line_form.move_id.invoice_line_ids - move_line_form
+                    move_line_form.unlink()
+
                 enasarco_amount = float(number_element[0].text)
-                enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / price_subtotal * 100)
-                enasarco_tax = self._l10n_it_edi_search_tax_for_import(
-                    company,
-                    enasarco_percentage,
-                    [('l10n_it_pension_fund_type', '=', 'TC07')] + type_tax_use_domain,
-                    vat_only=False)
-                if enasarco_tax:
-                    move_line_form.tax_ids |= enasarco_tax
+                enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / base_amount * 100)
+                domain = [('l10n_it_pension_fund_type', '=', 'TC07')] + type_tax_use_domain
+                if enasarco_tax := self._l10n_it_edi_search_tax_for_import(company, enasarco_percentage, domain, vat_only=False):
+                    target_lines.tax_ids |= enasarco_tax
                 else:
                     messages_to_log.append(Markup("%s<br/>%s") % (
                         _("Enasarco tax not found for line with description '%s'", move_line_form.name),

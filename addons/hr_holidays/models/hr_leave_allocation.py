@@ -701,8 +701,8 @@ class HolidaysAllocation(models.Model):
                     .get(allocation.holiday_status_id, {}).get('excess_days', {})
                 previous_excess = dict(previous_consumed_leaves[1]).get(allocation.employee_id, {}) \
                     .get(allocation.holiday_status_id, {}).get('excess_days', {})
-                total_current_excess = sum(leave_date['amount'] for leave_date in current_excess.values())
-                total_previous_excess = sum(leave_date['amount'] for leave_date in previous_excess.values())
+                total_current_excess = sum(leave_date['amount'] and not leave_date['is_virtual'] for leave_date in current_excess.values())
+                total_previous_excess = sum(leave_date['amount'] and not leave_date['is_virtual'] for leave_date in previous_excess.values())
 
                 if total_current_excess <= total_previous_excess:
                     continue
