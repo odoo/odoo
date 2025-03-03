@@ -9,9 +9,11 @@ import {
     hover,
     insertText,
     onRpcBefore,
+    openFormView,
     setupChatHub,
     start,
     startServer,
+    triggerHotkey,
 } from "../mail_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
@@ -375,4 +377,59 @@ test("Show IM status", async () => {
     setupChatHub({ folded: [channelId] });
     await start();
     await contains(".o-mail-ChatBubble .fa-circle.text-success[aria-label='User is online']");
+});
+
+test("Open chat window from messaging menu with chat hub compact", async () => {
+    const pyEnv = await startServer();
+    const johnId = pyEnv["res.users"].create({ name: "John" });
+    const johnPartnerId = pyEnv["res.partner"].create({ user_ids: [johnId], name: "John" });
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: johnPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    setupChatHub({ folded: [chatId] });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button.fa.fa-ellipsis-h[title='Chat Options']");
+    await click("button.o-mail-ChatHub-option", { text: "Hide all conversations" });
+    await contains(".o-mail-ChatHub-hiddenBtnIcon");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "John" });
+    await contains(".o-mail-ChatWindow", { text: "John" });
+    await click(".o-mail-ChatWindow-command[title='Fold']");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await withUser(johnId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello Mitchel!", message_type: "comment" },
+            thread_id: chatId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-ChatHub-hiddenBtnCounter", { text: "1" });
+    await contains(".o-mail-ChatWindow", { count: 0 });
+});
+
+test("Open chat window from command palette with chat hub compact", async () => {
+    const pyEnv = await startServer();
+    const johnId = pyEnv["res.users"].create({ name: "John" });
+    const johnPartnerId = pyEnv["res.partner"].create({ user_ids: [johnId], name: "John" });
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: johnPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    setupChatHub({ folded: [chatId] });
+    await start();
+    await click("button.fa.fa-ellipsis-h[title='Chat Options']");
+    await click("button.o-mail-ChatHub-option", { text: "Hide all conversations" });
+    await contains(".o-mail-ChatHub-hiddenBtnIcon");
+    await triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input", "@");
+    await click(".o-mail-DiscussCommand", { text: "John" });
+    await contains(".o-mail-ChatWindow", { text: "John" });
 });

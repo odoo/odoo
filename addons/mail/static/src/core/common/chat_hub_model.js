@@ -64,6 +64,13 @@ export class ChatHub extends Record {
         this.save(); // sync only once at the end
     }
 
+    hideAll() {
+        for (const cw of this.opened) {
+            cw.bypassCompact = false;
+        }
+        this.compact = true;
+    }
+
     onRecompute() {
         while (this.opened.length > this.maxOpened) {
             const cw = this.opened.pop();

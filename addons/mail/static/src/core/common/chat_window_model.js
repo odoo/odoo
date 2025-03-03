@@ -21,6 +21,7 @@ export class ChatWindow extends Record {
     }
 
     actionsDisabled = false;
+    bypassCompact = false;
     thread = Record.one("Thread");
     autofocus = 0;
     jumpToNewMessage = 0;
@@ -69,6 +70,7 @@ export class ChatWindow extends Record {
         this.store.chatHub.folded.delete(this);
         this.store.chatHub.folded.unshift(this);
         this.store.chatHub.save();
+        this.bypassCompact = false;
     }
 
     async open({ focus = false, notifyState = true, jumpToNewMessage = false } = {}) {
