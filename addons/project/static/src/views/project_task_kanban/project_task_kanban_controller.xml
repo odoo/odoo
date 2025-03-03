@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.ProjectTaskKanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <button class="btn btn-primary o-kanban-button-new" position="attributes">
+            <attribute name="t-if">!taskTemplates.length</attribute>
+        </button>
+        <button class="btn btn-primary o-kanban-button-new" position="after">
+            <t t-else="">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-hotkey="c">
+                    New
+                </button>
+                <ul class="dropdown-menu">
+                    <button type="button" class="btn btn-link dropdown-item" t-on-click="() => this.createRecord()">
+                        New Task
+                    </button>
+                    <div class="dropdown-divider"/>
+                    <span class="dropdown-item fs-5 pe-none my-2">Task Templates</span>
+                    <t t-foreach="taskTemplates" t-as="template" t-key="template.id">
+                        <button type="button" class="btn btn-link dropdown-item" t-on-click="() => this.createTaskFromTemplate(template.id)" t-out="template.name"/>
+                    </t>
+                </ul>
+            </t>
+        </button>
+    </t>
+</templates>

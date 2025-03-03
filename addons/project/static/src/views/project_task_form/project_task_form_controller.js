@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { HistoryDialog } from "@html_editor/components/history_dialog/history_dialog";
 import { useService } from '@web/core/utils/hooks';
-import { markup } from '@odoo/owl';
+import { markup, onWillStart } from "@odoo/owl";
 import { escape } from '@web/core/utils/strings';
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
 
@@ -14,9 +14,24 @@ Are you sure you want to proceed?`
 );
 
 export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
+    static template = "project.ProjectTaskFormView";
+
     setup() {
         super.setup();
         this.notifications = useService("notification");
+        this.orm = useService("orm");
+        this.taskTemplateService = useService("project_task_template");
+        onWillStart(this.onWillStart);
+        this.taskTemplates = [];
+    }
+
+    async onWillStart() {
+        const context = this.props.context;
+        if (context.default_project_id) {
+            this.taskTemplates = await this.orm.call("project.project", "get_template_tasks", [
+                context.default_project_id,
+            ]);
+        }
     }
 
     /**
@@ -88,5 +103,10 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
                 },
             },
         );
+    }
+
+    async createTaskFromTemplate(templateId) {
+        this.taskTemplateService.templateId = templateId;
+        await this.create();
     }
 }
