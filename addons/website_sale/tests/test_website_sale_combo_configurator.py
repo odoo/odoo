@@ -68,6 +68,7 @@ class TestWebsiteSaleComboConfigurator(HttpCase, WebsiteSaleCommon):
                     'value_ids': [Command.set(no_variant_attribute.value_ids.ids)],
                 }),
             ],
+            'website_published': True,
         })
         combo = self.env['product.combo'].create({
             'name': "Test combo",
