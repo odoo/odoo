@@ -3,7 +3,7 @@
 from markupsafe import Markup
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
@@ -1279,6 +1279,13 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         customer_id_field = cls.env['ir.model.fields']._get(cls.container._name, 'customer_id')
         comment_subtype_id = cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
+        cls.link_previews = cls.env["mail.link.preview"].create(
+            [
+                {"source_url": "https://www.odoo.com"},
+                {"source_url": "https://www.example.com"},
+            ]
+        )
+
         cls.messages_all = cls.env['mail.message'].sudo().create([
             {
                 'attachment_ids': [
@@ -1293,12 +1300,9 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                 'author_id': cls.partners[msg_idx].id,
                 'body': f'<p>Test {msg_idx}</p>',
                 'email_from': cls.partners[msg_idx].email_formatted,
-                'link_preview_ids': [
-                    (0, 0, {
-                        'source_url': 'https://www.odoo.com',
-                    }), (0, 0, {
-                        'source_url': 'https://www.example.com',
-                    }),
+                "message_link_preview_ids": [
+                    Command.create({"link_preview_id": cls.link_previews[0].id}),
+                    Command.create({"link_preview_id": cls.link_previews[1].id}),
                 ],
                 'message_type': 'comment',
                 'model': record._name,
@@ -1383,7 +1387,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         """
         messages_all = self.messages_all.with_env(self.env)
 
-        with self.assertQueryCount(employee=23):  # tm 22
+        with self.assertQueryCount(employee=24):  # tm 23
             res = Store(messages_all, for_current_user=True).get_result()
 
         self.assertEqual(len(res["mail.message"]), 2 * 2)
@@ -1396,7 +1400,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     def test_message_to_store_single(self):
         message = self.messages_all[0].with_env(self.env)
 
-        with self.assertQueryCount(employee=23):  # tm 22
+        with self.assertQueryCount(employee=24):  # tm 23
             res = Store(message, for_current_user=True).get_result()
 
         self.assertEqual(len(res["mail.message"]), 1)
@@ -1485,7 +1489,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "incoming_email_to": False,
                                     "is_discussion": True,
                                     "is_note": False,
-                                    "link_preview_ids": [],
+                                    "message_link_preview_ids": [],
                                     "message_type": "comment",
                                     "model": "mail.test.simple",
                                     "needaction": True,
@@ -1595,7 +1599,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "incoming_email_to": False,
                                     "is_discussion": True,
                                     "is_note": False,
-                                    "link_preview_ids": [],
+                                    "message_link_preview_ids": [],
                                     "message_type": "comment",
                                     "model": "mail.test.simple",
                                     "needaction": True,

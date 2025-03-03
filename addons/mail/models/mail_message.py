@@ -91,9 +91,9 @@ class MailMessage(models.Model):
     preview = fields.Char(
         'Preview', compute='_compute_preview',
         help='The text-only beginning of the body used as email preview.')
-    link_preview_ids = fields.One2many(
-        'mail.link.preview', 'message_id', string='Link Previews',
-        groups="base.group_erp_manager")
+    message_link_preview_ids = fields.One2many(
+        "mail.message.link.preview", "message_id", groups="base.group_erp_manager"
+    )
     reaction_ids = fields.One2many(
         'mail.message.reaction', 'message_id', string="Reactions",
         groups="base.group_system")
@@ -917,6 +917,27 @@ class MailMessage(models.Model):
     # STORE / NOTIFICATIONS
     # ------------------------------------------------------
 
+    def _field_store_repr(self, field_name):
+        """Return the default Store representation of the given field name, which can be passed as
+        param to the various Store methods."""
+        if field_name == "message_link_preview_ids":
+            return [
+                Store.Many(
+                    "message_link_preview_ids",
+                    value=lambda m: m.sudo()
+                    .message_link_preview_ids.filtered(
+                        lambda message_link_preview: not message_link_preview.is_hidden
+                    )
+                    .sorted(
+                        lambda message_link_preview: (
+                            message_link_preview.sequence,
+                            message_link_preview.id,
+                        )
+                    ),
+                )
+            ]
+        return [field_name]
+
     def _to_store_defaults(self):
         com_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
         note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
@@ -931,11 +952,8 @@ class MailMessage(models.Model):
             Store.Attr("is_note", lambda m: m.subtype_id.id == note_id),
             Store.Attr("is_discussion", lambda m: m.subtype_id.id == com_id),
             # sudo: mail.message - reading link preview on accessible message is allowed
-            Store.Many(
-                "link_preview_ids",
-                value=lambda m: m.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden),
-            ),
             "message_format",
+            "message_link_preview_ids",
             "message_type",
             "model",  # keep for iOS app
             "pinned_at",

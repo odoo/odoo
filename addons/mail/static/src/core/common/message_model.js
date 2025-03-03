@@ -68,10 +68,7 @@ export class Message extends Record {
     is_note;
     /** @type {boolean} */
     is_transient;
-    link_preview_ids = Record.many("mail.link.preview", {
-        inverse: "message_id",
-        onDelete: (r) => r.delete(),
-    });
+    message_link_preview_ids = Record.many("mail.message.link.preview", { inverse: "message_id" });
     /** @type {number[]} */
     parentMessage = Record.one("mail.message");
     /**
@@ -323,8 +320,8 @@ export class Message extends Record {
             this.body.startsWith("<a") &&
             this.body.endsWith("/a>") &&
             this.body.match(/<\/a>/im)?.length === 1 &&
-            this.link_preview_ids.length === 1 &&
-            this.link_preview_ids[0].isImage
+            this.message_link_preview_ids.length === 1 &&
+            this.message_link_preview_ids[0].link_preview_id.isImage
         );
     }
 
@@ -450,6 +447,7 @@ export class Message extends Record {
             mentionedChannels,
             mentionedPartners,
         });
+        const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
         const data = await rpc("/mail/message/update_content", {
             attachment_ids: attachments
                 .concat(this.attachment_ids)
@@ -463,7 +461,7 @@ export class Message extends Record {
             ...this.thread.rpcParams,
         });
         this.store.insert(data, { html: true });
-        if (this.hasLink && this.store.hasLinkPreviewFeature) {
+        if ((hadLink || this.hasLink) && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
     }
@@ -523,6 +521,12 @@ export class Message extends Record {
             }),
             { type: "success" }
         );
+    }
+
+    hideAllLinkPreviews() {
+        rpc("/mail/link_preview/hide", {
+            message_link_preview_ids: this.message_link_preview_ids.map((lpm) => lpm.id),
+        });
     }
 }
 

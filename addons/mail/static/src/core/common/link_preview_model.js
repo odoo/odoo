@@ -9,7 +9,7 @@ export class LinkPreview extends Record {
 
     /** @type {number} */
     id;
-    message_id = Record.one("mail.message", { inverse: "link_preview_ids" });
+    message_link_preview_ids = Record.many("mail.message.link.preview", { inverse: "link_preview_id"})
     /** @type {string} */
     image_mimetype;
     /** @type {string} */

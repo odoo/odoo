@@ -409,7 +409,7 @@ test("Update the link previews when a message is edited", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/link_preview", (args) => asyncStep("link_preview"));
+    onRpcBefore("/mail/link_preview$", (args) => asyncStep("link_preview"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
