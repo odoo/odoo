@@ -57,11 +57,14 @@ class ResPartner(models.Model):
                 partner = partner.parent_id
 
     def action_view_opportunity(self):
-        '''
-        This function returns an action that displays the opportunities from partner.
-        '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
         action['context'] = {}
+        action['context'] = {
+            'search_default_filter_won_status_won': 1,
+            'search_default_filter_won_status_lost': 1,
+            'search_default_filter_won_status_pending': 1,
+            'active_test': False,
+        }
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
