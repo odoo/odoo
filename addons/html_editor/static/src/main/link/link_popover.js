@@ -9,6 +9,8 @@ export class LinkPopover extends Component {
     static props = {
         linkElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         onApply: Function,
+        livePreview: Function,
+        onDiscard: Function,
         onRemove: Function,
         onCopy: Function,
         onClose: Function,
@@ -75,6 +77,24 @@ export class LinkPopover extends Component {
                 this.loadAsyncLinkPreview();
             }
         });
+        document.addEventListener("pointerdown", (ev) => {
+            if (
+                this.editingWrapper?.el &&
+                !this.state.isImage &&
+                !this.editingWrapper.el.contains(ev.target)
+            ) {
+                this.onClickApply();
+            }
+        });
+    }
+
+    onApplyLinkPreview(ev = null) {
+        if (ev?.target.name === "link_type") {
+            // Update state on "link_type" dropdown change.
+            this.state.type = ev.target.value;
+        }
+        // Apply changes to update the link preview.
+        this.props.livePreview(this.state.url, this.state.label, this.classes);
     }
     onClickApply() {
         this.state.editing = false;
@@ -280,6 +300,7 @@ export class LinkPopover extends Component {
         this.props.onUpload?.(attachment);
         this.state.url = getURL(attachment, { download: true, unique: true, accessToken: true });
         this.state.label ||= attachment.name;
+        this.onApplyLinkPreview();
     }
 
     isAttachmentUrl() {

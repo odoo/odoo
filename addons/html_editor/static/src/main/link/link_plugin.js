@@ -437,15 +437,24 @@ export class LinkPlugin extends Plugin {
                     this.dependencies.dom.insert(link);
                 }
             }
-            this.closeLinkTools(cursorsToRestore);
-            this.dependencies.selection.focusEditable();
-            this.dependencies.history.addStep();
         };
 
+        const restoreSavePoint = this.dependencies.history.makeSavePoint();
         const props = {
             linkElement,
             isImage: isImage,
-            onApply: applyCallback,
+            onApply: (...args) => {
+                applyCallback(...args);
+                this.closeLinkTools(cursorsToRestore);
+                this.dependencies.selection.focusEditable();
+                this.dependencies.history.addStep();
+            },
+            livePreview: applyCallback,
+            onDiscard: () => {
+                restoreSavePoint();
+                this.closeLinkTools();
+                this.dependencies.selection.focusEditable();
+            },
             onRemove: () => {
                 this.removeLinkInDocument();
                 this.linkInDocument = null;
