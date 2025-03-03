@@ -202,6 +202,7 @@ test("Can edit message comment in chatter", async () => {
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
 });
 
+test.tags("mobile");
 test("Can edit message comment in chatter (mobile)", async () => {
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
@@ -216,7 +217,7 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await click("button:contains('Edit')");
     await contains("button", { text: "Discard editing" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click("button[title='Save editing']");

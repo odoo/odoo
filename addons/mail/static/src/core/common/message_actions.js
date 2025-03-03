@@ -93,7 +93,7 @@ messageActionsRegistry
         title: _t("Edit"),
         onClick: (component) => {
             component.props.messageEdition.enterEditMode(component.props.message);
-            component.optionsDropdown.close();
+            component.optionsDropdown?.close();
         },
         sequence: 80,
     })
