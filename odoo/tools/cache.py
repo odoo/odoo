@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+from collections.abc import Mapping, Collection
 from decorator import decorator
 from inspect import signature, Parameter
 import logging
+import sys
 import time
 import typing
 import warnings
@@ -163,24 +165,52 @@ def log_ormcache_stats(sig=None, frame=None):   # noqa: ARG001 (arguments are th
     """ Log statistics of ormcache usage by database, model, and method. """
     from odoo.modules.registry import Registry
     cache_entries = {}
+    cache_footprints = {}
     current_db = None
+    current_cache_stats = []
     cache_stats = ['Caches stats:']
     for (dbname, model, method), stat in sorted(STAT.items(), key=lambda k: (k[0][0] or '~', k[0][1], k[0][2].__name__)):
         dbname_display = dbname or "<no_db>"
         if current_db != dbname_display:
+            if current_db:
+                current_cache_stats.sort()
+                cache_stats.append(f'Database {current_db}:')
+                cache_stats.extend(s[1] for s in current_cache_stats)
             current_db = dbname_display
-            cache_stats.append(f"Database {dbname_display}")
+            current_cache_stats = []
         if dbname:   # mainly for MockPool
+            cache = Registry.registries.d[dbname]._Registry__caches[stat.cache_name]
             if (dbname, stat.cache_name) not in cache_entries:
-                cache = Registry.registries.d[dbname]._Registry__caches[stat.cache_name]
                 cache_entries[dbname, stat.cache_name] = Counter(k[:2] for k in cache.d)
+                cache_footprints[dbname, stat.cache_name] = footprints = defaultdict(int)
+                for k, v in cache.d.items():
+                    footprints_ = get_memory_footprint(v)
+                    footprints['__all__', None] += footprints_
+                    footprints[k[:2]] += footprints_
             nb_entries = cache_entries[dbname, stat.cache_name][model, method]
+            nb_entries_all = len(cache) or 1
+            fp_entries = cache_footprints[dbname, stat.cache_name][model, method]
+            fp_entries_all = cache_footprints[dbname, stat.cache_name]['__all__', None] or 1
         else:
-            nb_entries = 0
+            nb_entries = fp_entries = 0
+            nb_entries_all = fp_entries_all = 1
         cache_name = stat.cache_name.rjust(25)
-        cache_stats.append(
-            f"{cache_name}, {nb_entries:6d} entries, {stat.hit:6d} hit, {stat.miss:6d} miss, {stat.err:6d} err, {stat.gen_time:10.3f}s time, {stat.ratio:6.1f}% ratio for {model}.{method.__name__}"
-        )
+        current_cache_stats.append((
+            (cache_name, -fp_entries),
+            f'{cache_name}, ' \
+            f'{nb_entries:6d} entries ({nb_entries * 100 / nb_entries_all:5.1f}%), ' \
+            f'{fp_entries:10d} bytes ({fp_entries / fp_entries_all * 100:5.1f}%),' \
+            f'{stat.hit:6d} hit, ' \
+            f'{stat.miss:6d} miss, ' \
+            f'{stat.err:6d} err, ' \
+            f'{stat.gen_time:10.3f} seconds, ' \
+            f'{stat.ratio:6.1f}% ratio ' \
+            f'for {model}.{method.__name__}',
+        ))
+    if current_db:
+        current_cache_stats.sort()
+        cache_stats.append(f'Database {current_db}:')
+        cache_stats.extend(s[1] for s in current_cache_stats)
     _logger.info('\n'.join(cache_stats))
 
 
@@ -191,3 +221,32 @@ def get_cache_key_counter(bound_method: Callable, *args, **kwargs):
     cache, key0, counter = ormcache_instance.lru(model)
     key = key0 + ormcache_instance.key(model, *args, **kwargs)
     return cache, key, counter
+
+
+def get_memory_footprint(*args):
+    """ A non-thread-safe recursive object size estimator """
+    seen_ids = set()
+    total_size = 0
+    objects = list(args)
+
+    while objects:
+        cur_obj = objects.pop()
+        if id(cur_obj) in seen_ids or callable(cur_obj):
+            continue
+
+        seen_ids.add(id(cur_obj))
+        total_size += sys.getsizeof(cur_obj)
+
+        if hasattr(cur_obj, '__slot__'):
+            objects.extend(getattr(cur_obj, s) for s in cur_obj.__slots__ if hasattr(cur_obj, s))
+        elif hasattr(cur_obj, '__dict__'):
+            objects.append(cur_obj.__dict__.values())
+            objects.append(cur_obj.__dict__.keys())
+
+        if isinstance(cur_obj, Mapping):
+            objects.extend(cur_obj.values())
+            objects.extend(cur_obj.keys())
+        elif isinstance(cur_obj, Collection) and not isinstance(cur_obj, (str, bytes, bytearray)):
+            objects.extend(cur_obj)
+
+    return total_size
