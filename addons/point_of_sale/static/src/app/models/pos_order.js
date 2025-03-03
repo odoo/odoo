@@ -45,6 +45,10 @@ export class PosOrder extends Base {
             this.lines = [];
         }
 
+        if (!this.user_id && this.models["res.users"]) {
+            this.user_id = this.user;
+        }
+
         // !!Keep all uiState in one object!!
         if (!this.uiState) {
             this.uiState = {
