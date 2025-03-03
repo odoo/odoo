@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_salesperson_assignment.SelectSalespersonButton">
+        <button
+            class="set-salesperson btn btn-light text-truncate btn-lg lh-lg w-auto">
+                <div t-if="salesperson" class="d-flex justify-content-between align-items-center">
+                    <div class="text-truncate text-action" t-on-click="onClick">
+                        <t t-esc="salesperson.name"/>
+                    </div>
+                    <i class="fa fa-close" style="padding-left: 8px" t-on-click="onRemove"/>
+                </div>
+                <t t-else="">
+                    <div t-on-click="onClick">
+                        Salesperson
+                    </div>
+                </t>
+        </button>
+    </t>
+</templates>
