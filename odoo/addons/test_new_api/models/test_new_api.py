@@ -1197,6 +1197,7 @@ class Test_New_ApiModel_B(models.Model):
 class Test_New_ApiModel_Parent(models.Model):
     _name = 'test_new_api.model_parent'
     _description = 'Model Multicompany parent'
+    _check_company_auto = True
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
