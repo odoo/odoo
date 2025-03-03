@@ -366,5 +366,12 @@ class TestSelectorSelection(TransactionCase):
         self.assertFalse(tags.check(no_tags_obj), 'Test should not match another module path with file')
 
         # absolute path case (used by test-file)
-        tags = TagsSelector(__file__)
+        tags = TagsSelector(__file__)  # todo fix if . in path
         self.assertTrue(tags.check(no_tags_obj), 'Test should match its absolute file path')
+
+class TestTestClass(BaseCase):
+    def test_canonical_tag(self):
+        self.assertEqual(self.canonical_tag, '/base/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')
+
+    def get_log_metadata(self):
+        self.assertEqual(self.log_metadata['canonical_tag'], '/base/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')
