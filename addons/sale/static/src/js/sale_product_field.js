@@ -2,7 +2,7 @@ import {
     ProductLabelSectionAndNoteField,
     productLabelSectionAndNoteField,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
-import { useEffect } from '@odoo/owl';
+import { useEffect } from "@odoo/owl";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -26,16 +26,19 @@ async function applyProduct(record, product) {
         if (selectedCustomPTAV) {
             customAttributesCommands.push(
                 x2ManyCommands.create(undefined, {
-                    custom_product_template_attribute_value_id: [selectedCustomPTAV.id, "we don't care"],
+                    custom_product_template_attribute_value_id: [
+                        selectedCustomPTAV.id,
+                        "we don't care",
+                    ],
                     custom_value: ptal.customValue,
                 })
             );
-        };
+        }
     }
 
-    const noVariantPTAVIds = product.attribute_lines.filter(
-        ptal => ptal.create_variant === "no_variant"
-    ).flatMap(ptal => ptal.selected_attribute_value_ids);
+    const noVariantPTAVIds = product.attribute_lines
+        .filter((ptal) => ptal.create_variant === "no_variant")
+        .flatMap((ptal) => ptal.selected_attribute_value_ids);
 
     // We use `_update` (not locked) instead of `update` (locked) so that multiple records can be
     // updated in parallel (for performance).
@@ -45,8 +48,7 @@ async function applyProduct(record, product) {
         product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPTAVIds)],
         product_custom_attribute_value_ids: customAttributesCommands,
     });
-};
-
+}
 
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "sale.SaleProductField";
@@ -93,7 +95,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 return product_id_data[1].split("\n")[0];
             }
         }
-        return super.productName
+        return super.productName;
     }
     get isProductClickable() {
         // product form should be accessible if the widget field is readonly
@@ -105,10 +107,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         );
     }
     get hasConfigurationButton() {
-        return this.isConfigurableLine || this.isConfigurableTemplate || this.isCombo;
-    }
-    get isConfigurableLine() {
-        return false;
+        return this.isConfigurableTemplate || this.isCombo;
     }
     get isConfigurableTemplate() {
         return this.props.record.data.is_configurable_product;
@@ -171,7 +170,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 context: this.context,
             }
         );
-        if(result && result.product_id) {
+        if (result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
                 if (result.is_combo) {
                     await this.props.record.update({
@@ -189,12 +188,12 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             }
         } else {
             if (result && result.sale_warning) {
-                const {type, title, message} = result.sale_warning
+                const { type, title, message } = result.sale_warning;
                 if (type === 'block') {
                     // display warning block, and remove blocking product
                     this.dialog.add(WarningDialog, { title, message });
-                    this.props.record.update({'product_template_id': false})
-                    return
+                    this.props.record.update({ product_template_id: false });
+                    return;
                 } else if (type == 'warning') {
                     // show the warning but proceed with the configurator opening
                     this.notification.add(message, {
@@ -217,20 +216,17 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     async _onProductUpdate() {} // event_booth_sale, event_sale, sale_renting
 
     onEditConfiguration() {
-        if (this.isConfigurableLine) {
-            this._editLineConfiguration();
-        } else if (this.isCombo) {
+        if (this.isCombo) {
             this._openComboConfigurator(true);
         } else if (this.isConfigurableTemplate) {
             this._openProductConfigurator(true);
         }
     }
-    _editLineConfiguration() {} // event_booth_sale, event_sale, sale_renting
 
-    async _openProductConfigurator(edit=false) {
+    async _openProductConfigurator(edit = false) {
         const saleOrderRecord = this.props.record.model.root;
         const saleOrderLine = this.props.record.data;
-        let ptavIds = this._getVariantPtavIds(saleOrderLine);
+        const ptavIds = this._getVariantPtavIds(saleOrderLine);
         let customPtavs = [];
 
         if (edit) {
@@ -273,7 +269,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         });
     }
 
-    async _openComboConfigurator(edit=false) {
+    async _openComboConfigurator(edit = false) {
         const saleOrder = this.props.record.model.root.data;
         const comboLineRecord = this.props.record;
         const comboItemLineRecords = getLinkedSaleOrderLines(comboLineRecord);
@@ -392,9 +388,10 @@ export const saleOrderLineProductField = {
     ...productLabelSectionAndNoteField,
     component: SaleOrderLineProductField,
     extractProps(fieldInfo, dynamicInfo) {
-        const props = productLabelSectionAndNoteField.extractProps(...arguments);
-        props.readonlyField = dynamicInfo.readonly;
-        return props;
+        return {
+            ...productLabelSectionAndNoteField.extractProps(fieldInfo, dynamicInfo),
+            readonlyField: dynamicInfo.readonly,
+        };
     },
 };
 
