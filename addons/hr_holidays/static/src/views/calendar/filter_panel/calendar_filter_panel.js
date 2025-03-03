@@ -1,6 +1,5 @@
 import { CalendarFilterPanel } from "@web/views/calendar/filter_panel/calendar_filter_panel";
 import { TimeOffCardMobile } from "../../../dashboard/time_off_card";
-import { getFormattedDateSpan } from "@web/views/calendar/utils";
 
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
@@ -26,7 +25,16 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
         super.setup();
 
         this.orm = useService("orm");
-        this.getFormattedDateSpan = getFormattedDateSpan;
+        this.getFormattedDateSpan = function getFormattedDateSpan(start, end) {
+            const n = "numeric",
+                s = "short",
+                l = "long";
+            const isSameDay = start.hasSame(end, "days");
+            if (isSameDay) {
+                return start.toLocaleString({ month: s, day: n, year: n });
+            }
+            return start.toLocaleString({ month: s, day: n, year: n }) + " - " + end.toLocaleString({ month: s, day: n, year: n });
+        };
         this.leaveState = useState({
             holidays: [],
             mandatoryDays: [],

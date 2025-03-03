@@ -54,7 +54,7 @@ export class TimeOffCalendarController extends CalendarController {
             );
         }
 
-        this.displayDialog(FormViewDialog, {
+        this.displayDialog(TimeOffFormViewDialog, {
             resModel: "hr.leave",
             title: _t("New Time Off"),
             viewId: this.model.formViewId,
@@ -62,6 +62,9 @@ export class TimeOffCalendarController extends CalendarController {
                 this.model.load();
                 this.env.timeOffBus.trigger("update_dashboard");
             },
+            onRecordDeleted: (record) => None,
+            onLeaveCancelled: (record) => None,
+            size: "md",
             context: context,
         });
     }
