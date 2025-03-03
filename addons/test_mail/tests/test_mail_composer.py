@@ -1742,6 +1742,33 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         self.assertEqual(message.partner_ids, self.partner_1 | self.partner_2)
 
     @users('employee')
+    def test_mail_composer_recipients_status(self):
+        test_record = self.test_record
+        external_partner = self.env['res.partner'].sudo().create({
+            "name": "Customer",
+            "partner_share": True,
+            "email": "custo@kuzco.com"
+        })
+        ctx = {
+            'default_model': test_record._name,
+            'default_composition_mode': "comment",
+            'default_res_ids': test_record.ids
+        }
+        for is_customer_subscribed in [True, False]:
+            composer = self.env['mail.compose.message'].with_context(ctx).create({
+                'body': '<p>Test Body</p>',
+                'reply_to': 'my_reply_to@test.example.com',
+                'subject': 'My amazing subject',
+            })
+            with self.subTest(is_customer_subscribed=is_customer_subscribed, partner_id=external_partner):
+                if is_customer_subscribed:
+                    test_record.message_subscribe(partner_ids=external_partner.ids)  # add external follower
+                    self.assertTrue(composer.notified_bcc_contains_share, 'The created partner is external so should be True')
+                else:
+                    test_record.message_unsubscribe(external_partner.ids)  # remove external follower
+                    self.assertFalse(composer.notified_bcc_contains_share, 'External follower should be unsubscribed')
+
+    @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_composer_server_config(self):
         """ Test various configuration to check behavior of outgoing mail

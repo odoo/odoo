@@ -1,61 +1,31 @@
 import { parseEmail } from "@mail/utils/common/format";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
-import { TagsList } from "@web/core/tags_list/tags_list";
 import { isEmail } from "@web/core/utils/strings";
 import { useService } from "@web/core/utils/hooks";
-import { useOpenMany2XRecord, useSelectCreate } from "@web/views/fields/relational_utils";
+import { useSelectCreate } from "@web/views/fields/relational_utils";
+
+import { rpc } from "@web/core/network/rpc";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
+import { RecipientsPopover } from "./recipients_popover";
+import { RecipientsInputTagsList } from "./recipients_input_tags_list";
 
 import { Component } from "@odoo/owl";
-import { rpc } from "@web/core/network/rpc";
 
 export class RecipientsInput extends Component {
     static template = "mail.RecipientsInput";
-    static components = { AutoComplete, TagsList };
+    static components = { AutoComplete, RecipientsInputTagsList };
     static props = {
         thread: { type: Object },
     };
 
     setup() {
         this.orm = useService("orm");
-        this.openFormViewToCreateResPartner = useOpenMany2XRecord({
-            fieldString: _t("Additional Contact"),
-            resModel: "res.partner",
-            activeActions: {
-                create: true,
-            },
-            /** @param {Record} partner */
-            onRecordSaved: async (partner) => {
-                this.insertAdditionalRecipient({
-                    email: partner.data.email,
-                    name: partner.data.name,
-                    partner_id: partner.resId,
-                    persona: { type: "partner", id: partner.resId },
-                });
-            },
-        });
-
-        this.openFormViewToEditPartner = useOpenMany2XRecord({
-            fieldString: _t("Edit Partner"),
-            resModel: "res.partner",
-            activeActions: {
-                create: false,
-                createEdit: false,
-                write: true,
-            },
-            /** @param {Record} partner */
-            onRecordSaved: (partner) => {
-                const recipients = this.getAllMailThreadRecipients().filter(
-                    (recipient) => recipient.partner_id === partner.resId
-                );
-                for (const recipient of recipients) {
-                    Object.assign(recipient, {
-                        email: partner.data.email,
-                        name: partner.data.name,
-                    });
-                }
-            },
-        });
+        this.action = useService("action");
+        this.store = useService("mail.store");
+        this.popover = usePopover(RecipientsPopover, { position: "bottom-middle" });
+        this.onKeydown = useTagNavigation("recipientsInputRef", this.deleteTagByIndex.bind(this));
 
         this.openListViewToSelectResPartner = useSelectCreate({
             resModel: "res.partner",
@@ -80,6 +50,13 @@ export class RecipientsInput extends Component {
                 }
             },
         });
+    }
+
+    deleteTagByIndex(index) {
+        const tags = this.getTagsFromMailThread();
+        if (tags[index]) {
+            tags[index].onDelete();
+        }
     }
 
     getAutoCompleteSources() {
@@ -153,7 +130,7 @@ export class RecipientsInput extends Component {
                             const partners = await rpc("/mail/partner/from_email", {
                                 thread_model: this.props.thread.model,
                                 thread_id: this.props.thread.id,
-                                emails: [email],
+                                emails: [term],
                             });
                             if (partners.length) {
                                 const partner = partners[0];
@@ -173,13 +150,16 @@ export class RecipientsInput extends Component {
                             }
                         };
                     } else {
-                        createOption.onSelectOption = () => {
-                            const context = {
-                                form_view_ref: "base.view_partner_simple_form",
-                                default_name: name,
-                                default_email: email,
-                            };
-                            this.openFormViewToCreateResPartner({ context });
+                        createOption.onSelectOption = async () => {
+                            const [partnerId] = await this.orm.create("res.partner", [
+                                { name, email },
+                            ]);
+                            this.insertAdditionalRecipient({
+                                email,
+                                name,
+                                partner_id: partnerId,
+                                persona: { type: "partner", id: partnerId },
+                            });
                         };
                     }
                     options.push(createOption);
@@ -193,23 +173,30 @@ export class RecipientsInput extends Component {
     getTagsFromMailThread() {
         const tags = [];
         const createTagForRecipient = (recipient, recipientField) => {
-            const title = _t("%(partner_name)s <%(partner_email)s>", {
-                partner_name: recipient.name,
-                partner_email: recipient.email,
-            });
+            const title = `${recipient.name} ${recipient.email ? "<" + recipient.email + ">" : ""}`;
+            title.trim();
             tags.push({
                 id: recipient.partner_id,
                 canEdit: true,
                 text: recipient.name || recipient.email,
+                name: recipient.name,
+                email: recipient.email,
                 title,
-                onClick: () => {
-                    if (recipient.partner_id) {
-                        this.openFormViewToEditPartner({
-                            resId: recipient.partner_id,
-                            title: _t("Edit: %s", recipient.name),
-                            context: {
-                                form_view_ref: "base.view_partner_simple_form",
-                            },
+                onClick: (ev) => {
+                    if (recipient.partner_id && recipient.email) {
+                        const viewProfileBtnOverride = () => {
+                            const action = {
+                                type: "ir.actions.act_window",
+                                res_model: "res.partner",
+                                res_id: recipient.partner_id,
+                                views: [[false, "form"]],
+                                target: "current",
+                            };
+                            this.action.doAction(action);
+                        };
+                        this.popover.open(ev.target, {
+                            viewProfileBtnOverride,
+                            id: recipient.partner_id,
                         });
                     }
                 },
@@ -220,6 +207,7 @@ export class RecipientsInput extends Component {
                             additionalOrSuggestedRecipient.email !== recipient.email
                     );
                 },
+                onKeydown: this.onKeydown.bind(this),
             });
         };
         for (const recipient of this.props.thread.suggestedRecipients) {
@@ -237,6 +225,24 @@ export class RecipientsInput extends Component {
             ...this.props.thread.suggestedRecipients,
             ...this.props.thread.additionalRecipients,
         ];
+    }
+
+    /**
+     * This method updates a recipient with a new email address.
+     * @param {string} emailNormalized email address to be set on the partner. The address is not a mailbox
+     * notation and only address, e.g. "Raoulette <raoulette@gmail.com>" is not accepted but "raoulette@gmail.com"
+     * is accepted as input.
+     * @param {number} recipientPartnerId ID of the partner to update
+     */
+    async updateRecipient(emailNormalized, recipientPartnerId) {
+        await this.orm.write("res.partner", [recipientPartnerId], { email: emailNormalized });
+        const allRecipients = this.getAllMailThreadRecipients();
+        allRecipients.some((oldRecipient) => {
+            if (oldRecipient.partner_id === recipientPartnerId) {
+                oldRecipient.email = emailNormalized;
+                return true;
+            }
+        });
     }
 
     /**

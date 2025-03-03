@@ -151,6 +151,30 @@ export class Message extends Component {
                 if (cookie.get("color_scheme") === "dark") {
                     this.shadowRoot.appendChild(shadowStyle);
                 }
+                const ellipsisStyle = document.createElement("style");
+                ellipsisStyle.textContent = `
+                    .o-mail-ellipsis {
+                        min-width: 2.7ch;
+                        background-color: ButtonFace;
+                        border-radius: 50rem;
+                        border: 0;
+                        display: block
+                        font: -moz-button;
+                        font-size: .75rem;
+                        font-weight: 500;
+                        line-height: 1.1;
+                        cursor: pointer;
+                        padding: 0 4px;
+                        vertical-align: top;
+                        color #ffffff;
+                        text-decoration: none;
+                        text-align: center;
+                        &:hover {
+                            background-color: -moz-buttonhoverface;
+                        }
+                    }
+                `;
+                this.shadowRoot.appendChild(ellipsisStyle);
             }
         });
         useEffect(
@@ -393,10 +417,9 @@ export class Message extends Component {
     onClickNotification(ev) {
         const message = toRaw(this.message);
         if (message.failureNotifications.length > 0) {
-            this.onClickFailure(ev);
-        } else {
-            this.popover.open(ev.target, { message });
+            markEventHandled(ev, "Message.ClickFailure");
         }
+        this.popover.open(ev.target, { message });
     }
 
     onClickFailure(ev) {
