@@ -1790,6 +1790,21 @@ describe("insert", () => {
         core.stopInteractions();
         expect(queryFirst("inserted")).toBe(null);
     });
+
+    test("inserted element is kept if removeOnClean is false", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            setup() {
+                const node = document.createElement("inserted");
+                this.insert(node, this.el, "beforeend", false);
+            }
+        }
+
+        const { core } = await startInteraction(Test, TemplateTest);
+        expect(queryOne(".test inserted:last-child")).toBeInstanceOf(HTMLElement);
+        core.stopInteractions();
+        expect(queryFirst("inserted")).toBeInstanceOf(HTMLElement);
+    });
 });
 
 describe("renderAt", () => {
@@ -1831,6 +1846,21 @@ describe("renderAt", () => {
         expect(queryFirst(".test [data-which]")).toBe(null);
         await click(subEls[0]);
         expect.verifySteps([]);
+    });
+
+    test("can neutralize cleanup of rendered template by setting removeOnClean to false", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            setup() {
+                this.renderAt("web.testRenderAt", {}, this.el, "beforeend", undefined, false);
+            }
+        }
+
+        const { core } = await startInteraction([Test], TemplateTest);
+        expect(core.interactions).toHaveLength(1);
+        expect(queryFirst(".test .rendered")).toBeInstanceOf(HTMLElement);
+        core.stopInteractions();
+        expect(queryFirst(".test .rendered")).toBeInstanceOf(HTMLElement);
     });
 
     function checkOrder(position) {

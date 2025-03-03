@@ -287,6 +287,16 @@ test("(rpc) form checks conditions", async () => {
     expect(rpcCheck).toBe(true);
 });
 
+test("form submit result cleaned but not removed on stop", async () => {
+    const { core } = await startInteractions(formTemplate);
+    expect(core.interactions).toHaveLength(1);
+    expect(queryOne("#s_website_form_result").children.length).toEqual(0);
+    await click("a.s_website_form_send");
+    expect(queryOne("#s_website_form_result").children.length).toEqual(1);
+    core.stopInteractions();
+    expect(queryOne("#s_website_form_result").children.length).toEqual(0);
+});
+
 test("form prefilled conditional", async () => {
     onRpc("res.users", "read", ({ parent }) => {
         const result = parent();
