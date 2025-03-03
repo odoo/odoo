@@ -94,6 +94,13 @@ export class DiscussSidebarCallParticipants extends Component {
             : "";
     }
 
+    onClickAvatarStack() {
+        if (this.compact) {
+            return;
+        }
+        this.state.expanded = true;
+    }
+
     get title() {
         return this.state.expanded ? _t("Collapse participants") : _t("Expand participants");
     }
