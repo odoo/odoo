@@ -786,4 +786,16 @@
         <field name="code">USRETROREGULAR</field>
         <field name="country_id" ref="base.us"/>
     </record>
+
+<!-- EG: Egypt -->
+    <record id="l10n_eg_sick_leave_75_work_entry_type" model="hr.work.entry.type">
+        <field name="name">Sick Leave (75% Paid)</field>
+        <field name="code">SICKLEAVE75</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+    <record id="l10n_eg_sick_leave_0_work_entry_type" model="hr.work.entry.type">
+        <field name="name">Sick Leave (Unpaid)</field>
+        <field name="code">SICKLEAVE0</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
 </data></odoo>
