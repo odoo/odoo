@@ -3,7 +3,7 @@
     <t t-name="mail.AvatarStack">
         <div t-if="props.personas.length > 0" class="bg-inherit" style="margin: 1px;" t-att-class="props.containerClass" t-on-click="props.onClick">
             <div class="d-flex bg-inherit" t-att-class="{'flex-column': props.direction === 'v'}">
-                <span t-foreach="props.personas.slice(0, props.max)" t-as="persona" t-key="persona.localId" class="bg-inherit rounded-circle" t-attf-style="{{getStyle(persona_index)}}">
+                <span t-foreach="props.personas.slice(0, props.max)" t-as="persona" t-key="persona.localId" class="bg-inherit rounded-circle position-relative" t-attf-style="{{getStyle(persona_index)}}">
                     <img t-att-src="persona.avatarUrl" t-att-title="persona.name" class="w-100 h-100 rounded-circle o_object_fit_cover" t-attf-class="{{props.avatarClass(persona)}}"/>
                     <t t-slot="avatarExtraInfo" persona="persona"/>
                 </span>
