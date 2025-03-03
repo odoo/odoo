@@ -64,7 +64,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestLeadConvert, cls).setUpClass()
+        super().setUpClass()
         date = Datetime.from_string('2020-01-20 16:00:00')
         cls.crm_lead_dt_mock.now.return_value = date
 
@@ -95,10 +95,11 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
              'probability': 100, 'stage_id': self.stage_team1_2.id,
             }
         ])
-        lead_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate lead: same email_from, lost')
-        _opp_proba100 = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, proba 100 but not won')
-        opp_won = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, won')
-        opp_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate: lost opportunity')
+        self.assertEqual(len(dup_leads), 8, 'Be sure below quick access are relevant')
+        opp_lost = dup_leads[3]
+        lead_lost = dup_leads[4]
+        opp_won = dup_leads[6]
+        _opp_proba100 = dup_leads[7]
 
         test_lead.write({'partner_id': customer.id})
 
