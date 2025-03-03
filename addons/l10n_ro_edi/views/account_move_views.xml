@@ -9,9 +9,9 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='journal_div']" position="after">
                 <field name="l10n_ro_edi_state"
-                       invisible="not l10n_ro_edi_state or state == 'draft' or move_type in ('in_invoice', 'in_refund')"/>
+                       invisible="not l10n_ro_edi_state or move_type in ('in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
                 <field name="l10n_ro_edi_index"
-                       invisible="not l10n_ro_edi_index or state == 'draft' or move_type in ('in_invoice', 'in_refund')"/>
+                       invisible="not l10n_ro_edi_index or move_type in ('in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
             </xpath>
 
             <!-- CIUS-RO Documents Tab -->
@@ -21,23 +21,25 @@
                       invisible="not l10n_ro_edi_document_ids">
                     <field name="l10n_ro_edi_document_ids">
                         <list create="false" delete="false" edit="false" no_open="1"
-                              decoration-danger="state == 'invoice_sending_failed'"
+                              decoration-danger="state == 'invoice_refused'"
                               decoration-warning="state == 'invoice_sent'"
                               decoration-success="state == 'invoice_validated'">
-                            <field name="message" column_invisible="1"/>
-                            <field name="attachment_id" column_invisible="1"/>
                             <field name="datetime"/>
                             <field name="state" widget="account_document_state"/>
-                            <field name="key_loading" optional="hide"/>
+                            <field name="key_download" optional="hide"/>
 
                             <button name="action_l10n_ro_edi_fetch_status"
                                     type="object"
                                     string="Fetch status"
-                                    invisible="state != 'invoice_sent'"/>
-                            <button name="action_l10n_ro_edi_download_signature"
+                                    invisible="not show_fetch_status_button"/>
+                            <button name="action_l10n_ro_edi_download_attachment"
                                     type="object"
-                                    string="Download"
-                                    invisible="not attachment_id"/>
+                                    string="Download the document sent"
+                                    invisible="not attachment or state not in ['invoice_not_indexed', 'invoice_sent']"/>
+                            <button name="action_l10n_ro_edi_download_attachment"
+                                    type="object"
+                                    string="Download the signature"
+                                    invisible="not attachment or state not in ['invoice_validated', 'invoice_refused']"/>
                         </list>
                     </field>
                 </page>
@@ -88,9 +90,9 @@
             </xpath>
             <xpath expr="//filter[@name='to_check']" position="after">
                 <filter string="Sent E-Factura" name="l10n_ro_edi_state_invoice_sent"
-                        domain="[('l10n_ro_edi_state', '=', 'invoice_sent')]"/>
-                <filter string="Error E-Factura" name="l10n_ro_edi_state_invoice_sending_failed"
-                        domain="[('l10n_ro_edi_document_ids.state', '=', 'invoice_sending_failed')]"/>
+                        domain="[('l10n_ro_edi_state', 'in', ['invoice_not_indexed', 'invoice_sent'])]"/>
+                <filter string="Refused E-Factura" name="l10n_ro_edi_state_invoice_refused"
+                        domain="[('l10n_ro_edi_state', '=', 'invoice_refused')]"/>
                 <filter string="Validated E-Factura" name="l10n_ro_edi_state_invoice_validated"
                         domain="[('l10n_ro_edi_state', '=', 'invoice_validated')]"/>
             </xpath>
