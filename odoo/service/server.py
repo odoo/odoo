@@ -1168,10 +1168,26 @@ class Worker(object):
     def run(self):
         try:
             self.start()
-            t = threading.Thread(name="Worker %s (%s) workthread" % (self.__class__.__name__, self.pid), target=self._runloop)
+
+            # Start registry signals listener thread
+            registry_signals = threading.Thread(
+                name="Worker %s (%s) registrysignalsthread" % (self.__class__.__name__, self.pid),
+                target=self._run_registry_signals
+            )
+            registry_signals.daemon = True
+            registry_signals.start()
+
+            # Start main worker thread
+            t = threading.Thread(
+                name="Worker %s (%s) workthread" % (self.__class__.__name__, self.pid), 
+                target=self._runloop
+            )
             t.daemon = True
             t.start()
+
             t.join()
+            registry_signals.join()
+            
             _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
                          self.pid, self.request_count,
                          len(Registry.registries))
@@ -1180,6 +1196,53 @@ class Worker(object):
             _logger.exception("Worker (%s) Exception occurred, exiting...", self.pid)
             # should we use 3 to abort everything ?
             sys.exit(1)
+    
+    def _run_registry_signals(self):
+        signal.pthread_sigmask(signal.SIG_BLOCK, {
+            signal.SIGXCPU,
+            signal.SIGINT, signal.SIGQUIT, signal.SIGUSR1,
+        })
+        dbconn = sql_db.db_connect('postgres', readonly=False)
+        dbcursor = dbconn.cursor()
+
+        # LISTEN / NOTIFY doesn't work in recovery mode
+        dbcursor.execute("SELECT pg_is_in_recovery()")
+        in_recovery = dbcursor.fetchone()[0]
+        if in_recovery:
+            self.alive = False
+            dbcursor.commit()
+            raise Exception("PG cluster in recovery mode, registry signals not activated")
+
+        dbcursor.execute("LISTEN registry_signals")
+        dbcursor.commit()
+        cnx = dbcursor._cnx
+
+        try:
+            while self.alive:
+                db_signals = set(notify.payload for notify in cnx.notifies)
+                cnx.notifies.clear()
+                Registry._signal_watchdog_time = time.time()
+                for db_signal in db_signals:
+                    if db_signal in Registry.registries:
+                        Registry.registries[db_signal].signal_timestamp = time.monotonic()
+                        _logger.info("Updated signal timestamp for registry %s", db_signal)
+
+                # sleep
+                try:
+                    select.select([cnx], [], [], SLEEP_INTERVAL)
+                    # clear pg_conn pipe if we were interrupted
+                    cnx.poll()
+                except select.error as e:
+                    if e.args[0] != errno.EINTR:
+                        raise
+
+        except Exception:
+            self.alive = False
+            dbcursor.close()
+            _logger.exception("Registry Signals Thread %s (%s) Exception occurred, exiting...", self.__class__.__name__, self.pid)
+            sys.exit(1)
+        
+        dbcursor.close()
 
     def _runloop(self):
         signal.pthread_sigmask(signal.SIG_BLOCK, {
