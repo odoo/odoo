@@ -117,11 +117,12 @@ def get_webhook_request_payload():
 class BaseAutomation(models.Model):
     _name = 'base.automation'
     _description = 'Automation Rule'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(string="Automation Rule Name", required=True, translate=True)
+    name = fields.Char(string="Automation Rule Name", required=True, translate=True, tracking=True)
     description = fields.Html(string="Description")
     model_id = fields.Many2one(
-        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade"
+        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade", tracking=True
     )
     model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
     model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
@@ -170,7 +171,7 @@ class BaseAutomation(models.Model):
 
             ('on_webhook', "On webhook"),
         ], string='Trigger',
-        compute='_compute_trigger', readonly=False, store=True, required=True)
+        compute='_compute_trigger', readonly=False, store=True, required=True, tracking=True)
     trg_selection_field_id = fields.Many2one(
         'ir.model.fields.selection',
         string='Trigger Field',
@@ -191,14 +192,14 @@ class BaseAutomation(models.Model):
     trg_date_id = fields.Many2one(
         'ir.model.fields', string='Trigger Date',
         compute='_compute_trg_date_id',
-        readonly=False, store=True,
+        readonly=False, store=True, tracking=True,
         domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]",
         help="""When should the condition be triggered.
                 If present, will be checked by the scheduler. If empty, will be checked at creation and update.""")
     trg_date_range = fields.Integer(
         string='Delay after trigger date',
         compute='_compute_trg_date_range_data',
-        readonly=False, store=True,
+        readonly=False, store=True, tracking=True,
         help="Use negative value to trigger it before the date")
     trg_date_range_type = fields.Selection(
         [('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
