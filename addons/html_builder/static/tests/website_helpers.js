@@ -63,6 +63,7 @@ export async function setupWebsiteBuilder(
         snippets,
         openEditor = true,
         loadIframeBundles = false,
+        loadAssetsFrontendJS = false,
         hasToCreateWebsite = true,
         styleContent,
         headerContent = "",
@@ -121,6 +122,13 @@ export async function setupWebsiteBuilder(
             // load the edit and frontend bundle in it. The problem is that
             // Hoot does not have control of this iframe and therefore
             // does not mock anything in it (location, rpc, ...).
+
+            if (loadIframeBundles) {
+                // TODO: await
+                loadBundle("html_builder.inside_builder_style", {
+                    targetDoc: iframe.contentDocument,
+                });
+            }
         },
     });
     await getService("action").doAction({
@@ -169,18 +177,14 @@ export async function setupWebsiteBuilder(
     }
 
     const iframe = queryOne("iframe[data-src^='/website/force/1']");
-    if (loadIframeBundles) {
-        loadBundle("html_builder.inside_builder_style", {
-            targetDoc: iframe.contentDocument,
-        });
-
-        loadBundle("web.assets_frontend", {
-            targetDoc: iframe.contentDocument,
-            js: false,
-        });
-    }
     if (isBrowserFirefox()) {
         await originalIframeLoaded;
+    }
+    if (loadIframeBundles) {
+        await loadBundle("web.assets_frontend", {
+            targetDoc: iframe.contentDocument,
+            js: loadAssetsFrontendJS,
+        });
     }
     resolveIframeLoaded(iframe);
     await animationFrame();

@@ -11,6 +11,8 @@
                 type="text"
                 autocomplete="chrome-off"
                 class="text-end"
+                t-att-data-tooltip="props.tooltip"
+                t-att-aria-label="props.tooltip"
                 t-on-change="onChange"
                 t-on-input="onInput"
                 t-att-value="displayValue"

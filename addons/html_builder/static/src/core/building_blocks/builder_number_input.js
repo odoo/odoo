@@ -12,6 +12,7 @@ export class BuilderNumberInput extends Component {
     static template = "html_builder.BuilderNumberInput";
     static props = {
         ...basicContainerBuilderComponentProps,
+        tooltip: { type: String, optional: true },
         default: { type: Number, optional: true },
         unit: { type: String, optional: true },
         saveUnit: { type: String, optional: true },

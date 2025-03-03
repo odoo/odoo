@@ -116,6 +116,7 @@ export class WebsiteBuilder extends Component {
     }
 
     loadAssetsEditBundle() {
+        // TODO: await both
         loadBundle("website.assets_edit_frontend", {
             targetDoc: this.websiteContent.el.contentDocument,
         });
