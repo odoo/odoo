@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
  * @property {import('@mail/core/common/thread_model').Thread} thread
  * @property {function} [close]
  * @extends {Component<Props, Env>}
+ * @deprecated Will be removed in master
  */
 export class RecipientList extends Component {
     static template = "mail.RecipientList";

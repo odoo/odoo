@@ -78,21 +78,9 @@
             </div>
             <t t-if="state.composerType">
                 <t t-if="state.composerType === 'message'">
-                    <div class="d-flex py-1">
+                    <div class="d-flex py-1 ps-3">
                         <span class="flex-shrink-0 text-end fw-bold px-2" style="width:46px">To: </span>
                         <RecipientsInput thread="state.thread"/>
-                        <button class="btn btn-link py-0 ms-1"
-                            t-if="!this.state.showNotifiedBcc"
-                            t-on-click="this.showNotifiedBcc">Bcc</button>
-                    </div>
-                    <div class="d-flex py-1" t-if="this.state.showNotifiedBcc">
-                        <span class="flex-shrink-0 text-end fw-bold px-2" style="width:46px">Bcc: </span>
-                        <div class="gap-1">
-                            <BaseRecipientsList
-                                t-if="state.thread.recipients.length > 0"
-                                thread="state.thread"/>
-                            <span t-else="" class="fst-italic">No recipient</span>
-                        </div>
                     </div>
                 </t>
                 <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" onCloseFullComposerCallback.bind="onCloseFullComposerCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>

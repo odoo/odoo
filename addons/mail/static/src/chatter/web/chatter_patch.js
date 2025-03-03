@@ -110,7 +110,6 @@ patch(Chatter.prototype, {
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
-            showNotifiedBcc: false,
             showScheduledMessages: true,
         });
         this.messageSearch = useMessageSearch();
@@ -446,10 +445,6 @@ patch(Chatter.prototype, {
             this.onThreadCreated = schedule;
             this.props.saveRecord?.();
         }
-    },
-
-    showNotifiedBcc() {
-        this.state.showNotifiedBcc = true;
     },
 
     toggleActivities() {

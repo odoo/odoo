@@ -8,6 +8,7 @@
             <div t-foreach="otherNotifications" t-as="notification" t-key="notification.id">
                 <i class="me-2" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.persona" t-esc="notification.persona.name"/>
+                <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
             </div>
             <div t-if="props.message.incoming_email_cc or props.message.incoming_email_to" t-foreach="(props.message.incoming_email_cc || []).concat(props.message.incoming_email_to || [])" t-as="incomingEmail" t-key="incomingEmail_index">
                 <i class="me-2 fa fa-fw fa-send-o"/>
@@ -17,6 +18,7 @@
             <div t-foreach="followerNotifications" t-as="notification" t-key="notification.id">
                 <i class="me-2" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
                 <span t-if="notification.persona" t-esc="notification.persona.name"/>
+                <span class="ms-1 text-muted" t-if="notification.isFailure">(<t t-esc="notification.failureMessage"/>)</span>
             </div>
         </div>
     </t>
