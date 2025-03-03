@@ -35,7 +35,7 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                         const dataSource = this.getChartDataSource(cmd.id);
                         const chart = this.getters.getChart(cmd.id);
                         if (
-                            chart.cumulative !== cmd.definition.cumulative ||
+                            chart.metaData.cumulated !== cmd.definition.cumulative ||
                             dataSource.getInitialDomainString() !==
                                 new Domain(cmd.definition.searchParams.domain).toString()
                         ) {
