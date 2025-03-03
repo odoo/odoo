@@ -42,4 +42,20 @@ export class ChartDataSource extends OdooViewsDataSource {
         }
         return this._model.data;
     }
+
+    changeChartType(newMode) {
+        this._metaData.mode = newMode;
+        this._model?.updateMetaData({ mode: newMode });
+    }
+}
+
+export function chartTypeToDataSourceMode(chartType) {
+    switch (chartType) {
+        case "odoo_bar":
+        case "odoo_line":
+        case "odoo_pie":
+            return chartType.replace("odoo_", "");
+        default:
+            return "bar";
+    }
 }
