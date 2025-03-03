@@ -16,6 +16,7 @@ import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+import { uniqueId } from "@web/core/utils/functions";
 
 const granularityToInterval = {
     hour: { hours: 1 },
@@ -717,12 +718,14 @@ export function isRelational(field) {
  */
 export function useRecordObserver(callback) {
     const component = useComponent();
-    let alive = true;
+    let currentId;
     const observeRecord = (props) => {
+        currentId = uniqueId();
         if (!props.record) {
             return;
         }
         const def = new Deferred();
+        const effectId = currentId;
         let firstCall = true;
         effect(
             (record) => {
@@ -734,7 +737,7 @@ export function useRecordObserver(callback) {
                 } else {
                     return batched(
                         (record) => {
-                            if (!alive) {
+                            if (effectId !== currentId) {
                                 // effect doesn't clean up when the component is unmounted.
                                 // We must do it manually.
                                 return;
@@ -752,7 +755,7 @@ export function useRecordObserver(callback) {
         return def;
     };
     onWillDestroy(() => {
-        alive = false;
+        currentId = uniqueId();
     });
     onWillStart(() => observeRecord(component.props));
     onWillUpdateProps((nextProps) => {
