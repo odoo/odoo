@@ -154,17 +154,9 @@ class PaymentTransaction(models.Model):
                 worldline_code = const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, 0)
                 payload['cardPaymentMethodSpecificInput']['paymentProductId'] = worldline_code
             else:
-                pm_codes = self.env['payment.method'].search([
-                    ('active', 'in', [True, False]),
-                    ('primary_payment_method_id', '=', self.payment_method_id.id),
-                ]).mapped('code')
-                worldline_codes = [
-                    const.PAYMENT_METHODS_MAPPING[code] for code in pm_codes
-                    if code in const.PAYMENT_METHODS_MAPPING
-                ]
                 payload['hostedCheckoutSpecificInput']['paymentProductFilters'] = {
                     'restrictTo': {
-                        'products': worldline_codes,
+                        'groups': ['cards'],
                     },
                 }
 
