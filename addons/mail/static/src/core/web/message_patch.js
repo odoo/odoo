@@ -131,8 +131,8 @@ patch(Message.prototype, {
     /**
      * @returns {string}
      */
-    formatTrackingOrNone(trackingType, trackingValue) {
-        const formattedValue = this.formatTracking(trackingType, trackingValue);
-        return formattedValue || _t("None");
+    highlightedValue(trackingType, trackingValue) {
+        const formattedValue = this.formatTracking(trackingType, trackingValue) || _t("None");
+        return this.props.messageSearch?.highlight(formattedValue) ?? formattedValue;
     },
 });

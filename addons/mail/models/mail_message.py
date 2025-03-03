@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
+import contextlib
 import logging
 import re
 import textwrap
@@ -846,32 +847,72 @@ class MailMessage(models.Model):
         return Store(self, {"starred": self.starred}).get_result()
 
     @api.model
-    def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
+    def _message_fetch(self, domain, res_id=None, res_model=None, search_term=None, search_type=None, before=None, after=None, around=None, limit=30):
         res = {}
         domain = Domain(domain)
         if search_term:
             # we replace every space by a % to avoid hard spacing matching
             search_term = search_term.replace(" ", "%")
-            domain &= Domain.OR([
+            search_domain = Domain.OR([
                 # sudo: access to attachment is allowed if you have access to the parent model
                 [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
                 [("body", "ilike", search_term)],
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
             ])
-            res["count"] = self.search_count(domain)
+            found_tracking_value_ids = []
+            if res_id and res_model:
+                tracking_value_domain = Domain.AND([
+                    [("mail_message_id.res_id", "=", int(res_id))],
+                    [("mail_message_id.model", "=", res_model)],
+                    self._get_tracking_values_domain(search_term)
+                ])
+                found_tracking_value_ids = self.env["mail.tracking.value"].sudo().search(tracking_value_domain)._filter_has_field_access(self.env).ids
+            if search_type == "all_activity":
+                search_domain |= Domain("tracking_value_ids", "in", found_tracking_value_ids)
+            elif search_type == "tracked_changes":
+                search_domain = Domain("tracking_value_ids", "in", found_tracking_value_ids)
+            domain &= search_domain
+            if not search_type or search_type == "conversation":
+                domain &= Domain("message_type", "not in", ["user_notification", "notification"])
+            # sudo: mail.message - searching allowed tracking values
+            res["count"] = self.sudo().search_count(domain)
         if around is not None:
-            messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
-            messages_after = self.search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')
+            # sudo: mail.message - searching allowed tracking values
+            messages_before = self.sudo().search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
+            messages_after = self.sudo().search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')
             return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
         if before:
             domain &= Domain('id', '<', before)
         if after:
             domain &= Domain('id', '>', after)
-        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
+        # sudo: mail.message - searching allowed tracking values
+        res["messages"] = self.sudo().search(domain, limit=limit, order='id ASC' if after else 'id DESC')
         if after:
             res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
+
+    def _get_tracking_values_domain(self, search_term):
+        """ Get the domain to search for tracking values. """
+        numeric_term = None
+        # try to convert the search term to a number
+        with contextlib.suppress(ValueError, TypeError):
+            numeric_term = float(search_term)
+        domain = Domain.OR([
+            [('old_value_char', 'ilike', search_term)],
+            [('new_value_char', 'ilike', search_term)],
+            [('old_value_text', 'ilike', search_term)],
+            [('new_value_text', 'ilike', search_term)],
+            [('field_id.name', 'ilike', search_term)],
+        ])
+        if numeric_term:
+            domain |= Domain.OR([
+                [('old_value_integer', '=', numeric_term)],
+                [('new_value_integer', '=', numeric_term)],
+                [('old_value_float', '=', numeric_term)],
+                [('new_value_float', '=', numeric_term)],
+            ])
+        return domain
 
     def _message_reaction(self, content, action, partner, guest, store: Store = None):
         self.ensure_one()

@@ -646,13 +646,15 @@ export class Store extends BaseStore {
      * @param {string} searchTerm
      * @param {Thread} thread
      * @param {number|false} [before]
+     * @param {string|false} [searchType]
      */
-    async searchMessagesInThread(searchTerm, thread, before = false) {
+    async searchMessagesInThread(searchTerm, thread, before = false, searchType = false) {
         const { count, data, messages } = await rpc(thread.getFetchRoute(), {
             ...thread.getFetchParams(),
             fetch_params: {
                 search_term: await prettifyMessageContent(searchTerm), // formatted like message_post
                 before,
+                search_type: searchType,
             },
         });
         this.insert(data);
