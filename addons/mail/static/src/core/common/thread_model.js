@@ -708,14 +708,14 @@ export class Thread extends Record {
     /** @param {Object} [options] */
     open(options) {}
 
-    async openChatWindow({ focus = false, fromMessagingMenu } = {}) {
+    async openChatWindow({ focus = false, fromMessagingMenu, bypassCompact } = {}) {
         const thread = await this.store.Thread.getOrFetch(this);
         if (!thread) {
             return;
         }
         await this.store.chatHub.initPromise;
         const cw = this.store.ChatWindow.insert(
-            assignDefined({ thread: this }, { fromMessagingMenu })
+            assignDefined({ thread: this }, { fromMessagingMenu, bypassCompact })
         );
         cw.open({ focus: focus });
         if (isMobileOS()) {
