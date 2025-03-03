@@ -26,7 +26,7 @@ class PosSelfKiosk(http.Controller):
                 }
             )
 
-    @http.route("/pos-self/data/<config_id>", type='json', auth='public')
+    @http.route("/pos-self/data/<config_id>", type='json', auth='public', website=True)
     def get_self_ordering_data(self, config_id=None, access_token=None, table_identifier=None):
         pos_config, _, _ = self._verify_entry_access(config_id, access_token, table_identifier)
         data = pos_config.load_self_data()

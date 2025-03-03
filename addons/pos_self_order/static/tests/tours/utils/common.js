@@ -55,3 +55,19 @@ export function openLanguageSelector() {
         run: "click",
     };
 }
+
+export function changeLanguage(language) {
+    return [
+        openLanguageSelector(),
+        {
+            content: `Check that the language is available`,
+            trigger: `.self_order_language_popup .btn:contains(${language})`,
+            in_modal: false,
+            run: "click",
+        },
+        {
+            content: `Check that the language changed`,
+            trigger: `.self_order_language_selector:contains(${language})`,
+        },
+    ];
+}
