@@ -551,6 +551,15 @@ class MailComposeMessage(models.TransientModel):
                     composer.partner_ids = rendered_values['partner_ids']
             elif composer.parent_id and composer.composition_mode == 'comment':
                 composer.partner_ids = composer.parent_id.partner_ids
+            elif composer.model and composer.composition_mode == 'comment' and not composer.composition_batch:
+                # To see if we need to handle create_values or not.
+                record = self.env[composer.model].browse(composer._evaluate_res_ids())
+                if not record:
+                    composer.partner_ids = False
+                    return
+                suggested_recipients = record._message_get_suggested_recipients()
+                partner_ids = self.env['res.partner'].browse([recipient['partner_id'] for recipient in suggested_recipients if recipient.get('partner_id')])
+                composer.partner_ids = partner_ids
             elif not composer.template_id:
                 composer.partner_ids = False
 
