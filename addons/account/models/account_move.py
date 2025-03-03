@@ -4443,11 +4443,11 @@ class AccountMove(models.Model):
 
         term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
         epd_installment = term_lines._get_epd_data()
+        discount_date = epd_installment and epd_installment['line'].discount_date
         epd_info = {}
-        if epd_installment:
+        if epd_installment and discount_date:
             installment_state = 'epd'
             amount_due = epd_installment['amount_residual_currency_unsigned']
-            discount_date = epd_installment['line'].discount_date
             discount_amount_currency = epd_installment['discount_amount_currency']
             days_left = (discount_date - fields.Date.context_today(self)).days  # should never be lower than 0 since epd is valid
             if days_left > 0:
