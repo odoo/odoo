@@ -2,7 +2,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { integerField, IntegerField } from "@web/views/fields/integer/integer_field";
 
-import { useEffect, useRef } from "@odoo/owl";
+import { onWillStart, useEffect, useRef } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 
 /**
@@ -21,18 +22,20 @@ export class IntegerUpdateFlagField extends IntegerField {
     static props= {
         ...IntegerField.props,
         flagFieldName: { type: String },
-        referenceValue: { type: Number },
+        referenceValue: { type: Number, optional: true },
     }
     /**
      * @override
      */
     setup() {
         super.setup(...arguments);
+        this.referenceValue = this.props.referenceValue;
+        this.orm = useService("orm");
         const inputRef = useRef("numpadDecimal");
         const onChange = async () => {
             await this.props.record._update({
-                [this.props.flagFieldName]: parseInt(this.formattedValue) !== this.props.referenceValue}
-            );
+                [this.props.flagFieldName]: parseInt(this.formattedValue) !== this.referenceValue,
+            });
         }
         useEffect(
             (inputEl) => {
@@ -45,6 +48,20 @@ export class IntegerUpdateFlagField extends IntegerField {
             },
             () => [inputRef.el]
         );
+        if (["survey.question", "survey_question"].includes(this.props.record.resModel)) {
+            this.referenceValue =
+                this.props.record?.evalContext?.parent?.session_speed_rating_time_limit;
+            if (this.referenceValue === undefined) {
+                onWillStart(async () => {
+                    const result = await this.orm.searchRead(
+                        "survey.survey",
+                        [["id", "=", this.props.record.data.survey_id[0]]],
+                        ["session_speed_rating_time_limit"]
+                    );
+                    this.referenceValue = result[0]["session_speed_rating_time_limit"];
+                });
+            }
+        }
     }
 }
 

@@ -81,12 +81,10 @@ QUnit.module("UpdateFlagFields", (hooks) => {
                                 <field name="is_time_customized"/>
                                 <field name="is_time_limited" readonly="0"
                                     widget="boolean_update_flag" 
-                                    options="{'flagFieldName': 'is_time_customized'}" 
-                                    context="{'referenceValue': parent.session_speed_rating}"/>
+                                    options="{'flagFieldName': 'is_time_customized'}"/>
                                 <field name="time_limit" readonly="0"
                                     widget="integer_update_flag"
-                                    options="{'flagFieldName': 'is_time_customized'}" 
-                                    context="{'referenceValue': parent.session_speed_rating_time_limit}"/>
+                                    options="{'flagFieldName': 'is_time_customized'}"/>
                             </group>
                         </form>
                     </field>
