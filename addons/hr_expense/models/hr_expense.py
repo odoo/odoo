@@ -8,7 +8,7 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty
+from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty
 
 
 _logger = logging.getLogger(__name__)
@@ -1196,9 +1196,8 @@ class HrExpense(models.Model):
             raise UserError(_("You need to have at least one category that can be expensed in your database to proceed!"))
 
         for attachment in attachments:
-            attachment_name = '.'.join(attachment.name.split('.')[:-1])
             vals = {
-                'name': attachment_name,
+                'name': _("Untitled Expense %s", format_date(self.env, fields.Date.context_today(self))),
                 'price_unit': 0,
                 'product_id': product.id,
             }
