@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
     checkDelay: 100,
     steps: () => [
         {
-            trigger: ".oe_search_found",
+            trigger: ".oe_search_found:not(:visible)",
         },
         {
             content: 'select Super Chair',
