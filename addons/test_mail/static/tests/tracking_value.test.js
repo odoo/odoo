@@ -320,3 +320,43 @@ test("rendering of tracked field of type many2one: from no related record to hav
     await click(".o_form_button_save");
     await contains(".o-mail-Message-tracking", { text: "NoneMarc(Many2one)" });
 });
+
+test("Search message with filter in chatter", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({ name: "Marc" });
+    const mailTestTrackAllId1 = pyEnv["mail.test.track.all"].create({});
+    pyEnv["mail.message"].create({
+        body: "marc",
+        model: "mail.test.track.all",
+        res_id: mailTestTrackAllId1,
+    });
+    await start();
+    registerArchs(archs);
+    await openFormView("mail.test.track.all", mailTestTrackAllId1);
+    await click("[name=many2one_field_id] input");
+    await click("[name=many2one_field_id] .o-autocomplete--dropdown-item", { text: "Marc" });
+    await click(".o_form_button_save");
+    // Search message with filter
+    await click("[title='Search Messages']");
+    await click("button[title='Filter Messages']");
+    await click("span", { text: "All Activity" });
+    await contains(".o_searchview_input");
+    await insertText(".o_searchview_input", "marc");
+    await click("[title='Search Messages']");
+    await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 2 });
+    await click("button[title='Filter Messages']");
+    await click("span", { text: "Conversation" });
+    await contains(".o_searchview_input");
+    await click("[title='Search Messages']");
+    await contains(".o-mail-SearchMessageResult .o-mail-Message", { text: "marc" });
+    await click("button[title='Filter Messages']");
+    await click("span", { text: "Tracked Changes" });
+    await contains(".o_searchview_input");
+    await click("[title='Search Messages']");
+    await contains(".o-mail-SearchMessageResult .o-mail-Message", { text: "marc" });
+    await editSelect("div[name=selection_field] select", '"first"');
+    await click(".o_form_button_save");
+    await insertText(".o_searchview_input", "first", { replace: true });
+    await click("[title='Search Messages']");
+    await contains(".o-mail-SearchMessageResult .o-mail-Message", { text: "first" });
+});
