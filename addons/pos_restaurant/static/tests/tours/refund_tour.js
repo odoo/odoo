@@ -7,6 +7,8 @@ import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_scre
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
@@ -40,5 +42,25 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             ProductScreen.isShown(),
             ProductScreen.selectedOrderlineHas("Coca-Cola"),
             ProductScreen.totalAmountIs("-4.40"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("RefundNoTable", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            Chrome.newOrder(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickMenuOption("Orders"),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("-0001"),
+            Utils.selectButton("Refund"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });
