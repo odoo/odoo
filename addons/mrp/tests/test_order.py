@@ -5099,6 +5099,31 @@ class TestMrpOrder(TestMrpCommon):
             production_form.date_start = original_start_date
         self.assertEqual(mo.date_start, original_start_date)
 
+    def test_json_popover_with_workorder_dependence(self):
+        """
+        Check that json_popover is correctly computed for workorders with dependencies
+        """
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'allow_operation_dependencies': True,
+            'operation_ids': [
+                Command.create({'name': 'Super op 1', 'workcenter_id': self.workcenter_2.id, 'sequence': 1}),
+                Command.create({'name': 'Super op 2', 'workcenter_id': self.workcenter_2.id, 'sequence': 2}),
+                Command.create({'name': 'Super op 3', 'workcenter_id': self.workcenter_2.id, 'sequence': 2}),
+            ]
+        })
+        bom.operation_ids[-1].blocked_by_operation_ids = bom.operation_ids[:2]
+        mo = self.env['mrp.production'].create({'bom_id': bom.id})
+        mo.action_confirm()
+        date_start = fields.Date.today()
+        date_finished = fields.Date.today() + timedelta(days=5)
+        wos_to_set = mo.workorder_ids - mo.workorder_ids[1]
+        wos_to_set.write({ 'date_start': date_start, 'date_finished': date_finished })
+        self.assertTrue(mo.workorder_ids[-1].show_json_popover)
+
+
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
