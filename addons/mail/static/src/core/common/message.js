@@ -470,6 +470,7 @@ export class Message extends Component {
                 message: this.props.message,
                 thread: this.props.thread,
                 isFirstMessage: this.props.isFirstMessage,
+                messageEdition: this.props.messageEdition,
                 messageToReplyTo: this.props.messageToReplyTo,
                 openReactionMenu: () => this.openReactionMenu(),
                 state: this.state,

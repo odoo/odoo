@@ -93,6 +93,7 @@ messageActionsRegistry
         icon: "fa fa-pencil",
         title: _t("Edit"),
         onClick: (component) => {
+<<<<<<< saas-18.2
             const message = toRaw(component.props.message);
             const text = convertBrToLineBreak(message.body);
             message.composer = {
@@ -105,6 +106,13 @@ messageActionsRegistry
                 },
             };
             component.state.isEditing = true;
+||||||| 87880d2234673f0ac5442e99e91520338ffc160d
+            component.props.messageEdition.enterEditMode(component.props.message);
+            component.optionsDropdown.close();
+=======
+            component.props.messageEdition.enterEditMode(component.props.message);
+            component.optionsDropdown?.close();
+>>>>>>> b4bc31f4ee8c063ecd672cf544c1cc2c3211a31b
         },
         sequence: 80,
     })
