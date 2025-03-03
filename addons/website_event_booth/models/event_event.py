@@ -55,5 +55,5 @@ class EventEvent(models.Model):
     def _get_website_menu_entries(self):
         self.ensure_one()
         return super()._get_website_menu_entries() + [
-            (_('Get A Booth'), '/event/%s/booth' % self.env['ir.http']._slug(self), False, 90, 'booth')
+            (_('Become exhibitor'), '/event/%s/booth' % self.env['ir.http']._slug(self), False, 90, 'booth', False)
         ]
