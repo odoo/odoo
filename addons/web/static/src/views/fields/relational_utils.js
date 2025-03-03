@@ -205,6 +205,7 @@ export class Many2XAutocomplete extends Component {
         searchLimit: { type: Number, optional: true },
         searchMoreLabel: { type: String, optional: true },
         searchMoreLimit: { type: Number, optional: true },
+        searchMinLength: { type: Number, optional: true },
         setInputFloats: { type: Function, optional: true },
         slots: { optional: true },
         specification: { type: Object, optional: true },
@@ -219,6 +220,7 @@ export class Many2XAutocomplete extends Component {
         otherSources: [],
         quickCreate: null,
         searchLimit: 7,
+        searchMinLength: 0,
         searchMoreLimit: 320,
         setInputFloats: () => {},
         specification: {},
@@ -337,6 +339,9 @@ export class Many2XAutocomplete extends Component {
         };
     }
     search(name) {
+        if (name.length < this.props.searchMinLength) {
+            return [];
+        }
         return this.orm.call(this.props.resModel, "web_name_search", [], {
             name: name,
             operator: "ilike",
@@ -391,7 +396,7 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        if (!this.props.noSearchMore && records.length > 0) {
+        if (!this.props.noSearchMore) {
             options.push({
                 label: this.SearchMoreButtonLabel,
                 action: this.onSearchMore.bind(this, request),
@@ -403,14 +408,6 @@ export class Many2XAutocomplete extends Component {
             "createEdit" in this.activeActions
                 ? this.activeActions.createEdit
                 : this.activeActions.create;
-        if (!request.length && !this.props.value && (this.props.quickCreate || canCreateEdit)) {
-            options.push({
-                label: _t("Start typing..."),
-                classList: "o_m2o_start_typing",
-                unselectable: true,
-            });
-        }
-
         if (request.length && canCreateEdit) {
             options.push({
                 label: _t("Create and edit..."),
@@ -420,6 +417,15 @@ export class Many2XAutocomplete extends Component {
                         context: this.getCreationContext(request),
                         nextRecordsContext: this.props.context,
                     }),
+            });
+        }
+
+        const startTypingMin = Math.max(1, this.props.searchMinLength);
+        if (request.length < startTypingMin && !this.props.value && (this.props.quickCreate || canCreateEdit)) {
+            options.push({
+                label: this.props.searchMinLength > 1 ? _t("Start typing %s characters", this.props.searchMinLength) : _t("Start typing..."),
+                classList: "o_m2o_start_typing",
+                unselectable: true,
             });
         }
 
