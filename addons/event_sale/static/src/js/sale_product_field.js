@@ -7,28 +7,29 @@ patch(SaleOrderLineProductField.prototype, {
         super.setup();
         this.action = useService("action");
     },
-
-    async _onProductUpdate() {
-        super._onProductUpdate(...arguments);
-        if (this.props.record.data.service_tracking === 'event') {
+    get isEvent() {
+        return this.props.record.data.service_tracking === "event";
+    },
+    get hasConfigurationButton() {
+        return super.hasConfigurationButton || this.isEvent;
+    },
+    onEditConfiguration() {
+        if (this.isEvent) {
             this._openEventConfigurator();
+        } else {
+            super.onEditConfiguration();
         }
     },
-
-    _editLineConfiguration() {
-        super._editLineConfiguration(...arguments);
-        if (this.props.record.data.service_tracking === 'event') {
+    _onProductUpdate() {
+        if (this.isEvent) {
             this._openEventConfigurator();
+        } else {
+            super._onProductUpdate();
         }
     },
-
-    get isConfigurableLine() {
-        return super.isConfigurableLine || this.props.record.data.service_tracking === 'event';
-    },
-
     async _openEventConfigurator() {
-        let actionContext = {
-            'default_product_id': this.props.record.data.product_id[0],
+        const actionContext = {
+            default_product_id: this.props.record.data.product_id[0],
         };
         if (this.props.record.data.event_id) {
             actionContext.default_event_id = this.props.record.data.event_id[0];
