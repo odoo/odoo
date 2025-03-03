@@ -7,7 +7,10 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { RecipientList } from "@mail/core/web/recipient_list";
 import { Thread } from "@mail/core/common/thread_model";
 
-
+/**
+ * Will be removed in master
+ * @deprecated
+ */
 export class BaseRecipientsList extends Component {
     static template = "mail.BaseRecipientsList";
     static components = {};

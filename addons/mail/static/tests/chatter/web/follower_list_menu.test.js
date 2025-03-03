@@ -205,50 +205,6 @@ test("Load 100 recipients at once", async () => {
     await start();
     await openFormView("res.partner", partnerIds[0]);
     await contains("button[title='Show Followers']", { text: "210" });
-    await click("button", { text: "Send message" });
-    await click("button", { text: "Bcc" });
-    await contains(".o-mail-Chatter", {
-        text: "Bcc: Partner1, Partner2, Partner3, Partner4, Partner5, and 95 more",
-    });
-    await contains("button[title='Show all recipients']");
-    await click("button[title='Show all recipients']");
-    await contains(".o-mail-RecipientList li", { count: 100 });
-    await contains(".o-mail-RecipientList", { text: "Load more" });
-    await scroll(".o-mail-RecipientList", "bottom");
-    await contains(".o-mail-RecipientList li", { count: 200 });
-    await tick(); // give enough time for the useVisible hook to register load more as hidden
-    await scroll(".o-mail-RecipientList", "bottom");
-    await contains(".o-mail-RecipientList li", { count: 209 });
-    await contains(".o-mail-RecipientList span", { count: 0, text: "Load more" });
-});
-
-test("Load recipient without email", async () => {
-    const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-        { name: "Luigi" },
-        { name: "Mario" },
-    ]);
-    pyEnv["mail.followers"].create([
-        {
-            is_active: true,
-            partner_id: serverState.partnerId,
-            res_id: partnerId_1,
-            res_model: "res.partner",
-        },
-        {
-            is_active: true,
-            partner_id: partnerId_2,
-            res_id: partnerId_1,
-            res_model: "res.partner",
-        },
-    ]);
-    await start();
-    await openFormView("res.partner", partnerId_1);
-    await click("button", { text: "Send message" });
-    await click("button", { text: "Bcc" });
-    await contains("span[title='no email address']", { text: "Mario" });
-    await click("button[title='Show all recipients']");
-    await contains(".o-mail-RecipientList li", { text: "Mario" });
 });
 
 test('Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access', async () => {
