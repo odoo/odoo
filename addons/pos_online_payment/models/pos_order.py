@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, tools, _
-from odoo.odoo.exceptions import UserError
 
 
 class PosOrder(models.Model):
