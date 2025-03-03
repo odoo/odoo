@@ -59,6 +59,7 @@ export function computeM2OProps(fieldProps) {
         placeholder: fieldProps.placeholder,
         readonly: fieldProps.readonly,
         relation: fieldProps.record.fields[fieldProps.name].relation,
+        searchThreshold: fieldProps.searchThreshold,
         string: fieldProps.string || fieldProps.record.fields[fieldProps.name].string || "",
         update: (value) => fieldProps.record.update({ [fieldProps.name]: value }),
         value: toRaw(fieldProps.record.data[fieldProps.name]),
@@ -95,6 +96,7 @@ export class Many2One extends Component {
         readonly: { type: Boolean, optional: true },
         relation: { type: String },
         searchMoreLabel: { type: String, optional: true },
+        searchThreshold: { type: Number, optional: true },
         slots: { type: Object, optional: true },
         specification: { type: Object, optional: true },
         string: { type: String, optional: true },
@@ -176,6 +178,7 @@ export class Many2One extends Component {
             quickCreate: this.props.canQuickCreate ? (name) => this.quickCreate(name) : null,
             resModel: this.props.relation,
             searchMoreLabel: this.props.searchMoreLabel,
+            searchThreshold: this.props.searchThreshold,
             setInputFloats: (isFloating) => {
                 this.state.isFloating = isFloating;
             },
