@@ -129,7 +129,11 @@ def push_to_end_point(base_url, device, payload, vapid_private_key, vapid_public
         #  - "k" the base64url-encoded key that signed that token.
         'Authorization': 'vapid t={}, k={}'.format(token, vapid_public_key),
         'Content-Encoding': 'aes128gcm',
-        'TTL': '0',
+        # The TTL is set to '60' as workaround because the push notifications 
+        # are not received on Edge with TTL ='0'. 
+        # Using the TTL '0' , the microsoft endpoint returns a 400 bad request error.
+        # and we are sure that the notification will be received
+        'TTL': '60',
     }
 
     response = session.post(endpoint, headers=headers, data=payload, timeout=5)
