@@ -11,7 +11,7 @@ class AccountMove(models.Model):
     def _compute_date(self):
         super()._compute_date()
         for move in self:
-            if move.country_code == 'CZ' and move.taxable_supply_date and move.state == 'draft':
+            if move.country_code == 'CZ' and move.taxable_supply_date and move.state == 'draft' and not move.statement_line_id:
                 move.date = move.taxable_supply_date
 
     @api.depends('taxable_supply_date')
