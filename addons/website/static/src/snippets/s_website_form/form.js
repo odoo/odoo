@@ -265,7 +265,7 @@ export class Form extends Interaction {
         buttonEl.classList.add("disabled"); // !compatibility
         buttonEl.setAttribute("disabled", "disabled");
         this.restoreBtnLoading = addLoadingEffect(buttonEl);
-        this.el.querySelector("#s_website_form_result, #o_website_form_result").replaceChildren(); // !compatibility
+        this.el.querySelector("#s_website_form_result, #o_website_form_result")?.replaceChildren(); // !compatibility
         if (!this.checkErrorFields({})) {
             if (this.fileInputError) {
                 const errorMessage = this.fileInputError.type === "number"
@@ -578,9 +578,16 @@ export class Form extends Interaction {
             message = _t("An error has occured, the form has not been sent.");
         }
 
-        this.renderAt(`website.s_website_form_status_${status}`, {
+        const renderedEls = this.renderAt(`website.s_website_form_status_${status}`, {
             message: message,
-        }, resultEl, "afterend");
+        }, resultEl, "afterend", undefined, false);
+        // Handle cleanup manually to keep s_website_form_result in DOM.
+        this.registerCleanup(() => {
+            for (const el of renderedEls) {
+                const renderedResultEl = el.matches("#s_website_form_result") ? el : el.querySelector("#s_website_form_result");
+                renderedResultEl.replaceChildren();
+            }
+        });
         resultEl.remove();
     }
 
