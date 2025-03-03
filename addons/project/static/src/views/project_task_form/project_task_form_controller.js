@@ -2,9 +2,11 @@ import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { HistoryDialog } from "@html_editor/components/history_dialog/history_dialog";
 import { useService } from '@web/core/utils/hooks';
-import { markup } from '@odoo/owl';
+import { markup, useEffect } from "@odoo/owl";
 import { escape } from '@web/core/utils/strings';
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
+
+import { ProjectTaskTemplateDropdown } from "../components/project_task_template_dropdown";
 
 export const subTaskDeleteConfirmationMessage = _t(
     `Deleting a task will also delete its associated sub-tasks. \
@@ -14,9 +16,41 @@ Are you sure you want to proceed?`
 );
 
 export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
+    static template = "project.ProjectTaskFormView";
+    static components = {
+        ...FormControllerWithHTMLExpander.components,
+        ProjectTaskTemplateDropdown,
+    };
+
+    static props = {
+        ...FormControllerWithHTMLExpander.props,
+        focusTitle: {
+            type: Boolean,
+            optional: true,
+        },
+    };
+    static defaultProps = {
+        ...FormControllerWithHTMLExpander.defaultProps,
+        focusTitle: false,
+    };
+
     setup() {
         super.setup();
         this.notifications = useService("notification");
+
+        if (this.props.focusTitle) {
+            useEffect(
+                () => {
+                    if (this.rootRef) {
+                        const title = this.rootRef.el.querySelector("#name_0");
+                        if (title) {
+                            title.focus();
+                        }
+                    }
+                },
+                () => []
+            );
+        }
     }
 
     /**

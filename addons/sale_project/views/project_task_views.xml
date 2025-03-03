@@ -166,7 +166,7 @@
             <xpath expr="//span[@id='start_rating_buttons']" position="before">
                 <button class="oe_stat_button"
                         type="object" name="action_view_so" icon="fa-dollar"
-                        invisible="not sale_order_id"
+                        invisible="not sale_order_id or has_template_ancestor"
                         groups="sales_team.group_sale_salesman">
                         <div class="o_stat_info">
                             <span class="o_stat_text">Sales Order</span>
@@ -177,16 +177,16 @@
                 <attribute name="context">{'default_project_id': context.get('default_project_id'), 'default_sale_line_id': sale_line_id}</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">not allow_billable</attribute>
+                <attribute name="invisible">not allow_billable or has_template_ancestor</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="project_sale_order_id" invisible="1"/>
                 <field name="sale_order_id" invisible="True" groups="sales_team.group_sale_salesman"/>
-                <label for="sale_line_id" invisible="not allow_billable or not project_id or not partner_id"/>
+                <label for="sale_line_id" invisible="not allow_billable or not project_id or not partner_id or has_template_ancestor"/>
                 <div 
                     name="sale_line_div"
                     class="o_row"
-                    invisible="not allow_billable or not project_id or not partner_id">
+                    invisible="not allow_billable or not project_id or not partner_id or has_template_ancestor">
                     <field name="sale_line_id"
                         groups="!sales_team.group_sale_salesman"
                         string="Sales Order Item"
@@ -221,8 +221,9 @@
                        context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}"
                        placeholder="Non-billable"
                        groups="sales_team.group_sale_salesman"
-                       invisible="not allow_billable"/>
-                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman"/>
+                       invisible="not allow_billable"
+                       column_invisible="parent.has_template_ancestor"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman" column_invisible="parent.has_template_ancestor"/>
                 <field name="allow_billable" column_invisible="True"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/list/field[@name='partner_id']" position="attributes">
@@ -230,8 +231,8 @@
                 <attribute name="invisible">not allow_billable</attribute>
             </xpath>
             <xpath expr="//field[@name='depend_on_ids']/list/field[@name='partner_id']" position="after">
-                <field name="sale_line_id" optional="hide" readonly="1" groups="sales_team.group_sale_salesman"/>
-                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" readonly="1" groups="sales_team.group_sale_salesman" column_invisible="parent.has_template_ancestor"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman" column_invisible="parent.has_template_ancestor"/>
                 <field name="allow_billable" column_invisible="True"/>
             </xpath>
             <xpath expr="//field[@name='depend_on_ids']/list/field[@name='partner_id']" position="attributes">
