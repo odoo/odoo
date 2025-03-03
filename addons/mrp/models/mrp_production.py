@@ -2415,7 +2415,7 @@ class MrpProduction(models.Model):
 
         ratio = self._get_ratio_between_mo_and_bom_quantities(bom)
         _dummy, bom_lines = bom.explode(self.product_id, bom.product_qty)
-        bom_lines_by_id = {(line.id, line.product_id.id): (line, exploded_values['qty']) for line, exploded_values in bom_lines if filter_by_attributes(line, exploded_values['product'])}
+        bom_lines_by_id = [(line, exploded_values['qty'] / exploded_values['original_qty']) for line, exploded_values in bom_lines if filter_by_attributes(line, exploded_values['product'])]
         bom_byproducts_by_id = {byproduct.id: byproduct for byproduct in bom.byproduct_ids.filtered(filter_by_attributes)}
         operations_by_id = {operation.id: operation for operation in bom.operation_ids.filtered(filter_by_attributes)}
 
@@ -2453,12 +2453,16 @@ class MrpProduction(models.Model):
 
         # Compares the BoM's lines to the MO's components.
         for move_raw in self.move_raw_ids:
-            bom_line, bom_qty = bom_lines_by_id.pop((move_raw.bom_line_id.id, move_raw.product_id.id), (False, None))
+            bom_line, bom_qty = next((line for line in bom_lines_by_id if line[0].id == move_raw.bom_line_id.id and line[0].product_id.id == move_raw.product_id.id), (None, -1))
+            if bom_line is not None:
+                bom_lines_by_id.remove((bom_line, bom_qty))
             # If the move isn't already linked to a BoM lines, search for a compatible line.
             if not bom_line:
-                for _bom_line, _bom_qty in bom_lines_by_id.values():
+                for _bom_line, _bom_qty in bom_lines_by_id:
                     if move_raw.product_id == _bom_line.product_id:
-                        bom_line, bom_qty = bom_lines_by_id.pop((_bom_line.id, move_raw.product_id.id))
+                        bom_line, bom_qty = next((line for line in bom_lines_by_id if line[0].id == _bom_line.id and line[0].product_id.id == move_raw.product_id.id), (None, -1))
+                        if bom_line is not None:
+                            bom_lines_by_id.remove((bom_line, bom_qty))
                         if bom_line:
                             break
             move_raw_qty = bom_line and move_raw.product_uom._compute_quantity(
@@ -2481,7 +2485,7 @@ class MrpProduction(models.Model):
                 moves_to_unlink |= move_raw
         # Creates a raw moves for each remaining BoM's lines.
         raw_moves_values = []
-        for bom_line, bom_qty in bom_lines_by_id.values():
+        for bom_line, bom_qty in bom_lines_by_id:
             raw_move_vals = self._get_move_raw_values(
                 bom_line.product_id,
                 bom_qty / ratio,

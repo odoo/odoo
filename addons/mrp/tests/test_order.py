@@ -4360,16 +4360,16 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(self.bom_3.bom_line_ids, kit_bom_line)
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 8, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 12, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 4, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 6, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
         ])
         # Check propagation upon update of the kit quantity
         kit_bom_line.product_qty = 3
         kit_bom.bom_line_ids[0].product_qty = 4
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 24, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 18, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 12, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 9, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
         ])
         # Check with multiple kits with different UOMs
         with Form(self.bom_3) as main_bom:
@@ -4379,8 +4379,8 @@ class TestMrpOrder(TestMrpCommon):
                 bom_line.product_uom_id = self.uom_dozen
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 120, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 90, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 60, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 45, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
         ])
 
     def test_update_mo_from_bom_with_kit_variants(self):
@@ -4439,6 +4439,20 @@ class TestMrpOrder(TestMrpCommon):
             {'product_id': self.product_1.id, 'product_qty': 1},
             {'product_id': self.product_4.id, 'product_qty': 1},
             {'product_id': paint_products[0].id, 'product_qty': 2},
+        ])
+        # Add a different variant of the kit to the main BoM
+        with Form(self.bom_4) as main_bom:
+            with main_bom.bom_line_ids.new() as bom_line:
+                bom_line.product_id = kit_product.product_variant_ids[1]
+                bom_line.product_qty = 1
+        # Update the MO
+        mo.action_update_bom()
+        self.assertEqual(len(mo.move_raw_ids), 4)
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': self.product_1.id, 'product_qty': 1},
+            {'product_id': self.product_4.id, 'product_qty': 2},
+            {'product_id': paint_products[0].id, 'product_qty': 2},
+            {'product_id': paint_products[1].id, 'product_qty': 1},
         ])
 
     @freeze_time('2024-11-26 9:00')
