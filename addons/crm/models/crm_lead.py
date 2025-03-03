@@ -1799,9 +1799,11 @@ class CrmLead(models.Model):
 
         domain = ['|'] * (len(domain) - 1) + domain
         if include_lost:
-            domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
+            # include lost means archived opportunities are allowed, if lost
+            domain += [('won_status', '!=', 'won'), '|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
-            domain += [('active', '=', True), ('won_status', '!=', 'won')]
+            # always filter out archived, those are not actionable anymore
+            domain += [('won_status', '=', 'pending'), ('active', '=', True)]
 
         return self.with_context(active_test=False).search(domain)
 
