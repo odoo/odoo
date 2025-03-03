@@ -25,3 +25,6 @@ class ProductTemplate(models.Model):
         ('automation_bulk', 'Automation Bulk'),
     ], string='Automation Manual Product', default='automation')
     hs_code = fields.Char(string='HS Code')
+    is_serial_number = fields.Boolean(string='By Serial Number', default=False)
+    is_dg = fields.Boolean(string='Is DG', default=False)
+    is_fragile = fields.Boolean(string='Is Fragile', default=False)
