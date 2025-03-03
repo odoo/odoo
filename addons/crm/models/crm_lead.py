@@ -753,7 +753,7 @@ class CrmLead(models.Model):
             if stage_updated and vals.get('stage_id'):
                 stage = self.env['crm.stage'].browse(vals['stage_id'])
                 if stage.is_won:
-                    vals.update({'probability': 100, 'automated_probability': 100})
+                    vals.update({'active': True, 'probability': 100, 'automated_probability': 100})
                     stage_is_won = True
         # user change; update date_open if at least one lead does not
         # have the same user
