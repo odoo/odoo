@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_customer_display.CustomerDisplay" t-inherit="point_of_sale.CustomerDisplay" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_customer_display_main')]/div" position="after">
+            <div>
+                <p>Partner: <t t-esc="order.partner?.name"/>
+                </p>
+                <p>
+                  Amount <t t-out="this.order.amount_per_guest?.toFixed(2)"/>/ Guest
+                </p>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[hasclass('o_customer_display_main')]/OrderWidget" position="replace">
+            <OrderWidget t-if="!order.finalized" lines="order.lines"/>
+            <p>Refunds</p>
+            <OrderWidget t-if="!order.finalized" lines="order.refundLines"/>
+        </xpath>
+    </t>
+</templates>
