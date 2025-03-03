@@ -2722,7 +2722,7 @@ test("pivot is reloaded when leaving and coming back", async () => {
     onRpc("partner", "*", ({ method }) => {
         expect.step(method);
     });
-    onRpc("/web/webclient/load_menus/*", () => {
+    onRpc("/web/webclient/load_menus", () => {
         expect.step("/web/webclient/load_menus");
     });
 
