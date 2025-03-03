@@ -4,7 +4,7 @@
 {
     'name': 'Delivery Stock Picking Batch',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Logistics/Inventory',
     'summary': 'Batch Transfer, Carrier',
     'description': """
 This module makes the link between the batch pickings and carrier applications.

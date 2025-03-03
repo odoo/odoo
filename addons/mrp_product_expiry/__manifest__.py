@@ -4,7 +4,7 @@
 {
     'name': 'Manufacturing Expiry',
     'version': '1.0',
-    'category': 'Manufacturing/Manufacturing',
+    'category': 'Logistics/Manufacturing',
     'summary': 'Manufacturing Expiry',
     'description': """
 Technical module.

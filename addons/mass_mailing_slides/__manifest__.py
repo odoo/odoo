@@ -3,7 +3,7 @@
 
 {
     'name': 'Mass mailing on course members',
-    'category': 'Hidden',
+    'category': 'Marketing/Email Marketing',
     'version': '1.0',
     'description':
         """

@@ -1,6 +1,6 @@
 {
     'name': 'Website IM Livechat HR Recruitment',
-    'category': 'Hidden',
+    'category': 'Website/Live Chat',
     'summary': 'Chatbot for the HR Recruitment',
     'version': '1.0',
     'depends': [

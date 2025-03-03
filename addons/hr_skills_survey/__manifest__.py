@@ -3,7 +3,7 @@
 
 {
     'name': 'Skills Certification',
-    'category': 'Hidden',
+    'category': 'Human Resources/Employees',
     'version': '1.0',
     'summary': 'Add certification to resume of your employees',
     'description':
