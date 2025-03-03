@@ -51,14 +51,13 @@ class StockValuationLayer(models.Model):
                 svl.warehouse_id = svl.stock_move_id.location_dest_id.warehouse_id.id
 
     def _search_warehouse_id(self, operator, value):
-        layer_ids = self.search([
+        return [
             '|',
             ('stock_move_id.location_dest_id.warehouse_id', operator, value),
             '&',
             ('stock_move_id.location_id.usage', '=', 'internal'),
             ('stock_move_id.location_id.warehouse_id', operator, value),
-        ]).ids
-        return [('id', 'in', layer_ids)]
+        ]
 
     def _validate_accounting_entries(self):
         am_vals = []
