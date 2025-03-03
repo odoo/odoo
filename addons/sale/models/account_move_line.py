@@ -20,6 +20,12 @@ class AccountMoveLine(models.Model):
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
         values['sale_line_ids'] = [(6, None, self.sale_line_ids.ids)]
 
+    def _prepare_analytic_distribution_vals(self):
+        vals = super()._prepare_analytic_distribution_vals()
+        if self.sale_line_ids and not self.analytic_distribution:
+            vals['analytic_distribution'] = self.sale_line_ids.analytic_distribution
+        return vals
+
     def _prepare_analytic_lines(self):
         """ Note: This method is called only on the move.line that having an analytic distribution, and
             so that should create analytic entries.
