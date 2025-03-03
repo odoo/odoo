@@ -10,7 +10,7 @@ class IrActionsServer(models.Model):
     """ Add mail.thread related options in server actions. """
     _name = 'ir.actions.server'
     _description = 'Server Action'
-    _inherit = ['ir.actions.server']
+    _inherit = ['ir.actions.server', 'mail.thread']
 
     state = fields.Selection(
         selection_add=[
