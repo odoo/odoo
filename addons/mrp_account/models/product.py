@@ -79,10 +79,13 @@ class ProductProduct(models.Model):
         for opt in bom.operation_ids:
             if opt._skip_operation_line(self):
                 continue
-
+            capacity = opt.workcenter_id._get_capacity(bom.product_id)
+            operation_cycle = float_round(
+                bom.product_qty / capacity, precision_rounding=1, rounding_method="UP"
+            )
             duration_expected = (
                 opt.workcenter_id._get_expected_duration(self) +
-                opt.time_cycle * 100 / opt.workcenter_id.time_efficiency)
+                operation_cycle * opt.time_cycle * 100 / opt.workcenter_id.time_efficiency)
             total += (duration_expected / 60) * opt._total_cost_per_hour()
 
         for line in bom.bom_line_ids:
