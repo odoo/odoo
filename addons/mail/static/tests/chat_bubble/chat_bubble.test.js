@@ -334,6 +334,21 @@ test("Can compact chat hub", async () => {
     await contains(".o-mail-ChatBubble i.fa.fa-comments");
 });
 
+test("Compact chat hub is crosstab synced", async () => {
+    const pyEnv = await startServer();
+    const channelIds = pyEnv["discuss.channel"].create([{ name: "ch-1" }, { name: "ch-2" }]);
+    setupChatHub({ folded: channelIds });
+    const env1 = await start({ asTab: true });
+    const env2 = await start({ asTab: true });
+    await contains(".o-mail-ChatBubble", { count: 2, target: env1 });
+    await contains(".o-mail-ChatBubble", { count: 2, target: env2 });
+    await hover(".o-mail-ChatBubble:eq(0)", { target: env1 });
+    await click("button.fa.fa-ellipsis-h[title='Chat Options']", { target: env1 });
+    await click("button.o-mail-ChatHub-option", { text: "Hide all conversations", target: env1 });
+    await contains(".o-mail-ChatBubble .fa-comments", { target: env1 });
+    await contains(".o-mail-ChatBubble .fa-comments", { target: env2 });
+});
+
 test("Compacted chat hub shows badge with amount of hidden chats with important messages", async () => {
     const pyEnv = await startServer();
     const channelIds = [];
