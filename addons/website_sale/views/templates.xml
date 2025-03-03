@@ -2080,13 +2080,14 @@
                  }"
             />
             <div class="ms-3">
-                <a t-att-href="combo_item_line.product_id.website_url">
-                    <h6 class="d-inline align-top h6 fw-bold">
-                        <span t-out="combo_item_line._get_displayed_quantity()"/>
-                        x
-                        <span t-out="combo_item_line.name_short"/>
-                    </h6>
-                </a>
+                <t t-if="combo_item_line.product_id.website_published">
+                    <a t-att-href="combo_item_line.product_id.website_url">
+                        <t t-call="website_sale.cart_item_line_heading" />
+                    </a>
+                </t>
+                <t t-else="">
+                    <t t-call="website_sale.cart_item_line_heading" />
+                </t>
                 <t
                     t-set="description_lines"
                     t-value="combo_item_line.get_description_following_lines()"
@@ -2098,6 +2099,14 @@
                 </div>
             </div>
         </div>
+    </template>
+
+    <template id="cart_item_line_heading">
+        <h6 class="d-inline align-top h6 fw-bold">
+            <span t-out="combo_item_line._get_displayed_quantity()"/>
+            x
+            <span t-out="combo_item_line.name_short"/>
+        </h6>
     </template>
 
     <template id="cart_product_price">
