@@ -6,6 +6,8 @@ import { markup } from '@odoo/owl';
 import { escape } from '@web/core/utils/strings';
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
 
+import { ProjectTaskTemplateDropdown } from "../components/project_task_template_dropdown";
+
 export const subTaskDeleteConfirmationMessage = _t(
     `Deleting a task will also delete its associated sub-tasks. \
 If you wish to preserve the sub-tasks, make sure to unlink them from their parent task beforehand.
@@ -14,6 +16,12 @@ Are you sure you want to proceed?`
 );
 
 export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
+    static template = "project.ProjectTaskFormView";
+    static components = {
+        ...FormControllerWithHTMLExpander.components,
+        ProjectTaskTemplateDropdown,
+    };
+
     setup() {
         super.setup();
         this.notifications = useService("notification");

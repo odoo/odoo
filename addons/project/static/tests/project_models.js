@@ -30,7 +30,13 @@ export class ProjectProject extends models.Model {
 
     check_access_rights() {
         return Promise.resolve(true);
-    };
+    }
+
+    get_template_tasks(projectId) {
+        return ProjectTask._records.filter(
+            (task) => task.project_id === projectId && task.is_template
+        );
+    }
 }
 
 export class ProjectProjectStage extends models.Model {
@@ -91,6 +97,8 @@ export class ProjectTask extends models.Model {
     depend_on_ids = fields.Many2many({ relation: "project.task" });
     closed_depend_on_count = fields.Integer();
     is_closed = fields.Boolean();
+    active = fields.Boolean({ string: "Active", default: true });
+    is_template = fields.Boolean({ string: "Is Template", default: false });
 
     _records = [
         {
