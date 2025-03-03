@@ -181,8 +181,10 @@ class MrpWorkorder(models.Model):
                 continue
             if wo.state in ('pending', 'waiting', 'ready'):
                 previous_wos = wo.blocked_by_workorder_ids
-                prev_start = min([workorder.date_start for workorder in previous_wos]) if previous_wos else False
-                prev_finished = max([workorder.date_finished for workorder in previous_wos]) if previous_wos else False
+                previous_starts = previous_wos.filtered('date_start').mapped('date_start')
+                previous_finished = previous_wos.filtered('date_finished').mapped('date_finished')
+                prev_start = min(previous_starts) if previous_starts else False
+                prev_finished = max(previous_finished) if previous_finished else False
                 if wo.state == 'pending' and prev_start and not (prev_start > wo.date_start):
                     infos.append({
                         'color': 'text-primary',
