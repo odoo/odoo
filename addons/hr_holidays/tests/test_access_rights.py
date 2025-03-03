@@ -772,7 +772,6 @@ class TestMultiCompany(TestHrHolidaysCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_access_no_company_user(self):
         self.employee_emp.company_id = self.user_employee.company_id
-        self.leave_type.write({'company_id': False})
         employee_leave = self.employee_leave.with_user(self.user_employee)
 
         employee_leave.name
