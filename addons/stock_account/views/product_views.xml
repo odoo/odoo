@@ -55,8 +55,8 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="stock.view_template_property_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='product_tooltip']" position="after">
-                    <field name="lot_valuated" invisible="tracking == 'none'" widget="confirm_boolean"/>
+                <xpath expr="//label[@for='serial_prefix_format']" position="before">
+                    <field name="lot_valuated" widget="confirm_boolean" invisible="tracking == 'none'"/>
                 </xpath>
             </field>
         </record>

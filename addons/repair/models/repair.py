@@ -418,7 +418,7 @@ class RepairOrder(models.Model):
 
     def action_generate_serial(self):
         self.ensure_one()
-        name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+        name = self.product_id.lot_sequence_id.next_by_id()
         exist_lot = not name or self.env['stock.lot'].search([
             ('product_id', '=', self.product_id.id),
             '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
