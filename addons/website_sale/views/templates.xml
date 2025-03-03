@@ -2003,7 +2003,6 @@
                                 <t t-call="website_sale.cart_lines_price"/>
                                 <div
                                     class="d-none d-md-block"
-                                    name="o_wsale_cart_line_qty_desktop"
                                     t-call="website_sale.cart_lines_quantity"
                                 />
                             </div>
@@ -2015,7 +2014,9 @@
                             <div
                                 class="d-flex d-md-none align-items-center me-auto"
                                 t-call="website_sale.cart_lines_quantity"
-                            />
+                            >
+                                <t t-set="is_mobile" t-value="True"/>
+                            </div>
                             <button
                                 class="js_delete_product btn btn-link d-inline-block d-md-none px-2"
                                 title="remove"
@@ -2032,7 +2033,7 @@
     <template id="cart_lines_quantity" name="Shopping Cart Line quantity">
         <div
             class="css_quantity input-group justify-content-end h-100"
-            name="website_sale_cart_line_quantity"
+            t-attf-name="{{'website_sale_cart_line_quantity' if not is_mobile else 'website_sale_cart_line_quantity_mobile'}}"
         >
             <t t-if="line._is_sellable()">
                 <t t-if="show_qty">
