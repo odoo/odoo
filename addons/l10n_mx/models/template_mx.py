@@ -53,33 +53,22 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
             }
         }
-
-    def _setup_utility_bank_accounts(self, template_code, company, template_data):
-        # EXTENDS 'account'
-        res = super()._setup_utility_bank_accounts(template_code, company, template_data)
-        accounts_data = {}
+        
+    def _get_accounts_data_values(self, company, template_data):
+        accounts_data = super()._get_accounts_data_values(company, template_data)
         Account = self.env['account.account']
-        if not Account.search([('code','=','403.01.01')]):
+        if not Account.search([('code','=','403.01.01'),('company_id','=',company.id)], limit=1):
             accounts_data.update({
                 'default_cash_difference_income_account_id' : {
                     'name': _('Other Income'),
                     'code': '403.01.01'
                 },
             })
-        if not Account.search([('code','=','601.84.02')]):
+        if not Account.search([('code','=','601.84.02'),('company_id','=',company.id)], limit=1):
             accounts_data.update({
                 'default_cash_difference_expense_account_id': {
                     'name': 'Cash Difference Loss',
                     'code': '601.84.02',
                 }
             })
-
-        self.env['account.account']._load_records([
-            {
-                'xml_id': f'account.{company.id}_{xml_id}',
-                'values': values,
-                'noupdate': True,
-            }
-            for xml_id, values in accounts_data.items()
-        ])
-        return res
+        return accounts_data
