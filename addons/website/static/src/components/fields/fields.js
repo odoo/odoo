@@ -3,6 +3,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { debounce } from "@web/core/utils/timing";
 import { Component, useEffect, useRef } from "@odoo/owl";
 
 /**
@@ -29,9 +30,20 @@ class PageUrlField extends UrlField {
         useEffect(
             (inputEl) => {
                 if (inputEl) {
-                    const fireChangeEvent = () => {
-                        inputEl.dispatchEvent(new Event("change"));
-                    };
+                    const originalValue = inputEl.value;
+                    let previousValueChanged = false;
+                    const fireChangeEvent = debounce(() => {
+                        const currentValue = inputEl.value;
+                        const valueChanged = currentValue !== originalValue;
+                        if (valueChanged !== previousValueChanged) {
+                            if (currentValue[0] !== "/") {
+                                inputEl.value = `/${currentValue}`;
+                            }
+                            inputEl.dispatchEvent(new Event("change"));
+                            inputEl.value = currentValue;
+                            previousValueChanged = valueChanged;
+                        }
+                    }, 100);
 
                     inputEl.addEventListener("input", fireChangeEvent);
                     return () => {
