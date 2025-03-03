@@ -42,7 +42,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         })
 
         # Set a different company on the analytic account.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.analytic_account_3.company_id = self.company_data_2['company']
 
         # Making the analytic account not company dependent is allowed.

@@ -442,7 +442,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self.assertEqual(self.computer._get_first_possible_combination(), computer_ssd_512 + computer_ram_32 + computer_hdd_4)
 
         # Not possible to add an exclusion when only one variant is left -> it deletes the product template associated to it
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self._add_exclude(computer_ram_32, computer_hdd_4)
 
         # If an exclusion rule deletes all variants at once it does not delete the template.

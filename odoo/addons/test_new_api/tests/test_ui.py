@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.http import request
 import odoo.tests
 from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -38,4 +39,8 @@ class TestUiTranslation(odoo.tests.HttpCase):
         # the message is translated (_load_module_terms is also) rollbacked.
         # Test individually the external id and loading of translation.
         self.start_tour("/odoo/action-test_new_api.action_categories",
-            'sql_constaint', login="admin")
+            'sql_constaint', login="admin",
+            # The tour relies on checking an sql constraint and does not cause
+            # subtransaction overflow.
+            patch_savepoints=False,
+        )

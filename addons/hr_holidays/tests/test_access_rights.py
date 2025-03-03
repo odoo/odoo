@@ -443,7 +443,7 @@ class TestAccessRightsRead(TestHrHolidaysAccessRightsCommon):
             'request_date_from': date.today(),
             'request_date_to': date.today() + relativedelta(days=1),
         })
-        with self.assertRaises(AccessError), self.cr.savepoint():
+        with self.assertRaises(AccessError):
             res = other_leave.with_user(self.user_employee_id).read(['number_of_days', 'state', 'name'])
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -457,7 +457,7 @@ class TestAccessRightsRead(TestHrHolidaysAccessRightsCommon):
             'request_date_from': date.today(),
             'request_date_to': date.today() + relativedelta(days=1),
         })
-        with self.assertRaises(AccessError), self.cr.savepoint():
+        with self.assertRaises(AccessError):
             other_leave.invalidate_model(['name'])
             name = other_leave.with_user(self.user_employee_id).name
 
@@ -697,7 +697,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
             'state': 'confirm',
         }
         leave = self.request_leave(self.user_employee_id, date.today() + relativedelta(days=-4), 1, values)
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             leave.with_user(self.user_employee.id).unlink()
 
     def test_leave_unlink_validate_by_user(self):
@@ -709,7 +709,7 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
         }
         leave = self.request_leave(self.user_employee_id, date.today() + relativedelta(days=6), 1, values)
         leave.with_user(self.user_hrmanager_id).write({'state': 'validate'})
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             leave.with_user(self.user_employee.id).unlink()
 
 class TestMultiCompany(TestHrHolidaysCommon):

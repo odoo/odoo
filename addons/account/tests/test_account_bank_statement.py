@@ -344,7 +344,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
 
     def test_constraints(self):
         def assertStatementLineConstraint(statement_line_vals):
-            with self.assertRaises(Exception), self.cr.savepoint():
+            with self.assertRaises(Exception):
                 self.env['account.bank.statement.line'].create(statement_line_vals)
 
         statement_line_vals = {
@@ -390,12 +390,12 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
                 'move_id': st_line.move_id.id,
             },
         ]
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             st_line.move_id.write({
                 'line_ids': [(0, 0, vals) for vals in addition_lines_to_create]
             })
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             st_line.line_ids.create(addition_lines_to_create)
 
     def test_statement_line_move_onchange_1(self):

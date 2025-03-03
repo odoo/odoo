@@ -3,7 +3,7 @@
 import logging
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
-from contextlib import nullcontext
+from contextlib import closing
 
 from odoo.sql_db import categorize_query
 from odoo.tools import mute_logger
@@ -194,7 +194,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
         # standard untracked website.page
         for readonly_enabled in (True, False):
             self.env.registry.test_readonly_enabled = readonly_enabled
-            with self.subTest(readonly_enabled=readonly_enabled), self.env.cr.savepoint() as savepoint:
+            with self.subTest(readonly_enabled=readonly_enabled), closing(self.env.cr.savepoint()):
                 select_tables_perf = {
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
@@ -213,13 +213,12 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
                 self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 10)
-                savepoint.rollback()
 
     def test_15_perf_sql_queries_page(self):
         # standard tracked website.page
         for readonly_enabled in (True, False):
             self.env.registry.test_readonly_enabled = readonly_enabled
-            with self.subTest(readonly_enabled=readonly_enabled), self.env.cr.savepoint() as savepoint:
+            with self.subTest(readonly_enabled=readonly_enabled), closing(self.env.cr.savepoint()):
                 select_tables_perf = {
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
@@ -247,13 +246,12 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, insert_tables_perf)
                 self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), expected_query_count_no_cache)
-                savepoint.rollback()
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
         for readonly_enabled in (True, False):
             self.env.registry.test_readonly_enabled = readonly_enabled
-            with self.subTest(readonly=readonly_enabled), self.env.cr.savepoint() as savepoint:
+            with self.subTest(readonly=readonly_enabled), closing(self.env.cr.savepoint()):
                 select_tables_perf = {
                     'orm_signaling_registry': 1,
                     'website_menu': 1,
@@ -276,7 +274,6 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     expected_query_count_no_cache += 1
                 self._check_url_hot_query('/', expected_query_count, select_tables_perf, insert_tables_perf)
                 self.assertEqual(self._get_url_hot_query('/', cache=False), expected_query_count_no_cache)
-                savepoint.rollback()
 
     def test_30_perf_sql_queries_page_no_layout(self):
         # untrack website.page with no call to layout templates

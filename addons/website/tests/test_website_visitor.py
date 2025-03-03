@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
-from odoo.tests import common, tagged, HttpCase
+from odoo.tests import common, tagged, HttpCase, patch_savepoint
 
 
 class MockVisitor(common.BaseCase):
@@ -431,10 +431,11 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
         self.assertEqual(visitor_admin.website_track_ids.url, '/admin')
 
         # Merge admin_duplicate partner (no user associated) in admin partner
-        self.env['base.partner.merge.automatic.wizard']._merge(
-            (self.partner_admin + self.partner_admin_duplicate).ids,
-            self.partner_admin
-        )
+        with patch_savepoint(): # There are no errors so no need for savepoints.
+            self.env['base.partner.merge.automatic.wizard']._merge(
+                (self.partner_admin + self.partner_admin_duplicate).ids,
+                self.partner_admin
+            )
         # Should be
         # | id | access_token | partner_id |
         # | -- | ------------ | ---------- |
@@ -489,10 +490,11 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
                         self.partner_admin_duplicate.id)
 
         # Merge admin_duplicate partner (no user associated) in admin partner
-        self.env['base.partner.merge.automatic.wizard']._merge(
-            (self.partner_admin + self.partner_admin_duplicate).ids,
-            self.partner_admin
-        )
+        with patch_savepoint(): # There are no errors so no need for savepoints.
+            self.env['base.partner.merge.automatic.wizard']._merge(
+                (self.partner_admin + self.partner_admin_duplicate).ids,
+                self.partner_admin
+            )
         # This should not happen..
         # | id | access_token           | partner_id |
         # | -- | ---------------------- | ---------- |

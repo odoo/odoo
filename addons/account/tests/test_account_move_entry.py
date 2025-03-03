@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import contextlib
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged, new_test_user
 from odoo import Command, fields
@@ -135,7 +137,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # It should raise an error.
         custom_account.currency_id = self.other_currency
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.line_ids[0].account_id = custom_account
 
         # The currency set on the account is the same as the one set on the company.
@@ -182,20 +184,20 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.ref = 'whatever'
 
         # Try to edit the account of a line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.line_ids[0].write({'account_id': self.test_move.line_ids[0].account_id.copy().id})
 
         # You can't remove the journal entry from a locked period.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.name = "Othername"
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.unlink()
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.button_draft()
 
         # Try to add a new journal entry prior to the lock date.
@@ -215,7 +217,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
 
         # You can't lock the fiscal year if there is some unreconciled statement.
-        with self.assertRaises(RedirectWarning), self.cr.savepoint():
+        with self.assertRaises(RedirectWarning):
             self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
 
     def test_misc_tax_lock_date_1(self):
@@ -234,16 +236,16 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.line_ids[0].write({'account_id': self.test_move.line_ids[0].account_id.copy().id})
 
         # You can't remove the journal entry from a locked period.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.name = "Othername"
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.unlink()
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             self.test_move.button_draft()
 
         copy_move = self.test_move.copy({'date': self.test_move.date})
@@ -252,7 +254,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copy_move.action_post()
 
         # You can't change the date to one being in a locked period.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             copy_move.date = fields.Date.from_string('2017-01-01')
 
     def test_misc_draft_reconciled_entries_1(self):
@@ -303,7 +305,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         (lines[0] + lines[2]).reconcile()
 
         # You can't unlink an already reconciled line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             draft_moves.unlink()
 
     def test_modify_posted_move_readonly_fields(self):
@@ -312,8 +314,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         readonly_fields = ('invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id',
                            'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
         for field in readonly_fields:
-            with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on a posted move"), \
-                    self.cr.savepoint():
+            with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on a posted move"):
                 self.test_move.write({field: False})
 
     def test_add_followers_on_post(self):
@@ -481,7 +482,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         # You cannot remove journal items if the related journal entry is posted.
         self.test_move.action_post()
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             unlink_posted_items()
 
         # You can remove journal items if the related journal entry is draft.
@@ -503,7 +504,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         move.currency_id.active = False
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             move.action_post()
 
         # Make sure that the invoice can still be posted when the currency is active
@@ -736,12 +737,10 @@ class TestAccountMove(AccountTestInvoicingCommon):
             })
 
         self.test_move.action_post()
-        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
-             self.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"):
             edit_tax_on_posted_moves()
 
-        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
-             self.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"):
             self.test_move.line_ids.filtered(lambda l: l.tax_line_id).tax_line_id = False
 
         # You can remove journal items if the related journal entry is draft.
@@ -825,7 +824,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         exchange_diff = moves.line_ids.matched_debit_ids.exchange_move_id
         self.assertTrue(exchange_diff)
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             exchange_diff.button_draft()
 
     def test_always_exigible_caba_account(self):
@@ -1054,17 +1053,17 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
         honest_move.action_post()
 
-        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, 'not balanced'), contextlib.closing(self.env.cr.savepoint()):
             self.env['account.move'].create({'line_ids': [Command.set(honest_move.line_ids[0].ids)]})
 
-        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, 'not balanced'), contextlib.closing(self.env.cr.savepoint()):
             self.env['account.move'].create({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
 
         stealer_move = self.env['account.move'].create({})
-        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, 'not balanced'), contextlib.closing(self.env.cr.savepoint()):
             stealer_move.write({'line_ids': [Command.set(honest_move.line_ids[0].ids)]})
 
-        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, 'not balanced'), contextlib.closing(self.env.cr.savepoint()):
             stealer_move.write({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
 
     def test_validate_move_wizard_with_auto_post_entry(self):

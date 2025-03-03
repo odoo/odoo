@@ -336,7 +336,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         move.line_ids.filtered(lambda line: line.account_id == account).reconcile()
 
         # Try to set the account as a not-reconcile one.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             account.reconcile = False
 
     def test_remove_account_from_account_group(self):
@@ -798,7 +798,8 @@ class TestAccountAccount(TestAccountMergeCommon):
 
         # Create the merged account by merging `accounts`
         wizard = self._create_account_merge_wizard(accounts)
-        wizard.action_merge()
+        with self.patched_savepoints():
+            wizard.action_merge()
         self.assertFalse(accounts[1].exists())
 
         # Check that the merged account has correct values
