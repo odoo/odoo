@@ -236,6 +236,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 return;
             }
             if (!data.cart_quantity) {
+                // Ensures last cart removal is recorded
+                sessionStorage.setItem('website_sale_cart_quantity', 0);
                 return window.location = '/shop/cart';
             }
             $input.val(data.quantity);
