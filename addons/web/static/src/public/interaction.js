@@ -326,10 +326,13 @@ export class Interaction {
      * @param { HTMLElement } el
      * @param { HTMLElement } [locationEl] the target
      * @param { "afterbegin" | "afterend" | "beforebegin" | "beforeend" } [position]
+     * @param { boolean } [removeOnClean]
      */
-    insert(el, locationEl = this.el, position = "beforeend") {
+    insert(el, locationEl = this.el, position = "beforeend", removeOnClean = true) {
         locationEl.insertAdjacentElement(position, el);
-        this.registerCleanup(() => el.remove());
+        if (removeOnClean) {
+            this.registerCleanup(() => el.remove());
+        }
         this.services["public.interactions"].startInteractions(el);
         this.refreshListeners();
     }
@@ -343,9 +346,17 @@ export class Interaction {
      * @param { HTMLElement } [locationEl] the target
      * @param { "afterbegin" | "afterend" | "beforebegin" | "beforeend" } [position]
      * @param { Function } callback called with rendered elements before insertion
+     * @param { boolean } [removeOnClean]
      * @returns { HTMLElement[] } rendered elements
      */
-    renderAt(template, renderContext, locationEl, position = "beforeend", callback) {
+    renderAt(
+        template,
+        renderContext,
+        locationEl,
+        position = "beforeend",
+        callback,
+        removeOnClean = true
+    ) {
         const fragment = renderToFragment(template, renderContext);
         const result = [...fragment.children];
         const els = [...fragment.children];
@@ -354,7 +365,7 @@ export class Interaction {
             els.reverse();
         }
         for (const el of els) {
-            this.insert(el, locationEl, position);
+            this.insert(el, locationEl, position, removeOnClean);
         }
         return result;
     }
