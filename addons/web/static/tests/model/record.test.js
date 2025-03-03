@@ -13,8 +13,10 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { useService } from "@web/core/utils/hooks";
 
 import { Record } from "@web/model/record";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { CharField } from "@web/views/fields/char/char_field";
 import { Field } from "@web/views/fields/field";
@@ -682,4 +684,81 @@ test(`faulty useRecordObserver in widget`, async () => {
     expect(`.error`).toHaveText(
         `The following error occurred in onWillStart: "faulty record observer"`
     );
+});
+
+test(`don't duplicate a useRecordObserver effect when switching back and forth between the same records`, async () => {
+    patchWithCleanup(CharField.prototype, {
+        setup() {
+            super.setup();
+            useRecordObserver((record) => {
+                expect.step(`foo: ${record.data.foo}`);
+            });
+        },
+    });
+
+    class StandaloneRelationalModel extends RelationalModel {
+        constructor(env, params, services) {
+            params = {
+                config: {
+                    resModel: "foo",
+                    fieldNames: ["foo"],
+                    fields: { foo: { name: "foo", type: "char" } },
+                    activeFields: { foo: {} },
+                    isMonoRecord: true,
+                },
+                hooks: {
+                    onRecordSaved: () => {},
+                    onWillSaveRecord: () => {},
+                    onRecordChanged: () => {},
+                },
+            };
+            super(env, params, services);
+        }
+        load(params = {}) {
+            const data = params.values;
+            const config = this._getNextConfig(this.config, params);
+            this.root = this._createRoot(config, data);
+            this.config = config;
+            return;
+        }
+    }
+
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { Record, Field };
+        static template = xml`
+            <a id="setRecord" t-on-click="setRecord">SET</a>
+            <a id="toggleRecord" t-on-click="toggleRecord">TOGGLE</a>
+            <Field name="'foo'" record="records[state.recordIndex]"/>
+        `;
+
+        setup() {
+            this.orm = useService("orm");
+            const services = { orm: this.orm };
+            const model = new StandaloneRelationalModel(this.env, {}, services);
+            model.load({ resId: 1, values: { foo: "abc" } });
+            const record1 = model.root;
+            model.load({ resId: 2, values: { foo: "def" } });
+            const record2 = model.root;
+            this.records = [record1, record2];
+            this.state = useState({ recordIndex: 0 });
+        }
+
+        setRecord() {
+            this.records[this.state.recordIndex].update({ foo: "ghi" });
+        }
+
+        toggleRecord() {
+            this.state.recordIndex = (this.state.recordIndex + 1) % 2;
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    expect.verifySteps(["foo: abc"]);
+    await contains("#toggleRecord").click();
+    expect.verifySteps(["foo: def"]);
+    await contains("#toggleRecord").click();
+    expect.verifySteps(["foo: abc"]);
+    await contains("#setRecord").click();
+    expect.verifySteps(["foo: ghi"]);
 });
