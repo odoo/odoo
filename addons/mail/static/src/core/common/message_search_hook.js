@@ -72,7 +72,12 @@ export function useMessageSearch(thread) {
             if (this.searchTerm) {
                 this.searching = true;
                 const data = await sequential(() =>
-                    store.searchMessagesInThread(this.searchTerm, this.thread, before)
+                    store.searchMessagesInThread(
+                        this.searchTerm,
+                        this.thread,
+                        before,
+                        this.searchType
+                    )
                 );
                 if (!data) {
                     return;
@@ -103,6 +108,7 @@ export function useMessageSearch(thread) {
         messages: [],
         /** @type {string|undefined} */
         searchTerm: undefined,
+        searchType: false,
         searched: false,
         searching: false,
         /** @param {string} target */
