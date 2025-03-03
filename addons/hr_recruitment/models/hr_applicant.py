@@ -100,7 +100,7 @@ class HrApplicant(models.Model):
     medium_id = fields.Many2one(ondelete='set null', help="This displays how the applicant has reached out, e.g. via Email, LinkedIn, Website, etc.")
     source_id = fields.Many2one(ondelete='set null')
     interviewer_ids = fields.Many2many('res.users', 'hr_applicant_res_users_interviewers_rel',
-        string='Interviewers', index=True, tracking=True,
+        string='Interviewers', index=True, tracking=True, copy=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
     application_status = fields.Selection([
         ('ongoing', 'Ongoing'),
