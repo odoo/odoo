@@ -128,6 +128,32 @@ export class ColorPicker extends Component {
     toggleGradientPicker() {
         this.state.showGradientPicker = !this.state.showGradientPicker;
     }
+
+    colorPickerNavigation(ev) {
+        const { target, key } = ev;
+        if (!target.classList.contains("o_color_button")) {
+            return;
+        }
+
+        let targetBtn;
+        if (key === "ArrowRight") {
+            targetBtn = target.nextElementSibling;
+        } else if (key === "ArrowLeft") {
+            targetBtn = target.previousElementSibling;
+        } else if (key === "ArrowUp" || key === "ArrowDown") {
+            const buttonIndex = [...target.parentElement.children].indexOf(target);
+            const row =
+                key === "ArrowUp"
+                    ? target.parentElement.previousElementSibling
+                    : target.parentElement.nextElementSibling;
+            targetBtn =
+                row?.matches(".o_color_section, .o_colorpicker_section") &&
+                row.children[buttonIndex];
+        }
+        if (targetBtn?.classList.contains("o_color_button")) {
+            targetBtn.focus();
+        }
+    }
 }
 
 export function useColorPicker(refName, props, options = {}) {

@@ -1,5 +1,16 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, waitFor, queryOne, hover, press, waitUntil, edit, queryAll } from "@odoo/hoot-dom";
+import {
+    click,
+    waitFor,
+    queryOne,
+    hover,
+    press,
+    waitUntil,
+    edit,
+    queryAll,
+    queryFirst,
+    getActiveElement,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -535,6 +546,47 @@ test("should be able to select farthest-corner option in radial gradient", async
     await click("button[title='Extend to the farthest corner']");
     await animationFrame();
     expect("button[title='Extend to the farthest corner']").toHaveClass("active");
+});
+
+test("solid tab color navigation using keys", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await press("Tab");
+    expect(getActiveElement()).toBe(queryFirst('.o_font_color_selector button:contains("Custom")'));
+    await press("Tab");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button:contains("Gradient")')
+    );
+    await press("Tab");
+    expect(getActiveElement()).toBe(queryFirst(".o_font_color_selector button.fa-trash"));
+    await press("Tab");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button[data-color="o-color-1"]')
+    );
+    await press("ArrowDown");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button[data-color="#000000"]')
+    );
+    await press("ArrowRight");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button[data-color="#424242"]')
+    );
+    await press("ArrowDown");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button[data-color="#FF9C00"]')
+    );
+    await press("ArrowLeft");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button[data-color="#FF0000"]')
+    );
+    await press("ArrowUp");
+    expect(getActiveElement()).toBe(
+        queryFirst('.o_font_color_selector button[data-color="#000000"]')
+    );
+    await press("Enter");
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(0, 0, 0);">[test]</font></p>`);
 });
 
 describe.tags("desktop");
