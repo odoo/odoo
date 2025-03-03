@@ -67,19 +67,7 @@
     }
 
     .o_today span {
-        position: relative;
-
-        &::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            bottom: $spacer * -0.25;
-            transform: translateX(-50%);
-            width: 0.95em;
-            height: 0.2em;
-            border-radius: $border-radius-pill;
-            background: $danger;
-        }
+        border-bottom: 0.2em solid $danger;
     }
 
     // Grids
