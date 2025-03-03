@@ -12,6 +12,26 @@
     padding: 0px;
     box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), .5);
     margin: 0.5px;
+
+    &:not(.o_gradient_color_button) {
+        &:focus,
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.o_gradient_color_button {
+  border-width: 0px;
+}
+
+.o_custom_gradient_button,
+.o_color_button {
+    &:focus,
+    &:hover {
+        outline: solid $o-enterprise-action-color;
+        transition: transform 0.1s ease-out;
+    }
 }
 
 .o_font_color_selector {
