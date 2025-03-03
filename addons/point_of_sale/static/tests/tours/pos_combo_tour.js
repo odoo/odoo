@@ -14,6 +14,21 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.clickInfoProduct("Office Combo"),
+            // check if the product info (price title and inventory) are present
+            {
+                content: "Check if modal title contains title",
+                trigger: `.modal-title.text-break.flex-grow-1:contains("Office Combo"):contains("57.50")`,
+            },
+            {
+                content: "Check if the inventory section is present",
+                trigger: ".section-inventory",
+            },
+            {
+                content: "Click OK button",
+                trigger: ".btn.btn-primary",
+                run: "click",
+            },
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),
             combo.isConfirmationButtonDisabled(),
