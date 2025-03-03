@@ -256,20 +256,19 @@
             sequence="5"/>
 
         <menuitem
+            id="menu_livechat_sessions"
+            name="Sessions"
+            parent="menu_livechat_root"
+            action="discuss_channel_action"
+            groups="im_livechat_group_user"
+            sequence="10"/>
+
+        <menuitem
             id="menu_reporting_livechat"
-            name="Report"
+            name="Reporting"
             parent="menu_livechat_root"
             sequence="50"
             groups="im_livechat_group_manager"/>
-
-
-        <menuitem
-            id="session_history"
-            name="Sessions History"
-            parent="menu_reporting_livechat"
-            action="discuss_channel_action"
-            groups="im_livechat_group_user"
-            sequence="5"/>
 
         <menuitem id="rating_rating_menu_livechat"
             name="Customer Ratings"
