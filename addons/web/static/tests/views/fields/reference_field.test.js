@@ -169,10 +169,13 @@ test("ReferenceField respects no_quick_create", async () => {
     await click(".o_field_widget[name='reference'] input");
     await edit("new partner");
     await runAllTimers();
-    expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveCount(1, {
-        message: "Dropdown should be opened and have only one item",
+    expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveCount(2, {
+        message: "Dropdown should be opened and have two items",
     });
-    expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveClass(
+    expect(".ui-autocomplete .o_m2o_dropdown_option:eq(0)").toHaveClass(
+        "o_m2o_dropdown_option_search_more"
+    );
+    expect(".ui-autocomplete .o_m2o_dropdown_option:eq(1)").toHaveClass(
         "o_m2o_dropdown_option_create_edit"
     );
 });

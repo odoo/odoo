@@ -51,6 +51,7 @@ export class Many2ManyTagsField extends Component {
         context: { type: Object, optional: true },
         placeholder: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
+        searchThreshold: { type: Number, optional: true },
         string: { type: String, optional: true },
         noSearchMore: { type: Boolean, optional: true },
     };
@@ -233,6 +234,14 @@ export const many2ManyTagsField = {
             availableTypes: ["integer"],
             help: _t("Set an integer field to use colors with the tags."),
         },
+        {
+            label: _t("Typeahead search"),
+            name: "search_threshold",
+            type: "number",
+            help: _t(
+                "Defines the minimum number of characters to perform the search. If not set, the search is performed on focus."
+            ),
+        },
     ],
     supportedTypes: ["many2many", "one2many"],
     relatedFields: ({ options }) => {
@@ -258,6 +267,7 @@ export const many2ManyTagsField = {
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
             placeholder: attrs.placeholder,
+            searchThreshold: options.search_threshold,
             string,
         };
     },

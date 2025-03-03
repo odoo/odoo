@@ -1282,7 +1282,11 @@ test("Many2ManyTagsField: conditional create/delete actions on desktop", async (
     });
     await runAllTimers();
 
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(2);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li.o_m2o_dropdown_option`)).toEqual([
+        "Create \"Something that does not exist\"",
+        "Search More...",
+        "Create and edit...",
+    ]);
 
     // set turtle_bar false -> create and delete actions are no longer available
     await contains('.o_field_widget[name="turtle_bar"] input:eq(0)').click();
@@ -1551,8 +1555,11 @@ test("Many2ManyTagsField with option 'no_quick_create' set to true on desktop", 
         confirm: false,
     });
     await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveClass(
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(2);
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option:eq(0)").toHaveClass(
+        "o_m2o_dropdown_option_search_more"
+    );
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option:eq(1)").toHaveClass(
         "o_m2o_dropdown_option_create_edit"
     );
     await clickFieldDropdownItem("timmy", "Create and edit...");
@@ -1606,7 +1613,7 @@ test("Many2ManyTagsField with option 'no_create' set to true on desktop", async 
         confirm: false,
     });
     await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(0);
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
     expect(".o-autocomplete.dropdown li.o_m2o_no_result").toHaveCount(1);
 });
 
@@ -1622,7 +1629,7 @@ test("Many2ManyTagsField with attribute 'can_create' set to false on desktop", a
         confirm: false,
     });
     await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(0);
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
 });
 
 test.tags("desktop");
@@ -1997,4 +2004,52 @@ test("Many2ManyTagsField placeholder should be empty on mobile", async () => {
         arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
     });
     expect("#timmy_0").not.toHaveAttribute("placeholder");
+});
+
+test.tags("desktop");
+test("search typeahead", async () => {
+    onRpc("web_name_search", () => expect.step("web_name_search"));
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="timmy" widget="many2many_tags" options="{ 'search_threshold': 3 }"/></form>`,
+    });
+
+    await contains(".o_field_widget[name=timmy] input").click();
+    await runAllTimers();
+    expect.verifySteps([]);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "Search More...",
+        "Start typing 3 characters",
+    ]);
+
+    await contains(".o_field_widget[name=timmy] input").edit("g", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps([]);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "Create \"g\"",
+        "Search More...",
+        "Create and edit...",
+        "Start typing 3 characters",
+    ]);
+
+    await contains(".o_field_widget[name=timmy] input").edit("go", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps([]);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "Create \"go\"",
+        "Search More...",
+        "Create and edit...",
+        "Start typing 3 characters",
+    ]);
+
+    await contains(".o_field_widget[name=timmy] input").edit("gol", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps(["web_name_search"]);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "gold",
+        "Create \"gol\"",
+        "Search More...",
+        "Create and edit...",
+    ]);
 });
