@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import OrderedDict
 
 from odoo import _, api, fields, models
 from odoo.tools import groupby
@@ -23,6 +24,10 @@ class AccountMove(models.Model):
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
     sale_order_count = fields.Integer(compute="_compute_origin_so_count", string='Sale Order Count')
+    sale_warning_text = fields.Text(
+        "Sale Warning",
+        help="Internal warning for the partner or the products as set by the user.",
+        compute="_compute_sale_warning_text")
 
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
@@ -48,6 +53,21 @@ class AccountMove(models.Model):
     def _compute_origin_so_count(self):
         for move in self:
             move.sale_order_count = len(move.line_ids.sale_line_ids.order_id)
+
+    @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'invoice_line_ids.product_id.sale_line_warn_msg', 'invoice_line_ids.product_id.display_name')
+    def _compute_sale_warning_text(self):
+        for move in self:
+            if move.move_type != 'out_invoice':
+                move.sale_warning_text = ''
+                continue
+            warnings = []
+            if partner_msg := move.partner_id.sale_warn_msg:
+                warnings.append(move.partner_id.name + ' - ' + partner_msg)
+            for product in move.invoice_line_ids.product_id:
+                if product_msg := product.sale_line_warn_msg:
+                    warnings.append(product.display_name + ' - ' + product_msg)
+            # Remove duplicate warnings before merging
+            move.sale_warning_text = '\n'.join(OrderedDict().fromkeys(warnings))
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # OVERRIDE

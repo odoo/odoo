@@ -837,3 +837,34 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.amount_untaxed, 15.0)
         po.company_id = company_a.id
         self.assertEqual(po.amount_untaxed, 10.0)
+
+    def test_purchase_warnings(self):
+        """Test warnings when partner/products with purchase warnings are used."""
+        partner_with_warning = self.env['res.partner'].create({
+            'name': 'Test Partner', 'purchase_warn_msg': 'Highly infectious disease'})
+        purchase_order = self.env['purchase.order'].create({'partner_id': partner_with_warning.id})
+
+        product_with_warning1 = self.env['product.product'].create({
+            'name': 'Test Product 1', 'purchase_line_warn_msg': 'Highly corrosive'})
+        product_with_warning2 = self.env['product.product'].create({
+            'name': 'Test Product 2', 'purchase_line_warn_msg': 'Toxic pollutant'})
+        self.env['purchase.order.line'].create([
+            {
+                'order_id': purchase_order.id,
+                'product_id': product_with_warning1.id,
+            },
+            {
+                'order_id': purchase_order.id,
+                'product_id': product_with_warning2.id,
+            },
+            # Warnings for duplicate products should not appear.
+            {
+                'order_id': purchase_order.id,
+                'product_id': product_with_warning1.id,
+            },
+        ])
+
+        expected_warnings = ('Test Partner - Highly infectious disease',
+                             'Test Product 1 - Highly corrosive',
+                             'Test Product 2 - Toxic pollutant')
+        self.assertEqual(purchase_order.purchase_warning_text, '\n'.join(expected_warnings))

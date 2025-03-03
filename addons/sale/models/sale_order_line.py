@@ -291,6 +291,7 @@ class SaleOrderLine(models.Model):
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
     company_price_include = fields.Selection(related="company_id.account_price_include")
+    sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
 
     #=== COMPUTE METHODS ===#
 
@@ -1096,25 +1097,6 @@ class SaleOrderLine(models.Model):
                     "A sale order line's product must match its combo item's product."
                 ))
 
-    #=== ONCHANGE METHODS ===#
-
-    @api.onchange('product_id')
-    def _onchange_product_id_warning(self):
-        if not self.product_id:
-            return
-
-        product = self.product_id
-        if product.sale_line_warn != 'no-message':
-            if product.sale_line_warn == 'block':
-                self.product_id = False
-
-            return {
-                'warning': {
-                    'title': _("Warning for %s", product.name),
-                    'message': product.sale_line_warn_msg,
-                }
-            }
-
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
@@ -1373,8 +1355,7 @@ class SaleOrderLine(models.Model):
         the product is read-only or not.
 
         A product is considered read-only if the order is considered read-only (see
-        ``SaleOrder._is_readonly`` for more details) or if `self` contains multiple records
-        or if it has sale_line_warn == "block".
+        ``SaleOrder._is_readonly`` for more details) or if `self` contains multiple records.
 
         Note: This method cannot be called with multiple records that have different products linked.
 
@@ -1394,12 +1375,9 @@ class SaleOrderLine(models.Model):
                 'price': self.price_unit,
                 'readOnly': (
                     self.order_id._is_readonly()
-                    or self.product_id.sale_line_warn == 'block'
                     or bool(self.combo_item_id)
                 ),
             }
-            if self.product_id.sale_line_warn != 'no-message' and self.product_id.sale_line_warn_msg:
-                res['warning'] = self.product_id.sale_line_warn_msg
             return res
         elif self:
             self.product_id.ensure_one()
@@ -1423,8 +1401,6 @@ class SaleOrderLine(models.Model):
                     )
                 )
             }
-            if self.product_id.sale_line_warn != 'no-message' and self.product_id.sale_line_warn_msg:
-                res['warning'] = self.product_id.sale_line_warn_msg
             return res
         else:
             return {
