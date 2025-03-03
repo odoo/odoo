@@ -16,6 +16,7 @@ class WebsiteVisitor(models.Model):
     discuss_channel_ids = fields.One2many('discuss.channel', 'livechat_visitor_id',
                                        string="Visitor's livechat channels", readonly=True)
     session_count = fields.Integer('# Sessions', compute="_compute_session_count")
+    guest_id = fields.Many2one(comodel_name="mail.guest")
 
     def _auto_init(self):
         # Skip the computation of the field `livechat_operator_id` at the module installation
@@ -83,7 +84,7 @@ class WebsiteVisitor(models.Model):
         for channel in discuss_channels:
             if not channel.livechat_visitor_id.partner_id:
                 # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
-                guest = self.env["mail.guest"].sudo().create(
+                self.guest_id = self.env["mail.guest"].sudo().create(
                     {
                         "country_id": country.id,
                         "lang": get_lang(channel.env).code,
@@ -91,7 +92,7 @@ class WebsiteVisitor(models.Model):
                         "timezone": visitor.timezone,
                     }
                 )
-                channel.add_members(guest_ids=guest.ids, post_joined_message=False)
+                channel.add_members(guest_ids=self.guest_id.ids, post_joined_message=False)
         # Open empty channel to allow the operator to start chatting with the visitor
         operator._bus_send_store(discuss_channels, extra_fields={"open_chat_window": True})
 
@@ -116,4 +117,5 @@ class WebsiteVisitor(models.Model):
                     if visitor_sudo.country_id
                     else f"Visitor #{visitor_sudo.id}"
                 )
+                visitor_sudo.guest_id = guest
         return visitor_id, upsert
