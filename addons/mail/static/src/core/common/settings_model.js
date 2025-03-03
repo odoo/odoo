@@ -10,6 +10,13 @@ const MESSAGE_SOUND = "mail.user_setting.message_sound";
 export class Settings extends Record {
     id;
 
+    static new() {
+        const record = super.new(...arguments);
+        record.onStorage = record.onStorage.bind(record);
+        browser.addEventListener("storage", record.onStorage);
+        return record;
+    }
+
     setup() {
         super.setup();
         this.saveVoiceThresholdDebounce = debounce(() => {
@@ -306,8 +313,6 @@ export class Settings extends Record {
         this.backgroundBlurAmount = backgroundBlurAmount ? parseInt(backgroundBlurAmount) : 10;
         const edgeBlurAmount = browser.localStorage.getItem("mail_user_setting_edge_blur_amount");
         this.edgeBlurAmount = edgeBlurAmount ? parseInt(edgeBlurAmount) : 10;
-        this.onStorage = this.onStorage.bind(this);
-        browser.addEventListener("storage", this.onStorage);
     }
     /**
      * @private
