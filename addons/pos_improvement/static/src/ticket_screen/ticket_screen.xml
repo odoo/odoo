@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_improvement.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <xpath expr="//div[@class='pads border-top d-flex gap-2']" position="inside">
+            <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3" t-on-click="() => this.doPayment(_selectedSyncedOrder)">
+                Payment
+            </button>
+        </xpath>
+    </t>
+</templates>
