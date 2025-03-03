@@ -166,9 +166,11 @@ class MailComposeMessage(models.TransientModel):
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
         compute='_compute_partner_ids', readonly=False, store=True)
+    partner_ids_all_have_email = fields.Boolean(compute="_compute_partner_ids_all_have_email")
     notified_bcc = fields.Many2many(
         string='Bcc', comodel_name='res.partner', compute='_compute_notified_bcc', readonly=True, store=False)
-    show_notified_bcc = fields.Boolean('Show BCC', store=False)
+    notified_bcc_contains_share = fields.Boolean('Is an external partner follower of the document?', compute="_compute_notified_bcc")
+    show_notified_bcc = fields.Boolean('Show BCC', store=False)  # TODO: remove field in master
 
     # sending
     auto_delete = fields.Boolean(
@@ -554,8 +556,13 @@ class MailComposeMessage(models.TransientModel):
             elif not composer.template_id:
                 composer.partner_ids = False
 
+    @api.depends('partner_ids')
+    def _compute_partner_ids_all_have_email(self):
+        for record in self:
+            record.partner_ids_all_have_email = all(record.partner_ids.mapped('email'))
+
     @api.depends('composition_batch', 'composition_mode', 'message_type',
-                 'model', 'partner_ids', 'res_ids', 'subtype_id')
+                 'model', 'res_ids', 'subtype_id')
     def _compute_notified_bcc(self):
         """ When being in monorecord comment mode, compute 'bcc' which are
         followers that are going to be 'silently' notified by the message. """
@@ -563,6 +570,7 @@ class MailComposeMessage(models.TransientModel):
             lambda comp: comp.model and comp.composition_mode == 'comment' and not comp.composition_batch
         )
         (self - post_composers).notified_bcc = False
+        (self - post_composers).notified_bcc_contains_share = False
         for composer in post_composers:
             record = self.env[composer.model].browse(
                 composer._evaluate_res_ids()[:1]
@@ -570,14 +578,16 @@ class MailComposeMessage(models.TransientModel):
             recipients_data = self.env['mail.followers']._get_recipient_data(
                 record, composer.message_type, composer.subtype_id.id
             )[record.id]
+            # Since it is only an informative field let's accept duplicates with partner_ids field
             partner_ids = [
                 pid
                 for pid, pdata in recipients_data.items()
                 if (pid and pdata['active']
-                    and pid != self.env.user.partner_id.id
-                    and pdata['id'] not in composer.partner_ids.ids)
+                    and pid != self.env.user.partner_id.id)
             ]
-            composer.notified_bcc = self.env['res.partner'].search([('id', 'in', partner_ids)])
+            notified_bcc = self.env['res.partner'].search([('id', 'in', partner_ids)])
+            composer.notified_bcc = notified_bcc
+            composer.notified_bcc_contains_share = any(notified_bcc.mapped('partner_share'))
 
     @api.depends('composition_mode', 'template_id')
     def _compute_auto_delete(self):

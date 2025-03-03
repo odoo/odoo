@@ -746,50 +746,6 @@ test("remove an uploading attachment", async () => {
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 0 });
 });
 
-test("Show recipient list when there is more than 5 followers.", async () => {
-    const pyEnv = await startServer();
-    const partnerIds = pyEnv["res.partner"].create([
-        { name: "test name 1", email: "test1@odoo.com" },
-        { name: "test name 2", email: "test2@odoo.com" },
-        { name: "test name 3", email: "test3@odoo.com" },
-        { name: "test name 4", email: "test4@odoo.com" },
-        { name: "test name 5", email: "test5@odoo.com" },
-        { name: "test name 6", email: "test6@odoo.com" },
-    ]);
-    for (const partner of partnerIds) {
-        pyEnv["mail.followers"].create({
-            is_active: true,
-            partner_id: partner,
-            res_id: partnerIds[0],
-            res_model: "res.partner",
-        });
-    }
-    await start();
-    await openFormView("res.partner", partnerIds[0]);
-    await click("button", { text: "Send message" });
-    await click("button", { text: "Bcc" });
-    await click("button[title='Show all recipients']");
-    await contains("li", { text: "test name 1 <test1@odoo.com>" });
-    await contains("li", { text: "test name 2 <test2@odoo.com>" });
-    await contains("li", { text: "test name 3 <test3@odoo.com>" });
-    await contains("li", { text: "test name 4 <test4@odoo.com>" });
-    await contains("li", { text: "test name 5 <test5@odoo.com>" });
-    await contains("li", { text: "test name 6 <test6@odoo.com>" });
-    await contains(".o-mail-Chatter", {
-        text: "Bcc: test name 1, test name 2, test name 3, test name 4, test name 5, and 1 more",
-    });
-});
-
-test("Show 'No recipient found.' with 0 followers.", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "test name 1", email: "test1@odoo.com" });
-    await start();
-    await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
-    await click("button", { text: "Bcc" });
-    await contains(".o-mail-Chatter-top", { text: "Bcc: No recipient" });
-});
-
 test("Uploading multiple files in the composer create multiple temporary attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
