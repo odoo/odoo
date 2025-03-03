@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, useState, onMounted, useRef, useEffect } from "@odoo/owl";
+import { Component, useState, onMounted, useRef, useEffect, useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
@@ -9,6 +9,8 @@ export class LinkPopover extends Component {
     static props = {
         linkElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         onApply: Function,
+        onChange: Function,
+        onDiscard: Function,
         onRemove: Function,
         onCopy: Function,
         onClose: Function,
@@ -80,6 +82,20 @@ export class LinkPopover extends Component {
                 this.loadAsyncLinkPreview();
             }
         });
+        useExternalListener(document, "pointerdown", (ev) => {
+            if (
+                this.editingWrapper?.el &&
+                !this.state.isImage &&
+                !this.editingWrapper.el.contains(ev.target)
+            ) {
+                this.onClickApply();
+            }
+        });
+    }
+
+    onChange() {
+        // Apply changes to update the link preview.
+        this.props.onChange(this.state.url, this.state.label, this.classes);
     }
     onClickApply() {
         this.state.editing = false;
@@ -285,6 +301,7 @@ export class LinkPopover extends Component {
         this.props.onUpload?.(attachment);
         this.state.url = getURL(attachment, { download: true, unique: true, accessToken: true });
         this.state.label ||= attachment.name;
+        this.onChange();
     }
 
     isAttachmentUrl() {

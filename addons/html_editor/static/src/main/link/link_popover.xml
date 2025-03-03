@@ -12,17 +12,28 @@
                 <div t-else="" class="d-flex">
                     <div class="col p-2" style="max-width: 250px;">
                         <div class="input-group mb-1">
-                            <input t-ref="label" class="o_we_label_link form-control form-control-sm" t-model="state.label" title="Label" placeholder="Add a label for your link"/>
+                            <input t-ref="label"
+                                class="o_we_label_link form-control form-control-sm"
+                                t-model="state.label"
+                                title="Label"
+                                placeholder="Add a label for your link"
+                                t-on-input="onChange"/>
                         </div>
                         <div class="input-group mb-1">
-                            <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Paste or type your URL" t-on-keydown="onKeydownEnter"/>
+                            <input t-ref="url"
+                                class="o_we_href_input_link form-control form-control-sm"
+                                t-model="state.url"
+                                title="URL"
+                                placeholder="Paste or type your URL"
+                                t-on-keydown="onKeydownEnter"
+                                t-on-input="onChange"/>
                             <span class="ms-1" t-if="props.canUpload and !state.url">
                                 or <button class="btn btn-secondary btn-sm" t-on-click="uploadFile"><i class="fa fa-upload"/></button>
                             </span>
 
                         </div>
                         <div class="input-group">
-                            <select name="link_type" class="form-select form-select-sm" t-att-class="{'mb-1': state.type !==  ''}" t-on-change="(ev)=>this.state.type = ev.target.value">
+                            <select name="link_type" class="form-select form-select-sm w-100 mb-1" t-model="state.type" t-on-change="onChange">
                                 <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
                                     <t t-if="colorData.type !== 'custom'">
                                         <option t-att-value="colorData.type" t-att-selected="state.type === colorData.type" t-attf-class="o_btn_preview">
@@ -31,18 +42,8 @@
                                     </t>
                                 </t>
                             </select>
-                            <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'ms-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
-                        </div>
-                    </div>
-
-                    <div t-if="!this.ui.isSmall and state.url" class="col o_link_dialog_preview" style="max-width: 125px;border-left: 1px solid var(--border-color);">
-                        <div class="text-center p-2">
-                            <label>Preview</label>
-                            <div style="max-width: 100px; max-height: 200px;" class="text-truncate">
-                                <a href="#" t-if="state.url" id="link-preview" aria-label="Preview" title="Preview" t-attf-class="{{classes}} text-truncate" style="max-width: 90px;">
-                                    <t t-esc="state.label or state.url"/>
-                                </a>
-                            </div>
+                            <button class="o_we_apply_link btn btn-sm btn-primary" t-on-click="onClickApply">Apply</button>
+                            <button class="o_we_discard_link btn btn-sm btn-dark ms-1" t-on-click="props.onDiscard">Discard</button>
                         </div>
                     </div>
                 </div>
