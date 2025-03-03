@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
             run: "fill Live Chat",
         },
         {
-            trigger: ".o_command:contains(Sessions History)",
+            trigger: ".o_command:contains(Sessions)",
             run: "click",
         },
         {
