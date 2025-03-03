@@ -35,17 +35,6 @@ export class LinkPopover extends Component {
         // alpha -> epsilon classes. This is currently done by removing
         // all btn-* classes anyway.
     ];
-    buttonSizesData = [
-        { size: "sm", label: _t("Small") },
-        { size: "", label: _t("Medium") },
-        { size: "lg", label: _t("Large") },
-    ];
-    buttonStylesData = [
-        { style: "fill", label: _t("Fill") },
-        { style: "fill,rounded-circle", label: _t("Fill + Rounded") },
-        { style: "outline", label: _t("Outline") },
-        { style: "outline,rounded-circle", label: _t("Outline + Rounded") },
-    ];
     setup() {
         this.ui = useService("ui");
         this.notificationService = useService("notification");
@@ -73,13 +62,11 @@ export class LinkPopover extends Component {
                 this.props.linkElement.className
                     .match(/btn(-[a-z0-9_-]*)(primary|secondary)/)
                     ?.pop() || "",
-            buttonSize: this.props.linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
-            buttonStyle: this.initButtonStyle(this.props.linkElement.className),
             isImage: this.props.isImage,
         });
 
         this.editingWrapper = useRef("editing-wrapper");
-        this.inputRef = useRef(this.state.isImage || this.state.label !== "" ? "url" : "label");
+        this.inputRef = useRef(this.state.isImage || "label");
         useEffect(
             (el) => {
                 if (el) {
@@ -93,15 +80,6 @@ export class LinkPopover extends Component {
                 this.loadAsyncLinkPreview();
             }
         });
-    }
-    initButtonStyle(className) {
-        const styleArray = [
-            className.match(/btn-([a-z0-9_]+)-(primary|secondary)/)?.[1],
-            className.match(/rounded-circle/)?.pop(),
-        ];
-        return styleArray.every(Boolean)
-            ? styleArray.join(",")
-            : styleArray.join("") || className.match(/flat/)?.pop() || "";
     }
     onClickApply() {
         this.state.editing = false;
@@ -290,20 +268,10 @@ export class LinkPopover extends Component {
     }
 
     get classes() {
-        const shapes = this.state.buttonStyle ? this.state.buttonStyle.split(",") : [];
-        const style = ["outline", "fill"].includes(shapes[0]) ? `${shapes[0]}-` : "fill-";
-        const shapeClasses = shapes.slice(style ? 1 : 0).join(" ");
         if (!this.state.type) {
             return "";
         }
-        let className = `btn btn-${style}${this.state.type}`;
-        if (shapeClasses) {
-            className += ` ${shapeClasses}`;
-        }
-        if (this.state.buttonSize) {
-            className += ` btn-${this.state.buttonSize}`;
-        }
-        return className;
+        return `btn btn-fill-${this.state.type}`;
     }
 
     async uploadFile() {
