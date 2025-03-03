@@ -11,6 +11,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { DISCUSS_SIDEBAR_COMPACT_LS } from "@mail/core/public_web/discuss_app_model";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
@@ -1235,16 +1236,34 @@ test("Can make sidebar smaller", async () => {
 });
 
 test("Sidebar compact is locally persistent (saved in local storage)", async () => {
-    browser.localStorage.setItem("mail.user_setting.discuss_sidebar_compact", true);
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, true);
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar.o-compact");
     await click(".o-mail-DiscussSidebar [title='Options']");
     await click(".dropdown-item", { text: "Expand panel" });
     await contains(".o-mail-DiscussSidebar:not(.o-compact)");
-    expect(browser.localStorage.getItem("mail.user_setting.discuss_sidebar_compact")).toBe(null);
+    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe(null);
     await click(".o-mail-DiscussSidebar [title='Options']");
     await click(".dropdown-item", { text: "Collapse panel" });
     await contains(".o-mail-DiscussSidebar.o-compact");
-    expect(browser.localStorage.getItem("mail.user_setting.discuss_sidebar_compact")).toBe("true");
+    expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe("true");
+});
+
+test("Sidebar compact is crosstab synced", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        create_uid: serverState.userId,
+        name: "General",
+    });
+    const env1 = await start({ asTab: true });
+    const env2 = await start({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await openDiscuss(channelId, { target: env2 });
+    await contains(".o-mail-DiscussSidebar:not(.o-compact)", { target: env1 });
+    await contains(".o-mail-DiscussSidebar:not(.o-compact)", { target: env2 });
+    await click(".o-mail-DiscussSidebar [title='Options']", { target: env1 });
+    await click(".dropdown-item:contains('Collapse panel')", { target: env1 });
+    await contains(".o-mail-DiscussSidebar.o-compact", { target: env1 });
+    await contains(".o-mail-DiscussSidebar.o-compact", { target: env2 });
 });
