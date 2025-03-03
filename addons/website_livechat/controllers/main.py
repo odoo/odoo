@@ -18,4 +18,8 @@ class WebsiteLivechat(LivechatController):
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
         if visitor_sudo:
             anonymous_name = _('Visitor #%s', visitor_sudo.id)
-        return super().get_session(channel_id, anonymous_name, previous_operator_id=previous_operator_id, chatbot_script_id=chatbot_script_id, persisted=persisted)
+        res = super().get_session(channel_id, anonymous_name, previous_operator_id=previous_operator_id, chatbot_script_id=chatbot_script_id, persisted=persisted)
+        guest = request.env["mail.guest"]._get_guest_from_context()
+        if guest and visitor_sudo:
+            visitor_sudo.guest_id = guest
+        return res

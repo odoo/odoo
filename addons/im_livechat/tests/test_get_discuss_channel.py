@@ -54,9 +54,13 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             [
                 {
                     "avatar_128_access_token": limited_field_access_token(guest, "avatar_128"),
+                    "history": False,
                     "id": guest.id,
                     "im_status": "offline",
+                    "is_connected": False,
+                    "lang_name": False,
                     "name": "Visitor",
+                    "website_name": False,
                     "write_date": fields.Datetime.to_string(guest.write_date),
                 },
             ],

@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, Command, fields, models, _
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 from odoo.exceptions import UserError
-from odoo.http import request
 from odoo.tools import get_lang
 from odoo.tools.sql import column_exists, create_column
 
@@ -16,6 +15,7 @@ class WebsiteVisitor(models.Model):
     discuss_channel_ids = fields.One2many('discuss.channel', 'livechat_visitor_id',
                                        string="Visitor's livechat channels", readonly=True)
     session_count = fields.Integer('# Sessions', compute="_compute_session_count")
+    guest_id = fields.Many2one(comodel_name="mail.guest")
 
     def _auto_init(self):
         # Skip the computation of the field `livechat_operator_id` at the module installation
@@ -83,7 +83,7 @@ class WebsiteVisitor(models.Model):
         for channel in discuss_channels:
             if not channel.livechat_visitor_id.partner_id:
                 # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
-                guest = self.env["mail.guest"].sudo().create(
+                self.guest_id = self.env["mail.guest"].sudo().create(
                     {
                         "country_id": country.id,
                         "lang": get_lang(channel.env).code,
@@ -91,7 +91,7 @@ class WebsiteVisitor(models.Model):
                         "timezone": visitor.timezone,
                     }
                 )
-                channel._add_members(guests=guest, post_joined_message=False)
+                channel._add_members(guests=self.guest_id, post_joined_message=False)
         # Open empty channel to allow the operator to start chatting with the visitor
         operator._bus_send_store(discuss_channels, extra_fields={"open_chat_window": True})
 
@@ -104,6 +104,7 @@ class WebsiteVisitor(models.Model):
         ]
         return super()._merge_visitor(target)
 
+    @add_guest_to_context
     def _upsert_visitor(self, access_token, force_track_values=None):
         visitor_id, upsert = super()._upsert_visitor(access_token, force_track_values=force_track_values)
         if upsert == 'inserted':
@@ -116,6 +117,7 @@ class WebsiteVisitor(models.Model):
                     if visitor_sudo.country_id
                     else f"Visitor #{visitor_sudo.id}"
                 )
+                visitor_sudo.guest_id = guest
         return visitor_id, upsert
 
     def _field_store_repr(self, field_name):

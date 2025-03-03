@@ -157,6 +157,7 @@ class LivechatController(http.Controller):
                     create_member_params={"livechat_member_type": "visitor"},
                     post_joined_message=False
                 )
+                request.update_context(guest=guest)
             channel = channel.with_context(guest=guest)  # a new guest was possibly created
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])

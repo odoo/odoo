@@ -1719,13 +1719,17 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     user.partner_id, "avatar_128"
                 ),
                 "email": False,
+                "history": False,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "is_company": False,
+                "is_connected": False,
                 "isInternalUser": True,
+                "lang_name": False,
                 "name": "test15",
                 "out_of_office_date_end": False,
                 "userId": user.id,
+                "website_name": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if guest:
