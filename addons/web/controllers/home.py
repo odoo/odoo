@@ -71,11 +71,11 @@ class Home(http.Controller):
         except AccessError:
             return request.redirect('/web/login?error=access')
 
-    @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'], readonly=True)
-    def web_load_menus(self, unique, lang=None):
+    @http.route('/web/webclient/load_menus', type='http', auth='user', methods=['GET'], readonly=True)
+    def web_load_menus(self, unique=None, lang=None):
         """
         Loads the menus for the webclient
-        :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :param unique: this parameters is not used: it is used by the HTTP stack to make a unique request
         :param lang: language in which the menus should be loaded (only works if language is installed)
         :return: the menus (including the images in Base64)
         """
