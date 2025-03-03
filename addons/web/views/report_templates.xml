@@ -732,7 +732,7 @@
                 <t t-call="web.address_layout">
                     <t t-set="custom_layout_address" t-value="true"/>
                 </t>
-                <h2 t-attf-class="{{not information_block and 'mb-4'}} text-end" t-out="layout_document_title"/>
+                <h2 t-attf-class="{{not information_block and 'mb-4'}} text-nowrap text-end" t-out="layout_document_title"/>
             </div>
             <t t-out="0"/>
         </div>
