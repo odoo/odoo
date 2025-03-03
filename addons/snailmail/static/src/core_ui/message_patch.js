@@ -5,7 +5,17 @@ import { SnailmailNotificationPopover } from "./snailmail_notification_popover";
 
 import { patch } from "@web/core/utils/patch";
 
+import { toRaw } from "@odoo/owl";
+
 patch(Message.prototype, {
+    onClickNotification(ev) {
+        // Keep the original notification click logic of opening the failure popover
+        if (this.message.message_type === "snailmail" && toRaw(this.message).failureNotifications.length > 0) {
+            this.onClickFailure(ev);
+        } else {
+            super.onClickNotification(ev);
+        }
+    },
     onClickFailure() {
         if (this.message.message_type === "snailmail") {
             const failureType = this.message.notification_ids[0].failure_type;

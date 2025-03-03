@@ -26,7 +26,24 @@ const notificationPatch = {
         }
         return super.statusIcon;
     },
-
+    get failureMessage() {
+        switch (this.failure_type) {
+            case "sn_credit":
+                return _t("Snailmail Credit Error");
+            case "sn_trial":
+                return _t("Snailmail Trial Error");
+            case "sn_price":
+                return _t("Snailmail No Price Available");
+            case "sn_fields":
+                return _t("Snailmail Missing Required Fields");
+            case "sn_format":
+                return _t("Snailmail Format Error");
+            case "sn_error":
+                return _t("Snailmail Unknown Error");
+            default:
+                return super.failureMessage;
+        }
+    },
     get statusTitle() {
         if (this.notification_type === "snail") {
             switch (this.notification_status) {

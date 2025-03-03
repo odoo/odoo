@@ -68,7 +68,7 @@
     </t>
 </ul>
 <t class="o_signature">
-    <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
+    <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" class="o_signature" style="font-size: 13px;"/>
 </t>
 <!-- FOOTER -->
 <div t-if="show_footer" style="margin-top:16px;">
@@ -187,7 +187,7 @@
             <xpath expr="//t[hasclass('o_signature')]" position="replace">
                 <t class="o_signature">
                     <div t-if="email_add_signature and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)"
-                         t-out="record.user_id.sudo().signature" style="font-size: 13px;"/>
+                         t-out="record.user_id.sudo().signature" class="o_signature" style="font-size: 13px;"/>
                 </t>
             </xpath>
         </template>

@@ -16,7 +16,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, leave, press, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
+import { mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -1079,18 +1079,6 @@ test("Notification Error", async () => {
         notification_type: "email",
         res_partner_id: partnerId,
     });
-    const openResendActionDef = new Deferred();
-    mockService("action", {
-        doAction(action, options) {
-            if (action?.res_model === "res.partner") {
-                return super.doAction(...arguments);
-            }
-            asyncStep("do_action");
-            expect(action).toBe("mail.mail_resend_message_action");
-            expect(options.additionalContext.mail_message_to_resend).toBe(messageId);
-            openResendActionDef.resolve();
-        },
-    });
     await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Message");
@@ -1098,8 +1086,8 @@ test("Notification Error", async () => {
     await contains(".o-mail-Message-notification i");
     expect(".o-mail-Message-notification i:first").toHaveClass("fa-envelope");
     await click(".o-mail-Message-notification").then(() => {});
-    await openResendActionDef;
-    await waitForSteps(["do_action"]);
+    await contains(".o-mail-MessageNotificationPopover");
+    expect(".o-mail-MessageNotificationPopover i.fa-times.text-danger").toHaveCount(1);
 });
 
 test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") messages.', async () => {
