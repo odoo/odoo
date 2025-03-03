@@ -15,4 +15,5 @@ This module contains all that is needed for the Bookkeeping Act
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',
+    'pre_init_hook': 'pre_init_hook',
 }
