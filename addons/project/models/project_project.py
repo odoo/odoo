@@ -38,7 +38,7 @@ class ProjectProject(models.Model):
         count_fields = {fname for fname in self._fields if 'count' in fname}
         if count_field not in count_fields:
             raise ValueError(f"Parameter 'count_field' can only be one of {count_fields}, got {count_field} instead.")
-        domain = [('project_id', 'in', self.ids)]
+        domain = [('project_id', 'in', self.ids), ('is_template', '=', False)]
         if additional_domain:
             domain = AND([domain, additional_domain])
         tasks_count_by_project = dict(self.env['project.task'].with_context(
@@ -107,7 +107,7 @@ class ProjectProject(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count", export_string_translation=False)
     open_task_count = fields.Integer(compute='_compute_open_task_count', string="Open Task Count", export_string_translation=False)
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
-                               domain=lambda self: [('is_closed', '=', False)])
+                               domain=lambda self: [('is_closed', '=', False), ('is_template', '=', False)])
     color = fields.Integer(string='Color Index', export_string_translation=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"))
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
@@ -636,6 +636,13 @@ class ProjectProject(models.Model):
                     'There are a couple of options to consider: either change the project\'s company '
                     'to align with the stage\'s company or remove the company designation from the stage', project.stage_id.company_id.name)
                 )
+
+    def get_template_tasks(self):
+        self.ensure_one()
+        return self.env['project.task'].search_read(
+            [('project_id', '=', self.id), ('is_template', '=', True)],
+            ['id', 'name'],
+        )
 
     # ---------------------------------------------------
     # Mail gateway
