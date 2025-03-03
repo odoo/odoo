@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, tools
+from odoo import models, fields, api, tools, _
+from odoo.odoo.exceptions import UserError
 
 
 class PosOrder(models.Model):
@@ -66,3 +67,12 @@ class PosOrder(models.Model):
         self.ensure_one()
         amount = self.next_online_payment_amount
         return amount if self._check_next_online_payment_amount(amount) else False
+
+    def sync_partner_from_ui(self, partner):
+        if self.state != 'draft':
+            return
+        partner_id = self.env['res.partner'].browse(partner)
+        if partner_id.exists():
+            self.write({'partner_id': partner})
+        else:
+            self.write({'partner_id': False})

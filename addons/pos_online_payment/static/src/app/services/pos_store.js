@@ -107,17 +107,35 @@ patch(PosStore.prototype, {
 
         return opData;
     },
+    /**
+     * Gets an additional context for partner synchronization.
+     *
+     * @param {Object} partner - The selected partner.
+     * @returns {Object} An object with additional data for the context.
+     *
+     * @note This method can be overridden to add additional information.
+     */
+    getPartnerAdditionalContext(partner) {
+        return {};
+    },
+    /**
+     * Assigns a partner to the current order and syncs it if payment is online.
+     *
+     * @param {Object} partner - The partner to be assigned to the order.
+     * @returns {Promise<void>} A promise that resolves when the sync completes.
+     */
     async setPartnerToCurrentOrder(partner) {
         super.setPartnerToCurrentOrder(partner);
         // Only sync if it is an online payment
         if (this.getOrder().online_payment_method_id) {
-            this.addPendingOrder([this.getOrder().id]);
-            await this.syncAllOrders({ partnerSync: true });
+            await this.data.call(
+                "pos.order",
+                "sync_partner_from_ui",
+                [this.getOrder().id, partner?.id],
+                {
+                    ...this.getPartnerAdditionalContext(partner),
+                }
+            );
         }
-    },
-    getSyncAllOrdersContext(orders, options = {}) {
-        const context = super.getSyncAllOrdersContext(...arguments);
-        context.partner_sync = options?.partnerSync;
-        return context;
     },
 });

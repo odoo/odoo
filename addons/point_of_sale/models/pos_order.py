@@ -90,14 +90,12 @@ class PosOrder(models.Model):
         else:
             pos_order = self.env['pos.order'].browse(order.get('id'))
 
-            # Prevent writing payment_ids if it is a partner_id sync
-            if not self.env.context.get('partner_sync'):
-                # Save lines and payments before to avoid exception if a line is deleted
-                # when vals change the state to 'paid'
-                for field in ['lines', 'payment_ids']:
-                    if order.get(field):
-                        pos_order.write({field: order.get(field)})
-                        order[field] = []
+            # Save lines and payments before to avoid exception if a line is deleted
+            # when vals change the state to 'paid'
+            for field in ['lines', 'payment_ids']:
+                if order.get(field):
+                    pos_order.write({field: order.get(field)})
+                    order[field] = []
 
             pos_order.write(order)
 
