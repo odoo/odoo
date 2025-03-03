@@ -176,11 +176,11 @@ class AccountTax(models.Model):
     #         return 0
     #     return super()._eval_tax_amount_price_excluded(batch, raw_base, evaluation_context)
 
-    def _eval_tax_amount_price_included(self, batch, raw_base, evaluation_context):
-        # EXTENDS 'account'
-        if self.is_withholding_tax_on_payment and self.amount_type == 'percent':
-            return raw_base * self.amount / 100.0
-        return super()._eval_tax_amount_price_included(batch, raw_base, evaluation_context)
+    # def _eval_tax_amount_price_included(self, batch, raw_base, evaluation_context):
+    #     # EXTENDS 'account'
+    #     if self.is_withholding_tax_on_payment and self.amount_type == 'percent':
+    #         return raw_base * self.amount / 100.0
+    #     return super()._eval_tax_amount_price_included(batch, raw_base, evaluation_context)
 
     # @api.model
     # def _add_tax_details_in_base_line(self, base_line, company, rounding_method=None):
