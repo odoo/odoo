@@ -1,4 +1,5 @@
 import { Component } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
@@ -93,6 +94,8 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
                 return;
             }
             if (!data.cart_quantity) {
+                // Ensures last cart removal is recorded
+                browser.sessionStorage.setItem('website_sale_cart_quantity', 0);
                 return window.location = '/shop/cart';
             }
             $input.val(data.quantity);
