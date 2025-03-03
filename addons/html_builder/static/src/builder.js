@@ -80,6 +80,10 @@ export class Builder extends Component {
                     on_mobile_preview_clicked: () => {
                         editorBus.trigger("DOM_UPDATED");
                     },
+                    update_invisible_panel: (el) => {
+                        this.updateInvisibleEls();
+                        this.editor.shared["builder-options"].updateContainers(el);
+                    },
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (!currentOptionsContainers.length) {
