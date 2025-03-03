@@ -124,6 +124,15 @@ class AccountPaymentRegister(models.TransientModel):
         # EXTEND account
         # To compute default withholding values if any lines on the entries has a default withholding tax applied to them.
         super()._compute_from_lines()
+        AccountTax = self.env['account.tax']
+
+        def grouping_function(base_line, tax_data):
+            return {
+                'analytic_distribution': base_line['analytic_distribution'],
+                'account_id': base_line['account_id'],
+                'tax': tax_data['tax'],
+                'skip': tax_data['tax'].is_withholding_tax_on_payment,
+            }
 
         for wizard in self:
             if wizard.country_code == 'AR' or not wizard.can_edit_wizard:
@@ -132,37 +141,62 @@ class AccountPaymentRegister(models.TransientModel):
 
             batch = wizard.batches[0]
             withholding_line_creation_vals = []
-            withholding_line_amounts = defaultdict(int)
+            # withholding_line_amounts = defaultdict(int)
+            base_lines = []
             for move in batch['lines'].move_id:
-                for line in move.invoice_line_ids:
-                    domain = self.env['account.withholding.line']._get_withholding_tax_domain(company=move.company_id, payment_type=wizard.payment_type)
-                    withholding_taxes = line.tax_ids.filtered_domain(domain)
+                if move.is_invoice(include_receipts=True):
+                    base_amls = move.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+                else:
+                    base_amls = move.line_ids.filtered(lambda line: line.display_type == 'product')
+                move_base_lines = [move._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
+                tax_amls = move.line_ids.filtered('tax_repartition_line_id')
+                move_tax_lines = [move._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
+                AccountTax._add_tax_details_in_base_lines(base_lines, move.company_id)
+                AccountTax._round_base_lines_tax_details(base_lines, move.company_id, tax_lines=move_tax_lines)
+                base_lines += move_base_lines
 
-                    # For each line, we will compute the tax details as if the withholding taxes were part of the line.
-                    # This way, we can apply is_base_affected/include_base_amount for taxes that would be on the line before we sum it all up for the wizard.
-                    # We update the context of the base_line's tax_ids to trigger computation of the withholding taxes.
-                    base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
-                    self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
+            base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
+            values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+            for grouping_key, values in values_per_grouping_key.items():
+                if not grouping_key or grouping_key['skip']:
+                    continue
 
-                    base_account = line.company_id.withholding_tax_base_account_id or line.account_id
-
-                    # We want to generate one line per group. A group is defined by a tax, account, and an analytic distribution.
-                    for withholding_tax in withholding_taxes:
-                        base_amount = 0
-                        if tax_data := [d for d in base_line['tax_details']['taxes_data'] if d['tax'] == withholding_tax][:1]:
-                            base_amount = tax_data[0]['raw_base_amount']  # We want the amount in company currency
-                        # Check if the move has a fiscal position and apply if needed.
-                        if move.fiscal_position_id:
-                            withholding_tax = move.fiscal_position_id.map_tax(withholding_tax)
-                        withholding_line_amounts[(json.dumps(base_line['analytic_distribution']), base_account, withholding_tax)] += base_amount
-
-            for (analytic_distribution, base_account, withholding_tax), withholding_line_amount in withholding_line_amounts.items():
                 withholding_line_creation_vals.append(Command.create({
-                    'tax_id': withholding_tax.id,
-                    'analytic_distribution': json.loads(analytic_distribution),
-                    'original_base_amount': withholding_line_amount,
-                    'tax_base_account_id': base_account.id,
+                    'tax_id': grouping_key['tax'].id,
+                    'analytic_distribution': grouping_key['analytic_distribution'],
+                    'tax_base_account_id': grouping_key['tax_base_account_id'].id,
+                    'original_base_amount': values['base_amount'] + values['tax_amount'],  # Not perfect
                 }))
+
+            #     for line in move.invoice_line_ids:
+            #         domain = self.env['account.withholding.line']._get_withholding_tax_domain(company=move.company_id, payment_type=wizard.payment_type)
+            #         withholding_taxes = line.tax_ids.filtered_domain(domain)
+            #
+            #         # For each line, we will compute the tax details as if the withholding taxes were part of the line.
+            #         # This way, we can apply is_base_affected/include_base_amount for taxes that would be on the line before we sum it all up for the wizard.
+            #         # We update the context of the base_line's tax_ids to trigger computation of the withholding taxes.
+            #         base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
+            #         self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
+            #
+            #         base_account = line.company_id.withholding_tax_base_account_id or line.account_id
+            #
+            #         # We want to generate one line per group. A group is defined by a tax, account, and an analytic distribution.
+            #         for withholding_tax in withholding_taxes:
+            #             base_amount = 0
+            #             if tax_data := [d for d in base_line['tax_details']['taxes_data'] if d['tax'] == withholding_tax][:1]:
+            #                 base_amount = tax_data[0]['raw_base_amount']  # We want the amount in company currency
+            #             # Check if the move has a fiscal position and apply if needed.
+            #             if move.fiscal_position_id:
+            #                 withholding_tax = move.fiscal_position_id.map_tax(withholding_tax)
+            #             withholding_line_amounts[(json.dumps(base_line['analytic_distribution']), base_account, withholding_tax)] += base_amount
+            #
+            # for (analytic_distribution, base_account, withholding_tax), withholding_line_amount in withholding_line_amounts.items():
+            #     withholding_line_creation_vals.append(Command.create({
+            #         'tax_id': withholding_tax.id,
+            #         'analytic_distribution': json.loads(analytic_distribution),
+            #         'original_base_amount': withholding_line_amount,
+            #         'tax_base_account_id': base_account.id,
+            #     }))
             wizard.withholding_line_ids = withholding_line_creation_vals
 
     @api.depends('withholding_line_ids')
