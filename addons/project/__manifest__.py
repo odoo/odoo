@@ -69,6 +69,7 @@
             'project/static/src/css/project.css',
             'project/static/src/core/web/**/*',
             'project/static/src/utils/**/*',
+            'project/static/src/actions/client_actions.js',
             'project/static/src/components/**/*',
             'project/static/src/views/**/*',
             'project/static/src/js/tours/project.js',
