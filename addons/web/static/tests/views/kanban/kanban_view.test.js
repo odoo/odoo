@@ -1799,8 +1799,8 @@ test("quick create record without quick_create_view", async () => {
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -1868,8 +1868,8 @@ test("quick create record with quick_create_view", async () => {
         "get_views", // form view in quick create
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
-        "web_read", // read the created record
         "onchange", // new quick create
+        "web_read", // read the created record
     ]);
 });
 
@@ -2108,8 +2108,8 @@ test("quick create record in grouped on m2o (no quick_create_view)", async () =>
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2176,8 +2176,8 @@ test("quick create record in grouped on m2o (with quick_create_view)", async () 
         "get_views", // form view in quick create
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2221,8 +2221,8 @@ test("quick create record in grouped on m2m (no quick_create_view)", async () =>
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2270,8 +2270,8 @@ test("quick create record in grouped on m2m in the None column", async () => {
         "web_search_read", // read records when unfolding 'None'
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2324,8 +2324,8 @@ test("quick create record in grouped on m2m (field not in template)", async () =
         "get_views", // get form view
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2384,8 +2384,8 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
         "get_views", // get form view
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
-        "web_read",
         "onchange",
+        "web_read",
     ]);
 });
 
@@ -2576,7 +2576,7 @@ test("quick create record with onchange of field marked readonly", async () => {
     expect.verifySteps(["onchange"]);
 
     await validateKanbanRecord();
-    expect.verifySteps(["web_save", "web_read", "onchange"]);
+    expect.verifySteps(["web_save", "onchange", "web_read"]);
 });
 
 test("quick create record and change state in grouped mode", async () => {
@@ -3378,9 +3378,13 @@ test("quick create several records in a row", async () => {
     });
 });
 
-test("quick create is disabled until record is created and read", async () => {
-    const def = new Deferred();
-    onRpc("web_read", () => def);
+test("quick create is disabled until record is created and onchange is done", async () => {
+    let webSaveDef;
+    let onchangeDef;
+    let webReadDef;
+    onRpc("web_save", () => webSaveDef);
+    onRpc("onchange", () => onchangeDef);
+    onRpc("web_read", () => webReadDef);
 
     await mountView({
         type: "kanban",
@@ -3406,6 +3410,9 @@ test("quick create is disabled until record is created and read", async () => {
     expect(".o_kanban_quick_create").toHaveCount(1, { message: "the quick create should be open" });
 
     await editKanbanRecordQuickCreateInput("display_name", "new partner 1");
+    webSaveDef = new Deferred();
+    onchangeDef = new Deferred();
+    webReadDef = new Deferred();
     await validateKanbanRecord();
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
@@ -3415,7 +3422,27 @@ test("quick create is disabled until record is created and read", async () => {
         message: "quick create should be disabled",
     });
 
-    def.resolve();
+    webSaveDef.resolve();
+    await animationFrame();
+
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
+        message: "first column should still contain one record",
+    });
+    expect(".o_kanban_quick_create.o_disabled").toHaveCount(1, {
+        message: "quick create should be disabled",
+    });
+
+    onchangeDef.resolve();
+    await animationFrame();
+
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
+        message: "first column should still contain one record",
+    });
+    expect(".o_kanban_quick_create.o_disabled").toHaveCount(0, {
+        message: "quick create should be enabled",
+    });
+
+    webReadDef.resolve();
     await animationFrame();
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2, {
@@ -6355,10 +6382,10 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
         "has_group",
         "onchange",
         "name_create",
+        "onchange",
         "web_read",
         "read_progress_bar",
         "web_read_group",
-        "onchange",
     ]);
 });
 
@@ -8778,9 +8805,9 @@ test("column progressbars on quick create properly update counter", async () => 
         "web_search_read",
         "onchange",
         "name_create",
+        "onchange",
         "web_read",
         "read_progress_bar",
-        "onchange",
     ]);
 });
 
@@ -9628,10 +9655,10 @@ test("column progressbars on quick create with quick_create_view", async () => {
         "get_views",
         "onchange",
         "web_save",
+        "onchange",
         "web_read",
         "read_progress_bar",
         "web_read_group",
-        "onchange",
     ]);
 });
 
@@ -9704,17 +9731,17 @@ test("progressbars and active filter with quick_create_view", async () => {
         "get_views",
         "onchange",
         "web_save",
+        "onchange",
         "web_read",
         "read_progress_bar",
         "web_read_group",
         "web_read_group",
-        "onchange",
         "web_save",
+        "onchange",
         "web_read",
         "read_progress_bar",
         "web_read_group",
         "web_read_group",
-        "onchange",
     ]);
 });
 

@@ -62,9 +62,7 @@ export class KanbanQuickCreateController extends Component {
         );
 
         const modelServices = Object.fromEntries(
-            this.props.Model.services.map((servName) => {
-                return [servName, useService(servName)];
-            })
+            this.props.Model.services.map((servName) => [servName, useService(servName)])
         );
         modelServices.orm = useService("orm");
         const config = {
@@ -163,12 +161,14 @@ export class KanbanQuickCreateController extends Component {
         }
 
         if (resId) {
-            await this.props.onValidate(resId, mode);
+            this.props.onValidate(resId, mode);
             if (mode === "add") {
                 await this.model.load({ resId: false });
+                this.state.disabled = false;
             }
+        } else {
+            this.state.disabled = false;
         }
-        this.state.disabled = false;
     }
 
     async cancel(force) {

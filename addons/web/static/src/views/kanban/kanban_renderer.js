@@ -445,20 +445,13 @@ export class KanbanRenderer extends Component {
     }
 
     async validateQuickCreate(recordId, mode, group) {
-        this.props.quickCreateState.groupId = false;
-        if (mode === "add") {
-            this.props.quickCreateState.groupId = group.id;
-        }
         const record = await group.addExistingRecord(recordId, true);
-        group.model.bus.trigger("group-updated", {
-            group: group,
-            withProgressBars: true,
-        });
         if (mode === "edit") {
             await this.props.openRecord(record);
         } else {
             this.props.progressBarState?.updateCounts(group);
         }
+        this.props.quickCreateState.groupId = mode === "add" ? group.id : false;
     }
 
     cancelQuickCreate() {
