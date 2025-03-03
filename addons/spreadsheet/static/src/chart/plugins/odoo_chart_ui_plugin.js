@@ -1,6 +1,6 @@
 import { Domain } from "@web/core/domain";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
-import { ChartDataSource } from "../data_source/chart_data_source";
+import { ChartDataSource, chartTypeToDataSourceMode } from "../data_source/chart_data_source";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
@@ -48,11 +48,14 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
                         const dataSource = this.getChartDataSource(cmd.id);
                         const chart = this.getters.getChart(cmd.id);
                         if (
-                            cmd.definition.type !== chart.type ||
                             dataSource.getInitialDomainString() !==
-                                new Domain(cmd.definition.searchParams.domain).toString()
+                            new Domain(cmd.definition.searchParams.domain).toString()
                         ) {
                             this.shouldChartUpdateReloadDataSource = true;
+                        } else if (cmd.definition.type !== chart.type) {
+                            dataSource.changeChartType(
+                                chartTypeToDataSourceMode(cmd.definition.type)
+                            );
                         }
                         break;
                     }
