@@ -13,6 +13,7 @@ export class Chatbot extends Record {
     static MULTILINE_STEP_DEBOUNCE_DELAY_TOUR = 500;
 
     isTyping = false;
+    isProcessingAnswer = false;
     script = Record.one("chatbot.script");
     currentStep = Record.one("ChatbotStep");
     steps = Record.many("ChatbotStep");
@@ -60,6 +61,7 @@ export class Chatbot extends Record {
         } else {
             await this._processAnswer(message);
         }
+        this.isProcessingAnswer = false;
     }
 
     async triggerNextStep() {
