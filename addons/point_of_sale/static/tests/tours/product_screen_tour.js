@@ -543,3 +543,24 @@ registry.category("web_tour.tours").add("ProductCardUoMPrecision", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("productwithvariantstour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickInfoProduct("variant product"),
+            // check if the product info (price title and inventory) are present
+            {
+                content: "Check if modal title contains title",
+                trigger: `.modal-title.text-break.flex-grow-1:contains("variant product"):contains("172")`,
+            },
+            {
+                content: "Check if the inventory section is present",
+                trigger: ".section-inventory:contains('Units available,'):contains('forecasted')",
+            },
+            Dialog.confirm(),
+            Chrome.endTour(),
+        ].flat(),
+});

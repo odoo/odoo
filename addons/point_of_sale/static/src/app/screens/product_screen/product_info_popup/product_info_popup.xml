@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoPopup">
-        <Dialog title.translate="Product information">
+        <Dialog title="isVariant ? (props.product.display_name + ' | ' + env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)) : 'Product Info'">
             <ProductInfoBanner t-if="!props.product.isConfigurable()" product="props.product" info="props.info"/>
-            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="!isVariant and props.info.productInfo.warehouses.length > 0">
+            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info.productInfo.warehouses.length > 0">
                 <h3 class="section-title">
                     Inventory
                     <t t-if="pos.session.update_stock_at_closing">(as of opening)</t>
