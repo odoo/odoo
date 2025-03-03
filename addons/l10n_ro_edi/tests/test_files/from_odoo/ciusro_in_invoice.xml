@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1</cbc:CustomizationID>
+  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+  <cbc:ID>INV/2025/00008</cbc:ID>
+  <cbc:IssueDate>2025-03-31</cbc:IssueDate>
+  <cbc:DueDate>2025-03-31</cbc:DueDate>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode>RON</cbc:DocumentCurrencyCode>
+  <cbc:TaxCurrencyCode>RON</cbc:TaxCurrencyCode>
+  <cac:OrderReference>
+    <cbc:ID>INV/2025/00008</cbc:ID>
+  </cac:OrderReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>INV_2025_00008.pdf</cbc:ID>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="INV_2017_00001.pdf">___ignore___</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="9947">30678383</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>RO Supplier</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Calea Turzii 223</cbc:StreetName>
+        <cbc:CityName>Cluj-Napoca</cbc:CityName>
+        <cbc:PostalZone>400491</cbc:PostalZone>
+        <cbc:CountrySubentity>RO-VS</cbc:CountrySubentity>
+        <cac:Country>
+          <cbc:IdentificationCode>RO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>30678383</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>NOT_EU_VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>RO Supplier</cbc:RegistrationName>
+        <cbc:CompanyID>30678383</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>RO Supplier</cbc:Name>
+        <cbc:Telephone>+40 712 034 567</cbc:Telephone>
+        <cbc:ElectronicMail>info@company.rosupplier.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="9947">23422586</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>RO Company</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Bulevardul Dimitrie Cantemir</cbc:StreetName>
+        <cbc:CityName>București</cbc:CityName>
+        <cbc:PostalZone>040237</cbc:PostalZone>
+        <cbc:CountrySubentity>RO-VS</cbc:CountrySubentity>
+        <cac:Country>
+          <cbc:IdentificationCode>RO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>23422586</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>NOT_EU_VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>RO Company</cbc:RegistrationName>
+        <cbc:CompanyID>23422586</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>RO Company</cbc:Name>
+        <cbc:Telephone>+40 712 034 567</cbc:Telephone>
+        <cbc:ElectronicMail>info@company.roexample.com</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cbc:StreetName>Bulevardul Dimitrie Cantemir</cbc:StreetName>
+        <cbc:CityName>București</cbc:CityName>
+        <cbc:PostalZone>040237</cbc:PostalZone>
+        <cbc:CountrySubentity>RO-VS</cbc:CountrySubentity>
+        <cac:Country>
+          <cbc:IdentificationCode>RO</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+  </cac:Delivery>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+    <cbc:PaymentID>INV/2025/00008</cbc:PaymentID>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID>RO23PORL7165378476876732</cbc:ID>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="RON">28.00</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="RON">100.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="RON">19.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>19.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="RON">100.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="RON">9.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>9.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="RON">200.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="RON">200.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="RON">228.00</cbc:TaxInclusiveAmount>
+    <cbc:PrepaidAmount currencyID="RON">0.00</cbc:PrepaidAmount>
+    <cbc:PayableAmount currencyID="RON">228.00</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="RON">100.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>[E-COM07] Large Cabinet</cbc:Description>
+      <cbc:Name>Large Cabinet</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID>E-COM07</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>19.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="RON">100.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="RON">100.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>[E-COM09] Large Desk</cbc:Description>
+      <cbc:Name>Large Desk</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID>E-COM09</cbc:ID>
+      </cac:SellersItemIdentification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>9.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="RON">100.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

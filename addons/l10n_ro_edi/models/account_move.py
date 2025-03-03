@@ -1,6 +1,5 @@
 import requests
-
-from odoo import models, fields, _, api, modules, tools
+from odoo import models, fields, _, api, modules
 
 
 class AccountMove(models.Model):
@@ -52,13 +51,14 @@ class AccountMove(models.Model):
     # Romanian Document Shorthands & Helpers
     ################################################################################
 
-    def _l10n_ro_edi_create_attachment_values(self, raw, res_model=None, res_id=None):
+    def _l10n_ro_edi_create_attachment_values(self, raw, res_model=None, res_id=None, name=None):
         """ Shorthand for creating the attachment_id values on the invoice's document """
         self.ensure_one()
         res_model = res_model or self._name
         res_id = res_id or self.id
+        name = name or self.name
         return {
-            'name': f"ciusro_signature_{self.name.replace('/', '_')}.xml",
+            'name': f"ciusro_signature_{name.replace('/', '_')}.xml",
             'res_model': res_model,
             'res_id': res_id,
             'raw': raw,
@@ -205,7 +205,7 @@ class AccountMove(models.Model):
                 result['key_loading'],
             ))
 
-    def _l10n_ro_edi_fetch_invoice_sent_documents(self):
+    def _l10n_ro_edi_fetch_invoice_sent_documents(self, invoices_to_fetch=[]):
         """
         This method loops over all invoice with sending document in `self`. For each of them,
         it pre-checks error and make a fetch request for the invoice. Based on the answer, it will then:
@@ -219,7 +219,7 @@ class AccountMove(models.Model):
         """
         session = requests.Session()
         to_delete_documents = self.env['l10n_ro_edi.document']
-        invoices_to_fetch = self.filtered(lambda inv: inv.l10n_ro_edi_state == 'invoice_sent')
+        invoices_to_fetch if invoices_to_fetch else self.filtered(lambda inv: inv.l10n_ro_edi_state == 'invoice_sent')
 
         for invoice in invoices_to_fetch:
             if errors := invoice._l10n_ro_edi_get_pre_send_errors():
@@ -251,7 +251,7 @@ class AccountMove(models.Model):
                     company=invoice.company_id,
                     key_download=result['key_download'],
                     session=session,
-                    status=result['state_status'],
+                    file_to_dl='error' if result['state_status'] == 'nok' else 'signature',
                 )
                 to_delete_documents |= invoice._l10n_ro_edi_get_sent_and_failed_documents()
                 final_result['key_loading'] = invoice.l10n_ro_edi_index
@@ -272,3 +272,49 @@ class AccountMove(models.Model):
 
         # Delete outdated documents in batches
         to_delete_documents.unlink()
+
+    def _l10n_ro_edi_fetch_invoices(self):
+        """ Fetch invoices from ANAF """
+        def _l10n_ro_edi_check_bill_already_imported(record):
+            return self.env['account.move'].search([
+                ('move_type', '=', 'in_invoice'),
+                ('amount_total', '=', record['amount_total']),
+                ('invoice_date_due', '=', record['due_date'])
+            ], limit=1)
+
+        session = requests.Session()
+        result = self.env['l10n_ro_edi.document']._request_ciusro_synchronize_invoices(
+            company=self.env.company,
+            session=session,
+            nb_days=1,
+        )
+        if result:
+            for res in result:
+                if not _l10n_ro_edi_check_bill_already_imported(res):
+                    move = self.env['account.move'].create(
+                        {
+                            'move_type': 'in_invoice',
+                            'journal_id': self.env.company.l10n_ro_edi_anaf_imported_inv_journal.id,
+
+                        }
+                    )
+                    attachment = self.env['ir.attachment'].create({
+                        'name': f"ciusro_signature_{res['name']}.xml",
+                        'raw': res['raw'],
+                        'res_model': 'account.move',
+                        'res_id': move.id,
+                    })
+                    move._extend_with_attachments(attachment, False)
+                    move.message_post(body=_(
+                        "Synchronized with ANAF",
+                        result['key_loading'],
+                    ))
+            if not modules.module.current_test:
+                self._cr.commit()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+            }
+
+    def action_l10n_ro_edi_fetch_invoices(self):
+        self._l10n_ro_edi_fetch_invoices()

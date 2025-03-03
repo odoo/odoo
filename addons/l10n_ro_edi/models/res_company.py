@@ -23,6 +23,7 @@ class ResCompany(models.Model):
     l10n_ro_edi_refresh_expiry_date = fields.Date(string='Refresh Token Expiry Date')
     l10n_ro_edi_callback_url = fields.Char(compute='_compute_l10n_ro_edi_callback_url')
     l10n_ro_edi_test_env = fields.Boolean(string='Use Test Environment', default=True)
+    l10n_ro_edi_anaf_imported_inv_journal = fields.Many2one(comodel_name='account.journal', string="Select journal for imported bills")
 
     @api.depends('country_code')
     def _compute_l10n_ro_edi_callback_url(self):
@@ -132,4 +133,32 @@ class ResCompany(models.Model):
                 self._l10n_ro_edi_log_message(
                     message=f'{error_header}\n{error_cause}',
                     func='_cron_l10n_ro_edi_refresh_access_token',
+                )
+
+    def _cron_l10n_ro_edi_synchronize_invoices(self):
+        """
+        This CRON method will be run every 4 hours to synchronize the invoices and the bills with the ANAF
+        """
+        ro_companies = self.env['res.company'].sudo().search([
+            ('l10n_ro_edi_refresh_token', '!=', False),
+            ('l10n_ro_edi_client_id', '!=', False),
+            ('l10n_ro_edi_client_secret', '!=', False),
+        ])
+        session = requests.Session()
+        for company in ro_companies:
+            error_cause = ''
+            try:
+                company.env['l10n_ro_edi.document']._request_ciusro_synchronize_invoices(
+                    company=company,
+                    session=session,
+                    nb_days=1,
+                )
+            except ValidationError as e:
+                error_cause = e
+
+            if error_cause:
+                error_header = _("", company_id=company.id)
+                self._l10n_ro_edi_log_message(
+                    message=f'{error_header}\n{error_cause}',
+                    func='_cron_l10n_ro_edi_synchronize_invoices',
                 )

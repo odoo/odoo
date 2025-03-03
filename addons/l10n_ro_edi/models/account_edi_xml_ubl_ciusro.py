@@ -129,3 +129,8 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
                     partner.display_name)
 
         return constraints
+
+    def _get_partner_party_vals(self, partner, role):
+        # EXTENDS account.edi.xml.ubl_bis3
+        vals = super()._get_partner_party_vals(partner, role)
+        return vals
