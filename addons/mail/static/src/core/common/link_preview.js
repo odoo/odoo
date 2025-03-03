@@ -7,12 +7,14 @@ import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef {Object} Props
  * @property {import("models").LinkPreview} linkPreview
- * @property {boolean} [deletable]
+ * @property {import("models").Message} [message]
+ * @property {function} [delete] Function bound to the delete button
+ * @property {function} [deleteAll] Function bound to the delete all button
  * @extends {Component<Props, Env>}
  */
 export class LinkPreview extends Component {
     static template = "mail.LinkPreview";
-    static props = ["linkPreview", "deletable"];
+    static props = ["linkPreview", "delete?", "deleteAll?"];
     static components = {};
 
     setup() {
@@ -33,6 +35,8 @@ export class LinkPreview extends Component {
     onClick() {
         this.dialogService.add(LinkPreviewConfirmDelete, {
             linkPreview: this.props.linkPreview,
+            delete: this.props.delete,
+            deleteAll: this.props.deleteAll,
             LinkPreview,
         });
     }
