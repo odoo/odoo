@@ -10,9 +10,19 @@ class IrActionsServer(models.Model):
     """ Add mail.thread related options in server actions. """
     _name = 'ir.actions.server'
     _description = 'Server Action'
-    _inherit = ['ir.actions.server']
+    _inherit = ['ir.actions.server', 'mail.thread', 'mail.activity.mixin']
+
+    name = fields.Char(tracking=True)
+    model_id = fields.Many2one(tracking=True)
+    crud_model_id = fields.Many2one(tracking=True)
+    link_field_id = fields.Many2one(tracking=True)
+    update_path = fields.Char(tracking=True)
+    value = fields.Text(tracking=True)
+    evaluation_type = fields.Selection(tracking=True)
+    webhook_url = fields.Char(tracking=True)
 
     state = fields.Selection(
+        tracking=True,
         selection_add=[
             ('next_activity', 'Create Activity'),
             ('mail_post', 'Send Email'),

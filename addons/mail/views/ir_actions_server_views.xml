@@ -7,6 +7,9 @@
             <field name="model">ir.actions.server</field>
             <field name="inherit_id" ref="base.view_server_action_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <chatter/>
+                </xpath>
                 <xpath expr="//group[@name='action_content']" position="inside">
                     <field name="activity_type_id" options="{'no_create': True, 'no_open': True}"
                         required="state == 'next_activity'" invisible="state != 'next_activity'"/>
