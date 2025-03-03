@@ -57,6 +57,8 @@ class TestStructure(TransactionCase):
             with self.assertRaises(ValidationError), self.env.cr.savepoint():
                 company.vat = "BE0987654321"  # VIES refused, don't fallback on other check
             company.vat = "BE0477472701"
+        # prevent flushing
+        self.env.transaction.clear()
 
     def test_vat_syntactic_validation(self):
         """ Tests VAT validation (both successes and failures), with the different country

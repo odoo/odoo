@@ -506,6 +506,7 @@ class TestMrpOrder(TestMrpCommon):
                 'workcenter_id': self.workcenter_1.id,
                 'product_uom_id': product_uom_id,
                 'production_id': mo_no_company.id,
+                'date_start': fields.Date.today(),
                 'duration': 60,
             } for n in range(300)
         ]
