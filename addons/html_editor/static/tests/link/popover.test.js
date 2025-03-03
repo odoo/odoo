@@ -235,7 +235,7 @@ describe("Incorrect URL should be corrected", () => {
 
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("newtest.com");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p>this is a <a href="http://newtest.com">li[]nk</a></p>'
+            '<p>this is a <a href="https://newtest.com">li[]nk</a></p>'
         );
     });
     test("when a link's URL is an email, the link's URL should start with mailto:", async () => {
@@ -667,52 +667,59 @@ describe("Link formatting in the popover", () => {
         );
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
-        const linkPreviewEl = await waitFor("#link-preview");
-        expect(linkPreviewEl).toHaveClass(["btn", "btn-fill-primary"]);
+        await animationFrame();
+        expect(".o_we_label_link").toHaveValue("link2");
+        expect(".o_we_href_input_link").toHaveValue("http://test.com/");
         expect(queryOne('select[name="link_type"]').selectedIndex).toBe(1);
     });
-    test("after changing the link format, the link preview should be updated", async () => {
-        await setupEditor(
+    test("after changing the link format, the link should be updated", async () => {
+        const { el } = await setupEditor(
             '<p><a href="http://test.com/" class="btn btn-fill-secondary">link2[]</a></p>'
         );
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
+        await animationFrame();
 
-        const linkPreviewEl = await waitFor("#link-preview");
-        expect(linkPreviewEl).toHaveClass(["btn", "btn-fill-secondary"]);
         expect(queryOne('select[name="link_type"]').selectedIndex).toBe(2);
 
         await click('select[name="link_type"');
         await select("primary");
-        await animationFrame();
-        expect(linkPreviewEl).toHaveClass(["btn", "btn-fill-primary"]);
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://test.com/" class="btn btn-fill-primary">link2</a></p>'
+        );
     });
     test("after applying the link format, the link's format should be updated", async () => {
         const { el } = await setupEditor('<p><a href="http://test.com/">link2[]</a></p>');
         await waitFor(".o-we-linkpopover");
         await click(".o_we_edit_link");
-        await waitFor("#link-preview");
+        await animationFrame();
         expect(queryOne('select[name="link_type"]').selectedIndex).toBe(0);
 
         await click('select[name="link_type"');
         await select("secondary");
-        await animationFrame();
-
-        const linkPreviewEl = queryOne("#link-preview");
-        expect(linkPreviewEl).toHaveClass(["btn", "btn-fill-secondary"]);
 
         await click(".o_we_apply_link");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="http://test.com/" class="btn btn-fill-secondary">link2[]</a></p>'
         );
     });
-    test("no preview of the link when the url is empty", async () => {
-        await setupEditor("<p><a>link2[]</a></p>");
+    test("clicking the discard button should revert the link format", async () => {
+        const { el } = await setupEditor('<p><a href="http://test.com/">link1[]</a></p>');
         await waitFor(".o-we-linkpopover");
-        expect("#link-preview").toHaveCount(0);
+        await click(".o_we_edit_link");
+        await contains(".o-we-linkpopover input.o_we_label_link").edit("link2");
+        await click('select[name="link_type"]');
+        await select("secondary");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://test.com/" class="btn btn-fill-secondary">link2</a></p>'
+        );
+        await click(".o_we_discard_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://test.com/">link1[]</a></p>'
+        );
     });
-    test("when no label input, the link preview should have the content of the url", async () => {
-        const { editor } = await setupEditor("<p>ab[]</p>");
+    test("when no label input, the link should have the content of the url", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/link");
         await animationFrame();
         await click(".o-we-command-name:first");
@@ -723,8 +730,10 @@ describe("Link formatting in the popover", () => {
             await press(char);
         }
         await animationFrame();
-        const linkPreviewEl = queryOne("#link-preview");
-        expect(linkPreviewEl).toHaveText("newtest.com");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>ab<a href="https://newtest.com">newtest.com[]</a></p>'
+        );
     });
 });
 

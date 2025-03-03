@@ -955,44 +955,46 @@ test("link preview in Link Popover", async () => {
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
         message: "The label input field should match the link's content",
     });
-    expect(".o-we-linkpopover a#link-preview").toHaveText("This website", {
-        message: "Link label in preview should match label input field",
-    });
 
     await contains(".o-we-linkpopover input.o_we_label_link").edit("Bad new label");
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("Bad new label", {
         message: "The label input field should match the link's content",
     });
-    expect(".o-we-linkpopover a#link-preview").toHaveText("Bad new label", {
-        message: "Link label in preview should match label input field",
-    });
-    // Move selection outside to discard
-    setSelectionInHtmlField(".test_target");
+    // Click on Discard button to undo changes.
+    await contains(".o-we-linkpopover .o_we_discard_link").click();
     await waitForNone(".o-we-linkpopover", { root: document, timeout: 500 });
     expect(".o-we-linkpopover").toHaveCount(0);
     expect(".test_target a").toHaveText("This website");
 
-    // Select link label to open the floating toolbar.
-    setSelectionInHtmlField(".test_target a");
-    await animationFrame();
     // Click on the edit link icon
     await contains("a.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
         message: "The label input field should match the link's content",
     });
-    expect(".o-we-linkpopover a#link-preview").toHaveText("This website", {
-        message: "Link label in preview should match label input field",
-    });
 
     // Open the popover option to edit the link
     await contains(".o-we-linkpopover input.o_we_label_link").edit("New label");
-    expect(".o-we-linkpopover a#link-preview").toHaveText("New label", {
-        message: "Preview should be updated on label input field change",
-    });
 
     // Click "Save".
     await contains(".o-we-linkpopover .o_we_apply_link").click();
     expect(".test_target a").toHaveText("New label", {
+        message: "The link's label should be updated",
+    });
+
+    // Click on the edit link icon
+    await contains("a.o_we_edit_link").click();
+    expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("New label", {
+        message: "The label input field should match the link's content",
+    });
+
+    // Open the popover option to edit the link
+    await contains(".o-we-linkpopover input.o_we_label_link").edit("Final label");
+
+    // Move selection outside for auto-save.
+    setSelectionInHtmlField(".test_target");
+    await waitForNone(".o-we-linkpopover", { root: document, timeout: 500 });
+    expect(".o-we-linkpopover").toHaveCount(0);
+    expect(".test_target a").toHaveText("Final label", {
         message: "The link's label should be updated",
     });
 });
