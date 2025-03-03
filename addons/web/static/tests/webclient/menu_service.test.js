@@ -83,7 +83,7 @@ test.tags("desktop");
 test(`use stored menus, and don't update on load_menus return (if identical)`, async () => {
     const def = new Deferred();
     redirect("/odoo/action-666");
-    onRpc("/web/webclient/load_menus/*", () => def);
+    onRpc("/web/webclient/load_menus", () => def);
 
     // Initial Stored values
     browser.localStorage.webclient_menus_version = "1.0";
@@ -110,7 +110,7 @@ test.tags("desktop");
 test(`use stored menus, and update on load_menus return`, async () => {
     const def = new Deferred();
     redirect("/odoo/action-666");
-    onRpc("/web/webclient/load_menus/*", () => def);
+    onRpc("/web/webclient/load_menus", () => def);
 
     // Initial Stored values
     // There is no menu "Test2" in the initial values

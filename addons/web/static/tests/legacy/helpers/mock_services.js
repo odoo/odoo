@@ -137,11 +137,7 @@ export function makeMockFetch(mockRPC) {
     return async (input, params) => {
         let route = typeof input === "string" ? input : input.url;
         if (route.includes("load_menus")) {
-            const routeArray = route.split("/");
-            params = {
-                hash: routeArray.pop(),
-            };
-            route = routeArray.join("/");
+            route = route.split("?")[0];
         }
         let res;
         let status;
