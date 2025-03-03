@@ -106,7 +106,7 @@ export class CallSettings extends Component {
         const data = JSON.stringify(this.rtc.state.globalLogs);
         const blob = new Blob([data], { type: "application/json" });
         const downloadLink = document.createElement("a");
-        const now = luxon.DateTime.now().toFormat("yyyy-ll-dd_HH-mm");
+        const now = luxon.DateTime.now().toFormat("yyyy-LL-dd_HH-mm");
         downloadLink.download = `RtcLogs_${now}.json`;
         const url = URL.createObjectURL(blob);
         downloadLink.href = url;

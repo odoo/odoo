@@ -341,7 +341,7 @@ export class Rtc extends Record {
             connectionType: undefined,
             hasPendingRequest: false,
             channel: undefined,
-            globalLogs: {},
+            globalLogs: { odooInfo: odoo.info },
             logs: new Map(), // deprecated
             sendCamera: false,
             sendScreen: false,
