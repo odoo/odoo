@@ -3,7 +3,7 @@
 
 {
     'name': 'Point of Sale',
-    'version': '1.0.1',
+    'version': '1.0.2',
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'User-friendly PoS interface for shops and restaurants',
