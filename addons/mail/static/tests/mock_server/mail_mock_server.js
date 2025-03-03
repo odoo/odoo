@@ -825,7 +825,12 @@ async function mail_thread_messages(request) {
         ["model", "=", thread_model],
         ["message_type", "!=", "user_notification"],
     ];
-    const res = MailMessage._message_fetch(domain, makeKwArgs(fetch_params));
+    const res = MailMessage._message_fetch(
+        domain,
+        thread_id,
+        thread_model,
+        makeKwArgs(fetch_params)
+    );
     const { messages } = res;
     delete res.messages;
     MailMessage.set_message_done(messages.map((message) => message.id));

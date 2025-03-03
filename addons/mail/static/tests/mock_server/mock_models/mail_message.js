@@ -8,6 +8,7 @@ import {
     models,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { Domain } from "@web/core/domain";
 
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
 
@@ -452,20 +453,87 @@ export class MailMessage extends models.ServerModel {
      * @param {number} [limit=30]
      * @returns {Object[]}
      */
-    _message_fetch(domain, search_term, before, after, around, limit) {
+    _message_fetch(
+        domain,
+        res_id,
+        res_model,
+        search_term,
+        search_type,
+        before,
+        after,
+        around,
+        limit
+    ) {
+        /** @type {import("mock_models").IrAttachment} */
+        const IrAttachment = this.env["ir.attachment"];
+        /** @type {import("mock_models").MailMessageSubtype} */
+        const MailMessageSubtype = this.env["mail.message.subtype"];
+        /** @type {import("mock_models").MailTrackingValue} */
+        const MailTrackingValue = this.env["mail.tracking.value"];
         ({
             domain,
+            res_id,
+            res_model,
             search_term,
+            search_type,
             before,
             after,
             around,
             limit = 30,
-        } = getKwArgs(arguments, "domain", "search_term", "before", "after", "around", "limit"));
-
+        } = getKwArgs(
+            arguments,
+            "domain",
+            "res_id",
+            "res_model",
+            "search_term",
+            "search_type",
+            "before",
+            "after",
+            "around",
+            "limit"
+        ));
         const res = {};
         if (search_term) {
+            domain = new Domain(domain || []);
             search_term = search_term.replace(" ", "%");
-            domain.push(["body", "ilike", search_term]);
+            const subtypeIds = MailMessageSubtype.search([["description", "ilike", search_term]]);
+            const irAttachmentIds = IrAttachment.search([["name", "ilike", search_term]]);
+            domain = Domain.and([
+                domain,
+                Domain.or([
+                    [["body", "ilike", search_term]],
+                    [["attachment_ids", "in", irAttachmentIds]],
+                    [["subject", "ilike", search_term]],
+                    [["subtype_ids", "in", subtypeIds]],
+                ]),
+            ]);
+            if (["all", "tracked_changes"].includes(search_type) && res_id && res_model) {
+                const messageIds = this.search([
+                    ["res_id", "=", res_id],
+                    ["model", "=", res_model],
+                ]);
+                const trackingValueDomain = Domain.and([
+                    [["mail_message_id", "in", messageIds]],
+                    this._get_tracking_values_domain(search_term),
+                ]).toList();
+                const trackingValueIds = MailTrackingValue.search(trackingValueDomain);
+                const trackingMessageIds = this.search([
+                    ["tracking_value_ids", "in", trackingValueIds],
+                ]);
+                domain = Domain.or([domain, [["id", "in", trackingMessageIds]]]);
+                if (search_type === "tracked_changes") {
+                    domain = Domain.and([
+                        domain,
+                        [["message_type", "in", ["user_notification", "notification"]]],
+                    ]);
+                }
+            } else {
+                domain = Domain.and([
+                    domain,
+                    [["message_type", "not in", ["user_notification", "notification"]]],
+                ]);
+            }
+            domain = domain.toList();
             res.count = this.search_count(domain);
         }
         if (around !== undefined) {
@@ -493,6 +561,31 @@ export class MailMessage extends models.ServerModel {
         messages.length = Math.min(messages.length, limit);
         res.messages = messages;
         return res;
+    }
+
+    _get_tracking_values_domain(search_term) {
+        let numeric_term = false;
+        try {
+            numeric_term = parseFloat(search_term);
+        } catch {}
+        let domain = Domain.or([
+            [["old_value_char", "ilike", search_term]],
+            [["new_value_char", "ilike", search_term]],
+            [["old_value_text", "ilike", search_term]],
+            [["new_value_text", "ilike", search_term]],
+            [["old_value_datetime", "ilike", search_term]],
+            [["new_value_datetime", "ilike", search_term]],
+        ]);
+        if (numeric_term) {
+            domain = Domain.or([
+                domain,
+                [["old_value_integer", "=", numeric_term]],
+                [["new_value_integer", "=", numeric_term]],
+                [["old_value_float", "=", numeric_term]],
+                [["new_value_float", "=", numeric_term]],
+            ]);
+        }
+        return domain;
     }
 
     /**

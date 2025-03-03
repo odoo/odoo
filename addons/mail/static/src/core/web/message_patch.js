@@ -127,8 +127,8 @@ patch(Message.prototype, {
     /**
      * @returns {string}
      */
-    formatTrackingOrNone(trackingFieldInfo, trackingValue) {
-        const formattedValue = this.formatTracking(trackingFieldInfo, trackingValue);
-        return formattedValue || _t("None");
+    highlightedValue(trackingFieldInfo, trackingValue) {
+        const formattedValue = this.formatTracking(trackingFieldInfo, trackingValue) || _t("None");
+        return this.props.messageSearch?.highlight(formattedValue) ?? formattedValue;
     },
 });
