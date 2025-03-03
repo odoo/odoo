@@ -86,7 +86,8 @@ class ConnectionManager(Thread):
             self.pairing_uuid = result['pairing_uuid']
             self.pairing_code_expires = time.monotonic() + PAIRING_CODE_TIMEOUT_SECONDS
             self.pairing_code_count += 1
-            self._try_print_pairing_code()
+            if platform.system() == 'Linux':
+                self._try_print_pairing_code()
 
     def _connect_to_server(self, url, token, db_uuid, enterprise_code):
         # Save DB URL and token
