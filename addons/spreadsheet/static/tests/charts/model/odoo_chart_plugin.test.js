@@ -4,6 +4,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { OdooBarChart } from "@spreadsheet/chart/odoo_chart/odoo_bar_chart";
 import { OdooChart } from "@spreadsheet/chart/odoo_chart/odoo_chart";
 import { OdooLineChart } from "@spreadsheet/chart/odoo_chart/odoo_line_chart";
+import { ChartDataSource } from "@spreadsheet/chart/data_source/chart_data_source";
 
 import {
     createSpreadsheetWithChart,
@@ -13,7 +14,12 @@ import { insertListInSpreadsheet } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { addGlobalFilter, updateChart } from "@spreadsheet/../tests/helpers/commands";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
-import { mockService, makeServerError, fields } from "@web/../tests/web_test_helpers";
+import {
+    mockService,
+    makeServerError,
+    fields,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import { user } from "@web/core/user";
@@ -1215,11 +1221,20 @@ test("Can configure the chart datasets", async () => {
     expect(definition.dataSets).toEqual([{ label: "My dataset" }]);
 });
 
-test("Chart data source is recreated when chart type is updated", async () => {
+test("Chart data source is updated when changing chart type", async () => {
+    patchWithCleanup(ChartDataSource.prototype, {
+        changeChartType(newMode) {
+            expect.step("changeChartType");
+            expect(newMode).toBe("line");
+            super.changeChartType(newMode);
+        },
+    });
+
     const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
     const chartDataSource = model.getters.getChartDataSource(chartId);
+
     model.dispatch("UPDATE_CHART", {
         definition: {
             ...model.getters.getChartDefinition(chartId),
@@ -1228,9 +1243,20 @@ test("Chart data source is recreated when chart type is updated", async () => {
         figureId: chartId,
         sheetId,
     });
-    expect(chartDataSource !== model.getters.getChartDataSource(chartId)).toBe(true, {
-        message: "The data source should have been recreated",
-    });
+    expect.verifySteps(["changeChartType"]);
+    expect(chartDataSource._metaData.mode).toBe("line");
+});
+
+test("Non-web chart types are using data source in 'bar' mode", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_radar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+
+    const chart = model.getters.getChart(chartId);
+    expect(chart.metaData.mode).toBe("bar");
+
+    const chartDataSource = model.getters.getChartDataSource(chartId);
+    expect(chartDataSource._metaData.mode).toBe("bar");
 });
 
 test("Long labels are only truncated in the axis callback, not in the data given to the chart", async () => {
