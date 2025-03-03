@@ -26,6 +26,23 @@ PY_OPERATORS = {
     'not in': lambda elem, container: elem not in container,
 }
 
+SERIAL_PREFIX_FORMAT_HELP_TEXT = """
+    If multiple products share the same prefix, they will share the same sequence, otherwise the sequence will be dedicated to the product.
+
+    * Legend (for prefix):
+    - Current Year with Century: %(year)s
+    - Current Year without Century: %(y)s
+    - Month: %(month)s
+    - Day: %(day)s
+    - Day of the Year: %(doy)s
+    - Week of the Year: %(woy)s
+    - Day of the Week (0:Monday): %(weekday)s
+    - Hour 00->24: %(h24)s
+    - Hour 00->12: %(h12)s
+    - Minute: %(min)s
+    - Second: %(sec)s
+"""
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -751,6 +768,13 @@ class ProductTemplate(models.Model):
         string="Tracking", required=True, default='none', # Not having a default value here causes issues when migrating.
         compute='_compute_tracking', store=True, readonly=False, precompute=True,
         help="Ensure the traceability of a storable product in your warehouse.")
+    lot_sequence_id = fields.Many2one(
+        'ir.sequence', 'Serial/Lot Numbers Sequence', default=lambda self: self.env.ref('stock.sequence_production_lots', raise_if_not_found=False),
+        help='Technical Field: The Ir.Sequence record that is used to generate serial/lot numbers for this product')
+    serial_prefix_format = fields.Char(
+        'Custom Lot/Serial', compute='_compute_serial_prefix_format', inverse='_inverse_serial_prefix_format',
+        help=SERIAL_PREFIX_FORMAT_HELP_TEXT)
+    next_serial = fields.Char(compute='_compute_next_serial')
     description_picking = fields.Text('Description on Picking', translate=True)
     description_pickingout = fields.Text('Description on Delivery Orders', translate=True)
     description_pickingin = fields.Text('Description on Receptions', translate=True)
@@ -795,6 +819,43 @@ class ProductTemplate(models.Model):
     @api.depends('type')
     def compute_is_storable(self):
         self.filtered(lambda t: t.type != 'consu' and t.is_storable).is_storable = False
+
+    @api.depends('lot_sequence_id', 'lot_sequence_id.prefix')
+    def _compute_serial_prefix_format(self):
+        for template in self:
+            template.serial_prefix_format = template.lot_sequence_id.prefix or ""
+
+    def _inverse_serial_prefix_format(self):
+        valid_sequences = self.env['ir.sequence'].search([('prefix', 'in', self.mapped('serial_prefix_format'))])
+        sequences_by_prefix = {seq.prefix: seq for seq in valid_sequences}
+        for template in self:
+            if template.serial_prefix_format:
+                if template.serial_prefix_format in sequences_by_prefix:
+                    template.lot_sequence_id = sequences_by_prefix[template.serial_prefix_format]
+                else:
+                    new_sequence = self.env['ir.sequence'].create({
+                        'name': f'{template.name} Serial Sequence',
+                        'code': 'stock.lot.serial',
+                        'prefix': template.serial_prefix_format,
+                        'padding': 7,
+                        'company_id': False,
+                    })
+                    template.lot_sequence_id = new_sequence
+                    sequences_by_prefix[template.serial_prefix_format] = new_sequence
+            else:
+                template.lot_sequence_id = False
+
+    @api.depends('serial_prefix_format', 'lot_sequence_id')
+    def _compute_next_serial(self):
+        for template in self:
+            if template.lot_sequence_id:
+                template.next_serial = '{:0{}d}{}'.format(
+                    template.lot_sequence_id.number_next_actual,
+                    template.lot_sequence_id.padding,
+                    template.lot_sequence_id.suffix or ""
+                )
+            else:
+                template.next_serial = '0000001'
 
     @api.depends('is_storable')
     def _compute_show_qty_status_button(self):
