@@ -63,7 +63,6 @@
                                 -->
                                 <field name="sequence" invisible="1"/>
                                 <field name="display_type" invisible="1"/>
-                                <field name="company_id" invisible="1"/>
                                 <group invisible="display_type">
                                     <group>
                                         <field name="product_id" required="not display_type"/>
@@ -91,9 +90,6 @@
                                     <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                     <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                 </control>
-
-                                <field name="display_type" column_invisible="True"/>
-                                <field name="company_id" column_invisible="True"/>
                                 <field name="sequence" widget="handle"/>
                                 <field name="product_id"/>
                                 <field name="name"/>
@@ -107,18 +103,19 @@
                     </page>
                     <page string="Optional Products" name="optional_products">
                         <field name="sale_order_template_option_ids">
-                          <list string="Quotation Template Lines" editable="bottom">
-                            <field name="product_id"/>
-                            <field name="name"/>
-                            <field name="quantity"/>
-                            <field name="uom_id" widget="many2one_uom" groups="uom.group_uom"/>
-                            <field name="company_id" column_invisible="True"/>
-                          </list>
+                            <list string="Quotation Template Lines" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="name"/>
+                                <field name="quantity"/>
+                                <field name="uom_id" widget="many2one_uom" groups="uom.group_uom"/>
+                            </list>
                         </field>
                     </page>
                         <page string="Terms &amp; Conditions" name="terms_and_conditions">
-                            <field name="note" nolabel="1"
-                                   placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
+                            <field
+                                name="note"
+                                nolabel="1"
+                                placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
                         </page>
                     </notebook>
                 </sheet>
