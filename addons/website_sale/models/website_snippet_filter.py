@@ -111,7 +111,12 @@ class WebsiteSnippetFilter(models.Model):
                     domain,
                     [('id', 'in', products_ids)],
                 ])
-                products = self.env['product.product'].with_context(display_default_code=False, add2cart_rerender=True).search(domain, limit=limit)
+                # `search` will not keep the order of tracked product => re-sort at the end
+                order = dict(zip(reversed(products_ids), range(len(products_ids), 0, -1)))
+                products = self.env['product.product'].with_context(
+                    display_default_code=False,
+                    add2cart_rerender=True,
+                ).search(domain, limit=limit).sorted(lambda p: order[p.id])
         return products
 
     def _get_products_recently_sold_with(self, website, limit, domain, context):
