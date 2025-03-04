@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
     MockServer,
     clickSave,
@@ -37,6 +38,7 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { router, routerBus } from "@web/core/browser/router";
+import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
@@ -597,14 +599,12 @@ test("Props are updated and kept when switching/restoring views", async () => {
             </group>
         </form>`;
 
-    onRpc("get_formview_action", ({ args, model }) => {
-        return {
-            res_id: args[0][0],
-            res_model: model,
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", ({ args, model }) => ({
+        res_id: args[0][0],
+        res_model: model,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -1226,15 +1226,13 @@ test("requests for execute_action of type object: disable buttons", async () => 
 
 test.tags("desktop");
 test("action with html help returned by a call_button", async () => {
-    onRpc("/web/dataset/call_button/*", () => {
-        return {
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "list"]],
-            help: "<p>I am not a helper</p>",
-            domain: [[0, "=", 1]],
-        };
-    });
+    onRpc("/web/dataset/call_button/*", () => ({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+        help: "<p>I am not a helper</p>",
+        domain: [[0, "=", 1]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -1411,15 +1409,13 @@ test("can open a many2one external window", async () => {
         </form>`;
 
     stepAllNetworkCalls();
-    onRpc("get_formview_action", () => {
-        return {
-            name: "Partner",
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            res_id: 3,
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        res_id: 3,
+        views: [[false, "form"]],
+    }));
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
     // open first record in form view
@@ -1864,6 +1860,42 @@ test("stored action is restored correctly with domain", async () => {
     expect(".o_data_row").toHaveCount(1);
 });
 
+test("current_action doesn't contains _originalAction", async () => {
+    class myActionComponent extends Component {
+        static template = xml`<div>This is a Client Action</div>`;
+        static props = ["*"];
+    }
+
+    const myAction = (env, action) => {
+        registry.category("actions").add("myAction", myActionComponent, { force: true });
+        return action;
+    };
+    registry.category("actions").add("myAction", myAction);
+    redirect("/odoo/myAction");
+    await mountWithCleanup(WebClient);
+
+    await animationFrame();
+    expect(JSON.parse(sessionStorage.getItem("current_action"))).toEqual(
+        {
+            context: {},
+            domain: [],
+            jsId: "action_1",
+            params: {
+                action: "myAction",
+                actionStack: [
+                    {
+                        action: "myAction",
+                    },
+                ],
+            },
+            tag: "myAction",
+            target: "current",
+            type: "ir.actions.client",
+        },
+        { message: "current_action doesn't contains _originalAction" }
+    );
+});
+
 test.tags("desktop");
 test("destroy action with lazy loaded controller", async () => {
     redirect("/odoo/action-3/2");
@@ -1892,14 +1924,12 @@ test("execute action from dirty, new record, and come back", async () => {
             <field name="bar" readonly="1"/>
         </form>`;
 
-    onRpc("get_formview_action", () => {
-        return {
-            res_id: 1,
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        res_id: 1,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -1995,14 +2025,12 @@ test("go back to action with form view as main view, and res_id", async () => {
     ]);
     Partner._views["form,44"] = '<form><field name="m2o"/></form>';
 
-    onRpc("get_formview_action", () => {
-        return {
-            res_id: 3,
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        res_id: 3,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(999);
@@ -2035,9 +2063,7 @@ test("action with res_id, load another res_id, do new action, restore previous",
     defineActions([action]);
 
     Partner._views["form,44"] = '<form><field name="m2o"/></form>';
-    onRpc("get_formview_action", () => {
-        return { ...action, res_id: 3 };
-    });
+    onRpc("get_formview_action", () => ({ ...action, res_id: 3 }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(999, { props: { resIds: [1, 2] } });
@@ -2224,16 +2250,14 @@ test.tags("desktop");
 test("executing a window action with onchange warning does not hide it", async () => {
     Partner._views["form,false"] = `<form><field name="foo"/></form>`;
 
-    onRpc("onchange", () => {
-        return {
-            value: {},
-            warning: {
-                title: "Warning",
-                message: "Everything is alright",
-                type: "dialog",
-            },
-        };
-    });
+    onRpc("onchange", () => ({
+        value: {},
+        warning: {
+            title: "Warning",
+            message: "Everything is alright",
+            type: "dialog",
+        },
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -2685,27 +2709,25 @@ test("sample server: populate groups", async () => {
             </pivot>`,
         search: `<search/>`,
     };
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    date_count: 0,
-                    "write_date:month": "December 2022",
-                    __range: {
-                        "write_date:month": {
-                            from: "2022-12-01",
-                            to: "2023-01-01",
-                        },
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                date_count: 0,
+                "write_date:month": "December 2022",
+                __range: {
+                    "write_date:month": {
+                        from: "2022-12-01",
+                        to: "2023-01-01",
                     },
-                    __domain: [
-                        ["write_date", ">=", "2022-12-01"],
-                        ["write_date", "<", "2023-01-01"],
-                    ],
                 },
-            ],
-            length: 1,
-        };
-    });
+                __domain: [
+                    ["write_date", ">=", "2022-12-01"],
+                    ["write_date", "<", "2023-01-01"],
+                ],
+            },
+        ],
+        length: 1,
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
