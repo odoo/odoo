@@ -6,6 +6,23 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <button id="send_by_email_primary" position="attributes">
+                <attribute name="string">Send</attribute>
+            </button>
+
+            <button name="action_confirm" class="btn-primary" position="after">
+                <button
+                    string="Print"
+                    name="sale.action_report_saleorder"
+                    type="action"
+                    invisible="state == 'sale'"
+                />
+            </button>
+
+            <button id="send_by_email" position="attributes">
+                <attribute name="string">Send</attribute>
+            </button>
+            
             <page name="order_lines" position="after">
                 <page string="Optional Products"
                     name="optional_products"
