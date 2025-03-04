@@ -48,8 +48,6 @@ class ResourceCalendarLeaves(models.Model):
         "resource.resource", 'Resource', index=True,
         help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource")
     time_type = fields.Selection([
-        ('leave', 'Time Off'),
-        ('other', 'Other'),
         ('work', 'Paid, Worked Time'),
         ('paid', 'Paid, non-Worked Time'),
         ('unpaid', 'Unpaid, non-Worked Time')], default='unpaid',

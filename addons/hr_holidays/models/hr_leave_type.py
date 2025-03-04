@@ -95,8 +95,6 @@ class HrLeaveType(models.Model):
 
     has_valid_allocation = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
     time_type = fields.Selection([
-        ('other', 'Worked Time'),
-        ('leave', 'Absence'),
         ('work', 'Paid, Worked Time'),
         ('paid', 'Paid, non-Worked Time'),
         ('unpaid', 'Unpaid, non-Worked Time')
