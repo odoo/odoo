@@ -800,4 +800,17 @@
         <field name="code">USRETROREGULAR</field>
         <field name="country_id" ref="base.us"/>
     </record>
+
+<!-- SA : Saudi Arabia -->
+    <record id="ksa_sick_leave_75_work_entry_type" model="hr.work.entry.type">
+            <field name="name">Sick Leave (75% Paid)</field>
+            <field name="code">SICKLEAVE75</field>
+            <field name="country_id" ref="base.sa"/>
+        </record>
+        <record id="ksa_sick_leave_0_work_entry_type" model="hr.work.entry.type">
+            <field name="name">Sick Leave (Unpaid)</field>
+            <field name="code">SICKLEAVE0</field>
+            <field name="country_id" ref="base.sa"/>
+        </record>
+
 </data></odoo>
