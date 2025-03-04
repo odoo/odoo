@@ -818,6 +818,7 @@ class HrExpense(models.Model):
             'tax_tag_ids': to_update['tax_tag_ids'],
             'amount_currency': amount_currency,
             'currency_id': self.currency_id.id,
+            'quantity': self.quantity,
         }
         move_lines.append(base_move_line)
         total_tax_line_balance = 0.0

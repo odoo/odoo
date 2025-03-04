@@ -6,10 +6,10 @@ from unittest.mock import patch
 
 from odoo.exceptions import AccessError
 from odoo.fields import Command
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import tagged, new_test_user, TransactionCase
 from odoo.tools import mute_logger
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.base.tests.common import HttpCase
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website.tools import MockRequest
@@ -298,60 +298,78 @@ class TestPartnerLeadPortal(TestCrmCommon):
 
 
 @tagged('post_install', '-at_install')
-class TestPublish(HttpCaseWithUserDemo):
+class TestPublish(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.group_partner_manager = cls.env.ref('base.group_partner_manager')
         cls.group_restricted_editor = cls.env.ref('website.group_website_restricted_editor')
-        cls.group_salesman = cls.env.ref('sales_team.group_sale_salesman')
+        cls.group_sale_salesman = cls.env.ref('sales_team.group_sale_salesman')
+        # Do not rely on HttpCaseWithUserDemo to avoid having different user
+        # definitions with and without demo data.
+        cls.user_test = new_test_user(cls.env, login='testtest', website_id=False)
+
+        # Partner Grade
+        grade = cls.env['res.partner.grade'].create({
+            'name': "Grade Test",
+            'partner_weight': 42,
+            'sequence': 3,
+        })
         cls.partner = cls.env['res.partner'].create({
             'name': "Agrolait",
             'is_company': True,
             'city': "Wavre",
             'zip': "1300",
-            'country_id': cls.env.ref("base.be").id,
+            'country_id': cls.env.ref('base.be').id,
             'street': "69 rue de Namur",
             'partner_weight': 10,
             'website_published': True,
+            'grade_id': grade.id,
         })
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_01_admin(self):
-        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_can_publish_partner', login="admin")
         self.assertTrue(self.partner.website_published, "Partner should have been published")
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_02_reditor_salesman(self):
-        self.user_demo.groups_id = [
+        self.user_test.groups_id = [
             Command.link(self.group_restricted_editor.id),
-            Command.link(self.group_salesman.id),
+            Command.link(self.group_sale_salesman.id),
         ]
-        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="demo")
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_can_publish_partner', login="testtest")
         self.assertTrue(self.partner.website_published, "Partner should have been published")
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_03_reditor_not_salesman(self):
-        self.user_demo.groups_id = [
+        self.user_test.groups_id = [
             Command.link(self.group_restricted_editor.id),
-            Command.unlink(self.group_salesman.id),
+            Command.unlink(self.group_sale_salesman.id),
+            Command.unlink(self.group_partner_manager.id)
         ]
-        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="demo")
-        self.assertTrue(self.partner.website_published, "Partner should have been published")
+        self.assertNotIn(self.group_sale_salesman.id, self.user_test.groups_id.ids, "User should not be a group_sale_salesman")
+        self.assertNotIn(self.group_partner_manager.id, self.user_test.groups_id.ids, "User should not be a group_partner_manager")
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_cannot_publish_partner', login="testtest")
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_04_not_reditor_salesman(self):
-        self.user_demo.groups_id = [
+        self.user_test.groups_id = [
             Command.unlink(self.group_restricted_editor.id),
-            Command.link(self.group_salesman.id),
+            Command.link(self.group_sale_salesman.id),
         ]
-        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="demo")
+        self.assertNotIn(self.group_restricted_editor.id, self.user_test.groups_id.ids, "User should not be a group_restricted_editor")
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_can_publish_partner', login="testtest")
         self.assertTrue(self.partner.website_published, "Partner should have been published")
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_05_not_reditor_not_salesman(self):
-        self.user_demo.groups_id = [
+        self.user_test.groups_id = [
             Command.unlink(self.group_restricted_editor.id),
-            Command.unlink(self.group_salesman.id),
+            Command.unlink(self.group_sale_salesman.id),
+            Command.unlink(self.group_partner_manager.id)
         ]
-        self.start_tour(self.env['website'].get_client_action_url(self.partner.website_url), 'test_can_publish_partner', login="demo")
-        self.assertTrue(self.partner.website_published, "Partner should have been published")
+        self.assertNotIn(self.group_sale_salesman.id, self.user_test.groups_id.ids, "User should not be a group_sale_salesman")
+        self.assertNotIn(self.group_partner_manager.id, self.user_test.groups_id.ids, "User should not be a group_partner_manager")
+        self.assertNotIn(self.group_restricted_editor.id, self.user_test.groups_id.ids, "User should not be a group_restricted_editor")
+        self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_cannot_publish_partner', login="testtest")
