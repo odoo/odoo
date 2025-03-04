@@ -7,6 +7,7 @@ import { insertText } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
 import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
 import { loadLanguages } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { DEFAULT_ALTERNATIVES_MODES } from "../src/main/chatgpt/chatgpt_alternatives_dialog";
@@ -90,12 +91,10 @@ test("ChatGPT dialog opens in translate mode when clicked on translate button in
 
 test("ChatGPT dialog opens in translate mode when clicked on translate dropdown in toolbar", async () => {
     loadLanguages.installedLanguages = false;
-    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => {
-        return [
-            ["en_US", "English (US)"],
-            ["fr_BE", "French (BE) / Français (BE)"],
-        ];
-    });
+    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => [
+        ["en_US", "English (US)"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ]);
     await setupEditor("<p>te[s]t</p>", {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
@@ -206,12 +205,10 @@ test("insert the response from ChatGPT alternatives dialog", async () => {
 
 test("insert the response from ChatGPT translate dialog", async () => {
     loadLanguages.installedLanguages = false;
-    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => {
-        return [
-            ["en_US", "English (US)"],
-            ["fr_BE", "French (BE) / Français (BE)"],
-        ];
-    });
+    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => [
+        ["en_US", "English (US)"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ]);
     const { editor, el } = await setupEditor("<p>[Hello]</p>", {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
@@ -285,6 +282,32 @@ test("Translate button should be positioned before ChatGPT button in toolbar", a
     expect(buttons).toHaveCount(2);
     expect(buttons[0]).toHaveAttribute("name", "translate");
     expect(buttons[1]).toHaveAttribute("name", "chatgpt");
+});
+
+test("Translate dropdown should have the default language at top", async () => {
+    loadLanguages.installedLanguages = false;
+    const languages = [
+        ["zh_HK", "Chinese (HK)"],
+        ["nl_NL", "Dutch / Nederlands"],
+        ["en", "English"],
+        ["fr_BE", "French (BE) / Français (BE)"],
+    ];
+
+    onRpc("/web/dataset/call_kw/res.lang/get_installed", () => languages);
+    await setupEditor("<p>[test]</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
+    });
+    await waitFor(".o-we-toolbar");
+
+    // Select Translate button in the toolbar.
+    await translateButtonFromToolbar();
+    await waitFor(".dropdown-menu");
+
+    const expectedLanguage = languages.find(([code]) => code === user.lang);
+
+    // Expect the default language to be at the top.
+    expect(".dropdown-menu .dropdown-item:first-child").toHaveText(expectedLanguage[1]);
+    loadLanguages.installedLanguages = false;
 });
 
 test("press escape to close ChatGPT dialog", async () => {
