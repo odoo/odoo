@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, getFixture } from "@odoo/hoot";
 import { click, queryAllTexts, queryAllValues } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
@@ -107,4 +107,17 @@ test("relational filter with a contextual domain", async function () {
     await click(".o_multi_record_selector input");
     await animationFrame();
     expect.verifySteps(["name_search"]);
+});
+
+test("Filters have a title", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "text",
+        label: "Text Filter",
+    });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    const fixture = getFixture();
+    expect(fixture.querySelector(".o-filter-value").title).toBe("Text Filter");
 });
