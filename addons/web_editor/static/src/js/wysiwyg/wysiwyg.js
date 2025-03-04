@@ -2274,7 +2274,7 @@ export class Wysiwyg extends Component {
         // snippet is a media.
         const isInMedia = $target.is(mediaSelector) && !$target.parent().hasClass('o_stars') && e.target &&
             (e.target.isContentEditable || (e.target.parentElement && e.target.parentElement.isContentEditable));
-        const isSharedBlockEl = $target[0]?.closest("[data-shared-block-tooltip]");
+        const sharedBlockEl = $target[0]?.closest("[data-shared-block-message]");
         this.toolbarEl.classList.toggle('oe-media', isInMedia);
 
         for (const el of this.toolbarEl.querySelectorAll([
@@ -2355,7 +2355,7 @@ export class Wysiwyg extends Component {
             this._updateMediaJustifyButton();
             this._updateFaResizeButtons();
         }
-        if ((isInMedia && !this.options.onDblClickEditableMedia) || isSharedBlockEl) {
+        if ((isInMedia && !this.options.onDblClickEditableMedia) || sharedBlockEl) {
             // Handle the media/link's tooltip.
             this.showTooltip = true;
             this.tooltipTimeouts.push(setTimeout(() => {
@@ -2365,7 +2365,7 @@ export class Wysiwyg extends Component {
                 }
                 // Tooltips need to be cleared before leaving the editor.
                 this.saving_mutex.exec(() => {
-                    const tooltipMessage = isInMedia ? _t('Double-click to edit') : isSharedBlockEl.dataset.sharedBlockTooltip;
+                    const tooltipMessage = isInMedia ? _t('Double-click to edit') : sharedBlockEl.dataset.sharedBlockMessage;
                     const removeTooltip = this.popover.add(e.target, Tooltip, { tooltip: tooltipMessage });
                     this.tooltipTimeouts.push(setTimeout(() => removeTooltip(), 800));
                 });
