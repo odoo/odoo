@@ -89,6 +89,8 @@ export class Thread extends Record {
     get canUnpin() {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
+    /** @type {boolean} */
+    can_react = true;
     close_chat_window = Record.attr(undefined, {
         /** @this {import("models").Thread} */
         onUpdate() {

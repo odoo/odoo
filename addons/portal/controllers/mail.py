@@ -44,10 +44,13 @@ class PortalChatter(http.Controller):
         store = Store()
         thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
         partner = request.env.user.partner_id
-        if thread and request.env.user._is_public():
-            if portal_partner := get_portal_partner(
+        if thread:
+            mode = request.env[thread_model]._get_mail_message_access([thread_id], "create")
+            can_react = request.env[thread_model]._get_thread_with_access(thread_id, mode, **kwargs)
+            store.add(thread, {"can_react": bool(can_react)}, as_thread=True)
+            if request.env.user._is_public() and (portal_partner := get_portal_partner(
                 thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
-            ):
+            )):
                 partner = portal_partner
         store.add_global_values(
             store_self=Store.One(partner, ["active", "avatar_128", "name", "user"])

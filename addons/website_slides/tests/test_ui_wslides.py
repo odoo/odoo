@@ -196,6 +196,15 @@ class TestUi(TestUICommon):
 
         self.start_tour('/slides', 'course_reviews', login=user_demo.login)
 
+    def test_course_reviews_reaction_public(self):
+        self.channel.message_post(
+            body="Bad course!",
+            message_type="comment",
+            rating_value="1",
+            subtype_xmlid="mail.mt_comment"
+        )
+
+        self.start_tour("/slides", "course_reviews_reaction_public", login=None)
 
 @tests.common.tagged('post_install', '-at_install')
 class TestUiPublisher(HttpCaseGamification):
