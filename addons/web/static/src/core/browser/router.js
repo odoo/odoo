@@ -390,6 +390,17 @@ function makeDebouncedPush(mode) {
     };
 }
 
+/**
+ * Removes specified query parameters from the URL without triggering a reload
+ * @param {string|string[]} params - Parameter(s) to remove from URL
+ */
+function removeQueryParams(params) {
+    const url = new URL(window.location.href);
+    const paramList = Array.isArray(params) ? params : [params];
+    paramList.forEach((param) => url.searchParams.delete(param));
+    browser.history.replaceState({}, "", url.toString());
+}
+
 export const router = {
     get current() {
         return state;
@@ -403,6 +414,7 @@ export const router = {
     cancelPushes: () => browser.clearTimeout(pushTimeout),
     addLockedKey: (key) => _lockedKeys.add(key),
     hideKeyFromUrl: (key) => _hiddenKeysFromUrl.add(key),
+    removeQueryParams: removeQueryParams,
     skipLoad: false,
 };
 
