@@ -66,8 +66,12 @@ class MailComposerMixin(models.AbstractModel):
         for composer_mixin in self:
             if not tools.is_html_empty(composer_mixin.body) and composer_mixin.template_id:
                 template_value = composer_mixin.template_id.body_html
-                sanitized_template_value = tools.html_sanitize(template_value)
-                composer_mixin.body_has_template_value = composer_mixin.body in (template_value, sanitized_template_value)
+                sanitize_vals = {'silent': True, 'sanitize_tags': False, 'sanitize_attributes': False,
+                'sanitize_style': True, 'sanitize_form': True, 'sanitize_conditional_comments': False,
+                'output_method': 'xml', 'strip_style': False, 'strip_classes': False}
+                sanitized_template_value = tools.html_sanitize(template_value, **sanitize_vals)
+                composer_mixin.body_has_template_value = composer_mixin.body in (template_value,
+                    sanitized_template_value)
             else:
                 composer_mixin.body_has_template_value = False
 

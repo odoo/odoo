@@ -327,3 +327,21 @@ class TestEventSaleMail(TestEventFullCommon):
                 "email_from": self.test_event.organizer_id.email_formatted,
             },
         )
+
+    def test_template_translation(self):
+        self.env['res.lang']._activate_lang('fr_BE')
+        test_event = self.env['event.event'].create({
+                'name': 'Test Event',
+            })
+        self.partners[0].lang = 'fr_BE'
+        self.env.ref('event.event_subscription').with_context(lang='fr_BE').body_html = 'Bonjour'
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            self.env['event.registration'].create({
+            'state': 'open',
+            'name': 'test_name',
+            'email': 'test@test.com',
+            'phone': 'test',
+            'event_id': test_event.id,
+            'partner_id': self.partners[0].id
+            })
+        self.assertEqual(self._new_mails[0].preview, "Bonjour")
