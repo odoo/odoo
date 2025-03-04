@@ -487,7 +487,7 @@ class MailMail(models.Model):
                     email_list.append(values)
 
                 # headers
-                headers = {'X-Odoo-Message-Id': mail.message_id}
+                headers = {}
                 ICP = self.env['ir.config_parameter'].sudo()
                 bounce_alias = ICP.get_param("mail.bounce.alias")
                 catchall_domain = ICP.get_param("mail.catchall.domain")

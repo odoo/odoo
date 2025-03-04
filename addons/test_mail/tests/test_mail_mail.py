@@ -790,25 +790,6 @@ class TestMailMail(TestMailCommon):
             [['test.cc.1@test.example.com', 'test.cc.2@test.example.com']] * 3,
         )
 
-    def test_mail_mail_values_headers(self):
-        """ Test headers content, notably X-Odoo-Message-Id added to keep context
-        when going through exotic mail providers that change our message IDs. """
-        mail = self.env['mail.mail'].create({
-            'body_html': '<p>Test</p>',
-            'email_to': 'test.😊@example.com',
-        })
-        message_id = mail.message_id
-        with self.mock_mail_gateway():
-            mail.send()
-        self.assertEqual(len(self._mails), 1)
-        self.assertDictEqual(
-            self._mails[0]['headers'],
-            {
-                'Return-Path': f'{self.alias_bounce}@{self.alias_domain}',
-                'X-Odoo-Message-Id': message_id,
-            }
-        )
-
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_values_email_unicode(self):
         """ Unicode should be fine. """
