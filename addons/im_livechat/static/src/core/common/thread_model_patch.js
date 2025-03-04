@@ -39,7 +39,10 @@ patch(Thread.prototype, {
         });
     },
     get autoOpenChatWindowOnNewMessage() {
-        return this.channel_type === "livechat" || super.autoOpenChatWindowOnNewMessage;
+        return (
+            (this.channel_type === "livechat" && !this.store.chatHub.compact) ||
+            super.autoOpenChatWindowOnNewMessage
+        );
     },
     get showCorrespondentCountry() {
         if (this.channel_type === "livechat") {
