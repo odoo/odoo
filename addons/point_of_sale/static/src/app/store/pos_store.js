@@ -630,7 +630,6 @@ export class PosStore extends Reactive {
         if (!order) {
             order = this.add_new_order();
         }
-        this.addPendingOrder([order.id]);
         return await this.addLineToOrder(vals, order, opts, configure);
     }
 
