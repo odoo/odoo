@@ -64,6 +64,14 @@ export class Message extends Record {
             );
         },
     });
+    /** @type {boolean} */
+    editedDate = fields.Datetime({
+        compute() {
+            return createDocumentFragmentFromContent(this.body).querySelector(
+                ".o-mail-Message-edited"
+            )?.dataset.oeExpression;
+        },
+    });
     hasLink = fields.Attr(false, {
         compute() {
             if (this.isBodyEmpty) {
@@ -218,12 +226,16 @@ export class Message extends Record {
         return this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, userLocale);
     }
 
+    get editedDatetimeMedium() {
+        return this.editedDate.toLocaleString({ ...DateTime.DATETIME_MED }, { locale: user.lang });
+    }
+
     get datetime() {
         return this.date || DateTime.now();
     }
 
-    get datetimeShort() {
-        return this.datetime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
+    get datetimeMedium() {
+        return this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, { locale: user.lang });
     }
 
     get isSelfMentioned() {
@@ -300,22 +312,23 @@ export class Message extends Record {
     });
     isBodyEmpty = fields.Attr(undefined, {
         compute() {
-            return (
-                !this.body ||
-                [
-                    "",
-                    "<p></p>",
-                    "<p><br></p>",
-                    "<p><br/></p>",
-                    "<div></div>",
-                    "<div><br></div>",
-                    "<div><br/></div>",
-                ].includes(
-                    this.body
-                        .replace('<span class="o-mail-Message-edited"></span>', "")
-                        .replace(/\s/g, "")
-                )
-            );
+            if (!this.body) {
+                return true;
+            }
+            const bodyEl = createDocumentFragmentFromContent(this.body);
+            const editedEl = bodyEl.querySelector(".o-mail-Message-edited");
+            if (editedEl) {
+                editedEl.parentElement.removeChild(editedEl);
+            }
+            return [
+                "",
+                "<p></p>",
+                "<p><br></p>",
+                "<p><br/></p>",
+                "<div></div>",
+                "<div><br></div>",
+                "<div><br/></div>",
+            ].includes(bodyEl.body.innerHTML.replace(/\s/g, ""));
         },
     });
 

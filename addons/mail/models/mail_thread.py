@@ -4607,7 +4607,7 @@ class MailThread(models.AbstractModel):
         if body is not None:
             msg_values["body"] = (
                 # keep html if already Markup, otherwise escape
-                escape(body) + Markup("<span class='o-mail-Message-edited'/>")
+                escape(body) + Markup("<span class='o-mail-Message-edited' data-oe-expression='%s'/>") % fields.Datetime.to_string(fields.Datetime.now())
                 if body or not message._filter_empty()
                 else ""
             )

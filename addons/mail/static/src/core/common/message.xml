@@ -20,7 +20,7 @@
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="message.datetimeShort">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="message.datetimeMedium">
                                 <t t-esc="message.dateSimple"/>
                             </small>
                         </t>
@@ -31,7 +31,7 @@
                                 <strong class="me-1" t-esc="message.authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeShort">
+                            <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeMedium">
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <t t-else="" t-out="message.dateSimpleWithDay"/>
                             </small>
@@ -122,7 +122,7 @@
     </t>
 
 <t t-name="mail.Message.edited">
-    <em class="smaller fw-bold text-500"> (edited)</em>
+    <span class="o-xsmaller fw-bold" t-att-title="message.editedDatetimeMedium"> (edited)</span>
 </t>
 
 <t t-name="mail.Message.actions">

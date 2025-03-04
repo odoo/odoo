@@ -673,7 +673,9 @@ async function mail_message_update_content(request) {
     const [message] = MailMessage.browse(message_id);
     const msg_values = {};
     if (body !== null) {
-        const edit_label = "<span class='o-mail-Message-edited'/>";
+        const edit_label = `<span class='o-mail-Message-edited' data-oe-expression="${serializeDateTime(
+            DateTime.now()
+        )}"/>`;
         msg_values.body = body === "" && attachment_ids.length === 0 ? "" : body + edit_label;
     }
     if (attachment_ids.length === 0) {

@@ -389,7 +389,9 @@ export class Message extends Component {
             return;
         }
         const editedEl = bodyEl.querySelector(".o-mail-Message-edited");
-        editedEl?.replaceChildren(renderToElement("mail.Message.edited"));
+        editedEl?.replaceChildren(
+            renderToElement("mail.Message.edited", { message: this.message })
+        );
         const linkEls = bodyEl.querySelectorAll(".o_channel_redirect");
         for (const linkEl of linkEls) {
             const text = linkEl.textContent.substring(1); // remove '#' prefix

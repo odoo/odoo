@@ -31,6 +31,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin, url } from "@web/core/utils/urls";
+import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
 
@@ -349,6 +350,7 @@ test("Do not stop edition on click away when clicking on emoji", async () => {
 });
 
 test("Edit and click save", async () => {
+    mockDate("2025-01-01 12:00:00", +1);
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -367,6 +369,7 @@ test("Edit and click save", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message-body", { text: "Goodbye World (edited)" });
+    await contains("span[title='Jan 1, 2025, 1:00 PM']:contains('(edited)')");
 });
 
 test("Do not call server on save if no changes", async () => {
@@ -800,7 +803,7 @@ test("basic rendering of message", async () => {
     await contains(
         `.o-mail-Message .o-mail-Message-header .o-mail-Message-date[title='${deserializeDateTime(
             "2019-04-20 10:00:00"
-        ).toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}']`
+        ).toLocaleString({ ...DateTime.DATETIME_MED }, { locale: user.lang })}']`
     );
 });
 
