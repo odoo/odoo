@@ -77,11 +77,16 @@ export class Activity extends Component {
         return computeDelay(this.props.data.date_deadline);
     }
 
+    get onUpdate() {
+        return this.props.onUpdate;
+    }
+
     toggleDetails() {
         this.state.showDetails = !this.state.showDetails;
     }
 
     async onClickMarkAsDone(ev) {
+        const thread = this.thread;
         if (this.popover.isOpen) {
             this.popover.close();
             return;
@@ -89,7 +94,7 @@ export class Activity extends Component {
         this.popover.open(ev.currentTarget, {
             activity: this.props.data,
             hasHeader: true,
-            reload: this.props.onUpdate,
+            reload: this.onUpdate(thread),
         });
     }
 
@@ -99,7 +104,7 @@ export class Activity extends Component {
             activity: this.props.data,
         });
         await this.activityService.markAsDone(this.props.data, [attachmentId]);
-        this.props.onUpdate(thread);
+        this.onUpdate(thread);
         await this.threadService.fetchNewMessages(thread);
     }
 
@@ -116,14 +121,14 @@ export class Activity extends Component {
         const thread = this.thread;
         const id = this.props.data.id;
         await this.env.services["mail.activity"].edit(id);
-        this.props.onUpdate(thread);
+        this.onUpdate(thread);
     }
 
     async unlink() {
         const thread = this.thread;
         this.activityService.delete(this.props.data);
         await this.env.services.orm.unlink("mail.activity", [this.props.data.id]);
-        this.props.onUpdate(thread);
+        this.onUpdate(thread);
     }
 
     get thread() {
