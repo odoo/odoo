@@ -461,3 +461,24 @@ test("down on empty BuilderNumberInput gives -1", async () => {
     expect("[data-action-id='customAction'] input").toHaveValue("-1");
     expect(":iframe .test-options-target").toHaveAttribute("data-number", "-1");
 });
+test("trailing space in BuilderNumberInput is ignored", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ value }) => {
+                expect.step(`customAction ${value}`);
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">10</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input").fill("3 4 5 ", { instantly: true });
+    expect.verifySteps(["customAction 3 4 5", "customAction 3 4 5"]); // input, change
+    expect(".options-container input").toHaveValue("3 4 5");
+});
