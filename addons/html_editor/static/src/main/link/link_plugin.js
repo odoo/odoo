@@ -206,7 +206,7 @@ export class LinkPlugin extends Plugin {
         power_buttons: withSequence(10, {
             commandId: "openLinkTools",
             commandParams: { type: "primary" },
-            title: _t("Button"),
+            description: _t("Add a button"),
             icon: "fa-square",
         }),
 
