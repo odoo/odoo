@@ -87,6 +87,7 @@
                     class="o_cw_filter_title flex-grow-1 text-truncate lh-base"
                     t-esc="filter.label"
                 />
+                <span t-if="filter.aggregatedValue" t-esc="filter.aggregatedValue"/>
             </label>
             <t t-if="filter.canRemove">
                 <button

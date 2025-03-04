@@ -9,7 +9,6 @@ const FIELD_ATTRIBUTE_NAMES = [
     "date_delay",
     "date_stop",
     "all_day",
-    "recurrence_update",
     "create_name_field",
     "color",
 ];
@@ -30,6 +29,7 @@ export class CalendarArchParser {
         let canCreate = true;
         let canDelete = true;
         let canEdit = true;
+        let aggregate;
         let quickCreate = true;
         let quickCreateViewId = null;
         let hasEditDialog = false;
@@ -59,6 +59,10 @@ export class CalendarArchParser {
                             fieldNames.add(fieldName);
                             fieldMapping[fieldAttrName] = fieldName;
                         }
+                    }
+                    if (node.hasAttribute("aggregate")) {
+                        aggregate = node.getAttribute("aggregate");
+                        fieldNames.add(aggregate.split(":")[0]);
                     }
 
                     if (node.hasAttribute("event_limit")) {
@@ -182,6 +186,7 @@ export class CalendarArchParser {
         });
 
         return {
+            aggregate,
             canCreate,
             canDelete,
             canEdit,

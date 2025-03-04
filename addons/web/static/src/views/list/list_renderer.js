@@ -11,12 +11,15 @@ import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
-import { getClassNameFromDecoration } from "@web/views/utils";
+import {
+    computeAggregatedValue,
+    getClassNameFromDecoration,
+    getFormattedValue,
+} from "@web/views/utils";
 import { combineModifiers } from "@web/model/relational_model/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
-import { getFormattedValue } from "../utils";
 import { localization } from "@web/core/l10n/localization";
 import { useMagicColumnWidths } from "./column_width_hook";
 
@@ -614,18 +617,7 @@ export class ListRenderer extends Component {
                 }
             }
             if (func) {
-                let aggregateValue = 0;
-                if (func === "max") {
-                    aggregateValue = Math.max(-Infinity, ...fieldValues);
-                } else if (func === "min") {
-                    aggregateValue = Math.min(Infinity, ...fieldValues);
-                } else if (func === "avg") {
-                    aggregateValue =
-                        fieldValues.reduce((acc, val) => acc + val) / fieldValues.length;
-                } else if (func === "sum") {
-                    aggregateValue = fieldValues.reduce((acc, val) => acc + val);
-                }
-
+                const aggregatedValue = computeAggregatedValue(fieldValues, func);
                 const formatter = formatters.get(widget, false) || formatters.get(type, false);
                 const formatOptions = {
                     digits: attrs.digits ? JSON.parse(attrs.digits) : undefined,
@@ -636,7 +628,7 @@ export class ListRenderer extends Component {
                 }
                 aggregates[fieldName] = {
                     help: attrs[func],
-                    value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
+                    value: formatter ? formatter(aggregatedValue, formatOptions) : aggregatedValue,
                 };
             }
         }

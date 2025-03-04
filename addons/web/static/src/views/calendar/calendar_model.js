@@ -13,8 +13,11 @@ import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
+import { groupBy } from "@web/core/utils/arrays";
 import { Cache } from "@web/core/utils/cache";
+import { formatFloat } from "@web/core/utils/numbers";
 import { useDebounced } from "@web/core/utils/timing";
+import { computeAggregatedValue } from "@web/views/utils";
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
@@ -34,6 +37,10 @@ export class CalendarModel extends Model {
             firstDayOfWeek: (localization.weekStart || 0) % 7,
             formViewId: params.formViewId || formViewIdFromConfig,
         };
+        if (this.meta.aggregate?.split(":").length === 1) {
+            const aggregator = this.fields[this.meta.aggregate].aggregator || "sum";
+            this.meta.aggregate = `${this.meta.aggregate}:${aggregator}`;
+        }
         this.meta.scale = this.getLocalStorageScale();
         this.data = {
             filterSections: {},
@@ -73,6 +80,9 @@ export class CalendarModel extends Model {
     // Public
     //--------------------------------------------------------------------------
 
+    get aggregate() {
+        return this.meta.aggregate;
+    }
     get date() {
         return this.meta.date;
     }
@@ -366,6 +376,16 @@ export class CalendarModel extends Model {
         }
 
         await unusualDaysProm;
+
+        // Compute aggregate values
+        if (this.aggregate) {
+            for (const [fieldName, { filters }] of Object.entries(data.filterSections)) {
+                const aggregates = this.computeAggregatedValues(fieldName, data);
+                for (const filter of filters) {
+                    filter.aggregatedValue = aggregates[filter.value] || 0;
+                }
+            }
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -399,6 +419,29 @@ export class CalendarModel extends Model {
 
     //--------------------------------------------------------------------------
 
+    /**
+     * @param {string} fieldName
+     * @param {Object} [data=this.data]
+     * @returns Object
+     */
+    computeAggregatedValues(fieldName, data = this.data) {
+        const records = Object.values(data.records);
+        const fieldType = this.meta.fields[fieldName].type;
+        const groups = groupBy(records, ({ rawRecord }) => {
+            const rawValue = rawRecord[fieldName];
+            // FIXME: many2many not supported, but not supported for filters either
+            return fieldType === "many2one" ? rawValue?.[0] || false : rawValue;
+        });
+        const aggregates = {};
+        const [aggregateField, aggregator] = this.aggregate.split(":");
+        for (const group in groups) {
+            const values = groups[group].map(({ rawRecord }) => rawRecord[aggregateField]);
+            aggregates[group] = formatFloat(computeAggregatedValue(values, aggregator), {
+                trailingZeros: false,
+            });
+        }
+        return aggregates;
+    }
     /**
      * @protected
      */
