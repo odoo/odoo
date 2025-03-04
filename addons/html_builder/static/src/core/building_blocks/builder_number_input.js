@@ -51,7 +51,7 @@ export class BuilderNumberInput extends Component {
         if (!values) {
             return "";
         }
-        return values.split(/\s+/g).map(convertSingleValueFn).join(" ");
+        return values.trim().split(/\s+/g).map(convertSingleValueFn).join(" ");
     }
 
     formatRawValue(rawValue) {
