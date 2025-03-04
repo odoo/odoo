@@ -237,14 +237,14 @@ class AccountMove(models.Model):
         for move in self:
             move.show_reset_to_draft_button = not move.l10n_it_edi_transaction and move.show_reset_to_draft_button
 
-    def _decode_attachment(self, attachment, new=False):
+    def _decode_attachment(self, file_data, new=False):
         # EXTENDS 'account'
-        if attachment.import_type == 'l10n_it.fatturapa':
+        if file_data['import_type'] == 'l10n_it.fatturapa':
             # Italy needs a custom order in prediction, since prediction generally deduces taxes
             # from products, while in Italian EDI, taxes are generally explicited in the XML file
             # while the product may not be labelled exactly the same as in the database.
-            return self.with_context(disable_onchange_name_predictive=True)._l10n_it_edi_import_invoice(attachment)
-        return super()._decode_attachment(attachment, new)
+            return self.with_context(disable_onchange_name_predictive=True)._l10n_it_edi_import_invoice(file_data)
+        return super()._decode_attachment(file_data, new)
 
     def _post(self, soft=True):
         # EXTENDS 'account'
@@ -978,11 +978,13 @@ class AccountMove(models.Model):
 
             # Unwrap the attachments. Potentially each FatturaPA file can get unwrapped into several sub-attachments that
             # should each create one invoice.
-            attachments |= attachments._unwrap_attachments()
+            files_data = attachments._to_files_data()
+            files_data.extend(self.env['ir.attachment']._unwrap_attachments(files_data))
 
-            moves = self.with_company(proxy_user.company_id).create([{}] * len(attachments))
+            moves = self.with_company(proxy_user.company_id).create([{}] * len(files_data))
 
-            for move, attachment in zip(moves, attachments):
+            for move, file_data in zip(moves, files_data):
+                attachment = file_data['attachment']
                 attachment.write({'res_model': 'account.move', 'res_id': move.id, 'res_field': 'l10n_it_edi_attachment_file'})
 
                 # Post the attachment in the chatter
@@ -992,8 +994,8 @@ class AccountMove(models.Model):
                 )
 
             # Extend created moves with the related attachments.
-            for move, attachment in zip(moves, attachments):
-                move._extend_with_attachments(attachment, new=True)
+            for move, file_data in zip(moves, files_data):
+                move._extend_with_attachments([file_data], new=True)
 
         return {"retrigger": retrigger, "proxy_acks": proxy_acks}
 
@@ -1076,7 +1078,7 @@ class AccountMove(models.Model):
             'type_tax_use_domain': [('type_tax_use', '=', 'purchase' if incoming else 'sale')],
         }, []
 
-    def _l10n_it_edi_import_invoice(self, attachment):
+    def _l10n_it_edi_import_invoice(self, file_data):
         """ Decode a FatturaPA attachment into an Odoo move.
 
         :returns: True if the import succeeded.
@@ -1090,7 +1092,7 @@ class AccountMove(models.Model):
         with self._get_edi_creation() as self:
             buyer_seller_info = self._l10n_it_buyer_seller_info()
 
-            tree = attachment.xml_tree
+            tree = file_data['xml_tree']
             # Identify the first invoice if there are several in the file.
             tree_body = tree.find('.//FatturaElettronicaBody')
             company = self.company_id

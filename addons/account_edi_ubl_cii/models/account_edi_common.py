@@ -278,14 +278,14 @@ class AccountEdiCommon(models.AbstractModel):
     # Import invoice
     # -------------------------------------------------------------------------
 
-    def _import_invoice_ubl_cii(self, invoice, attachment, new=False):
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
         if not (
             invoice._check_is_draft()
             and invoice._check_has_no_invoice_lines()
         ):
             return
 
-        tree = attachment.xml_tree
+        tree = file_data['xml_tree']
 
         # Not able to decode the move_type from the xml.
         move_type, qty_factor = self._get_import_document_amount_sign(tree)

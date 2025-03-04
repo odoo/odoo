@@ -516,11 +516,11 @@ class AccountMove(models.Model):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _decode_attachment(self, attachment, new=False):
+    def _decode_attachment(self, file_data, new=False):
         # EXTENDS 'account'
-        if attachment.import_type == 'l10n_es.facturae':
-            return self._import_invoice_facturae(attachment)
-        return super()._decode_attachment(attachment, new)
+        if file_data['import_type'] == 'l10n_es.facturae':
+            return self._import_invoice_facturae(file_data)
+        return super()._decode_attachment(file_data, new)
 
     def _import_get_partner(self, tree, is_bill):
         # If we're dealing with a vendor bill, then the partner is the seller party, if an invoice then it's the buyer.
@@ -564,12 +564,12 @@ class AccountMove(models.Model):
 
         return partner
 
-    def _import_invoice_facturae(self, attachment):
+    def _import_invoice_facturae(self, file_data):
         is_bill = self.move_type.startswith('in_')
-        partner = self._import_get_partner(attachment.xml_tree, is_bill)
+        partner = self._import_get_partner(file_data['xml_tree'], is_bill)
 
         # Only decode the first invoice of the Factura-e file.
-        tree = attachment.xml_tree.xpath('//Invoice')[0]
+        tree = file_data['xml_tree'].xpath('//Invoice')[0]
 
         logs = []
 

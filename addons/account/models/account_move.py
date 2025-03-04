@@ -4351,11 +4351,11 @@ class AccountMove(models.Model):
         with self._disable_recursion({'records': self}, 'ignore_discount_precision'):
             yield
 
-    def _extend_with_attachments(self, attachments, new=False):
+    def _extend_with_attachments(self, files_data, new=False):
         """ Extend/enhance an invoice with one or more attachments.
 
-        The attachments will be identified and only the one with the highest priority
-        will be used to extend the invoice, using the appropriate decoder.
+        Only the attachment with the highest priority will be used to extend the invoice, using the
+        appropriate decoder.
 
         The decoder may break Python and SQL constraints in difficult-to-predict ways.
         This method calls the decoder in such a way that any exceptions instead roll back the transaction
@@ -4365,7 +4365,7 @@ class AccountMove(models.Model):
         considered, you must pass them as part of the `attachments` recordset.
 
         :param self:        An invoice on which to apply the attachments.
-        :param attachments: A recordset of ir.attachment.
+        :param files_data:  A list of file_data dicts, each representing an in-DB or extracted attachment.
         :param new:         If true, indicates that the invoice was newly created, will be passed to the decoder.
         :return:            True if at least one document is successfully imported.
 
@@ -4378,15 +4378,22 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         # Identify the attachment to decode.
-        attachment = attachments.filtered(lambda a: a.import_priority > 0).sorted('import_priority', reverse=True)[:1]
-
-        if not attachment:
+        files_data_with_positive_priority = [file_data for file_data in files_data if file_data['import_priority'] > 0]
+        if not files_data_with_positive_priority:
             return
+
+        files_data_in_order = sorted(
+            files_data_with_positive_priority,
+            key=lambda file_data: file_data['import_priority'],
+            reverse=True,
+        )
+
+        file_data = files_data_in_order[0]
 
         existing_lines = self.invoice_line_ids
         try:
             with rollbackable_transaction(self.env.cr):
-                self._decode_attachment(attachment, new=new)
+                self._decode_attachment(file_data, new=new)
         except (
             AccessError,
             UserError,
@@ -4394,18 +4401,18 @@ class AccountMove(models.Model):
             psycopg2.errors.IntegrityError,
             psycopg2.errors.SerializationFailure,
         ):
-            if attachment.root_attachment_id:
+            if not file_data['attachment']:
                 message = _(
                     "Error importing attachment '%(filename)s' (extracted from '%(root_filename)s') as invoice (type=%(type)s)",
-                    filename=attachment.name,
-                    root_filename=attachment.root_attachment_id.name,
-                    type=attachment.import_type,
+                    filename=file_data['name'],
+                    root_filename=file_data['origin_attachment'].name,
+                    type=file_data['import_type'],
                 )
             else:
                 message = _(
                     "Error importing attachment '%(filename)s' as invoice (type=%(type)s)",
-                    filename=attachment.name,
-                    type=attachment.import_type,
+                    filename=file_data['name'],
+                    type=file_data['import_type'],
                 )
             _logger.exception(message)
             self.sudo().message_post(body=message)
@@ -4417,10 +4424,10 @@ class AccountMove(models.Model):
 
         return True
 
-    def _decode_attachment(self, attachment, new=False):
+    def _decode_attachment(self, file_data, new=False):
         """ Main method that should be overridden to implement decoders for various file types.
 
-        :param attachment: An ir.attachment record which should be decoded.
+        :param file_data: A dict representing an attachment which should be decoded.
         :param new:       (optional) whether the invoice was newly created.
         """
         return False
@@ -6351,21 +6358,24 @@ class AccountMove(models.Model):
             # No attachments, or the message was created in application code, so don't do anything.
             return super()._message_post_after_hook(new_message, message_values)
 
-        # Extract embedded files.
-        attachments |= attachments._unwrap_attachments()
+        files_data = attachments._to_files_data()
+
+        # Extract embedded files. Note that `_unwrap_attachments` may create ir.attachment records - for example
+        # see l10n_{es,it}_edi, so to retrieve those attachments you should use the `_from_files_data` method.
+        files_data.extend(self.env['ir.attachment']._unwrap_attachments(files_data))
 
         if self.env.context.get('from_alias'):
             # This is a newly-created invoice from a mail alias.
             # So dispatch the attachments into groups, and create a new invoice for each group beyond the first.
-            attachment_groups = self._group_mail_alias_attachments(attachments)
+            file_data_groups = self._group_mail_alias_attachments(files_data)
 
             invoices = self
-            if len(attachment_groups) > 1:
-                create_vals = (len(attachment_groups) - 1) * self.copy_data()
+            if len(file_data_groups) > 1:
+                create_vals = (len(file_data_groups) - 1) * self.copy_data()
                 invoices |= self.with_context(skip_is_manually_modified=True).create(create_vals)
 
-            for invoice, attachment_group in zip(invoices, attachment_groups):
-                attachment_records = attachment_group.filtered(lambda a: not isinstance(a.id, api.NewId))
+            for invoice, file_data_group in zip(invoices, file_data_groups):
+                attachment_records = self.env['ir.attachment']._from_files_data(file_data_group)
                 invoice._fix_attachments_on_invoice(attachment_records)
 
                 if invoice == self:
@@ -6384,19 +6394,19 @@ class AccountMove(models.Model):
                     }
                     super(AccountMove, invoice)._message_post_after_hook(sub_new_message, sub_message_values)
 
-            for invoice, attachment_group in zip(invoices, attachment_groups):
-                invoice._extend_with_attachments(attachment_group, new=True)
+            for invoice, file_data_group in zip(invoices, file_data_groups):
+                invoice._extend_with_attachments(file_data_group, new=True)
 
             return res
 
         else:
             # This is an existing invoice on which a message was posted either by e-mail or via the webclient.
-            attachment_records = attachments.filtered(lambda a: not isinstance(a.id, api.NewId))
+            attachment_records = self.env['ir.attachment']._from_files_data(files_data)
             self._fix_attachments_on_invoice(attachment_records)
 
             # Only trigger decoding if the message was sent by an active internal user (note OdooBot is always inactive).
             if self.env.user.active and self.env.user._is_internal():
-                self._extend_with_attachments(attachments)
+                self._extend_with_attachments(files_data)
 
             new_message.attachment_ids = [Command.set(attachment_records.ids)]
             message_values['attachment_ids'] = [Command.link(attachment.id) for attachment in attachment_records]
@@ -6413,8 +6423,8 @@ class AccountMove(models.Model):
                 'res_model': 'account.move',
                 'res_id': self.id,
             })
-        other_attachments = attachments - attachments_to_attach
-        if attachments_to_unattach := other_attachments.filtered(lambda a: a.res_model == 'account.move' and not a.res_field):
+        attachments_to_unattach = (attachments - attachments_to_attach).filtered(lambda a: a.res_model == 'account.move' and not a.res_field)
+        if attachments_to_unattach:
             attachments_to_unattach.write({
                 'res_model': False,
                 'res_id': 0,
@@ -6435,26 +6445,23 @@ class AccountMove(models.Model):
             'application/vnd.oasis.opendocument.presentation',
         }
 
-    def _group_mail_alias_attachments(self, attachments):
+    def _group_mail_alias_attachments(self, files_data):
         """ Heuristic to dispatch incoming attachments into groups that should be attached to different records.
 
-            :return: A list of ir.attachment groups (each group is a recordset), each group corresponding to a single invoice.
+            :return: A list of file_data groups (each group is a list), each group corresponding to a single invoice.
         """
-        def order(a):
-            import_type = a.origin_attachment_id.import_type
+        def order(file_data):
+            import_type = file_data['origin_import_type']
             return (import_type is False, import_type)
 
-        # 1. Dispatch the attachments into groups.
+        # Dispatch the attachments into groups.
         groups = []
-        for attachment in attachments.sorted(order):
-            self._assign_attachment_to_group(attachment, groups)
-
-        # 2. Convert each group from a list of ir.attachment records into an ir.attachment recordset.
-        groups = list(itertools.starmap(self.env['ir.attachment'].union, groups))
+        for file_data in sorted(files_data, key=order):
+            self._assign_attachment_to_group(file_data, groups)
 
         return groups
 
-    def _assign_attachment_to_group(self, incoming_attachment, groups=[]):
+    def _assign_attachment_to_group(self, incoming_file_data, groups=[]):
         """ This method is called in a loop to group attachments.
             This method assumes that the attachments come in an order where they are already sorted by type.
             Can be overriden to implement a custom grouping behaviour.
@@ -6465,19 +6472,19 @@ class AccountMove(models.Model):
         # Special rule 1: attachments that come from the same root attachment must be added to the same group.
         for group in groups:
             if any(
-                incoming_attachment.origin_attachment_id == attachment.origin_attachment_id
-                for attachment in group
+                incoming_file_data['origin_attachment'] == file_data['origin_attachment']
+                for file_data in group
             ):
-                group.append(incoming_attachment)
+                group.append(incoming_file_data)
                 return
 
         # Special rule 2: images and non-identified attachments are just added to the first group.
-        incoming_origin_type = incoming_attachment.origin_attachment_id.import_type
+        incoming_origin_type = incoming_file_data['origin_import_type']
         if incoming_origin_type in {False, 'jpg', 'png'}:
             if not groups:
-                groups.append([incoming_attachment])
+                groups.append([incoming_file_data])
             else:
-                groups[0].append(incoming_attachment)
+                groups[0].append(incoming_file_data)
             return
 
         # General case: add the attachment to a group which doesn't yet have an attachment of the same root type.
@@ -6485,21 +6492,21 @@ class AccountMove(models.Model):
         if groups_with_different_root_type := [
             group
             for group in groups
-            if incoming_origin_type not in (attachment.origin_attachment_id.import_type for attachment in group)
+            if incoming_origin_type not in (file_data['origin_import_type'] for file_data in group)
         ]:
             sorted_by_similarity = sorted(
                 groups_with_different_root_type,
                 key=lambda group: max(
-                    self._get_similarity_score(incoming_attachment.name, attachment.name)
-                    for attachment in group
+                    self._get_similarity_score(incoming_file_data['name'], file_data['name'])
+                    for file_data in group
                 ),
                 reverse=True,
             )
-            sorted_by_similarity[0].append(incoming_attachment)
+            sorted_by_similarity[0].append(incoming_file_data)
             return
 
         # Otherwise, create a new group.
-        groups.append([incoming_attachment])
+        groups.append([incoming_file_data])
 
     def _get_similarity_score(self, filename1, filename2):
         """ Compute a similarity score between two filenames.

@@ -998,20 +998,24 @@ class AccountJournal(models.Model):
         if not self:
             raise UserError(self.env['account.journal']._build_no_journal_error_msg(self.env.company.display_name, [journal_type]))
 
+        files_data = attachments._to_files_data()
+
         # Extract embedded attachments
-        attachments |= attachments._unwrap_attachments()
+        files_data.extend(self.env['ir.attachment']._unwrap_attachments(files_data))
 
         # Perform a grouping to determine how many invoices to create
-        attachment_groups = self._group_uploaded_attachments(attachments)
+        file_data_groups = self._group_uploaded_attachments(files_data)
 
         # Create one invoice per group.
-        invoices = self.env['account.move'].with_context(
-            default_journal_id=self.id,
-            default_move_type=move_type,
-        ).create([{}] * len(attachment_groups))
+        invoices = self.env['account.move'] \
+            .with_context(
+                default_journal_id=self.id,
+                default_move_type=move_type,
+            ) \
+            .create([{}] * len(file_data_groups))
 
-        for invoice, attachment_group in zip(invoices, attachment_groups):
-            attachment_records = attachment_group.filtered(lambda a: not isinstance(a.id, api.NewId))
+        for invoice, file_data_group in zip(invoices, file_data_groups):
+            attachment_records = self.env['ir.attachment']._from_files_data(file_data_group)
             attachment_records.write({
                 'res_model': 'account.move',
                 'res_id': invoice.id,
@@ -1021,15 +1025,17 @@ class AccountJournal(models.Model):
                 attachment_ids=attachment_records.ids
             )
 
-        for invoice, attachment_group in zip(invoices, attachment_groups):
-            invoice.with_context(skip_is_manually_modified=True)._extend_with_attachments(attachment_group, new=True)
+        for invoice, file_data_group in zip(invoices, file_data_groups):
+            invoice.with_context(skip_is_manually_modified=True)._extend_with_attachments(file_data_group, new=True)
             invoice._autopost_bill()
 
         return invoices
 
-    def _group_uploaded_attachments(self, attachments):
-        # Group embedded files together
-        return attachments.grouped('origin_attachment_id').values()
+    def _group_uploaded_attachments(self, files_data):
+        """ Group the attachments in files_data (which include both original attachments
+            and embedded attachments) into one group per original attachment.
+        """
+        return [file_data_group for origin_attachment, file_data_group in groupby(files_data, lambda file_data: file_data['origin_attachment'])]
 
     def create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files.

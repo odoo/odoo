@@ -205,15 +205,15 @@ class TestAccountInvoiceImportMixin:
 
         original_get_import_type_and_priority = self.env.registry['ir.attachment']._get_import_type_and_priority
 
-        def patched_get_import_type_and_priority(self):
+        def patched_get_import_type_and_priority(self, file_data):
             """ Patch _get_import_type_and_priority in order to recognize the 'test_xml' format
             which is an XML whose root tag is 'TestFileFormat'.
             """
-            if self.xml_tree is not False and self.xml_tree.tag == 'TestFileFormat':
+            if file_data['xml_tree'] is not None and file_data['xml_tree'].tag == 'TestFileFormat':
                 return ('test_xml', 20)
             else:
                 # Put priority=10 on PDF so that this test behaves the same regardless of whether `account_invoice_extract` is installed.
-                import_type, import_priority = original_get_import_type_and_priority(self)
+                import_type, import_priority = original_get_import_type_and_priority(self, file_data)
                 if import_type == 'pdf':
                     import_priority = 10
                 return import_type, import_priority
@@ -222,19 +222,19 @@ class TestAccountInvoiceImportMixin:
 
         original_decode_attachment = self.env.registry['account.move']._decode_attachment
 
-        def patched_decode_attachment(self, attachment, new):
-            decode_attachment_calls.append((self, attachment, new))
+        def patched_decode_attachment(self, file_data, new):
+            decode_attachment_calls.append((self, file_data, new))
 
-            if attachment.import_type == 'test_xml':
-                partner_name = attachment.xml_tree.findtext('.//PartnerName')
+            if file_data['import_type'] == 'test_xml':
+                partner_name = file_data['xml_tree'].findtext('.//PartnerName')
                 if partner_name and (partner := self.env['res.partner'].search([('name', '=', partner_name)], limit=1)):
                     self.partner_id = partner.id
                 else:
                     raise ValidationError('Could not identify partner!')
-            elif attachment.import_type == 'pdf':
+            elif file_data['import_type'] == 'pdf':
                 return
             else:
-                return original_decode_attachment(self, attachment, new)
+                return original_decode_attachment(self, file_data, new)
 
         with (
             patch.object(self.env.registry['ir.attachment'], '_get_import_type_and_priority', patched_get_import_type_and_priority),
@@ -260,7 +260,7 @@ class TestAccountInvoiceImportMixin:
 
         for decode_attachment_call in decode_attachment_calls:
             invoice = decode_attachment_call[0]
-            filename = decode_attachment_call[1].name
+            filename = decode_attachment_call[1]['name']
             actual_invoices.setdefault(invoice.id, {}).setdefault(filename, {})['is_decoded'] = True
 
             if decode_attachment_call[2]:

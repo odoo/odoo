@@ -87,13 +87,13 @@ class AccountMove(models.Model):
             if 'urn:cen.eu:en16931:2017' in customization_id.text:
                 return self.env['account.edi.xml.ubl_bis3']
 
-    def _decode_attachment(self, attachment, new=False):
+    def _decode_attachment(self, file_data, new=False):
         # EXTENDS 'account'
-        if attachment.import_type == 'account_edi_ubl_cii':
-            ubl_cii_xml_builder = self._get_ubl_cii_builder_from_xml_tree(attachment.xml_tree)
-            return ubl_cii_xml_builder._import_invoice_ubl_cii(self, attachment, new)
+        if file_data['import_type'] == 'account_edi_ubl_cii':
+            ubl_cii_xml_builder = self._get_ubl_cii_builder_from_xml_tree(file_data['xml_tree'])
+            return ubl_cii_xml_builder._import_invoice_ubl_cii(self, file_data, new)
 
-        return super()._decode_attachment(attachment, new)
+        return super()._decode_attachment(file_data, new)
 
     def _need_ubl_cii_xml(self, ubl_cii_format):
         self.ensure_one()

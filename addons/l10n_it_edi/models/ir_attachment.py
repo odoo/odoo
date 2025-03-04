@@ -14,15 +14,15 @@ FATTURAPA_FILENAME_RE = "[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
-    def _get_xml_tree(self):
+    def _get_xml_tree(self, file_data):
         """ Some FatturaPA XMLs need to be parsed with `recover=True`,
             and some have signatures that need to be removed prior to parsing.
         """
         # EXTENDS 'account'
-        res = super()._get_xml_tree()
+        res = super()._get_xml_tree(file_data)
 
         # If the file was not correctly parsed, retry parsing it.
-        if res is None and self._is_l10n_it_edi_import_file():
+        if res is None and self._is_l10n_it_edi_import_file(file_data):
             def parse_xml(parser, name, content):
                 try:
                     return etree.fromstring(content, parser)
@@ -31,57 +31,57 @@ class IrAttachment(models.Model):
 
             parser = etree.XMLParser(recover=True, resolve_entities=False)
             xml_tree = (
-                parse_xml(parser, self.name, self.raw)
+                parse_xml(parser, file_data['name'], file_data['raw'])
                 # The file may have a Cades signature, so we try removing it.
-                or parse_xml(parser, self.name, remove_signature(self.raw))
+                or parse_xml(parser, file_data['name'], remove_signature(file_data['raw']))
             )
             if xml_tree is None:
-                _logger.info("Italian EDI invoice file %s cannot be decoded.", self.name)
+                _logger.info("Italian EDI invoice file %s cannot be decoded.", file_data['name'])
             return xml_tree
 
         return res
 
-    def _is_l10n_it_edi_import_file(self):
+    def _is_l10n_it_edi_import_file(self, file_data):
         is_xml = (
-            self.name.endswith('.xml')
-            or self.mimetype.endswith('/xml')
-            or 'text/plain' in self.mimetype
-            and self.raw
-            and self.raw.startswith(b'<?xml'))
-        is_p7m = self.mimetype == 'application/pkcs7-mime'
-        return (is_xml or is_p7m) and re.search(FATTURAPA_FILENAME_RE, self.name)
+            file_data['name'].endswith('.xml')
+            or file_data['mimetype'].endswith('/xml')
+            or 'text/plain' in file_data['mimetype']
+            and file_data['raw']
+            and file_data['raw'].startswith(b'<?xml'))
+        is_p7m = file_data['mimetype'] == 'application/pkcs7-mime'
+        return (is_xml or is_p7m) and re.search(FATTURAPA_FILENAME_RE, file_data['name'])
 
-    def _get_import_type_and_priority(self):
+    def _get_import_type_and_priority(self, file_data):
         """ Identify FatturaPA XML and P7M files. """
         # EXTENDS 'account'
-        if self._is_l10n_it_edi_import_file() and self.xml_tree is not False:
+        if self._is_l10n_it_edi_import_file(file_data) and file_data['xml_tree'] is not None:
             return ('l10n_it.fatturapa', 20)
-        return super()._get_import_type_and_priority()
+        return super()._get_import_type_and_priority(file_data)
 
-    def _unwrap_attachments(self, recurse=True):
+    def _unwrap_attachments(self, files_data, recurse=True):
         """ Divide a FatturaPA file into constituent invoices and create a new attachment for each invoice after the first. """
         # EXTENDS 'account'
-        embedded = super()._unwrap_attachments(recurse=False)
+        embedded = super()._unwrap_attachments(files_data, recurse=False)
 
-        for attachment in self.filtered(lambda a: a.import_type == 'l10n_it.fatturapa' and len(a.xml_tree.findall('.//FatturaElettronicaBody')) > 1):
-            # One FatturaPA file may contain multiple invoices. In that case, create an
-            # attachment for each invoice beyond the first. We don't set the `root_attachment_id`
-            # field on those attachments to make sure they are not grouped with the original file,
-            # and we also create them as database records so that they persist on the invoice chatter.
+        for file_data in files_data:
+            if file_data['import_type'] == 'l10n_it.fatturapa' and len(file_data['xml_tree'].findall('.//FatturaElettronicaBody')) > 1:
+                # One FatturaPA file may contain multiple invoices. In that case, create an
+                # attachment for each invoice beyond the first.
 
-            # Create a new xml tree for each invoice beyond the first
-            trees = split_etree_on_tag(attachment.xml_tree, 'FatturaElettronicaBody')
-            filename_without_extension, dummy, extension = attachment.name.rpartition('.')
-            attachment_vals = [
-                {
-                    'name': f'{filename_without_extension}_{filename_index}.{extension}',
-                    'raw': etree.tostring(tree),
-                    'xml_tree': tree,
-                }
-                for filename_index, tree in enumerate(trees[1:], start=2)
-            ]
-            embedded |= self.create(attachment_vals)
+                # Create a new xml tree for each invoice beyond the first
+                trees = split_etree_on_tag(file_data['xml_tree'], 'FatturaElettronicaBody')
+                filename_without_extension, dummy, extension = file_data['name'].rpartition('.')
+                attachment_vals = [
+                    {
+                        'name': f'{filename_without_extension}_{filename_index}.{extension}',
+                        'raw': etree.tostring(tree),
+                    }
+                    for filename_index, tree in enumerate(trees[1:], start=2)
+                ]
+                created_attachments = self.create(attachment_vals)
+
+                embedded.extend(created_attachments._to_files_data())
 
         if embedded and recurse:
-            embedded |= embedded._unwrap_attachments(recurse=True)
+            embedded.extend(self._unwrap_attachments(embedded, recurse=True))
         return embedded
