@@ -27,7 +27,9 @@
                                 </div>
                             </div>
                             <t name="selectablePartnerDetail">
-                                <span class="flex-grow-1 mx-2 text-truncate text-start" t-esc="selectablePartner.name"/>
+                                <div class="d-flex flex-grow-1 mx-2 overflow-hidden align-items-baseline">
+                                    <span class="text-truncate" t-esc="selectablePartner.name"/>
+                                </div>
                             </t>
                             <input class="form-check-input flex-shrink-0 me-1" type="checkbox" t-att-checked="selectablePartner.in(selectedPartners) ? 'checked' : undefined"/>
                         </li>

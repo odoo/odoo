@@ -18,6 +18,13 @@ class ResPartner(models.Model):
         copy=False,
     )
     channel_member_ids = fields.One2many("discuss.channel.member", "partner_id")
+    is_in_call = fields.Boolean(compute="_compute_is_in_call", compute_sudo=True, groups="base.group_user")
+    rtc_session_ids = fields.One2many("discuss.channel.rtc.session", "partner_id")
+
+    @api.depends("rtc_session_ids")
+    def _compute_is_in_call(self):
+        for partner in self:
+            partner.is_in_call = bool(partner.rtc_session_ids)
 
     @api.readonly
     @api.model

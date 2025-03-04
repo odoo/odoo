@@ -21,7 +21,7 @@ class DiscussChannelRtcSession(models.Model):
 
     channel_member_id = fields.Many2one('discuss.channel.member', required=True, ondelete='cascade')
     channel_id = fields.Many2one('discuss.channel', related='channel_member_id.channel_id', store=True, readonly=True)
-    partner_id = fields.Many2one('res.partner', related='channel_member_id.partner_id', string="Partner")
+    partner_id = fields.Many2one('res.partner', related='channel_member_id.partner_id', string="Partner", store=True, index=True)
     guest_id = fields.Many2one('mail.guest', related='channel_member_id.guest_id')
 
     write_date = fields.Datetime("Last Updated On", index=True)
