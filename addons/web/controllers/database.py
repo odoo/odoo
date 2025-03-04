@@ -83,7 +83,7 @@ class Database(http.Controller):
             with odoo.modules.registry.Registry(name).cursor() as cr:
                 env = odoo.api.Environment(cr, None, {})
                 request.session.authenticate(env, credential)
-                request._save_session()
+                request._save_session(env)
                 request.session.db = name
             return request.redirect('/odoo')
         except Exception as e:
