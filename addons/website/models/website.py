@@ -530,22 +530,26 @@ class Website(models.Model):
             }
         )
 
-    @api.model
-    def configurator_apply(self, **kwargs):
-        website = self.get_current_website()
-        theme_name = kwargs['theme_name']
-        theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
-        #Temporarily activate the footer template to be able to update the footer content
+    def toggle_template_activation(self, enable=True):
         footer_template_keys = [
             'website.template_footer_descriptive',
             'website.template_footer_call_to_action',
             'website.template_footer_headline'
         ]
-
         for key in footer_template_keys:
-            footer_template = self.env['ir.ui.view'].with_context(active_test=False).search([('key', '=', key)])
+            footer_template = self.env['ir.ui.view'].with_context(active_test=False).search([('key', '=', key)], limit=1)
             if footer_template:
-                footer_template.write({'active': True})
+                footer_template.write({'active': enable})
+
+    @api.model
+    def configurator_apply(self, **kwargs):
+        website = self.get_current_website()
+        theme_name = kwargs['theme_name']
+        theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
+
+        #Temporarily activate the footer template to be able to update the footer content
+        self.toggle_template_activation(enable=True)
+
         redirect_url = theme.button_choose_theme()
 
         website.configurator_done = True
@@ -818,37 +822,51 @@ class Website(models.Model):
         # coverage. But if the target lang is en_XX it's ok to have en_US text.
         text_must_be_translated_for_openai = not text_generation_target_lang.startswith('en_')
         generated_content = {}
-        # Modify the footer content
-        # Template 1 - Default footer
-        default_view = self.env['website'].viewref("website.footer_custom")
+        footer_template_configs = [
+            {
+                "name": "website.footer_custom",
+                "xpath": "//div[contains(@class,'col-lg-5 pt24 pb24')]/p",
+                "br_insertion": {"enabled": True, "sentence_index": 2, "br_count": 2}
+            },
+            {
+                "name": "website.template_footer_descriptive",
+                "xpath": "//div[contains(@class, 'col-lg-5')]/p",
+                "br_insertion": {"enabled": False}
+            },
+            {
+                "name": "website.template_footer_call_to_action",
+                "xpath": {
+                    "heading": "//div[contains(@class, 'col-lg-9')]/h3",
+                    "paragraph": "(//div[contains(@class, 'col-lg-9')]/p)[1]"
+                },
+                "br_insertion": {"enabled": False}
+            },
+            {
+                "name": "website.template_footer_headline",
+                "xpath": "//div[contains(@class, 'col-lg-9')]/p[@class='lead']",
+                "br_insertion": {"enabled": True, "sentence_index": 1, "br_count": 1}
+            }
+        ]
 
-        # Template 2 - Descriptive footer
-        descriptive_view = self.env['website'].viewref("website.template_footer_descriptive")
-        if descriptive_view:
-            descriptive_arch = etree.fromstring(descriptive_view.arch_db)
-            company_paragraph = descriptive_arch.xpath("//div[contains(@class, 'col-lg-5')]/p")[0]
-            company_text = ''.join(company_paragraph.itertext()).replace("\n", "").strip()
-            generated_content[company_text] = ""
-
-        # Template 3 - Call-to-Action footer
-        cta_view = self.env['website'].viewref("website.template_footer_call_to_action")
-        if cta_view:
-            cta_arch = etree.fromstring(cta_view.arch_db)
-            cta_heading = cta_arch.xpath("//div[contains(@class, 'col-lg-9')]/h3")[0]
-            cta_heading_text = ''.join(cta_heading.itertext()).replace("\n", "").strip()
-            generated_content[cta_heading_text] = ""
-
-            cta_paragraph = cta_arch.xpath("//div[contains(@class, 'col-lg-9')]/p")[0]
-            cta_paragraph_text = ''.join(cta_paragraph.itertext()).replace("\n", "").strip()
-            generated_content[cta_paragraph_text] = ""
-
-        # Template 4 - Headline footer
-        headline_view = self.env['website'].viewref("website.template_footer_headline")
-        if headline_view:
-            headline_arch = etree.fromstring(headline_view.arch_db)
-            headline_paragraph = headline_arch.xpath("//div[contains(@class, 'col-lg-9')]/p")[0]
-            headline_text = ''.join(headline_paragraph.itertext()).replace("\n", "").strip()
-            generated_content[headline_text] = ""
+        for config in footer_template_configs:
+            view = self.env['website'].viewref(config["name"])
+            if view:
+                arch = etree.fromstring(view.arch_db)
+                xpaths = config["xpath"]
+                # Extract and store footer text from the template
+                if isinstance(xpaths, dict):
+                    for key, xpath in xpaths.items():
+                        elements = arch.xpath(xpath)
+                        if elements:
+                            footer_text = ''.join(elements[0].itertext()).replace("\n", "").strip()
+                            generated_content[footer_text] = ""
+                            config[key + "_text"] = footer_text
+                else:
+                    elements = arch.xpath(xpaths)
+                    if elements:
+                        footer_text = ''.join(elements[0].itertext()).replace("\n", "").strip()
+                        generated_content[footer_text] = ""
+                        config["text"] = footer_text
 
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = configurator_snippets.get(page_code, [])
@@ -874,42 +892,33 @@ class Website(models.Model):
                     'industry': industry,
                     'database_id': database_id,
                 })
+                # Update footer templates
+                for config in footer_template_configs:
+                    view = self.env['website'].viewref(config["name"])
+                    xpaths = config["xpath"]
+                    if isinstance(xpaths, dict):
+                        for key in ["heading_text", "paragraph_text"]:
+                            if key in config and config[key] in response:
+                                updated_footer_text = response[config[key]]
+                                view.save(updated_footer_text, xpath=xpaths[key.replace("_text", "")])
+                    else:
+                        if "text" in config and config["text"] in response:
+                            updated_footer_text = response[config["text"]]
+                            # Apply <br/> insertion
+                            if config.get("br_insertion", {}).get("enabled", False):
+                                sentences = updated_footer_text.split(". ")
+                                index = config["br_insertion"].get("sentence_index", 0)
+                                br_count = config["br_insertion"].get("br_count", 1)
 
-                # Template 1 & 2 - Update company description
-                if company_text in response and response[company_text] and descriptive_view:
-                    updated_company_description = response[company_text]
-                    descriptive_view.save(updated_company_description, xpath="//div[contains(@class, 'col-lg-5')]/p")
+                                if len(sentences) > index:
+                                    sentences[index] = ("<br/>" * br_count) + sentences[index]
+                                updated_footer_text = ". ".join(sentences)
 
-                    sentences = updated_company_description.split(". ")
-                    if len(sentences) >= 3:
-                        sentences[2] = "<br/><br/>" + sentences[2]
-                    updated_company_description = ". ".join(sentences)
-                    default_view.save(updated_company_description, xpath="//div[contains(@class,'col-lg-5 pt24 pb24')]/p")
+                            view.save(updated_footer_text, xpath=config["xpath"])
 
-                # Template 3 - Update CTA heading and paragraph
-                if cta_view:
-                    if cta_heading_text in response and response[cta_heading_text]:
-                        updated_cta_heading = response[cta_heading_text]
-                        cta_view.save(updated_cta_heading, xpath="//div[contains(@class, 'col-lg-9')]/h3")
+                # After updating footer templates, deactivate them
+                self.toggle_template_activation(enable=False)
 
-                    if cta_paragraph_text in response and response[cta_paragraph_text]:
-                        updated_cta_paragraph = response[cta_paragraph_text]
-                        cta_view.save(updated_cta_paragraph, xpath="//div[contains(@class, 'col-lg-9')]/p[contains(@class, 'lead')]")
-
-                # Template 4 - Update headline description
-                if headline_text in response and response[headline_text] and headline_view:
-                    updated_headline_text = response[headline_text]
-                    sentences = updated_headline_text.split(". ")
-                    if len(sentences) >= 2:
-                        sentences[1] = "<br/>" + sentences[1]
-                    updated_headline_text = ". ".join(sentences)
-                    headline_view.save(updated_headline_text, xpath="//div[contains(@class, 'col-lg-9')]/p[@class='lead']")
-
-                # After updating footer templates deactivate them
-                for key in footer_template_keys:
-                    footer_template = self.env['ir.ui.view'].with_context(active_test=False).search([('key', '=', key)], limit=1)
-                    if footer_template:
-                        footer_template.write({'active': False})
                 name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
                 for key in generated_content:
                     if response.get(key):
