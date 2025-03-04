@@ -140,6 +140,30 @@ export class DiscussSidebarChannel extends Component {
         return this.props.thread;
     }
 
+    get subChannels() {
+        return this.env.filteredThreads?.(this.thread.sub_channel_ids) ?? [];
+    }
+
+    showThread(sub) {
+        if (sub.eq(this.store.discuss.thread)) {
+            return true;
+        }
+        if (!this.thread.discussAppCategory.open) {
+            return false;
+        }
+        if (!this.thread.isMuted || sub.selfMember?.message_unread_counter > 0) {
+            return true;
+        }
+        return this.isSelfOrThreadActive && !(this.thread.isMuted && sub.isMuted);
+    }
+
+    get isSelfOrThreadActive() {
+        return (
+            this.thread.eq(this.store.discuss.thread) ||
+            this.store.discuss.thread?.in(this.subChannels)
+        );
+    }
+
     /** @param {MouseEvent} ev */
     openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");
