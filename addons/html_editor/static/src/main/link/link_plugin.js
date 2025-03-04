@@ -1,6 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { cleanTrailingBR, unwrapContents } from "@html_editor/utils/dom";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    childNodes,
+    closestElement,
+    descendants,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -32,6 +37,16 @@ function isLinkActive(selection) {
     }
 
     return false;
+}
+
+/**
+ * @param {EditorSelection} selection
+ */
+function isLinkDisabled(selection) {
+    const blockElements = childNodes(selection.commonAncestorContainer).filter(
+        (el) => isBlock(el) && el.isContentEditable
+    );
+    return blockElements.length >= 1;
 }
 
 function isSelectionHasLink(selection) {
@@ -172,6 +187,7 @@ export class LinkPlugin extends Plugin {
                 groupId: "link",
                 commandId: "toggleLinkTools",
                 isActive: isLinkActive,
+                isDisabled: isLinkDisabled,
             },
             {
                 id: "unlink",
