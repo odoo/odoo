@@ -57,7 +57,7 @@ class L10nEsEdiVerifactuCertificate(models.Model):
 
     def _decode_certificate_PEM(self):
         """
-        Return certificate data
+        Return certificate data in PEM format.
 
         :return tuple: private_key, certificate
         """

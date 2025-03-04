@@ -6,18 +6,24 @@ class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
     l10n_es_edi_verifactu_send_enable = fields.Boolean(
-        compute='_compute_l10n_es_edi_verifactu_compute_checkbox', store=True,
+        compute='_compute_l10n_es_edi_verifactu_compute_checkbox',
+        store=True,
     )
     l10n_es_edi_verifactu_send_readonly = fields.Boolean(
-        compute='_compute_l10n_es_edi_verifactu_compute_checkbox', store=True,
+        compute='_compute_l10n_es_edi_verifactu_compute_checkbox',
+        store=True,
     )
     l10n_es_edi_verifactu_send_checkbox = fields.Boolean(
         string="Veri*Factu",
-        compute='_compute_l10n_es_edi_verifactu_compute_checkbox', store=True, readonly=False,
-        help="Create a Veri*Factu Document to register or update the record and send it to the AEAT.")
+        compute='_compute_l10n_es_edi_verifactu_compute_checkbox',
+        store=True,
+        readonly=False,
+        help="Create a Veri*Factu Document to register or update the record and send it to the AEAT.",
+    )
     # TODO: in saas-17.4: replace it with `warnings` field
     l10n_es_edi_verifactu_warnings = fields.Char(
-        compute='_compute_l10n_es_edi_verifactu_warnings', store=True,
+        compute='_compute_l10n_es_edi_verifactu_warnings',
+        store=True,
     )
 
     def _get_wizard_values(self):
@@ -28,7 +34,6 @@ class AccountMoveSend(models.TransientModel):
 
     @api.depends('move_ids.l10n_es_edi_verifactu_state')
     def _compute_l10n_es_edi_verifactu_compute_checkbox(self):
-        """ Enable sending in case any move's Verifactur EDI can be send. """
         for wizard in self:
             any_moves_require_verifactu = any(wizard.move_ids.mapped('l10n_es_edi_verifactu_required'))
             enable = any_moves_require_verifactu or any(move.country_code == 'ES' for move in wizard.move_ids)
@@ -60,7 +65,7 @@ class AccountMoveSend(models.TransientModel):
         created_record_document = invoices_to_send.l10n_es_edi_verifactu_mark_for_next_batch()
 
         for invoice in invoices_to_send:
-            # The creation of a record_document is skipped in case we already
+            # The creation of a record document is skipped for `invoice` in case there are waiting record documents
             record_document = created_record_document.get(invoice)
             if record_document and record_document.state == 'creating_failed':
                 invoices_data[invoice]['error'] = {

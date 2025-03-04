@@ -63,7 +63,7 @@ class L10nEsEdiVerifactuRecordDocument(models.Model):
         string='XML filename',
         compute='_compute_xml_attachment_filename',
     )
-    # To use the binary widget in the form view to download the attachment
+    # To use the 'binary' widget in the form view to download the attachment
     xml_attachment_base64 = fields.Binary(
         string="XML Attachment (Base64)",
         related='xml_attachment_id.datas',

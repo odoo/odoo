@@ -45,7 +45,6 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         if invoice_date is not None:
             invoice_vals['invoice_date'] = invoice_date
         if name is not None:
-            # To give the record the needed record identifier
             invoice_vals['name'] = name
 
         invoice = self.env['account.move'].create(invoice_vals)

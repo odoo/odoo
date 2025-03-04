@@ -23,8 +23,8 @@ class AccountTax(models.Model):
 
             verifactu_tax_type = tax.l10n_es_edi_verifactu_tax_type
 
-            # tax t with recargo and tax t without recargo are to be kept separate for the output
-            # NOTE: we assume there is only a single (main_tax, recargo_tax) pair on a single base_line
+            # Tax t with recargo and tax t without recargo are to be kept separate for the output
+            # Note: We assume there is only a single (main tax, recargo tax) pair on a single base line
             with_recargo = False
             if tax.l10n_es_type in self.env['account.tax']._l10n_es_get_sujeto_tax_types():
                 with_recargo = base_line['taxes'].filtered(lambda t: t.l10n_es_type == 'recargo')

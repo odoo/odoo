@@ -202,9 +202,6 @@ class L10nEsEdiVerifactuResponseParser(models.AbstractModel):
         query_node = xml_tree.find("env:Body/tikLRRC:RespuestaConsultaFactuSistemaFacturacion", namespaces=namespaces)
         if query_node is None:
             errors.append((ERROR_MALFORMED_RESPONSE, None))
-            info['state'] = 'rejected'
             return
-
-        info['state'] = 'accepted'
 
         raise NotImplementedError

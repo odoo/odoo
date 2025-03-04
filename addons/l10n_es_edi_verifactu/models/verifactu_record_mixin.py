@@ -113,7 +113,7 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
                 if not last_sent_document and document.response_time and document.state:
                     last_sent_document = document
                 if not last_erroneous_document and document.state != 'accepted':
-                    last_erroneous_document = document  # only after `last_succesful_document`
+                    last_erroneous_document = document
                 if document.response_time and document.state in ('registered_with_errors', 'accepted'):
                     last_succesful_document = document
                     # We must have found `last_sent_document` already.

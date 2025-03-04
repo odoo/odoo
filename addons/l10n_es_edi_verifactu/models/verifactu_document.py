@@ -83,7 +83,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
     response_time = fields.Datetime(
         string="Time of Response",
         readonly=True,
-        help="The date and time on which we received the response.",  # Also set in case of failure
+        help="The date and time on which we received the response (or tried to send in case of failure).",
         compute='_compute_l10n_es_edi_verifactu_fields_from_response_info',
         store=True,
     )
@@ -136,7 +136,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
     def _get_attachment_filename(self):
         self.ensure_one()
-        document_type = 'consulta' if self.document_type == 'query' else 'envio'
+        document_type = 'consulta' if self.document_type == 'query' else 'remision'
         return f"verifactu_{self.id}_{document_type}.xml"
 
     @api.model
@@ -150,6 +150,15 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
     @api.model
     def _record_identifier(self, company, name, invoice_date, amount_total_signed):
+        """
+        Return a dictionary with the values used to identify records in the Veri*Factu system.
+          * 'IDEmisorFactura'
+          * 'NumSerieFactura'
+          * 'FechaExpedicionFactura'
+          * 'ImporteTotal'; (only) needed for the QR code
+            (See function `_compute_l10n_es_edi_verifactu_qr_code` of model 'l10n_es_edi_verifactu.record_mixin')
+          * TODO: 'Huella' added during XML generation
+        """
         errors = []
 
         if company:
@@ -240,7 +249,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 'level': 'document',
             }
 
-        # We translate the error tuples returned by the response parser into strings
+        # The errors are stored as tuples to avoid storing translated values.
+        # We translate / stringify them here.
         translated_errors = [
             self._translate_error_tuple(error) for error in record_response_info['errors']
         ]
@@ -296,12 +306,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 if cron:
                     cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=60))
 
-
-        record_document_domain = [
-            ('document_id', '=', False),
-        ]
         record_documents_per_company = self.env['l10n_es_edi_verifactu.record_document']._read_group(
-            record_document_domain,
+            [('document_id', '=', False)],
             groupby=['company_id'],
             aggregates=['id:recordset'],
         )
