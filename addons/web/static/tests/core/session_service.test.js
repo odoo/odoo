@@ -19,7 +19,7 @@ test("Only call once session info data when services calls lazy session", async 
             onMounted(() => expect.step("web_client_mounted"));
         },
     });
-    onRpc("lazy_session_info", () => {
+    onRpc("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
         expect.step("load_session_info");
         return { a: "a", b: "b" };
     });
@@ -69,7 +69,7 @@ test("Only call once lazy session info data on action", async () => {
             onMounted(() => expect.step("web_client_mounted"));
         },
     });
-    onRpc("lazy_session_info", () => {
+    onRpc("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
         expect.step("load_session_info");
         return { a: "a" };
     });
@@ -122,7 +122,7 @@ test("Call lazy session info after webclient init with action and service", asyn
             onMounted(() => expect.step("web_client_mounted"));
         },
     });
-    onRpc("lazy_session_info", () => {
+    onRpc("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
         expect.step("load_session_info");
         return { a: "a", b: "b" };
     });
