@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
 import logging
+import time
+from urllib.parse import urljoin
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -108,6 +111,44 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['in_verification', 'sender', 'smp_registration'])])
         edi_users._peppol_get_participant_status()
 
+    @api.model
+    def _cron_peppol_sync_data(self):
+        """
+        Bidirectional data/state sync between the peppol client and the peppol proxy server.
+
+        Sends the webhook URL to the server, and fetches the following data:
+
+        - Participant status
+        - New documents
+        - Sent message statuses
+        """
+        cron_time_limit = tools.config['limit_time_real_cron'] or -1
+        time_limit = cron_time_limit if 0 < cron_time_limit < 180 else 180
+
+        def iter_timeout(iterator, timeout):
+            start_time = time.monotonic()
+            for item in iterator:
+                yield item
+                if time.monotonic() - start_time > timeout:
+                    self.env.ref('account_peppol.ir_cron_peppol_sync_data')._trigger()
+                    break
+
+        in_registration = self.search([('company_id.account_peppol_proxy_state', 'in', ['in_verification', 'sender', 'smp_registration'])])
+        all_users = self.search([('proxy_type', '=', 'peppol')])
+        receivers = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver')])
+        senders = self.search([('company_id.account_peppol_proxy_state', 'in', self._get_can_send_domain())])
+
+        for _ in iter_timeout(
+                itertools.chain(
+                    in_registration._peppol_iter_get_participant_status(),
+                    all_users._peppol_iter_reset_webhook(),
+                    receivers._peppol_iter_get_new_documents(),
+                    senders._peppol_iter_get_message_status(),
+                ),
+                timeout=time_limit,
+        ):
+            pass
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -154,7 +195,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return True
 
-    def _peppol_get_new_documents(self):
+    def _peppol_iter_get_new_documents(self):
         params = {
             'domain': {
                 'direction': 'incoming',
@@ -162,6 +203,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             }
         }
         for edi_user in self:
+            yield
             params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
                 # request all messages that haven't been acknowledged
@@ -182,6 +224,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 continue
 
             for uuids in split_every(BATCH_SIZE, message_uuids):
+                yield
                 proxy_acks = []
                 # retrieve attachments for filtered messages
                 all_messages = edi_user._call_peppol_proxy(
@@ -214,7 +257,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                         params={'message_uuids': proxy_acks},
                     )
 
-    def _peppol_get_message_status(self):
+    def _peppol_get_new_documents(self):
+        for _ in self._peppol_iter_get_new_documents():
+            pass
+
+    def _peppol_iter_get_message_status(self):
         for edi_user in self:
             edi_user_moves = self.env['account.move'].search([
                 ('peppol_move_state', '=', 'processing'),
@@ -225,6 +272,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
             message_uuids = {move.peppol_message_uuid: move for move in edi_user_moves}
             for uuids in split_every(BATCH_SIZE, message_uuids.keys()):
+                yield
                 messages_to_process = edi_user._call_peppol_proxy(
                     "/api/peppol/1/get_document",
                     params={'message_uuids': uuids},
@@ -259,8 +307,13 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     params={'message_uuids': uuids},
                 )
 
-    def _peppol_get_participant_status(self):
+    def _peppol_get_message_status(self):
+        for _ in self._peppol_iter_get_message_status():
+            pass
+
+    def _peppol_iter_get_participant_status(self):
         for edi_user in self:
+            yield
             try:
                 proxy_user = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
             except AccountEdiProxyError as e:
@@ -269,6 +322,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
             if proxy_user['peppol_state'] in ('sender', 'smp_registration', 'receiver', 'rejected'):
                 edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']
+
+    def _peppol_get_participant_status(self):
+        for _ in self._peppol_iter_get_participant_status():
+            pass
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -291,6 +348,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'peppol_phone_number': self.company_id.account_peppol_phone_number,
             'peppol_contact_email': self.company_id.account_peppol_contact_email,
             'peppol_migration_key': self.company_id.account_peppol_migration_key,
+            'peppol_webhook_endpoint': self.company_id.peppol_webhook_endpoint,
         }
 
     def _peppol_register_sender(self, peppol_external_provider=None):
@@ -426,3 +484,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         """Get information from the IAP regarding the Peppol services."""
         self.ensure_one()
         return self._call_peppol_proxy("/api/peppol/2/get_services")
+
+    def _peppol_iter_reset_webhook(self):
+        for edi_user in self:
+            yield
+            edi_user._call_peppol_proxy('/api/peppol/2/set_webhook', params={'webhook_url': edi_user.company_id.peppol_webhook_endpoint})
