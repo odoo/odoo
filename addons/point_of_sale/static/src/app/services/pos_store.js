@@ -979,7 +979,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.hasJustAddedProduct = false;
         }, 3000);
 
-        this.addPendingOrder([order.id]);
         return order.getSelectedOrderline();
     }
 
