@@ -31,10 +31,10 @@
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2024
 # Claes-Johan Dahlin, 2024
 # Lasse L, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2025
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2025
 # Wil Odoo, 2025
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
 # 
 msgid ""
 msgstr ""
@@ -42,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -183,6 +183,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on "
 "%(date)s)%(attachment_extension)s"
 msgstr ""
+"%(attachment_name)s (lösgjord av %(user)s den "
+"%(date)s)%(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -661,6 +663,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+" <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+" Bästa\n"
+" <t t-if=\"object.partner_id.parent_id\">\n"
+" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+" </t>\n"
+" <t t-else=\"\">\n"
+" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+" </t>\n"
+" <br/><br/>\n"
+" Här är din\n"
+" <t t-if=\"objekt.namn\">\n"
+" kreditnota <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+" </t>\n"
+" <t t-else=\"\">\n"
+" kreditnota\n"
+" </t>\n"
+" <t t-if=\"object.invoice_origin\">\n"
+" (med referens: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+" </t>\n"
+" summa <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 750,00 $</span>\n"
+" från <t t-out=\"object.company_id.name or ''\">DittFöretag</t>.\n"
+" <br/><br/>\n"
+" Tveka inte att kontakta oss om du har några frågor.\n"
+" <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+" <br/><br/>\n"
+" <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+" </t>\n"
+" </p>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -715,6 +747,54 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+" <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+" Bästa\n"
+" <t t-if=\"object.partner_id.parent_id\">\n"
+" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+" </t>\n"
+" <t t-else=\"\">\n"
+" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+" </t>\n"
+" <br/><br/>\n"
+" Här är din\n"
+" <t t-if=\"objekt.namn\">\n"
+" faktura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+" </t>\n"
+" <t t-else=\"\">\n"
+" faktura\n"
+" </t>\n"
+" <t t-if=\"object.invoice_origin\">\n"
+" (med referens: <t t-out=\"object.invoice_origin eller ''\">SUB003</t>)\n"
+" </t>\n"
+" summa <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) eller ''\">143 750,00 $</span>\n"
+" från <t t-out=\"object.company_id.name eller ''\">DittFöretag</t>.\n"
+" <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+" Denna faktura är redan betald.\n"
+" </t>\n"
+" <t t-else=\"\">\n"
+" Vänligen betala betalningen så snart som möjligt.\n"
+" <t t-if=\"object.payment_reference\">\n"
+" <br/><br/>\n"
+" Använd följande kommunikation för din betalning: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+" <t t-if=\"object.partner_bank_id\">\n"
+" på kontot <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
+" </t>\n"
+" .\n"
+" </t>\n"
+" </t>\n"
+" <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+" <br/><br/>\n"
+" PS: du kan granska dina tidrapporter <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">från portalen.</a>\n"
+" </t>\n"
+" <br/><br/>\n"
+" Tveka inte att kontakta oss om du har några frågor.\n"
+" <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+" <br/><br/>\n"
+" <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+" </t>\n"
+" </p>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -736,6 +816,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+" <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+" Bästa <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+" Tack för din betalning.\n"
+" Här är ditt betalningskvitto <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') eller ''\">BNK1-2021-05-0002</span> belopp\n"
+" till <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 $</span> från <t t-out=\"object.company_id.name or ''\">DittFöretag</t>.\n"
+" <br/><br/>\n"
+" Tveka inte att kontakta oss om du har några frågor.\n"
+" <br/><br/>\n"
+" Med vänliga hälsningar,\n"
+" <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+" <br/><br/>\n"
+" <t t-out=\"user.signature eller ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+" </t>\n"
+" </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -2695,7 +2791,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__aba_routing
 msgid "American Bankers Association Routing Number"
-msgstr "American Bankers Association Routingnummer"
+msgstr "American Bankers Association routingnummer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -12641,7 +12737,7 @@ msgstr "RD-utgifter"
 #: model:ir.model.fields,field_description:account.field_res_company__rating_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
 msgid "Ratings"
-msgstr "Omdömen"
+msgstr "Betyg"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -18497,8 +18593,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-msgid "You cannot switch the type of a posted document."
-msgstr "Du kan inte byta typ av ett postat dokument."
+msgid "You cannot switch the type of a document which has been posted once."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18772,7 +18868,7 @@ msgstr "räkningar för"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr ""
+msgstr "av %s"
 
 #. module: account
 #. odoo-python
