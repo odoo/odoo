@@ -359,6 +359,7 @@ class AccountMove(models.Model):
             # Other data.
             other_data_list = it_values['altri_dati_gestionali_list'] = []
             if base_line['currency_id'] != self.company_currency_id:
+                it_values['prezzo_unitario'] = base_line['currency_id']._convert(it_values['prezzo_unitario'], self.company_currency_id, date=self.date)
                 other_data_list.extend([
                     {
                         'tipo_dato': 'DIVISA',

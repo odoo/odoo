@@ -565,3 +565,28 @@ class TestItEdiExport(TestItEdi):
         )
         invoice.action_post()
         self._assert_export_invoice(invoice, 'test_export_invoice_with_two_downpayments.xml')
+
+    def test_send_prezzo_unitario_converted_to_company_currency(self):
+        """
+        Test that the prezzo unitario is converted to the company currency when the invoice is in a foreign currency
+        """
+        usd = self.env['res.currency'].search([('name', '=', 'USD')])
+        self.env['res.currency.rate'].create({
+            'name': '2025-01-01',
+            'rate': 2,
+            'currency_id': usd.id,
+            'company_id': self.company.id,
+        })
+
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            partner=self.italian_partner_a,
+            invoice_date='2022-03-24',
+            post=True,
+            amounts=[100],
+            taxes=[self.default_tax],
+            company=self.company,
+            currency=usd,
+        )
+
+        self._assert_export_invoice(invoice, 'prezzio_unitario_converted_company_currency.xml')
