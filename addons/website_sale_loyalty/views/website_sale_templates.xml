@@ -129,12 +129,12 @@
             <attribute name="t-if">not line.is_reward_line</attribute>
         </xpath>
         <xpath expr="//div[hasclass('o_cart_product_image')]//div[@t-else]" position="before">
-            <div
+            <!-- TODO VCR remove for asset in python -->
+            <img
                 t-elif="line.is_reward_line"
-                class="o_image_64_max align-content-center w-100 h-100 border rounded bg-100 text-center text-500"
-            >
-                <i class="fa fa-2x fa-tags"/>
-            </div>
+                class="img border rounded"
+                src="/loyalty/static/img/discount.png"
+            />
         </xpath>
     </template>
 
