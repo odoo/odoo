@@ -2,7 +2,6 @@ import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestBlock } from "@html_editor/utils/blocks";
-import { removeClass } from "@html_editor/utils/dom";
 import { isEmptyBlock, isParagraphRelatedElement } from "@html_editor/utils/dom_info";
 import {
     childNodes,
@@ -41,6 +40,14 @@ export class ToggleBlockPlugin extends Plugin {
                 selector: `${toggleSelector} ${titleSelector} > *`,
                 text: _t("Toggle title"),
             }),
+            withSequence(100, {
+                target: (selectionData, editable) => [
+                    ...editable.querySelectorAll(
+                        `${toggleSelector} ${contentSelector} > ${baseContainerGlobalSelector}:only-child`
+                    ),
+                ],
+                text: _t("Add something inside this toggle"),
+            }),
         ],
         move_node_blacklist_selectors: `${toggleSelector} ${titleSelector} *`,
         powerbox_items: [
@@ -67,24 +74,8 @@ export class ToggleBlockPlugin extends Plugin {
             },
         ],
 
-        content_updated_handlers: [
-            withSequence(1, this.removeToggleContentHints.bind(this)),
-            withSequence(100, this.updateToggleContentHints.bind(this)),
-        ],
-        external_history_step_handlers: withSequence(100, () =>
-            this.updateToggleContentHints(this.editable)
-        ),
-        history_reset_from_steps_handlers: withSequence(100, () =>
-            this.updateToggleContentHints(this.editable)
-        ),
         mount_component_handlers: this.setupNewToggle.bind(this),
         normalize_handlers: this.normalize.bind(this),
-        selectionchange_handlers: [
-            withSequence(1, this.removeSelectedToggleContentHints.bind(this)),
-            withSequence(100, this.updateSelectedToggleContentHints.bind(this)),
-        ],
-        start_edition_handlers: () => this.updateToggleContentHints(this.editable),
-
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
         delete_forward_overrides: this.handleDeleteForward.bind(this),
         shift_tab_overrides: this.handleShiftTab.bind(this),
@@ -99,11 +90,6 @@ export class ToggleBlockPlugin extends Plugin {
     setup() {
         this.preventDeleteBackwardContentEnd = false;
         this.selectedToggleEmptyContentSet = new Set();
-    }
-
-    applyEmptyContentHint(element) {
-        element.setAttribute("placeholder", _t("Add something inside this toggle"));
-        element.classList.add("o-we-hint");
     }
 
     explodeToggle(toggle) {
@@ -562,69 +548,6 @@ export class ToggleBlockPlugin extends Plugin {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             baseContainer.appendChild(this.document.createElement("br"));
             emptyToggleNode.replaceChildren(baseContainer);
-        }
-    }
-
-    removeSelectedToggleContentHints() {
-        const editableSelection = this.dependencies.selection.getEditableSelection();
-        const target =
-            editableSelection.anchorNode &&
-            closestElement(
-                editableSelection.anchorNode,
-                `${toggleSelector} ${contentSelector} > ${baseContainerGlobalSelector}:first-child:is(.o-we-hint)`
-            );
-        if (target) {
-            target.removeAttribute("placeholder");
-            removeClass(target, "o-we-hint");
-            this.selectedToggleEmptyContentSet.add(target);
-        }
-    }
-
-    removeToggleContentHints(root) {
-        for (const contentChild of selectElements(
-            root,
-            `${toggleSelector} ${contentSelector} > ${baseContainerGlobalSelector}:first-child:is(.o-we-hint)`
-        )) {
-            if (contentChild.nextSibling || !isEmptyBlock(contentChild)) {
-                contentChild.removeAttribute("placeholder");
-                removeClass(contentChild, "o-we-hint");
-            }
-        }
-    }
-
-    updateSelectedToggleContentHints() {
-        for (const target of [...this.selectedToggleEmptyContentSet]) {
-            if (!target.isConnected) {
-                this.selectedToggleEmptyContentSet.delete(target);
-                continue;
-            }
-            if (
-                target.matches(
-                    `${toggleSelector} ${contentSelector} > ${baseContainerGlobalSelector}:only-child:is(.o-we-hint)`
-                )
-            ) {
-                continue;
-            }
-            this.selectedToggleEmptyContentSet.delete(target);
-            if (
-                target.matches(
-                    `${toggleSelector} ${contentSelector} > ${baseContainerGlobalSelector}:only-child:not(.o-we-hint)`
-                ) &&
-                isEmptyBlock(target)
-            ) {
-                this.applyEmptyContentHint(target);
-            }
-        }
-    }
-
-    updateToggleContentHints(root) {
-        for (const contentChild of selectElements(
-            root,
-            `${toggleSelector} ${contentSelector} > ${baseContainerGlobalSelector}:only-child:not(.o-we-hint)`
-        )) {
-            if (isEmptyBlock(contentChild)) {
-                this.applyEmptyContentHint(contentChild);
-            }
         }
     }
 
