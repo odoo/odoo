@@ -393,6 +393,7 @@ export function makeActionManager(env, router = _router) {
      */
     function _preprocessAction(action, context = {}) {
         try {
+            delete action._originalAction;
             action._originalAction = JSON.stringify(action);
         } catch {
             // do nothing, the action might simply not be serializable
