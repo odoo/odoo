@@ -44,9 +44,10 @@ export class Interaction {
     static selectorHas = "";
 
     /**
-     * Constant to reset dynamicContent t-att-* and t-out.
+     * Map to track which template files have been loaded for interactions
+     * Shared across all interaction instances
      */
-    static INITIAL_VALUE = INITIAL_VALUE;
+    static loadedTemplates = new Set();
 
     /**
      * Note that a dynamic selector is allowed to return a falsy value, for ex
@@ -201,9 +202,20 @@ export class Interaction {
 
         //     await Promise.all(templatePromises);
         // }
+        // if (this.xmlTemplates) {
+        //     const templatePromises = Object.entries(this.xmlTemplates).map(async ([name, path]) => {
+        //         await loadXML(path);
+        //     });
+        //     await Promise.all(templatePromises);
+        // }
         if (this.xmlTemplates) {
             const templatePromises = Object.entries(this.xmlTemplates).map(async ([name, path]) => {
-                await loadXML(path);
+                // Only load if not already loaded
+                if (!Interaction.loadedTemplates.has(path)) {
+                    debugger;
+                    await loadXML(path);
+                    Interaction.loadedTemplates.add(path);
+                }
             });
             await Promise.all(templatePromises);
         }
