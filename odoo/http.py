@@ -1108,7 +1108,7 @@ class Session(collections.abc.MutableMapping):
         if auth_info.get('mfa') == 'skip' or not user._mfa_url():
             self.finalize(env)
 
-        if request and request.session is self:
+        if request and request.session is self and request.db == env.registry.db_name:
             request.env = env(user=self.uid, context=self.context)
             request.update_context(lang=get_lang(request.env(user=pre_uid)).code)
 
@@ -1844,21 +1844,34 @@ class Request:
         threading.current_thread().url = httprequest.url
         self.httprequest = httprequest
 
-    def _save_session(self):
-        """ Save a modified session on disk. """
+    def _save_session(self, env=None):
+        """
+        Save a modified session on disk.
+
+        :param env: an environment to compute the session token.
+            MUST be left ``None`` (in which case it uses the request's
+            env) UNLESS the database changed.
+        """
         sess = self.session
+        if env is None:
+            env = self.env
 
         if not sess.can_save:
             return
 
         if sess.should_rotate:
-            root.session_store.rotate(sess, self.env)  # it saves
+            root.session_store.rotate(sess, env)  # it saves
         elif sess.is_dirty:
             root.session_store.save(sess)
 
         cookie_sid = self.cookies.get('session_id')
         if sess.is_dirty or cookie_sid != sess.sid:
-            self.future_response.set_cookie('session_id', sess.sid, max_age=get_session_max_inactivity(self.env), httponly=True)
+            self.future_response.set_cookie(
+                'session_id',
+                sess.sid,
+                max_age=get_session_max_inactivity(env),
+                httponly=True
+            )
 
     def _set_request_dispatcher(self, rule):
         routing = rule.endpoint.routing
