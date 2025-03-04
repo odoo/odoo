@@ -1,16 +1,27 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tools.misc import format_duration
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class HrLeaveType(models.Model):
     _inherit = 'hr.leave.type'
 
-    overtime_deductible = fields.Boolean(
-        "Deduct Extra Hours", default=False,
-        help="Once a time off of this type is approved, extra hours in attendances will be deducted.")
+    overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible', search='_search_overtime_deductible')
+
+    @api.depends_context('company')
+    def _compute_overtime_deductible(self):
+        company = self.env.company
+        for leave_type in self:
+            leave_type.overtime_deductible = leave_type == company.extra_hours_leave_type_id
+
+    def _search_overtime_deductible(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        company_extra_hours_leave_type_id = self.env.company.extra_hours_leave_type_id.id
+        op = '=' if (operator == '=' and value) or (operator == '!=' and not value) else '!='
+        return [('id', op, company_extra_hours_leave_type_id)]
 
     @api.depends('overtime_deductible', 'requires_allocation')
     @api.depends_context('request_type', 'leave', 'holiday_status_display_name', 'employee_id')
