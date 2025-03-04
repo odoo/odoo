@@ -113,6 +113,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if self.search_count([('company_id.account_peppol_proxy_state', '=', 'smp_registration')], limit=1):
             self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
 
+    def _cron_peppol_webhook_keepalive(self):
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['sender', 'receiver'])])
+        edi_users._peppol_reset_webhook()
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -304,6 +308,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'peppol_phone_number': self.company_id.account_peppol_phone_number,
             'peppol_contact_email': self.company_id.account_peppol_contact_email,
             'peppol_migration_key': self.company_id.account_peppol_migration_key,
+            'peppol_webhook_endpoint': self.company_id._get_peppol_webhook_endpoint(),
+            'peppol_webhook_token': self._generate_webhook_token(),
         }
 
     def _peppol_register_sender(self, peppol_external_provider=None):
@@ -442,3 +448,27 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         """Get information from the IAP regarding the Peppol services."""
         self.ensure_one()
         return self._call_peppol_proxy("/api/peppol/2/get_services")
+
+    def _generate_webhook_token(self):
+        self.ensure_one()
+        expiration = 30 * 24  # in 30 days
+        msg = [self.id, self.company_id._get_peppol_webhook_endpoint()]
+        payload = tools.hash_sign(self.sudo().env, 'account_peppol_webhook', msg, expiration_hours=expiration)
+        return payload
+
+    @api.model
+    def _get_user_from_token(self, token: str, url: str):
+        try:
+            if not (payload := tools.verify_hash_signed(self.sudo().env, 'account_peppol_webhook', token)):
+                return None
+        except ValueError:
+            return None
+        else:
+            id, endpoint = payload
+            if not url.startswith(endpoint):
+                return None
+            return self.browse(id).exists()
+
+    def _peppol_reset_webhook(self):
+        for edi_user in self:
+            edi_user._call_peppol_proxy('/api/peppol/2/set_webhook', params={'webhook_url': edi_user.company_id._get_peppol_webhook_endpoint(), 'token': edi_user._generate_webhook_token()})
