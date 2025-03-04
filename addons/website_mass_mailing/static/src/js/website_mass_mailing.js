@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { session } from "@web/session";
 import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
 
 publicWidget.registry.subscribe = publicWidget.Widget.extend({
@@ -19,6 +20,10 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         this._recaptcha = new ReCaptcha();
         this.rpc = this.bindService("rpc");
         this.notification = this.bindService("notification");
+        if (session.turnstile_site_key) {
+            const { turnStile } = odoo.loader.modules.get('@website_cf_turnstile/js/turnstile');
+            this._turnstile = turnStile;
+        }
     },
     /**
      * @override
@@ -76,6 +81,18 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
 
         subscribeBtnEl.classList.toggle('d-none', !!isSubscriber);
         thanksBtnEl.classList.toggle('d-none', !isSubscriber);
+
+        // When the website is in edit mode, window.top != window. We don't want turnstile to render during edit mode
+        // and mess up the DOM and saving it.
+        if (!isSubscriber && this._turnstile && window.top === window) {
+            const el = this._turnstile.addTurnstile('website_mass_mailing_subscribe');
+            if (el) {
+                this._turnstile.addSpinner(subscribeBtnEl);
+                el[0].classList.add('mt-3');
+                el.insertAfter(this.el);
+                this._turnstile.renderTurnstile(el);
+            }
+        }
     },
 
     _getListId: function () {
@@ -112,6 +129,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             'value': $input.length ? $input.val() : false,
             'subscription_type': inputName,
             recaptcha_token_response: tokenObj.token,
+            turnstile_captcha: this.el.parentElement.querySelector('input[name="turnstile_captcha"]')?.value,
         }).then(function (result) {
             let toastType = result.toast_type;
             if (toastType === 'success') {
