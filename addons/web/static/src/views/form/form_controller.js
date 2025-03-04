@@ -492,7 +492,7 @@ export class FormController extends Component {
                 callback: () => this.model.root.unarchive(),
             },
             duplicate: {
-                isAvailable: () => activeActions.create && activeActions.duplicate,
+                isAvailable: () => activeActions.duplicate,
                 sequence: 30,
                 icon: "fa fa-clone",
                 description: _t("Duplicate"),

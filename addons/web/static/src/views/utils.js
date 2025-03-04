@@ -161,7 +161,7 @@ export function getActiveActions(rootNode) {
         delete: exprToBoolean(rootNode.getAttribute("delete"), true),
     };
     activeActions.duplicate =
-        activeActions.create && exprToBoolean(rootNode.getAttribute("duplicate"), true);
+        exprToBoolean(rootNode.getAttribute("duplicate"), activeActions.create);
     return activeActions;
 }
 
