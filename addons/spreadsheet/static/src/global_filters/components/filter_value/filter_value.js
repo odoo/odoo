@@ -17,7 +17,7 @@ import { getFields, ModelNotFoundError } from "@spreadsheet/data_sources/data_so
 const { ValidationMessages } = components;
 
 export class FilterValue extends Component {
-    static template = "spreadsheet_edition.FilterValue";
+    static template = "spreadsheet.FilterValue";
     static components = {
         DateFilterValue,
         DateFromToValue,
