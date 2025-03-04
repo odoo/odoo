@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ThemeTab">
+    <div class="o_theme_tab h-100">
+        <div t-ref="content" class="d-flex flex-column h-100">
+            <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                <!-- TODO Define a more basic kind of options container -->
+                <OptionsContainer
+                    snippetModel="optionsContainer.snippetModel"
+                    editingElement="optionsContainer.element"
+                    options="optionsContainer.options"
+                    headerMiddleButtons="optionsContainer.headerMiddleButtons"
+                    isRemovable="optionsContainer.isRemovable"
+                    isClonable="optionsContainer.isClonable"
+                    containerTopButtons="optionsContainer.optionsContainerTopButtons"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="html_builder.ThemeColorsOption">
+    <BuilderContext preview="false">
+        TODO
+        <!--
+        <we-alert class="o_old_color_system_warning d-none mt-2">
+            It appears your website is still using the old color system of
+            Odoo 13.0 in some places. We made sure it is still working but
+            we recommend you to try to use the new color system, which is
+            still customizable.
+        </we-alert>
+        <we-row class="o_we_theme_colors_selector">
+            <div class="o_we_theme_colors_selector_group">
+                <we-title>Main</we-title>
+                <we-colorpicker data-name="color_1_opt" title="Primary"
+                                data-customize-website-color="" data-color="o-color-1"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+                <we-colorpicker data-name="color_2_opt" title="Secondary"
+                                data-customize-website-color="" data-color="o-color-2"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+                <we-colorpicker data-customize-website-color="" data-color="o-color-3"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+            </div>
+            <div class="o_we_theme_colors_selector_group">
+                <we-title>Light &amp; Dark</we-title>
+                <we-colorpicker data-customize-website-color="" data-color="o-color-4"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+                <we-colorpicker data-customize-website-color="" data-color="o-color-5"
+                                data-use-css-color="true" data-selected-tab="custom-colors"/>
+            </div>
+            <we-select data-img="/website/static/src/img/snippets_options/palette.svg" class="o_we_theme_colors_select" data-variable="color-palettes-name"/>
+        </we-row>
+        <we-collapse class="o_we_theme_presets_collapse" string="Color Presets">
+        </we-collapse>
+        -->
+    </BuilderContext>
+</t>
+
+<t t-name="html_builder.ThemeWebsiteSettingsOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Theme">
+            <BuilderButton action="'switchTheme'" className="'o_we_bg_brand_primary'">Switch Theme</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Language">
+            <BuilderButton action="'addLanguage'" className="'o_we_bg_brand_primary'">Add a Language</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Page Layout">
+            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'layout'">
+                <BuilderSelectItem actionValue="'full'" id="'layout_full_opt'">Full</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'boxed'">Boxed</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'framed'">Framed</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'postcard'">Postcard</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Background" level="1">
+            <BuilderColorPicker t-if="!this.isActiveItem('layout_full_opt')"
+                action="'customizeWebsiteColor'"
+                actionParam="'body'"
+            />
+            <BuilderButtonGroup action="'customizeBodyBgType'">
+                <BuilderButton title.translate="Image" actionValue="'image'" className="'fa fa-fw fa-camera'"/>
+                <BuilderButton title.translate="Pattern" actionValue="'pattern'" className="'fa fa-fw fa-th'"/>
+                <BuilderButton title.translate="None" actionValue="'NONE'" className="'fa fa-fw fa-ban'"/>
+            </BuilderButtonGroup>
+            <!-- Hidden imagepicker enabled by above button-group -->
+            <!--
+            <we-imagepicker data-name="body_bg_image_opt"
+                            data-customize-body-bg=""/>
+            -->
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="html_builder.ThemeParagraphOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Font Size">
+            <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'font-size-base'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'small-font-size'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Family">
+            TODO BuilderFontFamilyPicker
+            <!--
+            <we-fontfamilypicker data-variable="font"/>
+            -->
+        </BuilderRow>
+        <BuilderRow label.translate="Line Height">
+            <!-- "× ": \u00D7\u2000 -->
+            <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'body-line-height'" unit="'× '" saveUnit="''"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Margins" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput title.translate="Top" actionParam="'paragraph-margin-top'" unit="'px'" saveUnit="'px'"/>
+            <BuilderNumberInput title.translate="Bottom" actionParam="'paragraph-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="html_builder.ThemeHeadingsOption">
+    <BuilderContext preview="false">
+        <t t-set="heading_label">Heading</t>
+        <t t-set="display_label">Display</t>
+        <!-- We don't use `display-font-sizes.5` and `display-font-sizes.6` -->
+        <t t-set="used_display_font_sizes" t-value="[1, 2, 3, 4]"/>
+        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput title.translate="Heading 1" actionParam="'h1-font-size'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="heading_label + ' ' + depth">
+                        <BuilderNumberInput actionParam="'h' + depth + '-font-size'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </t>
+                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="display_label + ' ' + depth">
+                        <BuilderNumberInput actionParam="'display-' + depth + '-font-size'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </t>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Family" action="'customizeWebsiteVariable'">
+            TODO BuilderFontFamilyPicker
+            <!--
+            <BuilderFontFamilyPicker title.translate="Heading 1" actionParam="'headings-font'"/>
+            -->
+            <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
+                title.translate="Reset to Paragraph Font Family"
+                action="'removeFont'"
+                actionParam="{ variable: 'headings-font', tbd: 'set-headings-font' }"
+            />
+            <t t-set-slot="collapse">
+                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="heading_label + ' ' + depth">
+                        TODO BuilderFontFamilyPicker
+                        <!--
+                        <BuilderFontFamilyPicker actionParam="'h' + depth + '-font'"/>
+                        -->
+                        <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
+                            title.translate="Reset to Headings Font Family"
+                            action="'removeFont'"
+                            actionParam="{ variable: 'h' + depth + '-font', tbd: 'set-h' + depth + '-font' }"
+                        />
+                    </BuilderRow>
+                </t>
+                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="display_label + ' ' + depth">
+                        TODO BuilderFontFamilyPicker
+                        <!--
+                        <BuilderFontFamilyPicker actionParam="'display-' + depth + '-font'"/>
+                        -->
+                        <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
+                            title.translate="Reset to Headings Font Family"
+                            action="'removeFont'"
+                            actionParam="{ variable: 'display-' + depth + '-font', tbd: 'set-display-' + depth + '-font' }"
+                        />
+                    </BuilderRow>
+                </t>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Line Height" action="'customizeWebsiteVariable'">
+            <!-- "× ": \u00D7\u2000 -->
+            <BuilderNumberInput title.translate="Heading 1" actionParam="'headings-line-height'" unit="'× '" saveUnit="''"/>
+            <t t-set-slot="collapse">
+                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="heading_label + ' ' + depth">
+                        <BuilderNumberInput actionParam="'h' + depth + '-line-height'" unit="'× '" saveUnit="''"/>
+                    </BuilderRow>
+                </t>
+                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="display_label + ' ' + depth">
+                        <BuilderNumberInput actionParam="'display-' + depth + '-line-height'" unit="'× '" saveUnit="''"/>
+                    </BuilderRow>
+                </t>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Margins" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput title.translate="Top" actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'"/>
+            <BuilderNumberInput title.translate="Bottom" actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+            <t t-set-slot="collapse">
+                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="heading_label + ' ' + depth">
+                        <BuilderNumberInput title.translate="Top" actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
+                        <BuilderNumberInput title.translate="Bottom" actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+                    </BuilderRow>
+                </t>
+                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="display_label + ' ' + depth">
+                        <BuilderNumberInput title.translate="Top" actionParam="'display-' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
+                        <BuilderNumberInput title.translate="Bottom" actionParam="'display-' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+                    </BuilderRow>
+                </t>
+            </t>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="html_builder.ThemeButtonOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Primary Style">
+            <BuilderSelect action="'customizeButtonStyle'" actionParam="'primary'">
+                <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'outline'" id="'btn_primary_outline_opt'">Outline</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow t-if="isActiveItem('btn_primary_outline_opt')"
+            level="1" label.translate="Border Width"
+            action="'customizeWebsiteVariable'"
+        >
+            <BuilderNumberInput actionParam="'btn-primary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Secondary Style">
+            <BuilderSelect action="'customizeButtonStyle'" actionParam="'secondary'">
+                <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'outline'" id="'btn_secondary_outline_opt'">Outline</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow t-if="isActiveItem('btn_secondary_outline_opt')"
+            level="1" label.translate="Border Width"
+            action="'customizeWebsiteVariable'"
+        >
+            <BuilderNumberInput actionParam="'btn-secondary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Family">
+            TODO BuilderFontFamilyPicker
+            <!--
+            <we-fontfamilypicker data-variable="buttons-font"/>
+            -->
+            <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
+                title.translate="Reset to Paragraph Font Family"
+                action="'removeFont'"
+                actionParam="{ variable: 'buttons-font', tbd: 'set-buttons-font' }"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderNumberInput title.translate="X" actionParam="'btn-padding-x'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput title.translate="X" actionParam="'btn-padding-x-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput title.translate="X" actionParam="'btn-padding-x-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'btn-font-size'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput actionParam="'btn-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput actionParam="'btn-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Round Corners" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput actionParam="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="On Click Effect">
+            <BuilderSelect>
+                <BuilderSelectItem action="'customizeWebsiteVariable'" actionParam="'btn-ripple'" actionValue="'false'">None</BuilderSelectItem>
+                <BuilderSelectItem action="'customizeWebsiteVariableAndAssets'"
+                    actionParam="{variable: 'btn-ripple', assets: 'website.ripple_effect_scss, website.ripple_effect_js'}" actionValue="'true'"
+                >Ripple</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="html_builder.ThemeLinkOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Link Style">
+            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'link-underline'">
+                <BuilderSelectItem actionValue="'never'">No Underline</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'hover'">Underline On Hover</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'always'">Always Underline</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="html_builder.ThemeInputOption">
+    <BuilderContext preview="false">
+                <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderNumberInput title.translate="X" actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput title.translate="X" actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput title.translate="X" actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'input-font-size'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput actionParam="'input-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput actionParam="'input-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Border Width" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'input-border-width'" unit="'px'" saveUnit="'rem'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Border Radius" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'input-border-radius'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput actionParam="'input-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput actionParam="'input-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Background">
+            <BuilderColorPicker noTransparency="true"
+                action="'customizeWebsiteColor'"
+                actionParam="'input'"
+            />
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="html_builder.ThemeAdvancedOption">
+    <BuilderContext preview="false">
+        TODO
+        <!--
+        <we-checkbox string="Show Header"
+                     data-customize-website-views="website.option_layout_hide_header|"
+                     data-reload="/"/>
+        <we-row string="Code Injection" title="Enter code that will be added into every page of your site">
+            <we-button data-no-preview="true" data-open-custom-code-dialog="head">&amp;lt;head&amp;gt; and &amp;lt;/body&amp;gt;</we-button>
+        </we-row>
+        <we-row string="Google Map">
+            <we-button data-configure-api-key="" data-no-preview="true">Custom Key</we-button>
+        </we-row>
+        <we-row string="Status Colors">
+            <we-colorpicker title="Success" data-customize-website-color="" data-color-type="theme" data-color="success" data-selected-tab="custom-colors"/>
+            <we-colorpicker title="Info" data-customize-website-color="" data-color-type="theme" data-color="info" data-selected-tab="custom-colors"/>
+            <we-colorpicker title="Warning" data-customize-website-color="" data-color-type="theme" data-color="warning" data-selected-tab="custom-colors"/>
+            <we-colorpicker title="Error" data-customize-website-color="" data-color-type="theme" data-color="danger" data-selected-tab="custom-colors"/>
+        </we-row>
+        <we-collapse>
+            <we-row string="Grays" class="o_we_gray_preview o_we_collapse_toggler">
+                <t t-foreach="9" t-as="i">
+                    <t t-set="grayCode" t-value="str((9 - i) * 100)"/>
+                    <span t-attf-title="Gray #{grayCode}"
+                          t-attf-variable="#{grayCode}"
+                          t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"/>
+                </t>
+            </we-row>
+            <we-range string="Hue" class="o_we_sublevel_1 o_we_slider_tint" data-customize-gray="" data-param="gray-hue" data-min="0" data-max="359.9" data-step="0.1"/>
+            <we-range string="Saturation" class="o_we_sublevel_1" data-customize-gray="" data-param="gray-extra-saturation" data-step="0.1"/>
+        </we-collapse>
+        -->
+    </BuilderContext>
+</t>
+
+</templates>
