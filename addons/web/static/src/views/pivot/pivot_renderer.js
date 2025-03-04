@@ -1,22 +1,41 @@
-import { _t } from "@web/core/l10n/translation";
+import { Component, onWillUpdateProps, reactive, useRef } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
-import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { formatPercentage } from "@web/views/fields/formatters";
-import { PivotHeader } from "@web/views/pivot/pivot_header";
-
-import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
+import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { formatPercentage } from "@web/views/fields/formatters";
+import { PivotDropdown } from "@web/views/pivot/pivot_dropdown";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
 const formatters = registry.category("formatters");
 
+function clearObject(obj) {
+    for (const key in obj) {
+        delete obj[key];
+    }
+}
+
+function makeReactiveDropdownState({ onClose }) {
+    const state = reactive({
+        isOpen: false,
+        open: () => {
+            state.isOpen = true;
+        },
+        close: () => {
+            state.isOpen = false;
+            onClose?.();
+        },
+    });
+    return state;
+}
+
 export class PivotRenderer extends Component {
     static template = "web.PivotRenderer";
-    static components = { Dropdown, DropdownItem, CheckBox, PivotHeader, ReportViewMeasures };
+    static components = { Dropdown, DropdownItem, CheckBox, PivotDropdown, ReportViewMeasures };
     static props = ["model", "buttonTemplate"];
 
     setup() {
@@ -25,6 +44,11 @@ export class PivotRenderer extends Component {
         this.table = this.model.getTable();
         this.l10n = localization;
         this.tableRef = useRef("table");
+
+        this.dropdownReactive = reactive({});
+        this.dropdownState = makeReactiveDropdownState({
+            onClose: () => clearObject(this.dropdownReactive),
+        });
 
         onWillUpdateProps(this.onWillUpdateProps);
     }
@@ -62,20 +86,6 @@ export class PivotRenderer extends Component {
         return formatPercentage(cell.value, this.model.metaData.fields[cell.measure]);
     }
 
-    getHeaderProps({ cell, isXAxis = false, isInHead = false }) {
-        const type = isXAxis ? "col" : "row";
-        return {
-            cell,
-            isXAxis,
-            isInHead,
-            customGroupBys: this.model.metaData.customGroupBys,
-            onItemSelected: (payload) => this.onGroupBySelected(type, payload),
-            onAddCustomGroupBy: (fieldName) =>
-                this.onAddCustomGroupBy(type, cell.groupId, fieldName),
-            onClick: () => this.onHeaderClick(cell, type),
-        };
-    }
-
     //----------------------------------------------------------------------
     // Handlers
     //----------------------------------------------------------------------
@@ -103,11 +113,25 @@ export class PivotRenderer extends Component {
     /**
      * Handle a click on a header cell.
      *
+     * @param {PointerEvent} ev
      * @param {Object} cell
-     * @param {string} type col or row
+     * @param {boolean} isXAxis
      */
-    onHeaderClick(cell, type) {
-        if (cell.isLeaf && cell.isFolded) {
+    onHeaderClick(ev, cell, isXAxis) {
+        const type = isXAxis ? "col" : "row";
+        if (cell.isLeaf && !cell.isFolded) {
+            const target = ev.target.closest(".o_pivot_header_cell_closed");
+            Object.assign(this.dropdownReactive, {
+                target,
+                menuPosition: isXAxis ? "bottom-start" : "bottom-end",
+                customGroupBys: this.model.metaData.customGroupBys,
+                onItemSelected: (payload) =>
+                    this.onGroupBySelected(type, { ...payload, groupId: cell.groupId }),
+                onAddCustomGroupBy: (fieldName) =>
+                    this.onAddCustomGroupBy(type, cell.groupId, fieldName),
+            });
+            this.dropdownState.isOpen = true;
+        } else if (cell.isLeaf && cell.isFolded) {
             this.model.expandGroup(cell.groupId, type);
         } else if (!cell.isLeaf) {
             this.model.closeGroup(cell.groupId, type);

@@ -1,32 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.PivotHeader">
-        <Dropdown state="this.dropdownState" manual="true" position="props.isXAxis ? 'bottom-start' : 'bottom-end'">
-            <th
-                class="bg-view text-nowrap cursor-pointer fw-normal user-select-none"
-                t-att-colspan="props.isXAxis ? cell.width : undefined"
-                t-att-rowspan="props.isXAxis ? cell.height : undefined"
-                t-att-class="{
-                    o_pivot_header_cell_closed: cell.isLeaf,
-                    o_pivot_header_cell_opened: !cell.isLeaf,
-                    'border-top': props.isInHead,
-                }"
-                t-attf-style="{{
-                    props.isXAxis
-                        ? undefined
-                        : l10n.direction === 'ltr'
-                            ? 'padding-left: ' + padding + 'px;'
-                            : 'padding-right: ' + padding + 'px;'
-                }}"
-                t-att-data-tooltip="cell.label"
-                t-attf-data-tooltip-position="{{ l10n.direction === 'ltr' ? 'right' : 'left' }}"
-                t-on-click.stop="this.onClick"
-            >
-                <i t-attf-class="fa fa-{{ cell.isLeaf ? 'plus-square' : 'minus-square-o' }} me-1"/>
-                <span t-esc="cell.title"/>
-            </th>
-
+    <t t-name="web.Dropdown">
+        <Dropdown state="this.props.state" position="this.props.reactive.menuPosition" t-if="this.props.reactive.target">
+            <div t-att-style="positionStyle"/>
             <t t-set-slot="content">
                 <t t-set="currentGroup" t-value="null"/>
                 <t t-foreach="items" t-as="item" t-key="item.id">
