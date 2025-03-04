@@ -151,6 +151,7 @@ export class LinkPlugin extends Plugin {
             {
                 id: "removeLinkFromSelection",
                 title: _t("Remove Link"),
+                description: _t("Remove Link"),
                 icon: "fa-unlink",
                 isAvailable: isSelectionHasLink,
                 run: this.removeLinkFromSelection.bind(this),

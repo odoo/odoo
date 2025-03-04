@@ -24,7 +24,7 @@ export class Toolbar extends Component {
                                         const base = {
                                             id: String,
                                             groupId: String,
-                                            title: { type: [String, Function] },
+                                            description: { type: [String, Function] },
                                             isAvailable: { type: Function, optional: true },
                                             isDisabled: { type: Function, optional: true },
                                             namespaces: { type: Array, element: String },
@@ -110,7 +110,7 @@ export const toolbarButtonProps = {
  */
 export function composeToolbarButton(userCommand, toolbarItem) {
     return {
-        ...pick(userCommand, "item", "icon", "isAvailable"),
+        ...pick(userCommand, "description", "icon", "isAvailable"),
         ...omit(toolbarItem, "commandId", "commandParams"),
         run: () => userCommand.run(toolbarItem.commandParams),
     };

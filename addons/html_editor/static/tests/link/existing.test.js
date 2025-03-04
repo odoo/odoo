@@ -190,41 +190,41 @@ test("should not add a character in the link if start of paragraph", async () =>
 //         contentAfter: '<div><p>123</p><p><a href="#">d[]</a></p></div>',
 //     });
 // });
-test("should not allow to extends a link if selection span multiple link", async () => {
+test("should not allow to extend a link if selection spans multiple links", async () => {
     const { el } = await setupEditor(
         '<p>xxx <a href="exist">lin[k1</a> yyy <a href="exist">li]nk2</a> zzz</p>'
     );
     await waitFor(".o-we-toolbar");
     // link button should be disabled
-    expect('.o-we-toolbar button[title="Link"]').toHaveClass("disabled");
-    expect('.o-we-toolbar button[title="Link"]').toHaveAttribute("disabled");
-    await click('.o-we-toolbar button[title="Link"]');
+    expect('.o-we-toolbar button[name="link"]').toHaveClass("disabled");
+    expect('.o-we-toolbar button[name="link"]').toHaveAttribute("disabled");
+    await click('.o-we-toolbar button[name="link"]');
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         '<p>xxx <a href="exist">lin[k1</a> yyy <a href="exist">li]nk2</a> zzz</p>'
     );
 });
-test("should not allow to extends a link if selection span multiple link (2)", async () => {
+test("should not allow to extend a link if selection spans multiple links (2)", async () => {
     const { el } = await setupEditor(
         '<p>xxx <a href="exist">[link1</a> yyy <a href="exist">li]nk2</a> zzz</p>'
     );
     await waitFor(".o-we-toolbar");
     // link button should be disabled
-    expect('.o-we-toolbar button[title="Link"]').toHaveClass("disabled");
-    expect('.o-we-toolbar button[title="Link"]').toHaveAttribute("disabled");
-    await click('.o-we-toolbar button[title="Link"]');
+    expect('.o-we-toolbar button[name="link"]').toHaveClass("disabled");
+    expect('.o-we-toolbar button[name="link"]').toHaveAttribute("disabled");
+    await click('.o-we-toolbar button[name="link"]');
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         '<p>xxx <a href="exist">[link1</a> yyy <a href="exist">li]nk2</a> zzz</p>'
     );
 });
-test("should not allow to extends a link if selection span multiple link (3)", async () => {
+test("should not allow to extend a link if selection spans multiple links (3)", async () => {
     const { el } = await setupEditor(
         '<p>xxx <a href="exist">[link1</a> yyy <a href="exist">link2]</a> zzz</p>'
     );
     await waitFor(".o-we-toolbar");
     // link button should be disabled
-    expect('.o-we-toolbar button[title="Link"]').toHaveClass("disabled");
-    expect('.o-we-toolbar button[title="Link"]').toHaveAttribute("disabled");
-    await click('.o-we-toolbar button[title="Link"]');
+    expect('.o-we-toolbar button[name="link"]').toHaveClass("disabled");
+    expect('.o-we-toolbar button[name="link"]').toHaveAttribute("disabled");
+    await click('.o-we-toolbar button[name="link"]');
     expect(cleanLinkArtifacts(getContent(el))).toBe(
         '<p>xxx <a href="exist">[link1</a> yyy <a href="exist">link2]</a> zzz</p>'
     );

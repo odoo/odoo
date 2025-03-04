@@ -273,7 +273,7 @@ export class HtmlField extends Component {
                 user_commands: [
                     {
                         id: "codeview",
-                        title: _t("Code view"),
+                        description: _t("Code view"),
                         icon: "fa-code",
                         run: this.toggleCodeView.bind(this),
                     },

@@ -125,8 +125,18 @@ export class HistoryPlugin extends Plugin {
     ];
     resources = {
         user_commands: [
-            { id: "historyUndo", title: _t("Undo"), icon: "fa-undo", run: this.undo.bind(this) },
-            { id: "historyRedo", title: _t("Redo"), icon: "fa-repeat", run: this.redo.bind(this) },
+            {
+                id: "historyUndo",
+                description: _t("Undo"),
+                icon: "fa-undo",
+                run: this.undo.bind(this),
+            },
+            {
+                id: "historyRedo",
+                description: _t("Redo"),
+                icon: "fa-repeat",
+                run: this.redo.bind(this),
+            },
         ],
         ...(hasTouch() && {
             toolbar_groups: withSequence(5, { id: "historyMobile" }),
