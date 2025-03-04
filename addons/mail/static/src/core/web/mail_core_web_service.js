@@ -80,7 +80,6 @@ export class MailCoreWeb {
                 inbox.fetchMoreMessages();
             }
         });
-        this.busService.start();
     }
 }
 

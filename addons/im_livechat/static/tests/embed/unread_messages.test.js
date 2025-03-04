@@ -8,6 +8,7 @@ import {
     contains,
     focus,
     insertText,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
@@ -53,12 +54,14 @@ test("new message from operator displays unread counter", async () => {
             livechatUserId: serverState.publicUserId,
         })
     );
+    setupChatHub({ opened: [channelId] });
     onRpc("/mail/data", async (request) => {
         const { params } = await request.json();
         if (params.fetch_params.includes("init_messaging")) {
             asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
+    onRpc("/discuss/channel/messages", () => asyncStep("/discuss/channel/message"));
     const userId = serverState.userId;
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
@@ -69,6 +72,7 @@ test("new message from operator displays unread counter", async () => {
                 "failures", // called because mail/core/web is loaded in qunit bundle
                 "systray_get_activities", // called because mail/core/web is loaded in qunit bundle
                 "init_messaging",
+                ["discuss.channel", [channelId]],
             ],
             context: {
                 lang: "en",
@@ -77,9 +81,10 @@ test("new message from operator displays unread counter", async () => {
                 allowed_company_ids: [1],
             },
         })}`,
+        "/discuss/channel/message",
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Are you there?", message_type: "comment" },
             thread_id: channelId,
