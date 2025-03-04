@@ -11,6 +11,11 @@ export class BackgroundVideo extends Interaction {
         _dropdown: () => this.el.closest(".dropdown-menu")?.parentElement,
         _modal: () => this.el.closest("modal"),
     };
+
+    xmlTemplates = {
+        "website.background.video": "/website/static/src/xml/website.background.video.xml"
+    };
+
     dynamicContent = {
         _document: {
             // We don't add the optional cookies warning for background videos
@@ -34,9 +39,9 @@ export class BackgroundVideo extends Interaction {
         },
     };
 
-    assetLibs = [
-        "website.assets_widget_xml",
-    ];
+    // assetLibs = [
+    //     "website.assets_widget_xml",
+    // ];
 
     setup() {
         this.hideVideoContainer = false;
