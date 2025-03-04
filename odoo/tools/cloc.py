@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import ast
+import fnmatch
 import pathlib
 import os
 import re
@@ -24,6 +25,20 @@ STANDARD_MODULES = ['web', 'web_enterprise', 'theme_common', 'base']
 MAX_FILE_SIZE = 25 * 2**20 # 25 MB
 MAX_LINE_SIZE = 100000
 VALID_EXTENSION = ['.py', '.js', '.xml', '.css', '.scss']
+
+def glob_match(path, pattern):
+    """Convert a glob pattern to a regex pattern, then return True if it matches `path`"""
+    # TODO: as of Python 3.13, use `glob.translate()` instead
+
+    # First escape regex special chars, then convert glob wildcards **, *, and ?
+    pattern = re.escape(pattern)
+    # `**/` = match zero or more directories
+    pattern = pattern.replace(r"\*\*/", "(.*/)?")
+    # `*` = match anything
+    pattern = pattern.replace(r"\*", "[^/]*")
+    # `?` = match a single character
+    pattern = pattern.replace(r"\?", "[^/]")
+    return re.match(f"^{pattern}$", path) is not None
 
 class Cloc(object):
     def __init__(self):
@@ -130,10 +145,8 @@ class Cloc(object):
                     break
             except Exception:
                 pass
-        if not exclude:
-            exclude = set()
-        for i in filter(None, exclude_list):
-            exclude.update(str(p) for p in pathlib.Path(path).glob(i))
+
+
 
         module_name = os.path.basename(path)
         self.book(module_name)
@@ -141,7 +154,8 @@ class Cloc(object):
             for file_name in files:
                 file_path = os.path.join(root, file_name)
 
-                if file_path in exclude:
+                relative_path = str(pathlib.Path(file_path).relative_to(path))
+                if any(glob_match(relative_path, pattern) for pattern in exclude_list):
                     continue
 
                 ext = os.path.splitext(file_path)[1].lower()
