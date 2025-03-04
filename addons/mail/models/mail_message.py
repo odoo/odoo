@@ -844,19 +844,31 @@ class MailMessage(models.Model):
         return Store(self, {"starred": self.starred}).get_result()
 
     @api.model
-    def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
+    def _message_fetch(self, domain, search_term=None, search_type=None, before=None, after=None, around=None, limit=30):
         res = {}
         if search_term:
             # we replace every space by a % to avoid hard spacing matching
             search_term = search_term.replace(" ", "%")
-            domain = expression.AND([domain, expression.OR([
-                # sudo: access to attachment is allowed if you have access to the parent model
-                [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
-                [("body", "ilike", search_term)],
-                [("subject", "ilike", search_term)],
-                [("subtype_id.description", "ilike", search_term)],
-            ])])
-            domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
+            search_domain = []
+            if not search_type or search_type == "all_activity":
+                search_domain = [
+                    # sudo: access to attachment is allowed if you have access to the parent model
+                    [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
+                    [("body", "ilike", search_term)],
+                    [("subject", "ilike", search_term)],
+                    [("subtype_id.description", "ilike", search_term)],
+                ]
+            elif search_type == "conversation":
+                search_domain = [
+                    [("body", "ilike", search_term)],
+                    [("subject", "ilike", search_term)],
+                    [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))]
+                ]
+            elif search_type == "tracked_changes":
+                search_domain = [[("subtype_id.description", "ilike", search_term)]]
+            domain = expression.AND([domain, expression.OR(search_domain)])
+            if not search_type or search_type == "conversation":
+                domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
             res["count"] = self.search_count(domain)
         if around is not None:
             messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
