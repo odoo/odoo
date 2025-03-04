@@ -37,7 +37,7 @@ class _OdooOption(optparse.Option):
     config = None  # must be overriden
 
     TYPES = ['int', 'float', 'string', 'choice', 'bool', 'path', 'comma',
-             'addons_path', 'upgrade_path', 'without_demo']
+             'addons_path', 'upgrade_path', 'without_demo', 'smtp_ssl']
 
     @classproperty
     def TYPE_CHECKER(cls):
@@ -52,6 +52,7 @@ class _OdooOption(optparse.Option):
             'addons_path': cls.config._check_addons_path,
             'upgrade_path': cls.config._check_upgrade_path,
             'without_demo': cls.config._check_without_demo,
+            'smtp_ssl': cls.config._check_smtp_ssl,
         }
 
     @classproperty
@@ -67,6 +68,7 @@ class _OdooOption(optparse.Option):
             'addons_path': cls.config._format_list,
             'upgrade_path': cls.config._format_list,
             'without_demo': cls.config._format_without_demo,
+            'smtp_ssl': cls.config._format_string,
         }
 
     def __init__(self, *opts, **attrs):
@@ -314,8 +316,11 @@ class configmanager:
                          help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', my_default=25,
                          help='specify the SMTP port', type="int")
-        group.add_option('--smtp-ssl', dest='smtp_ssl', action='store_true', my_default=False,
-                         help='if passed, SMTP connections will be encrypted with SSL (STARTTLS)')
+        group.add_option('--smtp-ssl', dest='smtp_ssl', type='smtp_ssl', nargs='?', metavar='CHOICE', my_default='none', const='starttls',
+                         help="specify the encryption method, possible values are:   "
+                              "  none, starttls, startls_strict, ssl, ssl_strict     "
+                              "strict: encrypt and verify the server certificate     "
+                              "non-strict: encrypt only")
         group.add_option('--smtp-user', dest='smtp_user', my_default='',
                          help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', my_default='',
@@ -797,6 +802,22 @@ class configmanager:
         except optparse.OptionValueError:
             cls._log(logging.WARNING, "option %s: since 19.0, invalid boolean value: %r, assume %s", opt, value, value != 'None')
             return value != 'None'
+
+    def _check_smtp_ssl(cls, option, opt, value):
+        try:
+            smtp_ssl_bool = cls._check_bool(option, opt, value)
+            good_value = 'starttls' if smtp_ssl_bool else 'none'
+            cls._log(logging.WARNING, "option %s: since 19.0, invalid value: %r, assume %r", opt, value, good_value)
+            return good_value
+        except optparse.OptionValueError:
+            pass
+        encryption_methods = ('none', 'ssl', 'ssl_strict', 'starttls', 'starttls_strict')
+        if value in encryption_methods:
+            return value
+        raise optparse.OptionValueError(
+            f"option {opt}: invalid value: {value!r}, must be one of "
+            + ', '.join(encryption_methods)
+        )
 
     def parse(self, option_name, value):
         if not isinstance(value, str):
