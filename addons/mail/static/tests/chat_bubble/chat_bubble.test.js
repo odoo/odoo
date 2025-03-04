@@ -13,6 +13,7 @@ import {
     setupChatHub,
     start,
     startServer,
+    triggerEvents,
     triggerHotkey,
 } from "../mail_test_helpers";
 
@@ -399,6 +400,7 @@ test("Open chat window from messaging menu with chat hub compact", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "John" });
+    await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]); // FIXME: click fold doesn't focusout/blur the composer, thus marks as read
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await withUser(johnId, () =>
