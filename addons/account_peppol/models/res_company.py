@@ -5,6 +5,7 @@ import re
 import requests
 from lxml import etree
 from stdnum import get_cc_module, ean
+from urllib.parse import urljoin
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -275,6 +276,10 @@ class ResCompany(models.Model):
         # by design, we can only have zero or one proxy user per company with type Peppol
         peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
         return peppol_user.edi_mode or config_param or 'prod'
+
+    def _get_peppol_webhook_endpoint(self):
+        self.ensure_one()
+        return urljoin(self.get_base_url(), '/peppol/webhook')
 
     def _get_company_info_on_peppol(self, edi_identification):
 
