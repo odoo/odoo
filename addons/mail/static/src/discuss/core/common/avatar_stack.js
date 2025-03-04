@@ -36,6 +36,7 @@ export class AvatarStack extends Component {
         const styles = [
             "box-sizing: content-box",
             `height: ${this.props.size}px`,
+            "margin: 1px",
             `padding: 1.5px`,
             `width: ${this.props.size}px`,
             `z-index: ${this.props.personas.length - index}`,
