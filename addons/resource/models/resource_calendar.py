@@ -432,6 +432,13 @@ class ResourceCalendar(models.Model):
                     result_per_resource_id[resource.id] = res_intervals
         return result_per_resource_id
 
+    def _leave_work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+        domain = (domain or []) + [
+            ('time_type', '=', 'work')
+        ]
+        res = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz)
+        return {k: WorkIntervals(v) for k, v in res.items() if v}
+
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
         if resource is None:
             resource = self.env['resource.resource']

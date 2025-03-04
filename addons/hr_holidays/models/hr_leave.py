@@ -559,6 +559,7 @@ class HrLeave(models.Model):
             ('employee_id', 'in', self.employee_id.ids),
             ('id', 'not in', self.ids),
             ('state', 'not in', ['cancel', 'refuse']),
+            ('holiday_status_id.time_type', '!=', 'work'),
         ])
         for holiday in self:
             domain = [
