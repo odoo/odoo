@@ -163,9 +163,7 @@ class PaymentTransaction(models.Model):
         pm_max_amount = const.MANDATE_MAX_AMOUNT.get(pm_code, 100000)
         mandate_values = self._get_mandate_values()  # The linked document's values.
         if 'amount' in mandate_values and 'MRR' in mandate_values:
-            max_amount = min(
-                pm_max_amount, max(mandate_values['amount'] * 1.5, mandate_values['MRR'] * 5)
-            )
+            max_amount = min(pm_max_amount, mandate_values['amount'])
         else:
             max_amount = pm_max_amount
         return max_amount
