@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('actionpad')]/div/button[last()]" position="before">
+        <xpath expr="//div[hasclass('actionpad')]//button[hasclass('mobile-more-button')]" position="before">
             <button t-if="pos.config.module_pos_restaurant and !this.currentOrder._isRefundOrder()"
                     class="btn btn-secondary btn-lg flex-shrink-0 border-0" t-on-click="()=>this.pos.addCourse()">
                 <span>Course</span>
