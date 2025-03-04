@@ -188,25 +188,30 @@ export class Message extends Record {
             .replace(" ", " "); // so that AM/PM are properly wrapped
     }
 
-    get dateSimpleWithDay() {
+    formatDate(date) {
         const userLocale = { locale: user.lang };
-        if (this.datetime.hasSame(DateTime.now(), "day")) {
+        if (date.hasSame(DateTime.now(), "day")) {
             return _t("Today at %(time)s", {
-                time: this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
+                time: date.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
             });
         }
-        if (this.datetime.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
+        if (date.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
             return _t("Yesterday at %(time)s", {
-                time: this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
+                time: date.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
             });
         }
-        if (this.datetime?.year === DateTime.now().year) {
-            return this.datetime.toLocaleString(
-                { ...DateTime.DATETIME_MED, year: undefined },
-                userLocale
-            );
+        if (date?.year === DateTime.now().year) {
+            return date.toLocaleString({ ...DateTime.DATETIME_MED, year: undefined }, userLocale);
         }
-        return this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, userLocale);
+        return date.toLocaleString({ ...DateTime.DATETIME_MED }, userLocale);
+    }
+
+    get dateSimpleWithDay() {
+        return this.formatDate(this.datetime);
+    }
+
+    get editedDateSimpleWithDay() {
+        return "Last edited " + this.formatDate(this.write_date);
     }
 
     get datetime() {
