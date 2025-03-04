@@ -7,6 +7,7 @@ describe.current.tags("headless");
 
 const parser = new CalendarArchParser();
 const DEFAULT_ARCH_RESULTS = {
+    aggregate: undefined,
     canCreate: true,
     canDelete: true,
     canEdit: true,
