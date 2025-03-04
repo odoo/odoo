@@ -207,7 +207,7 @@ class MailController(http.Controller):
         if not request.env.user._is_internal():
             thread = request.env[message.model].search([('id', '=', message.res_id)])
             if hasattr(thread, "_get_share_url"):
-                return request.redirect(thread._get_share_url(share_token=False))
+                return request.redirect(f'{thread._get_share_url(share_token=False)}highlight_message_id={message.id}')
             raise Unauthorized()
         # @see commit c63d14a0485a553b74a8457aee158384e9ae6d3f
         # @see router.js: heuristics to discrimate a model name from an action path

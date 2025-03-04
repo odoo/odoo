@@ -1,10 +1,14 @@
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 
+import { router } from "@web/core/browser/router";
 import { patch } from "@web/core/utils/patch";
 import { useRef, onWillPatch, useEffect } from "@odoo/owl";
 
 patch(Chatter.prototype, {
     setup() {
+        this.highlightMessage = router.current.highlight_message_id;
+        router.removeQueryParams("highlight_message_id");
+
         super.setup(...arguments);
         this.topRef = useRef("top");
         onWillPatch(() => {
