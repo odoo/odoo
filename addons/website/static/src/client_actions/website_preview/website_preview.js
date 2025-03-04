@@ -1,15 +1,12 @@
-import { _t } from "@web/core/l10n/translation";
 import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { ResizablePanel } from '@web/core/resizable_panel/resizable_panel';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { redirect } from "@web/core/utils/urls";
-import { session } from "@web/session";
 import { ResourceEditor } from '../../components/resource_editor/resource_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
-import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import wUtils from '@website/js/utils';
 import { renderToElement } from "@web/core/utils/render";
@@ -77,30 +74,7 @@ export class WebsitePreview extends Component {
             this.backendWebsiteId = backendCurrentWebsite[0];
 
             const encodedPath = encodeURIComponent(this.path);
-            if (!session.website_bypass_domain_redirect // Used by the Odoo support (bugs to be expected)
-                    && this.websiteDomain
-                    && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
-                // The website domain might be the naked one while the naked one
-                // is actually redirecting to `www` (or the other way around).
-                // In such a case, we need to consider those 2 from the same
-                // domain and let the iframe load that "different" domain. The
-                // iframe will actually redirect to the correct one (naked/www),
-                // which will ends up with the same domain as the parent window
-                // URL (event if it wasn't, it wouldn't be an issue as those are
-                // really considered as the same domain, the user will share the
-                // same session and CORS errors won't be a thing in such a case)
-                this.dialogService.add(WebsiteDialog, {
-                    title: _t("Redirecting..."),
-                    body: _t("You are about to be redirected to the domain configured for your website ( %s ). This is necessary to edit or view your website from the Website app. You might need to log back in.", this.websiteDomain),
-                    showSecondaryButton: false,
-                }, {
-                    onClose: () => {
-                        window.location.href = `${encodeURI(this.websiteDomain)}/odoo/action-website.website_preview?path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`;
-                    }
-                });
-            } else {
-                this.initialUrl = `/website/force/${encodeURIComponent(this.websiteId)}?path=${encodedPath}`;
-            }
+            this.initialUrl = `/website/force/${encodeURIComponent(this.websiteId)}?path=${encodedPath}`;
         });
 
         useEffect(() => {
