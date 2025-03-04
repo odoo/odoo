@@ -114,7 +114,7 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
         return wizard
 
     @freeze_time('2024-01-01')
-    def test_tax_price_include_on_payment(self):
+    def test_no_withholding_tax_invoice_but_included_one_on_payment(self):
         invoice_tax = self.percent_tax(15)
 
         invoice = self.env['account.move'].create({
@@ -132,6 +132,15 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
             'amount_tax': 150.0,
             'amount_total': 1150.0,
         }])
+        self.assert_invoice_tax_totals_summary(
+            invoice,
+            {
+                'base_amount_currency': 1000.0,
+                'tax_amount_currency': 150.0,
+                'total_amount_currency': 1150.0,
+            },
+            soft_checking=True,
+        )
 
         withholding_tax = self.percent_tax(1, price_include_override='tax_included', is_withholding_tax_on_payment=True)
 
@@ -169,39 +178,57 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
             {'balance': -1000.0,    'tax_ids': []},
         ])
 
-    # def test_withholding_tax_on_payment(self):
-    #     payment_register = self._register_payment()
-    #     # No default withholding tax on the product = no default line in the wizard, as well as the option being disabled by default.
-    #     self.assertFalse(payment_register.withholding_line_ids)
-    #     self.assertFalse(payment_register.withhold_tax)
-    #     # We enable the withholding
-    #     payment_register.withhold_tax = True
-    #     # We add a tax.
-    #     payment_register.withholding_line_ids = [
-    #         Command.create({
-    #             'tax_id': self.tax_sale_b.id,
-    #             'name': '1',
-    #             'original_base_amount': 1000,
-    #             'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
-    #         })
-    #     ]
-    #     # The amount on the tax line should have been computed. The net amount too.
-    #     self.assertEqual(payment_register.withholding_line_ids[0].amount, 1000 * 0.01)
-    #     self.assertEqual(payment_register.withholding_net_amount, 1150 - (1000 * 0.01))
-    #     # The amounts are correct, we register the payment then check the entry
-    #     action = payment_register.action_create_payments()
-    #     payment = self.env['account.payment'].browse(action['res_id'])
-    #     self.assertRecordValues(payment.move_id.line_ids, [
-    #         # Receivable line:
-    #         {'balance': 1140.0, 'currency_id': payment_register.currency_id.id, 'amount_currency': 1140.0},
-    #         # Liquidity line:
-    #         {'balance': -1150.0, 'currency_id': payment_register.currency_id.id, 'amount_currency': -1150.0},
-    #         # withholding line:
-    #         {'balance': 10.0, 'currency_id': payment_register.currency_id.id, 'amount_currency': 10.0},
-    #         # base lines:
-    #         {'balance': 1000.0, 'currency_id': payment_register.currency_id.id, 'amount_currency': 1000.0},
-    #         {'balance': -1000.0, 'currency_id': payment_register.currency_id.id, 'amount_currency': -1000.0},
-    #     ])
+    @freeze_time('2024-01-01')
+    def test_included_withholding_tax_then_excluded_vat_invoice(self):
+        invoice_tax = self.percent_tax(15, include_base_amount=True)
+        withholding_tax = self.percent_tax(10, price_include_override='tax_included', is_withholding_tax_on_payment=True)
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set((invoice_tax + withholding_tax).ids)],
+            })],
+        })
+        invoice.action_post()
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 1000.0,
+            'amount_tax': 150.0,
+            'amount_total': 1150.0,
+        }])
+        self.assert_invoice_tax_totals_summary(
+            invoice,
+            {
+                'base_amount_currency': 1000.0,
+                'tax_amount_currency': 150.0,
+                'total_amount_currency': 1150.0,
+            },
+            soft_checking=True,
+        )
+
+        wizard = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({})
+        self.assertRecordValues(wizard.withholding_line_ids, [{
+            'original_base_amount': 1150.0,
+            'base_amount': 1150.0,
+            'amount': 115.0,
+        }])
+        self.assertRecordValues(wizard, [{'withholding_net_amount': 1035.0}])
+
+        payment = wizard._create_payments()
+        self.assertRecordValues(payment, [{
+            'amount': 1035.0,
+        }])
+        self.assertRecordValues(payment.move_id.line_ids, [
+            {'balance': 1140.0,     'tax_ids': []},
+            {'balance': -1150.0,    'tax_ids': []},
+            {'balance': 10.0,       'tax_ids': []},
+            {'balance': 1000.0,     'tax_ids': withholding_tax.ids},
+            {'balance': -1000.0,    'tax_ids': []},
+        ])
 
     def test_withholding_tax_before_payment(self):
         """
@@ -830,23 +857,3 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
         payment_register.withholding_line_ids[0].base_amount = 999999
         with self.assertRaisesRegex(UserError, 'The net amount cannot be negative.'):
             payment_register.action_create_payments()
-
-    def test_wrong_scenario(self):
-        """ Test for LAS """
-        tax = self.percent_tax(15, include_base_amount=True)
-        wth_tax = self._setup_tax('Withholding Tax 10', 10)
-        wth_tax.is_base_affected = True
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'date': '2024-01-01',
-            'invoice_date': '2024-01-01',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [
-                Command.create({'name': 'test', 'price_unit': 1000.0, 'tax_ids': [(6, 0, (tax + wth_tax).ids)]})
-            ],
-        })
-        invoice.action_post()
-        payment_register = self.env['account.payment.register'].with_context(
-            active_model='account.move.line', active_ids=invoice.line_ids.ids
-        ).create({})
-        self.assertEqual(payment_register.withholding_line_ids[0].base_amount, 1150)
