@@ -19,6 +19,14 @@ export class SubtaskOne2ManyField extends X2ManyField {
             ...defaultValueKeys,
         );
     }
+
+    get rendererProps() {
+        const rendererProps = super.rendererProps;
+        if (this.props.viewMode === "kanban") {
+            rendererProps.openRecord = this.switchToForm.bind(this);
+        }
+        return rendererProps;
+    }
 }
 
 export const subtaskOne2ManyField = {
