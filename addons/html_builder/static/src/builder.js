@@ -22,12 +22,13 @@ import { useSetupAction } from "@web/search/action_hook";
 import { InvisibleElementsPanel } from "./sidebar/invisible_elements_panel";
 import { BlockTab } from "./sidebar/block_tab";
 import { CustomizeTab } from "./sidebar/customize_tab";
+import { ThemeTab } from "./sidebar/theme_tab";
 import { CORE_PLUGINS } from "./core/core_plugins";
 import { EDITOR_COLOR_CSS_VARIABLES, getCSSVariableValue } from "./utils/utils_css";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
-    static components = { BlockTab, CustomizeTab, InvisibleElementsPanel };
+    static components = { BlockTab, CustomizeTab, InvisibleElementsPanel, ThemeTab };
     static props = {
         closeEditor: { type: Function },
         snippetsName: { type: String },
@@ -83,7 +84,7 @@ export class Builder extends Component {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (!currentOptionsContainers.length) {
                             // There is no options, fallback on the blocks tab
-                            this.setTab("blocks");
+                            this.setTab(this.noSelectionTab);
                             return;
                         }
                         this.setTab("customize");
@@ -156,6 +157,7 @@ export class Builder extends Component {
                 this.updateInvisibleEls(nextProps.isMobile);
             }
         });
+        this.noSelectionTab = "blocks";
     }
 
     setCSSVariables() {
@@ -206,6 +208,7 @@ export class Builder extends Component {
 
     setTab(tab) {
         this.state.activeTab = tab;
+        this.noSelectionTab = tab === "theme" ? "theme" : "blocks";
     }
 
     undo() {
