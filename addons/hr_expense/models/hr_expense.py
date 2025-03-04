@@ -875,6 +875,7 @@ class HrExpense(models.Model):
             'amount_currency': amount_currency,
             'currency_id': self.currency_id.id,
             'partner_id': self.vendor_id.id,
+            'quantity': self.quantity,
         }
         move_lines.append(base_move_line)
         total_tax_line_balance = 0.0
