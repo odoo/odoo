@@ -36,6 +36,7 @@ const IMAGE_SIZE = [
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
+    static shared = ["getSelectedImage"];
     resources = {
         user_commands: [
             {
@@ -196,7 +197,7 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.addDomListener(this.editable, "pointerup", (e) => {
-            if (e.target.tagName === "IMG") {
+            if (e.target.tagName === "IMG" && this.getResource("editable_node_predicates").some(p => p(e.target))) {
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
                 this.dependencies.selection.setSelection({
                     anchorNode,
@@ -263,10 +264,16 @@ export class ImagePlugin extends Plugin {
         if (!selectedImg) {
             return;
         }
+        let imageName;
+        // Keep the result from the first predicate that returns something.
+        this.getResource("image_name_predicates").find(p => {
+            imageName = p(selectedImg);
+            return imageName;
+        });
         const fileModel = {
             isImage: true,
             isViewable: true,
-            name: selectedImg.src,
+            name: imageName || selectedImg.src,
             defaultSource: selectedImg.src,
             downloadUrl: selectedImg.src,
         };
@@ -276,7 +283,7 @@ export class ImagePlugin extends Plugin {
 
     deleteImage() {
         const selectedImg = this.getSelectedImage();
-        if (selectedImg) {
+        if (selectedImg && !this.delegateTo("delete_image_handlers", selectedImg)) {
             const cursors = this.dependencies.selection.preserveSelection();
             cursors.update(callbacksForCursorUpdate.remove(selectedImg));
             const parentEl = closestBlock(selectedImg);

@@ -5,6 +5,7 @@ import {
     isProtected,
     isProtecting,
     isUnprotecting,
+    isSelfClosingElement,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
 import {
@@ -19,7 +20,6 @@ import { Plugin } from "../plugin";
 import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
-    normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
@@ -154,10 +154,12 @@ export class SelectionPlugin extends Plugin {
         "focusEditable",
         // "collapseIfZWS",
         "isSelectionInEditable",
+        "normalizeCursorPosition",
     ];
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
         shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
+        editable_node_predicates: this.isNodeEditable.bind(this),
     };
 
     setup() {
@@ -250,7 +252,7 @@ export class SelectionPlugin extends Plugin {
             };
         } else {
             range = selection.getRangeAt(0);
-            let { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
+            let { anchorNode, anchorOffset, focusNode, focusOffset, isCollapsed } = selection;
             let direction =
                 anchorNode === range.startContainer ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
             if (anchorNode === focusNode && focusOffset < anchorOffset) {
@@ -265,17 +267,56 @@ export class SelectionPlugin extends Plugin {
                 // inside a protected zone.
                 return this.activeSelection;
             }
-            [anchorNode, anchorOffset] = normalizeCursorPosition(
+
+            let [startContainer, startOffset, endContainer, endOffset] =
+                direction === DIRECTIONS.RIGHT
+                    ? [anchorNode, anchorOffset, focusNode, focusOffset]
+                    : [focusNode, focusOffset, anchorNode, anchorOffset];
+            activeSelection = {
                 anchorNode,
                 anchorOffset,
-                direction ? "left" : "right"
-            );
-            [focusNode, focusOffset] = normalizeCursorPosition(
                 focusNode,
                 focusOffset,
-                direction ? "right" : "left"
-            );
-            const [startContainer, startOffset, endContainer, endOffset] =
+                startContainer,
+                startOffset,
+                endContainer,
+                endOffset,
+                commonAncestorContainer: range.commonAncestorContainer,
+                isCollapsed,
+                direction,
+                textContent: () => (isCollapsed ? "" : selection.toString()),
+                intersectsNode: node => range.intersectsNode(node),
+            };
+
+            // If all the selected nodes are editable, there is no need to
+            // normalize for editable: we know the target is valid.
+            const selectedNodes = !isCollapsed && this.getSelectedNodes(activeSelection);
+            const isSelectionTargetingEditableNodes =
+                selectedNodes?.length && selectedNodes.every(node => (
+                    this.getResource("editable_node_predicates").some(p => p(node))
+                ));
+            if (isSelectionTargetingEditableNodes) {
+                [anchorNode, anchorOffset] = this.normalizeSelfClosingElement(
+                    anchorNode,
+                    anchorOffset,
+                );
+                [focusNode, focusOffset] = this.normalizeSelfClosingElement(
+                    focusNode,
+                    focusOffset,
+                );
+            } else {
+                [anchorNode, anchorOffset] = this.normalizeCursorPosition(
+                    anchorNode,
+                    anchorOffset,
+                    direction ? "left" : "right"
+                );
+                [focusNode, focusOffset] = this.normalizeCursorPosition(
+                    focusNode,
+                    focusOffset,
+                    direction ? "right" : "left"
+                );
+            }
+            [startContainer, startOffset, endContainer, endOffset] =
                 direction === DIRECTIONS.RIGHT
                     ? [anchorNode, anchorOffset, focusNode, focusOffset]
                     : [focusNode, focusOffset, anchorNode, anchorOffset];
@@ -456,10 +497,38 @@ export class SelectionPlugin extends Plugin {
             throw new Error("Selection is not in editor");
         }
         const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
-        [focusNode, focusOffset] = normalizeCursorPosition(focusNode, focusOffset, "right");
-        [anchorNode, anchorOffset] = isCollapsed
-            ? [focusNode, focusOffset]
-            : normalizeCursorPosition(anchorNode, anchorOffset, "left");
+        // If all the selected nodes are editable, there is no need to
+        // normalize: we know the parent is not self closing  by definition
+        // (or it wouldn't have children), and that the target is valid.
+        const range = new Range();
+        range.setStart(anchorNode, anchorOffset);
+        range.setEnd(focusNode, focusOffset);
+        const selectedNodes = !isCollapsed && this.getSelectedNodes(
+        {
+            anchorNode, startContainer: anchorNode,
+            anchorOffset, startOffset: anchorOffset,
+            focusNode, endContainer: focusNode,
+            focusOffset, endOffset: focusOffset,
+            commonAncestorContainer: range.commonAncestorContainer,
+            isCollapsed,
+            textContent: () => (isCollapsed ? "" : range.toString()),
+            intersectsNode: node => range.intersectsNode(node),
+        });
+        const isSelectionTargetingEditableNodes =
+            selectedNodes?.length && selectedNodes.every(node => (
+                this.getResource("editable_node_predicates").some(p => p(node))
+            ));
+        if (isSelectionTargetingEditableNodes) {
+            [focusNode, focusOffset] = this.normalizeSelfClosingElement(focusNode, focusOffset);
+            [anchorNode, anchorOffset] = isCollapsed
+                ? [focusNode, focusOffset]
+                : this.normalizeSelfClosingElement(anchorNode, anchorOffset);
+        } else {
+            [focusNode, focusOffset] = this.normalizeCursorPosition(focusNode, focusOffset, "right");
+            [anchorNode, anchorOffset] = isCollapsed
+                ? [focusNode, focusOffset]
+                : this.normalizeCursorPosition(anchorNode, anchorOffset, "left");
+        }
         if (normalize) {
             // normalize selection
             [anchorNode, anchorOffset] = normalizeDeepCursorPosition(anchorNode, anchorOffset);
@@ -580,10 +649,11 @@ export class SelectionPlugin extends Plugin {
     /**
      * Returns an array containing all the nodes fully contained in the selection.
      *
+     * @param { EditorSelection } [selection]
      * @returns {Node[]}
      */
-    getSelectedNodes() {
-        const selection = this.getSelectionData().editableSelection;
+    getSelectedNodes(selection) {
+        selection = selection || this.getSelectionData().editableSelection;
         const range = new Range();
         range.setStart(selection.startContainer, selection.startOffset);
         range.setEnd(selection.endContainer, selection.endOffset);
@@ -592,7 +662,7 @@ export class SelectionPlugin extends Plugin {
             this.getResource("fully_selected_node_predicates").some((cb) => cb(node, selection)) ||
             // Default rule
             (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)));
-        return this.getTraversedNodes().filter(isNodeFullySelected);
+        return this.getTraversedNodes(selection).filter(isNodeFullySelected);
     }
 
     isNodeContentsFullySelected(node) {
@@ -613,10 +683,11 @@ export class SelectionPlugin extends Plugin {
      * Returns the nodes intersected by the current selection, up to the common
      * ancestor container (inclusive).
      *
+     * @param { EditorSelection } [selection]
      * @returns {Node[]}
      */
-    getTraversedNodes() {
-        const selection = this.getSelectionData().deepEditableSelection;
+    getTraversedNodes(selection) {
+        selection = selection || this.getSelectionData().deepEditableSelection;
         const { commonAncestorContainer: root } = selection;
 
         let traversedNodes = [
@@ -646,10 +717,11 @@ export class SelectionPlugin extends Plugin {
     /**
      * Returns a Set of traversed blocks within the given range.
      *
+     * @param { EditorSelection } [selection]
      * @returns {Set<HTMLElement>}
      */
-    getTraversedBlocks() {
-        return new Set(this.getTraversedNodes().map(closestBlock).filter(Boolean));
+    getTraversedBlocks(selection) {
+        return new Set(this.getTraversedNodes(selection).map(closestBlock).filter(Boolean));
     }
     resetActiveSelection() {
         const selection = this.document.getSelection();
@@ -774,6 +846,37 @@ export class SelectionPlugin extends Plugin {
         }
         this.activeSelection = this.makeActiveSelection(selection);
         return this.activeSelection;
+    }
+
+    normalizeSelfClosingElement(node, offset) {
+        if (isSelfClosingElement(node)) {
+            // Cannot put cursor inside those elements, put it after instead.
+            [node, offset] = rightPos(node);
+        }
+        return [node, offset];
+    }
+
+    normalizeNotEditableNode(node, offset, position = "right") {
+        // Should move if the node's contents aren't editable.
+        let closest = closestElement(node);
+        while (closest && closest !== this.editable && !closest.isContentEditable) {
+            [node, offset] = position === "right" ? rightPos(node) : leftPos(node);
+            closest = node;
+        }
+        return [node, offset];
+    }
+
+    normalizeCursorPosition(node, offset, position = "right") {
+        [node, offset] = this.normalizeSelfClosingElement(node, offset);
+        [node, offset] = this.normalizeNotEditableNode(node, offset, position);
+        // todo @phoenix: we should maybe remove it
+        // // Be permissive about the received offset.
+        // offset = Math.min(Math.max(offset, 0), nodeSize(node));
+        return [node, offset];
+    }
+
+    isNodeEditable(node) {
+        return node.parentElement?.isContentEditable;
     }
 
     /**
