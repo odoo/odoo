@@ -50,7 +50,7 @@ class SaleOrder(models.Model):
             ('product_id.type', '=', 'service'),
         ], aggregates=['order_id:array_agg'])[0][0]
         for order in self:
-            order.show_project_button = order.id in show_button_ids and order.project_count
+            order.show_project_button = order.state not in ['draft', 'sent'] and order.project_count
             order.show_task_button = order.show_project_button or order.tasks_count
             order.show_create_project_button = (
                 is_project_manager
@@ -108,10 +108,11 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
         is_project_manager = self.env.user.has_group('project.group_project_manager')
-        projects = self.env['project.project'].search([('sale_order_id', 'in', self.ids)])
+        projects = self.env['project.project'].search(['|', ('sale_order_id', 'in', self.ids), ('reinvoiced_sale_order_id', 'in', self.ids)])
         projects_per_so = defaultdict(lambda: self.env['project.project'])
         for project in projects:
             projects_per_so[project.sale_order_id.id] |= project
+            projects_per_so[project.reinvoiced_sale_order_id.id] |= project
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.order_line.mapped('project_id')
