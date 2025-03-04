@@ -30,7 +30,6 @@ PROJECT_TASK_READABLE_FIELDS = {
     'create_date',
     'write_date',
     'company_id',
-    'displayed_image_id',
     'display_name',
     'portal_user_names',
     'user_ids',
@@ -71,6 +70,7 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'priority',
     'state',
     'is_closed',
+    'displayed_image_id',
 }
 
 CLOSED_STATES = {

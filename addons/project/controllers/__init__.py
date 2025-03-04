@@ -3,4 +3,5 @@
 
 from . import portal
 from . import project_sharing_chatter
+from . import project_sharing_cover_img
 from . import thread

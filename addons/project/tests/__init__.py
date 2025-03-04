@@ -10,6 +10,7 @@ from . import test_project_milestone
 from . import test_project_profitability
 from . import test_project_recurrence
 from . import test_project_sharing
+from . import test_project_sharing_cover_img_controller
 from . import test_project_sharing_portal_access
 from . import test_project_sharing_ui
 from . import test_project_stage_multicompany

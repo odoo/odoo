@@ -37,6 +37,7 @@
                 <progressbar field="state" colors='{"1_done": "success", "03_approved": "success", "02_changes_requested": "warning", "1_canceled": "danger", "04_waiting_normal": "200", "01_in_progress": "200"}'/>
                 <templates>
                 <t t-name="menu" t-if="!selection_mode">
+                    <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                     <div role="separator" class="dropdown-divider"></div>
                     <field name="color" widget="kanban_color_picker"/>
                 </t>
@@ -51,7 +52,7 @@
                     </div>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" context="{'project_id': project_id}"/>
                     <field t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']" widget="remaining_days"/>
-                    <field t-if="record.displayed_image_id.value" groups="base.group_user" name="displayed_image_id" widget="attachment_image"/>
+                    <field name="displayed_image_id" widget="attachment_image"/>
                     <footer t-if="!selection_mode">
                         <field name="priority" class="me-2" widget="priority"/>
                         <div class="d-flex ms-auto text-truncate">

@@ -21,17 +21,21 @@ export class KanbanCoverImageDialog extends Component {
             selectedAttachmentId: attachment[0],
         });
         onWillStart(async () => {
-            this.attachments = await this.orm.searchRead(
+            this.attachments = await this._getAttachments();
+            this.state.selectFile = this.props.autoOpen && this.attachments.length;
+        });
+    }
+
+    async _getAttachments() {
+        return await this.orm.searchRead(
                 "ir.attachment",
                 [
-                    ["res_model", "=", record.resModel],
-                    ["res_id", "=", record.resId],
+                    ["res_model", "=", this.props.record.resModel],
+                    ["res_id", "=", this.props.record.resId],
                     ["mimetype", "ilike", "image"],
                 ],
                 ["id"]
             );
-            this.state.selectFile = this.props.autoOpen && this.attachments.length;
-        });
     }
 
     get hasCoverImage() {
