@@ -16,6 +16,11 @@ class WebsiteSnippetFilter(models.Model):
             " cross selling",
     )
 
+    def _get_applicable_domain_for_published(self, model):
+        if (model == 'product.product'):
+            return []
+        return super()._get_applicable_domain_for_published(model)
+
     def _prepare_values(self, **kwargs):
         website = self.env['website'].get_current_website()
         if self.model_name == 'product.product' and not website.has_ecommerce_access():
