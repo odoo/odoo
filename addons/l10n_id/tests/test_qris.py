@@ -93,6 +93,11 @@ class TestQris(AccountTestInvoicingCommon):
             result = self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
             self.assertIsNotNone(result)
 
+            # when generating qr code, cliTrxNumber should not be empty string as it cannot
+            # generate QR code in practice
+            qr_param = patched.call_args[0][1]
+            self.assertTrue(qr_param.get('cliTrxNumber'))
+
             # Confirm that a transaction should be registered on the invoice
             qr_details = self.qris_qr_invoice.l10n_id_qris_transaction_ids
             self.assertEqual(len(qr_details), 1)
