@@ -134,16 +134,49 @@ describe("range not collapsed", () => {
                 contentAfter: '<p>a<a href="exist">bc</a>[d]e</p>',
             });
         });
+        test("should remove fully selected button link by toolbar unlink button", async () => {
+            await testEditor({
+                contentBefore: '<p>a<a href="exist" class="btn btn-primary">[bcd]</a>e</p>',
+                stepFunction: unlinkFromToolbar,
+                contentAfterEdit: "<p>a[bcd]e</p>",
+                contentAfter: "<p>a[bcd]e</p>",
+            });
+        });
+        test("should remove fully selected button link along with text by toolbar unlink button", async () => {
+            await testEditor({
+                contentBefore: '<p>a<a href="exist" class="btn btn-primary">[bcd</a>ef]g</p>',
+                stepFunction: unlinkFromToolbar,
+                contentAfterEdit: "<p>a[bcdef]g</p>",
+                contentAfter: "<p>a[bcdef]g</p>",
+            });
+        });
+        test("should remove fully selected button link along with text by toolbar unlink button (2)", async () => {
+            await testEditor({
+                contentBefore: '<p>a[bc<a href="exist" class="btn btn-primary">def]</a>g</p>',
+                stepFunction: unlinkFromToolbar,
+                contentAfterEdit: "<p>a[bcdef]g</p>",
+                contentAfter: "<p>a[bcdef]g</p>",
+            });
+        });
+        test("should remove fully selected formatted button link by toolbar unlink button", async () => {
+            await testEditor({
+                contentBefore: '<p>a<a href="exist" class="btn btn-primary"><i>[bcd]</i></a>e</p>',
+                stepFunction: unlinkFromToolbar,
+                contentAfterEdit: "<p>a<i>[bcd]</i>e</p>",
+                contentAfter: "<p>a<i>[bcd]</i>e</p>",
+            });
+        });
     });
     describe("remove by command", () => {
-        test("should remove the link in the selected range at the end of a link", async () => {
+        test("should remove the link in the selected range at the end of a link (2)", async () => {
             // FORWARD
             await testEditor({
-                contentBefore: '<p>a<a href="exist">bc[d]</a>e</p>',
+                contentBefore: '<p>a<a href="exist" class="btn btn-primary">bc[d]</a>e</p>',
                 stepFunction: async (editor) => {
                     await unlinkByCommand(editor);
                 },
-                contentAfter: '<p>a<a href="exist">bc</a>[d]e</p>',
+                contentAfterEdit:
+                    '<p>a\ufeff<a href="exist" class="btn btn-primary">\ufeffbc\ufeff</a>\ufeff[d]e</p>',
             });
             // BACKWARD
             await testEditor({
@@ -181,7 +214,7 @@ describe("range not collapsed", () => {
                 stepFunction: async (editor) => {
                     await unlinkByCommand(editor);
                 },
-                contentAfter: '<p>a[b]<a href="exist">cd</a>e</p>',
+                contentAfterEdit: '<p>a[b]\ufeff<a href="exist">\ufeffcd\ufeff</a>\ufeffe</p>',
             });
             // BACKWARD
             await testEditor({
@@ -189,7 +222,7 @@ describe("range not collapsed", () => {
                 stepFunction: async (editor) => {
                     await unlinkByCommand(editor);
                 },
-                contentAfter: '<p>a]b[<a href="exist">cd</a>e</p>',
+                contentAfterEdit: '<p>a]b[\ufeff<a href="exist">\ufeffcd\ufeff</a>\ufeffe</p>',
             });
         });
 
@@ -200,7 +233,7 @@ describe("range not collapsed", () => {
                 stepFunction: async (editor) => {
                     await unlinkByCommand(editor);
                 },
-                contentAfter: '<p>a<a href="exist">bc</a>[de]f</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="exist">\ufeffbc\ufeff</a>\ufeff[de]f</p>',
             });
             // BACKWARD
             await testEditor({
@@ -208,7 +241,7 @@ describe("range not collapsed", () => {
                 stepFunction: async (editor) => {
                     await unlinkByCommand(editor);
                 },
-                contentAfter: '<p>a<a href="exist">bc</a>]de[f</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="exist">\ufeffbc\ufeff</a>\ufeff]de[f</p>',
             });
         });
 
@@ -219,7 +252,7 @@ describe("range not collapsed", () => {
                 stepFunction: async (editor) => {
                     await unlinkByCommand(editor);
                 },
-                contentAfter: '<p>a[bc]<a href="exist">de</a>f</p>',
+                contentAfterEdit: '<p>a[bc]\ufeff<a href="exist">\ufeffde\ufeff</a>\ufefff</p>',
             });
             // BACKWARD
             await testEditor({
@@ -227,7 +260,7 @@ describe("range not collapsed", () => {
                 stepFunction: async (editor) => {
                     await unlinkByCommand(editor);
                 },
-                contentAfter: '<p>a]bc[<a href="exist">de</a>f</p>',
+                contentAfterEdit: '<p>a]bc[\ufeff<a href="exist">\ufeffde\ufeff</a>\ufefff</p>',
             });
         });
 
@@ -238,7 +271,7 @@ describe("range not collapsed", () => {
                 stepFunction: async (editor) => {
                     await unlinkByCommand(editor);
                 },
-                contentAfter: '<p>[ab<a contenteditable="false" href="exist">cd</a>ef]</p>',
+                contentAfterEdit: '<p>[ab<a contenteditable="false" href="exist">cd</a>ef]</p>',
             });
         });
     });
