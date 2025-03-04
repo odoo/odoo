@@ -34,6 +34,9 @@ class L10nLatamDocumentType(models.Model):
 
         return document_number.zfill(6)
 
+    def _is_doc_type_credit_note(self):
+        return self.code == '61'
+
     def _is_doc_type_vendor(self):
         return self.code == '46'
 
