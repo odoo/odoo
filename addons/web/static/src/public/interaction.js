@@ -44,6 +44,12 @@ export class Interaction {
     static selectorHas = "";
 
     /**
+     * Map to track which template files have been loaded for interactions
+     * Shared across all interaction instances
+     */
+    static loadedTemplates = new Set();
+
+    /**
      * Note that a dynamic selector is allowed to return a falsy value, for ex
      * the result of a querySelector. In that case, the directive will simply be
      * ignored.
@@ -193,9 +199,20 @@ export class Interaction {
 
         //     await Promise.all(templatePromises);
         // }
+        // if (this.xmlTemplates) {
+        //     const templatePromises = Object.entries(this.xmlTemplates).map(async ([name, path]) => {
+        //         await loadXML(path);
+        //     });
+        //     await Promise.all(templatePromises);
+        // }
         if (this.xmlTemplates) {
             const templatePromises = Object.entries(this.xmlTemplates).map(async ([name, path]) => {
-                await loadXML(path);
+                // Only load if not already loaded
+                if (!Interaction.loadedTemplates.has(path)) {
+                    debugger;
+                    await loadXML(path);
+                    Interaction.loadedTemplates.add(path);
+                }
             });
             await Promise.all(templatePromises);
         }
