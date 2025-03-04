@@ -514,6 +514,11 @@ class account_journal(models.Model):
                 'image': '/account/static/src/img/bank.svg' if journal.type in ('bank', 'credit') else '/web/static/img/rfq.svg',
                 'text': _('Drop to import transactions'),
             }
+            last_statement_visible = (
+                not journal.company_id.fiscalyear_lock_date
+                or journal.last_statement_id.date
+                and journal.company_id.fiscalyear_lock_date < journal.last_statement_id.date
+            )
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
@@ -526,9 +531,7 @@ class account_journal(models.Model):
                 'nb_lines_outstanding_pay_account_balance': has_outstanding,
                 'last_balance': currency.format(journal.last_statement_id.balance_end_real),
                 'last_statement_id': journal.last_statement_id.id,
-                'last_statement_date': str(journal.last_statement_id.date),
-                'lock_date': str(journal.company_id.fiscalyear_lock_date),
-                'last_statement_visible': not journal.company_id.fiscalyear_lock_date or journal.last_statement_id.date and journal.company_id.fiscalyear_lock_date < journal.last_statement_id.date,
+                'last_statement_visible': last_statement_visible,
                 'has_invalid_statements': journal.has_invalid_statements,
                 'bank_statements_source': journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
@@ -1097,8 +1100,7 @@ class account_journal(models.Model):
 
     def open_invalid_statements_action(self):
         self.ensure_one()
-        action = self.env["ir.actions.act_window"]._for_xml_id('account.action_bank_statement_tree')
-        return action
+        return self.env["ir.actions.act_window"]._for_xml_id('account.action_bank_statement_tree')
 
     def _show_sequence_holes(self, domain):
         return {

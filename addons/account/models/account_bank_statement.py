@@ -76,11 +76,6 @@ class AccountBankStatement(models.Model):
         string='Statement lines',
     )
 
-    line_ids_count = fields.Integer(
-        string="Transactions",
-        compute="_compute_line_ids_count"
-    )
-
     # A statement assumed to be complete when the sum of encoded lines is equal to the difference between start and
     # end balances.
     is_complete = fields.Boolean(
@@ -127,11 +122,6 @@ class AccountBankStatement(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
-
-    @api.depends('line_ids')
-    def _compute_line_ids_count(self):
-        for stmt in self:
-            stmt.line_ids_count = len(stmt.line_ids)
 
     @api.depends('create_date')
     def _compute_name(self):

@@ -230,10 +230,14 @@ class AccountJournal(models.Model):
     ]
 
     def _compute_has_invalid_statements(self):
-        invalid_statements_domain = [('journal_id', 'in', self.ids), '|', ('is_valid', '=', False), ('is_complete', '=', False)]
-        journals_with_invalid_statements = self.env['account.bank.statement'].search(invalid_statements_domain).mapped('journal_id')
-        (self - journals_with_invalid_statements).has_invalid_statements = False
+        journals_with_invalid_statements = self.env['account.bank.statement'].search([
+            ('journal_id', 'in', self.ids), 
+            '|',
+            ('is_valid', '=', False),
+            ('is_complete', '=', False),
+        ]).journal_id
         journals_with_invalid_statements.has_invalid_statements = True
+        (self - journals_with_invalid_statements).has_invalid_statements = False
 
     def _compute_display_alias_fields(self):
         self.display_alias_fields = self.env['mail.alias.domain'].search_count([], limit=1)

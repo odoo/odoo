@@ -443,7 +443,6 @@ class AccountBankStatementLine(models.Model):
 
     def unlink(self):
         # OVERRIDE to unlink the inherited account.move (move_id field) as well.
-        self._check_allow_unlink()
         tracked_lines = self.filtered(lambda stl: stl.company_id.check_account_audit_trail)
         tracked_lines.move_id.button_cancel()
         moves_to_delete = (self - tracked_lines).move_id
@@ -490,9 +489,9 @@ class AccountBankStatementLine(models.Model):
     # HELPERS
     # -------------------------------------------------------------------------
 
+    @api.ondelete(at_uninstall=False)
     def _check_allow_unlink(self):
-        valid_statements = self.statement_id.filtered(lambda stmt: stmt.is_valid and stmt.is_complete)
-        if valid_statements:
+        if self.statement_id.filtered(lambda stmt: stmt.is_valid and stmt.is_complete):
             raise UserError(_("You can not delete a transaction from a valid statement.\n"
                               "If you want to delete it, please remove the statement first."))
 
