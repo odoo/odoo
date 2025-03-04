@@ -524,9 +524,9 @@ describe("Link creation", () => {
             const { el } = await setupEditor("<p>H[ello</p><p>wor]ld</p>");
             await waitFor(".o-we-toolbar");
             // link button should be disabled
-            expect('.o-we-toolbar button[title="Link"]').toHaveClass("disabled");
-            expect('.o-we-toolbar button[title="Link"]').toHaveAttribute("disabled");
-            await click('.o-we-toolbar button[title="Link"]');
+            expect('.o-we-toolbar button[name="link"]').toHaveClass("disabled");
+            expect('.o-we-toolbar button[name="link"]').toHaveAttribute("disabled");
+            await click('.o-we-toolbar button[name="link"]');
             expect(getContent(el)).toBe("<p>H[ello</p><p>wor]ld</p>");
         });
         test("when you open link popover with a label, url input should be focus by default ", async () => {

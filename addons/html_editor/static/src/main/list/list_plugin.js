@@ -97,7 +97,7 @@ export class ListPlugin extends Plugin {
             withSequence(5, {
                 id: "list",
                 groupId: "layout",
-                title: _t("List"),
+                description: _t("Toggle List"),
                 Component: ListSelector,
                 props: {
                     getButtons: () => this.listSelectorButtons,
@@ -1069,6 +1069,8 @@ export class ListPlugin extends Plugin {
     getListSelectorButtons() {
         return listSelectorItems.map((item) => {
             const command = this.resources.user_commands.find((cmd) => cmd.id === item.commandId);
+            // We want short descriptions for these buttons.
+            item.description = command.title;
             return composeToolbarButton(command, item);
         });
     }

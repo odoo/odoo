@@ -27,7 +27,7 @@ export class MediaPlugin extends Plugin {
         user_commands: [
             {
                 id: "replaceImage",
-                title: _t("Replace media"),
+                description: _t("Replace media"),
                 icon: "fa-exchange",
                 run: this.replaceImage.bind(this),
             },

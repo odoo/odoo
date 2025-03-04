@@ -36,7 +36,7 @@ export class FontFamilyPlugin extends Plugin {
             withSequence(15, {
                 id: "font-family",
                 groupId: "font",
-                title: _t("Font family"),
+                description: _t("Select font family"),
                 Component: FontFamilySelector,
                 props: {
                     fontFamilyItems: fontFamilyItems,
