@@ -5603,3 +5603,44 @@ test(`calendar renderer is rendered once after search refresh`, async () => {
     await validateSearch();
     expect.verifySteps(["rendered"]);
 });
+
+test.tags("desktop");
+test(`calendar with filters and count aggregate`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" aggregate="id:count">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" filter_field="is_checked"/>
+            </calendar>
+        `,
+    });
+
+    expect(queryAllTexts(".o_calendar_filter_item span")).toEqual(["partner 1", "2", "partner 2"]);
+});
+
+test.tags("desktop");
+test(`calendar with dynamic filters and sum aggregate`, async () => {
+    Event._fields.revenue = fields.Float();
+    Event._records[0].revenue = 1200;
+    Event._records[1].revenue = 350;
+    Event._records[2].revenue = 800;
+    Event._records[3].revenue = 3000;
+    Event._records[4].revenue = 1900;
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" aggregate="revenue:sum">
+                <field name="partner_id" filters="1"/>
+            </calendar>
+        `,
+    });
+
+    expect(queryAllTexts(".o_calendar_filter_item span")).toEqual([
+        "partner 1",
+        "4,550",
+        "partner 4",
+        "2,700",
+    ]);
+});
