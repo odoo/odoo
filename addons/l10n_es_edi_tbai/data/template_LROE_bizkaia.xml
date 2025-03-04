@@ -175,7 +175,7 @@
                                 <BaseImponible t-out="format_float(tax['base'])"/>
                                 <TipoImpositivo t-out="tax['rec'].amount"/>
                                 <CuotaIVASoportada t-out="format_float(tax['tax'])"/>
-                                <CuotaIVADeducible t-out="format_float(tax['tax'])"/>
+                                <CuotaIVADeducible t-out="format_float(tax['tax']) if tax['rec'].l10n_es_type != 'no_deducible' else '0.00'"/>
                             </DetalleIVA>
                         </IVA>
                         <RentaIVA t-elif="freelancer">
@@ -185,7 +185,7 @@
                                 <BaseImponible t-out="format_float(tax['base'])"/>
                                 <TipoImpositivo t-out="tax['rec'].amount"/>
                                 <CuotaIVASoportada t-out="format_float(tax['tax'])"/>
-                                <CuotaIVADeducible t-out="format_float(tax['tax'])"/>
+                                <CuotaIVADeducible t-out="format_float(tax['tax']) if tax['rec'].l10n_es_type != 'no_deducible' else '0.00'"/>
                             </DetalleRentaIVA>
                         </RentaIVA>
                     </t>
