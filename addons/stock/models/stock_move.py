@@ -242,6 +242,8 @@ class StockMove(models.Model):
         for move in self:
             if move.state == 'done' or any(ml.picked for ml in move.move_line_ids):
                 move.picked = True
+            elif move.move_line_ids:
+                move.picked = False
 
     def _inverse_picked(self):
         for move in self:
