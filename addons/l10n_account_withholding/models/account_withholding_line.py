@@ -51,9 +51,9 @@ class AccountWithholdingLine(models.AbstractModel):
         comodel_name='res.currency',
         compute='_compute_currency_id',
     )
-    tax_base_account_id = fields.Many2one(
+    account_id = fields.Many2one(
         comodel_name='account.account',
-        compute='_compute_tax_base_account_id',  # To support using the default one on payment withholding lines.
+        compute='_compute_account_id',
         store=True,
         readonly=False,
         required=True,
@@ -68,23 +68,27 @@ class AccountWithholdingLine(models.AbstractModel):
         ],
         compute='_compute_comodel_payment_type',
     )
+    # todo
+    """
+    Remove all logic computing the tax amount here, and we keep it on the wizard and payment.
+    """
 
     # --------------------------------
     # Compute, inverse, search methods
     # --------------------------------
 
-    @api.depends('tax_id', 'base_amount')
-    def _compute_amount(self):
-        AccountTax = self.env['account.tax']
-        for line in self:
-            if not line.tax_id:
-                line.amount = 0.0
-            else:
-                base_line = line._prepare_base_line_for_taxes_computation()
-                AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
-                AccountTax._round_base_lines_tax_details([base_line], self.company_id)
-                tax_details = base_line['tax_details']
-                line.amount = sum(tax_data['tax_amount_currency'] for tax_data in tax_details['taxes_data'])
+    # @api.depends('tax_id', 'base_amount')
+    # def _compute_amount(self):
+    #     AccountTax = self.env['account.tax']
+    #     for line in self:
+    #         if not line.tax_id:
+    #             line.amount = 0.0
+    #         else:
+    #             base_line = line._prepare_base_line_for_taxes_computation()
+    #             AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
+    #             AccountTax._round_base_lines_tax_details([base_line], self.company_id)
+    #             tax_details = base_line['tax_details']
+    #             line.amount = sum(tax_data['tax_amount_currency'] for tax_data in tax_details['taxes_data'])
 
     @api.depends('original_base_amount')
     def _compute_base_amount(self):
@@ -98,9 +102,9 @@ class AccountWithholdingLine(models.AbstractModel):
                 line.base_amount = line.custom_user_amount
 
     @api.depends('company_id')
-    def _compute_tax_base_account_id(self):
+    def _compute_account_id(self):
         for line in self:
-            line.tax_base_account_id = line.tax_base_account_id or line.company_id.withholding_tax_base_account_id
+            line.account_id = line.account_id or line.company_id.withholding_tax_base_account_id
 
     # The following computes are related to the comodel (payment or register payment wizard) and are needed for various computations.
 
@@ -169,34 +173,6 @@ class AccountWithholdingLine(models.AbstractModel):
     # Business methods
     # ----------------
 
-    # def _get_withholding_tax_values(self):
-    #     """ Helper that uses compute_all in order to return the tax details.
-    #     We use handle_price_include to False; because we expect the same computation to happen for both price included and excluded.
-    #     """
-    #     self.ensure_one()
-    #     amount = self.base_amount
-    #     if not self.tax_id.price_include:
-    #         # On invoices, we get a price_unit without any taxes. Here, the base already "includes" the tax so we need to fix that to get the correct result.
-    #         amount = amount - (amount * (self.tax_id.amount/100))
-    #
-    #     tax_values = self.tax_id.with_context(include_withholding_taxes=True).compute_all(price_unit=amount, currency=self.currency_id)
-    #     return [{
-    #         'amount': tax['amount'],
-    #         'account': tax['account_id'],
-    #         'tax_repartition_line': tax['tax_repartition_line_id'],
-    #         'tax_name': tax['name'],
-    #         'tax_base_amount': tax['base'],
-    #         'tag_ids': tax['tag_ids'],
-    #     } for tax in tax_values['taxes']]
-
-    # def _get_withholding_tax_base_tag_ids(self):
-    #     """ Helper which returns the tax tags applied to the base repartition line for the withholding lines in self. """
-    #     tag_ids = set()
-    #     for line in self:
-    #         tax_values = line.tax_id.with_context(include_withholding_taxes=True).compute_all(price_unit=line.base_amount, currency=line.currency_id)
-    #         tag_ids.update(tax_values['base_tags'])
-    #     return tag_ids
-
     def _get_default_base_amount(self):
         """ Helper which retrieves the original base amount, in the comodel currency.
         It takes into account the ratio calculated based on the payment original and current amount.
@@ -222,38 +198,6 @@ class AccountWithholdingLine(models.AbstractModel):
         )
         return cc_original_base_amount * ratio
 
-    # def _prepare_withholding_line_vals_data(self):
-    #     """ Helper to prepare and format the date required by _prepare_withholding_line_vals. """
-    #     # Some data is going to be the same for all withholding lines of a same record.
-    #     # As this is expected to be called in this case, these values should always be the same.
-    #     data = {
-    #         'currency_id': self[0].currency_id.id,
-    #         'date': self[0].comodel_date,
-    #         'company_id': self[0].company_id.id,
-    #         'payment_type': self[0].comodel_payment_type,
-    #         'withholding_line_vals': [],
-    #     }
-    #     for line in self:
-    #         withholding_tax_values = line._get_withholding_tax_values()
-    #         for tax in withholding_tax_values:
-    #             tax_account = tax['account']
-    #             if not tax_account:
-    #                 raise UserError(self.env._('Please define a tax account on the distribution of the tax %(tax_name)s', tax_name=tax['tax_name']))
-    #
-    #         if not line.name:
-    #             line.name = line.tax_id.withholding_sequence_id.next_by_id()
-    #
-    #         data['withholding_line_vals'].append({
-    #             'withholding_tax_values': withholding_tax_values,
-    #             'name': line.name,
-    #             'base_amount': line.base_amount,
-    #             'base_tag_ids': line._get_withholding_tax_base_tag_ids(),
-    #             'tax_id': line.tax_id.id,
-    #             'analytic_distribution': line.analytic_distribution,
-    #             'tax_base_account': line.tax_base_account_id,
-    #         })
-    #     return data
-
     def _prepare_base_line_for_taxes_computation(self):
         self.ensure_one()
         company = self.company_id
@@ -270,7 +214,8 @@ class AccountWithholdingLine(models.AbstractModel):
             special_mode='total_included',
             rate=conversion_rate,
             sign=sign,
-            account_id=self.tax_base_account_id,
+            account_id=self.account_id,
+            calculate_withholding_taxes=True,
         )
 
     def _prepare_withholding_line_vals(self):
@@ -294,6 +239,9 @@ class AccountWithholdingLine(models.AbstractModel):
         # Convert them to base lines to compute the taxes.
         base_lines = []
         for line in self:
+            if not line.name:
+                line.name = line.tax_id.withholding_sequence_id.next_by_id()
+
             base_line = line._prepare_base_line_for_taxes_computation()
             AccountTax._add_tax_details_in_base_line(base_line, company)
             AccountTax._round_base_lines_tax_details([base_line], company)
@@ -329,7 +277,7 @@ class AccountWithholdingLine(models.AbstractModel):
 
                 # Hack the returned 'amount_currency' to avoid a rounding issue.
                 # Since the base lines are added twice just for the record, it won't unbalanced the accounting entry.
-                'amount_currency': base_line['record'].base_amount,
+                'amount_currency': base_line['record'].base_amount * base_line['sign'],
             })
 
         # Add the base lines.
@@ -351,84 +299,6 @@ class AccountWithholdingLine(models.AbstractModel):
                 'balance': -balance,
             })
 
-        #         'name': self.env._('WH Base Counterpart for "%(account_name)s"', account_name=account.name),
-
-        #
-        # withholding_line_vals_data = self._prepare_withholding_line_vals_data()
-        #
-        # sign = 1 if withholding_line_vals_data['payment_type'] == 'inbound' else -1
-        # payment_currency = self.env['res.currency'].browse(withholding_line_vals_data['currency_id'])
-        # payment_company = self.env['res.company'].browse(withholding_line_vals_data['company_id'])
-        # payment_date = withholding_line_vals_data['date']
-        #
-        #
-        # withholding_line_vals = []
-        # dict_group = defaultdict(list)
-        # for withholding_line_val in withholding_line_vals_data['withholding_line_vals']:
-        #     # We need to support using multiple tax repartition lines, but in the wizard one tax = one line.
-        #     # So, we'll only split the result here. If the amount of the line has been set manually, _get_withholding_tax_values already returns the tax details for that amount.
-        #     for tax in withholding_line_val['withholding_tax_values']:
-        #         withholding_line_vals.append({
-        #             'currency_id': payment_currency.id,
-        #             'name': withholding_line_val['name'],
-        #             'account_id': tax['account'],
-        #             'amount_currency': sign * tax['amount'],
-        #             'balance': sign * payment_currency._convert(tax['amount'], payment_company.currency_id, payment_company, payment_date),
-        #             'tax_base_amount': tax['tax_base_amount'],
-        #             'tax_repartition_line_id': tax['tax_repartition_line'],
-        #             'tax_tag_ids': [Command.set(tax['tag_ids'])],
-        #             'analytic_distribution': withholding_line_val['analytic_distribution'],
-        #         })
-        #     # We also need tax base lines for reporting.
-        #     # Group the withholding lines by their base amount and base tags.
-        #     dict_group[(withholding_line_val['base_amount'], withholding_line_val['tax_base_account'], self.env['account.account.tag'].browse(withholding_line_val['base_tag_ids']))].append(withholding_line_val)
-        #
-        # base_lines_to_create = []
-        # # This looping loop aim is to optimize the amount of account.move.line being created by this flow by grouping them.
-        # for (group_base_amount, group_base_account, group_tags), withholding_lines_val in dict_group.items():
-        #     # This base amount grouped above need to be multiplied in order to correctly affect the tax tags
-        #     group_base_amount *= len(withholding_lines_val)
-        #
-        #     # If we have a line in our list which has a base amount matching the one of the current group and which also
-        #     # doesn't have any of the tags inside, we can merge this group with that one to save records.
-        #     for i in range(len(base_lines_to_create)):
-        #         ((base_amount, tax_base_account, tags), lines) = base_lines_to_create[i]
-        #         if (base_amount == group_base_amount) and (tax_base_account == group_base_account) and not (tags & group_tags):
-        #             base_lines_to_create[i] = ((base_amount, tax_base_account, tags + group_tags), lines + withholding_lines_val)
-        #             break
-        #     else:
-        #         base_lines_to_create.append(((group_base_amount, group_base_account, group_tags), withholding_lines_val))
-        #
-        # counterpart_line_vals = defaultdict(lambda: {
-        #     'balance_sum': 0.0,
-        #     'amount_currency_sum': 0.0,
-        # })
-        # for (base_amount, tax_base_account, tags), withholding_lines in base_lines_to_create:
-        #     withholding_numbers = ', '.join([line['name'] for line in withholding_lines])
-        #     base_amount = sign * base_amount
-        #     cc_base_amount = payment_currency._convert(base_amount, payment_company.currency_id, payment_company, payment_date)
-        #     counterpart_line_vals[tax_base_account]['balance_sum'] += cc_base_amount
-        #     counterpart_line_vals[tax_base_account]['amount_currency_sum'] += base_amount
-        #     withholding_line_vals.append({
-        #         'currency_id': payment_currency.id,
-        #         'name': self.env._('WH Base: %(withholding_numbers)s', withholding_numbers=withholding_numbers),
-        #         'tax_ids': [Command.set([line['tax_id'] for line in withholding_lines])],
-        #         'account_id': tax_base_account.id,
-        #         'balance': cc_base_amount,
-        #         'amount_currency': base_amount,
-        #         'tax_tag_ids': [Command.set(list(set(chain.from_iterable([line['base_tag_ids'] for line in withholding_lines]))))],
-        #     })
-        #
-        # # counterpart line vals, one per account used in the base lines.
-        # for account, vals in counterpart_line_vals.items():
-        #     withholding_line_vals.append({
-        #         'currency_id': payment_currency.id,
-        #         'name': self.env._('WH Base Counterpart for "%(account_name)s"', account_name=account.name),
-        #         'account_id': account.id,
-        #         'balance': -vals['balance_sum'],
-        #         'amount_currency': -vals['amount_currency_sum'],
-        #     })
-
         return aml_create_values_list
 
     @api.model
@@ -438,3 +308,13 @@ class AccountWithholdingLine(models.AbstractModel):
         filter_domain = models.check_company_domain_parent_of(self, company)
         payment_type = 'purchase' if payment_type == 'outbound' else 'sale'
         return expression.AND([filter_domain, [('type_tax_use', '=', payment_type), ('is_withholding_tax_on_payment', '=', True)]])
+
+    def _get_grouping_key(self):
+        """ Helper returning the grouping key for this line; should match what is done in _compute_withholding_lines on the wizard. """
+        self.ensure_one()
+        return frozendict({
+            'analytic_distribution': self.analytic_distribution,
+            'account': self.account_id,
+            'tax': self.tax_id,
+            'skip': False,
+        })

@@ -108,7 +108,7 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
                         'tax_id': self.tax_sale_b.id,
                         'name': '1',
                         'original_base_amount': 1000,
-                        'tax_base_account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+                        'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
                     })
                 ]
         return wizard
@@ -144,8 +144,8 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
                 Command.create({
                     'name': 'withholding tax',
                     'tax_id': withholding_tax.id,
-                    # TODO: to me, 'tax_base_account_id' is computed so it should work without specifying it
-                    'tax_base_account_id': self.env.company.withholding_tax_base_account_id.id,
+                    # TODO: to me, 'account_id' is computed so it should work without specifying it
+                    'account_id': self.env.company.withholding_tax_base_account_id.id,
                     'original_base_amount': 1000.0,
                 }),
             ],
@@ -182,7 +182,7 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
     #             'tax_id': self.tax_sale_b.id,
     #             'name': '1',
     #             'original_base_amount': 1000,
-    #             'tax_base_account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+    #             'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
     #         })
     #     ]
     #     # The amount on the tax line should have been computed. The net amount too.
@@ -337,13 +337,13 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
                 'tax_id': self.tax_sale_b.id,
                 'name': '1',
                 'original_base_amount': 1000,
-                'tax_base_account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
             }),
             Command.create({
                 'tax_id': self.tax_sale_c.id,
                 'name': '1',
                 'original_base_amount': 1000,
-                'tax_base_account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
             })
         ]
         # The amounts are correct, we register the payment then check the entry
@@ -830,3 +830,23 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
         payment_register.withholding_line_ids[0].base_amount = 999999
         with self.assertRaisesRegex(UserError, 'The net amount cannot be negative.'):
             payment_register.action_create_payments()
+
+    def test_wrong_scenario(self):
+        """ Test for LAS """
+        tax = self.percent_tax(15, include_base_amount=True)
+        wth_tax = self._setup_tax('Withholding Tax 10', 10)
+        wth_tax.is_base_affected = True
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2024-01-01',
+            'invoice_date': '2024-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({'name': 'test', 'price_unit': 1000.0, 'tax_ids': [(6, 0, (tax + wth_tax).ids)]})
+            ],
+        })
+        invoice.action_post()
+        payment_register = self.env['account.payment.register'].with_context(
+            active_model='account.move.line', active_ids=invoice.line_ids.ids
+        ).create({})
+        self.assertEqual(payment_register.withholding_line_ids[0].base_amount, 1150)
