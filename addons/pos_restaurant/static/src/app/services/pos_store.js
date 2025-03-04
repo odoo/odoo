@@ -460,7 +460,9 @@ patch(PosStore.prototype, {
     //@override
     addNewOrder(data = {}) {
         const order = super.addNewOrder(...arguments);
-        this.addPendingOrder([order.id]);
+        if (this.config.module_pos_restaurant) {
+            this.addPendingOrder([order.id]);
+        }
         return order;
     },
     createOrderIfNeeded(data) {
@@ -477,6 +479,7 @@ patch(PosStore.prototype, {
         let currentCourse;
         if (this.config.module_pos_restaurant) {
             const order = this.getOrder();
+            this.addPendingOrder([order.id]);
             if (!order.uiState.booked) {
                 order.setBooked(true);
             }
