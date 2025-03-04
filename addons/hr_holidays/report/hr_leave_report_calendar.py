@@ -102,12 +102,12 @@ class HrLeaveReportCalendar(models.Model):
             leave.name += f": {leave.sudo().leave_id.duration_display}"
 
     def _search_name(self, operator, value):
-        query = self.env['hr.leave'].sudo()._search([('duration_display', operator, value)])
-        domain = ['|', ('employee_id.name', operator, value), ('leave_id', 'in', query)]
+        query = self.env['hr.leave.report.calendar'].sudo()._search([('leave_id.duration_display', operator, value)])
+        domain = ['|', ('employee_id.name', operator, value), ('id', 'in', query)]
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             domain = expression.OR([domain , [('leave_id.holiday_status_id.name', operator, value)]])
         return domain
-    
+
     @api.depends('leave_manager_id')
     def _compute_is_manager(self):
         for leave in self:
