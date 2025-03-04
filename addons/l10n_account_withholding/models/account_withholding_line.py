@@ -77,18 +77,18 @@ class AccountWithholdingLine(models.AbstractModel):
     # Compute, inverse, search methods
     # --------------------------------
 
-    # @api.depends('tax_id', 'base_amount')
-    # def _compute_amount(self):
-    #     AccountTax = self.env['account.tax']
-    #     for line in self:
-    #         if not line.tax_id:
-    #             line.amount = 0.0
-    #         else:
-    #             base_line = line._prepare_base_line_for_taxes_computation()
-    #             AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
-    #             AccountTax._round_base_lines_tax_details([base_line], self.company_id)
-    #             tax_details = base_line['tax_details']
-    #             line.amount = sum(tax_data['tax_amount_currency'] for tax_data in tax_details['taxes_data'])
+    @api.depends('tax_id', 'base_amount')
+    def _compute_amount(self):
+        AccountTax = self.env['account.tax']
+        for line in self:
+            if not line.tax_id:
+                line.amount = 0.0
+            else:
+                base_line = line._prepare_base_line_for_taxes_computation()
+                AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
+                AccountTax._round_base_lines_tax_details([base_line], self.company_id)
+                tax_details = base_line['tax_details']
+                line.amount = sum(tax_data['tax_amount_currency'] for tax_data in tax_details['taxes_data'])
 
     @api.depends('original_base_amount')
     def _compute_base_amount(self):
