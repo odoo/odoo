@@ -44,7 +44,7 @@ export class AlignPlugin extends Plugin {
             {
                 id: "alignment",
                 groupId: "layout",
-                title: _t("Text align"),
+                description: _t("Align text"),
                 Component: AlignSelector,
                 props: {
                     getItems: () => alignmentItems,

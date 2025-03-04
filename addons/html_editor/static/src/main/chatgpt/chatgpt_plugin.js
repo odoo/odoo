@@ -25,7 +25,7 @@ export class ChatGPTPlugin extends Plugin {
             {
                 id: "openChatGPTDialog",
                 title: _t("ChatGPT"),
-                description: _t("Generate or transform content with AI."),
+                description: _t("Generate or transform content with AI"),
                 run: this.openDialog.bind(this),
             },
         ],
@@ -36,7 +36,7 @@ export class ChatGPTPlugin extends Plugin {
             {
                 id: "translate",
                 groupId: "ai",
-                title: _t("Translate with AI"),
+                description: _t("Translate with AI"),
                 isAvailable: (selection) => {
                     return !selection.isCollapsed && user.userId;
                 },

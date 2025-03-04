@@ -1,7 +1,7 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.FontFamilySelector">
         <Dropdown menuClass="'o_font_family_selector_menu'">
-            <button class="btn btn-light" t-att-title="props.title">
+            <button class="btn btn-light" t-att-title="props.title" name="font_family">
                 <span class="px-1" t-esc="props.currentFontFamily.displayName"/>
             </button>
             <t t-set-slot="content">

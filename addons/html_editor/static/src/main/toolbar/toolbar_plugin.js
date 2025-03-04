@@ -40,7 +40,7 @@ import { _t } from "@web/core/l10n/translation";
  * @property {string} commandId
  * @property {string[]} [namespaces]
  * @property {Object} [commandParams] Passed to the command's `run` function
- * @property {TranslatedString | TranslatedStringGetter} [title] * - becomes the button's title (and tooltip content)
+ * @property {TranslatedString | TranslatedStringGetter} [description] * - becomes the button's title (and tooltip content)
  * @property {string} [icon] *
  * @property {string} [text] Can be used with (or instead of) `icon`
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
@@ -52,13 +52,13 @@ import { _t } from "@web/core/l10n/translation";
  * @property {string} id
  * @property {string} groupId
  * @property {string[]} [namespaces]
- * @property {TranslatedString | TranslatedStringGetter} [title]
+ * @property {TranslatedString | TranslatedStringGetter} [description]
  * @property {Function} Component
  * @property {Object} props
  * @property {(selection: EditorSelection) => boolean} [isAvailable]
  *
  * ToolbarItem.id maps to the button's `name` attribute
- * ToolbarItem.title maps to the button's `title` attribute (tooltip description)
+ * ToolbarItem.description maps to the button's `title` attribute (tooltip content)
  */
 
 /**
@@ -74,7 +74,7 @@ import { _t } from "@web/core/l10n/translation";
  *         {
  *             id: myCommand,
  *             run: myCommandFunction,
- *             title: _t("My Command"),
+ *             description: _t("My Command"),
  *             icon: "fa-bug",
  *         },
  *     ],
@@ -88,14 +88,14 @@ import { _t } from "@web/core/l10n/translation";
  *             id: "myButton",
  *             groupId: "myGroup",
  *             commandId: "myCommand",
- *             title: _t("My Toolbar Command Button"), // overrides the user command's `title`
+ *             description: _t("My Toolbar Command Button"), // overrides the user command's `description`
  *             // `icon` is inferred from the user command
  *         },
  *         @type {ToolbarComponentItem}
  *         {
  *             id: "myComponentButton",
  *             groupId: "myGroup",
- *             title: _t("My Toolbar Component Button"),
+ *             description: _t("My Toolbar Component Button"),
  *             Component: MyComponent,
  *             props: { myProp: "myValue" },
  *         },
@@ -109,7 +109,7 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef {Object} ToolbarCommandButton
  * @property {string} id
  * @property {string} groupId
- * @property {TranslatedString} title
+ * @property {TranslatedString} description
  * @property {Function} run
  * @property {string} [icon]
  * @property {string} [text]
@@ -150,7 +150,7 @@ export class ToolbarPlugin extends Plugin {
             id: "expand_toolbar",
             groupId: "expand_toolbar",
             commandId: "expandToolbar",
-            title: _t("Expand toolbar"),
+            description: _t("Expand toolbar"),
             icon: "fa-ellipsis-v",
         },
         toolbar_namespaces: withSequence(100, {
@@ -392,9 +392,9 @@ export class ToolbarPlugin extends Plugin {
                 this.state.buttonsAvailableState[button.id] =
                     button.isAvailable === undefined || button.isAvailable(selection);
                 this.state.buttonsTitleState[button.id] =
-                    button.title instanceof Function
-                        ? button.title(selection, nodes)
-                        : button.title;
+                    button.description instanceof Function
+                        ? button.description(selection, nodes)
+                        : button.description;
             }
         }
         this.updateSelection = null;

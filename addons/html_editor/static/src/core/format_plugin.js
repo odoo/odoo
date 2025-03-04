@@ -49,25 +49,25 @@ export class FormatPlugin extends Plugin {
         user_commands: [
             {
                 id: "formatBold",
-                title: _t("Toggle bold"),
+                description: _t("Toggle bold"),
                 icon: "fa-bold",
                 run: this.formatSelection.bind(this, "bold"),
             },
             {
                 id: "formatItalic",
-                title: _t("Toggle italic"),
+                description: _t("Toggle italic"),
                 icon: "fa-italic",
                 run: this.formatSelection.bind(this, "italic"),
             },
             {
                 id: "formatUnderline",
-                title: _t("Toggle underline"),
+                description: _t("Toggle underline"),
                 icon: "fa-underline",
                 run: this.formatSelection.bind(this, "underline"),
             },
             {
                 id: "formatStrikethrough",
-                title: _t("Toggle strikethrough"),
+                description: _t("Toggle strikethrough"),
                 icon: "fa-strikethrough",
                 run: this.formatSelection.bind(this, "strikeThrough"),
             },
@@ -89,7 +89,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "removeFormat",
-                title: (sel, nodes) =>
+                description: (sel, nodes) =>
                     nodes && this.hasAnyFormat(nodes)
                         ? _t("Remove Format")
                         : _t("Selection has no format"),
