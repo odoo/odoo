@@ -91,3 +91,18 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
         isCheck: true,
     }
 ]});
+
+registry.category("web_tour.tours").add('hr_holidays_launch', {
+    url: '/web',
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
+            run: "click",
+        },
+        {
+            trigger: '.o_calendar_container',
+            run: ()=>{},
+        },
+    ]
+});
