@@ -1,7 +1,7 @@
 export function clickPartner(name = "") {
     return {
         content: `click partner '${name}' from partner list screen`,
-        trigger: `.modal .partner-list b:contains(${name})`,
+        trigger: `.modal .partner-list b:contains("${name}")`,
         run: "click",
     };
 }
