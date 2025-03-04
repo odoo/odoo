@@ -29,6 +29,7 @@ export class PosPaymentProviderCards extends Component {
             this.state.providers = providers
                 .filter(
                     (prov) =>
+                        res.state.some((moduleState) => moduleState.name === prov[1]) &&
                         (prov[0] !== "ingenico" || ingenico) &&
                         (prov[0] !== "worldline" || worldline)
                 )
@@ -83,6 +84,7 @@ const providers = [
     ["stripe", "pos_stripe", "Stripe"],
     ["viva_wallet", "pos_viva_wallet", "Viva Wallet"],
     ["worldline", "pos_iot", "Worldline"],
+    ["tyro", "pos_tyro", "Tyro"],
 ];
 
 export const PosPaymentProviderCardsParams = {
