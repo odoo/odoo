@@ -1,6 +1,7 @@
 import { Component, onWillStart, whenReady, xml } from "@odoo/owl";
 import { session } from "@web/session";
 import { registry } from "./registry";
+import { registerTemplate } from "@web/core/templates";
 
 /**
  * @typedef {{
@@ -79,6 +80,10 @@ export function loadJS() {
 /** @type {typeof assets["loadCSS"]} */
 export function loadCSS() {
     return assets.loadCSS(...arguments);
+}
+
+export function loadXML() {
+    return assets.loadXML(...arguments);
 }
 
 export class AssetsLoadingError extends Error {}
@@ -175,6 +180,7 @@ export const assets = {
         }
         return getBundle(bundleName, { targetDoc }).then(({ cssLibs, jsLibs }) => {
             const promises = [];
+
             if (css && cssLibs) {
                 promises.push(...cssLibs.map((url) => assets.loadCSS(url, { targetDoc })));
             }
@@ -252,6 +258,50 @@ export const assets = {
         );
         cacheMap.set(url, promise);
         targetDoc.head.appendChild(scriptEl);
+        return promise;
+    },
+    /**
+     * Loads the given url inside an XML document and registers templates.
+     *
+     * @param {string} url the url of the XML file
+     * @param {Object} options
+     * @param {Document} [options.targetDoc=document] document to which the XML will be applied
+     * @returns {Promise<void>} resolved when the XML has been loaded and templates registered
+     */
+    loadXML(url, { targetDoc = document } = {}) {
+        const cacheMap = getCacheMap(targetDoc);
+        if (cacheMap.has(url)) {
+            return cacheMap.get(url);
+        }
+
+        const promise = fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: response.statusText });
+                }
+                return response.text();
+            })
+            .then(xmlText => {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+                // Find all templates in the XML
+                const templates = xmlDoc.querySelectorAll('template, t[t-name]');
+                templates.forEach(template => {
+                    const name = template.getAttribute('t-name');
+                    if (name) {
+                        // Register each template using the core templates service
+                        // const { registerTemplate } = require("@web/core/templates");
+                        registerTemplate(name, url, template.outerHTML);
+                    }
+                });
+            })
+            .catch(error => {
+                cacheMap.delete(url);
+                throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: error });
+            });
+
+        cacheMap.set(url, promise);
         return promise;
     },
 };
