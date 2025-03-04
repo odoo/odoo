@@ -639,7 +639,7 @@ export class LinkPlugin extends Plugin {
         // to remove link from selected images
         const selectedNodes = this.dependencies.selection.getSelectedNodes();
         const selectedImageNodes = selectedNodes.filter((node) => node.tagName === "IMG");
-        if (selectedImageNodes && startLink && endLink && startLink === endLink) {
+        if (selectedImageNodes.length && startLink && endLink && startLink === endLink) {
             for (const imageNode of selectedImageNodes) {
                 let imageLink;
                 if (direction === DIRECTIONS.RIGHT) {
@@ -665,8 +665,27 @@ export class LinkPlugin extends Plugin {
                 return;
             }
         }
+        const removeEmptyLinksAround = (node) => {
+            if (!node.parentElement?.isContentEditable) {
+                return;
+            }
+            ["previousSibling", "nextSibling"].forEach((sibling) => {
+                const link = node[sibling];
+                if (
+                    link?.nodeName === "A" &&
+                    cleanZWChars(link.innerText) === "" &&
+                    !link.querySelector("img")
+                ) {
+                    link.remove();
+                }
+            });
+        };
         if (startLink && startLink.isConnected) {
             anchorNode = this.dependencies.split.splitAroundUntil(anchorNode, startLink);
+            // If selected text node has an adjacent untraversed FEFF character,
+            // splitAroundUntil leaves an adjacent empty link after splitting
+            // which should be removed.
+            removeEmptyLinksAround(anchorNode);
             anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
             this.dependencies.selection.setSelection(
                 { anchorNode, anchorOffset, focusNode, focusOffset },
@@ -676,6 +695,7 @@ export class LinkPlugin extends Plugin {
         // Only split the end link if it was not already done above.
         if (endLink && endLink.isConnected) {
             focusNode = this.dependencies.split.splitAroundUntil(focusNode, endLink);
+            removeEmptyLinksAround(focusNode);
             focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
             this.dependencies.selection.setSelection(
                 { anchorNode, anchorOffset, focusNode, focusOffset },
