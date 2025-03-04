@@ -294,7 +294,9 @@ patch(PosStore.prototype, {
     //@override
     addNewOrder(data = {}) {
         const order = super.addNewOrder(...arguments);
-        this.addPendingOrder([order.id]);
+        if (this.config.module_pos_restaurant) {
+            this.addPendingOrder([order.id]);
+        }
         return order;
     },
     createOrderIfNeeded(data) {
@@ -308,8 +310,12 @@ patch(PosStore.prototype, {
         return super.createOrderIfNeeded(...arguments);
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        if (this.config.module_pos_restaurant && !this.getOrder().uiState.booked) {
-            this.getOrder().setBooked(true);
+        if (this.config.module_pos_restaurant) {
+            const order = this.getOrder();
+            this.addPendingOrder([order.id]);
+            if (!order.uiState.booked) {
+                order.setBooked(true);
+            }
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
     },
