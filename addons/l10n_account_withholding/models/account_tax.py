@@ -184,26 +184,35 @@ class AccountTax(models.Model):
         base_line['calculate_withholding_taxes'] = kwargs.get('calculate_withholding_taxes', False)
         return base_line
 
-    @api.model
-    def _add_tax_details_in_base_line(self, base_line, company, rounding_method=None):
+    def _eval_tax_amount_price_included(self, batch, raw_base, evaluation_context):
         # EXTENDS 'account'
-        if not base_line.get('calculate_withholding_taxes'):
-            # Adapt the price unit to properly affect the subtotal when using price_exclude tax
-            base_line['tax_ids'] = base_line['tax_ids'].filtered(lambda t: not t.is_withholding_tax_on_payment or not t.price_include)
-            price_unit = base_line['price_unit']
-            for withholding_tax in base_line['tax_ids'].filtered('is_withholding_tax_on_payment'):
-                base_line['price_unit'] += (price_unit / (1 - (withholding_tax.amount / 100))) - price_unit
+        if self.is_withholding_tax_on_payment:
+            return raw_base * self.amount / 100.0
+        return super()._eval_tax_amount_price_included(batch, raw_base, evaluation_context)
 
-        super()._add_tax_details_in_base_line(base_line, company, rounding_method=rounding_method)
+    def _eval_tax_amount_price_excluded(self, batch, raw_base, evaluation_context):
+        # EXTENDS 'account'
+        if self.is_withholding_tax_on_payment:
+            total_percentage = sum(tax.amount for tax in batch) / 100.0
+            incl_base_multiplicator = 1.0 if total_percentage == 1.0 else 1 - total_percentage
+            return raw_base * self.amount / 100.0 / incl_base_multiplicator
+        return super()._eval_tax_amount_price_excluded(batch, raw_base, evaluation_context)
 
-        if not base_line.get('calculate_withholding_taxes'):
-            # Affect the tax total for price_exclude taxes to not add the tax on top of it.
-            taxes_data = base_line['tax_details']['taxes_data']
-            for tax_data in taxes_data:
-                if tax_data['tax'].is_withholding_tax_on_payment:
-                    base_line['tax_details']['taxes_data'].remove(tax_data)
-                    raw_amount = tax_data['raw_tax_amount']
-                    raw_amount_currency = tax_data['raw_tax_amount_currency']
+    @api.model
+    def _get_base_line_tax_details(self, base_line, company, rounding_method=None):
+        # EXTENDS 'account'
+        taxes_computation = super()._get_base_line_tax_details(base_line, company, rounding_method=rounding_method)
 
-                    base_line['tax_details']['raw_total_included'] -= raw_amount
-                    base_line['tax_details']['raw_total_included_currency'] -= raw_amount_currency
+        if not base_line['special_mode'] and not base_line['calculate_withholding_taxes']:
+            new_taxes_data = []
+            for tax_data in taxes_computation['taxes_data']:
+                if tax_data['tax'].is_withholding_tax_on_payment and tax_data['tax'].price_include:
+                    taxes_computation['total_excluded'] += tax_data['tax_amount']
+                    for new_tax_data in new_taxes_data:
+                        if new_tax_data['tax'].include_base_amount:
+                            new_tax_data['base_amount'] += tax_data['tax_amount']
+                else:
+                    new_taxes_data.append(tax_data)
+            taxes_computation['taxes_data'] = new_taxes_data
+
+        return taxes_computation
