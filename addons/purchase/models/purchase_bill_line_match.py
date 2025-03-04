@@ -20,6 +20,7 @@ class PurchaseBillLineMatch(models.Model):
     line_qty = fields.Float()
     line_uom_id = fields.Many2one(comodel_name='uom.uom')
     qty_invoiced = fields.Float()
+    qty_to_invoice = fields.Float('Qty to invoice')
     purchase_order_id = fields.Many2one(comodel_name='purchase.order')
     account_move_id = fields.Many2one(comodel_name='account.move')
     line_amount_untaxed = fields.Monetary()
@@ -87,6 +88,7 @@ class PurchaseBillLineMatch(models.Model):
                    pol.product_qty as line_qty,
                    pol.product_uom_id as line_uom_id,
                    pol.qty_invoiced as qty_invoiced,
+                   pol.qty_to_invoice as qty_to_invoice,
                    po.id as purchase_order_id,
                    NULL as account_move_id,
                    pol.price_subtotal as line_amount_untaxed,
@@ -111,6 +113,7 @@ class PurchaseBillLineMatch(models.Model):
                    aml.quantity as line_qty,
                    aml.product_uom_id as line_uom_id,
                    NULL as qty_invoiced,
+                   NULL as qty_to_invoice,
                    NULL as purchase_order_id,
                    am.id as account_move_id,
                    aml.amount_currency as line_amount_untaxed,
