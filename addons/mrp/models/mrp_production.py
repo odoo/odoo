@@ -50,7 +50,7 @@ class MrpProduction(models.Model):
     def _get_default_is_locked(self):
         return not self.env.user.has_group('mrp.group_unlocked_by_default')
 
-    name = fields.Char('Reference', default='New', copy=False, readonly=True)
+    name = fields.Char('Reference', default=lambda self: _('New'), copy=False, readonly=True)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='0',
         help="Components will be reserved first for the MO with the highest priorities.")
