@@ -17,7 +17,7 @@
                                 <field name="custom_user_amount" column_invisible="1"/>  <!-- Required for the onchange, in order to save the value -->
                                 <field name="custom_user_currency_id" column_invisible="1"/>  <!-- Required for the onchange, in order to save the value -->
                                 <field name="name" string="Sequence Number" required="not withholding_sequence_id" width="92px" readonly="withholding_sequence_id"/>
-                                <field name="tax_base_account_id" column_invisible="parent.hide_tax_base_account" force_save="1" width="184px" optional="hide"/>
+                                <field name="account_id" column_invisible="parent.hide_tax_base_account" force_save="1" width="184px" optional="hide"/>
                                 <field name="base_amount"/>
                                 <field name="tax_id" options="{'no_open': True, 'no_create': True}" string="Tax" width="92px"/>
                                 <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
