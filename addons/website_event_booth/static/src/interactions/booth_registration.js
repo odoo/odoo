@@ -154,7 +154,7 @@ export class BoothRegistration extends Interaction {
         }
         this.updateBoothsList();
         this.showBoothCategoryDescription();
-        this.isSelectionEmpty = !!this.countSelectedBooths().length;
+        this.isSelectionEmpty = !this.countSelectedBooths().length;
     }
 
     /**
