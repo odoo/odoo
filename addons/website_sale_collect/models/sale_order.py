@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -59,19 +59,12 @@ class SaleOrder(models.Model):
                 zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
         return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
 
-    def _get_cart_and_free_qty(self, product, line=None):
-        """ Override of `website_sale_stock` to get free_qty of the product from the warehouse that
-        was chosen rather than website's one.
-
-        :param product.product product: The product
-        :param sale.order.line line: The optional line
-        """
-        cart_qty, free_qty = super()._get_cart_and_free_qty(product, line=line)
+    def _get_shop_warehouse_id(self):
+        """Override of `website_sale_stock` to consider the chosen warehouse."""
+        self.ensure_one()
         if self.carrier_id.delivery_type == 'in_store':
-            free_qty = (product or line.product_id).with_context(
-                warehouse_id=self.warehouse_id.id
-            ).free_qty
-        return cart_qty, free_qty
+            return self.warehouse_id.id
+        return super()._get_shop_warehouse_id()
 
     def _check_cart_is_ready_to_be_paid(self):
         """ Override of `website_sale` to check if all products are in stock in the selected
@@ -81,7 +74,9 @@ class SaleOrder(models.Model):
             and self.carrier_id.delivery_type == 'in_store'
             and not self._is_in_stock(self.warehouse_id.id)
         ):
-            raise ValidationError(_("Some products are not available in the selected store."))
+            raise ValidationError(self.env._(
+                "Some products are not available in the selected store."
+            ))
         return super()._check_cart_is_ready_to_be_paid()
 
     # === TOOLING ===#
@@ -105,11 +100,11 @@ class SaleOrder(models.Model):
         unavailable_order_lines = self.env['sale.order.line']
         for ol in self.order_line:
             if ol.is_storable:
-                product_free_qty = ol.product_id.with_context(warehouse_id=wh_id).free_qty
-                if ol.product_uom_qty > product_free_qty:
-                    ol.shop_warning = _(
-                        'Only %(new_qty)s available', new_qty=int(max(product_free_qty, 0))
-                    )
+                product = ol.product_id
+                cart_qty = self._get_cart_qty(product.id)
+                free_qty = product.with_context(warehouse_id=wh_id).free_qty
+                if cart_qty > free_qty:
+                    ol._set_shop_warning_stock(cart_qty, max(free_qty, 0))
                     unavailable_order_lines |= ol
         return unavailable_order_lines
 
