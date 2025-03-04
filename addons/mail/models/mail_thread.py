@@ -3941,6 +3941,13 @@ class MailThread(models.AbstractModel):
         if not res:
             return recipients_data
 
+        fields_tocheck = self._mail_get_partner_fields()
+        partner_ids_to_remove_from_followers = self.env['res.partner']
+        for field in fields_tocheck:
+            partner_ids_to_remove_from_followers |= self[field]
+        for partner_id in partner_ids_to_remove_from_followers:
+            res.pop(partner_id.id, None)
+
         # notify author of its own messages, False by default
         skip_author_id = False
         notify_author = kwargs.get('notify_author') or self.env.context.get('mail_notify_author')

@@ -570,12 +570,16 @@ class MailComposeMessage(models.TransientModel):
             recipients_data = self.env['mail.followers']._get_recipient_data(
                 record, composer.message_type, composer.subtype_id.id
             )[record.id]
+            customer_ids = composer.partner_ids
+            fields = record._mail_get_partner_fields()
+            for field in fields:
+                customer_ids |= record[field]
             partner_ids = [
                 pid
                 for pid, pdata in recipients_data.items()
                 if (pid and pdata['active']
                     and pid != self.env.user.partner_id.id
-                    and pdata['id'] not in composer.partner_ids.ids)
+                    and pdata['id'] not in customer_ids.ids)
             ]
             composer.notified_bcc = self.env['res.partner'].search([('id', 'in', partner_ids)])
 
