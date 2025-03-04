@@ -112,6 +112,7 @@ class LivechatController(http.Controller):
         store = Store()
         user_id = None
         country_id = None
+        guest = request.env["mail.guest"]
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
             user_id = request.env.user.id
@@ -194,7 +195,8 @@ class LivechatController(http.Controller):
             )
             if guest:
                 store.add_global_values(guest_token=guest._format_auth_cookie())
-        request.env["res.users"]._init_store_data(store)
+        request.env["res.users"].with_context(guest=guest)._init_store_data(store)
+        guest._bus_send_store(store)
         return store.get_result()
 
     def _post_feedback_message(self, channel, rating, reason):
