@@ -165,66 +165,45 @@ class AccountTax(models.Model):
         if self.is_withholding_tax_on_payment:
             self.tax_exigibility = 'on_invoice'
 
+    @api.onchange('is_withholding_tax_on_payment')
+    def _onchange_is_withholding_tax_on_payment(self):
+        """ For proper computations, withholding taxes should have their amount type set to division.. """
+        if self.is_withholding_tax_on_payment:
+            self.amount_type = 'division'
+
     # -----------------------
     # CRUD, inherited methods
     # -----------------------
 
-    # def _eval_tax_amount_price_excluded(self, batch, raw_base, evaluation_context):
-    #     # EXTENDS 'account'
-    #     self.ensure_one()
-    #     if self.is_withholding_tax_on_payment and self.amount_type == 'percent':
-    #         return 0
-    #     return super()._eval_tax_amount_price_excluded(batch, raw_base, evaluation_context)
+    @api.model
+    def _prepare_base_line_for_taxes_computation(self, record, **kwargs):
+        # EXTENDS 'account'
+        base_line = super()._prepare_base_line_for_taxes_computation(record, **kwargs)
+        # We support adding a new key in the base line dict to determine if the withholding taxes need to
+        # be computed completely or not.
+        base_line['calculate_withholding_taxes'] = kwargs.get('calculate_withholding_taxes', False)
+        return base_line
 
-    # def _eval_tax_amount_price_included(self, batch, raw_base, evaluation_context):
-    #     # EXTENDS 'account'
-    #     if self.is_withholding_tax_on_payment and self.amount_type == 'percent':
-    #         return raw_base * self.amount / 100.0
-    #     return super()._eval_tax_amount_price_included(batch, raw_base, evaluation_context)
+    @api.model
+    def _add_tax_details_in_base_line(self, base_line, company, rounding_method=None):
+        # EXTENDS 'account'
+        if not base_line.get('calculate_withholding_taxes'):
+            # Adapt the price unit to properly affect the subtotal when using price_exclude tax
+            base_line['tax_ids'] = base_line['tax_ids'].filtered(lambda t: not t.is_withholding_tax_on_payment or not t.price_include)
+            price_unit = base_line['price_unit']
+            for withholding_tax in base_line['tax_ids'].filtered('is_withholding_tax_on_payment'):
+                base_line['price_unit'] += (price_unit / (1 - (withholding_tax.amount / 100))) - price_unit
 
-    # @api.model
-    # def _add_tax_details_in_base_line(self, base_line, company, rounding_method=None):
-    #     """
-    #     When working with price-excluded withholding taxes, we want the subtotal to be affected.
-    #     To do so, we adjust the price_unit before computing the tax details; which will achieve the
-    #     adjustment of the subtotal and make sure it is used when computing subsequent taxes.
-    #     """
-    #     price_unit = base_line['price_unit']
-    #     for withholding_tax in base_line['tax_ids'].filtered('is_withholding_tax_on_payment'):
-    #         if not withholding_tax.price_include:
-    #             amount = (price_unit / (1 - (withholding_tax.amount / 100))) - price_unit
-    #             base_line['price_unit'] += amount
-    #     return super()._add_tax_details_in_base_line(base_line, company, rounding_method)
-    #
-    # @api.model
-    # def prepare_tax_extra_data(self, tax, special_mode, **kwargs):
-    #     """
-    #     For the purpose of tax computation (when the context key is set) every withholding tax will be considered
-    #     price-excluded.
-    #     """
-    #     # todo not forget to adapt js for all of this
-    #     res = super().prepare_tax_extra_data(tax, special_mode, **kwargs)
-    #     if tax.is_withholding_tax_on_payment and self.env.context.get('include_withholding_taxes'):
-    #         res['price_include'] = False
-    #     return res
-    #
-    # def _get_tax_details(
-    #     self,
-    #     price_unit,
-    #     quantity,
-    #     precision_rounding=0.01,
-    #     rounding_method='round_per_line',
-    #     product=None,
-    #     special_mode=False,
-    #     manual_tax_amounts=None,
-    # ):
-    #     """
-    #     Withholding taxes could have some effects when taxes are computed, and thus we do use them in _get_tax_details.
-    #     But unless explicitly asked for, we do not want to return any of their information, and we will remove them from the res.
-    #     """
-    #     res = super()._get_tax_details(price_unit, quantity, precision_rounding, rounding_method, product, special_mode, manual_tax_amounts)
-    #
-    #     if not self.env.context.get('include_withholding_taxes'):
-    #         res['taxes_data'] = [tax_data for tax_data in res['taxes_data'] if not tax_data['tax'].is_withholding_tax_on_payment]
-    #
-    #     return res
+        super()._add_tax_details_in_base_line(base_line, company, rounding_method=rounding_method)
+
+        if not base_line.get('calculate_withholding_taxes'):
+            # Affect the tax total for price_exclude taxes to not add the tax on top of it.
+            taxes_data = base_line['tax_details']['taxes_data']
+            for tax_data in taxes_data:
+                if tax_data['tax'].is_withholding_tax_on_payment:
+                    base_line['tax_details']['taxes_data'].remove(tax_data)
+                    raw_amount = tax_data['raw_tax_amount']
+                    raw_amount_currency = tax_data['raw_tax_amount_currency']
+
+                    base_line['tax_details']['raw_total_included'] -= raw_amount
+                    base_line['tax_details']['raw_total_included_currency'] -= raw_amount_currency

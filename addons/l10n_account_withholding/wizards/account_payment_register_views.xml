@@ -20,7 +20,7 @@
                                     <field name="custom_user_amount" column_invisible="True"/>  <!-- Required when changing currency on a custom amount. -->
                                     <field name="original_base_amount" column_invisible="True"/>  <!-- Required when changing currency on a default amount. -->
                                     <field name="name" readonly="withholding_sequence_id" column_invisible="parent.hide_withholding_number_col" required="not withholding_sequence_id" width="92px"/>
-                                    <field name="tax_base_account_id" column_invisible="parent.hide_tax_base_account" force_save="1" width="184px" readonly="True" optional="hide"/>
+                                    <field name="account_id" column_invisible="parent.hide_tax_base_account" force_save="1" width="184px" readonly="True" optional="hide"/>
                                     <field name="base_amount"/>
                                     <field name="tax_id" options="{'no_open': True, 'no_create': True}" width="92px"/>  <!-- Tax names tend to be short -->
                                     <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
