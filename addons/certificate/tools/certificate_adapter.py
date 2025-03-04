@@ -8,7 +8,10 @@ from urllib3.util.ssl_ import create_urllib3_context
 class CertificateAdapter(requests.adapters.HTTPAdapter):
 
     def __init__(self, *args, ciphers=None, **kwargs):
-        self._ciphers = ciphers
+        self._context_args = {}
+        if ciphers:
+            self._context_args['ciphers'] = ciphers
+        super().__init__(*args, **kwargs)
 
     def init_poolmanager(self, *args, **kwargs):
         """ We need inject_into_urllib3 as it forces the adapter to use PyOpenSSL.
@@ -17,7 +20,7 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
         """
         # OVERRIDE
         inject_into_urllib3()
-        kwargs['ssl_context'] = create_urllib3_context(ciphers=self._ciphers)
+        kwargs['ssl_context'] = create_urllib3_context(**self._context_args)
         return super().init_poolmanager(*args, **kwargs)
 
     def cert_verify(self, conn, url, verify, cert):
