@@ -625,3 +625,36 @@ registry.category("web_tour.tours").add("MultiPreparationPrinter", {
             Dialog.confirm(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("LeaveResidualOrder", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.totalAmountIs("2.20"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("FinishResidualOrder", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.totalAmountIs("2.20"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});

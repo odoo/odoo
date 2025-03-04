@@ -53,6 +53,9 @@
                         <field name="general_account_id"/>
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     </xpath>
+                    <xpath expr="//filter[@name='month']" position="after">
+                        <filter name="fiscal_date" string="From last fiscal year" domain="[('date', '>=', 'fiscal_start_year')]" invisible="1"/>
+                    </xpath>
                     <xpath expr="//group[@name='groupby']" position="inside">
                         <separator/>
                         <filter name="account_id" context="{'group_by': 'account_id'}"/>
@@ -79,14 +82,20 @@
 
         <record id="analytic.account_analytic_line_action_entries" model="ir.actions.act_window">
             <field name="search_view_id" ref="view_account_analytic_line_filter_inherit_account"/>
-            <field name="context">{'search_default_group_by_analytic_account': 1}</field>
+            <field name="context">{
+                'search_default_group_by_analytic_account': 1,
+                'search_default_fiscal_date': 1,
+            }</field>
         </record>
 
         <record id="action_analytic_reporting" model="ir.actions.act_window">
             <field name="name">Analytic Reporting</field>
             <field name="res_model">account.analytic.line</field>
             <field name="search_view_id" ref="view_account_analytic_line_filter_inherit_account"/>
-            <field name="context">{'search_default_group_by_analytic_account': 1}</field>
+            <field name="context">{
+                'search_default_group_by_analytic_account': 1,
+                'search_default_fiscal_date': 1,
+            }</field>
         </record>
 
     </data>

@@ -2,6 +2,7 @@
 
 from odoo import Command
 from odoo.tests import Form, HttpCase, new_test_user, tagged
+from odoo.exceptions import UserError
 
 from .common import TestSaleProjectCommon
 
@@ -13,6 +14,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.project_plan, _other_plans = cls.env['account.analytic.plan']._get_all_plans()
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
             'name': 'Plan Test',
         })
@@ -21,11 +23,16 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'plan_id': cls.analytic_plan.id,
             'code': 'AA-2030'
         })
+        cls.analytic_account = cls.env['account.analytic.account'].create({
+            'name': 'Main AA of Project',
+            'plan_id': cls.project_plan.id,
+        })
 
         # Create projects
         cls.project_global = cls.env['project.project'].create({
             'name': 'Global Project',
-            'account_id': cls.analytic_account_sale.id,
+            'account_id': cls.analytic_account.id,
+            cls.analytic_plan._column_name(): cls.analytic_account_sale.id,
             'allow_billable': True,
         })
         cls.project_template = cls.env['project.project'].create({
@@ -1032,3 +1039,148 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'sale_line_id': sale_order_line.id,
         })
         self.assertEqual(sale_order.state, 'sale')
+
+    def test_analytics_on_so_confirmation_no_project(self):
+        # Config 1: no project_id on the SO
+        self.product_order_service3.project_template_id = self.project_template
+        so = self.env['sale.order'].create({'partner_id': self.partner.id})
+        sol_no_project, sol_task_in_global_project, sol_task_in_template_project, sol_new_project = self.env['sale.order.line'].create([
+            {'order_id': so.id, 'product_id': self.product_order_service1.id, 'sequence': 1}, # no service_tracking
+            {'order_id': so.id, 'product_id': self.product_order_service2.id, 'sequence': 2}, # service_tracking: 'task_global_project'
+            {'order_id': so.id, 'product_id': self.product_order_service3.id, 'sequence': 3}, # service_tracking': 'task_in_project'
+            {'order_id': so.id, 'product_id': self.product_order_service4.id, 'sequence': 4}, # service_tracking: 'project_only'
+        ])
+        so.action_confirm()
+        self.assertEqual(len(so.order_line.project_id | so.order_line.task_id.project_id), 3, "Three projects should be linked to the SO.")
+        self.assertFalse(sol_no_project.project_id, "`sol_no_project` should not generate any project.")
+        self.assertEqual(
+            so.project_id,
+            sol_task_in_template_project.project_id,
+            "The project of the SO should be set to the project with the lowest (sequence, id)."
+        )
+        self.assertNotEqual(
+            sol_task_in_global_project.project_id.account_id,
+            sol_task_in_template_project.project_id.account_id,
+            "As the project of `sol_task_in_global_project` was not generated but already defined, its AA was kept the same."
+        )
+        self.assertEqual(
+            sol_task_in_template_project.project_id.account_id,
+            sol_new_project.project_id.account_id,
+            "As the projects of `sol_task_in_template_project` and `sol_new_project` were generated, they share the same AA which was created after SO confirmation."
+        )
+
+    def test_analytics_on_so_confirmation_project_with_accounts(self):
+        # Config 2: a project_id on the SO with AAs
+        # Also add an AA to the project template
+        plan_name = self.analytic_plan._column_name()
+        self.project_template[plan_name] = self.analytic_account_sale
+        self.product_order_service3.project_template_id = self.project_template
+        so = self.env['sale.order'].create({'partner_id': self.partner.id, 'project_id': self.project_global.id})
+        sol_task_in_template_project, sol_new_project = self.env['sale.order.line'].create([
+            {'order_id': so.id, 'product_id': self.product_order_service3.id},
+            {'order_id': so.id, 'product_id': self.product_order_service4.id},
+        ])
+        so.action_confirm()
+        self.assertEqual(len(so.order_line.project_id), 2, "Two projects should be linked to the SO.")
+        self.assertEqual(
+            self.project_global.account_id,
+            sol_task_in_template_project.project_id.account_id,
+            "The main AA of the project of `sol_task_in_template_project` should be the same as the main AA of the project set on the SO."
+        )
+        self.assertEqual(
+            self.project_template[plan_name],
+            sol_task_in_template_project.project_id[plan_name],
+            "The other AA of the project of `sol_task_in_template_project` should be the same as the other AA of its project template."
+        )
+        self.assertEqual(
+            self.project_global.account_id,
+            sol_new_project.project_id.account_id,
+            "The main AA of the project of `sol_new_project` should should be the same the main AA of the project set on the SO."
+        )
+        self.assertEqual(
+            self.project_global[plan_name],
+            sol_new_project.project_id[plan_name],
+            "The other AA of the project of `sol_new_project` should be the same as the other AA of the project set on the SO."
+        )
+
+    def test_analytics_on_so_confirmation_project_without_account(self):
+        # Config 3: a project_id on the SO without AA
+        self.product_order_service3.project_template_id = self.project_template
+        self.project_global.account_id = False
+        so = self.env['sale.order'].create({'partner_id': self.partner.id, 'project_id': self.project_global.id})
+        sol_task_in_template_project, sol_new_project = self.env['sale.order.line'].create([
+            {'order_id': so.id, 'product_id': self.product_order_service3.id},
+            {'order_id': so.id, 'product_id': self.product_order_service4.id},
+        ])
+        so.action_confirm()
+        self.assertEqual(len(so.order_line.project_id), 2, "Two projects should be linked to the SO.")
+        self.assertFalse(self.project_global.account_id, "The AA of the project of the SO should still be empty.")
+        self.assertEqual(
+            sol_task_in_template_project.project_id.account_id,
+            sol_new_project.project_id.account_id,
+            "As the projects of `sol_task_in_template_project` and `sol_new_project` were generated, they share the same AA which was created after SO confirmation."
+        )
+
+    def test_global_project_service_takes_so_project_on_so_confirmation(self):
+        self.product_order_service2.project_id = False
+        so = self.env['sale.order'].create({'partner_id': self.partner.id})
+        sol_task_in_global_project, sol_new_project = self.env['sale.order.line'].create([
+            {'order_id': so.id, 'product_id': self.product_order_service2.id},
+            {'order_id': so.id, 'product_id': self.product_order_service3.id},
+        ])
+        so.action_confirm()
+        self.assertEqual(
+            so.project_id,
+            sol_new_project.project_id,
+            "The project of the SO should be set to the project that was generated by `sol_new_project` at SO confirmation."
+        )
+        self.assertEqual(
+            so.project_id,
+            sol_task_in_global_project.task_id.project_id,
+            "The project of the task of `sol_task_in_global_project` should be set to the project of the SO."
+        )
+
+    def test_global_project_service_takes_so_project_on_already_confirmed_so(self):
+        self.product_order_service2.project_id = False
+        so = self.env['sale.order'].create({'partner_id': self.partner.id})
+        so.action_confirm()
+        sol_task_in_global_project, sol_new_project = self.env['sale.order.line'].create([
+            {'order_id': so.id, 'product_id': self.product_order_service2.id},
+            {'order_id': so.id, 'product_id': self.product_order_service3.id},
+        ])
+        self.assertEqual(
+            so.project_id,
+            sol_new_project.project_id,
+            "The project of the SO should be set to the project that was generated by `sol_new_project` after adding the SOLs in batch to the SO."
+        )
+        self.assertEqual(
+            so.project_id,
+            sol_task_in_global_project.task_id.project_id,
+            "The project of the task of `sol_task_in_global_project` should be set to the project of the SO."
+        )
+
+    def test_global_project_service_no_so_project_error(self):
+        self.product_order_service2.project_id = False
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product_order_service2.id})],
+        })
+        with self.assertRaises(UserError, msg="The SOL has a product which creates a task on SO confirmation, but no project is configured on the product or SO."):
+            so.action_confirm()
+
+    def test_so_confirmation_in_batch(self):
+        so1, so2 = self.env['sale.order'].create([{
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product_order_service3.id})],
+        } for _dummy in range(2)])
+        (so1 | so2).action_confirm()
+        self.assertEqual(
+            so1.project_id,
+            so1.order_line.project_id,
+            "The project of `so1` should be set to the project that was generated at SO confirmation."
+        )
+        self.assertEqual(
+            so2.project_id,
+            so2.order_line.project_id,
+            "The project of `so1` should be set to the project that was generated at SO confirmation."
+        )
