@@ -39,7 +39,7 @@ def _make_demo_tax(chart_template, chart_template_data):
         'name': '2% WTH',
         'type_tax_use': 'purchase',
         'is_withholding_tax_on_payment': True,
-        'amount_type': 'percent',
+        'amount_type': 'division',
         'amount': 2,
         'company_id': chart_template.env.company.id,
         'price_include_override': 'tax_included',
