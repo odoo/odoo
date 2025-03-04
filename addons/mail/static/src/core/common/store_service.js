@@ -44,6 +44,15 @@ export class Store extends BaseStore {
     static insert() {
         return super.insert(...arguments);
     }
+    /** @returns {import("models").Store} */
+    static new() {
+        const record = super.new(...arguments);
+        record._fetchStoreDataDebounced = debounce(
+            record._fetchStoreDataDebounced,
+            Store.FETCH_DATA_DEBOUNCE_DELAY
+        );
+        return record;
+    }
 
     /** @type {typeof import("@mail/core/common/chat_window_model").ChatWindow} */
     ChatWindow;
@@ -385,14 +394,6 @@ export class Store extends BaseStore {
             return true;
         }
         return false;
-    }
-
-    setup() {
-        super.setup();
-        this._fetchStoreDataDebounced = debounce(
-            this._fetchStoreDataDebounced,
-            Store.FETCH_DATA_DEBOUNCE_DELAY
-        );
     }
 
     /** Provides an override point for when the store service has started. */
