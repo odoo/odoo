@@ -1,23 +1,9 @@
-import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
-import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
-import {
-    SpreadsheetDashboard,
-    defineSpreadsheetDashboardModels,
-} from "@spreadsheet_dashboard/../tests/helpers/data";
+import { describe, expect, test } from "@odoo/hoot";
+import { createDashboardActionWithData } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
+import { defineSpreadsheetDashboardModels } from "@spreadsheet_dashboard/../tests/helpers/data";
 
 describe.current.tags("desktop");
 defineSpreadsheetDashboardModels();
-
-async function createDashboardActionWithData(data) {
-    const json = JSON.stringify(data);
-    const dashboard = SpreadsheetDashboard._records[0];
-    dashboard.spreadsheet_data = json;
-    dashboard.json_data = json;
-    await createSpreadsheetDashboard({ spreadsheetId: dashboard.id });
-    await animationFrame();
-    return getFixture();
-}
 
 test("A link in a dashboard should be clickable", async () => {
     const data = {
