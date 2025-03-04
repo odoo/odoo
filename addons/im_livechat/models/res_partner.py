@@ -35,6 +35,7 @@ class ResPartner(models.Model):
                     "is_available": partner in active_livechat_partners,
                     "lang_name": lang_name_by_code[partner.lang],
                 },
+                extra_fields=["is_in_call"]
             )
 
     @api.depends('user_ids.livechat_username')

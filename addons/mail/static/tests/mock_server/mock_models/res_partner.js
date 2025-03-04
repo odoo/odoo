@@ -20,6 +20,7 @@ export class ResPartner extends webModels.ResPartner {
         relation: "ir.attachment",
         string: "Main attachment",
     });
+    is_in_call = fields.Boolean({ compute: "_compute_is_in_call" });
 
     _views = {
         [`search, ${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
@@ -31,6 +32,16 @@ export class ResPartner extends webModels.ResPartner {
                 <chatter/>
             </form>`,
     };
+
+    _compute_is_in_call() {
+        for (const partner of this) {
+            partner.is_in_call =
+                this.env["discuss.channel.member"].search([
+                    ["rtc_session_ids", "!=", []],
+                    ["partner_id", "=", partner.id],
+                ]).length > 0;
+        }
+    }
 
     /**
      * @param {string} [search]
@@ -203,12 +214,14 @@ export class ResPartner extends webModels.ResPartner {
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
      */
-    _to_store(ids, store, fields) {
-        const kwargs = getKwArgs(arguments, "id", "store", "fields");
+    _to_store(ids, store, fields, extra_fields) {
+        const kwargs = getKwArgs(arguments, "id", "store", "fields", "extra_fields");
         fields = kwargs.fields;
+        extra_fields = kwargs.extra_fields ?? [];
         if (!fields) {
             fields = ["avatar_128", "name", "email", "active", "im_status", "is_company", "user"];
         }
+        fields = [...fields, extra_fields];
 
         /** @type {import("mock_models").ResCountry} */
         const ResCountry = this.env["res.country"];
