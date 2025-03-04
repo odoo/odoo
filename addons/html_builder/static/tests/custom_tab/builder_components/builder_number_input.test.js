@@ -482,3 +482,55 @@ test("trailing space in BuilderNumberInput is ignored", async () => {
     expect.verifySteps(["customAction 3 4 5", "customAction 3 4 5"]); // input, change
     expect(".options-container input").toHaveValue("3 4 5");
 });
+test("after input, displayed value is cleaned to match only numbers", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target" data-number="10">Test</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input").edit(" a&$*+>");
+    expect(".options-container input").toHaveValue("");
+    expect(":iframe .test-options-target").not.toHaveAttribute("data-number");
+});
+test("after copy / pasting, displayed value is cleaned to match only numbers", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target" data-number="10">Test</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input").edit(" a&$*-3+>", { instantly: true });
+    expect(".options-container input").toHaveValue("-3");
+    expect(":iframe .test-options-target").toHaveAttribute("data-number", "-3");
+});
+test("accept decimal numbers", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target" data-number="10">Test</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input").edit("3.3");
+    expect(".options-container input").toHaveValue("3.3");
+    expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
+});
+test("BuilderNumberInput transforms , into .", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput dataAttributeAction="'number'"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target" data-number="10">Test</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input").edit("3,3");
+    expect(".options-container input").toHaveValue("3.3");
+    expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
+});
