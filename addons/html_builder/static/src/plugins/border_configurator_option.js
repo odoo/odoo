@@ -35,6 +35,7 @@ export class BorderConfigurator extends Component {
                 mainParam: this.getStyleActionParam("width"),
             },
         });
-        return parseInt(styleActionValue.match(/\d+/g)[0]) > 0;
+        const values = (styleActionValue || "0").match(/\d+/g);
+        return values.some((value) => parseInt(value) > 0);
     }
 }
