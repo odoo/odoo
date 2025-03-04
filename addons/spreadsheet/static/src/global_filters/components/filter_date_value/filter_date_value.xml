@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-    <div t-name="spreadsheet_edition.DateFilterValue" class="date_filter_values">
+    <div t-name="spreadsheet.DateFilterValue" class="date_filter_values">
         <select t-if="dateOptions.length" class="o_input me-3" t-on-change="onPeriodChanged">
             <option value="empty">Select period...</option>
             <t t-foreach="dateOptions" t-as="periodOption" t-key="periodOption.id">

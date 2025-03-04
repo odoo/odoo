@@ -59,7 +59,7 @@ beforeEach(async () => {
             id: 1,
             children: [],
             name: "test menu 1",
-            xmlid: "documents_spreadsheet.test.menu",
+            xmlid: "spreadsheet.test.menu",
             appID: 1,
             actionID: "menuAction",
         },
@@ -67,7 +67,7 @@ beforeEach(async () => {
             id: 2,
             children: [],
             name: "test menu 2",
-            xmlid: "documents_spreadsheet.test.menu2",
+            xmlid: "spreadsheet.test.menu2",
             appID: 1,
             actionID: "menuAction2",
         },
@@ -75,7 +75,7 @@ beforeEach(async () => {
             id: 3,
             children: [],
             name: "test menu 2",
-            xmlid: "documents_spreadsheet.test.menu_without_action",
+            xmlid: "spreadsheet.test.menu_without_action",
             appID: 1,
         },
     };
@@ -241,7 +241,7 @@ test("can use menus xmlIds instead of menu ids", async function () {
     createBasicChart(model, chartId);
     model.dispatch("LINK_ODOO_MENU_TO_CHART", {
         chartId,
-        odooMenuId: "documents_spreadsheet.test.menu2",
+        odooMenuId: "spreadsheet.test.menu2",
     });
     await animationFrame();
 
@@ -267,7 +267,7 @@ test("Trying to open a menu without an action sends a notification to the user",
     createBasicChart(model, chartId);
     model.dispatch("LINK_ODOO_MENU_TO_CHART", {
         chartId,
-        odooMenuId: "documents_spreadsheet.test.menu_without_action",
+        odooMenuId: "spreadsheet.test.menu_without_action",
     });
     await animationFrame();
 
