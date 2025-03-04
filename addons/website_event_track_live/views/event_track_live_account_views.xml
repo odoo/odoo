@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="event_track_live_account_view_list" model="ir.ui.view">
+        <field name="name">event.track.live.account.view.list</field>
+        <field name="model">event.track.live.account</field>
+        <field name="arch" type="xml">
+            <list string="Event Track Live Account" create="0" js_class="event_track_live_account_list_view">
+                <field name="image" widget="image" class="oe_avatar" options='{"size": [30, 30]}'/>
+                <field name="name"/>
+                <field name="youtube_channel_id"/>
+                <field name="youtube_token_expiration_date"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_event_track_live_account__view_form" model="ir.ui.view">
+        <field name="name">event.track.live.account.view.form</field>
+        <field name="model">event.track.live.account</field>
+        <field name="arch" type="xml">
+            <form string="Event Track Live Account">
+                <sheet>
+                    <field name="image" nolabel="1" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" class="oe_inline"/></h1>
+                    </div>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="is_connected" widget="boolean_toggle"/>
+                        </group>
+                    <notebook>
+                        <page string="YouTube Credentials">
+                            <group>
+                                <field name="youtube_channel_id"/>
+                                <field name="youtube_access_token" password="True"/>
+                                <field name="youtube_refresh_token" password="True"/>
+                                <field name="youtube_token_expiration_date"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="event_track_live_account_action">
+        <field name="name">Event Track Live Account</field>
+        <field name="res_model">event.track.live.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              No YouTube Account Found.
+            </p><p>
+              Add a new YouTube Account by clicking on 'Add YouTube Account'.
+            </p>
+        </field>
+    </record>
+
+</odoo>

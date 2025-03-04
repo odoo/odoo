@@ -6,10 +6,17 @@
         <field name="model">event.track</field>
         <field name="inherit_id" ref="website_event_track.view_event_track_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button string="Youtube Post" type="object" name="action_see_post"
+                    icon="fa-brands fa-youtube-play" invisible="not youtube_post_id"/>
+            </xpath>
             <xpath expr="//field[@name='active']" position="after">
-                <field name="youtube_video_url" widget="url" />
+                <field name="youtube_video_url" widget="url" readonly="youtube_video_id"/>
                 <field name="is_youtube_replay"
                     invisible="not youtube_video_url or youtube_video_url == ''" />
+            </xpath>
+            <xpath expr="//field[@name='stage_id']" position="after">
+                <button string="Create Youtube Live" name="action_publish_on_youtube" type="object" invisible="youtube_post_id"/>
             </xpath>
         </field>
     </record>
@@ -23,6 +30,12 @@
                 <field name="youtube_video_url" widget="CopyClipboardURL" optional="hide"/>
             </xpath>
         </field>
+    </record>
+
+    <record id="action_open_tracks" model="ir.actions.act_window">
+        <field name="name">Tracks</field>
+        <field name="res_model">event.track</field>
+        <field name="view_mode">list</field>
     </record>
 
 </odoo>

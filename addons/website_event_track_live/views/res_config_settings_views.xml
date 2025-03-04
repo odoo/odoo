@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.event</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="event.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='module_website_event_track_live']" position="inside">
+                    <div class="content-group" invisible="not module_website_event_track_live">
+                        <div class="mt16">
+                            <label for="youtube_oauth_client_id" string="Youtube OAuth Client ID" class="col-lg-3"/>
+                            <field name="youtube_oauth_client_id" class="oe_inline"/>
+                        </div>
+                        <div class="mt16">
+                            <label for="youtube_oauth_client_secret" string="Youtube OAuth Client Secret" class="col-lg-3"/>
+                            <field name="youtube_oauth_client_secret" password="True" class="oe_inline"/>
+                        </div>
+                    </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

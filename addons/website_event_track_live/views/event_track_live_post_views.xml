@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_event_track_live_post_form" model="ir.ui.view">
+        <field name="name">event.track.live.post.form</field>
+        <field name="model">event.track.live.post</field>
+        <field name="arch" type="xml">
+            <form string="Event Track Live Post">
+                <header>
+                    <button name="action_retry_post" string="Retry" type="object" class="oe_highlight" invisible="state != 'failed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,scheduled,posted"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="event_track_id"/>
+                            <field name="name" readonly="1"/>
+                            <field name="thumbnail" widget="image" readonly="0"/>
+                        </group>
+                        <group>
+                            <field name="youtube_broadcast_id"/>
+                            <field name="youtube_stream_id"/>
+                            <field name="youtube_video_url" widget="url"/>
+                            <field name="youtube_live_start_time"/>
+                            <field name="youtube_live_duration"/>
+                            <field name="failure_reason"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_event_track_live_post_tree" model="ir.ui.view">
+        <field name="name">event.track.live.post.list</field>
+        <field name="model">event.track.live.post</field>
+        <field name="arch" type="xml">
+            <list string="Event Track Live Posts" create="0">
+                <field name="account_id" widget="many2one_tags"/>
+                <field name="name"/>
+                <field name="state" widget="badge"
+                    decoration-info="state == 'scheduled'" decoration-danger="state == 'failed'"
+                    decoration-success="state == 'posted'" decoration-warning="state == 'draft'" />
+                <field name="youtube_video_url" widget="url"/>
+                <field name="youtube_video_privacy"/>
+                <field name="failure_reason"/>
+                <field name="youtube_live_start_time" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_event_track_live_post" model="ir.actions.act_window">
+        <field name="name">Event Track Live Posts</field>
+        <field name="res_model">event.track.live.post</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_event_track_live_post"
+        name="Track Live Posts"
+        sequence="77"
+        action="action_event_track_live_post"
+        parent="event.menu_event_configuration"/>
+
+</odoo>

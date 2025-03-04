@@ -1,0 +1,52 @@
+<odoo>
+    <record id="view_event_track_post_wizard_form" model="ir.ui.view">
+        <field name="name">event.track.post.wizard.form</field>
+        <field name="model">event.track.post.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Post Track to YouTube Live">
+                <div class="alert alert-warning text-center" role="alert" invisible="not warning_message">
+                    <field name="warning_message" nolabel="1" readonly="1"/>
+                </div>
+                <group invisible="post_ids">
+                    <group>
+                        <field name="youtube_account_id" options='{"no_create":true}'/>
+                        <field name="youtube_privacy" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="post_method" widget="radio" />
+                        <field name="publish_hour_offset_before" invisible="post_method == 'now'" />
+                    </group>
+                </group>
+                <group invisible="not post_ids">
+                    <field name="post_ids" widget="many2many" nolabel="1" readonly="1">
+                        <list limit="10">
+                            <field name="name" string="Live Title"/>
+                            <field name="state" decoration-info="state == 'draft'" decoration-danger="state == 'failed'" decoration-success="state in ['scheduled', 'posted']" widget="badge"/>
+                            <field name="youtube_video_url" string="Live URL" widget="url" invisible="state != 'posted'"/>
+                        </list>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Start" type="object" name="action_post" class="btn-primary" invisible="is_partial or post_ids or not is_valid"/>
+                    <button string="Next" type="object" name="action_post" class="btn-primary" invisible="not is_partial or not is_valid"/>
+                    <button string="See Posts" type="object" name="action_see_posts" class="btn-secondary" invisible="not is_partial or not post_ids"
+                        confirm="You will not be able to continue the current posting! Confirm that you want to see posts?"/>
+                    <button string="See Posts" type="object" name="action_see_posts" class="btn-secondary" invisible="is_partial or not post_ids"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" invisible="is_partial"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_event_track_post_youtube" model="ir.actions.server">
+        <field name="name">Create Youtube Live</field>
+        <field name="group_ids" eval="[Command.link(ref('event.group_event_manager'))]"/>
+        <field name="model_id" ref="website_event_track.model_event_track" />
+        <field name="binding_model_id" ref="website_event_track.model_event_track" />
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_publish_on_youtube()
+        </field>
+    </record>
+</odoo>
