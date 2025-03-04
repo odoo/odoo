@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
     MockServer,
     clickSave,
@@ -37,6 +38,7 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { router, routerBus } from "@web/core/browser/router";
+import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
@@ -1858,6 +1860,42 @@ test("stored action is restored correctly with domain", async () => {
 
     expect(".o_list_view").toHaveCount(1);
     expect(".o_data_row").toHaveCount(1);
+});
+
+test("current_action doesn't contains _originalAction", async () => {
+    class myActionComponent extends Component {
+        static template = xml`<div>This is a Client Action</div>`;
+        static props = ["*"];
+    }
+
+    const myAction = (env, action) => {
+        registry.category("actions").add("myAction", myActionComponent, { force: true });
+        return action;
+    };
+    registry.category("actions").add("myAction", myAction);
+    redirect("/odoo/myAction");
+    await mountWithCleanup(WebClient);
+
+    await animationFrame();
+    expect(JSON.parse(sessionStorage.getItem("current_action"))).toEqual(
+        {
+            context: {},
+            domain: [],
+            jsId: "action_1",
+            params: {
+                action: "myAction",
+                actionStack: [
+                    {
+                        action: "myAction",
+                    },
+                ],
+            },
+            tag: "myAction",
+            target: "current",
+            type: "ir.actions.client",
+        },
+        { message: "current_action doesn't contains _originalAction" }
+    );
 });
 
 test.tags("desktop");
