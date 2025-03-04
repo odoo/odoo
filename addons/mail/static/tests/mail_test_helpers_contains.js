@@ -1,7 +1,7 @@
 /** @odoo-module alias=@web/../tests/utils default=false */
 
 import { __debug__, after, afterEach, expect, getFixture } from "@odoo/hoot";
-import { queryAll, queryFirst } from "@odoo/hoot-dom";
+import { getActiveElement, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { isVisible } from "@web/core/utils/ui";
@@ -233,10 +233,15 @@ function _triggerEvents(el, selector, eventDefs, options = {}) {
 function _click(
     el,
     selector,
-    { mouseEventInit = {}, skipDisabledCheck = false, skipVisibilityCheck = false } = {}
+    { mouseEventInit = {}, skipDisabledCheck = false, skipVisibilityCheck = false, target } = {}
 ) {
     if (!skipDisabledCheck && el.disabled) {
         throw new Error("Can't click on a disabled button");
+    }
+    const previousEl = getActiveElement(target);
+    const nextEl = findElement(el, selector);
+    if (previousEl !== nextEl) {
+        _triggerEvents(previousEl, undefined, ["focusout"], { skipVisibilityCheck });
     }
     return _triggerEvents(
         el,
@@ -719,6 +724,7 @@ class Contains {
                 mouseEventInit: this.options.click,
                 skipDisabledCheck: true,
                 skipVisibilityCheck: true,
+                target: this.options.target,
             });
         }
         if (this.options.dragenterFiles) {
