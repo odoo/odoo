@@ -69,7 +69,13 @@ export class BuilderNumberInput extends Component {
     }
 
     parseDisplayValue(displayValue) {
+        // Replace commas by dots and only accept 0-9, dot, - sign and space.
+        displayValue = displayValue.replace(/,/g, ".").replace(/[^0-9.-\s]/g, "");
+
         return this.convertSpaceSplitValues(displayValue, (value) => {
+            if (value === "") {
+                return value;
+            }
             const unit = this.props.unit;
             const saveUnit = this.props.saveUnit;
             if (unit && saveUnit) {
