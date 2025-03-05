@@ -38,7 +38,7 @@ export function useColorPickerBuilderComponent() {
         const { actionId, actionParam } = actionWithGetValue;
         const actionValue = getAction(actionId).getValue({ editingElement, param: actionParam });
         return {
-            selectedColor: actionValue,
+            selectedColor: actionValue || "#FFFFFF00",
         };
     }
     function getColor(colorValue) {
