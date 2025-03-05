@@ -48,7 +48,7 @@
             </div>
             <t t-slot="details"/>
         </t>
-        <t t-else="">
+        <t t-elif="props.mode !== 'receipt'">
             <div t-if="!props.slots?.emptyCart" class="d-flex flex-column align-items-center justify-content-center flex-grow-1 rounded-3 gap-3">
                 <CenteredIcon icon="'fa-shopping-cart fa-4x'" text="emptyCartText()" class="'h-unset'"/>
                 <t t-slot="details"/>
