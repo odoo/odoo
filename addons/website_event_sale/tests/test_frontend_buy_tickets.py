@@ -1,17 +1,19 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import timedelta
 
-import odoo.tests
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.fields import Datetime
+from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from .common import TestWebsiteEventSaleCommon
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
     def setUp(self):
         super().setUp()
@@ -117,65 +119,110 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
     # TO DO - add public test with new address when convert to web.tour format.
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install')
 class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.http')
     def test_check_seats_avail_before_purchase(self):
+        """Check that payments fails when there aren't enough seats available.
+        - First check payment fails due to exceeding the ticket's limit
+        - Then change to 2 unlimited tickets, which fails due to exceeding event limit
+        - Finally do a successful purchase of a single ticket without limit
+        """
         self.authenticate(None, None)
 
         sale_order = self.empty_cart
 
-        sale_order._cart_add(
-            product_id=self.ticket.product_id.id, event_ticket_id=self.ticket.id, quantity=2
-        )
-        sale_order._cart_add(
-            product_id=self.ticket_2.product_id.id, event_ticket_id=self.ticket_2.id, quantity=2
-        )
-
-        url = self._build_url(f'/shop/payment/transaction/{sale_order.id}')
-        self.assertEqual(self.event.seats_taken, 0)
-        self.assertEqual(self.event_2.seats_taken, 0)
-        self.env['event.registration'].create([
-            {
-                'event_id': self.event.id,
-                'event_ticket_id': self.ticket.id,
-                'name': 'reg1',
-                'state': 'done',
-            },
-            {
-                'event_id': self.event_2.id,
-                'event_ticket_id': self.ticket_2.id,
-                'name': 'reg2',
-                'state': 'done',
-            }
-        ])
-        self.assertEqual(self.event.seats_taken, 1)
-        self.assertEqual(self.event_2.seats_taken, 1)
-        self.ticket.write({
-            'seats_max': 2,
-            'seats_limited': True,
-        })
         self.ticket_2.write({
-            'seats_max': 2,
+            'name': "VIP",
+            'event_id': self.event.id,
+            'seats_max': 1,
             'seats_limited': True,
         })
-        self.env['event.registration'].create([
-            {'event_id': e.id, 'sale_order_id': sale_order.id, 'partner_id': p.id, 'event_ticket_id': t.id}
-            for p in [(self.partner), (self.partner_admin)]
-            for e, t in [(self.event, self.ticket), (self.event_2, self.ticket_2)]
-        ])
+        self.event.write({
+            'seats_max': 3,
+            'seats_limited': True,
+        })
+        self.assertFalse(self.ticket.seats_limited)
+        self.assertEqual(self.ticket_2.seats_available, 1)
+        self.assertEqual(self.event.seats_available, 3)
+
+        # Add VIP ticket to cart & create draft registration
+        sale_order.order_line = [Command.create({
+            'product_id': self.ticket.product_id.id,
+            'event_id': self.event.id,
+            'event_ticket_id': self.ticket_2.id,
+        })]
+        registration = self.env['event.registration'].create({
+            'state': 'draft',
+            'partner_id': sale_order.partner_id.id,
+            'event_id': self.event.id,
+            'event_ticket_id': self.ticket_2.id,
+            'sale_order_id': sale_order.id,
+        })
+        self.assertEqual(self.event.seats_taken, 0)
+        self.assertEqual(self.event.event_ticket_ids.mapped('seats_taken'), [0, 0])
+
+        # Sneaky Mitchell beats us to the punch
+        self.event.registration_ids = [Command.create({
+            'partner_id': self.partner_admin.id,
+            'event_ticket_id': self.ticket_2.id,
+            'state': 'done',
+        })]
+        self.assertEqual(self.event.seats_taken, 1)
+        self.assertEqual(self.event.seats_available, 2)
+
+        # Set up transaction values
+        url = self._build_url(f'/shop/payment/transaction/{sale_order.id}')
         route_kwargs = {
             'provider_id': self.provider.id,
             'payment_method_id': self.payment_method.id,
             'token_id': None,
-            'amount': sale_order.amount_total,
             'flow': 'direct',
             'tokenization_requested': False,
             'landing_route': '/shop/payment/validate',
-            'is_validation': False,
-            'csrf_token': odoo.http.Request.csrf_token(self),
             'access_token': sale_order._portal_ensure_token(),
         }
-        with self.assertRaisesRegex(odoo.tests.JsonRpcException, 'odoo.exceptions.ValidationError'):
+
+        # Payment should fail due to exceeding the VIP ticket limit
+        with self.assertRaisesRegex(JsonRpcException, r'odoo\.exceptions\.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
+        # Double check that we hit the correct limit
+        with self.assertRaises(ValidationError):
+            self.ticket_2._check_seats_availability(minimal_availability=1)
+        self.event._check_seats_availability(minimal_availability=1)
+
+        # Replace VIP ticket with 2 regular tickets
+        sale_order.order_line.write({
+            'product_id': self.ticket.product_id,
+            'product_uom_qty': 2,
+            'event_id': self.event.id,
+            'event_ticket_id': self.ticket.id,
+        })
+        registration.event_ticket_id = self.ticket.id
+        registration += registration.copy({'state': 'draft', 'sale_order_id': sale_order.id})
+
+        # Sneaky Mitchell beats us to the punch again
+        self.event.registration_ids = [Command.create({
+            'partner_id': self.partner_admin.id,
+            'event_ticket_id': self.ticket.id,
+            'state': 'done',
+        })]
+        self.assertEqual(self.event.seats_taken, 2)
+        self.assertEqual(self.event.seats_available, 1)
+
+        # Payment should fail due to exceeding the event seat limit
+        with self.assertRaisesRegex(JsonRpcException, r'odoo\.exceptions\.ValidationError'):
+            self.make_jsonrpc_request(url, route_kwargs)
+        # Double check that we hit the correct limit
+        with self.assertRaises(ValidationError):
+            self.event._check_seats_availability(minimal_availability=2)
+        self.ticket._check_seats_availability(minimal_availability=1)
+
+        # Payment should succeed when buying only one ticket
+        sale_order.order_line.product_uom_qty = 1
+        registration[1].unlink()
+        self.make_jsonrpc_request(url, route_kwargs)
+        registration.exists().write({'state': 'open'})
+        self.assertEqual(self.ticket.seats_taken, 2)
+        self.assertEqual(self.event.seats_taken, 3)
