@@ -88,7 +88,7 @@ export class ProductLabelSectionAndNoteField extends Component {
     }
 
     get productName() {
-        return this.props.record.data[this.props.name][1];
+        return this.props.record.data[this.props.name].display_name;
     }
 
     get label() {
@@ -104,13 +104,15 @@ export class ProductLabelSectionAndNoteField extends Component {
 
     get m2oProps() {
         const p = computeM2OProps(this.props);
+        let value = p.value && { ...p.value };
         if (this.props.readonly && this.productName) {
-            p.value[1] = this.productName;
+            value = { ...value, display_name: this.productName };
         }
         return {
             ...p,
             canOpen: !this.props.readonly || this.isProductClickable,
             placeholder: _t("Search a product"),
+            value,
         };
     }
 

@@ -22,17 +22,17 @@ export class CommonSkillsListRenderer extends ListRenderer {
             const data = record.data;
             const group = data[this.groupBy];
 
-            if (grouped[group[1]] === undefined) {
-                grouped[group[1]] = {
-                    id: parseInt(group[0]),
-                    name: group[1] || _t('Other'),
+            if (grouped[group.display_name] === undefined) {
+                grouped[group.display_name] = {
+                    id: parseInt(group.id),
+                    name: group.display_name || _t('Other'),
                     list: {
                         records: [],
                     },
                 };
             }
 
-            grouped[group[1]].list.records.push(record);
+            grouped[group.display_name].list.records.push(record);
         }
         return grouped;
     }

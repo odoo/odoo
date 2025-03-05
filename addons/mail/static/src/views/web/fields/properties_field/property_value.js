@@ -20,7 +20,7 @@ patch(PropertyValue.prototype, {
 
     _onAvatarClicked() {
         if (this.openChat && this.showAvatar && this.props.comodel === "res.users") {
-            this.openChat(this.props.value[0]);
+            this.openChat(this.props.value.id);
         }
     },
 });
