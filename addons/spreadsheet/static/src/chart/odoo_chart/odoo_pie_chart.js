@@ -14,6 +14,7 @@ const {
     getPieChartLegend,
     getChartShowValues,
     truncateLabel,
+    getEvaluatedChartTitle,
 } = chartHelpers;
 
 export class OdooPieChart extends OdooChart {
@@ -47,10 +48,13 @@ function createOdooChartRuntime(chart, getters) {
     const definition = chart.getDefinition();
     definition.dataSets = datasets.map(() => ({ trend: definition.trend }));
 
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
         locale: getters.getLocale(),
+        evaluatedChartTitle,
     };
 
     const config = {
@@ -63,7 +67,7 @@ function createOdooChartRuntime(chart, getters) {
             ...CHART_COMMON_OPTIONS,
             layout: getChartLayout(definition),
             plugins: {
-                title: getChartTitle(definition),
+                title: getChartTitle(definition, chartData),
                 legend: getPieChartLegend(definition, chartData),
                 tooltip: getPieChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),

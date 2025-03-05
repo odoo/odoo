@@ -16,6 +16,8 @@ const {
     getChartShowValues,
     getTrendDatasetForBarChart,
     truncateLabel,
+    getEvaluatedChartTitle,
+    getEvaluatedAxesDesign,
 } = chartHelpers;
 
 export class OdooBarChart extends OdooChart {
@@ -62,11 +64,16 @@ function createOdooChartRuntime(chart, getters) {
             : getTrendDatasetForBarChart(trend, dataset.data);
     });
 
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+    const evaluatedAxesDesign = getEvaluatedAxesDesign(getters, definition.axesDesign);
+
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
         locale: getters.getLocale(),
         trendDataSetsValues,
+        evaluatedChartTitle,
+        evaluatedAxesDesign,
     };
 
     const config = {
@@ -81,7 +88,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition),
             scales: getBarChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition),
+                title: getChartTitle(definition, chartData),
                 legend: getBarChartLegend(definition, chartData),
                 tooltip: getBarChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
