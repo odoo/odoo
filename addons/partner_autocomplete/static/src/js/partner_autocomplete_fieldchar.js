@@ -32,7 +32,7 @@ export class PartnerAutoCompleteCharField extends CharField {
             {
                 options: async (request, shouldSearchWorldWide) => {
                     if (await this.validateSearchTerm(request)) {
-                        let queryCountryId = this.props.record.data?.country_id ? this.props.record.data.country_id[0] : false;
+                        let queryCountryId = this.props.record.data?.country_id ? this.props.record.data.country_id.id : false;
                         if (shouldSearchWorldWide){
                         	queryCountryId = 0;
                         }
@@ -62,14 +62,6 @@ export class PartnerAutoCompleteCharField extends CharField {
             const logoField = this.props.record.resModel === 'res.partner' ? 'image_1920' : 'logo';
             data.company[logoField] = data.logo;
         }
-
-        // Format the many2one fields
-        const many2oneFields = ['country_id', 'state_id'];
-        many2oneFields.forEach((field) => {
-            if (data.company[field]) {
-                data.company[field] = [data.company[field].id, data.company[field].display_name];
-            }
-        });
 
         // Save UNSPSC codes (tags)
         const unspsc_codes = data.company.unspsc_codes

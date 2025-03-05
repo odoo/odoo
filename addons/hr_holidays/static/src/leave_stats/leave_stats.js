@@ -54,14 +54,14 @@ export class LeaveStatsComponent extends Component {
             const proms = [];
             if (
                 dateChanged ||
-                (employee && (this.state.employee && this.state.employee[0]) !== employee[0])
+                (employee && (this.state.employee && this.state.employee.id) !== employee.id)
             ) {
                 proms.push(this.loadLeaves(employee));
             }
             if (
                 dateChanged ||
                 (department &&
-                    (this.state.department && this.state.department[0]) !== department[0])
+                    (this.state.department && this.state.department.id) !== department.id)
             ) {
                 proms.push(this.loadDepartmentLeaves(department, employee));
             }
@@ -70,7 +70,7 @@ export class LeaveStatsComponent extends Component {
             this.state.employee = employee;
             this.state.department = department;
             if (this.state.department) {
-                const department_name_array = this.state.department[1].split('/');
+                const department_name_array = this.state.department.display_name.split('/');
                 this.state.department_name = department_name_array.pop();
                 this.state.has_parent_department = department_name_array.length > 0;
             }
@@ -89,26 +89,27 @@ export class LeaveStatsComponent extends Component {
 
         const dateFrom = serializeDateTime(this.state.date_from);
         const dateTo = serializeDateTime(this.state.date_to);
-        const leaves = await this.orm.searchRead(
+        const leaves = await this.orm.webSearchRead(
             "hr.leave",
             [
-                ["department_id", "=", department[0]],
+                ["department_id", "=", department.id],
                 ["state", "=", "validate"],
-                ["employee_id", "!=", employee],
+                ["employee_id", "!=", employee.id],
                 ["date_from", "<=", dateTo],
                 ["date_to", ">=", dateFrom],
             ],
-            [
-                "employee_id",
-                "date_from",
-                "date_to",
-                "number_of_days",
-                "number_of_hours",
-                "leave_type_request_unit",
-                "request_unit_hours"
-            ]
+            {
+                specification: {
+                    employee_id: { fields: { display_name: {} } },
+                    date_from: {},
+                    date_to: {},
+                    number_of_days: {},
+                    number_of_hours: {},
+                    leave_type_request_unit: {},
+                },
+            }
         );
-        this.state.departmentLeaves = this.arrangeData(leaves)
+        this.state.departmentLeaves = this.arrangeData(leaves.records)
     }
 
     async loadLeaves(employee) {
@@ -119,25 +120,26 @@ export class LeaveStatsComponent extends Component {
 
         const dateFrom = serializeDateTime(this.state.date_from.startOf("year"));
         const dateTo = serializeDateTime(this.state.date_from.endOf("year"));
-        const leaves = await this.orm.searchRead(
+        const leaves = await this.orm.webSearchRead(
             "hr.leave",
             [
-                ["employee_id", "=", employee[0]],
+                ["employee_id", "=", employee.id],
                 ["state", "=", "validate"],
                 ["date_from", "<=", dateTo],
                 ["date_to", ">=", dateFrom],
             ],
-            [
-                "holiday_status_id",
-                "date_from",
-                "date_to",
-                "number_of_days",
-                "number_of_hours",
-                "leave_type_request_unit",
-                "request_unit_hours"
-            ],
+            {
+                specification: {
+                    holiday_status_id: { fields: { display_name: {} } },
+                    date_from: {},
+                    date_to: {},
+                    number_of_days: {},
+                    number_of_hours: {},
+                    leave_type_request_unit: {},
+                },
+            }
         );
-        this.state.leaves = this.arrangeData(leaves);
+        this.state.leaves = this.arrangeData(leaves.records);
     }
     arrangeData(leaves) {
         leaves.forEach((leave) => {

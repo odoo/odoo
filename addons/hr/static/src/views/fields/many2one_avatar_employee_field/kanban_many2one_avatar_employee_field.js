@@ -27,7 +27,7 @@ export class KanbanMany2OneAvatarEmployeeField extends Component {
     }
 
     get displayName() {
-        return this.props.displayAvatarName && this.value ? this.value[1] : "";
+        return this.props.displayAvatarName && this.value ? this.value.display_name : "";
     }
 
     get m2oProps() {

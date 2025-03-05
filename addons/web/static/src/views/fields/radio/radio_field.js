@@ -47,13 +47,12 @@ export class RadioField extends Component {
         }
     }
     get value() {
+        const value = this.props.record.data[this.props.name];
         switch (this.type) {
             case "selection":
-                return this.props.record.data[this.props.name];
+                return value;
             case "many2one":
-                return Array.isArray(this.props.record.data[this.props.name])
-                    ? this.props.record.data[this.props.name][0]
-                    : this.props.record.data[this.props.name];
+                return value && value.id;
             default:
                 return null;
         }
@@ -68,7 +67,9 @@ export class RadioField extends Component {
                 this.props.record.update({ [this.props.name]: value[0] });
                 break;
             case "many2one":
-                this.props.record.update({ [this.props.name]: value });
+                this.props.record.update({
+                    [this.props.name]: value && { id: value[0], display_name: value[1] },
+                });
                 break;
         }
     }

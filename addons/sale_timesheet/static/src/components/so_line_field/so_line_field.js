@@ -16,7 +16,7 @@ export class SoLineField extends Component {
                 if (
                     // field is unset AND the old & new so_lines are different
                     !this.props.record.data.is_so_line_edited &&
-                    this.props.record.data[this.props.name][0] != value[0]
+                    this.props.record.data[this.props.name].id != value.id
                 ) {
                     this.props.record.update({ is_so_line_edited: true });
                 }

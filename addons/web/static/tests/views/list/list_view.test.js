@@ -16689,7 +16689,7 @@ test(`Properties: many2one`, async () => {
 
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
-        expect(args[1].properties[0].value[0]).toEqual(2);
+        expect(args[1].properties[0].value[0]).toBe(2);
     });
 
     await mountView({
