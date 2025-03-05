@@ -241,3 +241,12 @@ PosLoyalty.check.hasRewardLine("Free Product", "-10", "2.00");
 PosLoyalty.check.isRewardButtonHighlighted(false);
 
 Tour.register("PosLoyaltyRewardProductTag", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.clickDisplayedProduct('Product A');
+PosLoyalty.do.enterCode('563412');
+PosLoyalty.check.hasRewardLine('10% on your order', '-1.50');
+
+Tour.register("test_loyalty_on_order_with_fixed_tax", { test: true, url: "/pos/web" }, getSteps());
