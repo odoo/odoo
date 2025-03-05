@@ -239,3 +239,15 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
             PosLoyalty.isRewardButtonHighlighted(false, true),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_loyalty_on_order_with_fixed_tax", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            PosLoyalty.enterCode("563412"),
+            PosLoyalty.hasRewardLine("10% on your order", "-1.50"),
+        ].flat(),
+});
