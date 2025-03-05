@@ -108,25 +108,52 @@
                             <p class="h2">No Course created yet.</p>
                             <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
                         </div>
-                        <t t-if="channels_my">
-                            <t t-set="void_count" t-value="3 - len(channels_my[:3])"/>
-                            <div class="o_wslides_home_content_section mb-3">
-                                <div class="row o_wslides_home_content_section_title align-items-center">
-                                    <div class="col">
-                                        <a href="/slides/all?my=1" class="float-end">View all</a>
-                                        <h5 class="m-0">My courses</h5>
-                                        <hr class="mt-2 mb-2"/>
+                        <div t-if="channels_my" class="container mb-5">
+                            <div class="o_wslides_home_content_section">
+                                <div t-foreach="channels_my" t-as="channel">
+                                    <div class="d-flex align-items-center">
+                                        <div t-attf-class="align-items-md-center d-flex gap-1 flex-grow-1 flex-column flex-md-row">
+                                            <div class="w-50">
+                                                <a t-if="channel.is_member and not channel.completed" t-attf-href="/slides/#{slug(channel)}"
+                                                t-out="channel.name"/>
+                                                <span t-else="" t-field="channel.name"/>
+                                                <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
+                                            </div>
+                                            <t t-if="channel.is_member">
+                                                <t t-if="channel.completed">
+                                                    <div class="badge rounded-pill text-bg-success pull-right"><i class="fa fa-check"/> Completed</div>
+                                                </t>
+                                                <t t-elif="channel.is_member and channel.channel_type and channel.completion > 0">
+                                                    <div class="s_progress_bar s_progress_bar_label_after o_editable order-last order-md-0 flex-grow-1" data-name="Course progress bar" data-snippet="s_progress_bar" data-display="inline" data-vcss="001">
+                                                        <div class="s_progress_bar_wrapper d-flex gap-2">
+                                                            <div class="progress" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100">
+                                                                <div class="progress-bar overflow-visible o_not_editable" t-attf-style="width:#{channel.completion}%;" aria-label="Progress bar">
+                                                                </div>
+                                                            </div>
+                                                            <span class="s_progress_bar_text small o_default_snippet_text"><t t-out="channel.completion"/>%</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ms-0 ms-md-3 text-muted">
+                                                        <t t-out="'{:.1f}'.format(channel.total_time).rstrip('.0')"/> hours
+                                                    </div>
+                                                </t>
+                                                <t t-elif="channel.channel_type == 'documentation'">
+                                                    <div> <t t-esc="channel.total_slides"/> steps</div>
+                                                </t>
+                                            </t>
+                                        </div>
+                                        <div t-if="len(channels_my) == 1" class="col-2 d-flex flex-row-reverse">
+                                            <a t-if="not channel.completed" class="d-flex align-items-center" t-attf-href="/slides/#{slug(channel)}">
+                                                <div class="d-none d-md-block me-2">Continue</div><i class="oi oi-arrow-right me-1"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div t-if="not channel_last" class="row mx-1 mt-2">
+                                        <hr/>
                                     </div>
                                 </div>
-                                <div class="row mx-n2 mt8">
-                                    <t t-foreach="channels_my[:3]" t-as="channel">
-                                        <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex">
-                                            <t t-call="website_slides.course_card"/>
-                                        </div>
-                                    </t>
-                                </div>
                             </div>
-                        </t>
+                        </div>
                         <div class="o_wslides_home_content_section mb-3"
                             t-if="channels_popular">
                             <div class="row o_wslides_home_content_section_title align-items-center">
