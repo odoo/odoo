@@ -3,10 +3,10 @@
 
 <t t-name="mail.ChatHub">
     <div class="o-mail-ChatHub d-print-none" t-if="isShown or ui.isSmall">
-        <t t-if="!store.chatHub.compact">
-            <t t-foreach="chatHub.opened" t-as="cw" t-key="cw.localId">
-                <ChatWindow chatWindow="cw" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (chatHub.opened.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
-            </t>
+
+        <t t-set="visibleChatWindows" t-value="chatHub.compact ? chatHub.opened.filter(({ bypassCompact }) => bypassCompact) : chatHub.opened "/>
+        <t t-foreach="visibleChatWindows" t-as="cw" t-key="cw.localId">
+            <ChatWindow chatWindow="cw" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (visibleChatWindows.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
         </t>
         <div class="o-mail-ChatHub-bubbles position-fixed d-flex flex-column align-content-start justify-content-end align-items-center" t-attf-style="top: {{position.top}}; left: {{position.left}}; right: {{position.right}}; bottom: {{position.bottom}}" t-att-class="{ 'o-liftUp': busMonitoring.hasConnectionIssues }" t-ref="bubbles">
             <div class="d-flex flex-column align-content-start justify-content-end align-items-center gap-1">
@@ -14,7 +14,7 @@
                     <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn fa fa-ellipsis-h bg-100 mt-1" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !position.dragged and !options.isOpen and !isMobileOS, 'text-500': (bubblesHover.isHover or position.dragged) and !options.isOpen and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"/>
                     <t t-set-slot="content">
                         <t t-if="displayConversations">
-                            <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="() => chatHub.compact = true"><i class="fa fa-fw fa-eye-slash"></i>Hide all conversations</button>
+                            <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="() => chatHub.hideAll()"><i class="fa fa-fw fa-eye-slash"></i>Hide all conversations</button>
                             <button class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="() => chatHub.closeAll()"><i class="oi fa-fw oi-close"></i>Close all conversations</button>
                         </t>
                         <button t-if="position.dragged" class="o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal" t-on-click="resetPosition"><i class="fa fa-fw fa-undo"></i>Reset initial position</button>
