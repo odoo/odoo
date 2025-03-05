@@ -31,6 +31,6 @@ class ResPartner(models.Model):
         """
         self.ensure_one()
         picking_ids = self.env['stock.picking'].sudo().search(self._get_stock_picking_search_domain())
-        if picking_ids:
+        if picking_ids and self.type == 'delivery':
             return False
         return True
