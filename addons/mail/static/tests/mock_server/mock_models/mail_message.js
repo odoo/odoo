@@ -79,8 +79,8 @@ export class MailMessage extends models.ServerModel {
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
-        /** @type {import("mock_models").MailLinkPreview} */
-        const MailLinkPreview = this.env["mail.link.preview"];
+        /** @type {import("mock_models").MailMessageLinkPreview} */
+        const MailMessageLinkPreview = this.env["mail.message.link.preview"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").MailMessageReaction} */
@@ -155,8 +155,10 @@ export class MailMessage extends models.ServerModel {
                         ? ResFake._message_compute_subject([message.res_id])
                         : MailThread._message_compute_subject([message.res_id])
                     ).get(message.res_id),
-                link_preview_ids: mailDataHelpers.Store.many(
-                    MailLinkPreview.browse(message.link_preview_ids)
+                message_link_preview_ids: mailDataHelpers.Store.many(
+                    MailMessageLinkPreview.browse(message.message_link_preview_ids).filter(
+                        (lpm) => !lpm.is_hidden
+                    )
                 ),
                 notification_ids: mailDataHelpers.Store.many(
                     notifications.filter(

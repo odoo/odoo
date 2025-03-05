@@ -12,6 +12,6 @@ class LivechatLinkPreviewController(LinkPreviewController):
         self.mail_link_preview(message_id)
 
     @route("/im_livechat/cors/link_preview/hide", methods=["POST"], type="jsonrpc", auth="public", cors="*")
-    def livechat_link_preview_hide(self, guest_token, link_preview_ids):
+    def livechat_link_preview_hide(self, guest_token, message_link_preview_ids):
         force_guest_env(guest_token)
-        self.mail_link_preview_hide(link_preview_ids)
+        self.mail_link_preview_hide(message_link_preview_ids)
