@@ -12,7 +12,6 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_worldline import const
 from odoo.addons.payment_worldline.controllers.main import WorldlineController
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -261,6 +260,26 @@ class PaymentTransaction(models.Model):
             )
 
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on Worldline data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'worldline':
+            return super()._compare_notification_data(notification_data)
+
+        amount_of_money = notification_data.get('payment', {}).get('paymentOutput', {}).get(
+            'amountOfMoney', {}
+        )
+        amount = payment_utils.to_major_currency_units(
+            amount_of_money.get('amount'), self.currency_id
+        )
+        currency_code = amount_of_money.get('currencyCode')
+        self._validate_amount_and_currency(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of `payment' to process the transaction based on Worldline data.
