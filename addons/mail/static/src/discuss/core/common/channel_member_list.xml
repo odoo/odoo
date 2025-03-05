@@ -40,7 +40,9 @@
                 <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="member.persona.avatarUrl"/>
                 <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
             </div>
-            <span t-ref="displayName" class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name"/>
+            <div t-ref="displayName" class="d-flex overflow-hidden flex-column">
+                <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name"/>
+            </div>
             <span class="ms-auto">
                 <span t-if="member.in(props.thread.invitedMembers)" class="p-1 fa fa-user-plus opacity-75"/>
                 <span t-if="member.rtcSession?.isSelfMuted and !member.rtcSession?.isDeaf" class="p-1 fa fa-microphone-slash opacity-75"/>
