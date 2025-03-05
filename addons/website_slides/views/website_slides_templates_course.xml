@@ -153,10 +153,9 @@
                                         <t t-set="default_message_id" t-value="last_message_id"/>
                                         <t t-set="default_rating_value" t-value="last_rating_value"/>
                                         <t t-set="default_attachment_ids" t-value="last_message_attachment_ids"/>
-                                        <t t-set="force_submit_url" t-value="'/mail/message/update_content' if last_message_id else False"/>
                                         <t t-set="rate_with_void_content" t-value="True"/>
                                         <t t-set="disable_composer" t-value="not channel.can_review"/>
-                                        <t t-set="_link_btn_classes" t-value="'btn-sm btn-link mx-3 o_wslides_header_text'"/>
+                                        <t t-set="_link_btn_classes" t-value="'btn-sm mx-3 o_wslides_header_text'"/>
                                         <t t-set="_text_classes" t-value="'css_editable_mode_hidden'"/>
                                     </t>
                                 </div>

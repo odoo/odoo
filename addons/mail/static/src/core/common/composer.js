@@ -306,12 +306,34 @@ export class Composer extends Component {
         return this.props.type === "note" ? _t("Log") : _t("Send");
     }
 
+    get sendButtonAttClass() {
+        return {
+            "btn-primary btn-sm": this.extended,
+            "btn-link rounded-circle p-0": !this.extended,
+            "me-2": this.env.inDiscussApp,
+            "border-start-0": this.env.inDiscussApp && !this.props.composer.message,
+            "border-0": this.props.composer.message,
+        };
+    }
+
+    get inChatterStyle() {
+        return this.extended && !this.props.composer.message;
+    }
+
+    get showSendKeybinds() {
+        return !this.isSendButtonDisabled;
+    }
+
     get sendKeybinds() {
         return this.env.inChatter ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
     }
 
     get showComposerAvatar() {
         return !this.compact && this.props.sidebar;
+    }
+
+    get showSendButtonText() {
+        return this.thread && this.thread.model !== "discuss.channel";
     }
 
     get thread() {
@@ -642,18 +664,21 @@ export class Composer extends Component {
         return ev.isTrusted;
     }
 
+    get hasValidMessage() {
+        return (
+            this.props.composer.text.trim() ||
+            this.props.composer.attachments.length > 0 ||
+            (this.message && this.message.attachment_ids.length > 0)
+        );
+    }
+
     async processMessage(cb) {
         const el = this.ref.el;
-        const attachments = this.props.composer.attachments;
-        if (attachments.some(({ uploading }) => uploading)) {
+        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
-        } else if (
-            this.props.composer.text.trim() ||
-            attachments.length > 0 ||
-            (this.message && this.message.attachment_ids.length > 0)
-        ) {
+        } else if (this.hasValidMessage) {
             if (!this.state.active) {
                 return;
             }
@@ -727,14 +752,25 @@ export class Composer extends Component {
         this.props.composer.thread.additionalRecipients = [];
     }
 
+    get shouldEditMessage() {
+        const composer = toRaw(this.props.composer);
+        return composer.text || composer.message.attachment_ids.length > 0;
+    }
+
+    get updateData() {
+        const composer = toRaw(this.props.composer);
+        return {
+            attachments: composer.attachments,
+            mentionedChannels: composer.mentionedChannels,
+            mentionedPartners: composer.mentionedPartners,
+        };
+    }
+
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.text || composer.message.attachment_ids.length > 0) {
+        if (this.shouldEditMessage) {
             await this.processMessage(async (value) =>
-                composer.message.edit(value, composer.attachments, {
-                    mentionedChannels: composer.mentionedChannels,
-                    mentionedPartners: composer.mentionedPartners,
-                })
+                composer.message.edit(value, this.updateData)
             );
         } else {
             this.env.services.dialog.add(MessageConfirmDialog, {

@@ -53,7 +53,7 @@
     <template id="rating_stars_static_popup_composer" name="Rating: rating composer in popup">
         <t t-set="display_composer" t-value="not disable_composer and not (request.session.uid and env.user._is_public())"/>
 
-        <div class="d-print-none o_rating_popup_composer o_not_editable p-0"
+        <div class="d-print-none o_rating_popup_composer o_not_editable p-0 d-flex"
             contenteditable="false"
             t-att-data-rating_avg="rating_avg or 0.0"
             t-att-data-rating_count="rating_count or 0.0"
@@ -67,7 +67,6 @@
             t-att-data-default_message_id="default_message_id"
             t-att-data-default_rating_value="default_rating_value"
             t-att-data-default_attachment_ids="default_attachment_ids"
-            t-att-data-force_submit_url="force_submit_url"
             t-att-data-rate_with_void_content="rate_with_void_content"
             t-att-data-disable_composer="disable_composer"
             t-att-data-display_composer="display_composer"
@@ -77,18 +76,7 @@
             t-att-data-hide_rating_avg="hide_rating_avg"
             t-att-data-is_fullscreen="is_fullscreen">
             <div class="d-flex flex-wrap align-items-center">
-                <div class="o_rating_popup_composer_stars text-nowrap"/>
-                <button t-if="display_composer" type="button"
-                    t-att-class="'btn ' + _link_btn_classes or 'btn-primary'"
-                    data-bs-toggle="modal" data-bs-target="#ratingpopupcomposer">
-                    <i t-if="icon" t-att-class="icon"/>
-                    <span t-attf-class="#{_text_classes} o_rating_popup_composer_text">
-                        <t t-if="is_fullscreen">Review</t>
-                        <t t-elif="default_message_id">Edit Review</t>
-                        <t t-else="">Add Review</t>
-                    </span>
-                </button>
-                <div class="o_rating_popup_composer_modal"/>
+                <div t-if="not hide_rating_avg" class="o_rating_popup_composer_stars text-nowrap"/>
             </div>
         </div>
     </template>

@@ -10,4 +10,12 @@ patch(Store.prototype, {
         }
         return params;
     },
+
+    async getMessageUpdateParams({ updateData }) {
+        const params = await super.getMessageUpdateParams(...arguments);
+        if (updateData.rating_value) {
+            params.rating_value = updateData.rating_value;
+        }
+        return params;
+    },
 });

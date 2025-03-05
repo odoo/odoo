@@ -480,6 +480,27 @@ export class Store extends BaseStore {
         return params;
     }
 
+    /**
+     * Get the parameters to pass to the message update route.
+     */
+    async getMessageUpdateParams({ body, message, updateData }) {
+        const { attachments = [], mentionedChannels = [], mentionedPartners = [] } = updateData;
+        const validMentions = this.getMentionsFromText(body, {
+            mentionedChannels,
+            mentionedPartners,
+        });
+        return {
+            attachment_ids: attachments
+                .concat(message.attachment_ids)
+                .map((attachment) => attachment.id),
+            attachment_tokens: attachments
+                .concat(message.attachment_ids)
+                .map((attachment) => attachment.access_token),
+            body: await prettifyMessageContent(body, { validMentions }),
+            partner_ids: validMentions?.partners?.map((partner) => partner.id),
+        };
+    }
+
     getNextTemporaryId() {
         const lastMessageId = this.getLastMessageId();
         if (prevLastMessageId === lastMessageId) {
