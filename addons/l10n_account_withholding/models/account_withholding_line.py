@@ -38,7 +38,7 @@ class AccountWithholdingLine(models.AbstractModel):
     )
     amount = fields.Monetary(
         string='Withheld Amount',
-        compute='_compute_amount',
+        store=True,
     )
     custom_user_amount = fields.Monetary()
     custom_user_currency_id = fields.Many2one(comodel_name='res.currency')
@@ -68,27 +68,10 @@ class AccountWithholdingLine(models.AbstractModel):
         ],
         compute='_compute_comodel_payment_type',
     )
-    # todo
-    """
-    Remove all logic computing the tax amount here, and we keep it on the wizard and payment.
-    """
 
     # --------------------------------
     # Compute, inverse, search methods
     # --------------------------------
-
-    @api.depends('tax_id', 'base_amount')
-    def _compute_amount(self):
-        AccountTax = self.env['account.tax']
-        for line in self:
-            if not line.tax_id:
-                line.amount = 0.0
-            else:
-                base_line = line._prepare_base_line_for_taxes_computation()
-                AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
-                AccountTax._round_base_lines_tax_details([base_line], self.company_id)
-                tax_details = base_line['tax_details']
-                line.amount = sum(tax_data['tax_amount_currency'] for tax_data in tax_details['taxes_data'])
 
     @api.depends('original_base_amount')
     def _compute_base_amount(self):
@@ -216,6 +199,7 @@ class AccountWithholdingLine(models.AbstractModel):
             sign=sign,
             account_id=self.account_id,
             calculate_withholding_taxes=True,
+            manual_tax_line_name=self.name,
         )
 
     def _prepare_withholding_line_vals(self):
@@ -240,6 +224,8 @@ class AccountWithholdingLine(models.AbstractModel):
         base_lines = []
         for line in self:
             if not line.name:
+                if not line.tax_id.withholding_sequence_id:
+                    raise UserError(self.env._('Please enter the withholding number for the tax %(tax_name)s', tax_name=line.tax_id.name))
                 line.name = line.tax_id.withholding_sequence_id.next_by_id()
 
             base_line = line._prepare_base_line_for_taxes_computation()
@@ -314,7 +300,51 @@ class AccountWithholdingLine(models.AbstractModel):
         self.ensure_one()
         return frozendict({
             'analytic_distribution': self.analytic_distribution,
-            'account': self.account_id,
-            'tax': self.tax_id,
+            'account': self.account_id.id,
+            'tax': self.tax_id.id,
             'skip': False,
         })
+
+    def _calculate_withholding_lines_amount(self, tax_base_lines):
+        """
+        todo doc & similar thing on payment
+        """
+        AccountTax = self.env['account.tax']
+        withholding_line_vals = []
+        # Map the existing withholding tax lines to their grouping key in order to know which line to update, create or delete.
+        withholding_line_map = self.grouped(key=lambda l: l._get_grouping_key())
+
+        def grouping_function(base_line, tax_data):
+            account = tax_data['tax'].company_id.withholding_tax_base_account_id or base_line['account_id']
+            return {
+                'analytic_distribution': base_line['analytic_distribution'],
+                'account': account.id,
+                'tax': tax_data['tax'].id,
+                'skip': not tax_data['tax'].is_withholding_tax_on_payment,
+            }
+
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(tax_base_lines, grouping_function)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for grouping_key, values in values_per_grouping_key.items():
+            if not grouping_key or grouping_key['skip']:
+                continue
+
+            if grouping_key in withholding_line_map:
+                # Compute the amount for existing withholding lines when the lines are updated in the view
+                # We only want to recompute the tax amount todo maybe base for base affected/...?
+                withholding_line_vals.append(Command.update(withholding_line_map[grouping_key].id, {
+                    'amount': values['tax_amount'],
+                }))
+            else:
+                withholding_line_vals.append(Command.create({
+                    'tax_id': grouping_key['tax'],
+                    'analytic_distribution': grouping_key['analytic_distribution'],
+                    'account_id': grouping_key['account'],
+                    'original_base_amount': values['base_amount'] + values['tax_amount'],  # Not perfect
+                    'amount': values['tax_amount'],
+                }))
+        keys_to_remove = withholding_line_map.keys() - values_per_grouping_key.keys()
+        for key in keys_to_remove:
+            withholding_line_vals.append(Command.unlink(withholding_line_map[key].id))
+
+        return withholding_line_vals
