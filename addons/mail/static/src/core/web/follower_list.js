@@ -1,9 +1,9 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { FollowerSubtypeDialog } from "./follower_subtype_dialog";
 import { useVisible } from "@mail/utils/common/hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Follower } from "@mail/core/web/follower";
 
 /**
  * @typedef {Object} Props
@@ -15,13 +15,12 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
-    static components = { DropdownItem };
+    static components = { DropdownItem, Follower };
     static props = ["onAddFollowers?", "onFollowerChanged?", "thread", "dropdown"];
 
     setup() {
         super.setup();
         this.action = useService("action");
-        this.store = useService("mail.store");
         useVisible("load-more", (isVisible) => {
             if (isVisible) {
                 this.props.thread.loadMoreFollowers();
@@ -49,35 +48,5 @@ export class FollowerList extends Component {
                 this.props.onAddFollowers?.();
             },
         });
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     * @param {import("models").Follower} follower
-     */
-    onClickDetails(ev, follower) {
-        this.store.openDocument({ id: follower.partner.id, model: "res.partner" });
-        this.props.dropdown.close();
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     * @param {import("models").Follower} follower
-     */
-    async onClickEdit(ev, follower) {
-        this.env.services.dialog.add(FollowerSubtypeDialog, {
-            follower,
-            onFollowerChanged: () => this.props.onFollowerChanged?.(),
-        });
-        this.props.dropdown.close();
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     * @param {import("models").Follower} follower
-     */
-    async onClickRemove(ev, follower) {
-        await follower.remove();
-        this.props.onFollowerChanged?.();
     }
 }
