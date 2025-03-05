@@ -160,37 +160,36 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return this.props.record.data[this.props.name];
     }
 
-    async _onProductTemplateUpdate() {
-        const result = await this.orm.call(
-            'product.template',
-            'get_single_product_variant',
-            [this.props.record.data.product_template_id.id],
+    async _onProductTemplateUpdate(edit=false){
+        const saleOrderLine = this.props.record.data;
+        const saleOrderRecord = this.props.record.model.root;
+        const result = await rpc('/sale/product/get_values',
             {
-                context: this.context,
+                product_template_id: saleOrderLine.product_template_id.id,
+                company_id: saleOrderRecord.data.company_id.id,
+                only_main_product: edit,
+                ...this._getAdditionalRpcParams(),
             }
-        );
-        if (result && result.product_id) {
-            if (this.props.record.data.product_id != result.product_id.id) {
-                if (result.is_combo) {
-                    await this.props.record.update({
-                        product_id: { id: result.product_id, display_name: result.product_name },
-                    });
-                    this._openComboConfigurator();
-                } else if (result.has_optional_products) {
-                    this._openProductConfigurator();
-                } else {
-                    await this.props.record.update({
-                        product_id: { id: result.product_id, display_name: result.product_name },
-                    });
-                    this._onProductUpdate();
-                }
-            }
-        } else if (!result.mode || result.mode === 'configurator') {
-            this._openProductConfigurator();
-        } else {
-            // only triggered when sale_product_matrix is installed.
-            this._openGridConfigurator();
+        )
+        if(result.dialog == 'combo'){
+            await this.props.record.update({
+                product_id: { id: result.product_id, display_name: result.product_name },
+            });
+            await this._openComboConfigurator();
+        }else if(result.dialog == 'product'){
+            await this._openProductConfigurator(
+                result['show_main_product'],
+                result['show_optional_product'],
+                edit
+            )
+        }else if(result.dialog == 'matrix'){
+            this._openGridConfigurator(edit);
+        }else{
+            await this.props.record.update({
+                product_id: { id: result.product_id, display_name: result.product_name },
+            });
         }
+        return this._onProductUpdate();
     }
 
     _openGridConfigurator(edit = false) {} // sale_product_matrix
@@ -201,11 +200,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         if (this.isCombo) {
             this._openComboConfigurator(true);
         } else if (this.isConfigurableTemplate) {
-            this._openProductConfigurator(true);
+            this._onProductTemplateUpdate(true);
         }
     }
 
-    async _openProductConfigurator(edit = false) {
+    async _openProductConfigurator(show_main_product, show_optional_product, edit = false) {
         const saleOrderRecord = this.props.record.model.root;
         const saleOrderLine = this.props.record.data;
         const ptavIds = this._getVariantPtavIds(saleOrderLine);
@@ -219,8 +218,27 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
             customPtavs = await this._getCustomPtavs(saleOrderLine);
         }
+        const product_configurator_values = await rpc('/sale/product_configurator/get_values',
+            {
+                product_template_id: saleOrderLine.product_template_id.id,
+                quantity: saleOrderLine.product_uom_qty,
+                currency_id: saleOrderLine.currency_id.id,
+                so_date: serializeDateTime(saleOrderRecord.data.date_order),
+                product_uom_id: saleOrderLine.product_uom_id.id,
+                company_id: saleOrderRecord.data.company_id.id,
+                pricelist_id: saleOrderRecord.data.pricelist_id.id,
+                ptav_ids: ptavIds,
+                only_main_product: edit,
+                show_main_product: show_main_product,
+                show_optional_product: show_optional_product,
+                ...this._getAdditionalRpcParams(),
+            }
+        )
 
         this.dialog.add(ProductConfiguratorDialog, {
+            products: product_configurator_values['products'],
+            optionalProducts: product_configurator_values['optional_products'],
+            currencyId: saleOrderLine.currency_id.id,
             productTemplateId: saleOrderLine.product_template_id.id,
             ptavIds: ptavIds,
             customPtavs: customPtavs,
@@ -228,7 +246,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             productUOMId: saleOrderLine.product_uom_id.id,
             companyId: saleOrderRecord.data.company_id.id,
             pricelistId: saleOrderRecord.data.pricelist_id.id,
-            currencyId: saleOrderLine.currency_id.id,
             soDate: serializeDateTime(saleOrderRecord.data.date_order),
             edit: edit,
             save: async (mainProduct, optionalProducts) => {

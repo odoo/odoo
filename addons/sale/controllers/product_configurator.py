@@ -7,6 +7,65 @@ from odoo.http import Controller, request, route
 
 class SaleProductConfiguratorController(Controller):
 
+    @route(route='/sale/product/get_values', type='jsonrpc', auth='user', readonly=True)
+    def sale_product_get_values(
+        self,
+        product_template_id,
+        only_main_product=False,
+        company_id=None,
+        **kwargs,
+    ):
+        if company_id:
+            request.update_context(allowed_company_ids=[company_id])
+
+        product_template = request.env['product.template'].with_context(
+            request.env.context,
+        ).browse(product_template_id)
+        result = {
+            'product_id': product_template.product_variant_id.id,
+            'product_name': product_template.product_variant_id.display_name,
+            'dialog': False,
+        }
+
+        # force_open_dialog has higher priority than force_stop
+        force_open_product_configurator = self._force_open_product_configurator(**kwargs)
+        if not force_open_product_configurator and self._force_stop_product_configurator(
+            product_template,
+            **kwargs,
+        ):
+            dialog_type = product_template._get_dialog_type()
+            result['dialog'] = False if dialog_type == 'product' else dialog_type
+            return result
+
+        show_main_product = (
+            force_open_product_configurator
+            or product_template.product_variant_count != 1
+            or product_template.has_configurable_attributes
+        )
+
+        show_optional_products = not only_main_product and (
+            show_main_product
+            or (
+                any(
+                    self._should_show_product(
+                        optional_product,
+                        product_template.attribute_line_ids.product_template_value_ids,
+                    )
+                    and optional_product._check_availability_for_configurator(
+                        product_template.product_variant_id.product_template_attribute_value_ids,
+                    )
+                    for optional_product in product_template.optional_product_ids
+                )
+            )
+        )
+
+        if show_main_product or show_optional_products:
+            result['dialog'] = 'product'
+        result['show_main_product'] = show_main_product or show_optional_products
+        result['show_optional_product'] = show_optional_products
+
+        return result
+
     @route(route='/sale/product_configurator/get_values', type='jsonrpc', auth='user', readonly=True)
     def sale_product_configurator_get_values(
         self,
@@ -18,7 +77,8 @@ class SaleProductConfiguratorController(Controller):
         company_id=None,
         pricelist_id=None,
         ptav_ids=None,
-        only_main_product=False,
+        show_main_product=False,
+        show_optional_product=False,
         **kwargs,
     ):
         """ Return all product information needed for the product configurator.
@@ -34,6 +94,8 @@ class SaleProductConfiguratorController(Controller):
         :param list(int)|None ptav_ids: The combination of the product, as a list of
             `product.template.attribute.value` ids.
         :param bool only_main_product: Whether the optional products should be included or not.
+        :param bool show_main_product: Whether the main product should be included or not.
+        :param bool show_optional_product: Whether the optional products should be included or not.
         :param dict kwargs: Locally unused data passed to `_get_product_information`.
         :rtype: dict
         :return: A dict containing a list of products and a list of optional products information,
@@ -61,8 +123,9 @@ class SaleProductConfiguratorController(Controller):
         pricelist = request.env['product.pricelist'].browse(pricelist_id)
         so_date = datetime.fromisoformat(so_date)
 
-        return dict(
-            products=[
+        result = {'currency_id': currency_id, 'optional_products': []}
+        if show_main_product:
+            result['products'] = [
                 dict(
                     **self._get_product_information(
                         product_template,
@@ -74,29 +137,37 @@ class SaleProductConfiguratorController(Controller):
                         product_uom_id=product_uom_id,
                         **kwargs,
                     ),
-                )
-            ],
-            optional_products=[
-                dict(
-                    **self._get_product_information(
-                        optional_product_template,
-                        optional_product_template._get_first_possible_combination(
-                            parent_combination=combination
+                ),
+            ]
+
+        if show_optional_product:
+            for optional_product in product_template.optional_product_ids:
+                if not self._should_show_product(optional_product, combination):
+                    continue
+                result['optional_products'].append(
+                    dict(
+                        **self._get_product_information(
+                            optional_product,
+                            optional_product._get_first_possible_combination(
+                                parent_combination=combination,
+                            ),
+                            currency,
+                            pricelist,
+                            so_date,
+                            parent_combination=product_template.attribute_line_ids.product_template_value_ids,
+                            **kwargs,
                         ),
-                        currency,
-                        pricelist,
-                        so_date,
-                        # giving all the ptav of the parent product to get all the exclusions
-                        parent_combination=product_template.attribute_line_ids.\
-                            product_template_value_ids,
-                        **kwargs,
+                        parent_product_tmpl_id=product_template.id,
                     ),
-                    parent_product_tmpl_id=product_template.id,
-                ) for optional_product_template in product_template.optional_product_ids if
-                self._should_show_product(optional_product_template, combination)
-            ] if not only_main_product else [],
-            currency_id=currency_id,
-        )
+                )
+
+        return result
+
+    def _force_stop_product_configurator(self, product_template, **kwargs):
+        return product_template._get_dialog_type() != 'product'
+
+    def _force_open_product_configurator(self, **kwargs):
+        return kwargs.get('force_dialog')
 
     @route(
         route='/sale/product_configurator/create_product',

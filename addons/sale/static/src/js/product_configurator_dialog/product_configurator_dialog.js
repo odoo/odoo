@@ -8,6 +8,8 @@ export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
     static template = 'sale.ProductConfiguratorDialog';
     static props = {
+        products: {type: Array, element: Object},
+        optionalProducts: {type: Array, element: Object},
         productTemplateId: Number,
         ptavIds: { type: Array, element: Number },
         customPtavs: {
@@ -52,7 +54,6 @@ export class ProductConfiguratorDialog extends Component {
         // Nest the currency id in an object so that it stays up to date in the `env`, even if we
         // modify it in `onWillStart` afterwards.
         this.currency = { id: this.props.currencyId };
-        this.getValuesUrl = '/sale/product_configurator/get_values';
         this.createProductUrl = '/sale/product_configurator/create_product';
         this.updateCombinationUrl = '/sale/product_configurator/update_combination';
         this.getOptionalProductsUrl = '/sale/product_configurator/get_optional_products';
@@ -72,13 +73,8 @@ export class ProductConfiguratorDialog extends Component {
         });
 
         onWillStart(async () => {
-            const {
-                products,
-                optional_products,
-                currency_id,
-            } = await this._loadData(this.props.edit);
-            this.state.products = products;
-            this.state.optionalProducts = optional_products;
+            this.state.products = this.props.products;
+            this.state.optionalProducts = this.props.optionalProducts;
             for (const customPtav of this.props.customPtavs) {
                 this._updatePTAVCustomValue(
                     this.env.mainProductTmplId,
@@ -88,28 +84,13 @@ export class ProductConfiguratorDialog extends Component {
             }
             this._checkExclusions(this.state.products[0]);
             // Use the currency id retrieved from the server if none was provided in the props.
-            this.currency.id ??= currency_id;
+            this.currency.id ??= this.props.currencyId;
         });
     }
 
     //--------------------------------------------------------------------------
     // Data Exchanges
     //--------------------------------------------------------------------------
-
-    async _loadData(onlyMainProduct) {
-        return rpc(this.getValuesUrl, {
-            product_template_id: this.props.productTemplateId,
-            quantity: this.props.quantity,
-            currency_id: this.currency.id,
-            so_date: this.props.soDate,
-            product_uom_id: this.props.productUOMId,
-            company_id: this.props.companyId,
-            pricelist_id: this.props.pricelistId,
-            ptav_ids: this.props.ptavIds,
-            only_main_product: onlyMainProduct,
-            ...this._getAdditionalRpcParams(),
-        });
-    }
 
     async _createProduct(product) {
         return rpc(this.createProductUrl, {

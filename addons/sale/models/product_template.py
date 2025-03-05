@@ -201,27 +201,6 @@ class ProductTemplate(models.Model):
                     value_list=[field_descriptions[v] for v in incompatible_fields],
                 ))
 
-    def get_single_product_variant(self):
-        """ Method used by the product configurator to check if the product is configurable or not.
-
-        We need to open the product configurator if the product:
-        - is configurable (see has_configurable_attributes)
-        - has optional products """
-        res = super().get_single_product_variant()
-        if res.get('product_id', False):
-            has_optional_products = False
-            for optional_product in self.product_variant_id.optional_product_ids:
-                if optional_product.has_dynamic_attributes() or optional_product._get_possible_variants(
-                    self.product_variant_id.product_template_attribute_value_ids
-                ):
-                    has_optional_products = True
-                    break
-            res.update({
-                'has_optional_products': has_optional_products,
-                'is_combo': self.type == 'combo',
-            })
-        return res
-
     @api.model
     def _get_saleable_tracking_types(self):
         """Return list of salealbe service_tracking types.
@@ -314,3 +293,16 @@ class ProductTemplate(models.Model):
         :return: A dict containing additional data about the specified product.
         """
         return {}
+
+    def _check_availability_for_configurator(self, parent_combination):
+        if (self.has_dynamic_attributes()):
+            return True
+        # Instead of looping through all the variants and checking them as in
+        # _get_possible_variants, we return for the first valid variant
+        return any(
+            product_variant._is_variant_possible(parent_combination)
+            for product_variant in self.product_variant_ids
+        )
+
+    def _get_dialog_type(self):
+        return 'combo' if self.type == 'combo' else 'product'

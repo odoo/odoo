@@ -187,17 +187,22 @@ export class CartService {
                 ...rest
             });
         }
-
-        const shouldShowProductConfigurator = await this.rpc(
-            '/website_sale/should_show_product_configurator',
+        const productValues = await this.rpc(
+            '/website_sale/product/get_values',
             {
                 product_template_id: productTemplateId,
-                ptav_ids: ptavs,
                 is_product_configured: isConfigured,
+                force_dialog: session.add_to_cart_action === 'force_dialog',
+                ...rest,
             }
-        );
-        if (shouldShowProductConfigurator) {
+        )
+        if (
+            productValues['dialog']
+            && productValues['dialog'] == 'product'
+        ) {
             return this._openProductConfigurator(
+                productValues['show_main_product'],
+                productValues['show_optional_product'],
                 productTemplateId,
                 quantity,
                 ptavs.concat(noVariantAttributeValues),
@@ -303,6 +308,8 @@ export class CartService {
      * @returns {Number} - The product's quantity added to the cart.
      */
     async _openProductConfigurator(
+        show_main_product,
+        show_optional_product,
         productTemplateId,
         quantity,
         combination,
@@ -310,8 +317,23 @@ export class CartService {
         options,
         additionalData
     ) {
+        const productCongifuratorValues = await this.rpc(
+            '/website_sale/product_configurator/get_values',
+            {
+                product_template_id: productTemplateId,
+                quantity: quantity,
+                so_date: serializeDateTime(DateTime.now()),
+                ptav_ids: combination,
+                show_main_product: show_main_product,
+                show_optional_product: show_optional_product,
+                ...additionalData,
+            }
+        );
         return await new Promise((resolve) => {
             this.dialog.add(ProductConfiguratorDialog, {
+                products: productCongifuratorValues['products'],
+                optionalProducts: productCongifuratorValues['optional_products'],
+                currencyId: productCongifuratorValues['currency_id'],
                 productTemplateId: productTemplateId,
                 ptavIds: combination,
                 customPtavs: productCustomAttributeValues.map(customPtav => ({

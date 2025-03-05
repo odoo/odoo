@@ -25,7 +25,6 @@ patch(ProductConfiguratorDialog.prototype, {
         super.setup(...arguments);
 
         if (this.props.isFrontend) {
-            this.getValuesUrl = '/website_sale/product_configurator/get_values';
             this.createProductUrl = '/website_sale/product_configurator/create_product';
             this.updateCombinationUrl = '/website_sale/product_configurator/update_combination';
             this.getOptionalProductsUrl = '/website_sale/product_configurator/get_optional_products';

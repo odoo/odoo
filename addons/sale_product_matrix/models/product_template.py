@@ -16,10 +16,7 @@ class ProductTemplate(models.Model):
         help="Configurator: choose attribute values to add the matching product variant to the order."
              "\nGrid: add several variants at once from the grid of attribute values")
 
-    def get_single_product_variant(self):
-        res = super().get_single_product_variant()
-        if self.has_configurable_attributes:
-            res['mode'] = self.product_add_mode
-        else:
-            res['mode'] = 'configurator'
-        return res
+    def _get_dialog_type(self):
+        if self.product_add_mode == 'matrix':
+            return 'matrix'
+        return super()._get_dialog_type()

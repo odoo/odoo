@@ -18,12 +18,17 @@ class SaleOrder extends models.Model {
         relation: "sale.order.line",
         relation_field: "order_id",
     });
+    company_id = fields.Many2one({
+        string: 'company',
+        relation: "res.company",
+    });
 
     _records = [
         {
             id: 1,
             name: "first record",
             order_line: [],
+            company_id: 1,
         },
     ];
 }
@@ -89,7 +94,15 @@ class Product extends models.Model {
     _records = [{ id: 14, name: "desk" }];
 }
 
-defineModels([SaleOrder, SaleOrderLine, ProductTemplate, ProductTemplateAttributeValue, Product]);
+class Company extends models.Model {
+    _name = "res.company";
+
+    name = fields.Char();
+
+    _records = [{ id: 1, name: "test company" }];
+}
+
+defineModels([Company, SaleOrder, SaleOrderLine, ProductTemplate, ProductTemplateAttributeValue, Product]);
 defineMailModels();
 
 test.tags`desktop`;
@@ -97,12 +110,16 @@ test("pressing tab with incomplete text will create a product", async () => {
     onRpc(({ method }) => {
         expect.step(method);
     });
+    onRpc('/sale/product/get_values', ()=>{
+        return {dialog: 'false'}
+    })
     await mountView({
         type: "form",
         resModel: "sale.order",
         arch: `
                 <form>
                     <sheet>
+                        <field name="company_id"/>
                         <field name="order_line">
                             <list editable="bottom">
                                 <field name="product_template_id" widget="sol_product_many2one"/>
@@ -125,6 +142,5 @@ test("pressing tab with incomplete text will create a product", async () => {
         "onchange",
         "web_name_search",
         "name_create",
-        "get_single_product_variant",
     ]);
 });

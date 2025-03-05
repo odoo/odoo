@@ -163,11 +163,12 @@ class TestWebsiteSaleProductConfigurator(
         main_product = self.env['product.template'].create({
             'name': "Main product", 'website_published': True
         })
-
         with MockRequest(self.env, website=self.website):
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
-            )
+            show_configurator = self.pc_controller.website_sale_product_get_values(
+                product_template_id=main_product.id,
+                is_product_configured=False,
+                force_dialog=True,
+            )['dialog']
 
         self.assertTrue(show_configurator)
 
@@ -183,9 +184,10 @@ class TestWebsiteSaleProductConfigurator(
         })
 
         with MockRequest(self.env, website=self.website):
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
-            )
+            show_configurator = self.pc_controller.website_sale_product_get_values(
+                product_template_id=main_product.id,
+                is_product_configured=False,
+            )['dialog']
 
         self.assertTrue(show_configurator)
 
@@ -207,9 +209,10 @@ class TestWebsiteSaleProductConfigurator(
         })
 
         with MockRequest(self.env, website=self.website):
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
-            )
+            show_configurator = self.pc_controller.website_sale_product_get_values(
+                product_template_id=main_product.id,
+                is_product_configured=False,
+            )['dialog']
 
         self.assertFalse(show_configurator)
 
@@ -238,9 +241,10 @@ class TestWebsiteSaleProductConfigurator(
         })
 
         with MockRequest(self.env, website=self.website):
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=True
-            )
+            show_configurator = self.pc_controller.website_sale_product_get_values(
+                product_template_id=main_product.id,
+                is_product_configured=True,
+            )['dialog']
 
         self.assertFalse(show_configurator)
 
@@ -268,9 +272,10 @@ class TestWebsiteSaleProductConfigurator(
         })
 
         with MockRequest(self.env, website=self.website):
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
-            )
+            show_configurator = self.pc_controller.website_sale_product_get_values(
+                product_template_id=main_product.id,
+                is_product_configured=False,
+            )['dialog']
 
         self.assertTrue(show_configurator)
 
@@ -298,9 +303,10 @@ class TestWebsiteSaleProductConfigurator(
         })
 
         with MockRequest(self.env, website=self.website):
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
-            )
+            show_configurator = self.pc_controller.website_sale_product_get_values(
+                product_template_id=main_product.id,
+                is_product_configured=False,
+            )['dialog']
 
         self.assertTrue(show_configurator)
 
@@ -329,9 +335,10 @@ class TestWebsiteSaleProductConfigurator(
         })
 
         with MockRequest(self.env, website=self.website):
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
-            )
+            show_configurator = self.pc_controller.website_sale_product_get_values(
+                product_template_id=main_product.id,
+                is_product_configured=False,
+            )['dialog']
 
         self.assertTrue(show_configurator)
 
@@ -349,18 +356,17 @@ class TestWebsiteSaleProductConfigurator(
         })
 
         with MockRequest(self.env, website=self.website):
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
+            product_values = self.pc_controller.website_sale_product_get_values(
+                product_template_id=main_product.id,
             )
             configurator_values = self.pc_controller.website_sale_product_configurator_get_values(
                 product_template_id=main_product.id,
                 quantity=1,
+                so_date=datetime(2000, 1, 1).strftime('%Y-%m-%d'),
                 currency_id=self.currency.id,
-                so_date='2000-01-01',
-                pricelist_id=self.pricelist.id,
             )
 
-        self.assertFalse(show_configurator)
+        self.assertFalse(product_values['dialog'])
         self.assertListEqual(configurator_values['optional_products'], [])
 
     def test_product_configurator_extra_price_taxes(self):
