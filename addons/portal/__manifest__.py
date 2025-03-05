@@ -32,6 +32,7 @@ a dependency towards website editing and customization capabilities.""",
         ],
         'web._assets_frontend_helpers': [
             ('prepend', 'portal/static/src/scss/bootstrap_overridden.scss'),
+            'portal/static/src/chatter/boot/boot_service.js',
         ],
         'web.assets_backend': [
             'portal/static/src/views/**/*',
@@ -42,7 +43,6 @@ a dependency towards website editing and customization capabilities.""",
             'portal/static/src/js/**/*',
             'portal/static/src/xml/**/*',
             'portal/static/src/signature_form/**/*',
-            'portal/static/src/chatter/boot/boot_service.js',
         ],
         'web.assets_unit_tests_setup': [
             'portal/static/src/interactions/**/*',
