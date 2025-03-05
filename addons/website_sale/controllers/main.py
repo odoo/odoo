@@ -1021,6 +1021,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             callback = callback or '/shop/checkout'
 
+        is_anonymous_cart = order_sudo._is_anonymous_cart()
         partner_sudo, feedback_dict = self._create_or_update_address(
             partner_sudo,
             address_type=address_type,
@@ -1031,7 +1032,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             # contains service type products
             skip_required_fields_check=(
                 order_sudo.only_services
-                and partner_sudo == order_sudo.partner_id
+                and (partner_sudo == order_sudo.partner_id or is_anonymous_cart)
             ),
             **form_data
         )
@@ -1039,7 +1040,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if feedback_dict.get('invalid_fields'):
             return json.dumps(feedback_dict) # Return if error when creating/updating partner.
 
-        is_anonymous_cart = order_sudo._is_anonymous_cart()
         is_main_address = is_anonymous_cart or order_sudo.partner_id.id == partner_sudo.id
         partner_fnames = set()
         if is_main_address:  # Main customer address updated.
