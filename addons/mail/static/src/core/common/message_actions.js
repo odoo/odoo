@@ -123,7 +123,7 @@ messageActionsRegistry
             const component = useComponent();
             component.dialog = useService("dialog");
         },
-        sequence: 90,
+        sequence: 120,
     })
     .add("download_files", {
         condition: (component) =>
