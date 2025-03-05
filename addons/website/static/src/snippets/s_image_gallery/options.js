@@ -46,18 +46,16 @@ options.registry.gallery = options.Class.extend({
                 const index = Array.from(
                     this.$target[0].querySelectorAll(".carousel-item")
                 ).findIndex((item) => item.classList.contains("active"));
-                const el = ev.currentTarget;
-                const iframe = el.querySelector("iframe");
+                const iframeEl = ev.currentTarget.querySelector("iframe");
 
-                if (iframe) {
-                    const src = iframe.src;
-                    const thumbnailUrl = this._extractThumbnailUrl(src);
-                    const carouselIndicators = this.$target[0].querySelectorAll(
+                if (iframeEl) {
+                    const thumbnailUrl = this._extractThumbnailUrl(iframeEl.src);
+                    const carouselIndicatorEls = this.$target[0].querySelectorAll(
                         ".carousel li[data-bs-target]"
                     );
 
-                    if (carouselIndicators[index]) {
-                        carouselIndicators[
+                    if (carouselIndicatorEls[index]) {
+                        carouselIndicatorEls[
                             index
                         ].style.backgroundImage = `url(${thumbnailUrl})`;
                     }
@@ -346,7 +344,7 @@ options.registry.gallery = options.Class.extend({
     slideshow: function () {
         const imageEls = this._getImages();
         const imgHolderEls = this._getImgHolderEls();
-        const elements = _.map(imageEls, img => {
+        const elements = Array.from(imageEls).map(img => {
             const isVideo = img.classList.contains("media_iframe_video");
             return {
                 // Use getAttribute to get the attribute value otherwise .src
@@ -373,38 +371,26 @@ options.registry.gallery = options.Class.extend({
             attrStyle: imageEls.length > 0 ? imageEls[0].style.cssText : '',
         },
         $slideshow = $(qweb.render('website.gallery.slideshow', params));
-        for (let i = 0; i < elements.length; i++) {
-            if (elements[i].isVideo) {
-                const videoEl = $slideshow[0].querySelectorAll("img")[i];
-                const videoSrc = videoEl.src;
-                if (videoSrc.includes(elements[i].src)) {
-                    // Todo: To remove this code and adapt in xml code
-                    // Template: Replace image tag with media_iframe_video
-                    const videoContainer = document.createElement("div");
-                    videoContainer.classList.add("d-block", "media_iframe_video");
-                    videoContainer.setAttribute("data-o-main-image", "true");
-                    videoContainer.setAttribute("t-att-data-oe-expression", elements[i].src);
+        for (const [i, element] of elements.entries()) {
+            if (element.isVideo) {
+                const videoEl = $slideshow[0].querySelector(`img[src='${element.src}']`);
+                // Todo: To remove this code and adapt in xml code
+                // Template: Replace image tag with media_iframe_video
+                const videoContainerHTML = `
+                    <div class="d-block media_iframe_video" data-o-main-image="true" t-att-data-oe-expression="${element.src}">
+                        <div class="css_editable_mode_display"></div>
+                        <div class="media_iframe_video_size"></div>
+                        <iframe src="${element.src}" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+                    </div>`;
+                videoEl.insertAdjacentHTML("afterend", videoContainerHTML);
+                videoEl.remove();
 
-                    const displayDiv = document.createElement("div");
-                    displayDiv.classList.add("css_editable_mode_display");
-
-                    const sizeDiv = document.createElement("div");
-                    sizeDiv.classList.add("media_iframe_video_size");
-
-                    const iframe = document.createElement("iframe");
-                    iframe.setAttribute("src", elements[i].src);
-                    iframe.setAttribute("frameborder", "0");
-                    iframe.setAttribute("allowfullscreen", "allowfullscreen");
-                    videoContainer.append(displayDiv, sizeDiv, iframe);
-                    videoEl.replaceWith(videoContainer);
-
-                    // Todo: To remove this code and adapt in xml code
-                    // Indicators: Replace backgroundImage styling with thumbnail URL
-                    const thumbnailUrl = this._extractThumbnailUrl(videoSrc);
-                    $slideshow[0].querySelectorAll(".carousel-indicators [data-bs-slide-to]")[
-                        i
-                    ].style.backgroundImage = `url(${thumbnailUrl})`;
-                }
+                // Todo: To remove this code and adapt in xml code
+                // Indicators: Replace backgroundImage styling with thumbnail URL
+                const thumbnailUrl = this._extractThumbnailUrl(videoEl.src);
+                $slideshow[0].querySelectorAll(".carousel-indicators [data-bs-slide-to]")[
+                    i
+                ].style.backgroundImage = `url(${thumbnailUrl})`;
             }
         }
         const imgSlideshowEls = $slideshow[0].querySelectorAll("[data-o-main-image]");
@@ -519,6 +505,7 @@ options.registry.gallery = options.Class.extend({
 
     /**
      * @private
+     * @param {String} src 
      *
      * Extract thumbnail from video src.
      */
