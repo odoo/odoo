@@ -24,13 +24,6 @@ class MrpRoutingWorkcenter(models.Model):
         'mrp.bom', 'Bill of Material',
         index=True, ondelete='cascade', required=True, check_company=True)
     company_id = fields.Many2one('res.company', 'Company', related='bom_id.company_id')
-    worksheet_type = fields.Selection([
-        ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
-        string="Worksheet", default="text", tracking=True
-    )
-    note = fields.Html('Description')
-    worksheet = fields.Binary('PDF')
-    worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.", tracking=True)
     time_mode = fields.Selection([
         ('auto', 'Compute based on tracked time'),
         ('manual', 'Set duration manually')], string='Duration Computation',
