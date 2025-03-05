@@ -728,6 +728,7 @@ test("Replying on a channel should focus composer initially", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer-input:focus");
 });
