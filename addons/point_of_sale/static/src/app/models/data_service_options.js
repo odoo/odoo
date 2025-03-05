@@ -82,4 +82,10 @@ export class DataServiceOptions {
     get uniqueModels() {
         return ["pos.session", "res.users", "res.company"];
     }
+
+    get prohibitedAutoLoadedFields() {
+        return {
+            "res.partner": ["property_product_pricelist"],
+        };
+    }
 }
