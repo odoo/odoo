@@ -206,7 +206,7 @@ class AccountTax(models.Model):
         if not base_line['special_mode'] and not base_line['calculate_withholding_taxes']:
             new_taxes_data = []
             for tax_data in taxes_computation['taxes_data']:
-                if tax_data['tax'].is_withholding_tax_on_payment and tax_data['tax'].price_include:
+                if tax_data['tax'].is_withholding_tax_on_payment:
                     taxes_computation['total_excluded'] += tax_data['tax_amount']
                     for new_tax_data in new_taxes_data:
                         if new_tax_data['tax'].include_base_amount:

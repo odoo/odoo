@@ -46,13 +46,32 @@ class AccountPayment(models.Model):
     @api.depends('withholding_line_ids')
     def _compute_withhold_tax(self):
         """ We enable the boolean by default only if withholding tax lines are given at the creation of the payment. """
-        for wizard in self:
-            wizard.withhold_tax = bool(wizard.withholding_line_ids)
+        for payment in self:
+            payment.withhold_tax = bool(payment.withholding_line_ids)
 
     @api.depends('company_id')
     def _compute_hide_tax_base_account(self):
-        for wizard in self:
-            wizard.hide_tax_base_account = bool(wizard.company_id.withholding_tax_base_account_id.id)
+        for payment in self:
+            payment.hide_tax_base_account = bool(payment.company_id.withholding_tax_base_account_id.id)
+
+    # ----------------------------
+    # Onchange, Constraint methods
+    # ----------------------------
+
+    @api.onchange('withholding_line_ids')
+    def _update_withholding_line_amounts(self):
+        """ Called in cases when the withholding lines must be updated. """
+        self.ensure_one
+        AccountTax = self.env['account.tax']
+        base_lines = []
+
+        for line in self.withholding_line_ids:
+            base_line = line._prepare_base_line_for_taxes_computation()
+            AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
+            AccountTax._round_base_lines_tax_details([base_line], self.company_id)
+            base_lines.append(base_line)
+
+        self.withholding_line_ids = self.withholding_line_ids._calculate_withholding_lines_amount(base_lines)
 
     # -----------------------
     # CRUD, inherited methods
