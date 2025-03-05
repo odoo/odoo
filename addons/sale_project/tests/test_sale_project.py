@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.fields import Datetime
 from odoo.tests import Form, HttpCase, new_test_user, tagged
 from odoo.exceptions import UserError
+from odoo.tools.safe_eval import safe_eval
 
 from .common import TestSaleProjectCommon
 
@@ -1304,3 +1305,51 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         so.action_confirm()
         self.assertFalse(self.product_order_service2.project_id.task_ids)
         self.assertFalse(sol.task_id)
+
+    def test_sale_order_lines_associated_sale_orders_of_parent_and_child_partners(self):
+        """
+        Test Case Steps:
+        1. Create a child partner linked to the parent partner.
+        2. Create a sale order for the parent partner and confirm it.
+        3. Create a sale order for the child partner and confirm it.
+        4. Set the parent partner on the project and fetch the sale order lines.
+        5. Verify that child partner's sale order lines are returned.
+        6. Set the child partner on the project and fetch the sale order lines.
+        7. Verify parent partner's sale order lines are returned.
+        """
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Partner',
+            'parent_id': self.partner.id,
+        })
+        sale_order_1 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order_service1.id,
+                    'product_uom_qty': 10,
+                })
+            ]
+        })
+        sale_order_1.action_confirm()
+        sale_order_2 = self.env['sale.order'].create({
+            'partner_id': child_partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order_service2.id,
+                    'product_uom_qty': 5,
+                })
+            ]
+        })
+        sale_order_2.action_confirm()
+
+        self.project_global.partner_id = self.partner.id
+        domain = self.project_global._domain_sale_line_id()
+        evaluated_domain = safe_eval(str(domain), {'partner_id': self.project_global.partner_id.id})
+        sale_order_lines = self.env['sale.order.line'].search(evaluated_domain)
+        self.assertIn(sale_order_2.order_line, sale_order_lines, "Expected sale order lines of child partner")
+
+        self.project_global.partner_id = child_partner.id
+        domain = self.project_global._domain_sale_line_id()
+        evaluated_domain = safe_eval(str(domain), {'partner_id': self.project_global.partner_id.id})
+        sale_order_lines = self.env['sale.order.line'].search(evaluated_domain)
+        self.assertIn(sale_order_1.order_line, sale_order_lines, "Expected sale order lines of parent partner")
