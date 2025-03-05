@@ -47,6 +47,7 @@ Spanish charts of accounts (PGCE 2008).
         'data/mod390/mod390_section6.xml',
         'data/mod390/mod390_section7.xml',
         'data/mod390/mod390.xml',
+        'data/mod420.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
