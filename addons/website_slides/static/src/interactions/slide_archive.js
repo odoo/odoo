@@ -27,7 +27,7 @@ export class SlideArchive extends Interaction {
                 if (isArchived) {
                     this.el.closest(".o_wslides_slides_list_slide")?.remove();
                     const categories = document.querySelectorAll(".o_wslides_slide_list_category");
-                    for (const category in categories) {
+                    for (const category of categories) {
                         const categoryHeaderEl = category.querySelector(".o_wslides_slide_list_category_header");
                         const categorySlideCountEl = category.querySelector(".o_wslides_slides_list_slide:not(.o_not_editable)").length;
                         const emptyFlagContainerEl = categoryHeaderEl.querySelector(".o_wslides_slides_list_drag");
