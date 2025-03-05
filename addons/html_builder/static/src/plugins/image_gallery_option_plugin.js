@@ -154,6 +154,9 @@ class ImageGalleryOption extends Plugin {
             case "grid":
                 this.grid(imageGalleryElement, images);
                 break;
+            case "nomode":
+                this.nomode(imageGalleryElement, images);
+                break;
         }
     }
 
@@ -223,6 +226,24 @@ class ImageGalleryOption extends Plugin {
                 row.classList.add("row", "s_nb_column_fixed");
                 container.appendChild(row);
             }
+        }
+    }
+
+    nomode(imageGalleryElement, images) {
+        const row = this.document.createElement("div");
+        row.classList.add("row", "s_nb_column_fixed");
+        const container = this.getContainer(imageGalleryElement);
+        container.replaceChildren(row);
+        for (const [index, img] of images.entries()) {
+            let wrapClass = "col-lg-3";
+            if (img.width >= img.height * 2 || img.width > 600) {
+                wrapClass = "col-lg-6";
+            }
+
+            const wrap = this.document.createElement("div");
+            wrap.classList.add(wrapClass);
+            wrap.appendChild(img);
+            row.appendChild(wrap);
         }
     }
 
