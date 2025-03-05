@@ -26,6 +26,7 @@ import {
     serverState,
     waitForSteps,
     withUser,
+    getService,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -2003,4 +2004,25 @@ test("deleted message should not have translate feature", async () => {
         await animationFrame(); // in case some rendering
         await contains(".dropdown-item:contains('Translate')", { count: 0 });
     }
+});
+
+test("display the notification message's posting date and time", async () => {
+    mockDate("2025-01-01 12:00:00", +1);
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Hogwarts" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Tom Riddle" });
+    const userId = pyEnv["res.users"].create({
+        name: "Harry Potter",
+        partner_id: partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await withUser(userId, () => {
+        getService("orm").call("discuss.channel", "add_members", [[channelId]], {
+            partner_ids: [partnerId],
+        });
+    });
+    await contains(".o-mail-NotificationMessage", {
+        text: "Tom Riddle joined the channelToday at 1:00 PM",
+    });
 });
