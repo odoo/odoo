@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo import Command
+from odoo.tests import JsonRpcException
 
 from datetime import timedelta
 
@@ -193,3 +195,46 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         }
         with self.assertRaisesRegex(odoo.tests.JsonRpcException, 'odoo.exceptions.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
+
+    @mute_logger('odoo.http')
+    def test_available_event_seats_payment_validation(self):
+        """Ensure payment transactions fail if there are no more seats available for an event."""
+        self.event.write({
+            'seats_limited': True,
+            'seats_max': 1,
+        })
+
+        # Add ticket to cart
+        self.so.order_line = [Command.create({
+            'event_id': self.event.id,
+            'event_ticket_id': self.ticket.id,
+            'product_id': self.ticket.product_id.id,
+        })]
+        # Create draft registration
+        self.event.registration_ids = [Command.create({
+            'partner_id': self.partner.id,
+            'sale_order_id': self.so.id,
+            'event_ticket_id': self.ticket.id,
+            'state': 'draft',
+        })]
+        self.assertEqual(self.event.seats_taken, 0)
+
+        # Sneaky Mitchell beats us to the punch
+        self.event.registration_ids = [Command.create({
+            'partner_id': self.partner_admin.id,
+            'event_ticket_id': self.ticket.id,
+            'state': 'done',
+        })]
+        self.assertEqual(self.event.seats_taken, 1)
+
+        self.authenticate(None, None)
+        with self.assertRaisesRegex(JsonRpcException, r'odoo\.exceptions\.ValidationError'):
+            self.make_jsonrpc_request(self._build_url(f'/shop/payment/transaction/{self.so.id}'), {
+                'access_token': self.so._portal_ensure_token(),
+                'provider_id': self.provider.id,
+                'payment_method_id': self.payment_method.id,
+                'flow': 'direct',
+                'token_id': None,
+                'tokenization_requested': False,
+                'landing_route': '/shop/payment/validate',
+            })
