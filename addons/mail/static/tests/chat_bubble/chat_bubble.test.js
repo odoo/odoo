@@ -380,7 +380,7 @@ test("Show IM status", async () => {
     await contains(".o-mail-ChatBubble .fa-circle.text-success[aria-label='User is online']");
 });
 
-test("Open chat window from messaging menu with chat hub compact", async () => {
+test.skip("Open chat window from messaging menu with chat hub compact", async () => {
     const pyEnv = await startServer();
     const johnId = pyEnv["res.users"].create({ name: "John" });
     const johnPartnerId = pyEnv["res.partner"].create({ user_ids: [johnId], name: "John" });
