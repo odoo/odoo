@@ -13,8 +13,8 @@ import { markRaw } from "@odoo/owl";
 
 function compareFieldValues(v1, v2, fieldType) {
     if (fieldType === "many2one") {
-        v1 = v1 ? v1[1] : "";
-        v2 = v2 ? v2[1] : "";
+        v1 = v1 ? v1.display_name : "";
+        v2 = v2 ? v2.display_name : "";
     }
     return v1 < v2;
 }

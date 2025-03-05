@@ -15,10 +15,10 @@ export class KanbanCoverImageDialog extends Component {
         this.orm = useService("orm");
         this.http = useService("http");
         const { record, fieldName } = this.props;
-        const attachment = (record && record.data[fieldName]) || [];
+        const attachment = record.data[fieldName];
         this.state = useState({
             selectFile: false,
-            selectedAttachmentId: attachment[0],
+            selectedAttachmentId: attachment?.id || false,
         });
         onWillStart(async () => {
             this.attachments = await this.orm.searchRead(
@@ -63,8 +63,8 @@ export class KanbanCoverImageDialog extends Component {
     }
 
     async setCover() {
-        const id = this.state.selectedAttachmentId ? [this.state.selectedAttachmentId] : false;
-        await this.props.record.update({ [this.props.fieldName]: id }, { save: true });
+        const value = this.state.selectedAttachmentId ? { id: this.state.selectedAttachmentId } : false;
+        await this.props.record.update({ [this.props.fieldName]: value }, { save: true });
         this.props.close();
     }
 

@@ -102,7 +102,7 @@ export class StatusBarField extends Component {
                 const value = record.data[fieldName];
                 let domain = getFieldDomain(record, fieldName, props.domain);
                 if (domain.length && value) {
-                    domain = Domain.or([[["id", "=", value[0]]], domain]).toList(
+                    domain = Domain.or([[["id", "=", value.id]], domain]).toList(
                         record.evalContext
                     );
                 }
@@ -250,7 +250,7 @@ export class StatusBarField extends Component {
                 value: option.id,
                 label: option.display_name,
                 isFolded: option[foldField],
-                isSelected: Boolean(currentValue && option.id === currentValue[0]),
+                isSelected: Boolean(currentValue && option.id === currentValue.id),
             }));
         } else {
             // Selection
@@ -305,7 +305,7 @@ export class StatusBarField extends Component {
      */
     async selectItem(item) {
         const { name, record } = this.props;
-        const value = this.field.type === "many2one" ? [item.value, item.label] : item.value;
+        const value = this.field.type === "many2one" ? { id: item.value, display_name: item.label } : item.value;
         await record.update({ [name]: value });
         await record.save();
     }

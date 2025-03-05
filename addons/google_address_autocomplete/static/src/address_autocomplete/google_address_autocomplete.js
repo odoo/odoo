@@ -114,7 +114,9 @@ export class AddressAutoComplete extends CharField {
 
             const recordFieldName = addressFieldMap[fieldName] || fieldName;
             if (recordFieldName in activeFields) {
-                if (Array.isArray(value) && fields[recordFieldName].type !== "many2one") {
+                if (fields[recordFieldName].type === "many2one") {
+                    value = value && { id: value[0], display_name: value[1] };
+                } else if (Array.isArray(value)) {
                     value = value[1];
                 }
                 valuesToUpdate[recordFieldName] = value || false;

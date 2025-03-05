@@ -31,7 +31,7 @@ class HrOrgChartPopover extends Component {
      */
     async _onEmployeeRedirect(employeeId) {
         const action = await this.orm.call('hr.employee', 'get_formview_action', [employeeId]);
-        this.actionService.doAction(action); 
+        this.actionService.doAction(action);
     }
 }
 
@@ -54,11 +54,11 @@ export class HrOrgChart extends Component {
             this.employee = this.props.record.data;
             // the widget is either dispayed in the context of a hr.employee form or a res.users form
             this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.props.record.resId;
-            this.state.parent_id = this.employee.parent_id?.[0] || this.employee.employee_parent_id?.[0];
+            this.state.parent_id = this.employee.parent_id?.id || this.employee.employee_parent_id?.id;
         });
 
         useRecordObserver(async (record) => {
-            const newParentId = record.data.parent_id?.[0] || record.data.employee_parent_id?.[0] || false;
+            const newParentId = record.data.parent_id?.id || record.data.employee_parent_id?.id || false;
             const newEmployeeId = record.data.employee_ids !== undefined ? record.data.employee_ids.resIds[0] :
                                         record.resId;
             this.state.employee_id = newEmployeeId;
@@ -114,7 +114,7 @@ export class HrOrgChart extends Component {
      */
     async _onEmployeeRedirect(employeeId) {
         const action = await this.orm.call('hr.employee', 'get_formview_action', [employeeId]);
-        this.actionService.doAction(action); 
+        this.actionService.doAction(action);
     }
 
     async _onEmployeeMoreManager(managerId) {

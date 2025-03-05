@@ -32,7 +32,7 @@ export class SoLineCreateButton extends Component {
                     "get_first_service_line",
                     [rec.resId]
                 );
-                record.update({ sale_line_id: service_line_id });
+                record.update({ sale_line_id: { id: service_line_id[0] } });
             },
         });
     }

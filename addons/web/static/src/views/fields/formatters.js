@@ -248,11 +248,11 @@ formatInteger.extractOptions = ({ attrs, options }) => ({
 
 /**
  * Returns a string representing a many2one value. The value is expected to be
- * either `false` or an array in the form [id, display_name]. The returned
- * value will then be the display name of the given value, or an empty string
- * if the value is false.
+ * either `false` or an array in the form [id, display_name] or an object
+ * containing at least the key "display_name". The returned value will then be
+ * the display name of the given value, or an empty string if the value is false.
  *
- * @param {[number, string] | false} value
+ * @param {[number, string] | { display_name: string } | false} value
  * @param {Object} [options] additional options
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @returns {string}
@@ -260,8 +260,8 @@ formatInteger.extractOptions = ({ attrs, options }) => ({
 export function formatMany2one(value, options) {
     if (!value) {
         value = "";
-    } else if (value[1]) {
-        value = value[1];
+    } else if ("display_name" in value ? value.display_name : value[1]) {
+        value = "display_name" in value ? value.display_name : value[1];
     } else {
         value = _t("Unnamed");
     }
@@ -327,7 +327,7 @@ export function formatMonetary(value, options = {}) {
             (options.field && options.field.currency_field) ||
             "currency_id";
         const dataValue = options.data[currencyField];
-        currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
+        currencyId = dataValue?.id ?? dataValue;
     }
     return formatCurrency(value, currencyId, options);
 }
@@ -379,7 +379,7 @@ function formatProperties(value, field) {
  * @returns {string}
  */
 export function formatReference(value, options) {
-    return formatMany2one(value ? [value.resId, value.displayName] : false, options);
+    return formatMany2one(value ? { id: value.resId, display_name: value.displayName } : false, options);
 }
 
 /**
@@ -389,7 +389,7 @@ export function formatReference(value, options) {
  * @returns {string}
  */
 export function formatMany2oneReference(value) {
-    return value ? formatMany2one([value.resId, value.displayName]) : "";
+    return value ? formatMany2one({ id: value.resId, display_name: value.displayName }) : "";
 }
 
 /**

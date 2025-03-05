@@ -142,8 +142,8 @@ class GetMetadataDialog extends Component {
         this.state.xmlid = metadata.xmlid;
         this.state.xmlids = metadata.xmlids;
         this.state.noupdate = metadata.noupdate;
-        this.state.creator = formatMany2one(metadata.create_uid);
-        this.state.lastModifiedBy = formatMany2one(metadata.write_uid);
+        this.state.creator = formatMany2one(metadata.create_uid && { display_name: metadata.create_uid[1] });
+        this.state.lastModifiedBy = formatMany2one(metadata.write_uid && { display_name: metadata.write_uid[1] });
         this.state.createDate = formatDateTime(deserializeDateTime(metadata.create_date));
         this.state.writeDate = formatDateTime(deserializeDateTime(metadata.write_date));
     }
@@ -302,8 +302,8 @@ class SetDefaultDialog extends Component {
     display(fieldInfo, value) {
         let displayed = value;
         if (value && fieldInfo.type === "many2one") {
-            displayed = value[1];
-            value = value[0];
+            displayed = value.display_name;
+            value = value.id;
         } else if (value && fieldInfo.type === "selection") {
             displayed = fieldInfo.selection.find((option) => {
                 return option[0] === value;

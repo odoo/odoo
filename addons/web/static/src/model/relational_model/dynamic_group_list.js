@@ -2,7 +2,7 @@
 
 import { Domain } from "@web/core/domain";
 import { DynamicList } from "./dynamic_list";
-import { createMany2OneValue, getGroupServerValue } from "./utils";
+import { getGroupServerValue } from "./utils";
 
 /**
  * @typedef {import("./record").Record} RelationalRecord
@@ -131,7 +131,7 @@ export class DynamicGroupList extends DynamicList {
         // step 2: update record value
         const value =
             targetGroup.groupByField.type === "many2one"
-                ? createMany2OneValue([targetGroup.value, targetGroup.displayName])
+                ? { id: targetGroup.value, display_name: targetGroup.displayName }
                 : targetGroup.value;
         const revert = () => {
             targetGroup._removeRecords([record.id]);

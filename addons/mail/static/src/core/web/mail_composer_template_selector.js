@@ -52,7 +52,7 @@ export class MailComposerTemplateSelector extends Component {
      */
     async onLoadTemplate(template) {
         await this.props.record.update({
-            template_id: [template.id]
+            template_id: { id: template.id },
         });
     }
 
@@ -88,7 +88,7 @@ export class MailComposerTemplateSelector extends Component {
             domain: [["model", "=", this.props.record.data.render_model]],
             onSelected: async templateIds => {
                 await this.props.record.update({
-                    template_id: templateIds
+                    template_id: { id: templateIds[0] },
                 });
             },
         });

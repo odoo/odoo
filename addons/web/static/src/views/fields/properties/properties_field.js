@@ -81,7 +81,7 @@ export class PropertiesField extends Component {
                     if (!canChangeDefinition) {
                         this.notification.add(
                             _t('Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
-                                parentName: this.props.record.data[this.definitionRecordField][1],
+                                parentName: this.props.record.data[this.definitionRecordField].display_name,
                                 parentFieldLabel:
                                     this.props.record.fields[this.definitionRecordField].string,
                             }),
@@ -354,7 +354,7 @@ export class PropertiesField extends Component {
      * @returns {integer}
      */
     get definitionRecordId() {
-        return this.props.record.data[this.definitionRecordField][0];
+        return this.props.record.data[this.definitionRecordField].id;
     }
 
     /**
@@ -654,7 +654,7 @@ export class PropertiesField extends Component {
             body: _t(
                 'Are you sure you want to delete this property field? It will be removed for everyone using the "%(parentName)s" %(parentFieldLabel)s.',
                 {
-                    parentName: this.props.record.data[this.definitionRecordField][1],
+                    parentName: this.props.record.data[this.definitionRecordField].display_name,
                     parentFieldLabel: this.props.record.fields[this.definitionRecordField].string,
                 }
             ),

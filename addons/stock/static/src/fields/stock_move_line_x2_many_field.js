@@ -43,10 +43,10 @@ export class SMLX2ManyField extends X2ManyField {
             search_default_on_hand: true,
             search_default_in_stock: true,
         };
-        const productName = this.props.record.data.product_id[1];
+        const productName = this.props.record.data.product_id.display_name;
         const title = _t("Add line: %s", productName);
         let domain = [
-            ["product_id", "=", this.props.record.data.product_id[0]],
+            ["product_id", "=", this.props.record.data.product_id.id],
             ["location_id", "child_of", this.props.context.default_location_id],
         ];
         if (this.dirtyQuantsData.size) {
@@ -77,7 +77,7 @@ export class SMLX2ManyField extends X2ManyField {
             (ml) => !ml.data.quant_id && ml._values.quantity - ml._changes.quantity
         );
         const dirtyQuantMoveLines = this._move_line_ids.filter(
-            (ml) => ml.data.quant_id[0]
+            (ml) => ml.data.quant_id.id
         );
         const dirtyMoveLines = [...dirtyQuantityMoveLines, ...dirtyQuantMoveLines];
         if (!dirtyMoveLines.length) {
@@ -92,7 +92,7 @@ export class SMLX2ManyField extends X2ManyField {
                     .map((rec) => rec.resId),
                 this.props.record.resId,
                 dirtyMoveLines.filter((rec) => rec.resId).map((rec) => rec.resId),
-                dirtyQuantMoveLines.map((ml) => ml.data.quant_id[0]),
+                dirtyQuantMoveLines.map((ml) => ml.data.quant_id.id),
             ],
             {}
         );
@@ -106,7 +106,7 @@ export class SMLX2ManyField extends X2ManyField {
         }
         const offsetByQuant = new Map();
         for (const ml of dirtyQuantMoveLines) {
-            const quantId = ml.data.quant_id[0];
+            const quantId = ml.data.quant_id.id;
             offsetByQuant.set(quantId, (offsetByQuant.get(quantId) || 0) - ml.data.quantity);
             const dbQuantId = dbMoveLinesData.get(ml.resId)?.quantId;
             if (dbQuantId && quantId != dbQuantId) {

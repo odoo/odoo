@@ -508,7 +508,11 @@ export function parseServerValue(field, value) {
             };
         }
         case "many2one": {
-            return createMany2OneValue(value);
+            if (Array.isArray(value)) {
+                // Used for web_read_group, where the value is an array of [id, display_name]
+                value = { id: value[0], display_name: value[1] };
+            }
+            return value;
         }
         case "properties": {
             return value
@@ -867,21 +871,4 @@ export async function resequence({
         records.splice(0, records.length, ...originalOrder);
         throw error;
     }
-}
-
-/**
- * @param {object | [number, string] | false} value
- * @returns {object}
- */
-export function createMany2OneValue(value) {
-    if (!value) {
-        return false;
-    }
-
-    if (Array.isArray(value)) {
-        value = Object.assign(value, { id: value[0], display_name: value[1] });
-    } else {
-        value = Object.assign([value.id, value.display_name], value);
-    }
-    return value;
 }

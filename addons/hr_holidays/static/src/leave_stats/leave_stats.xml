@@ -11,13 +11,13 @@
                         />
                     </div>
                     <div class="o_hr_leave_subtitle">
-                        <t t-esc="state.employee[1]"/>'s summary (<t t-esc="thisYear"/>)
+                        <t t-esc="state.employee.display_name"/>'s summary (<t t-esc="thisYear"/>)
                     </div>
                 </div>
             </div>
             <div class="d-flex flex-column mb-1">
                 <div t-foreach="state.leaves" t-as="leave" t-key="leave.id" class="d-flex mb-2">
-                    <span class="col-4 fw-bold" t-esc="leave.holiday_status_id[1]"/>
+                    <span class="col-4 fw-bold" t-esc="leave.holiday_status_id.display_name"/>
                     <div t-if="leave.leave_type_request_unit == 'hour'" class="d-flex gap-2 col-6">
                         <span t-esc="leave.date_from"/>
                         <span t-esc="leave.hour_from" class="fst-italic"/>
@@ -54,7 +54,7 @@
                                 record="{'data' : {'employee_id': leave.employee_id}, 'fields': this.props.record.fields}"
                                 name="'employee_id'" relation="'hr.employee'"
                             />
-                            <span t-esc="leave.employee_id[1]" class="mx-1 fw-bold"/>
+                            <span t-esc="leave.employee_id.display_name" class="mx-1 fw-bold"/>
                         </div>
                         <div t-if="leave.leave_type_request_unit == 'hour'" class="d-flex gap-2 col-6">
                             <span t-esc="leave.date_from"/>

@@ -8,7 +8,6 @@ import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import { FetchRecordError } from "./errors";
 import {
-    createMany2OneValue,
     createPropertyActiveField,
     getBasicEvalContext,
     getFieldContext,
@@ -531,7 +530,7 @@ export class Record extends DataPoint {
             const pair = await this.model.orm.call(resModel, "name_create", [displayName], {
                 context,
             });
-            return pair && createMany2OneValue(pair);
+            return pair && { id: pair[0], display_name: pair[1] };
         }
         if (resId && displayName === undefined) {
             const fieldSpec = { display_name: {} };
@@ -550,9 +549,9 @@ export class Record extends DataPoint {
                 specification: fieldSpec,
             };
             const records = await this.model.orm.webRead(resModel, [resId], kwargs);
-            return createMany2OneValue(records[0]);
+            return records[0];
         }
-        return createMany2OneValue(value);
+        return value;
     }
 
     _computeDataContext() {
@@ -669,7 +668,7 @@ export class Record extends DataPoint {
             return value.map((property) => {
                 let value;
                 if (property.type === "many2one") {
-                    value = property.value;
+                    value = property.value && [property.value.id, property.value.display_name];
                 } else if (
                     (property.type === "date" || property.type === "datetime") &&
                     typeof property.value === "string"
@@ -852,8 +851,8 @@ export class Record extends DataPoint {
                 data[propertyFieldName] = staticList;
             } else if (property.type === "many2one") {
                 data[propertyFieldName] =
-                    property.value?.length && property.value[1] === null
-                        ? createMany2OneValue([property.value.id, _t("No Access")])
+                    property.value && property.value.display_name === null
+                        ? { id: property.value.id, display_name: _t("No Access") }
                         : property.value;
             } else {
                 data[propertyFieldName] = property.value ?? false;
@@ -919,7 +918,6 @@ export class Record extends DataPoint {
         const proms = Object.entries(changes)
             .filter(([fieldName]) => this.fields[fieldName].type === "many2one")
             .map(async ([fieldName, value]) => {
-                value = createMany2OneValue(value);
                 if (!value) {
                     changes[fieldName] = false;
                 } else if (!this.activeFields[fieldName]) {

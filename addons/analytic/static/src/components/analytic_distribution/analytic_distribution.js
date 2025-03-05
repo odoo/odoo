@@ -302,7 +302,7 @@ export class AnalyticDistribution extends Component {
                 // TODO: check web_read network request
                 const { string, name, type, relation } = this.props.record.fields[currency_field];
                 recordFields[currency_field] = { name, string, type, relation, invisible: true };
-                values[currency_field] = this.props.record.data[currency_field][0];
+                values[currency_field] = this.props.record.data[currency_field].id;
             }
         }
         return {
@@ -333,10 +333,10 @@ export class AnalyticDistribution extends Component {
             args['business_domain'] = this.props.business_domain;
         }
         if (this.props.product_field && record.data[this.props.product_field]) {
-            args['product'] = record.data[this.props.product_field][0];
+            args['product'] = record.data[this.props.product_field].id;
         }
         if (this.props.account_field && record.data[this.props.account_field]) {
-            args['account'] = record.data[this.props.account_field][0];
+            args['account'] = record.data[this.props.account_field].id;
         }
         if (this.props.force_applicability) {
             args['applicability'] = this.props.force_applicability;
@@ -346,7 +346,7 @@ export class AnalyticDistribution extends Component {
             args['existing_account_ids'] = existing_account_ids;
         }
         if (record.data.company_id) {
-            args['company_id'] = record.data.company_id[0];
+            args['company_id'] = record.data.company_id.id;
         }
         return args;
     }
@@ -375,8 +375,8 @@ export class AnalyticDistribution extends Component {
         // record analytic account changes to the state
         for (const account of line.analyticAccounts) {
             const selected = record.data[`x_plan${account.planId}_id`];
-            account.accountId = selected[0];
-            account.accountDisplayName = selected[1];
+            account.accountId = selected.id;
+            account.accountDisplayName = selected.display_name;
             account.accountColor = account.planColor;
             account.accountRootPlanId = account.planId;
         }
@@ -463,9 +463,9 @@ export class AnalyticDistribution extends Component {
         const { record, product_field, account_field } = this.props;
         this.openTemplate({ resId: false, context: {
             'default_analytic_distribution': this.dataToJson(),
-            'default_partner_id': record.data['partner_id'] ? record.data['partner_id'][0] : undefined,
-            'default_product_id': product_field ? record.data[product_field][0] : undefined,
-            'default_account_prefix': account_field ? record.data[account_field][1].substr(0, 3) : undefined,
+            'default_partner_id': record.data['partner_id'] ? record.data['partner_id'].id : undefined,
+            'default_product_id': product_field ? record.data[product_field].id : undefined,
+            'default_account_prefix': account_field ? record.data[account_field].display_name.substr(0, 3) : undefined,
         }});
     }
 

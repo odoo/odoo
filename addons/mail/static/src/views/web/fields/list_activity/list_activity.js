@@ -28,7 +28,7 @@ export class ListActivity extends Component {
             return this.props.record.data.activity_summary;
         }
         if (this.props.record.data.activity_type_id) {
-            return this.props.record.data.activity_type_id[1 /* display_name */];
+            return this.props.record.data.activity_type_id.display_name;
         }
         return undefined;
     }

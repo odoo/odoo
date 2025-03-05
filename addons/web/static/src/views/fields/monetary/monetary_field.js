@@ -50,7 +50,7 @@ export class MonetaryField extends Component {
             this.props.record.fields[this.props.name].currency_field ||
             "currency_id";
         const currency = this.props.record.data[currencyField];
-        return currency && currency[0];
+        return currency && currency.id;
     }
     get currency() {
         if (!isNaN(this.currencyId)) {

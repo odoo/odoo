@@ -12,7 +12,7 @@ export class StockPickFrom extends Component {
         const props = computeM2OProps(this.props);
         return {
             ...props,
-            value: props.value || [0, this._quant_display_name()],
+            value: props.value || { id: 0, display_name: this._quant_display_name() },
         };
     }
 
@@ -20,15 +20,15 @@ export class StockPickFrom extends Component {
         let name_parts = [];
         // if location group is activated
         const data = this.props.record.data;
-        name_parts.push(data.location_id?.[1])
+        name_parts.push(data.location_id?.display_name)
         if (data.lot_id) {
-            name_parts.push(data.lot_id?.[1] || data.lot_name)
+            name_parts.push(data.lot_id?.display_name || data.lot_name)
         }
         if (data.package_id) {
-            name_parts.push(data.package_id?.[1])
+            name_parts.push(data.package_id?.display_name)
         }
         if (data.owner) {
-            name_parts.push(data.owner?.[1])
+            name_parts.push(data.owner?.display_name)
         }
         const result = name_parts.join(" - ");
         if (result) return result;

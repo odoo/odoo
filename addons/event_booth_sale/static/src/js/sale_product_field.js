@@ -31,15 +31,15 @@ patch(SaleOrderLineProductField.prototype, {
     },
     async _openEventBoothConfigurator(edit) {
         const actionContext = {
-            default_product_id: this.props.record.data.product_id[0],
+            default_product_id: this.props.record.data.product_id.id,
         };
         if (edit) {
             const recordData = this.props.record.data;
             if (recordData.event_id) {
-                actionContext.default_event_id = recordData.event_id[0];
+                actionContext.default_event_id = recordData.event_id.id;
             }
             if (recordData.event_booth_category_id) {
-                actionContext.default_event_booth_category_id = recordData.event_booth_category_id[0];
+                actionContext.default_event_booth_category_id = recordData.event_booth_category_id.id;
             }
             if (recordData.event_booth_pending_ids) {
                 actionContext.default_event_booth_ids = recordData.event_booth_pending_ids.records.map(

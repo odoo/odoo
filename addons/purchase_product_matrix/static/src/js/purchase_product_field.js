@@ -17,7 +17,7 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
 
         useRecordObserver((record) => {
             if (record.isInEdition && this.props.record.data[this.props.name]) {
-                if (!this.currentValue || this.currentValue[0] != record.data[this.props.name][0]) {
+                if (!this.currentValue || this.currentValue.id != record.data[this.props.name].id) {
                     // Field was updated if line was open in edit mode,
                     //      field is not emptied,
                     //      new value is different than existing value.
@@ -41,13 +41,13 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
         const result = await this.orm.call(
             'product.template',
             'get_single_product_variant',
-            [this.props.record.data.product_template_id[0]],
+            [this.props.record.data.product_template_id.id],
         );
         if(result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
                 this.props.record.update({
                     // TODO right name get (same problem as configurator)
-                    product_id: [result.product_id, result.product_name],
+                    product_id: { id: result.product_id, display_name: result.product_name },
                 });
             }
         } else {

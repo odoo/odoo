@@ -652,10 +652,10 @@ export class ListRenderer extends Component {
                     };
                     continue;
                 }
-                currencyId = values[0][currencyField] && values[0][currencyField][0];
+                currencyId = values[0][currencyField] && values[0][currencyField].id;
                 if (currencyId && func) {
                     const sameCurrency = values.every(
-                        (value) => currencyId === value[currencyField][0]
+                        (value) => currencyId === value[currencyField].id
                     );
                     if (!sameCurrency) {
                         aggregates[fieldName] = {
