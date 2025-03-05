@@ -55,12 +55,12 @@ PROJECT_TASK_READABLE_FIELDS = {
     'recurring_count',
     'duration_tracking',
     'display_follow_button',
+    'partner_id',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'description',
-    'partner_id',
     'date_deadline',
     'date_last_stage_update',
     'tag_ids',
