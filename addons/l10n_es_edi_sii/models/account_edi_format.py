@@ -367,7 +367,7 @@ class AccountEdiFormat(models.Model):
             if invoice.is_sale_document():
                 # Customer invoices
 
-                if com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN"):
+                if (com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN")) or is_simplified:
                     tax_details_info_vals = self._l10n_es_edi_get_invoices_tax_details_info(invoice)
                     invoice_node['TipoDesglose'] = {'DesgloseFactura': tax_details_info_vals['tax_details_info']}
 
