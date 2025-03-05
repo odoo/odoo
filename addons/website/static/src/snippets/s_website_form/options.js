@@ -1428,16 +1428,26 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         // Get the authorized existing fields for the form model
         // Do it on each render because of custom property fields which can
         // change depending on the project selected.
-        this.existingFields = await authorizedFieldsCache.get(this.formEl, this.orm).then((fields) => {
+        this.existingFields = await authorizedFieldsCache.get(this.formEl, this.orm).then(async (fields) => {
             this.fields = {};
-            for (const [fieldName, field] of Object.entries(fields)) {
-                field.name = fieldName;
-                const fieldDomain = _getDomain(this.formEl, field.name, field.type, field.relation);
-                field.domain = fieldDomain || field.domain || [];
-                this.fields[fieldName] = field;
-            }
+            const validFields = Object.fromEntries(
+                await Promise.all(
+                    Object.entries(fields).map(async ([fieldName, field]) => {
+                        // Filter selection fields that have no records
+                        if (field.relation && field.relation !== 'ir.attachment') {
+                            const records = await this._fetchFieldRecords(field);
+                            if (records.length === 0) return null; // Exclude fields with no records
+                        }
+                        field.name = fieldName;
+                        const fieldDomain = _getDomain(this.formEl, field.name, field.type, field.relation);
+                        field.domain = fieldDomain || field.domain || [];
+                        this.fields[fieldName] = field;
+                        return [fieldName, field];
+                    })
+                ).then(results => results.filter(Boolean)) // Remove null entries
+            );
             // Create the buttons for the type we-select
-            return Object.keys(fields).map(key => {
+            return Object.keys(validFields).map(key => {
                 const field = fields[key];
                 const button = document.createElement('we-button');
                 button.textContent = field.string;
