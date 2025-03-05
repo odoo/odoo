@@ -245,11 +245,7 @@
                         </list>
                     </field>
                 </page>
-                <page string="Work Instruction" name="workorder_page_work_instruction" invisible="not worksheet and not worksheet_google_slide and not operation_note">
-                    <field name="worksheet_type" invisible="1"/>
-                    <field name="worksheet" widget="pdf_viewer" invisible="worksheet_type != 'pdf'"/>
-                    <field name="worksheet_google_slide" widget="google_slide_viewer" invisible="worksheet_type != 'google_slide'"/>
-                    <field name="operation_note" invisible="worksheet_type != 'text'"/>
+                <page string="Work Instruction" name="workorder_page_work_instruction">
                 </page>
                 <field name="allow_workorder_dependencies" invisible="1"/>
                 <page string="Blocked By" name="dependencies" invisible="not allow_workorder_dependencies">

@@ -99,13 +99,6 @@ class MrpWorkorder(models.Model):
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation', check_company=True, index='btree_not_null')
         # Should be used differently as BoM can change in the meantime
-    worksheet = fields.Binary(
-        'Worksheet', related='operation_id.worksheet', readonly=True)
-    worksheet_type = fields.Selection(
-        string='Worksheet Type', related='operation_id.worksheet_type', readonly=True)
-    worksheet_google_slide = fields.Char(
-        'Worksheet URL', related='operation_id.worksheet_google_slide', readonly=True)
-    operation_note = fields.Html("Description", related='operation_id.note', readonly=True)
     move_raw_ids = fields.One2many(
         'stock.move', 'workorder_id', 'Raw Moves',
         domain=[('raw_material_production_id', '!=', False), ('production_id', '=', False)])
