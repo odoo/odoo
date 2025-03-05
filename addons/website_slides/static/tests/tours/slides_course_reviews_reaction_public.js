@@ -21,11 +21,11 @@ registry.category("web_tour.tours").add("course_reviews_reaction_public", {
             run: "hover && click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Message-actions",
+            trigger: "#chatterRoot:shadow .o-mail-Message-actions",
             run: async () => {
                 const addReactionButton = document.querySelector('#chatterRoot').shadowRoot.querySelector("[title='Add a Reaction']")
                 if (addReactionButton) {
-                    throw new Error("Public user is able to react");
+                    throw new Error("Non-authenticated user should not be able to add a reaction to a message");
                 }
             },
         },
