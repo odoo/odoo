@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, Command, fields, models, _
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import add_guest_to_context
 from odoo.exceptions import UserError
-from odoo.http import request
 from odoo.tools import get_lang
 from odoo.tools.sql import column_exists, create_column
 
@@ -105,6 +104,7 @@ class WebsiteVisitor(models.Model):
         ]
         return super()._merge_visitor(target)
 
+    @add_guest_to_context
     def _upsert_visitor(self, access_token, force_track_values=None):
         visitor_id, upsert = super()._upsert_visitor(access_token, force_track_values=force_track_values)
         if upsert == 'inserted':

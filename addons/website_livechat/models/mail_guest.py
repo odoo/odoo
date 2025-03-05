@@ -9,7 +9,7 @@ class MailGuest(models.Model):
 
     website_name = fields.Char(related="visitor_id.website_id.name")
     lang_name = fields.Char(related="visitor_id.lang_id.name")
-    is_connected = fields.Char(related="visitor_id.is_connected")
+    is_connected = fields.Boolean(related="visitor_id.is_connected")
     history = fields.Char(compute="_compute_history")
 
     @api.depends("visitor_id")
