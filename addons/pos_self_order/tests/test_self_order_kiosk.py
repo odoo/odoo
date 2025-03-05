@@ -80,3 +80,36 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.with_user(self.pos_user).open_ui()
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "self_order_language_changes")
+
+    def test_self_order_kiosk_combo_sides(self):
+        combo = self.env["product.combo"].create(
+            {
+                "name": "Desk Accessories Combo",
+                "combo_item_ids": [
+                    Command.create({
+                        "product_id": self.desk_organizer.id,
+                        "extra_price": 0,
+                    }),
+                ],
+            }
+        )
+        self.env["product.product"].create(
+            {
+                "available_in_pos": True,
+                "list_price": 40,
+                "name": "Office Combo",
+                "type": "combo",
+                "combo_ids": [
+                    (6, 0, [combo.id])
+                ],
+            }
+        )
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_self_order_kiosk_combo_sides")
