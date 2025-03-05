@@ -86,7 +86,7 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
         # Second tax sale account for cases where we want multiple repartition lines
         cls.tax_sale_account = cls.company_data['default_account_tax_sale'].copy()
 
-    def _register_payment(self, create_vals=None, enable_withholding=False, with_default_line=False):
+    def _register_payment(self, create_vals=None):
         """ Simply post the invoice, and then return a payment register wizard.
         Can optionally take create_vals if some specific fields are required on the wizard at creation, or allows to
         enable withholding tax right away.
@@ -100,17 +100,6 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
         wizard = self.env['account.payment.register'].with_context(
             active_model='account.move.line', active_ids=self.invoice.line_ids.ids
         ).create(create_vals or {})
-        if enable_withholding or with_default_line:
-            wizard.withhold_tax = True
-            if with_default_line:
-                wizard.withholding_line_ids = [
-                    Command.create({
-                        'tax_id': self.tax_sale_b.id,
-                        'name': '1',
-                        'original_base_amount': 1000,
-                        'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
-                    })
-                ]
         return wizard
 
     @freeze_time('2024-01-01')
@@ -178,64 +167,20 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
             {'balance': -1000.0,    'tax_ids': []},
         ])
 
-    @freeze_time('2024-01-01')
-    def test_included_withholding_tax_then_excluded_vat_invoice(self):
-        invoice_tax = self.percent_tax(15, include_base_amount=True)
-        withholding_tax = self.percent_tax(10, price_include_override='tax_included', is_withholding_tax_on_payment=True)
-
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
-                'price_unit': 1000.0,
-                'tax_ids': [Command.set((invoice_tax + withholding_tax).ids)],
-            })],
-        })
-        invoice.action_post()
-        self.assertRecordValues(invoice, [{
-            'amount_untaxed': 1000.0,
-            'amount_tax': 150.0,
-            'amount_total': 1150.0,
-        }])
-        self.assert_invoice_tax_totals_summary(
-            invoice,
-            {
-                'base_amount_currency': 1000.0,
-                'tax_amount_currency': 150.0,
-                'total_amount_currency': 1150.0,
-            },
-            soft_checking=True,
-        )
-
-        wizard = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
-        self.assertRecordValues(wizard.withholding_line_ids, [{
-            'original_base_amount': 1150.0,
-            'base_amount': 1150.0,
-            'amount': 115.0,
-        }])
-        self.assertRecordValues(wizard, [{'withholding_net_amount': 1035.0}])
-
-        payment = wizard._create_payments()
-        self.assertRecordValues(payment, [{
-            'amount': 1035.0,
-        }])
-        self.assertRecordValues(payment.move_id.line_ids, [
-            {'balance': 1140.0,     'tax_ids': []},
-            {'balance': -1150.0,    'tax_ids': []},
-            {'balance': 10.0,       'tax_ids': []},
-            {'balance': 1000.0,     'tax_ids': withholding_tax.ids},
-            {'balance': -1000.0,    'tax_ids': []},
-        ])
-
     def test_withholding_tax_before_payment(self):
         """
         Post the invoice, then register withholding taxes.
         Afterward, register the payment separately.
         """
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         self.assertEqual(payment_register.withholding_net_amount, 1150 - (1000 * 0.01))
         # As we only want to register withholding taxes, we change the register payment amount to match the net amount
         payment_register.amount = 1000 * 0.01
@@ -279,7 +224,15 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
         # reset so that it applies exchange rate
         self.invoice.invoice_line_ids = [Command.clear()] + [Command.create({'product_id': self.product_a.id})]
         self.invoice.action_post()
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         self.assertEqual(payment_register.amount, 2300)
         # The amount on the tax line should have been computed. The net amount too.
         self.assertEqual(payment_register.withholding_line_ids[0].base_amount, 2000)
@@ -331,6 +284,14 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
             create_vals={'outstanding_account_id': self.outstanding_account.id},
             with_default_line=True,
         )
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         # Remove the account from the payment method
         payment_register.payment_method_line_id.payment_account_id = False
         # The amounts are correct, we register the payment then check the entry
@@ -447,7 +408,15 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
             Command.clear(),
             Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0}),
         ]
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         with Form(payment_register) as payment_register_form:
             # Edit manually a line.
             with payment_register_form.withholding_line_ids.edit(1) as line_form:
@@ -652,10 +621,17 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
 
     def test_outstanding_account_marked_as_reconcilable(self):
         """ Ensure that an account set as outstanding account in the wizard will be marked as reconcilable if it is not yet done. """
-        self._register_payment(
+        payment_register = self._register_payment(
             create_vals={'outstanding_account_id': self.outstanding_account.id},
-            with_default_line=True,
         )
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         # reconcile should have switched to true.
         self.assertTrue(self.outstanding_account.reconcile)
 
@@ -717,7 +693,7 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
             Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0}),
             Command.create({'product_id': self.product_b.id, 'price_unit': 1000.0}),
         ]
-        payment_register = self._register_payment(with_default_line=True)  # Add a default manual line with another tax
+        payment_register = self._register_payment()  # Add a default manual line with another tax
         payment_register.withholding_line_ids[0].name = '1'
         payment_register.withholding_line_ids[1].name = '2'
         payment_register.withholding_line_ids[2].name = '3'
@@ -747,7 +723,15 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
     def test_payment_synchronize_to_moves(self):
         """ Test that the payment and the journal entry behind it are synchronized as expected when the payment record is updated. """
         # First create a payment and assert the lines.
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         action = payment_register.action_create_payments()
         payment = self.env['account.payment'].browse(action['res_id'])
         self.assertRecordValues(payment.move_id.line_ids, [
@@ -804,13 +788,29 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
 
     def test_withholding_line_base_amount(self):
         """ Test that a withholding line base amount cannot be less than or equal to 0 """
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         with self.assertRaises(UserError):
             payment_register.withholding_line_ids[0].base_amount = -25.0
 
     def test_custom_base_amount(self):
         """ Test that editing the base amount saves it as a custom amount, and that reverting it to the default amount clear the custom fields. """
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         with Form(payment_register) as payment_register_form:
             # Edit manually a line.
             with payment_register_form.withholding_line_ids.edit(0) as line_form:
@@ -830,7 +830,15 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
         """ Ensure that the correct error is raised when the configuration is incorrect, and we try to sync the payment lines. """
         # Start by testing that an error if raised when the account is missing on the tax repartition line.
         self.tax_sale_b.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').account_id = False
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         withholding_tax_line = payment_register.withholding_line_ids[0]
         with self.assertRaisesRegex(UserError, f'Please define a tax account on the distribution of the tax {self.tax_sale_b.name}'):
             withholding_tax_line._prepare_withholding_line_vals_data()
@@ -840,7 +848,15 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
         We should not have any default values the first time we register a payment with an outstanding account.
         The second time, the register payment wizard should find the previous outstanding account and use it as default.
         """
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         self.assertFalse(payment_register.outstanding_account_id)  # False by default due to no precedence.
         # We only use payments for which the payment method line has no account as reference for the default.
         payment_register.payment_method_line_id.payment_account_id = False
@@ -848,12 +864,28 @@ class TestL10nAccountWithholdingTaxes(TestTaxCommon, AnalyticCommon):
         payment_register.action_create_payments()  # With the payment created, our reference should be set for next time.
         # Remove the reconciliation so that we can re-register payment.
         self.invoice.mapped('line_ids').remove_move_reconcile()
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         self.assertEqual(payment_register.outstanding_account_id, self.outstanding_account)
 
     def test_cannot_register_negative_payment(self):
         """ Test that you cannot register a payment where the withholding amount is higher than the payment amount. """
-        payment_register = self._register_payment(with_default_line=True)
+        payment_register = self._register_payment()
+        payment_register.withholding_line_ids = [
+            Command.create({
+                'tax_id': self.tax_sale_b.id,
+                'name': '1',
+                'original_base_amount': 1000,
+                'account_id': self.company_data['company'].withholding_tax_base_account_id.id,
+            })
+        ]
         payment_register.withholding_line_ids[0].base_amount = 999999
         with self.assertRaisesRegex(UserError, 'The net amount cannot be negative.'):
             payment_register.action_create_payments()

@@ -31,6 +31,7 @@ class AccountPaymentRegister(models.TransientModel):
         string='Net Amount',
         help="Net amount after deducting the withholding lines",
         compute='_compute_withholding_net_amount',
+        store=True,
     )
     # We need to define the outstanding account of the payment in order for it to have the proper journal entry.
     # To that end, we'll have this field required if we have a withholding tax impacting the payment, and we don't have a payment account set on the payment method.
@@ -144,67 +145,7 @@ class AccountPaymentRegister(models.TransientModel):
                 AccountTax._round_base_lines_tax_details(move_base_lines, move.company_id, tax_lines=move_tax_lines)
                 base_lines += move_base_lines
 
-            wizard._calculate_withholding_lines_amount(base_lines)
-
-    @api.onchange('withholding_line_ids')
-    def _update_withholding_line_amounts(self):
-        """ Called in cases when the withholding lines must be updated. """
-        self.ensure_one
-        AccountTax = self.env['account.tax']
-        base_lines = []
-
-        for line in self.withholding_line_ids:
-            base_line = line._prepare_base_line_for_taxes_computation()
-            AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
-            AccountTax._round_base_lines_tax_details([base_line], self.company_id)
-            base_lines.append(base_line)
-
-        self._calculate_withholding_lines_amount(base_lines)
-
-    def _calculate_withholding_lines_amount(self, base_lines):
-        """
-        todo doc & similar thing on payment
-        """
-        self.ensure_one()
-        AccountTax = self.env['account.tax']
-        withholding_line_vals = []
-        # Map the existing withholding tax lines to their grouping key in order to know which line to update, create or delete.
-        withholding_line_map = self.withholding_line_ids.grouped(key=lambda l: l._get_grouping_key())
-
-        def grouping_function(base_line, tax_data):
-            account = tax_data['tax'].company_id.withholding_tax_base_account_id or base_line['account_id']
-            return {
-                'analytic_distribution': base_line['analytic_distribution'],
-                'account': account,
-                'tax': tax_data['tax'],
-                'skip': not tax_data['tax'].is_withholding_tax_on_payment,
-            }
-
-        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
-        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-        for grouping_key, values in values_per_grouping_key.items():
-            if not grouping_key or grouping_key['skip']:
-                continue
-
-            if grouping_key in withholding_line_map:
-                # Compute the amount for existing withholding lines when the lines are updated in the view
-                # We only want to recompute the tax amount todo maybe base for base affected/...?
-                withholding_line_vals.append(Command.update(withholding_line_map[grouping_key].id, {
-                    'amount': values['tax_amount'],
-                }))
-            else:
-                withholding_line_vals.append(Command.create({
-                    'tax_id': grouping_key['tax'].id,
-                    'analytic_distribution': grouping_key['analytic_distribution'],
-                    'account_id': grouping_key['account'].id,
-                    'original_base_amount': values['base_amount'] + values['tax_amount'],  # Not perfect
-                    'amount': values['tax_amount'],
-                }))
-        keys_to_remove = withholding_line_map.keys() - values_per_grouping_key.keys()
-        for key in keys_to_remove:
-            withholding_line_vals.append(Command.unlink(withholding_line_map[key].id))
-
-        self.withholding_line_ids = withholding_line_vals
+            self.withholding_line_ids = self.withholding_line_ids._calculate_withholding_lines_amount(base_lines)
 
     @api.depends('withholding_line_ids')
     def _compute_withhold_tax(self):
@@ -259,6 +200,21 @@ class AccountPaymentRegister(models.TransientModel):
                 # As we handle this on the wizard itself, we can't rely on the onchange to update this.
                 line.custom_user_currency_id = self.currency_id
 
+    @api.onchange('withholding_line_ids')
+    def _update_withholding_line_amounts(self):
+        """ Called in cases when the withholding lines must be updated. """
+        self.ensure_one
+        AccountTax = self.env['account.tax']
+        base_lines = []
+
+        for line in self.withholding_line_ids:
+            base_line = line._prepare_base_line_for_taxes_computation()
+            AccountTax._add_tax_details_in_base_line(base_line, self.company_id)
+            AccountTax._round_base_lines_tax_details([base_line], self.company_id)
+            base_lines.append(base_line)
+
+        self.withholding_line_ids = self.withholding_line_ids._calculate_withholding_lines_amount(base_lines)
+
     # -----------------------
     # CRUD, inherited methods
     # -----------------------
@@ -296,7 +252,13 @@ class AccountPaymentRegister(models.TransientModel):
             for line_vals in withholding_write_off_line_vals
             if line_vals.get('tax_repartition_line_id')
         )
-        payment_vals['write_off_line_vals'] += withholding_write_off_line_vals
         if self.outstanding_account_id:
             payment_vals['outstanding_account_id'] = self.outstanding_account_id.id
+
+        payment_vals['withholding_line_ids'] = []
+        withholding_lines_vals = self.withholding_line_ids.with_context(active_test=False).copy_data()
+        for withholding_line_vals in withholding_lines_vals:
+            del withholding_line_vals['payment_register_id']  # We don't want this on the payment.
+            payment_vals['withholding_line_ids'].append(Command.create(withholding_line_vals))
+
         return payment_vals
