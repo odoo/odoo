@@ -173,6 +173,7 @@ QUnit.module('partner_autocomplete', {
                         "id": 1,
                         "name": "Walloon Brabant"
                     },
+                    "mobile": false,
                 });
             }
             else if (route.startsWith("https://autocomplete.clearbit.com/v1/companies/suggest")) {

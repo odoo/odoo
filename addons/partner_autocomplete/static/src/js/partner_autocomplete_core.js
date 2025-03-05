@@ -196,6 +196,164 @@ export function usePartnerAutocomplete() {
     }
 
     /**
+<<<<<<< 4fdc229a7f3c24a1305ef748282ea2a193b5bb60
+||||||| b1b7f93694a6f64db13261d1debc4e3193d1798b
+     * Get enriched data + logo before populating partner form
+     *
+     * @param {Object} company
+     * @returns {Promise}
+     */
+    function getCreateData(company) {
+        const removeUselessFields = (company) => {
+            // Delete attribute to avoid "Field_changed" errors
+            const fields = ['label', 'description', 'domain', 'logo', 'legal_name', 'ignored', 'email', 'bank_ids', 'classList', 'skip_enrich'];
+            fields.forEach((field) => {
+                delete company[field];
+            });
+
+            // Remove if empty and format it otherwise
+            const many2oneFields = ['country_id', 'state_id'];
+            many2oneFields.forEach((field) => {
+                if (!company[field]) {
+                    delete company[field];
+                }
+            });
+        };
+
+        return new Promise((resolve) => {
+            // Fetch additional company info via Autocomplete Enrichment API
+            const enrichPromise = !company.skip_enrich ? enrichCompany(company) : false;
+
+            // Get logo
+            const logoPromise = company.logo ? getCompanyLogo(company.logo) : false;
+            whenAll([enrichPromise, logoPromise]).then(([company_data, logo_data]) => {
+                // The vat should be returned for free. This is the reason why
+                // we add it into the data of 'company' even if an error such as
+                // an insufficient credit error is raised.
+                if (company_data.error && company_data.vat) {
+                    company.vat = company_data.vat;
+                }
+
+                if (company_data.error) {
+                    if (company_data.error_message === 'Insufficient Credit') {
+                        notifyNoCredits();
+                    }
+                    else if (company_data.error_message === 'No Account Token') {
+                        notifyAccountToken();
+                    }
+                    else {
+                        notification.add(company_data.error_message);
+                    }
+                    if (company_data.city !== undefined) {
+                        company.city = company_data.city;
+                    }
+                    if (company_data.street !== undefined) {
+                        company.street = company_data.street;
+                    }
+                    if (company_data.zip !== undefined) {
+                        company.zip = company_data.zip;
+                    }
+                    company_data = company;
+                }
+
+                if (!Object.keys(company_data).length) {
+                    company_data = company;
+                }
+
+                removeUselessFields(company_data);
+
+                // Assign VAT coming from parent VIES VAT query
+                if (company.vat) {
+                    company_data.vat = company.vat;
+                }
+                resolve({
+                    company: company_data,
+                    logo: logo_data
+                });
+            });
+        });
+    }
+
+    /**
+=======
+     * Get enriched data + logo before populating partner form
+     *
+     * @param {Object} company
+     * @returns {Promise}
+     */
+    function getCreateData(company) {
+        const removeUselessFields = (company) => {
+            // Delete attribute to avoid "Field_changed" errors
+            const fields = ['label', 'description', 'domain', 'logo', 'legal_name', 'ignored', 'email', 'bank_ids', 'classList', 'skip_enrich', 'mobile'];
+            fields.forEach((field) => {
+                delete company[field];
+            });
+
+            // Remove if empty and format it otherwise
+            const many2oneFields = ['country_id', 'state_id'];
+            many2oneFields.forEach((field) => {
+                if (!company[field]) {
+                    delete company[field];
+                }
+            });
+        };
+
+        return new Promise((resolve) => {
+            // Fetch additional company info via Autocomplete Enrichment API
+            const enrichPromise = !company.skip_enrich ? enrichCompany(company) : false;
+
+            // Get logo
+            const logoPromise = company.logo ? getCompanyLogo(company.logo) : false;
+            whenAll([enrichPromise, logoPromise]).then(([company_data, logo_data]) => {
+                // The vat should be returned for free. This is the reason why
+                // we add it into the data of 'company' even if an error such as
+                // an insufficient credit error is raised.
+                if (company_data.error && company_data.vat) {
+                    company.vat = company_data.vat;
+                }
+
+                if (company_data.error) {
+                    if (company_data.error_message === 'Insufficient Credit') {
+                        notifyNoCredits();
+                    }
+                    else if (company_data.error_message === 'No Account Token') {
+                        notifyAccountToken();
+                    }
+                    else {
+                        notification.add(company_data.error_message);
+                    }
+                    if (company_data.city !== undefined) {
+                        company.city = company_data.city;
+                    }
+                    if (company_data.street !== undefined) {
+                        company.street = company_data.street;
+                    }
+                    if (company_data.zip !== undefined) {
+                        company.zip = company_data.zip;
+                    }
+                    company_data = company;
+                }
+
+                if (!Object.keys(company_data).length) {
+                    company_data = company;
+                }
+
+                removeUselessFields(company_data);
+
+                // Assign VAT coming from parent VIES VAT query
+                if (company.vat) {
+                    company_data.vat = company.vat;
+                }
+                resolve({
+                    company: company_data,
+                    logo: logo_data
+                });
+            });
+        });
+    }
+
+    /**
+>>>>>>> 64e2391aadb56b9433d3d8c8dbcb28a7a59fdfdb
      * Returns a promise which will be resolved with the base64 data of the
      * image fetched from the given url.
      *
