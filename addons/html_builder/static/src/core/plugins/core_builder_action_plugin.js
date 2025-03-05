@@ -59,9 +59,7 @@ export class CoreBuilderActionPlugin extends Plugin {
                     values = values.join(" ").replace(color, "").trim();
                     return `${color} ${values}${inset ? " inset" : ""}`;
                 },
-                apply: (el, value, param) => {
-                    setStyleValue(el, param, value);
-                },
+                apply: setStyleValue,
             },
             "border-width": {
                 getValue: (el, param) => {
@@ -79,9 +77,7 @@ export class CoreBuilderActionPlugin extends Plugin {
                     }
                     return value;
                 },
-                apply: (el, value, param) => {
-                    setStyleValue(el, param, value);
-                },
+                apply: setStyleValue,
             },
             "row-gap": {
                 getValue: (el, param) => parseInt(getStyleValue(el, param)) || 0,
@@ -126,7 +122,7 @@ export class CoreBuilderActionPlugin extends Plugin {
                 withoutTransition(editingElement, () => {
                     const customStyle = this.customStyleActions[param.mainParam];
                     if (customStyle) {
-                        customStyle.apply(editingElement, value, param);
+                        customStyle.apply(editingElement, param, value);
                     } else {
                         setStyleValue(editingElement, param, value);
                     }
