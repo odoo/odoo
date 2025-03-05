@@ -21,10 +21,21 @@ class GamificationBadgeUser(models.Model):
     def action_open_badge(self):
         self.ensure_one()
         return {
+            'name': _('Received Badge'),
             'type': 'ir.actions.act_window',
-            'res_model': 'gamification.badge',
             'view_mode': 'form',
-            'res_id': self.badge_id.id,
+            'res_model': 'gamification.current.badge.wizard',
+            'view_id': self.env.ref("hr_gamification.view_current_badge_wizard_form", False).id,
+            'target': 'new',
+            'context': {
+                'default_badge_id': self.badge_id.id,
+                'default_comment': self.comment,
+                'default_has_edit_delete_access': bool(self.env.user.has_group('hr.group_hr_user') or
+                    self.env.uid == self.create_uid.id),
+                'default_old_badge_user_id': self.id,
+                'default_create_uid': self.create_uid.id,
+                'default_create_date': self.create_date
+            }
         }
 
 
