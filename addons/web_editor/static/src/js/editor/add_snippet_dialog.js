@@ -8,8 +8,10 @@ import {
     useEffect,
     Component,
     onMounted,
+    onWillStart
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
+import { rpc } from "@web/core/network/rpc";
 
 export class RenameCustomSnippetDialog extends Component {
     static template = "web_editor.RenameCustomSnippetDialog";
@@ -36,6 +38,7 @@ export class RenameCustomSnippetDialog extends Component {
 export class AddSnippetDialog extends Component {
     static template = "web_editor.AddSnippetDialog";
     static props = {
+        dynamicSnippetIds: Array,
         close: Function,
         snippets: Object,
         groupSelected: String,
@@ -63,6 +66,18 @@ export class AddSnippetDialog extends Component {
             search: "",
         });
 
+        onWillStart(async () => {
+            let list;
+            this.props.snippets.forEach((value, key) => {
+                if (value.name?.startsWith("s_product_product")) {
+                    const newName = value.name.replace("s_", "dynamic_filter_template_");
+                    list.push(newName);
+                }
+            });
+
+            const data = await rpc("/web_editor/render_dynamic_snippets", list);
+            console.log(data);
+        });
         onMounted(async () => {
             const isFirefox = isBrowserFirefox();
             if (isFirefox) {
@@ -98,6 +113,7 @@ export class AddSnippetDialog extends Component {
      * @returns {object} snippets
      */
     getSnippetGroups() {
+        debugger;
         return [...this.props.snippets.values()]
             .filter(snippet =>
                 !snippet.excluded
@@ -114,6 +130,7 @@ export class AddSnippetDialog extends Component {
      * Inserts the snippets from the selected snippetGroup into the <iframe>.
      */
     async insertSnippets() {
+        debugger;
         const insertSnippetsCallID = ++this.currentInsertSnippetsCallID;
 
         // First, filter out snippets which are never supposed to be shown
