@@ -253,6 +253,24 @@ class AccountChartTemplate(models.AbstractModel):
         data.pop('account.reconcile.model', None)
         if 'res.company' in data:
             data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
+            company_data = data['res.company'][company.id]
+            differences = []
+
+            for field, expected_value in company_data.items():
+                current_value = getattr(company, field, None)
+                field_type = company._fields.get(field).type
+
+                if field_type == 'many2one':
+                    if '.' not in str(expected_value):
+                        expected_value = self.env.ref(f"account.{company.id}_{expected_value}", raise_if_not_found=False)
+                    else:
+                        expected_value = self.env.ref(str(expected_value), raise_if_not_found=False)
+
+                if expected_value and current_value != expected_value:
+                    differences.append(field)
+
+            for field in differences:
+                company_data.pop(field)
 
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
