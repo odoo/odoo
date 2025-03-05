@@ -129,7 +129,7 @@ class StockRule(models.Model):
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
                 (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
-        domain = (
+        domain = [
             ('bom_id', '=', bom.id),
             ('product_id', '=', procurement.product_id.id),
             ('state', 'in', ['draft', 'confirmed']),
@@ -137,7 +137,7 @@ class StockRule(models.Model):
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', procurement.company_id.id),
             ('user_id', '=', False),
-        )
+        ]
         if procurement.values.get('orderpoint_id'):
             procurement_date = datetime.combine(
                 fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay)),
