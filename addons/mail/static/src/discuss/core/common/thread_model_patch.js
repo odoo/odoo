@@ -383,6 +383,8 @@ const threadPatch = {
             const [firstWord] = body.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
             if (
+                // here we can check command.isAvailable right?
+                // which eventually remove the need to check channel types also
                 command &&
                 (!command.channel_types || command.channel_types.includes(this.channel_type))
             ) {

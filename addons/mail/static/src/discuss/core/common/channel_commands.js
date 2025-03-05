@@ -13,7 +13,10 @@ commandRegistry
         methodName: "execute_command_leave",
     })
     .add("who", {
-        channel_types: ["channel", "chat", "group"],
+        // channel_types: ["channel", "chat", "group"],
         help: _t("List users in the current channel"),
         methodName: "execute_command_who",
+        isAvailable: (store, thread) =>
+            store.self.type === "partner" &&
+            ["channel", "chat", "group"].includes(thread.channel_type),
     });
