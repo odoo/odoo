@@ -7,25 +7,39 @@ import {
 import { isMobileView } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { LayoutOption } from "./layout_option";
+import { LayoutColumnOption, LayoutGridOption, LayoutOption } from "./layout_option";
 
 class LayoutOptionPlugin extends Plugin {
     static id = "LayoutOption";
     static dependencies = ["clone"];
     resources = {
-        builder_options: {
-            OptionComponent: LayoutOption,
-            selector:
-                ":is(section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item):has(> * > .row, > .s_allow_columns)",
-            exclude:
-                ".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs",
-        },
+        builder_options: [
+            {
+                OptionComponent: LayoutOption,
+                selector:
+                    "section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item",
+                exclude:
+                    ".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_timeline, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs",
+                applyTo: ":scope > *:has(> .row), :scope > .s_allow_columns",
+            },
+            {
+                OptionComponent: LayoutColumnOption,
+                selector: "section.s_features_grid, section.s_process_steps",
+                applyTo: ":scope > *:has(> .row), :scope > .s_allow_columns",
+            },
+            {
+                OptionComponent: LayoutGridOption,
+                selector:
+                    "section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info",
+                applyTo: ":scope > *:has(> .row)",
+            },
+        ],
 
         builder_actions: this.getActions(),
     };
 
     getActions() {
-        const getRow = (el) => el.querySelector(":scope > .container > .row");
+        const getRow = (el) => el.querySelector(":scope > .row");
         const isGrid = (el) => {
             const rowEl = getRow(el);
             return !!(rowEl && rowEl.classList.contains("o_grid_mode"));
@@ -37,7 +51,7 @@ class LayoutOptionPlugin extends Plugin {
                     if (isGrid(editingElement)) {
                         return;
                     }
-                    toggleGridMode(editingElement.querySelector(".container"));
+                    toggleGridMode(editingElement);
                 },
                 isApplied: ({ editingElement }) => isGrid(editingElement),
             },
