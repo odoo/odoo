@@ -87,7 +87,7 @@ class ResourceMixin(models.AbstractModel):
             changed using the `calendar` argument.
 
             `domain` is used in order to recognise the leaves to take,
-            None means default value ('time_type', '=', 'leave')
+            None means default value ('time_type', '=', 'unpaid')
 
             Returns a dict {'days': n, 'hours': h} containing the
             quantity of working time expressed as days and as hours.
@@ -132,7 +132,7 @@ class ResourceMixin(models.AbstractModel):
             changed using the `calendar` argument.
 
             `domain` is used in order to recognise the leaves to take,
-            None means default value ('time_type', '=', 'leave')
+            None means default value ('time_type', '=', 'unpaid')
 
             Returns a dict {'days': n, 'hours': h} containing the number of leaves
             expressed as days and as hours.
@@ -176,7 +176,7 @@ class ResourceMixin(models.AbstractModel):
             changed using the `calendar` argument.
 
             `domain` is used in order to recognise the leaves to take,
-            None means default value ('time_type', '=', 'leave')
+            None means default value ('time_type', '=', 'unpaid')
 
             Returns a list of tuples (day, hours) for each day
             containing at least an attendance.
@@ -210,7 +210,7 @@ class ResourceMixin(models.AbstractModel):
             changed using the `calendar` argument.
 
             `domain` is used in order to recognise the leaves to take,
-            None means default value ('time_type', '=', 'leave')
+            None means default value ('time_type', '=', 'unpaid')
 
             Returns a list of tuples (day, hours, resource.calendar.leaves)
             for each leave in the calendar.

@@ -15,7 +15,7 @@ class TestHrLeaveType(TestHrHolidaysCommon):
     def test_time_type(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': 'no',
         })
 
@@ -31,7 +31,7 @@ class TestHrLeaveType(TestHrHolidaysCommon):
 
         self.assertEqual(
             self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave_1.id)]).time_type,
-            'leave'
+            'unpaid'
         )
 
     def test_type_creation_right(self):
