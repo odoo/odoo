@@ -100,30 +100,6 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             trigger: ".my_wish_quantity:contains(1)",
         },
         {
-            content: "check B2B wishlist mode",
-            trigger: "input#b2b_wish",
-            run: "click",
-        },
-        {
-            content: "add item to cart",
-            trigger: '.o_wish_add:eq(1)',
-            run: "click",
-        },
-        clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'),
-        {
-            content: "check that cart contains 1 item",
-            trigger: ".my_cart_quantity:contains(1)",
-        },
-        {
-            content: "check that wishlist contains 1 item",
-            trigger: ".my_wish_quantity:contains(1)",
-        },
-        {
-            content: "remove B2B wishlist mode",
-            trigger: "input#b2b_wish",
-            run: "click",
-        },
-        {
             content: "add last item to cart",
             trigger: '.o_wish_add:eq(1)',
             run: "click",
