@@ -7,26 +7,30 @@
             <BuilderButton action="'setGridLayout'" id="'grid'">Grid</BuilderButton>
             <BuilderButton action="'setColumnLayout'" id="'column'">Column</BuilderButton>
         </BuilderButtonGroup>
-        <t t-if="isActiveItem('column')">
-            <BuilderSelect action="'changeColumnCount'" >
-               <t t-foreach="[1, 2, 3, 4, 5, 6]" t-as="column" t-key="column_index">
-                    <BuilderSelectItem actionValue="column" t-esc="column"/>
-                </t>
-                <BuilderSelectItem t-if="this.state.isCustomColumn" actionValue="'custom'">Custom</BuilderSelectItem>
-            </BuilderSelect>
-        </t>
+        <SelectNumberColumn  t-if="isActiveItem('column')"/>
     </BuilderRow>
     <t t-if="isActiveItem('grid')">
         <AddElementOption level="1" applyTo="'.o_grid_mode'"/>
         <SpacingOption level="1" applyTo="'.o_grid_mode'"/>
     </t>
-    <t t-else="">
+    <t t-if="isActiveItem('column')">
         <BuilderContext applyTo="'.row'">
             <t t-call="html_builder.VerticalAlignmentOption">
                 <t t-set="level" t-value="1"/>
             </t>
         </BuilderContext>
     </t>
+</t>
+
+<t t-name="html_builder.LayoutGridOption">
+    <AddElementOption applyTo="'.o_grid_mode'"/>
+    <SpacingOption applyTo="'.o_grid_mode'"/>
+</t>
+
+<t t-name="html_builder.LayoutColumnOption">
+    <BuilderRow label.translate="Columns">
+        <SelectNumberColumn/>
+    </BuilderRow>
 </t>
 
 </templates>
