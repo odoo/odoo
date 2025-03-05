@@ -28,26 +28,15 @@
                             <span class="fw-bold fs-5">#<field name="name"/></span>
                             <field class="text-truncate text-nowrap d-block" name="description"/>
                             <div class="d-flex flex-row mt-2">
-                                <div class="d-flex flex-column flex-fill overflow-hidden text-nowrap">
-                                    <a class="text-truncate"
-                                       t-if="record.member_count.raw_value"
-                                       name="%(mail_group.mail_group_member_action)d"
-                                       type="action"
-                                       context="{'search_default_mail_group_id': id}">
-                                        <span>Members</span>
-                                        <field class="ms-2" name="member_count"/>
-                                    </a>
-
-                                    <a class="text-truncate"
-                                       t-if="record.mail_group_message_moderation_count.raw_value"
-                                       name="%(mail_group.mail_group_message_action)d"
-                                       type="action"
-                                       context="{'search_default_mail_group_id': id, 'search_default_moderation_status': 'pending_moderation'}">
-                                            <span>Message to review</span>
-                                            <field class="ms-2" name="mail_group_message_moderation_count"/>
-                                    </a>
-                                </div>
-                                <div class="text-end">
+                                <a class="text-truncate"
+                                   t-if="record.mail_group_message_moderation_count.raw_value"
+                                   name="%(mail_group.mail_group_message_action)d"
+                                   type="action"
+                                   context="{'search_default_mail_group_id': id, 'search_default_moderation_status': 'pending_moderation'}">
+                                    <field class="ms-2" name="mail_group_message_moderation_count"/>
+                                    messages to review
+                                </a>
+                                <div class="text-end ms-auto">
                                     <button type="object" invisible="is_member or is_closed" class="btn btn-primary ms-auto"
                                             name="action_join">Join
                                     </button>
