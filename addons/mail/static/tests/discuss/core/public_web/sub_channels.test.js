@@ -9,7 +9,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { Deferred, mockDate, animationFrame } from "@odoo/hoot-mock";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
@@ -17,6 +17,7 @@ describe.current.tags("desktop");
 defineMailModels();
 
 test("navigate to sub channel", async () => {
+    mockDate("2025-01-01 12:00:00", +1);
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -36,7 +37,7 @@ test("navigate to sub channel", async () => {
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
     await contains(".o-mail-NotificationMessage", {
-        text: `${serverState.partnerName} started a thread: New Thread. See all threads.`,
+        text: `${serverState.partnerName} started a thread: New Thread. See all threads.Today at 1:00 PM`,
     });
     await click(".o-mail-NotificationMessage a", { text: "New Thread" });
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
@@ -59,6 +60,7 @@ test("can manually unpin a sub-thread", async () => {
 });
 
 test("open sub channel menu from notification", async () => {
+    mockDate("2025-01-01 12:00:00", +1);
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -69,7 +71,7 @@ test("open sub channel menu from notification", async () => {
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-NotificationMessage", {
-        text: `${serverState.partnerName} started a thread: New Thread. See all threads.`,
+        text: `${serverState.partnerName} started a thread: New Thread. See all threads.Today at 1:00 PM`,
     });
     await click(".o-mail-NotificationMessage a", { text: "See all threads" });
     await contains(".o-mail-SubChannelList");

@@ -9,6 +9,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -36,6 +37,7 @@ test("should display the channel invitation form after clicking on the invite bu
 });
 
 test("can invite users in channel from chat window", async () => {
+    mockDate("2025-01-01 12:00:00", +1);
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
@@ -57,7 +59,7 @@ test("can invite users in channel from chat window", async () => {
     await click("[title='Invite to Channel']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(".o-mail-Thread .o-mail-NotificationMessage", {
-        text: "Mitchell Admin invited TestPartner to the channel",
+        text: "Mitchell Admin invited TestPartner to the channelToday at 1:00 PM",
     });
 });
 
