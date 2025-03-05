@@ -4,7 +4,7 @@ import {
     getFixture,
     nextTick,
     patchWithCleanup,
-    triggerHotkey
+    triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
@@ -17,6 +17,17 @@ QUnit.module("Fields", (hooks) => {
         target = getFixture();
         serverData = {
             models: {
+                'res.company': {
+                    fields: {
+                        name: { string: "name", type: "char" }
+                    },
+                    records: [
+                        {
+                            id: 1,
+                            name: "my company"
+                        }
+                    ]
+                },
                 'sale.order': {
                     fields: {
                         display_name: { string: "Displayed name", type: "char" },
@@ -26,12 +37,18 @@ QUnit.module("Fields", (hooks) => {
                             relation: "sale.order.line",
                             relation_field: "order_id",
                         },
+                        company_id: {
+                            string: "company",
+                            type: "many2one",
+                            relation: "res.company",
+                        }
                     },
                     records: [
                         {
                             id: 1,
                             display_name: "first record",
                             order_line: [],
+                            company_id: 1,
                         },
                     ],
                     onchanges: {},
@@ -69,11 +86,6 @@ QUnit.module("Fields", (hooks) => {
                     records: [
                         { id: 12, display_name: "desk" },
                     ],
-                    methods:  {
-                        get_single_product_variant() {
-                            return Promise.resolve({product_id: 14, product_name: 'desk'});
-                        }
-                    }
                 },
                 'product.product': {
                     fields: {
@@ -118,6 +130,9 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <sheet>
+                    <group>
+                        <field name="company_id"/>
+                    </group>
                         <field name="order_line">
                             <list editable="bottom">
                                 <field name="product_template_id" widget="sol_product_many2one"/>
@@ -128,6 +143,15 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, args) {
+                if(route == '/sale/product/get_values'){
+                    assert.step(route);
+                    return Promise.resolve({
+                        'product_id': 1,
+                        'product_name': "new product",
+                        'show_main_product': false,
+                        'show_optional_product': false,
+                    })
+                }
                 assert.step(args.method);
             }
         });
@@ -143,7 +167,7 @@ QUnit.module("Fields", (hooks) => {
             "onchange",
             "web_name_search",
             "name_create",
-            "get_single_product_variant",
+            "/sale/product/get_values",
         ]);
     });
 

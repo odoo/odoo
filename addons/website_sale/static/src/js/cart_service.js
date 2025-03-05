@@ -187,17 +187,35 @@ export class CartService {
                 ...rest
             });
         }
-
-        const shouldShowProductConfigurator = await this.rpc(
-            '/website_sale/should_show_product_configurator',
+        const productValues = await this.rpc(
+            '/website_sale/product/get_values',
             {
                 product_template_id: productTemplateId,
-                ptav_ids: ptavs,
                 is_product_configured: isConfigured,
+                force_dialog: session.add_to_cart_action === 'force_dialog',
+                ...rest,
             }
-        );
-        if (shouldShowProductConfigurator) {
+        )
+        if (
+            productValues['dialog']
+            && productValues['dialog'] != 'combo'
+        ) {
+            const productCongifuratorValues = await this.rpc(
+                '/website_sale/product_configurator/get_values',
+                {
+                    product_template_id: productTemplateId,
+                    quantity: quantity,
+                    so_date: serializeDateTime(DateTime.now()),
+                    ptav_ids: ptavs.concat(noVariantAttributeValues),
+                    show_main_product: productValues['show_main_product'],
+                    show_optional_product: productValues['show_optional_product'],
+                    ...rest,
+                }
+            );
             return this._openProductConfigurator(
+                productCongifuratorValues['products'],
+                productCongifuratorValues['optional_products'],
+                productCongifuratorValues['currency_id'],
                 productTemplateId,
                 quantity,
                 ptavs.concat(noVariantAttributeValues),
@@ -303,6 +321,9 @@ export class CartService {
      * @returns {Number} - The product's quantity added to the cart.
      */
     async _openProductConfigurator(
+        products,
+        optional_products,
+        currency_id,
         productTemplateId,
         quantity,
         combination,
@@ -312,6 +333,9 @@ export class CartService {
     ) {
         return await new Promise((resolve) => {
             this.dialog.add(ProductConfiguratorDialog, {
+                products: products,
+                optionalProducts: optional_products,
+                currencyId: currency_id,
                 productTemplateId: productTemplateId,
                 ptavIds: combination,
                 customPtavs: productCustomAttributeValues.map(customPtav => ({
