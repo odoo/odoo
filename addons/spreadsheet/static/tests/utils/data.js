@@ -122,6 +122,7 @@ export function getBasicData() {
                 name: { string: "Name", type: "char" },
                 raw: { string: "Data", type: "text" },
                 thumbnail: { string: "Thumbnail", type: "text" },
+                display_thumbnail: { string: "Thumbnail", type: "text" },
                 favorited_ids: { string: "Name", type: "many2many" },
                 is_favorited: { string: "Name", type: "boolean" },
                 mimetype: { string: "Mimetype", type: "char" },
@@ -220,6 +221,7 @@ export function getBasicData() {
                 name: { string: "Name", type: "char" },
                 data: { string: "Data", type: "binary" },
                 thumbnail: { string: "Thumbnail", type: "binary" },
+                display_thumbnail: { string: "Thumbnail", type: "text" },
             },
             records: [
                 { id: 1, name: "Template 1", data: btoa("{}") },
