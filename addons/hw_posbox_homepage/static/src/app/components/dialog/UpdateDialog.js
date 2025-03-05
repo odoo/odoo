@@ -18,6 +18,7 @@ export class UpdateDialog extends Component {
             waitRestart: false,
             odooIsUpToDate: false,
             imageIsUpToDate: false,
+            newImageVersion: "latest",
             currentCommitHash: "",
         });
     }
@@ -31,7 +32,7 @@ export class UpdateDialog extends Component {
             this.state.odooIsUpToDate = true;
             this.state.imageIsUpToDate = true;
             this.state.initialization = false;
-            return
+            return;
         }
         try {
             const data = await this.store.rpc({
@@ -40,6 +41,7 @@ export class UpdateDialog extends Component {
 
             this.state.odooIsUpToDate = data.odooIsUpToDate;
             this.state.imageIsUpToDate = data.imageIsUpToDate;
+            this.state.newImageVersion = data.newImageVersion;
             this.state.currentCommitHash = data.currentCommitHash;
             this.state.initialization = false;
         } catch {
@@ -47,8 +49,26 @@ export class UpdateDialog extends Component {
         }
     }
 
+    async flashImage() {
+        this.state.waitRestart =
+            "Please wait while we update your IoT Box, the device will restart during this process.";
+        try {
+            const data = await this.store.rpc({
+                url: "/hw_posbox_homepage/flash_image",
+                method: "POST",
+            });
+
+            if (data.status === "error") {
+                this.state.waitRestart = false;
+                console.error(data.message);
+            }
+        } catch {
+            console.warn("Error while flashing image.");
+        }
+    }
+
     async updateGitTree() {
-        this.state.waitRestart = true;
+        this.state.waitRestart = "Updating your device, please wait...";
         try {
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/update_git_tree",
@@ -63,7 +83,7 @@ export class UpdateDialog extends Component {
     }
 
     async forceUpdateIotHandlers() {
-        this.state.waitRestart = true;
+        this.state.waitRestart = "Updating drivers, please wait...";
         try {
             await this.store.rpc({
                 url: "/hw_posbox_homepage/load_iot_handlers",
@@ -79,9 +99,7 @@ export class UpdateDialog extends Component {
 
     static template = xml`
         <LoadingFullScreen t-if="this.state.waitRestart">
-            <t t-set-slot="body">
-                Updating your device, please wait...
-            </t>
+            <t t-set-slot="body" t-esc="state.waitRestart"/>
         </LoadingFullScreen>
 
         <BootstrapDialog identifier="'update-configuration'" btnName="'Update'" onOpen.bind="getVersionInfo" onClose.bind="onClose">
@@ -104,11 +122,22 @@ export class UpdateDialog extends Component {
                     <div t-if="this.state.imageIsUpToDate" class="text-success px-2 small">
                         Operating system is up to date
                     </div>
-                    <div t-else="" class="alert alert-warning small mb-0">
-                        A new version of the operating system is available, see:
-                        <a href="https://www.odoo.com/documentation/18.0/applications/general/iot/config/updating_iot.html#flashing-the-sd-card-on-iot-box" target="_blank" class="alert-link">
-                            Flashing the SD Card on IoT Box
-                        </a>
+                    <div t-else="" class="d-flex justify-content-between align-items-center alert alert-warning small mb-0">
+                        A new operating system is available
+                        <BootstrapDialog identifier="'update-configuration'" btnName="'Update to ' + state.newImageVersion" onClose.bind="onClose">
+                            <t t-set-slot="header">
+                                Update to <t t-esc="state.newImageVersion"/>
+                            </t>
+                            <t t-set-slot="body">
+                                Are you sure you want to update to the new version? <br/>
+                                This process will reboot the device and may take a few minutes.
+                            </t>
+                            <t t-set-slot="footer">
+                                <button class="btn btn-primary btn-sm" t-on-click="flashImage">Update to <t t-esc="state.newImageVersion"/></button>
+                                <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                            </t>
+                        </BootstrapDialog>
+                        <button class="btn btn-primary btn-sm" t-on-click="flashImage">Update to <t t-esc="state.newImageVersion"/></button>
                     </div>
                     <div t-if="this.store.dev" class="alert alert-light small">
                         <a href="https://nightly.odoo.com/master/iotbox/" target="_blank" class="alert-link">
