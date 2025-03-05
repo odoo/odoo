@@ -47,7 +47,7 @@ export class CoreBuilderActionPlugin extends Plugin {
     getStyleActions() {
         const styleActions = {
             "box-shadow": {
-                getValue: (el, param) => {
+                getValue: ({ editingElement: el, param }) => {
                     const value = getStyleValue(el, param);
                     const inset = value.includes("inset");
                     let values = value
@@ -59,10 +59,12 @@ export class CoreBuilderActionPlugin extends Plugin {
                     values = values.join(" ").replace(color, "").trim();
                     return `${color} ${values}${inset ? " inset" : ""}`;
                 },
-                apply: setStyleValue,
+                apply: ({ editingElement: el, param, value }) => {
+                    setStyleValue(el, param, value);
+                },
             },
             "border-width": {
-                getValue: (el, param) => {
+                getValue: ({ editingElement: el, param }) => {
                     let value = getStyleValue(el, param);
                     if (value.endsWith("px")) {
                         value = value
@@ -77,15 +79,23 @@ export class CoreBuilderActionPlugin extends Plugin {
                     }
                     return value;
                 },
-                apply: setStyleValue,
+                apply: ({ editingElement: el, param, value }) => {
+                    setStyleValue(el, param, value);
+                },
             },
             "row-gap": {
-                getValue: (el, param) => parseInt(getStyleValue(el, param)) || 0,
-                apply: setStyleValue,
+                getValue: ({ editingElement: el, param }) =>
+                    parseInt(getStyleValue(el, param)) || 0,
+                apply: ({ editingElement: el, param, value }) => {
+                    setStyleValue(el, param, value);
+                },
             },
             "column-gap": {
-                getValue: (el, param) => parseInt(getStyleValue(el, param)) || 0,
-                apply: setStyleValue,
+                getValue: ({ editingElement: el, param, value }) =>
+                    parseInt(getStyleValue(el, param)) || 0,
+                apply: ({ editingElement: el, param, value }) => {
+                    setStyleValue(el, param, value);
+                },
             },
         };
         for (const borderWidthPropery of CSS_SHORTHANDS["border-width"]) {
@@ -95,25 +105,28 @@ export class CoreBuilderActionPlugin extends Plugin {
     }
 
     getStyleAction() {
-        const getValue = ({ editingElement, param }) =>
+        const getValue = (...args) => {
+            const { editingElement, param } = args[0];
             // Disable all transitions for the duration of the style check
             // as we want to know the final value of a property to properly
             // update the UI.
-            withoutTransition(editingElement, () => {
+            return withoutTransition(editingElement, () => {
                 const customStyle = this.customStyleActions[param.mainParam];
                 if (customStyle) {
-                    return customStyle.getValue(editingElement, param);
+                    return customStyle.getValue(...args);
                 } else {
                     return getStyleValue(editingElement, param);
                 }
             });
+        };
         return {
             getValue,
             isApplied: ({ editingElement, param = {}, value }) => {
                 const currentValue = getValue({ editingElement, param });
                 return currentValue === value;
             },
-            apply: ({ editingElement, param = {}, value }) => {
+            apply: (...args) => {
+                const { editingElement, param = {}, value } = args[0];
                 // Disable all transitions for the duration of the method as many
                 // comparisons will be done on the element to know if applying a
                 // property has an effect or not. Also, changing a css property via the
@@ -122,7 +135,7 @@ export class CoreBuilderActionPlugin extends Plugin {
                 withoutTransition(editingElement, () => {
                     const customStyle = this.customStyleActions[param.mainParam];
                     if (customStyle) {
-                        customStyle.apply(editingElement, param, value);
+                        customStyle.apply(...args);
                     } else {
                         setStyleValue(editingElement, param, value);
                     }
