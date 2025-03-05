@@ -281,6 +281,7 @@ class ProductTemplate(models.Model):
             )
             if available_variants:
                 return available_variants[0].product_template_value_ids
+        return False
 
 
     def _get_sales_prices(self, website):
