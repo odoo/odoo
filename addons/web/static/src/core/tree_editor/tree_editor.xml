@@ -42,7 +42,7 @@
             <button
                 class="btn px-2 fs-4"
                 role="button"
-                title="Add New Rule"
+                data-tooltip="Add New Rule"
                 aria-label="Add New Rule"
                 t-on-click="() => this.insertLeaf(parent, node)"
                 t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
@@ -53,7 +53,7 @@
             <button
                 class="btn px-2 fs-4"
                 role="button"
-                title="Add branch"
+                data-tooltip="Add branch"
                 aria-label="Add branch"
                 t-on-click="() => this.insertBranch(parent, node)"
                 t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
@@ -64,7 +64,7 @@
             <button
                 class="btn btn-link px-2 text-danger fs-4"
                 role="button"
-                title="Delete node"
+                data-tooltip="Delete node"
                 aria-label="Delete node"
                 t-on-click="() => this.delete(ancestors, node)"
                 t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
@@ -182,8 +182,8 @@
             <div t-attf-class="o_tree_editor_editor #{_classes}">
                 <div class="o_input d-flex align-items-center">
                     <span class="flex-grow-1 text-truncate" t-esc="info.stringify(value)" />
-                    <i role="alert" class="fa fa-exclamation-triangle text-warning mx-2" t-att-title="(typeof info.message === 'function') ? info.message(value) : info.message" />
-                    <i class="fa fa-times" title="Clear" t-on-click="() => update(info.defaultValue())" />
+                    <i role="alert" class="fa fa-exclamation-triangle text-warning mx-2" t-att-data-tooltip="(typeof info.message === 'function') ? info.message(value) : info.message" />
+                    <i class="fa fa-times" data-tooltip="Clear" t-on-click="() => update(info.defaultValue())" />
                 </div>
             </div>
         </t>
