@@ -5098,11 +5098,14 @@ class SnippetsMenu extends Component {
                 return;
             }
 
-            await new Promise(resolve => {
+            await new Promise(async (resolve) => {
+                debugger;
+                const result = await rpc("/web_editor/get_xml_id")
                 // TODO: MSH: Maybe here we can add some logic
                 // Keep blank template for all the dynamic templates with resepctive xml ID in template as data attribute
                 // Here we can add the logic here or in AddSnippetDialog to get the template from the server and replace the placeholder added in xml view
                 this.dialog.add(AddSnippetDialog, {
+                    dynamicSnippetIds: result,
                     snippets: this.snippets,
                     groupSelected: groupSelected,
                     optionsSnippets: this.options.snippets,
