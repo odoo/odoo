@@ -477,7 +477,8 @@ class ProductPricelistItem(models.Model):
 
         elif self.applied_on == "2_product_category":
             if (
-                product.categ_id != self.categ_id
+                product.categ_id
+                and product.categ_id != self.categ_id
                 and not product.categ_id.parent_path.startswith(self.categ_id.parent_path)
             ):
                 res = False
