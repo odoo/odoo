@@ -1,16 +1,13 @@
 import hashlib
 import math
-from base64 import b64encode, encodebytes
+from base64 import b64encode
 from pytz import timezone
 
-from copy import deepcopy
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import hashes
 from lxml import etree
-from uuid import uuid4
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.addons.l10n_es.models.xml_utils import get_xades_template_render_values, sign_xades
 from odoo.tools import cleanup_xml_node, float_repr, float_round
 import odoo.release
 
@@ -32,72 +29,6 @@ def _path_get(dictionary, slash_path, default=None):
             return default
         x = x[field]
     return x
-
-def _canonicalize_node(node, **kwargs):
-    """
-    Returns the canonical representation of node.
-    Specified in: https://www.w3.org/TR/2001/REC-xml-c14n-20010315
-    Required for computing digests and signatures.
-    Returns an UTF-8 encoded bytes string.
-    """
-    return etree.tostring(node, method="c14n", with_comments=False, **kwargs)
-
-def _get_uri(uri, reference, base_uri=""):
-    """
-    Returns the content within `reference` that is identified by `uri`.
-    Canonicalization is used to convert node reference to an octet stream.
-    - URIs starting with # are same-document references
-    https://www.w3.org/TR/xmldsig-core/#sec-URI
-    - Empty URIs point to the whole document tree, without the signature
-    https://www.w3.org/TR/xmldsig-core/#sec-EnvelopedSignature
-    Returns an UTF-8 encoded bytes string.
-    """
-    transform_nodes = reference.findall(".//{*}Transform")
-    # handle exclusive canonization
-    exc_c14n = bool(transform_nodes) and transform_nodes[0].attrib.get('Algorithm') == 'http://www.w3.org/2001/10/xml-exc-c14n#'
-    prefix_list = []
-    if exc_c14n:
-        inclusive_ns_node = transform_nodes[0].find(".//{*}InclusiveNamespaces")
-        if inclusive_ns_node is not None and inclusive_ns_node.attrib.get('PrefixList'):
-            prefix_list = inclusive_ns_node.attrib.get('PrefixList').split(' ')
-
-    node = deepcopy(reference.getroottree().getroot())
-    if uri == base_uri:
-        # Base URI: whole document, without signature (default is empty URI)
-        for signature in node.findall('.//ds:Signature', namespaces=NS_MAP):
-            if signature.tail:
-                # move the tail to the previous node or to the parent
-                if (previous := signature.getprevious()) is not None:
-                    previous.tail = "".join([previous.tail or "", signature.tail or ""])
-                else:
-                    signature.getparent().text = "".join([signature.getparent().text or "", signature.tail or ""])
-            signature.getparent().remove(signature)  # we can only remove a node from its direct parent
-        return _canonicalize_node(node, exclusive=exc_c14n, inclusive_ns_prefixes=prefix_list)
-
-    if uri.startswith("#"):
-        path = "//*[@*[local-name() = '{}' ]=$uri]"
-        results = node.xpath(path.format("Id"), uri=uri.lstrip("#"))  # case-sensitive 'Id'
-        if len(results) == 1:
-            return _canonicalize_node(results[0], exclusive=exc_c14n, inclusive_ns_prefixes=prefix_list)
-        if len(results) > 1:
-            raise UserError(f"Ambiguous reference URI {uri} resolved to {len(results)} nodes")
-
-    raise UserError(f'URI {uri} not found')
-
-def _reference_digests(node, base_uri=""):
-    """
-    Processes the references from node and computes their digest values as specified in
-    https://www.w3.org/TR/xmldsig-core/#sec-DigestMethod
-    https://www.w3.org/TR/xmldsig-core/#sec-DigestValue
-    """
-    for reference in node.findall("ds:Reference", namespaces=NS_MAP):
-        ref_node = _get_uri(reference.get("URI", ""), reference, base_uri=base_uri)
-        lib = hashlib.new("sha256", ref_node)
-        reference.find("ds:DigestValue", namespaces=NS_MAP).text = b64encode(lib.digest())
-
-def _int_to_bytes(number):
-    """ Converts an integer to a byte string (in smallest big-endian form). """
-    return number.to_bytes((number.bit_length() + 7) // 8, byteorder='big')
 
 
 class L10nEsEdiVerifactuXml(models.AbstractModel):
@@ -454,7 +385,6 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
     def _render_vals_dsig(self, vals):
         errors = []
         company = vals['company']
-        record_uuid = str(uuid4())
 
         # Ensure a certificate is available.
         certificate = company.l10n_es_edi_verifactu_certificate_id
@@ -462,30 +392,15 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
             errors.append(_("There is no certificate configured for Veri*Factu on the company."))
             return {'dsig': {}}, errors
         _cert_private, cert_public = certificate._decode_certificate()
-        public_key_numbers = cert_public.public_key().public_numbers()
+        # TODO: maybe just generating signature like in tbai?
+        #       (do not put stuff in render_vals; render dedicated signature template after XML is generated)
 
-        # For e.g. facturae and tbai the authorities requirerd a specific order of the elements
-        rfc4514_attr = dict(element.rfc4514_string().split("=", 1) for element in cert_public.issuer.rdns)
-        # TODO: check; we may need to add other keys ('L', '2.5.4.97')
-        #       ?: common function for l10n_es*?
-        cert_issuer = ", ".join([f"{key}={rfc4514_attr[key]}" for key in ['CN', 'OU', 'O', 'C'] if key in rfc4514_attr])
-        render_vals = {
-            'dsig': {
-                'signature_id': f"signature-{record_uuid}",
-                'xmldsig_reference_id': f"xmldsig_reference_id-{record_uuid}",
-                'signed_properties_id': f"signed_properties-{record_uuid}",
-                'key_info_id': f"key_info_id-{record_uuid}",
-                'x509_certificate': encodebytes(cert_public.public_bytes(encoding=serialization.Encoding.DER)).decode(),
-                'rsa_key_modulus': encodebytes(_int_to_bytes(public_key_numbers.n)).decode(),
-                'rsa_key_exponent': encodebytes(_int_to_bytes(public_key_numbers.e)).decode(),
-                'signing_time': fields.Datetime.now().isoformat(),
-                'signing_certificate_digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
-                'x509_issuer_name': cert_issuer,
-                'x509_serial_number': cert_public.serial_number,
-                'sigpolicy_url': "https://sede.administracion.gob.es/politica_de_firma_anexo_1.pdf",
-                'sigpolicy_digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
-            }
+        sigpolicy = {
+            'url': "https://sede.administracion.gob.es/politica_de_firma_anexo_1.pdf",
+            # TODO: check sigpolicy digest
+            'digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
         }
+        render_vals = get_xades_template_render_values(sigpolicy, cert_public)
 
         return render_vals, errors
 
@@ -561,13 +476,10 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
         if not certificate:
             errors.append(_("There is no certificate configured for Veri*Factu on the company."))
             return None, errors
+
         cert_private, _cert_public = certificate._decode_certificate()
         signature_node = xml_node.find('*/ds:Signature', namespaces=NS_MAP)
-        signature_node = cleanup_xml_node(signature_node, remove_blank_nodes=False)
-        signed_info_node = signature_node.find('ds:SignedInfo', namespaces=NS_MAP)
-        _reference_digests(signed_info_node)
-        signature = cert_private.sign(_canonicalize_node(signed_info_node), padding.PKCS1v15(), hashes.SHA256())
-        signature_node.find('ds:SignatureValue', namespaces=NS_MAP).text = encodebytes(signature)
+        sign_xades(signature_node, cert_private)
 
         return xml_node, errors
 

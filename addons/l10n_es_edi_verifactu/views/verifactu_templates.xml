@@ -123,7 +123,7 @@
             <sum1:TipoHuella t-out="_path_get(vals, 'RegistroAlta/TipoHuella')"/>
             <sum1:Huella t-out="_path_get(vals, 'RegistroAlta/Huella')"/>
             <t t-call="l10n_es_edi_verifactu.verifactu_signature_xades">
-                <t t-set="vals" t-value="vals['RegistroAlta']['dsig']"/>
+                <t t-set="dsig" t-value="vals['RegistroAlta']['dsig']"/>
             </t>
         </sum1:RegistroAlta>
     </template>
@@ -153,7 +153,7 @@
             <sum1:TipoHuella t-out="_path_get(vals, 'RegistroAnulacion/TipoHuella')"/>
             <sum1:Huella t-out="_path_get(vals, 'RegistroAnulacion/Huella')"/>
             <t t-call="l10n_es_edi_verifactu.verifactu_signature_xades">
-                <t t-set="vals" t-value="vals['RegistroAnulacion']['dsig']"/>
+                <t t-set="dsig" t-value="vals['RegistroAnulacion']['dsig']"/>
             </t>
         </sum1:RegistroAnulacion>
     </template>
@@ -191,64 +191,65 @@
         </sum1:SistemaInformatico>
     </template>
 
+    <!-- TODO: in master: move template to 'l10n_es' so that tbai and verifactu can use the same one -->
     <template id="verifactu_signature_xades">
-        <ds:Signature t-att-Id="vals['signature_id']" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:Signature t-att-Id="dsig['signature_id']" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
             <ds:SignedInfo>
                 <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
                 <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-                <ds:Reference t-att-Id="vals['xmldsig_reference_id']" Type="http://www.w3.org/2000/09/xmldsig#Object" URI="">
+                <ds:Reference t-att-Id="dsig['reference_uri']" Type="http://www.w3.org/2000/09/xmldsig#Object" URI="">
                     <ds:Transforms>
                         <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
                     </ds:Transforms>
                     <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
                     <ds:DigestValue></ds:DigestValue>
                 </ds:Reference>
-                <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" t-attf-URI="##{vals['signed_properties_id']}">
+                <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" t-attf-URI="##{dsig['sigproperties_id']}">
                     <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
                     <ds:DigestValue></ds:DigestValue>
                 </ds:Reference>
-                <ds:Reference t-attf-URI="##{vals['key_info_id']}">
+                <ds:Reference t-attf-URI="##{dsig['keyinfo_id']}">
                     <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
                     <ds:DigestValue></ds:DigestValue>
                 </ds:Reference>
             </ds:SignedInfo>
             <ds:SignatureValue></ds:SignatureValue>
-            <ds:KeyInfo t-att-Id="vals['key_info_id']">
+            <ds:KeyInfo t-att-Id="dsig['keyinfo_id']">
                 <ds:X509Data>
-                    <ds:X509Certificate t-out="vals['x509_certificate']"/>
+                    <ds:X509Certificate t-out="dsig['x509_certificate']"/>
                 </ds:X509Data>
                 <ds:KeyValue>
                     <ds:RSAKeyValue>
-                        <ds:Modulus t-out="vals['rsa_key_modulus']"/>
-                        <ds:Exponent t-out="vals['rsa_key_exponent']"/>
+                        <ds:Modulus t-out="dsig['public_modulus']"/>
+                        <ds:Exponent t-out="dsig['public_exponent']"/>
                     </ds:RSAKeyValue>
                 </ds:KeyValue>
             </ds:KeyInfo>
             <ds:Object>
-                <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" t-attf-Target="##{vals['signature_id']}">
-                    <xades:SignedProperties t-att-Id="vals['signed_properties_id']">
+                <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" t-attf-Target="##{dsig['signature_id']}">
+                    <xades:SignedProperties t-att-Id="dsig['sigproperties_id']">
                         <xades:SignedSignatureProperties>
-                            <xades:SigningTime t-out="vals['signing_time']"/>
+                            <xades:SigningTime t-out="dsig['iso_now']"/>
                             <xades:SigningCertificateV2>
                                 <xades:Cert>
                                     <xades:CertDigest>
                                         <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                                        <ds:DigestValue t-out="vals['signing_certificate_digest']"/>
+                                        <ds:DigestValue t-out="dsig['sigcertif_digest']"/>
                                     </xades:CertDigest>
                                     <xades:IssuerSerial>
-                                        <ds:X509IssuerName t-out="vals['x509_issuer_name']"/>
-                                        <ds:X509SerialNumber t-out="vals['x509_serial_number']"/>
+                                        <ds:X509IssuerName t-out="dsig['x509_issuer_description']"/>
+                                        <ds:X509SerialNumber t-out="dsig['x509_serial_number']"/>
                                     </xades:IssuerSerial>
                                 </xades:Cert>
                             </xades:SigningCertificateV2>
                             <xades:SignaturePolicyIdentifier>
                                 <xades:SignaturePolicyId>
                                     <xades:SigPolicyId>
-                                        <xades:Identifier t-out="vals['sigpolicy_url']"/>
+                                        <xades:Identifier t-out="dsig['sigpolicy_url']"/>
                                     </xades:SigPolicyId>
                                     <xades:SigPolicyHash>
                                         <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-                                        <ds:DigestValue t-out="vals['sigpolicy_digest']"/>
+                                        <ds:DigestValue t-out="dsig['sigpolicy_digest']"/>
                                     </xades:SigPolicyHash>
                                 </xades:SignaturePolicyId>
                             </xades:SignaturePolicyIdentifier>
@@ -258,4 +259,5 @@
             </ds:Object>
         </ds:Signature>
     </template>
+
 </odoo>
