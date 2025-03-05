@@ -71,7 +71,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         level.maximum_leave = 10
         self.assertEqual(accrual_plan.level_ids.maximum_leave, 10)
 
-        with self.assertRaises(UserError):
+        with self.assertRaises(IntegrityError):
             level.maximum_leave = 0
 
         level.cap_accrued_time = False

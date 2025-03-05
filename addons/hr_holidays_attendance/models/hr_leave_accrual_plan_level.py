@@ -9,8 +9,8 @@ class HrLeaveAccrualLevel(models.Model):
 
     frequency_hourly_source = fields.Selection(
         selection=[
-            ('calendar', 'Calendar'),
-            ('attendance', 'Attendances')
+            ('calendar', 'his Working Schedule'),
+            ('attendance', 'his Attendances')
         ],
         default='calendar',
         compute='_compute_frequency_hourly_source',
