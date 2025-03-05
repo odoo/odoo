@@ -248,7 +248,7 @@ export class Message extends Component {
 
     /** Max amount of quick actions, including "..." */
     get quickActionCount() {
-        return this.env.inChatter ? 3 : this.env.inChatWindow ? 2 : 4;
+        return this.env.inChatWindow ? 2 : 4;
     }
 
     get showSubtypeDescription() {

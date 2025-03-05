@@ -728,6 +728,7 @@ test("Replying on a channel should focus composer initially", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await click("[title='Expand']");
     await click("[title='Reply']");
     await contains(".o-mail-Composer-input:focus");
 });
@@ -1147,7 +1148,8 @@ test("composer reply-to message is restored on thread change", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Message [title='Reply']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Reply']");
     await contains(".o-mail-Composer:contains('Replying to')");
     await click(".o-mail-DiscussSidebar-item:contains('Inbox')");
     await contains(".o-mail-Message", { count: 0 });
