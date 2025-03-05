@@ -236,6 +236,19 @@ class TestMenu(common.TransactionCase):
         submenu.url = '/sub/slug-3'
         test_full_case(submenu)
 
+    def test_menu_group_ids(self):
+        Menu = self.env['website.menu']
+        menu = Menu.create({
+            'name': 'Test',
+        })
+        self.assertEqual(menu.group_ids, self.env['res.groups'])
+        menu.group_ids = self.env.ref('base.group_user')
+        self.assertEqual(
+            menu.group_ids,
+            self.env.ref('base.group_user') +
+            self.env.ref('website.group_website_designer')
+        )
+
 
 class TestMenuHttp(common.HttpCase):
     def setUp(self):

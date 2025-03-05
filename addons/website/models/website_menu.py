@@ -116,8 +116,10 @@ class WebsiteMenu(models.Model):
     def write(self, values):
         self.env.registry.clear_cache('templates')
         res = super().write(values)
-        if 'group_ids' in values:
-            self.filtered('group_ids').group_ids += self.env.ref('website.group_website_designer')
+        if 'group_ids' in values and not self.env.context.get("adding_designer_group_to_menu"):
+            self.filtered("group_ids").with_context(
+                adding_designer_group_to_menu=True
+            ).group_ids += self.env.ref("website.group_website_designer")
         return res
 
     def unlink(self):
