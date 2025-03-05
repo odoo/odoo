@@ -1048,3 +1048,28 @@ test("insert with id relation keeps existing field values", async () => {
     expect(member2.channel.eq(channel1)).toBe(true);
     expect(member2.is_internal).toBe(true);
 });
+
+test("ignores update when condition matches", async () => {
+    (class Persona extends Record {
+        static id = "name";
+        name;
+        neverFalseAgain = Record.attr(undefined, {
+            ignoreUpdateWhen(new_val) {
+                return this.neverFalseAgain && !new_val;
+            },
+        });
+    }).register(localRegistry);
+    const store = await start();
+    const john = store.Persona.insert("John");
+    expect(john.neverFalseAgain).toBe(undefined);
+    john.neverFalseAgain = false;
+    expect(john.neverFalseAgain).toBe(false);
+    john.neverFalseAgain = undefined;
+    expect(john.neverFalseAgain).toBe(undefined);
+    john.neverFalseAgain = true;
+    expect(john.neverFalseAgain).toBe(true);
+    john.neverFalseAgain = false;
+    expect(john.neverFalseAgain).toBe(true);
+    john.neverFalseAgain = undefined;
+    expect(john.neverFalseAgain).toBe(true);
+});
