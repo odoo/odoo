@@ -12,29 +12,11 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_es_edi_verifactu_required = move.country_code == 'ES' and move.company_id.l10n_es_edi_verifactu_required
 
-    @api.depends('company_id', 'name', 'invoice_date', 'amount_total_signed')
-    def _compute_l10n_es_edi_verifactu_record_identifier(self):
-        # Overrides verifactu_record_mixin.py
-        for move in self:
-            if not move.l10n_es_edi_verifactu_required:
-                identifier = {
-                    'errors': [_("Veri*Factu is not enabled for the invoice.")],
-                }
-            elif move.state == 'draft':
-                identifier = {
-                    'errors': [_("The invoice is in draft.")],
-                }
-            else:
-                identifier = self.env['l10n_es_edi_verifactu.document']._record_identifier(
-                    move.company_id, move.name, move.invoice_date, move.amount_total_signed
-                )
-            move.l10n_es_edi_verifactu_record_identifier = identifier
-
     @api.depends('l10n_es_edi_verifactu_state', 'l10n_es_edi_verifactu_record_document_ids', 'l10n_es_edi_verifactu_record_document_ids.state')
     def _compute_show_reset_to_draft_button(self):
         """
         Disallow resetting to draft in the following cases:
-        * The move is registerd with the AEAT
+        * The move is registered with the AEAT
         * We are waiting to sent a record document (registration) to the AEAT.
         """
         # EXTENDS 'account'
@@ -51,6 +33,10 @@ class AccountMove(models.Model):
 
         invoice = self
         invoice = invoice.with_context(lang=invoice.partner_id.lang)
+
+        if invoice.state != 'posted':
+            errors.append(_("Veri*Factu records can only be generated for posted invoices."))
+            return {}, errors
 
         company = invoice.company_id
         if not company:

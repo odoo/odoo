@@ -58,10 +58,10 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
             'NumSerieFactura': 'INV/2019/00006',
             'FechaExpedicionFactura': '11-12-2024',
         }
-        self.assertDictEqual(record_document.record_identifier,
-                             expected_record_identifier | record_document.record_identifier)
-        self.assertDictEqual(record.l10n_es_edi_verifactu_record_identifier,
-                             expected_record_identifier | record.l10n_es_edi_verifactu_record_identifier)
+        record_identifier = record_document.record_identifier
+        self.assertDictEqual(record_identifier, expected_record_identifier | record_identifier)
+        record_identifier = record._l10n_es_edi_verifactu_record_identifier()
+        self.assertDictEqual(record_identifier, expected_record_identifier | record_identifier)
 
     def test_generation_error(self):
         _render_xml_node_function = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_record_mixin.L10nEsEdiVerifactuRecordMixin._l10n_es_edi_verifactu_render_xml_node'

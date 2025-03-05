@@ -7,12 +7,11 @@
         <field name="arch" type="xml">
             <xpath expr="//block[@name='default_taxes_setting_container']" position="before">
                 <block title="Veri*Factu" name="l10n_es_edi_verifactu" invisible="country_code != 'ES'" >
-                    <field name="l10n_es_edi_verifactu_required_readonly" invisible="1"/>
                     <setting id="l10n_es_edi_verifactu_required"
-                             help="Automatically generate and send Veri*Factu records to the AEAT. This cannot be disabled after generating the first Veri*Factu record."
+                             help="Automatically generate and send Veri*Factu records to the AEAT."
                              company_dependent="1"
                              documentation="/applications/finance/fiscal_localizations/spain.html#veri-factu">
-                        <field name="l10n_es_edi_verifactu_required" invisible="l10n_es_edi_verifactu_required_readonly"/>
+                        <field name="l10n_es_edi_verifactu_required"/>
                     </setting>
 
                     <field name="l10n_es_edi_verifactu_certificate_ids" invisible="1"/>

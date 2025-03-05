@@ -60,7 +60,7 @@ class AccountTax(models.Model):
         def filter_to_apply(base_line, tax_values):
             return (tax_values['tax_repartition_line'].factor_percent > 0.0
                     and tax_values['tax_repartition_line'].tax_id.amount != -100.0
-                    and tax_values['tax_repartition_line'].tax_id.l10n_es_type != 'ignore')
+                    and tax_values['tax_repartition_line'].tax_id.l10n_es_type not in ('ignore', 'retencion'))
 
         return {
             'full_filter_invl_to_apply': full_filter_invl_to_apply,

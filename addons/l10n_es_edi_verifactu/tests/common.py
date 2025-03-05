@@ -58,8 +58,9 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         cls.tax21_services = cls.env["account.chart.template"].with_company(cls.company).ref("account_tax_template_s_iva21s")
         cls.tax10_goods = cls.env["account.chart.template"].with_company(cls.company).ref("account_tax_template_s_iva10b")
         cls.tax10_services = cls.env["account.chart.template"].with_company(cls.company).ref("account_tax_template_s_iva10s")
-        cls.tax_s_req014 = cls.env["account.chart.template"].with_company(cls.company).ref("account_tax_template_s_req014")
-        cls.tax_s_req52 = cls.env["account.chart.template"].with_company(cls.company).ref("account_tax_template_s_req52")
+        cls.tax1p4_services_recargo = cls.env["account.chart.template"].with_company(cls.company).ref("account_tax_template_s_req014")
+        cls.tax5p2_services_recargo = cls.env["account.chart.template"].with_company(cls.company).ref("account_tax_template_s_req52")
+        cls.tax1_withholding = cls.env["account.chart.template"].with_company(cls.company).ref("account_tax_template_s_irpf1")
 
     @classmethod
     def _read_file(cls, path, *args):

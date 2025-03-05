@@ -53,9 +53,9 @@ class AccountMoveSend(models.TransientModel):
             ) if waiting_moves else False
 
     @api.model
-    def _call_web_service_after_invoice_pdf_render(self, invoices_data):
+    def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
-        super()._call_web_service_after_invoice_pdf_render(invoices_data)
+        super()._call_web_service_before_invoice_pdf_render(invoices_data)
 
         invoices_to_send = self.env['account.move'].browse([
             invoice.id for invoice, invoice_data in invoices_data.items()

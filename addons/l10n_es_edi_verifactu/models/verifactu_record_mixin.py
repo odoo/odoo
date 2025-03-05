@@ -27,7 +27,6 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
 
     The functions that need to be implemented (override / extend) in models inheriting this mixin:
       - `_compute_l10n_es_edi_verifactu_required`
-      - `_compute_l10n_es_edi_verifactu_record_identifier`
       - `_l10n_es_edi_verifactu_get_record_values`
     """
     _name = 'l10n_es_edi_verifactu.record_mixin'
@@ -36,11 +35,6 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
     l10n_es_edi_verifactu_required = fields.Boolean(
         string="Veri*Factu Required",
         compute='_compute_l10n_es_edi_verifactu_required',
-    )
-    l10n_es_edi_verifactu_record_identifier = fields.Json(
-        string="Veri*Factu Record Identifier",
-        compute='_compute_l10n_es_edi_verifactu_record_identifier',
-        help="Technical field containing the values used to identify records in the Veri*Factu system.",
     )
     l10n_es_edi_verifactu_record_document_ids = fields.One2many(
         comodel_name='l10n_es_edi_verifactu.record_document',
@@ -97,10 +91,6 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
         # To override
         self.l10n_es_edi_verifactu_required = False
 
-    def _compute_l10n_es_edi_verifactu_record_identifier(self):
-        # To override
-        self.l10n_es_edi_verifactu_record_identifier = False
-
     @api.depends('l10n_es_edi_verifactu_record_document_ids', 'l10n_es_edi_verifactu_record_document_ids.state')
     def _compute_l10n_es_edi_verifactu_info_from_record_document_ids(self):
         for record in self:
@@ -132,15 +122,15 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
             record.l10n_es_edi_verifactu_last_erroneous_record_document_id = last_erroneous_document
             record.l10n_es_edi_verifactu_state = state
 
-    @api.depends('l10n_es_edi_verifactu_required', 'company_id.l10n_es_edi_verifactu_endpoints', 'l10n_es_edi_verifactu_record_identifier')
+    @api.depends('l10n_es_edi_verifactu_record_document_ids', 'l10n_es_edi_verifactu_record_document_ids.record_identifier')
     def _compute_l10n_es_edi_verifactu_qr_code(self):
         for record in self:
-            record_identifier = record.l10n_es_edi_verifactu_record_identifier
-            if not record.l10n_es_edi_verifactu_required or not record_identifier or record_identifier['errors']:
+            record_identifier = record._l10n_es_edi_verifactu_record_identifier()
+            if not record_identifier:
                 record.l10n_es_edi_verifactu_qr_code = False
                 continue
             url = url_quote_plus(
-                f"{record.company_id.l10n_es_edi_verifactu_endpoints['QR']}?"
+                f"{record.company_id._l10n_es_edi_verifactu_get_endpoints()['QR']}?"
                 f"nif={record_identifier['IDEmisorFactura']}&"
                 f"numserie={record_identifier['NumSerieFactura']}&"
                 f"fecha={record_identifier['FechaExpedicionFactura']}&"
@@ -153,6 +143,13 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
     def _compute_l10n_es_edi_verifactu_show_cancel_button(self):
         for move in self:
             move.l10n_es_edi_verifactu_show_cancel_button = move.l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')
+
+    def _l10n_es_edi_verifactu_record_identifier(self):
+        self.ensure_one()
+        last_submission_document = self.l10n_es_edi_verifactu_record_document_ids.filtered(
+            lambda rd: rd.record_type == 'submission'
+        ).sorted()[:1]
+        return last_submission_document.record_identifier
 
     def _l10n_es_edi_verifactu_get_record_values(self, cancellation=False):
         # To extend
@@ -169,26 +166,13 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
                 rejected_before = True
                 break
 
-        record_identifier = self.l10n_es_edi_verifactu_record_identifier
-        errors.extend(record_identifier['errors'])
-
         vals = {
             'cancellation': cancellation,
             'record': self,
             'rejected_before': rejected_before,
-            'identifier': record_identifier,
             'verifactu_state': self.l10n_es_edi_verifactu_state,
         }
         return vals, errors
-
-    def _l10n_es_edi_verifactu_get_render_vals(self, cancellation=False, previous_record_identifier=None):
-        self.ensure_one()
-        record_values, errors = self._l10n_es_edi_verifactu_get_record_values(cancellation)
-        if errors:
-            return {}, errors
-        return self.env['l10n_es_edi_verifactu.xml']._render_vals(
-            record_values, previous_record_identifier=previous_record_identifier
-        )
 
     def _l10n_es_edi_verifactu_render_xml_node(self, cancellation=False, previous_record_identifier=None):
         self.ensure_one()
@@ -198,8 +182,13 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
             'errors': [],
         }
 
-        render_vals, errors = self._l10n_es_edi_verifactu_get_render_vals(
-            cancellation=cancellation, previous_record_identifier=previous_record_identifier
+        record_values, errors = self._l10n_es_edi_verifactu_get_record_values(cancellation)
+        if errors:
+            render_info['errors'] = errors
+            return render_info
+
+        render_vals, errors = self.env['l10n_es_edi_verifactu.xml']._render_vals(
+            record_values, previous_record_identifier=previous_record_identifier
         )
         render_info['render_vals'] = render_vals
         if errors:
@@ -239,9 +228,7 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
         else:
             render_vals = render_info['render_vals']
             xml = etree.tostring(render_info['xml_node'], xml_declaration=False, encoding='UTF-8')
-            record_identifier = render_vals['record_identifier']
-            record_identifier['Huella'] = render_vals['vals'][render_vals['record_type']]['Huella']
-            record_document_vals['record_identifier'] = record_identifier
+            record_document_vals['record_identifier'] = render_vals['record_identifier']
 
         record_document = self.env['l10n_es_edi_verifactu.record_document'].create(record_document_vals)
 
@@ -259,7 +246,7 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
 
     def l10n_es_edi_verifactu_mark_for_next_batch(self, cancellation=False):
         result = {}
-        # TODO:?: lock company / l10n_es_edi_verifactu_last_record_document field
+        # TODO:?: lock company / l10n_es_edi_verifactu_last_record_document_id field
         if self:
             for record in self:
                 waiting_record_documents = record.l10n_es_edi_verifactu_record_document_ids.filtered(lambda rd: not rd.state)
@@ -267,12 +254,12 @@ class L10nEsEdiVerifactuRecordMixin(models.AbstractModel):
                     continue
 
                 company = record.company_id
-                previous_record = company.l10n_es_edi_verifactu_last_record_document
+                previous_record = company.l10n_es_edi_verifactu_last_record_document_id
                 record_document = record._l10n_es_edi_verifactu_create_record_document(
                     cancellation=cancellation, previous_record_identifier=previous_record.record_identifier
                 )
                 if record_document.state != 'creating_failed':
-                    company.l10n_es_edi_verifactu_last_record_document = record_document
+                    company.l10n_es_edi_verifactu_last_record_document_id = record_document
                 result[record] = record_document
             self.env['l10n_es_edi_verifactu.document'].trigger_next_batch()
         return result

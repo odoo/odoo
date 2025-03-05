@@ -43,8 +43,11 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_1_credit_note.xml")
 
     def test_invoice_2(self):
-        # Recargo de Equivalencia
-        # FechaOperacion
+        """
+        I.e. test that the following are handled correctly
+          * Recargo de equivalencia taxes
+          * 'FechaOperacion' field (set as `delivery_date` in case it is different from the `invoice_date`)
+        """
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': '2019-01-30',
@@ -53,14 +56,43 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
             'partner_id': self.partner_b.id,  # Spanish customer
             'invoice_line_ids': [
                 Command.create({'product_id': self.product_1.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.tax21_services.ids)]}),
-                Command.create({'product_id': self.product_1.id, 'price_unit': 100.0, 'tax_ids': [Command.set((self.tax10_goods + self.tax_s_req014).ids)]}),
-                Command.create({'product_id': self.product_1.id, 'price_unit': 200.0, 'tax_ids': [Command.set((self.tax21_services + self.tax_s_req52).ids)]}),
+                Command.create({'product_id': self.product_1.id, 'price_unit': 100.0, 'tax_ids': [Command.set((self.tax10_goods + self.tax1p4_services_recargo).ids)]}),
+                Command.create({'product_id': self.product_1.id, 'price_unit': 200.0, 'tax_ids': [Command.set((self.tax21_services + self.tax5p2_services_recargo).ids)]}),
             ],
         })
         invoice.action_post()
         record_document = invoice._l10n_es_edi_verifactu_create_record_document()
         xml, errors = record_document._create_batch_xml()
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_2.xml")
+
+    def test_invoice_3(self):
+        """
+        Test withholding / retention taxes (taxes with `l10n_es_type` 'retencion').
+          * We need to ignore them in the generation of the XML
+          * We need ignore them for the total in the QR code
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-30',
+            'date': '2019-01-30',
+            'partner_id': self.partner_b.id,  # Spanish customer
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_1.id,
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set((self.tax10_goods + self.tax1_withholding).ids)]
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.assertEqual(invoice.amount_total, 1090.0)
+
+        record_document = invoice._l10n_es_edi_verifactu_create_record_document()
+        expected_qr_code_url = '/report/barcode/?barcode_type=QR&value=https%3A%2F%2Fprewww2.aeat.es%2Fwlpl%2FTIKE-CONT%2FValidarQR%3Fnif%3D59962470K%26numserie%3DINV%2F2019%2F00001%26fecha%3D30-01-2019%26importe%3D1100.00&barLevel=M&width=180&height=180'
+        self.assertEqual(invoice.l10n_es_edi_verifactu_qr_code, expected_qr_code_url)
+
+        xml, errors = record_document._create_batch_xml()
+        self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_3.xml")
 
     def test_invoice_multicurrency_1(self):
         invoice = self.env['account.move'].create({

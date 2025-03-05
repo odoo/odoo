@@ -149,51 +149,8 @@ class L10nEsEdiVerifactuDocument(models.Model):
         return doc
 
     @api.model
-    def _record_identifier(self, company, name, invoice_date, amount_total_signed):
-        """
-        Return a dictionary with the values used to identify records in the Veri*Factu system.
-          * 'IDEmisorFactura'
-          * 'NumSerieFactura'
-          * 'FechaExpedicionFactura'
-          * 'ImporteTotal'; (only) needed for the QR code
-            (See function `_compute_l10n_es_edi_verifactu_qr_code` of model 'l10n_es_edi_verifactu.record_mixin')
-          * TODO: 'Huella' added during XML generation
-        """
-        errors = []
-
-        if company:
-            company_values = company._get_l10n_es_edi_verifactu_values()
-            company_NIF = company_values['NIF']
-            if not company_NIF or len(company_NIF) != 9:  # NIFType
-                errors.append(_("The NIF '%(company_nif)s' of the company is not exactly 9 characters long",
-                                company_nif=company_NIF))
-        else:
-            company_NIF = 'NO_DISPONIBLE'
-            errors.append(_("The company is missing."))
-
-        if not name or len(name) > 60:
-            errors.append(_("The name of the record is not between 1 and 60 characters long: %(name)s",
-                            name=name))
-
-        if not invoice_date:
-            invoice_date = 'NO_DISPONIBLE'
-            errors.append(_("The invoice date is missing."))
-        else:
-            invoice_date = self.env['l10n_es_edi_verifactu.xml']._format_date_fecha_type(invoice_date)
-
-        total_amount = self.env['l10n_es_edi_verifactu.xml']._round_format_number_2(amount_total_signed)
-
-        return {
-            'IDEmisorFactura': company_NIF,
-            'NumSerieFactura': name,
-            'FechaExpedicionFactura': invoice_date,
-            'ImporteTotal': total_amount,
-            'errors': errors,
-        }
-
-    @api.model
     def _get_record_key(self, record_identifier):
-        # `record_identifier` is a dictionary like returned from function `_record_identifier`
+        # `record_identifier` is a dictionary like belonging to `'record_identifier'` in render values
         return str((record_identifier['IDEmisorFactura'], record_identifier['NumSerieFactura']))
 
     @api.model
@@ -273,7 +230,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         return document
 
     @api.model
-    def get_time_for_next_batch(self, company):
+    def _get_time_for_next_batch(self, company):
         # TODO: just put a field on the company?
         last_document = self.sudo().search([
             ('company_id', '=', company.id),
@@ -294,8 +251,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
         2. Send all waiting record documents that we can send.
         3. Trigger the cron again at a later date to send the record documents we could not send
         """
-        # TODO: cron handling; maybe 1 cron per company better?
-
         documents_to_resend = self.env['l10n_es_edi_verifactu.document'].sudo().search([
             ('state', '=', 'sending_failed')
         ])
@@ -321,21 +276,20 @@ class L10nEsEdiVerifactuDocument(models.Model):
             record_documents = record_documents.sorted(reverse=True)
 
             # Send batches with size BATCH_LIMIT; they are not restricted by the waiting time
-            record_count = len(record_documents)
+            next_batch = record_documents[0:BATCH_LIMIT]
             start_index = 0
-            end_index = min(record_count, start_index + BATCH_LIMIT)
-            while end_index - start_index == BATCH_LIMIT:
-                self.with_company(company)._create_batch_and_send(record_documents[start_index:end_index])
+            while len(next_batch) == BATCH_LIMIT:
+                self.with_company(company)._create_batch_and_send(next_batch)
                 start_index += BATCH_LIMIT
-                end_index = min(record_count, start_index + BATCH_LIMIT)
-            remaining_records = record_documents[start_index:]
+                next_batch = record_documents[start_index:start_index + BATCH_LIMIT]
+            # now: len(next_batch) < BATCH_LIMIT ; we need to respect the waiting time
 
-            if not remaining_records:
+            if not next_batch:
                 continue
 
-            next_batch_time = self.get_time_for_next_batch(company)
+            next_batch_time = self._get_time_for_next_batch(company)
             if not next_batch_time or fields.Datetime.now() >= next_batch_time:
-                self.with_company(company)._create_batch_and_send(remaining_records)
+                self.with_company(company)._create_batch_and_send(next_batch)
             else:
                 cron = self.env.ref('l10n_es_edi_verifactu.cron_verifactu_batch', raise_if_not_found=False)
                 if cron:
@@ -346,14 +300,14 @@ class L10nEsEdiVerifactuDocument(models.Model):
         company = self.company_id
 
         session = requests.Session()
-        session.cert = company.l10n_es_edi_verifactu_certificate_id
+        session.cert = company.sudo()._l10n_es_edi_verifactu_get_certificate()
         session.mount("https://", PatchedHTTPAdapter())
 
         soap_xml = self.env['l10n_es_edi_verifactu.xml']._build_soap_request_xml(self.xml_attachment_id.raw)
 
         response = session.request(
             'post',
-            url=company.l10n_es_edi_verifactu_endpoints['verifactu'],
+            url=company._l10n_es_edi_verifactu_get_endpoints()['verifactu'],
             data=soap_xml,
             timeout=15,
             headers={"Content-Type": 'application/soap+xml;charset=UTF-8'},

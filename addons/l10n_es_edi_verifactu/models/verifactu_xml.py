@@ -66,14 +66,13 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
                 record_type: {},
             },
             'record': vals['record'],
-            'record_identifier': vals['identifier'],
             'cancellation': cancellation,
             'errors': [],
         }
         main_render_vals = render_vals['vals'][record_type]
         errors = render_vals['errors']
 
-        company_values = company._get_l10n_es_edi_verifactu_values()
+        company_values = company._l10n_es_edi_verifactu_get_values()
         company_name = company_values['name']
         render_vals['company'] = company
 
@@ -105,6 +104,8 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
             render_vals, previous_record_identifier=previous_record_identifier
         )
 
+        render_vals['record_identifier'] = self._extract_record_identifiers(render_vals['vals'])
+
         return render_vals, errors
 
     @api.model
@@ -132,10 +133,31 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
         render_vals = {}
         errors = []
 
+        company = vals['company']
         cancellation = vals['cancellation']
+        name = vals['name']
+        invoice_date = vals['invoice_date']
 
-        identifier = vals['identifier']
-        invoice_date = identifier['FechaExpedicionFactura']
+        if company:
+            company_values = company._l10n_es_edi_verifactu_get_values()
+            company_NIF = company_values['NIF']
+            if not company_NIF or len(company_NIF) != 9:  # NIFType
+                errors.append(_("The NIF '%(company_nif)s' of the company is not exactly 9 characters long",
+                                company_nif=company_NIF))
+        else:
+            company_NIF = 'NO_DISPONIBLE'
+            errors.append(_("The company is missing."))
+
+        if not name or len(name) > 60:
+            errors.append(_("The name of the record is not between 1 and 60 characters long: %(name)s",
+                            name=name))
+
+        if not invoice_date:
+            invoice_date = 'NO_DISPONIBLE'
+            errors.append(_("The invoice date is missing."))
+        else:
+            invoice_date = self._format_date_fecha_type(invoice_date)
+
 
         delivery_date = vals['delivery_date']
         if delivery_date:
@@ -144,9 +166,9 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
         if cancellation:
             render_vals.update({
                 'IDFactura': {
-                    'IDEmisorFacturaAnulada': identifier['IDEmisorFactura'],
-                    'NumSerieFacturaAnulada': identifier['NumSerieFactura'],
-                    'FechaExpedicionFacturaAnulada': identifier['FechaExpedicionFactura'],
+                    'IDEmisorFacturaAnulada': company_NIF,
+                    'NumSerieFacturaAnulada': name,
+                    'FechaExpedicionFacturaAnulada': invoice_date,
                 },
             })
         else:
@@ -154,9 +176,9 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
             errors.extend(tipos_errors)
             render_vals.update({
                 'IDFactura': {
-                    'IDEmisorFactura': identifier['IDEmisorFactura'],
-                    'NumSerieFactura': identifier['NumSerieFactura'],
-                    'FechaExpedicionFactura': identifier['FechaExpedicionFactura'],
+                    'IDEmisorFactura': company_NIF,
+                    'NumSerieFactura': name,
+                    'FechaExpedicionFactura': invoice_date,
                 },
                 'TipoFactura': tipos['TipoFactura'],
                 'TipoRectificativa': tipos['TipoRectificativa'],  # may be None
@@ -172,9 +194,11 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
             })
 
             refunded_record = vals['refunded_record']
-            refunded_record_identifier = refunded_record and refunded_record.l10n_es_edi_verifactu_record_identifier
-            if refunded_record_identifier and refunded_record_identifier['errors']:
-                errors.extend(refunded_record_identifier['errors'])
+            refunded_record_identifier = refunded_record and refunded_record._l10n_es_edi_verifactu_record_identifier()
+            if refunded_record and not refunded_record_identifier:
+                # TODO: maybe just do not put the values in the XML
+                # TODO: maybe we could implement case cancellation without prior registration like this?
+                errors.append(_("There is no record identifier yet for the refunded record."))
             elif refunded_record:
                 render_vals.update({
                     'FacturasRectificadas': {
@@ -273,7 +297,9 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
         sign = -1 if vals['move_type'] in ('out_refund', 'in_refund') else 1
         for key, tax_detail in tax_details['tax_details'].items():
             tax_type = tax_detail['l10n_es_type']
-            if tax_type in ('recargo', 'ignore'):
+            # Tax types 'ignore' and 'retencion' are ignored when generating the `tax_details`
+            # See `filter_to_apply` in function `_l10n_es_edi_verifactu_get_tax_details_functions` on 'account.tax'
+            if tax_type == 'recargo':
                 # Recargo taxes are only used in combination with another tax (a sujeto tax)
                 # They will be handled when processing the remaining taxes
                 continue
@@ -292,6 +318,8 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
             else:
                 base_amount_no_sujeto = base_amount
                 base_amount_sujeto = None
+
+            # NOTE: / TODO: [1198] Si CalificacionOperacion es S2 TipoImpositivo y CuotaRepercutida deberan tener valor 0.
 
             calificacion_operacion = None  # Reported if not tax-exempt;
             recargo_equivalencia = {}
@@ -312,8 +340,8 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
             elif tax_type == 'exento':
                 pass  # exempt_reason set already
             else:
-                # tax_type in ('no_deducible', 'retencion', 'dua')
-                # TODO: subtract 'retencion' from total?
+                # TODO:
+                # tax_type in ('no_deducible', 'dua')
                 pass
 
             recargo_percentage = recargo_equivalencia.get("tax_percentage")
@@ -337,17 +365,13 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
         total_amount = sign * (tax_details['base_amount'] + tax_details['tax_amount'])
         tax_amount = sign * (tax_details['tax_amount'])
 
-        total_amount_formatted = self._format_number_ImporteSgn12_2(total_amount)
-        if total_amount_formatted != vals['identifier']['ImporteTotal']:
-            errors.append(_("The computed 'ImporteTotal' does not match the 'Total Signed' amount on the invoice."))
-
         render_vals = {
             'Macrodato': 'S' if abs(total_amount) >= 100000000 else None,
             'Desglose': {
                 'DetalleDesglose': detalles,
             },
             'CuotaTotal': self._format_number_ImporteSgn12_2(tax_amount),
-            'ImporteTotal': total_amount_formatted,
+            'ImporteTotal': self._format_number_ImporteSgn12_2(total_amount),
         }
 
         return render_vals, errors
@@ -387,7 +411,7 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
         company = vals['company']
 
         # Ensure a certificate is available.
-        certificate = company.l10n_es_edi_verifactu_certificate_id
+        certificate = company.sudo()._l10n_es_edi_verifactu_get_certificate()
         if not certificate:
             errors.append(_("There is no certificate configured for Veri*Factu on the company."))
             return {'dsig': {}}, errors
@@ -397,12 +421,34 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
 
         sigpolicy = {
             'url': "https://sede.administracion.gob.es/politica_de_firma_anexo_1.pdf",
-            # TODO: check sigpolicy digest
             'digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
         }
         render_vals = get_xades_template_render_values(sigpolicy, cert_public)
 
         return render_vals, errors
+
+    def _extract_record_identifiers(self, render_values):
+        cancellation = "RegistroAnulacion" in render_values
+        if cancellation:
+            identifiers = {
+                "IDEmisorFactura": render_values["RegistroAnulacion"]["IDFactura"]["IDEmisorFacturaAnulada"],
+                "NumSerieFactura": render_values["RegistroAnulacion"]["IDFactura"]["NumSerieFacturaAnulada"],
+                "FechaExpedicionFactura": render_values["RegistroAnulacion"]["IDFactura"]["FechaExpedicionFacturaAnulada"],
+                "FechaHoraHusoGenRegistro": render_values["RegistroAnulacion"]["FechaHoraHusoGenRegistro"],
+                "Huella": render_values["RegistroAnulacion"]["Huella"],
+            }
+        else:
+            identifiers = {
+                "IDEmisorFactura": render_values["RegistroAlta"]["IDFactura"]["IDEmisorFactura"],
+                "NumSerieFactura": render_values["RegistroAlta"]["IDFactura"]["NumSerieFactura"],
+                "FechaExpedicionFactura": render_values["RegistroAlta"]["IDFactura"]["FechaExpedicionFactura"],
+                "TipoFactura": render_values["RegistroAlta"]["TipoFactura"],
+                "CuotaTotal": render_values["RegistroAlta"]["CuotaTotal"],
+                "ImporteTotal": render_values["RegistroAlta"]["ImporteTotal"],
+                "FechaHoraHusoGenRegistro": render_values["RegistroAlta"]["FechaHoraHusoGenRegistro"],
+                "Huella": render_values["RegistroAlta"]["Huella"],
+            }
+        return identifiers
 
     @api.model
     def _update_render_vals_with_chaining_info(self, render_vals, previous_record_identifier=None):
@@ -472,7 +518,7 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
 
         # Sign the rendered XML (modify <ds:Signature> node appropriately)
         company = render_vals['company']
-        certificate = company.l10n_es_edi_verifactu_certificate_id
+        certificate = company.sudo()._l10n_es_edi_verifactu_get_certificate()
         if not certificate:
             errors.append(_("There is no certificate configured for Veri*Factu on the company."))
             return None, errors
@@ -488,7 +534,7 @@ class L10nEsEdiVerifactuXml(models.AbstractModel):
         errors = []
 
         company = self.env.company
-        company_values = company._get_l10n_es_edi_verifactu_values()
+        company_values = company._l10n_es_edi_verifactu_get_values()
         company_NIF = company_values['NIF']
         if not company_NIF or len(company_NIF) != 9:  # NIFType
             errors.append(_("The NIF '%(company_nif)s' of the company is not exactly 9 characters long",
