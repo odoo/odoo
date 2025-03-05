@@ -27,7 +27,10 @@ export class TaskWithHours extends Component {
             canCreateEdit: props.canCreateEdit && this.canCreate(),
             canQuickCreate: props.canQuickCreate && this.canCreate(),
             context: { ...props.context, hr_timesheet_display_remaining_hours: true },
-            value: props.value && [props.value[0], props.value[1]?.split("\u00A0")[0]],
+            value: props.value && {
+                ...props.value,
+                display_name: props.value.display_name?.split("\u00A0")[0],
+            },
         };
     }
 }

@@ -344,9 +344,9 @@ test(`handles many2one fields: value is an object`, async () => {
         onRecordChanged(record, changes) {
             expect.step("record changed");
             expect(changes).toEqual({ foo: 3 });
-            // data is an array with properties defined on it
-            // Object.assign([id, name], { id, name, ... })
-            expect(record.data).toEqual({ foo: [3, "abc"] });
+            expect(record.data).toEqual({ foo: { id: 3, display_name: "abc" } });
+            expect(record.data.foo.id).toBe(3);
+            expect(record.data.foo.display_name).toBe("abc");
         }
     }
 
@@ -394,7 +394,7 @@ test(`handles many2one fields: value is a pair id, display_name`, async () => {
                 },
             };
             this.values = {
-                foo: [1, "bar1"],
+                foo: { id: 1, display_name: "bar1" },
             };
             this.hooks = {
                 onRecordChanged: this.onRecordChanged.bind(this),
@@ -404,7 +404,9 @@ test(`handles many2one fields: value is a pair id, display_name`, async () => {
         onRecordChanged(record, changes) {
             expect.step("record changed");
             expect(changes).toEqual({ foo: 3 });
-            expect(record.data).toEqual({ foo: [3, "abc"] });
+            expect(record.data).toEqual({ foo: { id: 3, display_name: "abc" } });
+            expect(record.data.foo.id).toBe(3);
+            expect(record.data.foo.display_name).toBe("abc");
         }
     }
 
@@ -462,7 +464,7 @@ test(`handles many2one fields: value is an id`, async () => {
     expect(`.o_field_many2one_selection input`).toHaveValue("bar1");
 });
 
-test(`handles many2one fields: value is an array with id only`, async () => {
+test(`handles many2one fields: value is an object with id only`, async () => {
     class Bar extends models.Model {
         name = fields.Char();
 
@@ -491,7 +493,7 @@ test(`handles many2one fields: value is an array with id only`, async () => {
                 },
             };
             this.values = {
-                foo: [1],
+                foo: { id: 1 },
             };
         }
     }

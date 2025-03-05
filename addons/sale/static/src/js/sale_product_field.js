@@ -42,7 +42,7 @@ async function applyProduct(record, product) {
     // We use `_update` (not locked) instead of `update` (locked) so that multiple records can be
     // updated in parallel (for performance).
     await record._update({
-        product_id: [product.id, product.display_name],
+        product_id: { id: product.id, display_name: product.display_name },
         product_uom_qty: product.quantity,
         product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPTAVIds)],
         product_custom_attribute_value_ids: customAttributesCommands,
@@ -84,14 +84,14 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 }
             }
             this.isInternalUpdate = false;
-        }, () => [Array.isArray(this.value) && this.value[0]]);
+        }, () => [this.value && this.value.id]);
     }
 
     get productName() {
         if (this.props.name == 'product_template_id') {
             const product_id_data = this.props.record.data.product_id;
-            if (product_id_data && product_id_data[1]) {
-                return product_id_data[1].split("\n")[0];
+            if (product_id_data && product_id_data.display_name) {
+                return product_id_data.display_name.split("\n")[0];
             }
         }
         return super.productName;
@@ -135,10 +135,10 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
 
     get m2oProps() {
         const p = super.m2oProps;
-        const value = p.value && [...p.value];
-        if (this.isCombo && value[1]) {
+        const value = p.value && { ...p.value };
+        if (this.isCombo && value && value.display_name) {
             // Show the product quantity next to the product name for combo lines.
-            value[1] = `${value[1]} x ${this.props.record.data.product_uom_qty}`;
+            value.display_name = `${value.display_name} x ${this.props.record.data.product_uom_qty}`;
         }
         return {
             ...p,
@@ -164,7 +164,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         const result = await this.orm.call(
             'product.template',
             'get_single_product_variant',
-            [this.props.record.data.product_template_id[0]],
+            [this.props.record.data.product_template_id.id],
             {
                 context: this.context,
             }
@@ -173,14 +173,14 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             if (this.props.record.data.product_id != result.product_id.id) {
                 if (result.is_combo) {
                     await this.props.record.update({
-                        product_id: [result.product_id, result.product_name],
+                        product_id: { id: result.product_id, display_name: result.product_name },
                     });
                     this._openComboConfigurator();
                 } else if (result.has_optional_products) {
                     this._openProductConfigurator();
                 } else {
                     await this.props.record.update({
-                        product_id: [result.product_id, result.product_name],
+                        product_id: { id: result.product_id, display_name: result.product_name },
                     });
                     this._onProductUpdate();
                 }
@@ -221,14 +221,14 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         }
 
         this.dialog.add(ProductConfiguratorDialog, {
-            productTemplateId: saleOrderLine.product_template_id[0],
+            productTemplateId: saleOrderLine.product_template_id.id,
             ptavIds: ptavIds,
             customPtavs: customPtavs,
             quantity: saleOrderLine.product_uom_qty,
-            productUOMId: saleOrderLine.product_uom_id[0],
-            companyId: saleOrderRecord.data.company_id[0],
-            pricelistId: saleOrderRecord.data.pricelist_id[0],
-            currencyId: saleOrderLine.currency_id[0],
+            productUOMId: saleOrderLine.product_uom_id.id,
+            companyId: saleOrderRecord.data.company_id.id,
+            pricelistId: saleOrderRecord.data.pricelist_id.id,
+            currencyId: saleOrderLine.currency_id.id,
             soDate: serializeDateTime(saleOrderRecord.data.date_order),
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
@@ -256,25 +256,25 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         const comboLineRecord = this.props.record;
         const comboItemLineRecords = getLinkedSaleOrderLines(comboLineRecord);
         const selectedComboItems = await Promise.all(comboItemLineRecords.map(async record => ({
-            id: record.data.combo_item_id[0],
+            id: record.data.combo_item_id.id,
             no_variant_ptav_ids: edit ? this._getNoVariantPtavIds(record.data) : [],
             custom_ptavs: edit ? await this._getCustomPtavs(record.data) : [],
         })));
         const { combos, ...remainingData } = await rpc('/sale/combo_configurator/get_data', {
-            product_tmpl_id: comboLineRecord.data.product_template_id[0],
-            currency_id: comboLineRecord.data.currency_id[0],
+            product_tmpl_id: comboLineRecord.data.product_template_id.id,
+            currency_id: comboLineRecord.data.currency_id.id,
             quantity: comboLineRecord.data.product_uom_qty,
             date: serializeDateTime(saleOrder.date_order),
-            company_id: saleOrder.company_id[0],
-            pricelist_id: saleOrder.pricelist_id[0],
+            company_id: saleOrder.company_id.id,
+            pricelist_id: saleOrder.pricelist_id.id,
             selected_combo_items: selectedComboItems,
             ...this._getAdditionalRpcParams(),
         });
         this.dialog.add(ComboConfiguratorDialog, {
             combos: combos.map(combo => new ProductCombo(combo)),
             ...remainingData,
-            company_id: saleOrder.company_id[0],
-            pricelist_id: saleOrder.pricelist_id[0],
+            company_id: saleOrder.company_id.id,
+            pricelist_id: saleOrder.pricelist_id.id,
             date: serializeDateTime(saleOrder.date_order),
             edit: edit,
             save: async (comboProductData, selectedComboItems) => {
@@ -350,17 +350,25 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         // are not loaded in list views. Therefore, we fetch them from the server if the record was
         // saved. Otherwise, we use the value stored on the line.
         const customPtavIds = saleOrderLine.product_custom_attribute_value_ids;
-        const customPtavs = customPtavIds.records[0]?.isNew
-            ? customPtavIds.records.map(record => record.data)
-            : customPtavIds.currentIds.length
-                ? await this.orm.read(
-                    'product.attribute.custom.value',
-                    customPtavIds.currentIds,
-                    ['custom_product_template_attribute_value_id', 'custom_value'],
-                )
-                : [];
+        let customPtavs = [];
+        if (customPtavIds.records[0]?.isNew) {
+            customPtavs = customPtavIds.records.map(record => record.data);
+        } else if (customPtavIds.currentIds.length) {
+            const specification = {
+                custom_product_template_attribute_value_id: {
+                    fields: { id: {} },
+                },
+                custom_value: {},
+            };
+            customPtavs = await this.orm.webRead(
+                'product.attribute.custom.value',
+                customPtavIds.currentIds,
+                { specification },
+            );
+        }
         return customPtavs.map(customPtav => ({
-            id: customPtav.custom_product_template_attribute_value_id[0],
+            id: customPtav.custom_product_template_attribute_value_id &&
+                customPtav.custom_product_template_attribute_value_id.id,
             value: customPtav.custom_value,
         }));
     }

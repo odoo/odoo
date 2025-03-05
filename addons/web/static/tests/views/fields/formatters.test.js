@@ -92,10 +92,10 @@ test("formatInteger", () => {
 
 test("formatMany2one", () => {
     expect(formatMany2one(false)).toBe("");
-    expect(formatMany2one([false, "M2O value"])).toBe("M2O value");
-    expect(formatMany2one([1, false])).toBe("Unnamed");
-    expect(formatMany2one([1, "M2O value"])).toBe("M2O value");
-    expect(formatMany2one([1, "M2O value"], { escape: true })).toBe("M2O%20value");
+    expect(formatMany2one({ id: false, display_name: "M2O value" })).toBe("M2O value");
+    expect(formatMany2one({ id: 1, display_name: false })).toBe("Unnamed");
+    expect(formatMany2one({ id: 1, display_name: "M2O value" })).toBe("M2O value");
+    expect(formatMany2one({ id: 1, display_name: "M2O value" }, { escape: true })).toBe("M2O%20value");
 });
 
 test("formatText", () => {

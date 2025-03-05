@@ -358,7 +358,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         // Filter the fetched templates based on the current model
         const args = this.props.filterTemplates
-            ? [[['mailing_model_id', '=', this.props.record.data.mailing_model_id[0]]]]
+            ? [[['mailing_model_id', '=', this.props.record.data.mailing_model_id.id]]]
             : [];
 
         // Templates taken from old mailings
@@ -367,14 +367,14 @@ export class MassMailingHtmlField extends HtmlField {
         const templatesParams = result.map(values => {
             return {
                 id: values.id,
-                modelId: values.mailing_model_id[0],
-                modelName: values.mailing_model_id[1],
+                modelId: values.mailing_model_id.id,
+                modelName: values.mailing_model_id.display_name,
                 name: `template_${values.id}`,
                 nowrap: true,
                 subject: values.subject,
                 template: values.body_arch,
-                userId: values.user_id[0],
-                userName: values.user_id[1],
+                userId: values.user_id.id,
+                userName: values.user_id.display_name,
             };
         });
 
@@ -437,7 +437,7 @@ export class MassMailingHtmlField extends HtmlField {
         const $themeSelectorNew = $(renderToElement("mass_mailing.theme_selector_new", {
             themes: themesParams,
             templates: templatesParams,
-            modelName: this.props.record.data.mailing_model_id[1] || '',
+            modelName: this.props.record.data.mailing_model_id.display_name || '',
         }));
 
         // Check if editable area is empty.
@@ -597,7 +597,7 @@ export class MassMailingHtmlField extends HtmlField {
         }
         const iframeContent = this.wysiwyg.$iframe.contents();
 
-        const mailing_model_id = record.data.mailing_model_id[0];
+        const mailing_model_id = record.data.mailing_model_id.id;
         iframeContent
             .find(`.o_mail_template_preview[model-id!="${mailing_model_id}"]`)
             .addClass('d-none')
@@ -616,7 +616,7 @@ export class MassMailingHtmlField extends HtmlField {
             iframeContent.find('.o_mailing_template_preview_wrapper').removeClass('d-none');
         } else {
             iframeContent.find('.o_mailing_template_message').removeClass('d-none');
-            iframeContent.find('.o_mailing_template_message span').text(record.data.mailing_model_id[1]);
+            iframeContent.find('.o_mailing_template_message span').text(record.data.mailing_model_id.display_name);
             iframeContent.find('.o_mailing_template_preview_wrapper').addClass('d-none');
         }
     }

@@ -54,7 +54,7 @@ export class CalendarFormController extends FormController {
         if (record.data.recurrency) {
             recurrenceUpdate = await this.askRecurrenceUpdatePolicy();
         }
-        if (rootValues.attendees_count == 1 && rootValues.user_id[0] !== rootValues.partner_ids._currentIds[0]) {
+        if (rootValues.attendees_count == 1 && rootValues.user_id.id !== rootValues.partner_ids._currentIds[0]) {
             await this._archiveRecord(record.resId, recurrenceUpdate);
         } else {
             await this.orm.call("calendar.event", "action_unlink_event", [

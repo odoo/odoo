@@ -45,14 +45,14 @@ export class LeaveStatsComponent extends Component {
             const proms = [];
             if (
                 dateChanged ||
-                (employee && (this.state.employee && this.state.employee[0]) !== employee[0])
+                (employee && (this.state.employee && this.state.employee.id) !== employee.id)
             ) {
                 proms.push(this.loadLeaves(dateFrom, employee));
             }
             if (
                 dateChanged ||
                 (department &&
-                    (this.state.department && this.state.department[0]) !== department[0])
+                    (this.state.department && this.state.department.id) !== department.id)
             ) {
                 proms.push(this.loadDepartmentLeaves(dateFrom, department, employee));
             }
@@ -76,25 +76,27 @@ export class LeaveStatsComponent extends Component {
         const dateFrom = date.startOf("month").setZone(null);
         const dateTo = dateFrom.plus({'months': 1});
 
-        const departmentLeaves = await this.orm.searchRead(
+        const departmentLeaves = await this.orm.webSearchRead(
             "hr.leave",
             [
-                ["department_id", "=", department[0]],
+                ["department_id", "=", department.id],
                 ["state", "=", "validate"],
                 ["date_from", "<", serializeDateTime(dateTo)],
                 ["date_to", ">=", serializeDateTime(dateFrom)],
             ],
-            [
-                "employee_id",
-                "date_from",
-                "date_to",
-                "number_of_days",
-                "number_of_hours",
-                "leave_type_request_unit",
-            ]
+            {
+                specification: {
+                    employee_id: { fields: { display_name: {} } },
+                    date_from: {},
+                    date_to: {},
+                    number_of_days: {},
+                    number_of_hours: {},
+                    leave_type_request_unit: {},
+                },
+            }
         );
 
-        this.state.departmentLeaves = departmentLeaves.map((leave) => {
+        this.state.departmentLeaves = departmentLeaves.records.map((leave) => {
             const dateFormat =
                 leave.leave_type_request_unit === "hour"
                     ? {
@@ -115,7 +117,7 @@ export class LeaveStatsComponent extends Component {
                 dateTo: DateTime.fromSQL(leave.date_to, { zone: "utc" })
                     .toLocal()
                     .toLocaleString(dateFormat),
-                sameEmployee: leave.employee_id[0] === employee[0],
+                sameEmployee: leave.employee_id.id === employee.id,
             });
         });
     }
@@ -131,7 +133,7 @@ export class LeaveStatsComponent extends Component {
         this.state.leaves = await this.orm.formattedReadGroup(
             "hr.leave",
             [
-                ["employee_id", "=", employee[0]],
+                ["employee_id", "=", employee.id],
                 ["state", "=", "validate"],
                 ["date_from", "<", serializeDateTime(dateTo)],
                 ["date_to", ">=", serializeDateTime(dateFrom)],

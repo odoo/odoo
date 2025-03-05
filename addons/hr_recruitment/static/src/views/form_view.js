@@ -15,7 +15,7 @@ export class InterviewerFormController extends FormController {
             return result;
         }
         result["o_applicant_interviewer_form"] = root.data.interviewer_ids.records.findIndex(
-            interviewer => interviewer.resId === root.data.user_id[0]) > -1;
+            interviewer => interviewer.resId === root.data.user_id.id) > -1;
         return result;
     }
 }

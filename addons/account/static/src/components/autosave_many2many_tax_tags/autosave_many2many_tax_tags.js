@@ -30,8 +30,8 @@ export class AutosaveMany2ManyTaxTagsField extends Many2ManyTaxTagsField {
         const line = record.data;
         if (line.tax_ids.records.length > 0) {
             if (line.balance !== this.lastBalance
-                || line.account_id[0] !== this.lastAccount[0]
-                || line.partner_id[0] !== this.lastPartner[0]) {
+                || line.account_id.id !== this.lastAccount.id
+                || line.partner_id.id !== this.lastPartner.id) {
                 this.lastBalance = line.balance;
                 this.lastAccount = line.account_id;
                 this.lastPartner = line.partner_id;

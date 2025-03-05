@@ -7,7 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
-import { createMany2OneValue, getFieldDomain } from "@web/model/relational_model/utils";
+import { getFieldDomain } from "@web/model/relational_model/utils";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "../relational_utils";
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,11 +19,11 @@ export function m2oTupleFromData(data) {
     let name;
     if ("display_name" in data) {
         name = data.display_name;
-    } else {
+    } else if ("name" in data) {
         const _name = data.name;
-        name = Array.isArray(_name) ? _name[1] : _name;
+        name = _name.id ? _name.display_name : _name;
     }
-    return [id, name];
+    return { id, display_name: name };
 }
 
 export function computeM2OProps(fieldProps) {
@@ -140,7 +140,7 @@ export class Many2One extends Component {
                     this.input.focus();
                 },
                 onRecordSaved: async () => {
-                    const resId = this.value?.id;
+                    const resId = this.props.value?.id;
                     const fieldNames = ["display_name"];
                     // use unity read + relatedFields from Field Component
                     const records = await this.orm.read(this.props.relation, [resId], fieldNames, {
@@ -194,10 +194,9 @@ export class Many2One extends Component {
     }
 
     get displayName() {
-        const value = this.value;
-        if (value) {
-            if (value.display_name) {
-                return value.display_name.split("\n")[0];
+        if (this.props.value) {
+            if (this.props.value.display_name) {
+                return this.props.value.display_name.split("\n")[0];
             } else {
                 return _t("Unnamed");
             }
@@ -207,7 +206,7 @@ export class Many2One extends Component {
     }
 
     get extraLines() {
-        const name = this.value?.display_name;
+        const name = this.props.value?.display_name;
         return name
             ? name
                   .split("\n")
@@ -222,7 +221,7 @@ export class Many2One extends Component {
     }
 
     get hasLinkButton() {
-        return this.props.canOpen && !!this.value && !this.state.isFloating;
+        return this.props.canOpen && !!this.props.value && !this.state.isFloating;
     }
 
     get input() {
@@ -230,18 +229,13 @@ export class Many2One extends Component {
     }
 
     get linkHref() {
-        if (!this.value) {
+        if (!this.props.value) {
             return "/";
         }
         const relation = this.props.relation.includes(".")
             ? this.props.relation
             : `m-${this.props.relation}`;
-        return `/odoo/${relation}/${this.value.id}`;
-    }
-
-    get value() {
-        const value = this.props.value;
-        return value ? createMany2OneValue(value) : null;
+        return `/odoo/${relation}/${this.props.value.id}`;
     }
 
     async openBarcodeScanner() {
@@ -280,7 +274,7 @@ export class Many2One extends Component {
         const action = await this.orm.call(
             this.props.relation,
             "get_formview_action",
-            [[this.value?.id]],
+            [[this.props.value?.id]],
             { context: this.props.openActionContext() }
         );
         await this.action.doAction(action, { newWindow });
@@ -288,7 +282,7 @@ export class Many2One extends Component {
 
     async openRecordInDialog() {
         return this.recordDialog.open({
-            resId: this.value?.id,
+            resId: this.props.value?.id,
             context: this.props.context,
         });
     }
@@ -303,7 +297,8 @@ export class Many2One extends Component {
         });
         const validPairs = pairs.filter(([id]) => !!id);
         if (validPairs.length === 1) {
-            return this.update(validPairs[0]);
+            const pair = validPairs[0];
+            return this.update({ id: pair[0], display_name: pair[1] });
         } else {
             const input = this.input;
             input.value = barcode;
@@ -315,12 +310,15 @@ export class Many2One extends Component {
     }
 
     quickCreate(name) {
-        return this.update([false, name]);
+        return this.update({ id: false, display_name: name });
     }
 
     update(idNamePair) {
         this.state.isFloating = false;
-        return this.props.update(createMany2OneValue(idNamePair));
+        if (Array.isArray(idNamePair)) {
+            console.trace("array m2o", JSON.stringify(idNamePair));
+        }
+        return this.props.update(idNamePair);
     }
 }
 
