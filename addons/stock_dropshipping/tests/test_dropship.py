@@ -350,3 +350,38 @@ class TestDropship(common.TransactionCase):
             {'product_id': subcontracted_service.id, 'product_uom_qty': 1.0, 'qty_delivered': 0.0},
             {'product_id': self.dropship_product.id, 'product_uom_qty': 0.0, 'qty_delivered': 1.0},
         ])
+
+    def test_dropship_return_impacts_order_line_qty(self):
+        """ Return of a dropship should deplete sale and purchase lines' delivered & received qty.
+        """
+        self.dropship_product.write({'route_ids': [(6, 0, [self.dropshipping_route.id])]})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'name': self.dropship_product.name,
+                'product_id': self.dropship_product.id,
+                'product_uom_qty': 2,
+                'product_uom': self.dropship_product.uom_id.id,
+                'price_unit': 12,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order._get_purchase_orders()
+        purchase_order.button_confirm()
+        dropship_picking = purchase_order.picking_ids
+        dropship_picking.move_ids.quantity = 2
+        dropship_picking.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, 2)
+        self.assertEqual(purchase_order.order_line.qty_received, 2)
+        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
+            active_ids=dropship_picking.ids,
+            active_id=dropship_picking.id,
+            active_model='stock.picking'
+        ))
+        return_wiz = stock_return_picking_form.save()
+        return_wiz.product_return_moves.quantity = 2
+        res = return_wiz.action_create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
+        self.assertEqual(purchase_order.order_line.qty_received, 0)
