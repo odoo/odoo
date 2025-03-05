@@ -816,7 +816,9 @@ class HrLeave(models.Model):
                         if self.env.context.get('multi_leave_request', False):
                             employees_without_allocation |= employee
                         else:
-                            raise ValidationError(self.env._("There is no valid allocation to cover that request."))
+                            raise ValidationError(_(
+                                "%(name)s does not have a valid allocation for the leave type %(leave_type)s to cover that request.",
+                                name=employee.name, leave_type=work_entry_type.name))
                 continue
 
             previous_leave_data = work_entry_type.with_context(
@@ -837,7 +839,9 @@ class HrLeave(models.Model):
                     if self.env.context.get('multi_leave_request', False):
                         employees_without_allocation |= employee
                     else:
-                        raise ValidationError(self.env._("There is no valid allocation to cover that request."))
+                        raise ValidationError(_(
+                            "%(name)s does not have a valid allocation for the leave type %(leave_type)s to cover that request.",
+                            name=employee.name, leave_type=work_entry_type.name))
 
         is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         if not is_leave_user and any(leave.has_mandatory_day for leave in self if leave.state not in ('cancel', 'refuse')):
