@@ -252,7 +252,11 @@ class AccountChartTemplate(models.AbstractModel):
                 template_data.pop(prop)
         data.pop('account.reconcile.model', None)
         if 'res.company' in data:
-            data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
+            fields = ['anglo_saxon_accounting', 'external_report_layout_id', 'paperformat_id']
+            for field in fields:
+                value = company[field]
+                if data['res.company'][company.id].get(field) is not None and isinstance(value, bool) or self.ref(data['res.company'][company.id].get(field)) != value:
+                    data['res.company'][company.id].pop(field)
 
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
