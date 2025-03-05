@@ -19,9 +19,6 @@
                     <address t-field="partner.self" class="m-0" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
                 </div>
             </t>
-        </xpath>
-
-        <xpath expr="//div[@id='informations']" position="inside">
             <t t-if="o.l10n_fr_is_company_french and o.move_type.startswith('out_')">
                 <t t-set="tax_scopes" t-value="o.invoice_line_ids.mapped('tax_ids.tax_scope')"/>
                 <t t-set="has_service" t-value="'service' in tax_scopes"/>
