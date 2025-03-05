@@ -1,7 +1,11 @@
 import { registries, chartHelpers } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
-import { onOdooChartItemClick, onOdooChartItemHover } from "./odoo_chart_helpers";
+import {
+    onOdooChartItemClick,
+    onOdooChartItemHover,
+    computeCumulatedDatasets,
+} from "./odoo_chart_helpers";
 
 const { chartRegistry } = registries;
 
@@ -54,7 +58,9 @@ chartRegistry.add("odoo_line", {
 function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     let { datasets, labels } = chart.dataSource.getData();
-    datasets = computeCumulatedDatasets(chart, datasets);
+    if (chart.cumulative) {
+        datasets = computeCumulatedDatasets(datasets, "asc");
+    }
 
     const definition = chart.getDefinition();
     const locale = getters.getLocale();
@@ -96,21 +102,4 @@ function createOdooChartRuntime(chart, getters) {
     };
 
     return { background, chartJsConfig: config };
-}
-
-function computeCumulatedDatasets(chart, datasets) {
-    const cumulatedDatasets = [];
-    for (const dataset of datasets) {
-        if (chart.cumulative) {
-            let accumulator = dataset.cumulatedStart || 0;
-            const data = dataset.data.map((value) => {
-                accumulator += value;
-                return accumulator;
-            });
-            cumulatedDatasets.push({ ...dataset, data });
-        } else {
-            cumulatedDatasets.push(dataset);
-        }
-    }
-    return cumulatedDatasets;
 }

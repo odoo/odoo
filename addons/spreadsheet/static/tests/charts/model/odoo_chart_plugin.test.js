@@ -614,6 +614,27 @@ test("cumulative line chart with past data before domain period", async () => {
     ]);
 });
 
+test("Funnel chart to support cumulative data", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_funnel" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const definition = model.getters.getChartDefinition(chartId);
+    await waitForDataLoaded(model);
+    expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
+        [-1, 1],
+        [-3, 3],
+    ]);
+    model.dispatch("UPDATE_CHART", {
+        definition: { ...definition, cumulative: true },
+        id: chartId,
+        sheetId,
+    });
+    expect(model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data).toEqual([
+        [-4, 4],
+        [-3, 3],
+    ]);
+});
+
 test("Can insert odoo chart from a different model", async () => {
     const { model } = await createModelWithDataSource();
     insertListInSpreadsheet(model, { model: "product", columns: ["name"] });

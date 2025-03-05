@@ -86,3 +86,21 @@ export function onOdooChartItemHover() {
         }
     };
 }
+
+export function computeCumulatedDatasets(datasets, order) {
+    return datasets.map((dataset) => {
+        const data = [];
+        let accumulator = dataset.cumulatedStart || 0;
+        const indexes =
+            order === "asc" ? Object.keys(dataset.data) : Object.keys(dataset.data).reverse();
+        for (const i of indexes) {
+            if (!isNaN(parseFloat(dataset.data[i]))) {
+                accumulator += parseFloat(dataset.data[i]);
+                data[i] = accumulator;
+            } else {
+                data[i] = dataset.data[i];
+            }
+        }
+        return { ...dataset, data };
+    });
+}
