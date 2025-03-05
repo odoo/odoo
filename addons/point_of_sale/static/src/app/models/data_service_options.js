@@ -79,7 +79,15 @@ export class DataServiceOptions {
         ];
     }
 
+<<<<<<< saas-18.1
     get uniqueModels() {
         return ["pos.session", "res.users", "res.company"];
+||||||| b681ebf620d6e4494982377a822e4b7cf4de9139
+=======
+    get prohibitedAutoLoadedFields() {
+        return {
+            "res.partner": ["property_product_pricelist"],
+        };
+>>>>>>> 98f73f71755849457ecf1a864e1cc71e9f72f654
     }
 }
