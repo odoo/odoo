@@ -477,6 +477,10 @@ export class PosData extends Reactive {
                     continue;
                 }
 
+                if (this.opts.prohibitedAutoLoadedFields[rel.model]?.includes(rel.name)) {
+                    continue;
+                }
+
                 const values = records.map((record) => record[rel.name]).flat();
                 const missing = values.filter((value) => {
                     if (!value || typeof value !== "number" || idsMap[rel.relation]?.has(value)) {
