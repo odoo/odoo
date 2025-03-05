@@ -30,11 +30,11 @@
         <field name="auto_delete" eval="True"/>
     </record>
     
-    <record id="email_reminder" model="mail.template">
+    <record id="mail_template_data_track_reminder" model="mail.template">
         <field name="name">Add reminder via email</field>
         <field name="model_id" ref="website_event_track.model_event_track"/>
         <field name="subject">Add talk reminder: {{ object.name }}</field>
-        <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or '') }}</field>
+        <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}</field>
         <field name="description">Add talk reminder</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
