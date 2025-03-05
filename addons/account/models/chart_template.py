@@ -625,7 +625,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         created_records = {}
         for model, model_data in delay(list(deepcopy(data).items())):
-            all_records_vals = []
+            records_to_create = []
             for xml_id, record_vals in model_data.items():
                 # Extract the translations from the values
                 for key in list(record_vals):
@@ -639,12 +639,13 @@ class AccountChartTemplate(models.AbstractModel):
                 else:
                     xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id}"
 
-                all_records_vals.append({
-                    'xml_id': xml_id,
-                    'values': deref_values(record_vals, self.env[model]),
-                    'noupdate': True,
-                })
-            created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals)
+                if not xml_id or not bool(self.env['ir.model.data']._xmlid_to_res_model_res_id(xml_id, raise_if_not_found=False)[1]):
+                    records_to_create.append({
+                        'xml_id': xml_id,
+                        'values': deref_values(record_vals, self.env[model]),
+                        'noupdate': True,
+                    })
+            created_records[model] = self.with_context(lang='en_US').env[model]._load_records(records_to_create)
         return created_records
 
     def _post_load_data(self, template_code, company, template_data):
