@@ -36,9 +36,9 @@ test("Only two quick actions are shown", async () => {
     await contains(".o-mail-MessageReaction", { text: "😅" });
     await contains(".o-mail-Message-actions i", { count: 3 });
     await contains("[title='Add a Reaction']");
-    await contains("[title='Reply']");
     await contains("[title='Expand']");
     await click("[title='Expand']");
+    await contains("[title='Reply']");
     await contains(".o-mail-Message-actions i, .o-mail-Message-moreMenu i", { count: 8 });
     await contains("[title='View Reactions']");
     await contains("[title='Mark as Unread']");
