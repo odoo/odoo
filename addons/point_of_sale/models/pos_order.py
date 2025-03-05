@@ -71,13 +71,11 @@ class PosOrder(models.Model):
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
             order['session_id'] = self._get_valid_session(order).id
 
-        if order.get('partner_id'):
-            partner_id = self.env['res.partner'].browse(order['partner_id'])
-            if not partner_id.exists():
-                order.update({
-                    "partner_id": False,
-                    "to_invoice": False,
-                })
+        if not (order.get('partner_id') and self.env['res.partner'].browse(order['partner_id']).exists()):
+            order.update({
+                "partner_id": False,
+                "to_invoice": False,
+            })
 
         pos_order = False
         record_uuid_mapping = order.pop('relations_uuid_mapping', {})
