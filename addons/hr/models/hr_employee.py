@@ -730,9 +730,13 @@ class HrEmployee(models.Model):
     def _get_calendar_tz_batch(self, dt=None):
         """ Return a mapping { employee id : employee's effective schedule's (at dt) timezone }
         """
+        employees_by_id = self.grouped('id')
         if not dt:
             calendars = self._get_calendars()
-            return {emp_id: calendar.sudo().tz for emp_id, calendar in calendars.items()}
+            return {
+                emp_id: calendar.sudo().tz or employees_by_id[emp_id].tz \
+                    for emp_id, calendar in calendars.items()
+            }
 
         employees_by_tz = self.grouped(lambda emp: emp._get_tz())
 
@@ -740,7 +744,10 @@ class HrEmployee(models.Model):
         for tz, employee_ids in employees_by_tz.items():
             date_at = timezone(tz).localize(dt).date()
             calendars = self._get_calendars(date_at)
-            employee_timezones |= {emp_id: cal.sudo().tz for emp_id, cal in calendars.items()}
+            employee_timezones |= {
+                emp_id: cal.sudo().tz or employees_by_id[emp_id].tz \
+                    for emp_id, cal in calendars.items()
+            }
         return employee_timezones
 
     def _employee_attendance_intervals(self, start, stop, lunch=False):
