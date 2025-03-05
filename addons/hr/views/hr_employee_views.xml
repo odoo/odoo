@@ -59,17 +59,11 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <form string="Employee" js_class="hr_employee_form">
-                    <field name="active" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="user_partner_id" invisible="1"/>
-                    <field name="image_128" invisible="1" />
-                    <field name="company_id" invisible="1"/>
-                    <field name="last_activity_time" invisible="1"/>
-                    <field name="last_activity" invisible="1"/>
-                    <field name="work_contact_id" invisible="1"/>
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
+                        <button name="%(hr_employee_history_wizard_action)d" string="New Version" type="action"/>
+                        <field name="selected_history_id" widget="statusbar_employee_history" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
@@ -97,52 +91,36 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <group>
-                                <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com"/>
-                                <field name="work_phone" widget="phone"/>
-                                <field name="mobile_phone" widget="phone"/>
                                 <field name="category_ids" widget="many2many_tags"
                                     options="{'color_field': 'color', 'no_create_edit': True}"
                                     placeholder="Tags" groups="hr.group_hr_user"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="company_country_id" invisible="1"/>
-                                <field name="company_country_code" invisible="1"/>
                             </group>
                             <group>
-                                <field name="department_id"/>
-                                <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
-                                <field name="parent_id" widget="many2one_avatar_employee"/>
-                                <field name="coach_id" widget="many2one_avatar_employee"/>
+                                <field name="selected_history_id" readonly="True"/>
                             </group>
                         </group>
                         <field name="employee_properties" columns="2"/>
                         <notebook>
-                            <page name="public" string="Work Information">
-                                <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
-                                    <div id="o_work_employee_main" class="flex-grow-1">
-                                        <group string="Location">
-                                            <field name="address_id"
-                                                context="{'show_address': 1}"
-                                                options='{"highlight_first_line": True}'/>
-                                            <field name="work_location_id" context="{'default_address_id': address_id}" placeholder="e.g. Building 2, Remote, etc."/>
-                                        </group>
-                                        <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
-                                            <!-- is overridden in other hr related modules -->
-                                        </group>
-                                        <group name="departure" string="Departure" invisible="active">
-                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                                            <field name="departure_description"/>
-                                            <field name="departure_date"/>
-                                        </group>
-                                        <group name="schedule" string="Schedule">
-                                            <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
-                                            <field name="id" invisible="1"/>
-                                            <field name="tz" required="id"/>
-                                        </group>
-                                    </div>
-                                </div>
-                            </page>
-                            <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
+                            <page name="personal_information" string="Personal Information" groups="hr.group_hr_user">
                                 <group>
+                                    <group string="Citizenship">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id"/>
+                                        <field name="ssnid"/>
+                                        <field name="passport_id"/>
+                                        <field name="gender"/>
+                                        <label for="birthday"/>
+                                        <div class="o_row" name="div_km_home_work">
+                                            <field name="birthday" class="o_hr_narrow_field"/>
+                                            <span invisible="not birthday" >
+                                                <label for="birthday_public_display" class="fw-bold text-900 form-check-label ms-3"/>
+                                                <field name="birthday_public_display" class="ms-3"/>
+                                            </span>
+                                        </div>
+                                        <field name="place_of_birth"/>
+                                        <field name="country_of_birth"/>
+                                    </group>
                                     <group string="Private Contact">
                                         <label for="private_street" string="Private Address"/>
                                         <div class="o_address_format">
@@ -162,23 +140,6 @@
                                             <span><field name="distance_home_work_unit"/></span>
                                         </div>
                                         <field name="private_car_plate" />
-                                    </group>
-                                    <group string="Citizenship">
-                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id"/>
-                                        <field name="ssnid"/>
-                                        <field name="passport_id"/>
-                                        <field name="gender"/>
-                                        <label for="birthday"/>
-                                        <div class="o_row" name="div_km_home_work">
-                                            <field name="birthday" class="o_hr_narrow_field"/>
-                                            <span invisible="not birthday" >
-                                                <label for="birthday_public_display" class="fw-bold text-900 form-check-label ms-3"/>
-                                                <field name="birthday_public_display" class="ms-3"/>
-                                            </span>
-                                        </div>
-                                        <field name="place_of_birth"/>
-                                        <field name="country_of_birth"/>
                                     </group>
                                     <group string="Emergency" name="emergency">
                                         <field name="emergency_contact"/>
@@ -202,6 +163,40 @@
                                         <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name"/>
                                     </group>
                                 </group>
+                            </page>
+                            <page name="public" string="Work Information">
+                                <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
+                                    <div id="o_work_employee_main" class="flex-grow-1">
+                                        <group string="Contact">
+                                            <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com"/>
+                                            <field name="work_phone" widget="phone"/>
+                                            <field name="mobile_phone" widget="phone"/>
+                                        </group>
+                                        <group name="organization" string="Organization">
+                                            <field name="department_id"/>
+                                            <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                                            <field name="parent_id" widget="many2one_avatar_employee"/>
+                                        </group>
+                                        <group string="Location">
+                                            <field name="address_id"
+                                                context="{'show_address': 1}"
+                                                options='{"highlight_first_line": True}'/>
+                                            <field name="work_location_id" context="{'default_address_id': address_id}" placeholder="e.g. Building 2, Remote, etc."/>
+                                        </group>
+                                        <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
+                                            <!-- is overridden in other hr related modules -->
+                                        </group>
+                                        <group name="departure" string="Departure" invisible="active">
+                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                            <field name="departure_description"/>
+                                            <field name="departure_date"/>
+                                        </group>
+                                        <group string="Schedule">
+                                            <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
+                                            <field name="tz" required="id"/>
+                                        </group>
+                                    </div>
+                                </div>
                             </page>
                             <page name="hr_settings" string="Settings" groups="hr.group_hr_user">
                                 <group>
