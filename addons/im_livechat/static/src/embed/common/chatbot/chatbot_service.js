@@ -31,6 +31,9 @@ export class ChatBotService {
         this.store = services["mail.store"];
         this.livechatService.onStateChange(SESSION_STATE.NONE, () => this.stop());
         this.bus.addEventListener("MESSAGE_POST", async ({ detail: message }) => {
+            if (this.chatbot?.forwarded) {
+                return;
+            }
             await this.chatbot?.processAnswer(message);
             if (this.chatbot?.currentStep.completed) {
                 this._triggerNextStep();

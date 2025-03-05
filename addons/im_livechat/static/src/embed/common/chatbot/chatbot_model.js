@@ -12,10 +12,17 @@ export class Chatbot extends Record {
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
     static MULTILINE_STEP_DEBOUNCE_DELAY_TOUR = 500;
 
+    forwarded;
     isTyping = false;
     isProcessingAnswer = false;
     script = Record.one("chatbot.script");
-    currentStep = Record.one("ChatbotStep");
+    currentStep = Record.one("ChatbotStep", {
+        onUpdate() {
+            if (this.currentStep?.operatorFound) {
+                this.forwarded = true;
+            }
+        },
+    });
     steps = Record.many("ChatbotStep");
     thread = Record.one("Thread", {
         inverse: "chatbot",
