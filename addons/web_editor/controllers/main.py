@@ -160,10 +160,6 @@ class Web_Editor(http.Controller):
 
         return response
 
-    @http.route('/web_editor/render_public_asset', type='jsonrpc', auth='user')
-    def render_public_asset(self, **kwargs):
-        return request.env["ir.ui.view"].with_context(kwargs.get("context")).render_public_asset(kwargs.get("template"), values=kwargs.get("values"))
-
     #------------------------------------------------------
     # Update a checklist in the editor on check/uncheck
     #------------------------------------------------------
@@ -537,3 +533,10 @@ class Web_Editor(http.Controller):
                     translation[key] = field.translate.term_converter(value)
             source_lang = record._get_base_lang()
         return record._update_field_translations(field_name, translations, lambda old_term: sha256(old_term.encode()).hexdigest(), source_lang=source_lang)
+    
+    @http.route('/web_editor/get_snippet_data', type='jsonrpc', auth='public', website=True)
+    def get_snippet_data(self, template_data, **kwargs):
+        results = {}
+        for key, value in template_data.items():
+            results[key] = request.env['website.snippet.filter'].get_dummy_product_records(key, value)
+        return results

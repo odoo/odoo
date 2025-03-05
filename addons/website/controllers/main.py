@@ -32,7 +32,6 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
-from odoo.addons.web_editor.controllers.main import Web_Editor
 from odoo.addons.website.tools import get_base_domain
 from odoo.tools.json import scriptsafe as json
 
@@ -82,12 +81,6 @@ class QueryURL:
         if not path.startswith(path_prefix):
             path = path_prefix + path
         return path
-
-class Web_Editor(Web_Editor):
-
-    @http.route(website=True, auth='user')
-    def render_public_asset(self, **kwargs):
-        return super().render_public_asset(**kwargs)
 
 
 class Website(Home):

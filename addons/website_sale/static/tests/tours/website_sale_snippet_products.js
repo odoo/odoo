@@ -10,15 +10,7 @@ import {
 import { goToCart } from '@website_sale/js/tours/tour_utils';
 
 const optionBlock = 'dynamic_snippet_products';
-const productsSnippet = {
-    id: "s_dynamic_filter_template_product_product_borderless_1",
-    name: "Products",
-    groupName: "Products",
-};
-const modifiedProductsSnippet = {
-    ...productsSnippet,
-    id: "s_product_product_borderless_1",
-};
+const productsSnippet = {id: "s_dynamic_snippet_products", name: "Products", groupName: "Products"};
 const templates = [
     "dynamic_filter_template_product_product_add_to_cart",
     "dynamic_filter_template_product_product_view_detail",
@@ -38,7 +30,7 @@ function changeTemplate(templateKey) {
     const templateClass = templateKey.replace(/dynamic_filter_template_/, "s_");
     return [
         {
-            content: "click on snippet",
+            content: "Click on snippet",
             trigger: ":iframe .s_dynamic_snippet_products",
             run: "click",
         },
@@ -70,7 +62,7 @@ registerWebsitePreviewTour('website_sale.snippet_products', {
     }
     return [
         ...insertSnippet(productsSnippet),
-        ...clickOnSnippet(modifiedProductsSnippet),
+        ...clickOnSnippet(productsSnippet),
         ...templatesSteps,
         ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
         ...clickOnSave(),
@@ -88,7 +80,7 @@ registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
 },
 () => [
     ...insertSnippet(productsSnippet),
-    ...clickOnSnippet(modifiedProductsSnippet),
+    ...clickOnSnippet(productsSnippet),
     ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
     {
         content: "Click on dropped snippet to open options",
