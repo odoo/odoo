@@ -16,7 +16,7 @@ function addRow(position) {
 function addColumn(position) {
     return (editor) => {
         const selection = editor.shared.selection.getEditableSelection();
-        editor.shared.table.addColumn(position, findInSelection(selection, "td"));
+        editor.shared.table.addColumn(position, findInSelection(selection, "td, th"));
     };
 }
 
@@ -265,6 +265,36 @@ describe("column", () => {
             });
         });
 
+        test("should add a `TH` column before", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                    '<th style="width: 40px;">ab[]</th>' +
+                    '<th style="width: 50px;">cd</th>' +
+                    '<th style="width: 60px;">ef</th>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: addColumn("before"),
+                contentAfter:
+                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                    '<th style="width: 32px;"><p><br></p></th>' +
+                    '<th style="width: 32px;">ab[]</th>' +
+                    '<th style="width: 40px;">cd</th>' +
+                    '<th style="width: 45px;">ef</th>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+            });
+        });
+
         test("should add a column left of the middle column", async () => {
             await testEditor({
                 contentBefore:
@@ -337,6 +367,36 @@ describe("column", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "<td><p><br></p></td>" +
+                    "</tr></tbody></table>",
+            });
+        });
+
+        test("should add a `TH` column after", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                    '<th style="width: 40px;">ab</th>' +
+                    '<th style="width: 50px;">cd[]</th>' +
+                    '<th style="width: 60px;">ef</th>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: addColumn("after"),
+                contentAfter:
+                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                    '<th style="width: 30px;">ab</th>' +
+                    '<th style="width: 38px;">cd[]</th>' +
+                    '<th style="width: 38px;"><p><br></p></th>' +
+                    '<th style="width: 43px;">ef</th>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td><p><br></p></td>" +
+                    "<td>ef</td>" +
                     "</tr></tbody></table>",
             });
         });
