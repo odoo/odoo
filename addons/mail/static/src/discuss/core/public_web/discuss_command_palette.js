@@ -119,7 +119,7 @@ async function makeNewChannel(name, store) {
     });
     const { Thread } = store.insert(data);
     const [channel] = Thread;
-    channel.open({ focus: true });
+    channel.open({ focus: true, bypassCompact: true });
 }
 
 export class DiscussCommandPalette {
@@ -224,7 +224,7 @@ export class DiscussCommandPalette {
                 Component: DiscussCommand,
                 action: async () => {
                     const channel = await this.store.Thread.getOrFetch(thread);
-                    channel.open({ focus: true });
+                    channel.open({ focus: true, bypassCompact: true });
                 },
                 name: thread.displayName,
                 category,
