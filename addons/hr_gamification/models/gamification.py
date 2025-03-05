@@ -10,6 +10,7 @@ class GamificationBadgeUser(models.Model):
     _inherit = 'gamification.badge.user'
 
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True)
+    has_edit_delete_access = fields.Boolean(compute="_compute_has_edit_delete_access")
 
     @api.constrains('employee_id')
     def _check_employee_related_user(self):
@@ -18,13 +19,22 @@ class GamificationBadgeUser(models.Model):
                 with_context(allowed_company_ids=badge_user.user_id.company_ids.ids).employee_ids:
                 raise ValidationError(_('The selected employee does not correspond to the selected user.'))
 
+    def _compute_has_edit_delete_access(self):
+        is_hr_user = self.env.user.has_group('hr.group_hr_user')
+        for badge_user in self:
+            badge_user.has_edit_delete_access = is_hr_user or self.env.uid == self.create_uid.id
+
     def action_open_badge(self):
         self.ensure_one()
         return {
+            'name': _('Received Badge'),
             'type': 'ir.actions.act_window',
-            'res_model': 'gamification.badge',
+            'res_model': 'gamification.badge.user',
+            'res_id': self.id,
+            'target': 'new',
             'view_mode': 'form',
-            'res_id': self.badge_id.id,
+            'view_id': self.env.ref("hr_gamification.view_current_badge_form").id,
+            'context': {"dialog_size": "medium"},
         }
 
 
