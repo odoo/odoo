@@ -834,10 +834,13 @@ class AccountTax(models.Model):
             # t2: price-included 10% tax
             # On a price unit of 122, base amount of t2 is computed as 122 - 1 = 121
             if special_mode in (False, 'total_included'):
-                if not tax.include_base_amount:
+                if tax.include_base_amount:
                     for other_tax in get_tax_after():
-                        if other_tax.price_include:
+                        if not other_tax.is_base_affected:
                             add_extra_base(other_tax, -1)
+                else:
+                    for other_tax in get_tax_after():
+                        add_extra_base(other_tax, -1)
                 for other_tax in get_tax_before():
                     add_extra_base(other_tax, -1)
 
@@ -855,9 +858,10 @@ class AccountTax(models.Model):
             # With special_mode = 'total_excluded' 109 is provided as price unit.
             # To compute the base amount of t2, we need to add the tax amount of t1 first
             else:  # special_mode == 'total_excluded'
-                for other_tax in get_tax_after():
-                    if not other_tax.price_include or tax.include_base_amount:
-                        add_extra_base(other_tax, 1)
+                if tax.include_base_amount:
+                    for other_tax in get_tax_after():
+                        if other_tax.is_base_affected:
+                            add_extra_base(other_tax, 1)
 
         elif not tax.price_include:
 
