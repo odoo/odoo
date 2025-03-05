@@ -52,7 +52,6 @@ export class Builder extends Component {
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
         useHotkey("control+shift+z", () => this.redo());
-        this.websiteService = useService("website");
         this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
