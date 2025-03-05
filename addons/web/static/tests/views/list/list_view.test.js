@@ -4607,15 +4607,13 @@ test(`fields are translatable in list view`, async () => {
         fr_BE: "Frenglish",
     });
 
-    onRpc("/web/dataset/call_kw/foo/get_field_translations", () => {
-        return [
-            [
-                { lang: "en_US", source: "yop", value: "yop" },
-                { lang: "fr_BE", source: "yop", value: "valeur français" },
-            ],
-            { translation_type: "char", translation_show_source: false },
-        ];
-    });
+    onRpc("/web/dataset/call_kw/foo/get_field_translations", () => [
+        [
+            { lang: "en_US", source: "yop", value: "yop" },
+            { lang: "fr_BE", source: "yop", value: "valeur français" },
+        ],
+        { translation_type: "char", translation_show_source: false },
+    ]);
 
     await mountView({
         resModel: "foo",
@@ -15063,6 +15061,30 @@ test(`view widgets are rendered in list view`, async () => {
         message: "there should be one widget (inside td) per record",
     });
     expect(queryAllTexts`.test_widget`).toEqual(["true", "true", "true", "false"]);
+});
+
+test(`view widget with options in list view`, async () => {
+    class TestWidget extends Component {
+        static template = xml`<div class="test_widget" t-esc="props.x"/>`;
+        static props = ["*"];
+    }
+    registry.category("view_widgets").add("test_widget", {
+        component: TestWidget,
+        extractProps: ({ options }) => ({
+            x: options.x,
+        }),
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <widget name="test_widget" options="{'x': 'y'}"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts`.test_widget`).toEqual(["y", "y", "y", "y"]);
 });
 
 test(`edit a record then select another record with a throw error when saving`, async () => {
