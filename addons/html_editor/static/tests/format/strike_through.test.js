@@ -1,8 +1,14 @@
 import { expect, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
 import { s, span } from "../_helpers/tags";
-import { insertText, strikeThrough, tripleClick } from "../_helpers/user_actions";
+import {
+    insertText,
+    strikeThrough,
+    tripleClick,
+    simulateArrowKeyPress,
+} from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 
 test("should make a few characters strikeThrough", async () => {
@@ -214,8 +220,7 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
         stepFunction: strikeThrough,
         contentAfterEdit: unformat(`
             <table class="table table-bordered o_table o_selected_table">
@@ -236,7 +241,18 @@ test("should make a few characters strikeThrough inside table (strikeThrough)", 
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
     });
+});
+
+test("should remove empty strikeThrough when changing selection", async () => {
+    const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+    strikeThrough(editor);
+    await tick();
+    expect(getContent(el)).toBe(`<p>ab${s("[]\u200B", "first")}cd</p>`);
+
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await tick(); // await selectionchange
+    expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
 });
