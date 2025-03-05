@@ -98,20 +98,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         data1 = res2.json()["result"]
         self.assertEqual(
             data1["ir.attachment"],
-            [
-                    {
-                    "checksum": False,
-                    "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
-                    "id": self.attachments[0].id,
-                    "name": "File 1",
-                    "res_name": "Test channel",
-                    "mimetype": "application/octet-stream",
-                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
-                    "voice": False,
-                    'type': 'binary',
-                    'url': False,
-                },
-            ],
+            [self._get_attachment_data()],
             "guest should be allowed to add attachment with token when posting message",
         )
         # test message update: token error
@@ -154,32 +141,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         data2 = res4.json()["result"]
         self.assertEqual(
             data2["ir.attachment"],
-            [
-                {
-                    "checksum": False,
-                    "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
-                    "id": self.attachments[0].id,
-                    "name": "File 1",
-                    "res_name": "Test channel",
-                    "mimetype": "application/octet-stream",
-                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
-                    "voice": False,
-                    'type': 'binary',
-                    'url': False,
-                },
-                {
-                    "checksum": False,
-                    "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
-                    "id": self.attachments[1].id,
-                    "name": "File 2",
-                    "res_name": "Test channel",
-                    "mimetype": "application/octet-stream",
-                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
-                    "voice": False,
-                    'type': 'binary',
-                    'url': False,
-                },
-            ],
+            [self._get_attachment_data()] + [self._get_attachment_data(1)],
             "guest should be allowed to add attachment with token when updating message",
         )
         # test message update: own attachment ok
@@ -200,32 +162,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         data3 = res5.json()["result"]
         self.assertEqual(
             data3["ir.attachment"],
-            [
-                {
-                    "checksum": False,
-                    "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
-                    "id": self.attachments[0].id,
-                    "name": "File 1",
-                    "res_name": "Test channel",
-                    "mimetype": "application/octet-stream",
-                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
-                    "voice": False,
-                    'type': 'binary',
-                    'url': False,
-                },
-                {
-                    "checksum": False,
-                    "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
-                    "id": self.attachments[1].id,
-                    "name": "File 2",
-                    "res_name": "Test channel",
-                    "mimetype": "application/octet-stream",
-                    "thread": {"id": self.channel.id, "model": "discuss.channel"},
-                    "voice": False,
-                    'type': 'binary',
-                    'url': False,
-                },
-            ],
+            [self._get_attachment_data()] + [self._get_attachment_data(1)],
             "guest should be allowed to add own attachment without token when updating message",
         )
 
@@ -338,6 +275,24 @@ class TestMessageController(HttpCaseWithUserDemo):
         )
         self.assertIn("no-cache", res.headers["Cache-Control"])
 
+    def _get_attachment_data(self, index=0):
+        """Returns the data result of attachment.
+        The point of having a separate getter is to allow it to be overriden.
+        """
+        attachment = self.attachments[index]
+        return {
+            "checksum": False,
+            "create_date": fields.Datetime.to_string(attachment.create_date),
+            "file_size": 0,
+            "id": attachment.id,
+            "name": f"File {index + 1}",
+            "res_name": "Test channel",
+            "mimetype": "application/octet-stream",
+            "thread": {"id": self.channel.id, "model": "discuss.channel"},
+            "voice": False,
+            'type': 'binary',
+            'url': False,
+        }
 
 @tagged("mail_message")
 class TestMessageLinks(MailCommon, HttpCase):

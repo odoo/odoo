@@ -43,7 +43,6 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                     files={"ufile": file},
                 )
                 res.raise_for_status()
-                attachment = self.env["ir.attachment"].search([], order="id desc", limit=1)
                 # ignore signature in url
                 content = re.sub(
                     r'"url": "https://accountname\.blob\.core\.windows\.net/.*?"',
@@ -54,23 +53,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                     json.loads(content),
                     {
                         "data": {
-                            "ir.attachment": [
-                                {
-                                    "access_token": False,
-                                    "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-                                    "create_date": odoo.fields.Datetime.to_string(
-                                        attachment.create_date
-                                    ),
-                                    "id": attachment.id,
-                                    "mimetype": "text/x-python",
-                                    "name": "__init__.py",
-                                    "res_name": False,
-                                    "thread": False,
-                                    "voice": False,
-                                    "type": "cloud_storage",
-                                    "url": "[url]",
-                                }
-                            ],
+                            "ir.attachment": [self._get_attachment_data()],
                         },
                         "upload_info": {
                             "headers": {"x-ms-blob-type": "BlockBlob"},
@@ -80,3 +63,25 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                         },
                     },
                 )
+
+    def _get_attachment_data(self):
+        """Returns the data of attachment.
+        The point of having a separate getter is to allow it to be overriden.
+        """
+        attachment = self.env["ir.attachment"].search([], order="id desc", limit=1)
+        return {
+            "access_token": False,
+            "checksum": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "create_date": odoo.fields.Datetime.to_string(
+                attachment.create_date
+            ),
+            "file_size": 0,
+            "id": attachment.id,
+            "mimetype": "text/x-python",
+            "name": "__init__.py",
+            "res_name": False,
+            "thread": False,
+            "voice": False,
+            "type": "cloud_storage",
+            "url": "[url]",
+        }
