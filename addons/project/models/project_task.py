@@ -40,12 +40,12 @@ PROJECT_TASK_READABLE_FIELDS = {
     'message_is_follower',
     'recurring_task',
     'closed_subtask_count',
+    'partner_id',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'description',
-    'partner_id',
     'date_deadline',
     'date_last_stage_update',
     'tag_ids',
