@@ -16,6 +16,8 @@ export class BuilderNumberInput extends Component {
         unit: { type: String, optional: true },
         saveUnit: { type: String, optional: true },
         step: { type: Number, optional: true },
+        min: { type: Number, optional: true },
+        max: { type: Number, optional: true },
         id: { type: String, optional: true },
         placeholder: { type: String, optional: true },
         style: { type: String, optional: true },
@@ -72,6 +74,16 @@ export class BuilderNumberInput extends Component {
         });
     }
 
+    clampValue(value) {
+        if (parseFloat(value) < this.props.min) {
+            return `${this.props.min}`;
+        }
+        if (parseFloat(value) > this.props.max) {
+            return `${this.props.max}`;
+        }
+        return value;
+    }
+
     parseDisplayValue(displayValue) {
         displayValue = displayValue.replace(/,/g, ".");
         // Only accept 0-9, dot, - sign and space if multiple values are allowed
@@ -83,6 +95,7 @@ export class BuilderNumberInput extends Component {
                 .split(" ")[0]
                 .replace(/[^0-9.-]/g, "");
         }
+        displayValue = displayValue.split(" ").map(this.clampValue.bind(this)).join(" ");
 
         return this.convertSpaceSplitValues(displayValue, (value) => {
             if (value === "") {
@@ -126,11 +139,11 @@ export class BuilderNumberInput extends Component {
         const values = e.target.value.split(" ").map((number) => parseFloat(number) || 0);
         if (e.key === "ArrowUp") {
             values.forEach((value, i) => {
-                values[i] = value + (this.props.step || 1);
+                values[i] = this.clampValue(value + (this.props.step || 1));
             });
         } else if (e.key === "ArrowDown") {
             values.forEach((value, i) => {
-                values[i] = value - (this.props.step || 1);
+                values[i] = this.clampValue(value - (this.props.step || 1));
             });
         }
         e.target.value = values.join(" ");

@@ -25,7 +25,7 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Suggestions">
-        <BuilderNumberInput id="'limit_opt'" dataAttributeAction="'limit'" unit.translate="results" saveUnit="''"/>
+        <BuilderNumberInput id="'limit_opt'" dataAttributeAction="'limit'" unit.translate="results" saveUnit="''" min="0"/>
     </BuilderRow>
 
     <t t-if="this.getItemValue('limit_opt') > 0" t-foreach="state.displayItems" t-as="item" t-key="`${item.label}_${item.dataAttributeAction}`">

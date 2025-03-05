@@ -21,9 +21,9 @@
         <BuilderButton action="'customIcon'" actionParam="'customInactiveIcon'" preview="false"><i class="fa fa-fw fa-refresh me-1"/> Replace Icon</BuilderButton>
     </BuilderRow>
     <BuilderRow label.translate="Score">
-        <BuilderNumberInput action="'activeIconsNumber'"/>
+        <BuilderNumberInput action="'activeIconsNumber'" min="0"/>
         <span class="mx-2">/</span>
-        <BuilderNumberInput action="'totalIconsNumber'"/>
+        <BuilderNumberInput action="'totalIconsNumber'" min="1"/>
     </BuilderRow>
     <BuilderRow label.translate="Size">
         <BuilderButtonGroup applyTo="'.s_rating_icons'">
