@@ -47,13 +47,17 @@ function removeWishlistProduct(productId) {
  */
 function updateWishlistNavBar() {
     const wishlistProductIds = getWishlistProductIds();
-    const wishButton = document.querySelector('.o_wsale_my_wish');
-    if (wishButton.classList.contains('o_wsale_my_wish_hide_empty')) {
-        wishButton.classList.toggle('d-none', !wishlistProductIds.length);
-    }
-    wishButton.querySelector('.my_wish_quantity').textContent = `${wishlistProductIds.length}`;
-    const wishlistQuantity = document.querySelector('.my_wish_quantity');
-    wishlistQuantity.classList.toggle('d-none', !wishlistProductIds.length);
+    const wishButton = document.querySelectorAll('.o_wsale_my_wish');
+    wishButton.forEach(button => {
+        if (button.classList.contains('o_wsale_my_wish_hide_empty')) {
+            button.classList.toggle('d-none', !wishlistProductIds.length);
+        }
+        button.querySelector('.my_wish_quantity').textContent = `${wishlistProductIds.length}`;
+    });
+    const wishlistQuantity = document.querySelectorAll('.my_wish_quantity');
+    wishlistQuantity.forEach(quantity => {
+        quantity.classList.toggle('d-none', !wishlistProductIds.length);
+    });
 }
 
 export default {
