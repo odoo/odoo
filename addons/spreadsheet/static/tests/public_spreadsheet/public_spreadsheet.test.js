@@ -66,3 +66,11 @@ test("click close button in filter panel will close the panel", async function (
     expect(fixture.querySelector(".o-public-spreadsheet-filter-button")).toBeVisible();
     expect(fixture.querySelector(".o-public-spreadsheet-filters")).toBe(null);
 });
+
+test("Hides the download button when the downloadExcelUrl is not provided", async function () {
+    const { model } = await createModelWithDataSource();
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet", false);
+    await contains(".o-topbar-menu[data-id='file']").click();
+    expect(fixture.querySelector(".o-menu-item[data-name='download_public_excel']")).toBe(null);
+});
