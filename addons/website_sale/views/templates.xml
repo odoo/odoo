@@ -2494,9 +2494,7 @@
     <template id="address_on_payment" name="Address on payment">
         <div class="card">
             <div class="card-body" id="delivery_and_billing">
-                <a class="float-end no-decoration" href="/shop/checkout">
-                    <i class="fa fa-pencil me-1"/> Edit
-                </a>
+                <a class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-pencil me-1"/>Edit</a>
                 <t
                     t-set="use_delivery_as_billing"
                     t-value="order.partner_invoice_id == order.partner_shipping_id and not order.pickup_location_data"
@@ -2510,12 +2508,7 @@
                         <b>Delivery: </b>
                         <span
                             t-out="order.partner_shipping_id"
-                            t-options="dict(
-                                widget='contact',
-                                fields=['address'],
-                                no_marker=True,
-                                separator=', '
-                            )"
+                            t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"
                             class="address-inline"
                         />
                     </t>
@@ -2908,7 +2901,8 @@
                     groups="base.group_system"
                     target="_blank"
                     aria-label="Edit"
-                    t-attf-href="/odoo/action-payment.action_payment_provider/{{tx_sudo.provider_id.id}}">
+                    t-attf-href="/odoo/action-payment.action_payment_provider/{{tx_sudo.provider_id.id}}"
+                >
                     <i class="fa fa-pencil"/>
                 </a>
                 <div>
