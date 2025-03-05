@@ -141,13 +141,16 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _removeWish: function (e, deferred_redirect) {
-        var tr = $(e.currentTarget).parents('tr');
-        var wish = tr.data('wish-id');
-        var product = tr.data('product-id');
-        var self = this;
+        const wishtItemEl = e.currentTarget.closest('.o_wish_item');
+        const wish = wishtItemEl.dataset.wishId;
+        const product = wishtItemEl.dataset.productId;
+        const self = this;
 
+        // TODO VCR in some case it opens a dialog, we should remove only
+        // after clicking dialog CTA, else closing / cancel the dialog will
+        // delete the item from the wishlist
         rpc('/shop/wishlist/remove/' + wish).then(function () {
-            $(tr).hide();
+            wishtItemEl.classList.add('d-none');
         });
 
         this.wishlistProductIDs = this.wishlistProductIDs.filter((p) => p !== product);
@@ -182,10 +185,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             productId: parseInt(productId, 10),
             isCombo: isCombo,
         });
-
-        if (!document.getElementById('b2b_wish').checked) {
-            this._removeWish(ev, addToCart);
-        }
+        this._removeWish(ev, addToCart)
         return addToCart;
     },
     /**
