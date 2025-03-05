@@ -2381,32 +2381,6 @@
 
     <!-- /shop/address route -->
     <template id="website_sale.address_form_fields" inherit_id="portal.address_form_fields" primary="True">
-        <label for="o_email" position="replace">
-            <div
-                class="d-flex justify-content-between align-items-center"
-            >
-                <label class="col-form-label" for="o_email">
-                    Email
-                </label>
-                <div
-                    id="email-exists-message"
-                    t-if="(
-                        website.account_on_checkout != 'disabled'
-                        and is_anonymous_cart
-                    )"
-                    class="col-form-label text-end d-none"
-                >
-                    <span>Already Exists. </span>
-                    <a
-                        role="button"
-                        href='/web/login?redirect=/shop/checkout'
-                        class="text-primary text-decoration-none"
-                    >
-                        Sign in?
-                    </a>
-                </div>
-            </div>
-        </label>
         <t name="b2b_fields" position="attributes">
             <attribute name="t-if">display_b2b_fields</attribute>
         </t>
