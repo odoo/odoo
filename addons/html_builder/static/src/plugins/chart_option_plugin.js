@@ -15,7 +15,7 @@ class ChartOptionPlugin extends Plugin {
                 selector: CHART_SELECTOR,
                 props: {
                     isPieChart: this.isPieChart,
-                    getColor: (color, editingElement) => this.getColor(color, editingElement),
+                    getColor: (color) => this.getColor(color),
                 },
             },
         ],
@@ -237,12 +237,9 @@ class ChartOptionPlugin extends Plugin {
                     const data = this.getData(editingElement);
                     if (this.isPieChart(editingElement)) {
                         // TODO: shouldn't getColor be done directly in BuilderColorPicker?
-                        return this.getColor(
-                            data.datasets[datasetIndex]?.[type][dataIndex],
-                            editingElement
-                        );
+                        return this.getColor(data.datasets[datasetIndex]?.[type][dataIndex]);
                     } else {
-                        return this.getColor(data.datasets[datasetIndex]?.[type], editingElement);
+                        return this.getColor(data.datasets[datasetIndex]?.[type]);
                     }
                 },
                 apply: ({ editingElement, value, param: { type, datasetIndex, dataIndex } }) => {
@@ -280,7 +277,7 @@ class ChartOptionPlugin extends Plugin {
         return Math.ceil(Math.max(...dataValues) / 5) * 5;
     }
 
-    getColor(color, editingElement) {
+    getColor(color) {
         if (!color) {
             return "";
         }
@@ -288,9 +285,7 @@ class ChartOptionPlugin extends Plugin {
             ? color
             : getCSSVariableValue(
                   color,
-                  this.document.defaultView.getComputedStyle(
-                      editingElement.ownerDocument.documentElement
-                  )
+                  this.document.defaultView.getComputedStyle(this.document.documentElement)
               );
     }
 
