@@ -2514,3 +2514,28 @@ class TestUi(TestPointOfSaleHttpCommon):
         loyalty_history = self.env['loyalty.history'].search([('card_id','=',ewallet_aaa.id)])
         self.assertEqual(loyalty_history.mapped("issued"), [0.0, 50.0])
         self.assertEqual(loyalty_history.mapped("used"), [12.0, 0.0])
+
+    def test_loyalty_on_order_with_fixed_tax(self):
+
+        self.env['loyalty.program'].search([('id', '!=', self.auto_promo_program_next.id)]).write({'active': False})
+        self.auto_promo_program_next.coupon_ids = [Command.create({
+            'code': '563412',
+            'points': 10
+        })]
+
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'Fixed Tax',
+            'amount_type': 'fixed',
+            'amount': 50,
+        })
+        self.env["product.product"].create(
+            {
+                "name": "Product A",
+                "list_price": 15,
+                "available_in_pos": True,
+                "taxes_id": [Command.link(fixed_tax.id)],
+            }
+        )
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_loyalty_on_order_with_fixed_tax', login="pos_user")

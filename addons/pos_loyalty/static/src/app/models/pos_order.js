@@ -910,7 +910,9 @@ patch(PosOrder.prototype, {
             if (!line.getQuantity()) {
                 continue;
             }
-            const taxKey = line.tax_ids.map((t) => t.id);
+            const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+                ? line.tax_ids.map((t) => t.id)
+                : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
             discountable += line.getPriceWithTax();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
