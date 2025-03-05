@@ -108,7 +108,7 @@ describe("styleAction", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                    <BuilderNumberInput styleAction="{ mainParam: 'border-width', extraClass: 'border' }" unit="'px'" composable="true"
+                    <BuilderNumberInput styleAction="{ mainParam: 'border-width', extraClass: 'border' }" unit="'px'" min="0" composable="true"
                     />
                 `,
         });
@@ -141,7 +141,7 @@ describe("styleAction", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                    <BuilderNumberInput styleAction="{ mainParam: 'border-width', extraClass: 'border' }" unit="'px'" composable="true"
+                    <BuilderNumberInput styleAction="{ mainParam: 'border-width', extraClass: 'border' }" unit="'px'" min="0" composable="true"
                     />
                 `,
         });

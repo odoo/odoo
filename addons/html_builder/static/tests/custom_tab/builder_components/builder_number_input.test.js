@@ -488,6 +488,48 @@ describe("sanitized values", () => {
         expect(".options-container input").toHaveValue("33");
         expect(":iframe .test-options-target").toHaveInnerHTML("33");
     });
+    test("use min when the given value is smaller", async () => {
+        addActionOption({
+            customAction: {
+                getValue: ({ editingElement }) => editingElement.innerHTML,
+                apply: ({ value }) => {
+                    expect.step(`customAction ${value}`);
+                },
+            },
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" min="0"/>`,
+        });
+        await setupWebsiteBuilder(`
+            <div class="test-options-target">10</div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        await contains(".options-container input").edit("-1", { instantly: true });
+        expect.verifySteps(["customAction ", "customAction 0", "customAction 0"]); // input, input, change
+        expect(".options-container input").toHaveValue("0");
+    });
+    test("use max when the given value is bigger", async () => {
+        addActionOption({
+            customAction: {
+                getValue: ({ editingElement }) => editingElement.innerHTML,
+                apply: ({ value }) => {
+                    expect.step(`customAction ${value}`);
+                },
+            },
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'" max="10"/>`,
+        });
+        await setupWebsiteBuilder(`
+            <div class="test-options-target">3</div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        await contains(".options-container input").edit("11", { instantly: true });
+        expect.verifySteps(["customAction ", "customAction 10", "customAction 10"]); // input, input, change
+        expect(".options-container input").toHaveValue("10");
+    });
     test("multi values: trailing space in BuilderNumberInput is ignored", async () => {
         addActionOption({
             customAction: {
