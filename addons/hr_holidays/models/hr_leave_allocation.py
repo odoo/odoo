@@ -82,7 +82,7 @@ class HolidaysAllocation(models.Model):
         'Duration (days)', compute='_compute_number_of_days_display',
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
     number_of_hours_display = fields.Float(
-        'Duration (hours)', compute='_compute_number_of_hours_display', store=True,
+        'Duration (hours)', default_export_compatible=True, compute='_compute_number_of_hours_display', store=True,
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
     duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
@@ -118,7 +118,7 @@ class HolidaysAllocation(models.Model):
     ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
-        compute="_compute_accrual_plan_id", store=True, readonly=False, tracking=True,
+        compute="_compute_accrual_plan_id", inverse="_inverse_accrual_plan_id", store=True, readonly=False, tracking=True,
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
@@ -274,6 +274,10 @@ class HolidaysAllocation(models.Model):
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
                 if allocation.holiday_status_id:
                     allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
+
+    def _inverse_accrual_plan_id(self):
+        for allocation in self:
+            allocation.allocation_type = "accrual" if allocation.accrual_plan_id else "regular"
 
     def _get_request_unit(self):
         self.ensure_one()
