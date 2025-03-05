@@ -25,7 +25,7 @@ inclusion of rating directly within the customer portal discuss widget.
             # 'portal_rating/static/src/xml/portal_chatter.xml',
             'portal_rating/static/src/interactions/**/*',
             # 'portal_rating/static/src/xml/portal_rating_composer.xml',
-            'portal_rating/static/src/xml/portal_tools.xml',
+            # 'portal_rating/static/src/xml/portal_tools.xml',
         ],
         'web.assets_unit_tests_setup': [
             'portal_rating/static/src/interactions/**/*',

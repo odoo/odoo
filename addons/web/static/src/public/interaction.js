@@ -209,10 +209,8 @@ export class Interaction {
         //     await Promise.all(templatePromises);
         // }
         if (this.xmlTemplates) {
-            const templatePromises = Object.entries(this.xmlTemplates).map(async ([name, path]) => {
-                // Only load if not already loaded
+            const templatePromises = Object.entries(this.xmlTemplates).map(async ([path, templateInfo]) => {
                 if (!Interaction.loadedTemplates.has(path)) {
-                    debugger;
                     await loadXML(path);
                     Interaction.loadedTemplates.add(path);
                 }
