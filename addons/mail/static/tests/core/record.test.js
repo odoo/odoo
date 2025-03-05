@@ -982,18 +982,41 @@ test("record.toData() returns flat data", async () => {
         leader = Record.one("Person");
     }).register(localRegistry);
     const store = await start();
-    const p = store.Person.insert({
-        id: 1,
-        due_datetime: "2024-08-28 10:19:44",
-        names: ["John", "Marc"],
-        messages: [
-            { id: 1, body: "1" },
-            { id: 2, body: "2" },
+    store.Person.insert([
+        {
+            id: 1,
+            due_datetime: "2024-08-28 10:19:44",
+            names: ["John", "Marc"],
+            messages: [
+                { id: 1, body: "1" },
+                { id: 2, body: "2" },
+            ],
+            team: { id: 1, name: "Discuss", leader: { id: 2 } },
+        },
+        {
+            id: 2,
+            due_datetime: "2025-01-23 12:12:12",
+            names: ["Alex"],
+            messages: [
+                { id: 1, body: "1" },
+                { id: 3, body: "3" },
+            ],
+            team: { id: 2, name: "VoIP", leader: { id: 1 } },
+        },
+    ]);
+    const p = store.Person.get(1);
+    expect(p.toData()).toEqual({
+        Person: [
+            {
+                id: 1,
+                due_datetime: "2024-08-28 10:19:44",
+                names: ["John", "Marc"],
+                messages: [{ id: 1 }, { id: 2 }],
+                team: { id: 1 },
+            },
         ],
-        team: { id: 1, name: "Discuss", leader: { id: 1 } },
     });
-    const data = p.toData();
-    expect(data).toEqual({
+    expect(p.toData(["messages", "team"])).toEqual({
         Person: [
             {
                 id: 1,
@@ -1007,7 +1030,53 @@ test("record.toData() returns flat data", async () => {
             { id: 1, body: "1" },
             { id: 2, body: "2" },
         ],
-        Team: [{ id: 1, name: "Discuss", leader: { id: 1 } }],
+        Team: [{ id: 1, name: "Discuss", leader: { id: 2 } }],
+    });
+    expect(p.toData(["team.leader"])).toEqual({
+        Person: [
+            {
+                id: 2,
+                due_datetime: "2025-01-23 12:12:12",
+                names: ["Alex"],
+                messages: [{ id: 1 }, { id: 3 }],
+                team: { id: 2 },
+            },
+            {
+                id: 1,
+                due_datetime: "2024-08-28 10:19:44",
+                names: ["John", "Marc"],
+                messages: [{ id: 1 }, { id: 2 }],
+                team: { id: 1 },
+            },
+        ],
+        Team: [{ id: 1, name: "Discuss", leader: { id: 2 } }],
+    });
+    expect(p.toData({ depth: true })).toEqual({
+        Person: [
+            {
+                id: 2,
+                due_datetime: "2025-01-23 12:12:12",
+                names: ["Alex"],
+                messages: [{ id: 1 }, { id: 3 }],
+                team: { id: 2 },
+            },
+            {
+                id: 1,
+                due_datetime: "2024-08-28 10:19:44",
+                names: ["John", "Marc"],
+                messages: [{ id: 1 }, { id: 2 }],
+                team: { id: 1 },
+            },
+        ],
+        Message: [
+            { id: 1, body: "1" },
+            { id: 2, body: "2" },
+            { id: 3, body: "3" },
+        ],
+        Team: [
+            { id: 2, name: "VoIP", leader: { id: 1 } },
+            { id: 1, name: "Discuss", leader: { id: 2 } },
+        ],
     });
 });
 

@@ -414,12 +414,18 @@ export class Record {
         return !this.in(collection);
     }
 
-    toData() {
+    toData(options = { depth: false }) {
         const seenRecords = new Set();
         const storeData = {};
-        this._toData(storeData, seenRecords);
+        const prefix = this._getPyModelName();
+        let fields = undefined;
+        if (Array.isArray(options)) {
+            fields = options.map((field) => `${prefix}.${field}`);
+        }
+        this._toData(storeData, seenRecords, options.depth, fields, prefix);
         return storeData;
     }
+
     _cleanupData(data) {
         const fieldsToDelete = [
             "_",
@@ -432,23 +438,33 @@ export class Record {
         ];
         fieldsToDelete.forEach((field) => delete data[field]);
     }
+
     _getPyModelName() {
         return this.Model.getName();
     }
-    _toData(storeData, seenRecords) {
+
+    _toData(storeData, seenRecords, depth = false, fields = undefined, prefix = undefined) {
+        if (seenRecords.has(this.localId)) {
+            return;
+        }
         seenRecords.add(this.localId);
+
         const recordProxy = this;
         const record = toRaw(recordProxy)._raw;
         const Model = record.Model;
         const data = { ...recordProxy };
         for (const name of Model._.fields.keys()) {
+            const fullFieldName = prefix ? `${prefix}.${name}` : name;
             if (isMany(Model, name)) {
                 data[name] = record._proxyInternal[name].map((recordProxy) => {
                     const record = toRaw(recordProxy)._raw;
                     return record._toDataRelationalRecord.call(
                         record._proxyInternal,
                         storeData,
-                        seenRecords
+                        seenRecords,
+                        depth,
+                        fields,
+                        fullFieldName
                     );
                 });
             } else if (isOne(Model, name)) {
@@ -456,7 +472,10 @@ export class Record {
                 data[name] = otherRecord?._toDataRelationalRecord.call(
                     otherRecord._proxyInternal,
                     storeData,
-                    seenRecords
+                    seenRecords,
+                    depth,
+                    fields,
+                    fullFieldName
                 );
             } else {
                 // Record.attr()
@@ -470,19 +489,33 @@ export class Record {
                 }
             }
         }
+
         this._cleanupData(data);
         const pyModelName = record._getPyModelName();
         storeData[pyModelName] ||= [];
         storeData[pyModelName].push(data);
     }
-    _toDataRelationalRecord(storeData, seenRecords) {
+
+    _toDataRelationalRecord(
+        storeData,
+        seenRecords,
+        depth = false,
+        fields = undefined,
+        prefix = undefined
+    ) {
         const data = this.Model._retrieveIdFromData(this);
-        if (!seenRecords.has(this.localId)) {
-            this._toData(storeData, seenRecords);
+        if (depth || fields?.some((field) => field.startsWith(prefix))) {
+            this._toData(storeData, seenRecords, depth, fields, prefix);
         }
         for (const [name, val] of Object.entries(data)) {
             if (isRecord(val)) {
-                data[name] = val._toDataRelationalRecord(storeData, seenRecords);
+                data[name] = val._toDataRelationalRecord(
+                    storeData,
+                    seenRecords,
+                    depth,
+                    fields,
+                    prefix
+                );
             }
         }
         return data;
