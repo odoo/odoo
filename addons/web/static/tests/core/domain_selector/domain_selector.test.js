@@ -179,7 +179,10 @@ test("building a domain with an invalid path", async () => {
 
     expect(getCurrentPath()).toBe("fooooooo");
     expect(".o_model_field_selector_warning").toHaveCount(1);
-    expect(".o_model_field_selector_warning").toHaveAttribute("title", "Invalid field chain");
+    expect(".o_model_field_selector_warning").toHaveAttribute(
+        "data-tooltip",
+        "Invalid field chain"
+    );
     expect(getOperatorOptions()).toHaveLength(1);
     expect(getCurrentOperator()).toBe("is equal");
     expect(getCurrentValue()).toBe("abc");
