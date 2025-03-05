@@ -79,7 +79,7 @@ class MailGroup(models.Model):
         ('public', 'Everyone'),
         ('members', 'Members only'),
         ('groups', 'Selected group of users'),
-        ], string='Accept messages from', required=True, default='public')
+        ], string='Privacy', required=True, default='public')
     access_group_id = fields.Many2one('res.groups', string='Authorized Group',
                                       default=lambda self: self.env.ref('base.group_user'))
     # UI
