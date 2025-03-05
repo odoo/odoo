@@ -12,7 +12,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
-from odoo.tools import clean_context, float_round, groupby, lazy, single_email_re, str2bool, SQL
+from odoo.tools import SQL, clean_context, float_round, groupby, lazy, single_email_re, str2bool
 from odoo.tools.image import image_data_uri
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
@@ -861,17 +861,37 @@ class WebsiteSale(payment_portal.PaymentPortal):
             no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs
         )
+
         # If the line is a combo product line, and it already has combo items, we need to update
         # the combo item quantities as well.
         line = request.env['sale.order.line'].browse(values['line_id'])
         if line.product_type == 'combo' and line.linked_line_ids:
-            for linked_line_id in line.linked_line_ids:
-                if values['quantity'] != linked_line_id.product_uom_qty:
-                    order._cart_update(
-                        product_id=linked_line_id.product_id.id,
-                        line_id=linked_line_id.id,
-                        set_qty=values['quantity'],
+            quantity = values['quantity']
+            combo_quantity = quantity
+            # A combo product and its items should have the same quantity (by design). So, if the
+            # requested quantity isn't available for one or more combo items, we should lower the
+            # quantity of the combo product and its items to the maximum available quantity of the
+            # combo item with the least available quantity.
+            for linked_line in line.linked_line_ids:
+                if quantity != linked_line.product_uom_qty:
+                    combo_item_quantity, _ = order._verify_updated_quantity(
+                        linked_line, linked_line.product_id.id, quantity, **kwargs
                     )
+                    combo_quantity = min(combo_quantity, combo_item_quantity)
+            for linked_line in line.linked_line_ids:
+                order._cart_update(
+                    product_id=linked_line.product_id.id,
+                    line_id=linked_line.id,
+                    set_qty=combo_quantity,
+                    **kwargs,
+                )
+            if combo_quantity < quantity:
+                order._cart_update(
+                    product_id=product_id,
+                    line_id=line_id,
+                    set_qty=combo_quantity,
+                    **kwargs,
+                )
 
         values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])
         values['notification_info']['warning'] = values.pop('warning', '')
@@ -1572,7 +1592,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :param dict address_values: The address value.
         :return: None
         """
-        pass
 
     @route(
         _express_checkout_route, type='json', methods=['POST'], auth="public", website=True,
