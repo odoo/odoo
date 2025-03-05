@@ -10,7 +10,7 @@
             </xpath>
             <xpath expr="//notebook/page[@name='other_info']" position="before">
                 <page string="eWayBill" name="l10n_in_edi_ewaybill_page"
-                    invisible="move_type == 'entry' or country_code != 'IN'">
+                    invisible="move_type in ('entry', 'out_refund') or country_code != 'IN'">
                     <group name="ewaybill_group">
                         <group string="Transaction Details" name="Transaction_group" 
                             invisible="not l10n_in_edi_ewaybill_direct_api">
