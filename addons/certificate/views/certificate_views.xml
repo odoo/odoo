@@ -16,8 +16,8 @@
                         <field name="content" widget="binary"/>
                         <field name="pkcs12_password" password="True" />
                         <field name="subject_common_name" invisible="not pem_certificate"/>
-                        <field name="private_key_id" invisible="not pem_certificate"/>
-                        <field name="public_key_id" invisible="not pem_certificate"/>
+                        <field name="private_key_id" invisible="not pem_certificate" options="{'no_quick_create': True}"/>
+                        <field name="public_key_id" invisible="not pem_certificate" options="{'no_quick_create': True}"/>
                         <field name="scope" widget="radio" invisible="1"/> <!-- Should be overriden by modules adding options to this selection field -->
                     </group>
                     <group id="certificate_data">
