@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_amount, format_date, formatLang, get_lang, groupby
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero, float_repr, float_round
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -1491,9 +1491,11 @@ class PurchaseOrderLine(models.Model):
         if  self.env.context.get('accrual_entry_date'):
             return
         if new_qty != self.qty_received and self.order_id.state == 'purchase':
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            str_qty_received = float_repr(new_qty, precision_digits)
             self.order_id.message_post_with_view(
                 'purchase.track_po_line_qty_received_template',
-                values={'line': self, 'qty_received': new_qty},
+                values={'line': self, 'qty_received': new_qty, 'str_qty_received': str_qty_received},
                 subtype_id=self.env.ref('mail.mt_note').id
             )
 

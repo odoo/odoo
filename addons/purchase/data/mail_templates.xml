@@ -20,7 +20,7 @@
             <strong>The received quantity has been updated.</strong>
             <ul>
                 <li><t t-esc="line.product_id.display_name"/>:</li>
-                Received Quantity: <t t-esc="line.qty_received" /> -&gt; <t t-esc="float(qty_received)"/><br/>
+                Received Quantity: <t t-esc="line.qty_received" /> -&gt; <t t-esc="str_qty_received"/><br/>
             </ul>
         </div>
     </template>
