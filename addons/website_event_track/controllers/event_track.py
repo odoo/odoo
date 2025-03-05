@@ -547,15 +547,15 @@ class EventTrackController(http.Controller):
 
     @http.route('/event/send_email_reminder', type="jsonrpc", auth="public", website=True)
     def send_email_reminder(self, track_id, email_to):
-        template = self.env.ref("website_event_track.email_reminder", raise_if_not_found=False)
+        template = self.env.ref("website_event_track.mail_template_data_track_reminder", raise_if_not_found=False)
         if not template:
             return {'success': False, 'error': 'missing_template'}
 
         valid_email_to = tools.email_normalize(email_to)
-        if not track_id or not valid_email_to:
+        track = request.env['event.track'].sudo().browse(track_id)
+        if not track.is_published or not valid_email_to:
             return {'success': False, 'message': _('Invalid data.')}
         request.session['website_event_track.email_reminder'] = valid_email_to
-        track = request.env['event.track'].sudo().browse(track_id)
 
         agenda_urls = track._get_event_track_resource_urls()
         context = {
