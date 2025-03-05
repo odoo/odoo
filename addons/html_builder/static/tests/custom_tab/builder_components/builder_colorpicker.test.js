@@ -131,3 +131,33 @@ test("should revert preview on escape", async () => {
     await press("escape");
     expect(":iframe .test-options-target").toHaveStyle({ "background-color": "rgba(0, 0, 0, 0)" });
 });
+
+test("should apply transparent color if no color is defined", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => {
+                expect.step("getValue");
+                return editingElement.dataset.color;
+            },
+            apply: ({ editingElement, value }) => {
+                editingElement.dataset.color = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker action="'customAction'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o-overlay-item button:contains('Custom')").click();
+    expect.verifySteps(["getValue"]);
+    expect(".o-overlay-item .o_hex_input").toHaveValue("#FFFFFF");
+    expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
+    await contains(".o-overlay-item .o_color_pick_area").click({ top: "50%", left: "50%" });
+    expect(".o-overlay-item .o_hex_input").not.toHaveValue("#FFFFFF");
+    expect(":iframe .test-options-target").toHaveAttribute("data-color");
+    expect.verifySteps(["getValue"]);
+});

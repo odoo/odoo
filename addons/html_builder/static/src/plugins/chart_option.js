@@ -53,10 +53,6 @@ export class ChartOption extends Component {
         return data;
     }
 
-    getColor(color) {
-        return this.props.getColor(color, this.env.getEditingElement());
-    }
-
     isPieChart(editingElement) {
         const isPieChart = this.props.isPieChart(editingElement);
         if (this.state && this.domState.isPieChart !== isPieChart) {
@@ -78,13 +74,16 @@ export class ChartOption extends Component {
         const colorSet = new Set();
         for (const dataset of data.datasets) {
             if (this.isPieChart(editingElement)) {
-                dataset.backgroundColor.forEach((color) => colorSet.add(this.getColor(color)));
-                dataset.borderColor.forEach((color) => colorSet.add(this.getColor(color)));
+                dataset.backgroundColor.forEach((color) =>
+                    colorSet.add(this.props.getColor(color))
+                );
+                dataset.borderColor.forEach((color) => colorSet.add(this.props.getColor(color)));
             } else {
-                colorSet.add(this.getColor(dataset.backgroundColor));
-                colorSet.add(this.getColor(dataset.borderColor));
+                colorSet.add(this.props.getColor(dataset.backgroundColor));
+                colorSet.add(this.props.getColor(dataset.borderColor));
             }
         }
+        colorSet.delete(""); // No color, remove to avoid bugs.
         return colorSet;
     }
     /**
