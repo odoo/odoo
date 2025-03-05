@@ -59,9 +59,7 @@ export class CoreBuilderActionPlugin extends Plugin {
                     values = values.join(" ").replace(color, "").trim();
                     return `${color} ${values}${inset ? " inset" : ""}`;
                 },
-                apply: ({ editingElement: el, param, value }) => {
-                    setStyleValue(el, param, value);
-                },
+                apply: setStyleValue,
             },
             "border-width": {
                 getValue: ({ editingElement: el, param }) => {
@@ -79,23 +77,17 @@ export class CoreBuilderActionPlugin extends Plugin {
                     }
                     return value;
                 },
-                apply: ({ editingElement: el, param, value }) => {
-                    setStyleValue(el, param, value);
-                },
+                apply: setStyleValue,
             },
             "row-gap": {
                 getValue: ({ editingElement: el, param }) =>
                     parseInt(getStyleValue(el, param)) || 0,
-                apply: ({ editingElement: el, param, value }) => {
-                    setStyleValue(el, param, value);
-                },
+                apply: setStyleValue,
             },
             "column-gap": {
                 getValue: ({ editingElement: el, param, value }) =>
                     parseInt(getStyleValue(el, param)) || 0,
-                apply: ({ editingElement: el, param, value }) => {
-                    setStyleValue(el, param, value);
-                },
+                apply: setStyleValue,
             },
         };
         for (const borderWidthPropery of CSS_SHORTHANDS["border-width"]) {
@@ -137,7 +129,7 @@ export class CoreBuilderActionPlugin extends Plugin {
                     if (customStyle) {
                         customStyle.apply(...args);
                     } else {
-                        setStyleValue(editingElement, param, value);
+                        setStyleValue({ editingElement, param, value });
                     }
                 });
             },
@@ -162,11 +154,11 @@ function getStyleValue(el, { mainParam: styleName } = {}) {
     return cssValues.join(" ");
 }
 
-function setStyleValue(
-    el,
-    { mainParam: styleName, extraClass, force = false, allowImportant = true } = {},
-    value
-) {
+function setStyleValue({
+    editingElement: el,
+    param: { mainParam: styleName, extraClass, force = false, allowImportant = true } = {},
+    value,
+}) {
     const computedStyle = window.getComputedStyle(el);
     const cssProps = CSS_SHORTHANDS[styleName] || [styleName];
     // Always reset the inline style first to not put inline style on an
@@ -222,9 +214,7 @@ function setStyleValue(
 export function getGeneralStyle(param) {
     return {
         getValue: (editingElement) => getStyleValue(editingElement, param),
-        apply: (editingElement, value) => {
-            setStyleValue(editingElement, param, value);
-        },
+        apply: setStyleValue,
     };
 }
 
