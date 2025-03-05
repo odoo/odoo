@@ -714,7 +714,7 @@
             <field name="name">project.task.view.list.main.base</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <list string="Tasks" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
+                <list string="Tasks" editable="bottom" open_form_view="True" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
                     <field name="sequence" readonly="1" column_invisible="True"/>
                     <field name="allow_milestones" column_invisible="True"/>
                     <field name="subtask_count" column_invisible="True"/>
