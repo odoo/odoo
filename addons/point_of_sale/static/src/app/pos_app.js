@@ -34,12 +34,6 @@ export class Chrome extends Component {
         if (odoo.use_pos_fake_tours) {
             window.pos_fake_tour = useTours();
         }
-        // prevent backspace from performing a 'back' navigation
-        document.addEventListener("keydown", (ev) => {
-            if (ev.key === "Backspace" && !ev.target.matches("input, textarea")) {
-                ev.preventDefault();
-            }
-        });
 
         if (this.pos.config.iface_big_scrollbars) {
             const body = document.getElementsByTagName("body")[0];
