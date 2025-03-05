@@ -15858,6 +15858,30 @@ test(`view widgets are rendered in list view`, async () => {
     expect(queryAllTexts`.test_widget`).toEqual(["true", "true", "true", "false"]);
 });
 
+test(`view widget with options in list view`, async () => {
+    class TestWidget extends Component {
+        static template = xml`<div class="test_widget" t-esc="props.x"/>`;
+        static props = ["*"];
+    }
+    registry.category("view_widgets").add("test_widget", {
+        component: TestWidget,
+        extractProps: ({ options }) => ({
+            x: options.x,
+        }),
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <widget name="test_widget" options="{'x': 'y'}"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts`.test_widget`).toEqual(["y", "y", "y", "y"]);
+});
+
 test(`edit a record then select another record with a throw error when saving`, async () => {
     expect.errors(1);
 
