@@ -2410,6 +2410,12 @@
         <t name="b2b_fields" position="attributes">
             <attribute name="t-if">display_b2b_fields</attribute>
         </t>
+        <input name="required_fields" position="replace">
+            <input type="hidden" t-if="only_services" name="required_fields" t-att-value="'name,email'"/>
+            <t t-else="">
+                <t>$0</t> <!-- Replaced by old content. -->
+            </t>
+        </input>
     </template>
 
     <!-- /shop/address route -->
@@ -2515,13 +2521,7 @@
         <div class="card">
             <div class="card-body" id="delivery_and_billing">
                 <a class="float-end no-decoration" href="/shop/checkout">
-                    <i class="fa fa-pencil me-1"/>
-                    <t t-if="order.partner_shipping_id.contact_address_complete">
-                        Edit
-                    </t>
-                    <t t-else="">
-                        Want an invoice?
-                    </t>
+                    <i class="fa fa-pencil me-1"/> Edit
                 </a>
                 <t
                     t-set="use_delivery_as_billing"

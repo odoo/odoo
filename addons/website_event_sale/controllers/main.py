@@ -79,8 +79,8 @@ class WebsiteEventSaleController(WebsiteEventController, WebsiteSale):
                     ], limit=1)
                     booked_by_partner, _feedback_dict = self._create_or_update_address(
                         booked_by_partner,
-                        address_type='',
                         order_sudo=order_sudo,
+                        skip_required_fields_check=True,
                         **registrations[0]
                     )
                     order_sudo._update_address(booked_by_partner.id, ['partner_id'])

@@ -1027,6 +1027,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             use_delivery_as_billing=use_delivery_as_billing,
             callback=callback,
             order_sudo=order_sudo,
+            # Skip required fields check for current users' main address and when order only
+            # contains service type products
+            skip_required_fields_check=(
+                order_sudo.only_services
+                and partner_sudo == order_sudo.partner_id
+            ),
             **form_data
         )
 
