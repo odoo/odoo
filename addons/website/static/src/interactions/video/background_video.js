@@ -13,7 +13,9 @@ export class BackgroundVideo extends Interaction {
     };
 
     xmlTemplates = {
-        "website.background.video": "/website/static/src/xml/website.background.video.xml"
+        "/website/static/src/xml/website.background.video.xml": [
+            "website.background.video",
+        ],
     };
 
     dynamicContent = {
