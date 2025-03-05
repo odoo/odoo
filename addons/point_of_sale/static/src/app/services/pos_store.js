@@ -462,7 +462,11 @@ export class PosStore extends WithLazyGetterTrap {
                     typeof order.id === "number" &&
                     Object.keys(order.last_order_preparation_change).length > 0
                 ) {
-                    await this.sendOrderInPreparation(order, true, true);
+                    const today = new Date().toISOString().split("T")[0];
+                    const orderDate = new Date(order.preset_time).toISOString().split("T")[0];
+                    if (!order.preset_time || orderDate === today) {
+                        await this.sendOrderInPreparation(order, true, true);
+                    }
                 }
 
                 const cancelled = this.removeOrder(order, false);
