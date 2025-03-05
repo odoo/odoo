@@ -26,15 +26,21 @@ class ChatbotScriptStep(models.Model):
         self.filtered(lambda s: s.step_type == "create_lead_and_forward").is_forward_operator = True
 
     def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
-        return {
-            "company_id": self.crm_team_id.company_id.id,
+        partner = self.env.user.partner_id
+        team = self.crm_team_id
+        if partner.company_id and team.company_id and partner.company_id != team.company_id:
+            team = self.env["crm.team"]
+        vals = {
             'description': description + discuss_channel._get_channel_history(),
             "name": self.env._("%s's New Lead", self.chatbot_script_id.title),
             'source_id': self.chatbot_script_id.source_id.id,
-            'team_id': self.crm_team_id.id,
-            'type': 'lead' if self.crm_team_id.use_leads else 'opportunity',
+            "team_id": team.id,
             'user_id': False,
         }
+        if team:
+            vals["type"] = "lead" if team.use_leads else "opportunity"
+        return vals
+
 
     def _process_step(self, discuss_channel):
         self.ensure_one()
@@ -63,11 +69,7 @@ class ChatbotScriptStep(models.Model):
                 'phone': customer_values['phone'],
             }
         else:
-            partner = self.env.user.partner_id
-            create_values = {
-                'partner_id': partner.id,
-                'company_id': partner.company_id.id,
-            }
+            create_values = {"partner_id": self.env.user.partner_id.id}
         create_values.update(self._chatbot_crm_prepare_lead_values(
             discuss_channel, customer_values['description']))
         return self.env["crm.lead"].create(create_values)
@@ -89,6 +91,11 @@ class ChatbotScriptStep(models.Model):
             teams = possible_teams.filtered(
                 lambda team: team.assignment_max
                 and lead.filtered_domain(literal_eval(team.assignment_domain or "[]"))
+            )
+        if self.env.user.partner_id.company_id:
+            teams = teams.filtered(
+                lambda team: not team.company_id
+                or team.company_id == self.env.user.partner_id.company_id
             )
         assignable_user_ids = [
             member.user_id.id
