@@ -8,7 +8,7 @@ describe.current.tags("desktop");
 defineLivechatModels();
 
 test("Can invite a partner to a livechat channel", async () => {
-    mockDate("2023-01-03 12:00:00");
+    mockDate("2023-01-03 12:00:00", +1);
     const pyEnv = await startServer();
     const langIds = pyEnv["res.lang"].create([
         { code: "en", name: "English" },
@@ -56,7 +56,7 @@ test("Can invite a partner to a livechat channel", async () => {
     );
     await click("button:enabled", { text: "Invite" });
     await contains(".o-mail-NotificationMessage", {
-        text: "Mitch (FR) invited James to the channel",
+        text: "Mitch (FR) invited James to the channelToday at 1:00 PM",
     });
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("button[title='Members']");
