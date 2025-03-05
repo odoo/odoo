@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains, scroll } from "@web/../tests/utils";
+import { click, contains, scroll, createFile, dragenterFiles, dropFiles } from "@web/../tests/utils";
 
 QUnit.module("attachment box");
 
@@ -244,4 +244,54 @@ QUnit.test("attachment box auto-closed on switch to record wih no attachments", 
     await contains(".o-mail-AttachmentBox");
     await click(".o_pager_next");
     await contains(".o-mail-AttachmentBox", { count: 0 });
+});
+
+QUnit.test('Chatter main attachment: can change from non-viewable to viewable', async function (assert) {
+    const pyEnv = await startServer();
+    const resPartnerId = pyEnv['res.partner'].create({});
+    const irAttachmentId = pyEnv['ir.attachment'].create({
+        mimetype: 'text/plain',
+        name: "Blah.txt",
+        res_id: resPartnerId,
+        res_model: 'res.partner',
+    });
+    pyEnv['mail.message'].create({
+        attachment_ids: [irAttachmentId],
+        model: 'res.partner',
+        res_id: resPartnerId,
+    });
+    pyEnv['res.partner'].write([resPartnerId], {message_main_attachment_id : irAttachmentId})
+    const views = {
+        'res.partner,false,form':
+            '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="name"/>' +
+                '</sheet>' +
+                '<div class="o_attachment_preview"/>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids"/>' +
+                '</div>' +
+            '</form>',
+    };
+    patchUiSize({ size: SIZES.XXL });
+    const { openFormView } = await start({
+        mockRPC(route, args) {
+            if (String(route).includes("/web/static/lib/pdfjs/web/viewer.html")) {
+                var canvas = document.createElement('canvas');
+                return canvas.toDataURL();
+            }
+        },
+        serverData: { views },
+    });
+    await openFormView('res.partner', resPartnerId);
+
+    // Add a PDF file
+    const pdfFile = await createFile({ name: "invoice.pdf", contentType: "application/pdf" });
+    await dragenterFiles(".o-mail-Chatter", [pdfFile]);
+    await dropFiles(".o-mail-Dropzone", [pdfFile]);
+    await contains(".o-mail-Attachment > iframe", { count: 0 }); // The viewer tries to display the text file not the PDF
+
+    // Switch to the PDF file in the viewer
+    await click(".o_move_next");
+    await contains(".o-mail-Attachment > iframe"); // There should be iframe for PDF viewer
 });
