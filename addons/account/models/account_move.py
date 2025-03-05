@@ -3519,17 +3519,18 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         # EXTENDS account sequence.mixin
         self.ensure_one()
-        year_part = "%04d" % self.date.year
+        account_date = self.date or fields.Date.context_today(self)
+        year_part = "%04d" % account_date.year
         last_day = int(self.company_id.fiscalyear_last_day)
         last_month = int(self.company_id.fiscalyear_last_month)
         is_staggered_year = last_month != 12 or last_day != 31
         if is_staggered_year:
-            max_last_day = calendar.monthrange(self.date.year, last_month)[1]
+            max_last_day = calendar.monthrange(account_date.year, last_month)[1]
             last_day = min(last_day, max_last_day)
-            if self.date > date(self.date.year, last_month, last_day):
-                year_part = "%s-%s" % (self.date.strftime('%y'), (self.date + relativedelta(years=1)).strftime('%y'))
+            if account_date > date(account_date.year, last_month, last_day):
+                year_part = "%s-%s" % (account_date.strftime('%y'), (account_date + relativedelta(years=1)).strftime('%y'))
             else:
-                year_part = "%s-%s" % ((self.date + relativedelta(years=-1)).strftime('%y'), self.date.strftime('%y'))
+                year_part = "%s-%s" % ((account_date + relativedelta(years=-1)).strftime('%y'), account_date.strftime('%y'))
         # Arbitrarily use annual sequence for sales documents, but monthly
         # sequence for other documents
         if self.journal_id.type in ['sale', 'bank', 'cash', 'credit']:
@@ -3538,7 +3539,7 @@ class AccountMove(models.Model):
             # example). Note that it's already the case for monthly sequences.
             starting_sequence = "%s/%s/%s" % (self.journal_id.code, year_part, '0000' if is_staggered_year else '00000')
         else:
-            starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, self.date.month)
+            starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, account_date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
         if self.journal_id.payment_sequence and self.origin_payment_id or self.env.context.get('is_payment'):
