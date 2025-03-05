@@ -1043,3 +1043,39 @@ test("Chart data source is recreated when chart type is updated", async () => {
         message: "The data source should have been recreated",
     });
 });
+
+test("Long labels are only truncated in the axis callback, not in the data given to the chart", async () => {
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { name: "Guy", probability: 10 },
+        { name: "Guy with a very very very long name", probability: 2 },
+    ];
+    const searchParams = { comparison: null, context: {}, domain: [], groupBy: [], orderBy: [] };
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_line",
+        serverData,
+        definition: {
+            type: "odoo_line",
+            metaData: {
+                groupBy: ["name"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams,
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const config = model.getters.getChartRuntime(chartId).chartJsConfig;
+    expect(config.data.labels).toEqual(["Guy", "Guy with a very very very long name"]);
+
+    const fakeChart = { getLabelForValue: (value) => value };
+    const scaleCallback = config.options.scales.x.ticks.callback.bind(fakeChart);
+    expect(scaleCallback("Guy")).toBe("Guy");
+    expect(scaleCallback("Guy with a very very very long name")).toBe("Guy with a very very…");
+});

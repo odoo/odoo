@@ -15,7 +15,6 @@ const {
     getComboChartLegend,
     getChartShowValues,
     getTrendDatasetForBarChart,
-    truncateLabel,
 } = chartHelpers;
 
 export class OdooComboChart extends OdooChart {
@@ -76,7 +75,7 @@ function createOdooChartRuntime(chart, getters) {
     const config = {
         type: "bar",
         data: {
-            labels: chartData.labels.map(truncateLabel),
+            labels: chartData.labels,
             datasets: getComboChartDatasets(definition, chartData),
         },
         options: {

@@ -14,7 +14,6 @@ const {
     getPyramidChartScales,
     getBarChartLegend,
     getPyramidChartTooltip,
-    truncateLabel,
 } = chartHelpers;
 
 export class OdooPyramidChart extends OdooChart {
@@ -72,7 +71,7 @@ function createOdooChartRuntime(chart, getters) {
     const config = {
         type: "bar",
         data: {
-            labels: chartData.labels.map(truncateLabel),
+            labels: chartData.labels,
             datasets: getBarChartDatasets(definition, chartData),
         },
         options: {
