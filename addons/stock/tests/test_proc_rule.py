@@ -3,6 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
+from odoo import Command
 from odoo.tests import Form, TransactionCase
 from odoo.tools import mute_logger
 from odoo.exceptions import UserError
@@ -601,8 +602,92 @@ class TestProcRule(TransactionCase):
             mto_rule.rule_message,
             'The help message should correctly display information for MTSO.'
         )
-        
-        
+
+    def test_search_on_qty_to_order(self):
+        Orderpoint = self.env['stock.warehouse.orderpoint']
+        product_auto, product_manual = self.env['product.product'].create([
+            {'name': f'product {i}', 'is_storable': True}
+            for i in (1, 2)
+        ])
+        for product in (product_auto, product_manual):
+            out_move = self.env['stock.move'].create({
+                'name': f'out {product.name}',
+                'product_id': product.id,
+                'product_uom_qty': 100,
+                'location_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })
+            out_move._action_confirm()
+        manual_order_point = Orderpoint.create({
+            'product_id': product_auto.id,
+            'trigger': 'manual',
+        })
+        manual_order_point.qty_to_order = 55
+        Orderpoint.action_open_orderpoints()
+        self.assertEqual(sum(Orderpoint.search([('qty_to_order', '=', 0)]).mapped('qty_to_order')), 0)
+        self.assertEqual(sum(Orderpoint.search([('qty_to_order', '<=', 0)]).mapped('qty_to_order')), 0)
+        self.assertEqual(sum(Orderpoint.search([('qty_to_order', '<', 1)]).mapped('qty_to_order')), 0)
+
+    def test_default_orderpoint_unlink(self):
+        """ On action_open_orderpoints() we should not unlink then create "default" orderpoints
+        unnecessarily.
+        """
+        def make_out_move():
+            out_move = self.env['stock.move'].create({
+                'name': 'tosqto out move',
+                'product_id': product.id,
+                'product_uom_qty': 100,
+                'location_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })
+            out_move._action_confirm()
+            return out_move
+
+        StockWarehouseOrderpoint = self.env['stock.warehouse.orderpoint']
+        product = self.product
+        product.write({'is_storable': True})
+
+        # Nothing changed, do nothing
+        make_out_move()
+        StockWarehouseOrderpoint.action_open_orderpoints()
+        auto_generated_orderpoint = StockWarehouseOrderpoint.search([('product_id', '=', product.id)])
+        self.assertTrue(auto_generated_orderpoint.exists())
+        StockWarehouseOrderpoint.action_open_orderpoints()
+        self.assertTrue(auto_generated_orderpoint.exists())
+        auto_generated_orderpoint.action_replenish() # Replenish, unlinking the orderpoint
+        self.assertFalse(auto_generated_orderpoint.exists())
+
+        # Change in forecast -> qty_to_order updates
+        make_out_move()
+        StockWarehouseOrderpoint.action_open_orderpoints()
+        auto_generated_orderpoint = StockWarehouseOrderpoint.search([('product_id', '=', product.id)])
+        self.assertTrue(auto_generated_orderpoint.exists())
+        make_out_move()
+        StockWarehouseOrderpoint.action_open_orderpoints()
+        self.assertTrue(auto_generated_orderpoint.exists())
+        self.assertEqual(auto_generated_orderpoint.qty_to_order, 200)
+        auto_generated_orderpoint.action_replenish()  # Replenish, unlinking the orderpoint
+        self.assertFalse(auto_generated_orderpoint.exists())
+
+        # Change product_max_qty/product_min_qty -> don't unlink
+        make_out_move()
+        StockWarehouseOrderpoint.action_open_orderpoints()
+        auto_generated_orderpoint = StockWarehouseOrderpoint.search([('product_id', '=', product.id)])
+        self.assertTrue(auto_generated_orderpoint.exists())
+        auto_generated_orderpoint.product_max_qty = 10
+        StockWarehouseOrderpoint.action_open_orderpoints()
+        self.assertTrue(auto_generated_orderpoint.exists())
+        auto_generated_orderpoint.action_replenish() # Replenish, unlinking the orderpoint
+        self.assertFalse(auto_generated_orderpoint.exists())
+        make_out_move()
+        StockWarehouseOrderpoint.action_open_orderpoints()
+        auto_generated_orderpoint = StockWarehouseOrderpoint.search([('product_id', '=', product.id)])
+        self.assertTrue(auto_generated_orderpoint.exists())
+        auto_generated_orderpoint.product_min_qty = 10
+        StockWarehouseOrderpoint.action_open_orderpoints()
+        self.assertTrue(auto_generated_orderpoint.exists())
+
+
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
         super(TestProcRuleLoad, cls).setUp()
