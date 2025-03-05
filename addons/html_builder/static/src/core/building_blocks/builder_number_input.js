@@ -19,9 +19,13 @@ export class BuilderNumberInput extends Component {
         id: { type: String, optional: true },
         placeholder: { type: String, optional: true },
         style: { type: String, optional: true },
+        composable: { type: Boolean, optional: true },
         // TODO support a min and max value
     };
     static components = { BuilderComponent };
+    static defaultProps = {
+        composable: false,
+    };
 
     setup() {
         if (this.props.saveUnit && !this.props.unit) {
@@ -69,8 +73,16 @@ export class BuilderNumberInput extends Component {
     }
 
     parseDisplayValue(displayValue) {
-        // Replace commas by dots and only accept 0-9, dot, - sign and space.
-        displayValue = displayValue.replace(/,/g, ".").replace(/[^0-9.-\s]/g, "");
+        displayValue = displayValue.replace(/,/g, ".");
+        // Only accept 0-9, dot, - sign and space if multiple values are allowed
+        if (this.props.composable) {
+            displayValue = displayValue.replace(/[^0-9.-\s]/g, "");
+        } else {
+            displayValue = displayValue
+                .trim()
+                .split(" ")[0]
+                .replace(/[^0-9.-]/g, "");
+        }
 
         return this.convertSpaceSplitValues(displayValue, (value) => {
             if (value === "") {
