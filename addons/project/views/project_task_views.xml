@@ -746,6 +746,7 @@
             <field name="arch" type="xml">
                 <list position="attributes">
                     <attribute name="multi_edit">1</attribute>
+                    <attribute name="js_class">project_task_list</attribute>
                 </list>
                 <field name="date_deadline" position="after">
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
@@ -778,7 +779,6 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <list position="attributes">
-                    <attribute name="js_class">project_task_list</attribute>
                     <attribute name="default_group_by">stage_id</attribute>
                 </list>
             </field>
