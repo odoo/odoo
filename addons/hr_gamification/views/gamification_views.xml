@@ -14,6 +14,80 @@
             </field>
         </record>
 
+        <record id="view_current_badge_form" model="ir.ui.view">
+            <field name="name">gamification.badge.user.form</field>
+            <field name="model">gamification.badge.user</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="row flex-column-reverse flex-lg-row">
+                        <div class="col-12 col-lg-9">
+                            <div class="mb-2">
+                                <h1>
+                                    <field
+                                        name="badge_id"
+                                        string="Badge Name"
+                                        options="{'no_open': True}"
+                                        readonly="1"
+                                        class="oe_inline"
+                                    />
+                                </h1>
+                                <p class="d-flex align-items-center"> Granted by
+                                    <field
+                                        class="m-0 mx-1"
+                                        name="create_uid"
+                                        options="{'no_open': True}"
+                                        widget="many2one_avatar_user"
+                                    /> on <field class="m-0 mx-1"
+                                    name="create_date" widget="datetime"
+                                    options="{'show_time': false}" />
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-3 d-flex justify-content-center align-items-start">
+                            <field
+                                name="badge_id"
+                                nolabel="1"
+                                class="oe_avatar"
+                                widget="image"
+                                options="{'preview_image': 'image_1024'}"
+                            />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <field
+                            name="comment"
+                            placeholder="Describe what they did and why it matters (will be public)"
+                            readonly="not has_edit_delete_access"
+                            string="Description"
+                            rows="5"
+                        />
+                    </div>
+                    <footer>
+                        <div class="d-flex justify-content-between w-100">
+                            <div>
+                                <button
+                                    class="btn-primary me-1"
+                                    data-hotkey="q"
+                                    invisible="not has_edit_delete_access"
+                                    string="Save"
+                                    special="save"
+                                />
+                                <button string="Discard" special="cancel" data-hotkey="x" class="btn-secondary" />
+                            </div>
+                            <button
+                                class="btn-danger w-fit"
+                                confirm="Are you sure you want to delete this granted badge?"
+                                name="unlink"
+                                invisible="not has_edit_delete_access"
+                                type="object"
+                                string="Delete"
+                            />
+                        </div>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
         <record id="goals_menu_groupby_action2" model="ir.actions.act_window">
             <field name="res_model">gamification.goal</field>
             <field name="name">Goals History</field>
