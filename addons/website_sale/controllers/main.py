@@ -3,27 +3,29 @@
 
 import json
 import logging
-
 from datetime import datetime
+
+from psycopg2.errors import LockNotAvailable
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
 from odoo import fields, http, SUPERUSER_ID, tools, _
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
+from odoo.tools import SQL, lazy, str2bool
+
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.osv import expression
-from odoo.tools import lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
 _logger = logging.getLogger(__name__)
@@ -2027,15 +2029,22 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :param dict kwargs: Locally unused data passed to `_create_transaction`
         :return: The mandatory values for the processing of the transaction
         :rtype: dict
+        :raise: UserError if the order has already been paid or has an ongoing transaction
         :raise: ValidationError if the invoice id or the access token is invalid
         """
         # Check the order id and the access token
+        # Then lock it during the transaction to prevent concurrent payments
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token)
+            request.env.cr.execute(
+                SQL('SELECT 1 FROM sale_order WHERE id = %s FOR NO KEY UPDATE NOWAIT', order_id)
+            )
         except MissingError as error:
             raise error
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
+        except LockNotAvailable:
+            raise UserError(_("Payment is already being processed."))
 
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been canceled."))
@@ -2051,8 +2060,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if not kwargs.get('amount'):
             kwargs['amount'] = order_sudo.amount_total
 
-        if tools.float_compare(kwargs['amount'], order_sudo.amount_total, precision_rounding=order_sudo.currency_id.rounding):
+        compare_amounts = order_sudo.currency_id.compare_amounts
+        if compare_amounts(kwargs['amount'], order_sudo.amount_total):
             raise ValidationError(_("The cart has been updated. Please refresh the page."))
+        if compare_amounts(order_sudo.amount_paid, order_sudo.amount_total) == 0:
+            raise UserError(_("The cart has already been paid. Please refresh the page."))
 
         tx_sudo = self._create_transaction(
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,

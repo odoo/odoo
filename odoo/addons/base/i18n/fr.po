@@ -6759,10 +6759,10 @@ msgstr ""
 "Gérer des devis et des commandes\n"
 "=======================================\n"
 "\n"
-"Cette application permet de gérer les objectifs de ventes d'une façon efficace et efficiente en gardant trace de tous les bons de commande y compris leur historique.\n"
+"Cette application permet de gérer les objectifs de ventes d'une façon efficace et efficiente en gardant trace de tous les commandes clients y compris leur historique.\n"
 "\n"
 "Elle permet de gérer le processus de vente au complet :\n"
-" **Devis** -> **bon de commande** -> **facture**\n"
+" **Devis** -> **commande client** -> **facture**\n"
 "\n"
 "Paramètres (seulement si la gestion d'entrepôt est installée)\n"
 "-----------------------------------------------------------------------------------\n"
@@ -6943,11 +6943,11 @@ msgstr ""
 "Programme directeur de production\n"
 "==========================\n"
 "\n"
-"Vous devez parfois créer des bons de commande pour les composants des\n"
+"Vous devez parfois créer des commandes clients pour les composants des\n"
 "ordres de fabrication qui ne seront créés qu'à une date ultérieure ou des ordres de production\n"
 "dont vous n'aurez les commandes clients qu'à une date ultérieure. La solution consiste à prévoir\n"
 "les ventes et en fonction des prévisions, vous commencerez à créer quelques ordres de\n"
-"production ou bons de commande.\n"
+"production ou commandes clients.\n"
 "\n"
 "Vous devez choisir les produits à ajouter au rapport. Choisissez\n"
 "la périodicité du rapport : jour, semaine, mois… Vous pouvez également définir\n"
@@ -8908,7 +8908,7 @@ msgid ""
 msgstr ""
 "\n"
 "Module technique :\n"
-"L'objectif principal est de remplacer la vue sale_order pour permettre la configuration des produits dans le formulaire du bon de commande.\n"
+"L'objectif principal est de remplacer la vue sale_order pour permettre la configuration des produits dans le formulaire de la commande client.\n"
 "\n"
 "Il active également la fonctionnalité \"produits optionnels\".\n"
 
@@ -9317,7 +9317,7 @@ msgstr ""
 "* Plan comptable finlandais\n"
 "* Positions fiscales\n"
 "* Types de référence de paiement de facture (référence standard finlandaise et référence du créancier finlandais (RF))\n"
-"* Format de référence finlandais pour les ordres de vente\n"
+"* Format de référence finlandais pour les commandes clients\n"
 "\n"
 "Définissez le type de référence de paiement à partir du journal des ventes.\n"
 
@@ -10460,7 +10460,7 @@ msgid ""
 "by choosing product variants quantity through a Grid Entry.\n"
 msgstr ""
 "\n"
-"        Ce module permet de remplir rapidement une bon de commande\n"
+"        Ce module permet de remplir rapidement une commande client\n"
 "en sélectionnant la quantité de variantes de produit via une grille d'entrée.\n"
 
 #. module: base
@@ -13844,21 +13844,21 @@ msgstr ""
 "\n"
 "Afin d'utiliser ce module, vous devez :\n"
 "\n"
-"* Générer un nouveau bon de commande pour un produit étranger. Les coûts logistiques ne sont possibles que pour les produits configurés avec une évaluation\n"
+"* Générer un nouveau commande client pour un produit étranger. Les coûts logistiques ne sont possibles que pour les produits configurés avec une évaluation\n"
 " 'automatisée' avec un mode de calcul du coût \n"
 "'FIFO'. Le mode de calcul des coûts est configuré dans la catégorie de \n"
 "produit.\n"
 "\n"
 ".. figure:: static/description/purchase_order_new.png\n"
 "\n"
-"* Recevez le produit du bon de commande\n"
+"* Recevez le produit de la commande client\n"
 "\n"
 ".. figure:: static/description/picking_done_purchase.png\n"
 "\n"
 "* Allez à l'inventaire -> Contrôle des stocks -> Coûts logistiques\n"
 "\n"
 "* Créer un nouveau coût logistique indiquant le transfert\n"
-" du bon de commande \n"
+" de la commande client \n"
 "et le numéro des informations douanières (pedimento). Les coûts logistiques ne sont possible que pour les produits configurés\n"
 " avec une évaluation en temps réel avec un mode de calcul du coût réel.\n"
 " Le mode de coût est configuré sur la catégorie de produit\n"
@@ -24972,12 +24972,12 @@ msgstr "Intégrez le SMS Marketing à vos campagnes promotionnelles"
 msgid "Integrate discount and loyalty programs mechanisms in sales orders."
 msgstr ""
 "Intégrez des mécanismes de programmes de remise et de fidélisation dans les "
-"bons de commande."
+"commandes clients."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_delivery
 msgid "Integrate free shipping in sales orders."
-msgstr "Intégrez l'expédition gratuite dans les bons de commande."
+msgstr "Intégrez l'expédition gratuite dans les commandes clients."
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_mail_plugin
@@ -27351,7 +27351,7 @@ msgstr "Email marketing auprès des pistes / opportunités"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sale
 msgid "Mass mailing on sale orders"
-msgstr "Email marketing sur les bons de commande"
+msgstr "E-mail marketing sur les commandes clients"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_sale_subscription
@@ -27374,7 +27374,7 @@ msgstr "SMS Marketing sur les pistes / opportunités"
 #: model:ir.module.module,description:base.module_mass_mailing_sale_sms
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sale_sms
 msgid "Mass mailing sms on sale orders"
-msgstr "SMS marketing sur les bons de commande"
+msgstr "SMS marketing sur les commandes clients"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -39339,12 +39339,12 @@ msgstr "UTM et Email Marketing auprès des pistes / opportunités"
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_sale
 msgid "UTM and mass mailing on sale orders"
-msgstr "UTM et Email Marketing sur les bons de commande"
+msgstr "UTM et E-mail Marketing sur les commandes clients"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_sale
 msgid "UTM and post on sale orders"
-msgstr "UTM et post sur les bons de commande"
+msgstr "UTM et post sur les commandes clients"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_crm
