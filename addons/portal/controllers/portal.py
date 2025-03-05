@@ -472,6 +472,7 @@ class CustomerPortal(Controller):
         use_delivery_as_billing=False,
         callback='/my/addresses',
         required_fields=False,
+        skip_required_fields_check=False,
         **form_data
     ):
         """ Create or update an address if there is no error else return error dict.
@@ -484,6 +485,7 @@ class CustomerPortal(Controller):
         :param str callback: The URL to redirect to in case of successful address creation/update.
         :param str required_fields: The additional required address values, as a comma-separated
                                     list of `res.partner` fields.
+        :param str skip_required_fields_check: Whether we want skip required fields check or not.
         :return: Partner record and A JSON-encoded feedback, with either the success URL or
                  an error message.
         :rtype: res.partner, dict
@@ -500,6 +502,7 @@ class CustomerPortal(Controller):
             address_type,
             use_delivery_as_billing,
             required_fields or '',
+            skip_required_fields_check=skip_required_fields_check,
             **extra_form_data,
         )
         if error_messages:
@@ -581,6 +584,7 @@ class CustomerPortal(Controller):
         address_type,
         use_delivery_as_billing,
         required_fields,
+        skip_required_fields_check=False,
         **kwargs,
     ):
         """ Validate the address values and return the invalid fields, the missing fields, and any
@@ -594,6 +598,7 @@ class CustomerPortal(Controller):
                               the delivery address.
         :param str required_fields: The additional required address values, as a comma-separated
                                     list of `res.partner` fields.
+        :param str skip_required_fields_check: Whether we want skip required fields check or not.
         :param dict kwargs: Extra form data, available for overrides and some method calls.
         :return: The invalid fields, the missing fields, and any error messages.
         :rtype: tuple[set, set, list]
@@ -707,9 +712,15 @@ class CustomerPortal(Controller):
         # Complete the set of required fields based on the address type.
         country_id = address_values.get('country_id')
         country = request.env['res.country'].browse(country_id)
-        if address_type == 'delivery' or use_delivery_as_billing:
+        if (
+            not skip_required_fields_check
+            and (address_type == 'delivery' or use_delivery_as_billing)
+        ):
             required_field_set |= self._get_mandatory_delivery_address_fields(country)
-        if address_type == 'billing' or use_delivery_as_billing:
+        if (
+            not skip_required_fields_check
+            and (address_type == 'billing' or use_delivery_as_billing)
+        ):
             required_field_set |= self._get_mandatory_billing_address_fields(country)
             if not is_commercial_address:
                 commercial_fields = ResPartnerSudo._commercial_fields()

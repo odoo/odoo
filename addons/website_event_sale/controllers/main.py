@@ -5,9 +5,10 @@ from collections import defaultdict
 from odoo.http import request, route
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
-class WebsiteEventSaleController(WebsiteEventController):
+class WebsiteEventSaleController(WebsiteEventController, WebsiteSale):
 
     def _process_tickets_form(self, event, form_details):
         """ Add price information on ticket order """
@@ -70,8 +71,21 @@ class WebsiteEventSaleController(WebsiteEventController):
         # we have at least one registration linked to a ticket -> sale mode activate
         if any(info['event_ticket_id'] for info in registrations):
             if order_sudo.amount_total:
+                if order_sudo._is_anonymous_cart():
+                    booked_by_partner_details = registrations[0]
+                    Partner = request.env['res.partner'].sudo()
+                    booked_by_partner = Partner.search([
+                        ('email', '=', booked_by_partner_details['email']),
+                    ], limit=1)
+                    booked_by_partner, _feedback_dict = self._create_or_update_address(
+                        booked_by_partner,
+                        order_sudo=order_sudo,
+                        skip_required_fields_check=True,
+                        **registrations[0]
+                    )
+                    order_sudo._update_address(booked_by_partner.id, ['partner_id'])
                 request.session['sale_last_order_id'] = order_sudo.id
-                return request.redirect("/shop/checkout")
+                return request.redirect("/shop/checkout?try_skip_step=true")
             else:
                 # Free order -> auto confirmation without checkout
                 order_sudo.action_confirm()  # tde notsure: email sending ?
