@@ -22,7 +22,6 @@ export class BuilderNumberInput extends Component {
         placeholder: { type: String, optional: true },
         style: { type: String, optional: true },
         composable: { type: Boolean, optional: true },
-        // TODO support a min and max value
     };
     static components = { BuilderComponent };
     static defaultProps = {
