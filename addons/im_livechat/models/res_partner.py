@@ -4,13 +4,33 @@ from markupsafe import Markup
 
 from odoo import api, models, fields, _
 from odoo.addons.mail.tools.discuss import Store
-
+from odoo.tools.misc import OrderedSet
+from odoo.fields import Domain
 
 class ResPartner(models.Model):
     """Update of res.partner class to take into account the livechat username."""
     _inherit = 'res.partner'
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
+
+    def _get_search_for_channel_invite_term_domain(self, channel_id, search_term):
+        domain = super()._get_search_for_channel_invite_term_domain(channel_id, search_term)
+        if (channel_id and
+            self.env["discuss.channel"].search([
+                ("id", "=", int(channel_id)), ("channel_type", "=", "livechat")
+            ])):
+            languages = self.env["res.lang"].search([("name", "ilike", search_term)])
+            domain |= Domain(
+                "user_ids.res_users_settings_ids",
+                "in",
+                # sudo: res.users.settings - operators can access other operators settings
+                self.env["res.users.settings"].sudo()._search(
+                    Domain("user_id.partner_id.lang", "in", languages.mapped("code")) |
+                    Domain("livechat_lang_ids", "in", languages.ids) |
+                    Domain("livechat_expertise_ids.name", "ilike", search_term)
+                ),
+            )
+        return domain
 
     def _search_for_channel_invite_to_store(self, store: Store, channel):
         super()._search_for_channel_invite_to_store(store, channel)
@@ -28,12 +48,20 @@ class ResPartner(models.Model):
             self.env["im_livechat.channel"].search([]).available_operator_ids.partner_id
         )
         for partner in self:
+            languages = list(OrderedSet([
+                lang_name_by_code[partner.lang],
+                # sudo: res.users.settings - operator can access other operators languages
+                *partner.user_ids.sudo().livechat_lang_ids.mapped("name")
+            ]))
             store.add(
                 partner,
                 {
                     "invite_by_self_count": invite_by_self_count_by_partner.get(partner, 0),
                     "is_available": partner in active_livechat_partners,
-                    "lang_name": lang_name_by_code[partner.lang],
+                    "lang_name": languages[0],
+                    # sudo: res.users.settings - operator can access other operators expertises
+                    "livechat_expertise": partner.user_ids.sudo().livechat_expertise_ids.mapped("name"),
+                    "livechat_languages": languages[1:],
                 },
             )
 
