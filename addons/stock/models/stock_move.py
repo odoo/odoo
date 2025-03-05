@@ -358,29 +358,6 @@ class StockMove(models.Model):
                 move.quantity = sum_qty[move.id]
 
     def _set_quantity(self):
-        def _process_decrease(move, quantity):
-            mls_to_unlink = set()
-            # Since the move lines might have been created in a certain order to respect
-            # a removal strategy, they need to be unreserved in the opposite order
-            for ml in reversed(move.move_line_ids.sorted('id')):
-                if self.env.context.get('unreserve_unpicked_only') and ml.picked:
-                    continue
-                if float_is_zero(quantity, precision_rounding=move.product_uom.rounding):
-                    break
-                qty_ml_dec = min(ml.quantity, ml.product_uom_id._compute_quantity(quantity, ml.product_uom_id, round=False))
-                if float_is_zero(qty_ml_dec, precision_rounding=ml.product_uom_id.rounding):
-                    continue
-                if float_compare(ml.quantity, qty_ml_dec, precision_rounding=ml.product_uom_id.rounding) == 0 and ml.state not in ['done', 'cancel']:
-                    mls_to_unlink.add(ml.id)
-                else:
-                    ml.quantity -= qty_ml_dec
-                quantity -= move.product_uom._compute_quantity(qty_ml_dec, move.product_uom, round=False)
-            self.env['stock.move.line'].browse(mls_to_unlink).unlink()
-
-        def _process_increase(move, quantity):
-            # move._action_assign(quantity)
-            move._set_quantity_done(move.quantity)
-
         err = []
         for move in self:
             uom_qty = float_round(move.quantity, precision_rounding=move.product_uom.rounding, rounding_method='HALF-UP')
@@ -394,9 +371,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 continue
             delta_qty = move.quantity - move._quantity_sml()
             if float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
-                _process_increase(move, delta_qty)
-            elif float_compare(delta_qty, 0, precision_rounding=move.product_uom.rounding) < 0:
-                _process_decrease(move, abs(delta_qty))
+                move._action_assign(delta_qty)
+            move._set_quantity_done(move.quantity)
         if err:
             raise UserError('\n'.join(err))
 
@@ -1767,8 +1743,9 @@ Please change the quantity done or the rounding precision of your unit of measur
                 move.next_serial_count = move.product_uom_qty
 
         self.env['stock.move.line'].create(move_line_vals_list)
-        StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
-        StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
+        if not force_qty:
+            StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
+            StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
         if not self.env.context.get('bypass_entire_pack'):
             self.picking_id._check_entire_pack()
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
@@ -2075,8 +2052,13 @@ Please change the quantity done or the rounding precision of your unit of measur
         res = []
         for ml in self.move_line_ids:
             ml_qty = ml.quantity
+            if self.env.context.get('unreserve_unpicked_only') and ml.picked:
+                continue
             if float_is_zero(qty, precision_rounding=self.product_uom.rounding):
-                res.append((2, ml.id))
+                if ml.state not in ['done', 'cancel']:
+                    res.append(Command.delete(ml.id))
+                else:
+                    res.append(Command.update(ml.id, {'quantity': 0}))
                 continue
             if float_compare(ml_qty, 0, precision_rounding=ml.product_uom_id.rounding) <= 0:
                 continue
