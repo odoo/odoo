@@ -17,6 +17,13 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 export class ProductTemplate extends Base {
     static pythonModel = "product.template";
 
+    setup(_vals) {
+        super.setup(...arguments);
+        this.uiState = {
+            applicablePricelistRules: {},
+        };
+    }
+
     prepareProductBaseLineForTaxesComputationExtraValues(
         price,
         pricelist = false,
@@ -160,6 +167,23 @@ export class ProductTemplate extends Base {
         return current;
     }
 
+    getApplicablePricelistRules(pricelist) {
+        if (this.uiState.applicablePricelistRules[pricelist.id]) {
+            return this.uiState.applicablePricelistRules[pricelist.id];
+        }
+        const productTmplRules = this["<-product.pricelist.item.product_tmpl_id"] || [];
+        const rulesIds = [...new Set([...productTmplRules])].map((rule) => rule.id);
+        const availableRules =
+            pricelist.item_ids?.filter(
+                (rule) =>
+                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
+                    (!rule.product_tmpl_id || rule.product_tmpl_id.id === this.id) &&
+                    (!rule.categ_id || rule.categ_id.id === this.categ_id?.id)
+            ) || [];
+        this.uiState.applicablePricelistRules[pricelist.id] = availableRules.map((rule) => rule.id);
+        return this.uiState.applicablePricelistRules[pricelist.id];
+    }
+
     // Port of _get_product_price on product.pricelist.
     //
     // Anything related to UOM can be ignored, the POS will always use
@@ -186,22 +210,19 @@ export class ProductTemplate extends Base {
         }
 
         const product = variant;
-        const productTmpl = variant.product_tmpl_id || this;
         const standardPrice = variant ? variant.standard_price : this.standard_price;
         const basePrice = variant ? variant.lst_price : this.list_price;
-        const productTmplRules = productTmpl["<-product.pricelist.item.product_tmpl_id"] || [];
-        const productRules = product["<-product.pricelist.item.product_id"] || [];
-        const rulesIds = [...productTmplRules, ...productRules].map((rule) => rule.id);
-
         let price = basePrice + (price_extra || 0);
-        const rules =
-            pricelist?.item_ids?.filter(
-                (rule) =>
-                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
-                    (!rule.min_quantity || quantity >= rule.min_quantity) &&
-                    (!rule.product_id || rule.product_id.id === product?.id) &&
-                    (!rule.categ_id || rule.categ_id.id === product?.categ_id?.id)
-            ) || [];
+        let rules = [];
+        if (pricelist) {
+            if (product) {
+                rules = product.getApplicablePricelistRules(pricelist);
+            } else {
+                rules = this.getApplicablePricelistRules(pricelist);
+            }
+            rules = this.models["product.pricelist.item"].readMany(rules);
+            rules = rules.filter((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+        }
 
         const rule = rules.length && rules[0];
         if (!rule) {
