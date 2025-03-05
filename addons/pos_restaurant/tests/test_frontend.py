@@ -269,7 +269,13 @@ class TestFrontend(TestFrontendCommon):
 
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('SplitBillScreenTour2')
+        self.run_parallel_tours(
+            "pos_user",
+            [
+                self.prepare_pos_tour('SplitBillScreenTour2'),
+                self.prepare_pos_tour('RefundStayCurrentTableTour'),
+            ]
+        )
 
     def test_07_split_bill_screen(self):
         # disable kitchen printer to avoid printing errors

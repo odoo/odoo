@@ -1039,12 +1039,6 @@ class ChromeBrowser:
             self.screencasts_dir = os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
             os.makedirs(self.screencasts_frames_dir, exist_ok=True)
 
-        if os.name == 'posix':
-            self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
-            signal.signal(signal.SIGXCPU, self.signal_handler)
-        else:
-            self.sigxcpu_handler = None
-
         test_case.browser_size = test_case.browser_size.replace('x', ',')
 
         self.chrome, self.devtools_port = self._chrome_start(
@@ -1099,12 +1093,6 @@ class ChromeBrowser:
         else:
             return None
 
-    def signal_handler(self, sig, frame):
-        if sig == signal.SIGXCPU:
-            _logger.info('CPU time limit reached, stopping Chrome and shutting down')
-            self.stop()
-            os._exit(0)
-
     def stop(self):
         if hasattr(self, 'ws'):
             self._websocket_send('Page.stopScreencast')
@@ -1135,10 +1123,6 @@ class ChromeBrowser:
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
             shutil.rmtree(self.user_data_dir, ignore_errors=True)
-
-        # Restore previous signal handler
-        if self.sigxcpu_handler and os.name == 'posix':
-            signal.signal(signal.SIGXCPU, self.sigxcpu_handler)
 
     @property
     def executable(self):
@@ -1988,9 +1972,6 @@ class HttpCase(TransactionCase):
         # completely) or clear-ing session.cookies.
         self.opener = Opener(self.cr)
         self.opener.cookies['session_id'] = session.sid
-        if browser:
-            self._logger.info('Setting session cookie in browser')
-            browser.set_cookie('session_id', session.sid, '/', HOST)
 
         return session
 
@@ -2016,6 +1997,12 @@ class HttpCase(TransactionCase):
             The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
         :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
         """
+        browser, kwargs = self.initialize_chrome_browser(url_path, code, ready, login, timeout, cookies, error_checker, watch, success_signal, debug, cpu_throttling, **kw)
+        with self.custom_sigxcpu_handler_and_authenticated([browser], login):
+            browser.set_cookie('session_id', self.session.sid, '/', HOST)
+            self.start_browser(browser, **kwargs)
+
+    def initialize_chrome_browser(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
 
@@ -2030,13 +2017,51 @@ class HttpCase(TransactionCase):
             self._logger.warning('watch mode is only suitable for local testing')
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
+        return browser, {
+            'url_path': url_path,
+            'code': code,
+            'ready': ready,
+            'login': login,
+            'timeout': timeout,
+            'cookies': cookies,
+            'error_checker': error_checker,
+            'watch': watch,
+            'success_signal': success_signal,
+            'debug': debug,
+            'cpu_throttling': cpu_throttling,
+            **kw
+        }
+
+    @contextmanager
+    def custom_sigxcpu_handler_and_authenticated(self, browsers, login):
+        prev_sigxcpu_handler = None
+
+        def new_handler(sig, frame):
+            if sig == signal.SIGXCPU:
+                _logger.info('CPU time limit reached, stopping Chrome and shutting down')
+                for browser in browsers:
+                    browser.stop()
+                os._exit(0)
+
+        if os.name == 'posix':
+            prev_sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
+            signal.signal(signal.SIGXCPU, new_handler)
+
         try:
-            self.authenticate(login, login, browser=browser)
+            self.authenticate(login, login)
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
             # test cursors, which uses different caches than this transaction.
             self.cr.flush()
             self.cr.clear()
+            yield
+
+        finally:
+            if os.name == 'posix' and prev_sigxcpu_handler is not None:
+                signal.signal(signal.SIGXCPU, prev_sigxcpu_handler)
+
+    def start_browser(self, browser, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+        try:
             url = werkzeug.urls.url_join(self.base_url(), url_path)
             if watch:
                 parsed = werkzeug.urls.url_parse(url)
@@ -2088,10 +2113,7 @@ class HttpCase(TransactionCase):
             browser.stop()
             self._wait_remaining_requests()
 
-    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
-        """Wrapper for `browser_js` to start the given `tour_name` with the
-        optional delay between steps `step_delay`. Other arguments from
-        `browser_js` can be passed as keyword arguments."""
+    def pre_start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         options = {
             'stepDelay': step_delay or 0,
             'keepWatchBrowser': kwargs.get('watch', False),
@@ -2106,6 +2128,15 @@ class HttpCase(TransactionCase):
         if options["delayToCheckUndeterminisms"] > 0:
             timeout = timeout + 1000 * options["delayToCheckUndeterminisms"]
             _logger.runbot("Tour %s is launched with mode: check for undeterminisms.", tour_name)
+
+        return code, ready, timeout
+
+    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
+        """Wrapper for `browser_js` to start the given `tour_name` with the
+        optional delay between steps `step_delay`. Other arguments from
+        `browser_js` can be passed as keyword arguments."""
+
+        code, ready, timeout = self.pre_start_tour(url_path, tour_name, step_delay, **kwargs)
         return self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
 
     def profile(self, **kwargs):

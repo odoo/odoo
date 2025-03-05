@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import threading
 from contextlib import contextmanager
 from unittest.mock import patch
 from odoo import Command
@@ -30,6 +31,39 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
     def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
         self.start_tour(self._get_url(pos_config=kwargs.get('pos_config')), tour_name, login=login, **kwargs)
+
+    def prepare_pos_tour(self, tour_name, login="pos_user", **kwargs):
+        url_path = self._get_url(pos_config=kwargs.get('pos_config'))
+        code, ready, timeout = self.pre_start_tour(url_path, tour_name, login=login, **kwargs)
+        browser, kw = self.initialize_chrome_browser(url_path=url_path, code=code, login=login, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
+        return browser, lambda: self.start_browser(browser, **kw)
+
+    def run_parallel_tours(self, login="pos_user", prepared_tours=[]):
+        browsers, _ = zip(*prepared_tours)
+        errors = []
+
+        def try_tour(start_tour):
+            try:
+                start_tour()
+            except Exception as e:
+                errors.append(e)
+
+        with self.custom_sigxcpu_handler_and_authenticated(browsers, login):
+            threads = []
+
+            for browser, start_tour in prepared_tours:
+                browser.set_cookie('session_id', self.session.sid, '/', '127.0.0.1')
+                thread = threading.Thread(target=try_tour, args=(start_tour,))
+                threads.append(thread)
+
+            for thread in threads:
+                thread.start()
+
+            for thread in threads:
+                thread.join()
+
+        if errors:
+            raise errors[0]
 
     @contextmanager
     def with_new_session(self, config=None, user=None):
