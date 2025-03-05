@@ -253,7 +253,7 @@ test("input should step up or down from by the step prop", async () => {
 
     expect.verifySteps(["customAction 12", "customAction 10"]);
 });
-test("apply change on each value with up or down", async () => {
+test("multi values: apply change on each value with up or down", async () => {
     addActionOption({
         customAction: {
             getValue: ({ editingElement }) => editingElement.innerHTML,
@@ -265,7 +265,7 @@ test("apply change on each value with up or down", async () => {
     });
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+        template: xml`<BuilderNumberInput action="'customAction'" composable="true"/>`,
     });
     await setupWebsiteBuilder(`
         <div class="test-options-target">10 4 0</div>
@@ -284,6 +284,27 @@ test("apply change on each value with up or down", async () => {
     expect(":iframe .test-options-target").toHaveInnerHTML("10 4 0");
 
     expect.verifySteps(["customAction 11 5 1", "customAction 10 4 0"]);
+});
+test("don't allow multi values by default", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ editingElement, value }) => {
+                editingElement.innerHTML = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">10</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    await contains(".options-container input").edit("33 4 0", { instantly: true });
+    expect(".options-container input").toHaveValue("33");
+    expect(":iframe .test-options-target").toHaveInnerHTML("33");
 });
 test("should handle unit", async () => {
     addActionOption({
@@ -461,7 +482,7 @@ test("down on empty BuilderNumberInput gives -1", async () => {
     expect("[data-action-id='customAction'] input").toHaveValue("-1");
     expect(":iframe .test-options-target").toHaveAttribute("data-number", "-1");
 });
-test("trailing space in BuilderNumberInput is ignored", async () => {
+test("multi values: trailing space in BuilderNumberInput is ignored", async () => {
     addActionOption({
         customAction: {
             getValue: ({ editingElement }) => editingElement.innerHTML,
@@ -472,7 +493,7 @@ test("trailing space in BuilderNumberInput is ignored", async () => {
     });
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderNumberInput action="'customAction'"/>`,
+        template: xml`<BuilderNumberInput action="'customAction'" composable="true"/>`,
     });
     await setupWebsiteBuilder(`
         <div class="test-options-target">10</div>
