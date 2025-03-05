@@ -359,8 +359,7 @@ class AccountEdiFormat(models.Model):
 
             if invoice.is_sale_document():
                 # Customer invoices
-
-                if not com_partner._l10n_es_is_foreign():
+                if not com_partner._l10n_es_is_foreign() or is_simplified:
                     tax_details_info_vals = self._l10n_es_edi_get_invoices_tax_details_info(invoice)
                     invoice_node['TipoDesglose'] = {'DesgloseFactura': tax_details_info_vals['tax_details_info']}
 

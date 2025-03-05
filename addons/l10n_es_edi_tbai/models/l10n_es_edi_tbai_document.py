@@ -414,7 +414,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             **self._get_regime_code_value(values['taxes'], values['is_simplified']),
         }
 
-        if not values['partner'] or not values['partner']._l10n_es_is_foreign():
+        if not values['partner'] or not values['partner']._l10n_es_is_foreign() or values["is_simplified"]:
             sale_values.update(**self._get_importe_desglose_es_partner(values['base_lines'], values['is_refund']))
         else:
             sale_values.update(**self._get_importe_desglose_foreign_partner(values['base_lines'], values['is_refund']))
