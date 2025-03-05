@@ -13,6 +13,7 @@ class PosCategory(models.Model):
     _description = "Point of Sale Category"
     _inherit = ['pos.load.mixin']
     _order = "sequence, name"
+    _rec_name = 'complete_name'
 
     @api.constrains('parent_id')
     def _check_category_recursion(self):
@@ -23,6 +24,9 @@ class PosCategory(models.Model):
         return random.randint(0, 10)
 
     name = fields.Char(string='Category Name', required=True, translate=True)
+    complete_name = fields.Char(
+        'Complete Name', compute='_compute_complete_name', recursive=True,
+        store=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
     child_ids = fields.One2many('pos.category', 'parent_id', string='Children Categories')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")
@@ -32,6 +36,14 @@ class PosCategory(models.Model):
     # During loading of data, the image is not loaded so we expose a lighter
     # field to determine whether a pos.category has an image or not.
     has_image = fields.Boolean(compute='_compute_has_image')
+
+    @api.depends('name', 'parent_id.complete_name')
+    def _compute_complete_name(self):
+        for category in self:
+            if category.parent_id:
+                category.complete_name = '%s / %s' % (category.parent_id.complete_name, category.name)
+            else:
+                category.complete_name = category.name
 
     @api.model
     def _load_pos_data_domain(self, data):
