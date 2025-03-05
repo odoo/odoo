@@ -82,3 +82,9 @@ class ResUsers(models.Model):
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ['expense_manager_id']
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + [
+            'expense_manager_id',
+        ]
