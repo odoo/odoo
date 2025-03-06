@@ -190,12 +190,19 @@ export class ListDataSource extends OdooViewsDataSource {
         return field ? field.string : path;
     }
 
+    /**
+     * @returns {object | object[]}
+     */
     _getRecordFromRelation(mainRecord, path) {
         const fields = path.split(".");
         let record = mainRecord;
         for (let i = 0; i < fields.length - 1; i++) {
             // Ignore the last one
-            record = record && record[fields[i]];
+            if (Array.isArray(record)) {
+                record = record.map((r) => r[fields[i]]).flat();
+            } else {
+                record = record && record[fields[i]];
+            }
         }
         return record;
     }
@@ -239,39 +246,44 @@ export class ListDataSource extends OdooViewsDataSource {
             return "";
         }
         const lastField = path.split(".").at(-1);
+        if (Array.isArray(record)) {
+            // remove duplicates?
+            // needs to be formatted...
+            return record.map((r) => this._parseServerValue(field, r[lastField])).join(", ");
+        }
+        return this._parseServerValue(field, record[lastField]);
+    }
+
+    _parseServerValue(field, value) {
         switch (field.type) {
             case "many2one":
-                return record[lastField].display_name ?? "";
+                return value.display_name ?? "";
             case "one2many":
             case "many2many": {
-                const labels = record[lastField]
+                const labels = value
                     .map(({ display_name }) => display_name)
                     .filter((displayName) => displayName !== undefined);
                 return labels.join(", ");
             }
             case "selection": {
-                const key = record[lastField];
-                const value = field.selection.find((array) => array[0] === key);
-                return value ? value[1] : "";
+                const key = value;
+                const selectedOption = field.selection.find((array) => array[0] === key);
+                return selectedOption ? selectedOption[1] : "";
             }
             case "boolean":
-                return record[lastField] ? true : false;
+                return value ? true : false;
             case "date":
-                return record[lastField]
-                    ? toNumber(this._formatDate(record[lastField]), DEFAULT_LOCALE)
-                    : "";
+                return value ? toNumber(this._formatDate(value), DEFAULT_LOCALE) : "";
             case "datetime":
-                return record[lastField]
-                    ? toNumber(this._formatDateTime(record[lastField]), DEFAULT_LOCALE)
-                    : "";
+                return value ? toNumber(this._formatDateTime(value), DEFAULT_LOCALE) : "";
             case "properties": {
-                const properties = record[lastField] || [];
+                const properties = value || [];
                 return properties.map((property) => property.string).join(", ");
             }
             case "json":
                 return new EvaluationError(_t('Fields of type "%s" are not supported', "json"));
             default:
-                return record[lastField] || "";
+                return value || "";
         }
     }
 

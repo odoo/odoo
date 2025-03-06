@@ -31,6 +31,8 @@ import {
     generateListDefinition,
     Partner,
     Product,
+    ResUsers,
+    ResGroup,
 } from "@spreadsheet/../tests/helpers/data";
 
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
@@ -1112,6 +1114,31 @@ test("Support field chaining in list", async function () {
     setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "product_id.id")`);
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe(37);
+});
+
+test("Support many2many field chaining in list", async function () {
+    Partner._records = [
+        {
+            id: 1,
+            user_ids: [7, 8],
+        },
+    ];
+    ResUsers._records = [
+        { id: 7, name: "Alice", group_ids: [1, 2], partner_id: 1 },
+        { id: 8, name: "Bob", group_ids: [2, 3], partner_id: 1 },
+    ];
+    ResGroup._records = [
+        { id: 1, name: "Group 1" },
+        { id: 2, name: "Group 2" },
+        { id: 3, name: "Group 3" },
+    ];
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "user_ids.id")`);
+    setCellContent(model, "A2", `=ODOO.LIST(${listId}, 1, "user_ids.group_ids.id")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("7, 8");
+    expect(getCellValue(model, "A2")).toBe("1, 2, 2, 3");
 });
 
 test("Invalid field chaining in list should be marked as such", async function () {
