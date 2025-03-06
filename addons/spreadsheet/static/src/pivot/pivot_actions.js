@@ -38,13 +38,17 @@ export const SEE_RECORDS_PIVOT = async (position, env, newWindow) => {
     );
 };
 
+export function hasPivotFunction(position, getters) {
+    const cell = getters.getCorrespondingFormulaCell(position);
+    return cell && cell.isFormula && getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1;
+}
+
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
  * @param {import("@spreadsheet").OdooGetters} getters
  * @returns {boolean}
  */
 export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
-    const cell = getters.getCorrespondingFormulaCell(position);
     const evaluatedCell = getters.getEvaluatedCell(position);
     const pivotId = getters.getPivotIdFromPosition(position);
     const pivotCell = getters.getPivotCellFromPosition(position);
@@ -54,9 +58,7 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
         evaluatedCell.type !== "error" &&
         evaluatedCell.value !== "" &&
         pivotCell.type !== "EMPTY" &&
-        cell &&
-        cell.isFormula &&
-        getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1 &&
+        hasPivotFunction(position, getters) &&
         getters.getPivotCoreDefinition(pivotId).type === "ODOO" &&
         getters.getPivot(pivotId).getPivotCellDomain(pivotCell.domain)
     );
