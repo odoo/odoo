@@ -317,16 +317,6 @@ patch(Chatter.prototype, {
         this.state.isSearchOpen = false;
     },
 
-    async _follow(thread) {
-        const data = await rpc("/mail/thread/subscribe", {
-            res_model: thread.model,
-            res_id: thread.id,
-            partner_ids: [this.store.self.id],
-        });
-        this.store.insert(data);
-        this.onFollowerChanged();
-    },
-
     onActivityChanged(thread) {
         this.load(thread, [...this.requestList, "messages"]);
     },
@@ -359,26 +349,9 @@ patch(Chatter.prototype, {
         }
     },
 
-    async onClickFollow() {
-        if (this.state.thread.id) {
-            this._follow(this.state.thread);
-        } else {
-            this.onThreadCreated = this._follow;
-            await this.props.saveRecord?.();
-        }
-    },
-
     onClickSearch() {
         this.state.composerType = false;
         this.state.isSearchOpen = !this.state.isSearchOpen;
-    },
-
-    async onClickUnfollow() {
-        const thread = this.state.thread;
-        if (thread.selfFollower) {
-            await thread.selfFollower.remove();
-            this.onFollowerChanged();
-        }
     },
 
     onCloseFullComposerCallback() {

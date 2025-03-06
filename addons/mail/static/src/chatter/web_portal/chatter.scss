@@ -49,9 +49,8 @@
     height: $o-mail-Avatar-sizeSmall;
 }
 
-.o-mail-Follower-details:hover,
-.o-mail-Follower-action:hover {
-    background-color: var(--chatter_follower-bg--hover, #{$o-gray-300});
+.o-mail-Follower:has(.o-mail-Follower-action:hover), .o-mail-FollowerList-unfollow:has(.o-mail-Follower-action:hover) {
+    background-color: inherit !important;
 }
 
 .btn.o-mail-Chatter-follow:hover {

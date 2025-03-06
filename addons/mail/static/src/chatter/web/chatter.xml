@@ -42,9 +42,9 @@
                 </FileUploader>
                 <t t-else="" t-call="mail.Chatter.attachFiles"/>
                 <div class="o-mail-Followers d-flex me-1">
-                    <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown d-flex flex-column'" state="followerListDropdown">
-                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 ' + (props.compactHeight ? '' : 'my-2')" t-att-disabled="isDisabled" t-att-title="followerButtonLabel">
-                            <i class="fa fa-user-o me-1" role="img"/>
+                    <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown d-flex flex-column bg-100 border-secondary'" state="followerListDropdown">
+                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 ' + (props.compactHeight ? '' : 'my-2') + ' ' + (state.thread.selfFollower ? 'active' : '')" t-att-disabled="isDisabled" t-att-title="followerButtonLabel">
+                            <i class="fa fa-fw" role="img" t-attf-class="{{ state.thread.selfFollower ? 'fa-user' : 'fa-user-o' }}"/>
                             <i t-if="state.thread.id and state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
                             <sup t-else="" class="o-mail-Followers-counter" t-esc="state.thread.followersCount ?? 0"/>
                         </button>
@@ -53,28 +53,6 @@
                         </t>
                     </Dropdown>
                 </div>
-                <button t-if="state.thread.selfFollower" class="btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover, 'my-2': !props.compactHeight }" t-att-disabled="!props.threadId" t-on-click="onClickUnfollow" t-ref="unfollow">
-                    <div class="position-relative">
-                        <!-- Hidden element used to set the button maximum size -->
-                        <span class="d-flex invisible text-nowrap">
-                            <t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>
-                        </span>
-                        <span class="o-mail-Chatter-follow position-absolute end-0 top-0" t-out="unfollowHover.isHover ? unfollowText : followingText"/>
-                    </div>
-                </button>
-                <button t-if="!state.thread.selfFollower" class="o-mail-Chatter-follow btn btn-link  px-0 text-600" t-on-click="onClickFollow">
-                    <div class="position-relative">
-                        <span class="d-flex invisible text-nowrap">
-                            <t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>
-                        </span>
-                        <span class="position-absolute end-0 top-0">
-                            Follow
-                        </span>
-                    </div>
-                </button>
-                <button t-if="props.close" class="o-mail-Chatter-close btn btn-secondary flex-shrink-0 ms-2" aria-label="Close" t-on-click="props.close">
-                    <i class="oi oi-close"/>
-                </button>
             </div>
             <t t-if="state.composerType">
                 <t t-if="state.composerType === 'message'">

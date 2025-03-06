@@ -3,6 +3,7 @@ import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
 import { fields } from "../common/record";
 import { compareDatetime } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 /** @type {import("models").Thread} */
 const threadPatch = {
@@ -76,5 +77,13 @@ const threadPatch = {
         await chatWindow?.close();
         await super.unpin(...arguments);
     },
+    async follow() {
+        const data = await rpc("/mail/thread/subscribe", {
+            res_model: this.model,
+            res_id: this.id,
+            partner_ids: [this.store.self.id],
+        });
+        this.store.insert(data);
+    }
 };
 patch(Thread.prototype, threadPatch);

@@ -28,7 +28,7 @@ test("simplest layout of a followed subtype", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
-    await click("button[title='Edit subscription']");
+    await click("[title='Edit subscription']");
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] label`,
         { text: "TestSubtype" }
@@ -53,7 +53,7 @@ test("simplest layout of a not followed subtype", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
-    await click("button[title='Edit subscription']");
+    await click("[title='Edit subscription']");
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:not(:checked)`
     );
@@ -74,7 +74,7 @@ test("toggle follower subtype checkbox", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
-    await click("button[title='Edit subscription']");
+    await click("[title='Edit subscription']");
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:not(:checked)`
     );
@@ -112,7 +112,7 @@ test("follower subtype apply", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
-    await click("button[title='Edit subscription']");
+    await click("[title='Edit subscription']");
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId1}'] input[type='checkbox']:checked`
     );
