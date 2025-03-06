@@ -203,7 +203,7 @@ def check_image():
     if value_actual == value_latest:  # pylint: disable=E0601
         return False
     version = check_file.get(value_latest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
-    return {'major': version[0], 'minor': version[1]}
+    return f"{version[0]}.{version[1]}"
 
 
 def save_conf_server(url, token, db_uuid, enterprise_code):

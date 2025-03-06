@@ -77,6 +77,7 @@ if [ ! -d $CLONE_DIR ]; then
     echo "addons/web
 addons/hw_*
 addons/iot_box_image/configuration
+addons/iot_box_image/migrations
 addons/point_of_sale/tools/posbox/configuration
 odoo/
 odoo-bin" | tee --append .git/info/sparse-checkout > /dev/null

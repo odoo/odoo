@@ -77,6 +77,8 @@ class Manager(Thread):
         if platform.system() == 'Linux':
             wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
 
+        upgrade.image_version_migration() # ensure image version is up to date
+
         helpers.start_nginx_server()
         _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
         upgrade.check_git_branch()

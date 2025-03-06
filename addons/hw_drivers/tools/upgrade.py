@@ -11,12 +11,14 @@ from odoo.addons.hw_drivers.tools.helpers import (
     require_db,
     toggleable,
     writable,
+    check_image,
+    get_version,
 )
-from threading import Lock
 
 _logger = logging.getLogger(__name__)
 
 IS_LINUX = platform.system() == 'Linux'
+
 
 def linux(function):
     """Decorator to check if the system is Linux before running the function."""
@@ -105,9 +107,10 @@ def check_git_branch(server_url=None):
 
                 # System updates
                 update_packages()
+                # TODO: migration might need to be run even if no checkout to
+                #  allow next migrations if previous required a service restart
+                image_version_migration()
 
-                # Miscellaneous updates (version migrations)
-                misc_migration_updates()
             _logger.warning("Update completed, restarting...")
             odoo_restart()
     except Exception:
@@ -192,19 +195,30 @@ def update_packages():
     subprocess.Popen(["sudo", "bash", "-c", background_cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def misc_migration_updates():
-    """Run miscellaneous updates after the code update."""
-    _logger.warning("Running version migration updates")
-    if IS_LINUX:
-        if path_file('odoo', 'addons', 'point_of_sale').exists():
-            # TODO: remove this when v18.0 is deprecated (point_of_sale/tools/posbox/ -> iot_box_image/)
-            with open('/root_bypass_ramdisks/etc/systemd/system/ramdisks.service', 'r+', encoding='utf-8') as f:
-                content = f.read()
-                f.seek(0)
-                f.write(content.replace('iot_box_image', 'point_of_sale/tools/posbox'))
-                f.truncate()
+@linux
+def image_version_migration():
+    """Run migration scripts from the current image version to the latest one."""
+    current_version = get_version()[1:]
+    latest_available_version = check_image()
 
-            # TODO: Remove this code when v16 is deprecated
-            with open('addons/point_of_sale/tools/posbox/configuration/odoo.conf', 'r+', encoding='utf-8') as f:
-                if "server_wide_modules" not in f.read():
-                    f.write("server_wide_modules=hw_drivers,hw_posbox_homepage,web\n")
+    if current_version == latest_available_version:
+        return
+
+    _logger.warning("Running image version migration scripts")
+    migration_scripts = sorted(
+        path_file('odoo', 'addons', 'iot_box_image', 'migrations').iterdir(),
+        key=lambda s: float(s.stem) # sort by version number (filename without extension)
+    )
+    with writable():
+        for script in migration_scripts:
+            if float(script.stem) > float(current_version):
+                _logger.info("Running migration script to version %s", script.stem)
+                subprocess.run(["sudo", "tee", "/var/odoo/iot_box_version"], input=script.stem.encode(), check=True)
+
+                # We use `systemd-run` to run the script in the background, so that a script can restart `odoo.service`
+                # But if it doesn't, and there are multiple upgrade scripts, we need to wait for each to finish to
+                # avoid conflicts.
+                p = subprocess.Popen(
+                    ["sudo", "systemd-run", "--wait" , "bash", script.name, "&"], cwd=script.absolute().parent
+                )
+                p.wait()
