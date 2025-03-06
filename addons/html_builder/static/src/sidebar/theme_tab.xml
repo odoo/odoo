@@ -82,11 +82,6 @@
                 <BuilderButton title.translate="Pattern" actionValue="'pattern'" className="'fa fa-fw fa-th'"/>
                 <BuilderButton title.translate="None" actionValue="'NONE'" className="'fa fa-fw fa-ban'"/>
             </BuilderButtonGroup>
-            <!-- Hidden imagepicker enabled by above button-group -->
-            <!--
-            <we-imagepicker data-name="body_bg_image_opt"
-                            data-customize-body-bg=""/>
-            -->
         </BuilderRow>
     </BuilderContext>
 </t>
@@ -102,10 +97,7 @@
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Font Family">
-            TODO BuilderFontFamilyPicker
-            <!--
-            <we-fontfamilypicker data-variable="font"/>
-            -->
+            <BuilderFontFamilyPicker action="'customizeWebsiteVariable'" actionParam="'font'" valueParamName="'actionValue'"/>
         </BuilderRow>
         <BuilderRow label.translate="Line Height">
             <!-- "× ": \u00D7\u2000 -->
@@ -139,11 +131,8 @@
                 </t>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Font Family" action="'customizeWebsiteVariable'">
-            TODO BuilderFontFamilyPicker
-            <!--
-            <BuilderFontFamilyPicker title.translate="Heading 1" actionParam="'headings-font'"/>
-            -->
+        <BuilderRow label.translate="Font Family" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
+            <BuilderFontFamilyPicker actionParam="'headings-font'" valueParamName="'actionValue'"/>
             <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
                 title.translate="Reset to Paragraph Font Family"
                 action="'removeFont'"
@@ -152,10 +141,7 @@
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        TODO BuilderFontFamilyPicker
-                        <!--
-                        <BuilderFontFamilyPicker actionParam="'h' + depth + '-font'"/>
-                        -->
+                        <BuilderFontFamilyPicker actionParam="'h' + depth + '-font'" valueParamName="'actionValue'"/>
                         <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
                             title.translate="Reset to Headings Font Family"
                             action="'removeFont'"
@@ -165,10 +151,7 @@
                 </t>
                 <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="display_label + ' ' + depth">
-                        TODO BuilderFontFamilyPicker
-                        <!--
-                        <BuilderFontFamilyPicker actionParam="'display-' + depth + '-font'"/>
-                        -->
+                        <BuilderFontFamilyPicker actionParam="'display-' + depth + '-font'" valueParamName="'actionValue'"/>
                         <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
                             title.translate="Reset to Headings Font Family"
                             action="'removeFont'"
@@ -244,10 +227,7 @@
             <BuilderNumberInput actionParam="'btn-secondary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
         </BuilderRow>
         <BuilderRow label.translate="Font Family">
-            TODO BuilderFontFamilyPicker
-            <!--
-            <we-fontfamilypicker data-variable="buttons-font"/>
-            -->
+            <BuilderFontFamilyPicker actionParam="'buttons-font'" valueParamName="'actionValue'"/>
             <BuilderButton className="'fa fa-fw fa-remove o_we_hover_danger o_we_link'"
                 title.translate="Reset to Paragraph Font Family"
                 action="'removeFont'"
