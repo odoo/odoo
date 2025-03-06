@@ -8,7 +8,8 @@ requirement is explained in the [FAQ](#faq).
 
 1.  Read the [Individual Contributor License Agreement](icla-1.0.md)
 
-2.  Modify your current pull request, or make a new pull request on
+2.  Create a new commit with commit message `[CLA] add signature for <name>`
+    as part of your current or new pull request on
     [odoo/odoo](https://github.com/odoo/odoo), adding a new file
     `<lowercase-github-login>.md` under the [`doc/cla/individual`](individual/) directory.
     If your GitHub login is `ODony`, the file would be
@@ -44,7 +45,8 @@ signature is merged.
 
 1.  Read the [Corporate Contributor License Agreement](ccla-1.0.md)
 
-2.  Modify your current pull request, or make a new pull request on
+2.  Create a new commit with commit message `[CLA] add corporate signature for <company-name>`
+    as part of your current or new pull request on
     [odoo/odoo](/odoo/odoo), adding a new file `<lowercase-company-name>.md`
     under the [`doc/cla/corporate`](corporate/) directory.
     If the name of the company is Odoo, the file would be
