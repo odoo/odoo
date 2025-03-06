@@ -33,7 +33,14 @@ import { FormCompiler } from "./form_compiler";
 import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
-import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onError,
+    onRendered,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 
@@ -122,6 +129,7 @@ export class FormController extends Component {
         this.user = useService("user");
         this.viewService = useService("view");
         this.ui = useService("ui");
+        this.companyService = useService("company");
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
@@ -164,6 +172,17 @@ export class FormController extends Component {
         useEffect(() => {
             if (!this.env.inDialog) {
                 this.updateURL();
+            }
+        });
+
+        onError((error) => {
+            const suggestedCompany = error.cause?.data?.context?.suggested_company;
+            if (error.cause?.data?.name === "odoo.exceptions.AccessError" && suggestedCompany) {
+                const activeCompanyIds = this.companyService.activeCompanyIds;
+                activeCompanyIds.push(suggestedCompany.id);
+                this.companyService.setCompanies(activeCompanyIds, true);
+            } else {
+                throw error;
             }
         });
 
