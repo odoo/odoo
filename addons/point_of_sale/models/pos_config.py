@@ -418,6 +418,7 @@ class PosConfig(models.Model):
             val.update(name=_('POS order line %s', vals['name']), code='pos.order.line')
             vals['sequence_line_id'] = IrSequence.create(val).id
         pos_configs = super().create(vals_list)
+        if pos_configs.use_presets: pos_configs.update_presets_menu_visibility()
         pos_configs.sudo()._check_modules_to_install()
         pos_configs.sudo()._check_groups_implied()
         pos_configs._update_preparation_printers_menuitem_visibility()
@@ -447,6 +448,8 @@ class PosConfig(models.Model):
         self._reset_default_on_vals(vals)
         if ('is_order_printer' in vals and not vals['is_order_printer']):
             vals['printer_ids'] = [fields.Command.clear()]
+
+        old_use_presets = self.use_presets
 
         bypass_categories_forbidden_change = self.env.context.get('bypass_categories_forbidden_change', False)
         bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
@@ -500,12 +503,21 @@ class PosConfig(models.Model):
 
         result = super(PosConfig, self).write(vals)
 
+        if self.use_presets != old_use_presets:
+            self.update_presets_menu_visibility()
+
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
         if 'is_order_printer' in vals:
             self._update_preparation_printers_menuitem_visibility()
         return result
+
+    def update_presets_menu_visibility(self):
+        menu = self.env.ref("point_of_sale.menu_pos_preset", False)
+        any_pos_use_presets = bool(self.search([("use_presets", "=", True)], limit=1))
+        if menu and menu.active != any_pos_use_presets:
+            menu.active = any_pos_use_presets
 
     def _preprocess_x2many_vals_from_settings_view(self, vals):
         """ From the res.config.settings view, changes in the x2many fields always result to an array of link commands or a single set command.

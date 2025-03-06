@@ -33,14 +33,6 @@ class PosPreset(models.Model):
                 if attendance.hour_from % 24 >= attendance.hour_to % 24:
                     raise ValidationError(_('The start time must be before the end time.'))
 
-    @api.constrains('identification')
-    def _check_identification(self):
-        config_ids = self.env['pos.config'].search([])
-        for preset in self:
-            config = config_ids.filtered(lambda c: c.default_preset_id.id == preset.id)
-            if config and preset.identification != 'none':
-                raise ValidationError(_('The identification method should be set to "None" for the default preset.'))
-
     @api.model
     def _load_pos_data_domain(self, data):
         preset_ids = data['pos.config'][0]['available_preset_ids'] + [data['pos.config'][0]['default_preset_id']]

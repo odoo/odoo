@@ -1833,14 +1833,15 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (preset) {
+            order.setPreset(preset);
+
             if (preset.identification === "address" && !order.partner_id) {
-                const partner = await this.selectPartner();
+                const partner = await this.selectPartner(order);
                 if (!partner) {
                     return;
                 }
             }
 
-            order.setPreset(preset);
             if (preset.identification === "name" && !order.floating_order_name && !order.table_id) {
                 order.floating_order_name = order.getPartner()?.name;
                 if (!order.floating_order_name) {
@@ -1868,9 +1869,8 @@ export class PosStore extends WithLazyGetterTrap {
             preset.computeAvailabilities();
         }
     }
-    async selectPartner() {
+    async selectPartner(currentOrder = this.getOrder()) {
         // FIXME, find order to refund when we are in the ticketscreen.
-        const currentOrder = this.getOrder();
         if (!currentOrder) {
             return false;
         }
