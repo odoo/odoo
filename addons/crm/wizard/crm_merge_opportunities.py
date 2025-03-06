@@ -20,19 +20,22 @@ class CrmMergeOpportunity(models.TransientModel):
     @api.model
     def default_get(self, fields):
         """ Use active_ids from the context to fetch the leads/opps to merge.
-            In order to get merged, these leads/opps can't be in 'Dead' or 'Closed'
+        In order to get merged, these leads/opps cannot be already 'Won' (closed)
         """
         record_ids = self._context.get('active_ids')
         result = super().default_get(fields)
 
         if record_ids:
             if 'opportunity_ids' in fields:
-                opp_ids = self.env['crm.lead'].browse(record_ids).filtered(lambda opp: opp.probability < 100).ids
+                opp_ids = self.env['crm.lead'].browse(record_ids).filtered(lambda opp: opp.won_status != 'won').ids
                 result['opportunity_ids'] = [(6, 0, opp_ids)]
 
         return result
 
-    opportunity_ids = fields.Many2many('crm.lead', 'merge_opportunity_rel', 'merge_id', 'opportunity_id', string='Leads/Opportunities')
+    opportunity_ids = fields.Many2many(
+        'crm.lead', 'merge_opportunity_rel', 'merge_id', 'opportunity_id',
+        string='Leads/Opportunities',
+        context={'active_test': False})
     user_id = fields.Many2one('res.users', 'Salesperson', domain="[('share', '=', False)]")
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',
