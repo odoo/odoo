@@ -339,10 +339,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _search_qty_to_order(self, operator, value):
         records = self.search_fetch([('qty_to_order_manual', 'in', [0, False])], ['qty_to_order_computed'])
         matched_ids = records.filtered_domain([('qty_to_order_computed', operator, value)]).ids
-        return ['|',
-                    ('qty_to_order_manual', operator, value),
-                    ('id', 'in', matched_ids)
-                ]
+        return [('id', 'in', matched_ids)]
 
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order_computed(self):
