@@ -1,4 +1,5 @@
 import { reactive } from "@odoo/owl";
+import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 
 import { registry } from "@web/core/registry";
 
@@ -11,9 +12,24 @@ export class MailCoreCommon {
         this.env = env;
         this.busService = services.bus_service;
         this.store = services["mail.store"];
+        /** @type {{ [codepoints: string]: string[] }} */
+        this.shortcodesByCodepoints = {};
+        /** @type {RegExp|undefined} */
+        this.knownEmojisRegex;
     }
 
     setup() {
+        loader.onEmojiLoaded(async () => {
+            const { emojis } = await loadEmoji();
+            emojis.forEach((e) => (this.shortcodesByCodepoints[e.codepoints] = e.shortcodes));
+            this.knownEmojisRegex = new RegExp(
+                Object.keys(this.shortcodesByCodepoints)
+                    .map((c) => c.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"))
+                    .sort((a, b) => b.length - a.length) // Sort to get composed emojis first
+                    .join("|"),
+                "gu"
+            );
+        });
         this.busService.subscribe("ir.attachment/delete", (payload) => {
             const { id: attachmentId, message: messageData } = payload;
             if (messageData) {

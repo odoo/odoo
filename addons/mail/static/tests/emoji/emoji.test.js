@@ -1,4 +1,4 @@
-import { patchTranslations, preloadBundle } from "@web/../tests/web_test_helpers";
+import { patchTranslations, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
 
 import {
     click,
@@ -215,4 +215,20 @@ test("selecting an emoji while holding down the Shift key prevents the emoji pic
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
     await contains(".o-EmojiPicker");
     await contains(".o-mail-Composer-input", { value: "👺" });
+});
+
+test("shortcodes shown in emoji title in message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    pyEnv["mail.message"].create({
+        res_id: channelId,
+        model: "discuss.channel",
+        body: "💑😇",
+        author_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { text: "💑😇" });
+    await contains(".o-mail-Message *[title=':couple_with_heart:']");
+    await contains(".o-mail-Message *[title=':innocent:, :halo:']");
 });
