@@ -105,6 +105,7 @@ export class HistoryPlugin extends Plugin {
     static id = "history";
     static dependencies = ["selection", "sanitize"];
     static shared = [
+        "applyCustomMutation",
         "addExternalStep",
         "addStep",
         "canRedo",
@@ -538,6 +539,26 @@ export class HistoryPlugin extends Plugin {
         }
     }
 
+    applyCustomMutation({ apply, revert }) {
+        apply();
+        this.addCustomMutation({ apply, revert });
+    }
+
+    addCustomMutation({ apply, revert }) {
+        const customMutation = {
+            type: "custom",
+            apply: () => {
+                apply();
+                this.addCustomMutation({ apply, revert });
+            },
+            revert: () => {
+                revert();
+                this.addCustomMutation({ apply: revert, revert: apply });
+            },
+        };
+        this.currentStep.mutations.push(customMutation);
+    }
+
     /**
      * @param { Node } node
      */
@@ -798,6 +819,10 @@ export class HistoryPlugin extends Plugin {
     applyMutations(mutations, { forNewStep = false } = {}) {
         for (const mutation of mutations) {
             switch (mutation.type) {
+                case "custom": {
+                    mutation.apply();
+                    break;
+                }
                 case "characterData": {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
@@ -863,6 +888,10 @@ export class HistoryPlugin extends Plugin {
     revertMutations(mutations, { forNewStep = false } = {}) {
         for (const mutation of mutations.toReversed()) {
             switch (mutation.type) {
+                case "custom": {
+                    mutation.revert();
+                    break;
+                }
                 case "characterData": {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
@@ -1011,9 +1040,6 @@ export class HistoryPlugin extends Plugin {
         };
     }
 
-    getIsPreviewing() {
-        return this.isPreviewing;
-    }
     /**
      * Discard the current draft, and, if necessary, consume and revert
      * reversible steps until the specified step index, and ensure that
