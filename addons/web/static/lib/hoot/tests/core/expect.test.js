@@ -537,10 +537,12 @@ describe(parseUrl(import.meta.url), () => {
 
             expect(".div").toHaveStyle({ width: `${3 * documentFontSize}px`, height: 26 });
             expect(".div").toHaveStyle({ display: "block" });
+            expect(".div").toHaveStyle("border-top");
             expect(".div").not.toHaveStyle({ height: 50 });
 
             expect(".div").toHaveStyle("height: 26px ; width : 3rem", { inline: true });
             expect(".div").not.toHaveStyle({ display: "block" }, { inline: true });
+            expect(".div").not.toHaveStyle("border-top", { inline: true });
         });
     });
 });
