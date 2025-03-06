@@ -237,7 +237,7 @@ test(`width computation: with records, lot of fields, grouped`, async () => {
         groupBy: ["int_field"],
     });
     expect(`.o_resize`).toHaveCount(9);
-    expect(getColumnWidths()).toEqual([40, 29, 89, 80, 89, 102, 89, 154, 114, 45]);
+    expect(getColumnWidths()).toEqual([40, 29, 89, 89, 89, 154, 34, 80, 102, 125]);
 });
 
 test(`width computation: with records, few fields`, async () => {
