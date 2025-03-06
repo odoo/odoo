@@ -72,6 +72,8 @@ import { EXCLUDE_PREFIX, createUrlFromId, setParams } from "./url";
  *  tags?: string[];
  *  touch?: boolean;
  * }} Preset
+ *
+ * @typedef {import("./config").SearchFilter} SearchFilter
  */
 
 /**
@@ -98,7 +100,7 @@ const {
     console: { error: $error, groupEnd: $groupEnd, log: $log, table: $table },
     EventTarget,
     Map,
-    Math: { floor: $floor },
+    Math: { abs: $abs, floor: $floor },
     Object: {
         assign: $assign,
         defineProperties: $defineProperties,
@@ -131,6 +133,14 @@ const filterReady = (jobs) =>
         }
         return job.run;
     });
+
+/**
+ * @param {Record<string, number>} values
+ */
+const formatIncludes = (values) =>
+    $entries(values)
+        .filter(([, value]) => $abs(value) === INCLUDE_LEVEL.url)
+        .map(([id, value]) => (value >= 0 ? id : `${EXCLUDE_PREFIX}${id}`));
 
 /**
  * @param {import("./expect").Assertion[]} assertions
@@ -337,16 +347,12 @@ export class Runner {
          *  - +1/-1: included/excluded by URL
          *  - +2/-2: included/excluded by explicit test tag (readonly)
          *  - +3/-3: included/excluded by preset (readonly)
-         * @type {{
-         *  suites: Record<string, number>;
-         *  tags: Record<string, number>;
-         *  tests: Record<string, number>;
-         * }}
+         * @type {Record<Omit<SearchFilter, "filter">, Record<string, number>>}
          */
         includeSpecs: {
-            suites: {},
-            tags: {},
-            tests: {},
+            suite: {},
+            tag: {},
+            test: {},
         },
         /** @type {"ready" | "running" | "done"} */
         status: "ready",
@@ -445,17 +451,17 @@ export class Runner {
 
         // Suites
         if (this.config.suite?.length) {
-            this._include("suites", this.config.suite);
+            this._include("suite", this.config.suite);
         }
 
         // Tags
         if (this.config.tag?.length) {
-            this._include("tags", this.config.tag);
+            this._include("tag", this.config.tag);
         }
 
         // Tests
         if (this.config.test?.length) {
-            this._include("tests", this.config.test);
+            this._include("test", this.config.test);
         }
 
         // Random seed
@@ -788,6 +794,23 @@ export class Runner {
             suite: this.suiteStack.at(-1) || null,
             test: this.state.currentTest,
         };
+    }
+
+    /**
+     * @param {SearchFilter} type
+     * @param {string} id
+     * @param {number} value
+     */
+    include(type, id, value) {
+        const { includeSpecs } = this.state;
+        if (value) {
+            includeSpecs[type][id] = value;
+        } else {
+            delete includeSpecs[type][id];
+        }
+
+        this.config.filter = "";
+        this.config[type] = formatIncludes(includeSpecs[type]);
     }
 
     manualStart() {
@@ -1269,7 +1292,7 @@ export class Runner {
                         );
                     }
                     this._include(
-                        job instanceof Suite ? "suites" : "tests",
+                        job instanceof Suite ? "suite" : "test",
                         [job.id],
                         INCLUDE_LEVEL.tag
                     );
@@ -1299,14 +1322,13 @@ export class Runner {
 
     /**
      * @param {keyof Runner["config"]} configKey
-     * @param {keyof Runner["state"]["includeSpecs"]} specKey
      * @param {Map<string, any>} valuesMap
      */
-    _checkUrlValidity(configKey, specKey, valuesMap) {
-        const values = this.state.includeSpecs[specKey];
+    _checkUrlValidity(configKey, valuesMap) {
+        const values = this.state.includeSpecs[configKey];
         const availableValues = new Set(valuesMap.keys());
-        for (const [key, incLevel] of Object.entries(values)) {
-            if (Math.abs(incLevel) === INCLUDE_LEVEL.url && !availableValues.has(key)) {
+        for (const [key, incLevel] of $entries(values)) {
+            if ($abs(incLevel) === INCLUDE_LEVEL.url && !availableValues.has(key)) {
                 delete values[key];
                 this.config[configKey] = this.config[configKey].filter((val) => key !== val);
             }
@@ -1385,18 +1407,18 @@ export class Runner {
      */
     _getExplicitIncludeStatus(job) {
         const includeSpec =
-            job instanceof Suite ? this.state.includeSpecs.suites : this.state.includeSpecs.tests;
+            job instanceof Suite ? this.state.includeSpecs.suite : this.state.includeSpecs.test;
         const explicitInclude = includeSpec[job.id] || 0;
         return [explicitInclude > 0, explicitInclude < 0];
     }
 
     /**
-     * @param {"suites" | "tags" | "tests"} type
+     * @param {SearchFilter} type
      * @param {Iterable<string>} ids
      * @param {number} [priority=1]
      */
     _include(type, ids, priority = INCLUDE_LEVEL.url) {
-        priority = Math.abs(priority);
+        priority = $abs(priority);
         if (priority === INCLUDE_LEVEL.url) {
             this._hasRemovableFilter = true;
         }
@@ -1418,7 +1440,7 @@ export class Runner {
      */
     _isImplicitlyExcluded(job) {
         // By tag name
-        for (const [tagName, status] of $entries(this.state.includeSpecs.tags)) {
+        for (const [tagName, status] of $entries(this.state.includeSpecs.tag)) {
             if (status < 0 && job.tags.some((tag) => tag.name === tagName)) {
                 return true;
             }
@@ -1439,7 +1461,7 @@ export class Runner {
      */
     _isImplicitlyIncluded(job) {
         // By tag name
-        for (const [tagName, status] of $entries(this.state.includeSpecs.tags)) {
+        for (const [tagName, status] of $entries(this.state.includeSpecs.tag)) {
             if (status > 0 && job.tags.some((tag) => tag.name === tagName)) {
                 return true;
             }
@@ -1543,7 +1565,7 @@ export class Runner {
                 throw new HootError(`unknown preset: "${this.config.preset}"`);
             }
             if (preset.tags?.length) {
-                this._include("tags", preset.tags, INCLUDE_LEVEL.preset);
+                this._include("tag", preset.tags, INCLUDE_LEVEL.preset);
             }
             if (preset.platform) {
                 mockUserAgent(preset.platform);
@@ -1556,13 +1578,13 @@ export class Runner {
 
         // Cleanup invalid IDs and tags from URL
         if (this.config.suite) {
-            this._checkUrlValidity("suite", "suites", this.suites);
+            this._checkUrlValidity("suite", this.suites);
         }
         if (this.config.tag) {
-            this._checkUrlValidity("tag", "tags", this.tags);
+            this._checkUrlValidity("tag", this.tags);
         }
         if (this.config.test) {
-            this._checkUrlValidity("test", "tests", this.tests);
+            this._checkUrlValidity("test", this.tests);
         }
 
         // Cleanup invalid tests from storage
