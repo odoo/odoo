@@ -252,6 +252,58 @@ class MailControllerThreadCommon(MailControllerCommon):
             [("res_id", "=", record.id), ("model", "=", record._name)], order="id desc", limit=1
         )
 
+    def _execute_message_fetch_subtests(self, record, subtests):
+        for data_user, allowed, *args in subtests:
+            route_kw = args[0] if args else {}
+            user = data_user if data_user._name == "res.users" else self.user_public
+            guest = data_user if data_user._name == "mail.guest" else self.env["mail.guest"]
+            self._authenticate_pseudo_user(self.user_admin)
+            self._message_post(
+                record,
+                {
+                    "body": "<p>Test comment</p>",
+                    "message_type": "comment",
+                    "subtype_xmlid": "mail.mt_comment",
+                },
+                {},
+            )
+            self._message_post(
+                record,
+                {
+                    "body": "<p>Test note</p>",
+                    "message_type": "comment",
+                    "subtype_xmlid": "mail.mt_note",
+                },
+                {},
+            )
+            messages = self.env["mail.message"].search(
+                [("res_id", "=", record.id), ("model", "=", record._name)]
+            )
+            self._authenticate_pseudo_user(data_user)
+            with self.subTest(record=record, user=user, guest=guest, route_kw=route_kw):
+                if allowed:
+                    self._check_fetched_messages(record, messages, allowed, route_kw)
+                else:
+                    with self.assertRaises(
+                        JsonRpcException, msg="Fetch messages should raise NotFound"
+                    ):
+                        self._message_fetch(record, route_kw)
+            messages.unlink()
+
+    def _message_fetch(self, record, route_kw):
+        return self.make_jsonrpc_request(
+            route="/mail/thread/messages",
+            params={
+                "thread_model": record._name,
+                "thread_id": record.id,
+                **route_kw,
+            },
+        )
+
+    def _check_fetched_messages(self, record, messages, allowed, route_kw):
+        if allowed == "all":
+            self.assertEqual(len(self._message_fetch(record, route_kw)["messages"]), len(messages))
+
 
 class MailControllerUpdateCommon(MailControllerCommon):
 
