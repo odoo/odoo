@@ -48,7 +48,13 @@ export class ControlButtons extends Component {
                 item: "none",
             },
         ];
+<<<<<<< 5eb60dce4b63ba36557ef94ba5f6a755dd20a7da
         for (const fiscalPos of this.pos.models["pos.config"].getFirst().fiscal_position_ids) {
+||||||| 77aedc0a396e17106e21b4062d492cfe13b8cdf1
+        for (const fiscalPos of this.pos.models["account.fiscal.position"].getAll()) {
+=======
+        for (const fiscalPos of this.pos.config.fiscal_position_ids) {
+>>>>>>> 19bc34fb8e7c91762479cae0b8d2719329a0257b
             fiscalPosList.push({
                 id: fiscalPos.id,
                 label: fiscalPos.name,
@@ -84,7 +90,7 @@ export class ControlButtons extends Component {
      * @returns {Array}
      */
     getPricelistList() {
-        const selectionList = this.pos.models["product.pricelist"].map((pricelist) => ({
+        const selectionList = this.pos.config.availablePricelists.map((pricelist) => ({
             id: pricelist.id,
             label: pricelist.name,
             isSelected:
