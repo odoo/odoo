@@ -108,3 +108,10 @@ export function checkCombo(comboName, products) {
 
     return steps;
 }
+
+export function checkTotalPrice(price) {
+    return {
+        content: `The total price to pay is ${price}`,
+        trigger: `.order-price :contains(Total):contains(${price})`,
+    };
+}
