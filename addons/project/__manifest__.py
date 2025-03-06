@@ -199,6 +199,7 @@
             'web/static/lib/hoot-dom/**/*',
 
             'html_editor/static/src/**/*',
+            ('remove', 'html_editor/static/src/public/**/*'),
 
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/chatter/web/form_renderer.scss',
