@@ -232,7 +232,7 @@ class ProjectTask(models.Model):
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
-    parent_id = fields.Many2one('project.task', string='Parent Task', index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
+    parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]", export_string_translation=False)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count', export_string_translation=False)
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count', export_string_translation=False)
@@ -352,6 +352,13 @@ class ProjectTask(models.Model):
             record.display_in_project = record.project_id and (
                 not record.parent_id or record.project_id != record.parent_id.project_id
             )
+
+    def _inverse_parent_id(self):
+        for task in self:
+            if not task.parent_id:
+                task.display_in_project = True
+            elif task.display_in_project and task.project_id == task.parent_id.project_id:
+                task.display_in_project = False
 
     @api.depends('stage_id', 'depend_on_ids.state', 'project_id.allow_task_dependencies')
     def _compute_state(self):
@@ -1280,8 +1287,6 @@ class ProjectTask(models.Model):
                         if not project_link:
                             project_link = link_per_project_id[task.project_id.id] = task.project_id._get_html_link(title=task.project_id.display_name)
                         project_link_per_task_id[task.id] = project_link
-        if vals.get('parent_id') is False:
-            vals['display_in_project'] = True
         result = super().write(vals)
         if portal_can_write:
             super(ProjectTask, self_no_sudo).write(vals_no_sudo)
