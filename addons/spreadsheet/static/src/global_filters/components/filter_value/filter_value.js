@@ -46,4 +46,5 @@ FilterValue.components = { RecordsSelector, DateFilterValue };
 FilterValue.props = {
     filter: Object,
     model: Object,
+    showTitle: { type: Boolean, optional: true },
 };
