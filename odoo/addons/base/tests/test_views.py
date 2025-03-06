@@ -1522,7 +1522,7 @@ class TestTemplating(ViewCase):
             'name': "Base View",
             'type': 'qweb',
             'arch': """<root>
-                <item><span t-call="foo"/></item>
+                <item><span><t t-call="foo"/></span></item>
             </root>""",
         })
 

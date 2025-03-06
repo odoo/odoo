@@ -339,7 +339,7 @@
 
                     <!-- main content -->
                     <div t-attf-class="#{'pb-5' if report_type == 'html' else ''}" id="portal_sale_content">
-                        <div t-call="#{sale_order._get_name_portal_content_view()}"/>
+                        <div><t t-call="#{sale_order._get_name_portal_content_view()}"/></div>
                     </div>
 
                     <!-- bottom actions -->

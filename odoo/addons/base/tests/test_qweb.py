@@ -571,7 +571,7 @@ class TestQWebNS(TransactionCase):
             'arch': """
                 <t t-name="base.dummy2">
                     <root xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                        <cac:line t-foreach="[1, 2]" t-as="i" t-call="base.dummy"/>
+                        <cac:line t-foreach="[1, 2]" t-as="i"><t t-call="base.dummy"/></cac:line>
                     </root>
                 </t>
             """

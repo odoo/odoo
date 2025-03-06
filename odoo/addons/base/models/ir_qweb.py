@@ -2161,6 +2161,10 @@ class IrQweb(models.AbstractModel):
         """
         expr = el.attrib.pop('t-call')
 
+        el_tag = etree.QName(el.tag).localname if el.nsmap else el.tag
+        if el_tag != 't':
+            raise SyntaxError(f"t-call must be on a <t> element (actually on <{el_tag}>).")
+
         if el.attrib.get('t-call-options'): # retro-compatibility
             el.attrib.set('t-options', el.attrib.pop('t-call-options'))
 

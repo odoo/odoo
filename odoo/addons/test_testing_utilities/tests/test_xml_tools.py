@@ -115,12 +115,12 @@ _</h1>
             'type': 'qweb',
             'arch_db': f'''<data>
     <item t-foreach="items" t-as="item" t-esc="item"/>
-    <addressSender t-call='{template_addresses.id}'>
+    <addressSender><t t-call='{template_addresses.id}'>
         <t t-set="address" t-value="addressSender"/>
-    </addressSender>
-    <addressRecipient t-call='{template_addresses.id}'>
+    </t></addressSender>
+    <addressRecipient><t t-call='{template_addresses.id}'>
         <t t-set="address" t-value="addressRecipient"/>
-    </addressRecipient>
+    </t></addressRecipient>
 </data>
 '''})
         expected = """<data>
