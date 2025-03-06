@@ -9,7 +9,7 @@
             <xpath expr="//header" position="inside">
                 <button name="action_generate_leads" type="object" class="o_button_generate_leads"
                         string="Generate Leads" groups="sales_team.group_sale_manager" display="always"
-                        invisible="context.get('active_model', 'crm.lead') != 'crm.lead'"/>
+                        invisible="context.get('active_model', 'crm.lead') != 'crm.lead' or context.get('crm_lead_view_list_short')"/>
             </xpath>
         </field>
     </record>
@@ -23,7 +23,7 @@
                 <header>
                     <button name="action_generate_leads" type="object" class="o_button_generate_leads"
                             string="Generate Leads" groups="sales_team.group_sale_manager" display="always"
-                            invisible="context.get('active_model', 'crm.lead') != 'crm.lead'"/>
+                            invisible="context.get('active_model', 'crm.lead') != 'crm.lead' or context.get('crm_lead_view_list_short')"/>
                 </header>
             </xpath>
         </field>
