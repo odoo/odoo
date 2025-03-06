@@ -179,6 +179,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 Command.create({
                     'product_id': self.product_a.id,
                     'qty': 1,
+                    'price_unit': 134.38,
                     'price_subtotal': 134.38,
                     'price_subtotal_incl': 134.38,
                 }),
@@ -452,6 +453,56 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(refund.state, 'paid')
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed')
+
+    def test_order_partial_refund_multiple(self):
+        """Ensures that a refund following partial refund has correct total amount."""
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+
+        # Step 0: Create and pay for an order with 3x Product P ($1 each)
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'lines': [(0, 0, {
+                'product_id': self.product_a.id,
+                'price_unit': 1.0,
+                'qty': 3,
+                'price_subtotal': 3.0,
+                'price_subtotal_incl': 3.0,
+            })],
+            'amount_total': 3.0,
+            'amount_tax': 0.0,
+            'amount_paid': 3.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+        self.assertEqual(order.amount_total, order.amount_paid)
+
+        # Step 1: First partial refund (1 out of 3 original products)
+        refund_action = order.refund()
+        refund1 = self.PosOrder.browse(refund_action['res_id'])
+        self.assertEqual(refund1.amount_total, -3.0,
+            "Default refund's total should be set to a negative counterpart of the original order")
+        with Form(refund1) as refund_form:
+            with refund_form.lines.edit(0) as line:
+                line.qty = -1
+        refund1 = refund_form.save()
+        self.assertEqual(refund1.amount_total, -1.0,
+            "Refunding 1 product should set the refund's total to a negative counterpart of the refunded product")
+
+        # Step 2: Second partial refund, refunding reminder of the original order (2 out of 3 original products)
+        refund_action = order.refund()
+        refund2 = self.PosOrder.browse(refund_action['res_id'])
+        self.assertEqual(refund2.lines.qty, -2.0,
+            "Refund quantity should be set by default to the reminder (non yet refunded) of the original order")
+        self.assertEqual(refund2.amount_total, -2.0, "Wrong partial refund's total")
 
     def test_order_to_picking(self):
         """

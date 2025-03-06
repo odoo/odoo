@@ -1163,7 +1163,10 @@ class PosOrder(models.Model):
                 PosOrderLineLot = self.env['pos.pack.operation.lot']
                 for pack_lot in line.pack_lot_ids:
                     PosOrderLineLot += pack_lot.copy()
-                line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
+                new_line = line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
+                new_line._onchange_amount_line_all()
+            refund_order.amount_total = sum(refund_order.lines.mapped('price_subtotal_incl'))
+            refund_order.amount_tax = refund_order.amount_total - sum(refund_order.lines.mapped('price_subtotal'))
             refund_orders |= refund_order
         return refund_orders
 
