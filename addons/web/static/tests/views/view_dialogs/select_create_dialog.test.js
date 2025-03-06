@@ -549,9 +549,9 @@ test("SelectCreateDialog: save current search on desktop", async () => {
         },
     });
 
-    onRpc("get_views", ({ kwargs }) =>
-        expect(kwargs.options.load_filters).toBe(true, { message: "Missing load_filters option" })
-    );
+    onRpc("get_views", ({ kwargs }) => {
+        expect(kwargs.options.load_filters).toBe(true, { message: "Missing load_filters option" });
+    });
     onRpc("create_or_replace", ({ model, args }) => {
         if (model === "ir.filters") {
             const irFilter = args[0];
@@ -610,9 +610,9 @@ test("SelectCreateDialog: save current search on mobile", async () => {
         },
     });
 
-    onRpc("get_views", ({ kwargs }) =>
-        expect(kwargs.options.load_filters).toBe(true, { message: "Missing load_filters option" })
-    );
+    onRpc("get_views", ({ kwargs }) => {
+        expect(kwargs.options.load_filters).toBe(true, { message: "Missing load_filters option" });
+    });
     onRpc("create_or_replace", ({ model, args }) => {
         if (model === "ir.filters") {
             const irFilter = args[0];
