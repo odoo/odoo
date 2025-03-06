@@ -41,7 +41,7 @@
                 <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
             </div>
             <div t-ref="displayName" class="d-flex overflow-hidden flex-column">
-                <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name"/>
+                <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name" t-att-title="member.name"/>
             </div>
             <span class="ms-auto">
                 <span t-if="member.in(props.thread.invitedMembers)" class="p-1 fa fa-user-plus opacity-75"/>
