@@ -6,7 +6,14 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
 
-    def assert_sale_order_down_payment(self, sale_order, amount_type, amount, expected_values, soft_checking=False):
+    def assert_sale_order_down_payment(
+        self,
+        sale_order,
+        amount_type,
+        amount,
+        expected_values,
+        soft_checking=False,
+    ):
         if amount_type == 'percent':
             advance_payment_method = 'percentage'
             percent_amount = amount
@@ -26,7 +33,11 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             })
         action_values = downpayment_wizard.create_invoices()
         invoice = self.env['account.move'].browse(action_values['res_id'])
-        self._assert_tax_totals_summary(invoice.tax_totals, expected_values, soft_checking=soft_checking)
+        self._assert_tax_totals_summary(
+            invoice.tax_totals,
+            expected_values,
+            soft_checking=soft_checking,
+        )
 
         # Full invoice.
         downpayment_wizard = self.env['sale.advance.payment.inv']\
@@ -38,7 +49,9 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             })
         action_values = downpayment_wizard.create_invoices()
         invoice = self.env['account.move'].browse(action_values['res_id'])
-        self.assertRecordValues(invoice, [{'amount_total': original_amount_total - expected_values['total_amount_currency']}])
+        self.assertRecordValues(invoice, [
+            {'amount_total': original_amount_total - expected_values['total_amount_currency']},
+        ])
 
     def test_taxes_l10n_in_sale_orders(self):
         for test_mode, document, soft_checking, amount_type, amount, expected_values in self._test_taxes_l10n_in():

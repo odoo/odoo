@@ -1983,7 +1983,8 @@ class SaleOrder(models.Model):
         """ Convert the base lines passed as parameter representing a down payment into a list
         of dictionaries to be converted into sale order lines in the current sale order.
 
-        :param down_payment_base_lines: A list of base lines (see '_prepare_base_line_for_taxes_computation').
+        :param down_payment_base_lines: A list of base lines
+                                        (see '_prepare_base_line_for_taxes_computation').
         :return: A list of dictionaries to create new sale order lines.
         """
         self.ensure_one()
@@ -2004,6 +2005,7 @@ class SaleOrder(models.Model):
 
         # Base lines.
         for base_line in down_payment_base_lines:
+            extra_tax_data = self.env['account.tax']._export_base_line_extra_tax_data(base_line)
             so_line_values_list.append({
                 'order_id': self.id,
                 'is_downpayment': True,
@@ -2011,7 +2013,7 @@ class SaleOrder(models.Model):
                 'price_unit': base_line['price_unit'],
                 'tax_ids': [Command.set(base_line['tax_ids'].ids)],
                 'analytic_distribution': base_line['analytic_distribution'],
-                'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(base_line),
+                'extra_tax_data': extra_tax_data,
                 'sequence': sequence,
             })
             matched_base_lines.append(base_line)
@@ -2021,7 +2023,8 @@ class SaleOrder(models.Model):
     def _add_down_payment_lines_from_base_lines(self, down_payment_base_lines):
         """ Add the base lines passed as parameter as sale order lines into the current sale order.
 
-        :param down_payment_base_lines: A list of base lines (see '_prepare_base_line_for_taxes_computation').
+        :param down_payment_base_lines: A list of base lines
+                                        (see '_prepare_base_line_for_taxes_computation').
         """
         self.ensure_one()
         down_payment_so_lines_values_list, matched_base_lines = \
