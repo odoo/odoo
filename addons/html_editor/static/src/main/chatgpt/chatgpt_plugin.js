@@ -8,7 +8,6 @@ import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
 
-
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
     static dependencies = [
@@ -37,17 +36,13 @@ export class ChatGPTPlugin extends Plugin {
             {
                 id: "translate",
                 groupId: "ai",
-                isAvailable: (selection) => {
-                    return !selection.isCollapsed && user.userId;
-                },
+                title: _t("Translate with AI"),
+                isAvailable: (selection) => !selection.isCollapsed && user.userId,
                 isDisabled: this.isReplaceableByAI.bind(this),
                 Component: LanguageSelector,
                 props: {
-                    title: _t("Translate with AI"),
                     onSelected: (language) => this.openDialog({ language }),
-                    isDisabled: (selection) => {
-                        return this.isReplaceableByAI(selection);
-                    },
+                    isDisabled: (selection) => this.isReplaceableByAI(selection),
                 },
             },
             {

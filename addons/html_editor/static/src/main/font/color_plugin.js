@@ -48,12 +48,14 @@ export class ColorPlugin extends Plugin {
             {
                 id: "forecolor",
                 groupId: "color",
+                title: _t("Font Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("foreground"),
             },
             {
                 id: "backcolor",
                 groupId: "color",
+                title: _t("Background Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("background"),
             },
@@ -62,6 +64,19 @@ export class ColorPlugin extends Plugin {
         /** Handlers */
         selectionchange_handlers: this.updateSelectedColor.bind(this),
         remove_format_handlers: this.removeAllColor.bind(this),
+
+        /** Overridables */
+        /**
+         * Makes the way colors are applied overridable.
+         *
+         * @param {Element} element
+         * @param {string} color hexadecimal or bg-name/text-name class
+         * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
+         */
+        apply_color_style: (element, mode, color) => {
+            element.style[mode] = color;
+            return true;
+        },
 
         /** Predicates */
         has_format_predicates: [

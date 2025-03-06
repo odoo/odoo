@@ -25,7 +25,7 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
     expect("table tr").toHaveCount(0);
-    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target">b</div>`);
+    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target o-paragraph">b</div>`);
 
     await contains(".btn.o-dropdown").click();
     expect("input").toHaveCount(1);
@@ -35,7 +35,7 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     expect("span.o-dropdown-item").toHaveCount(3);
     await contains("span.o-dropdown-item").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;name&quot;:&quot;First&quot;}]">b</div>`
+        `<div class="test-options-target o-paragraph" data-test="[{&quot;id&quot;:1,&quot;name&quot;:&quot;First&quot;}]">b</div>`
     );
     expect("table tr").toHaveCount(1);
 
@@ -46,13 +46,13 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     expect("span.o-dropdown-item").toHaveCount(2);
     await contains("span.o-dropdown-item").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;name&quot;:&quot;First&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;Second&quot;}]">b</div>`
+        `<div class="test-options-target o-paragraph" data-test="[{&quot;id&quot;:1,&quot;name&quot;:&quot;First&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;Second&quot;}]">b</div>`
     );
     expect("table tr").toHaveCount(2);
 
     await contains("button.fa-minus").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:2,&quot;name&quot;:&quot;Second&quot;}]">b</div>`
+        `<div class="test-options-target o-paragraph" data-test="[{&quot;id&quot;:2,&quot;name&quot;:&quot;Second&quot;}]">b</div>`
     );
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");

@@ -3,12 +3,13 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { loadLanguages } from "@web/core/l10n/translation";
+import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { user } from "@web/core/user";
 
 export class LanguageSelector extends Component {
     static template = "html_editor.LanguageSelector";
     static props = {
-        title: String,
+        ...toolbarButtonProps,
         onSelected: { type: Function },
         isDisabled: { type: Function, optional: true },
     };
