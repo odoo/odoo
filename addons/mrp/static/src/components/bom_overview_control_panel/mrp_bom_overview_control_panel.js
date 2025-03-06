@@ -21,7 +21,6 @@ export class BomOverviewControlPanel extends Component {
         showVariants: { type: Boolean, optional: true },
         variants: { type: Object, optional: true },
         data: { type: Object, optional: true },
-        showUom: { type: Boolean, optional: true },
         uomName: { type: String, optional: true },
         currentWarehouse: Object,
         warehouses: { type: Array, optional: true },
@@ -29,8 +28,9 @@ export class BomOverviewControlPanel extends Component {
         changeWarehouse: Function,
         changeVariant: Function,
         changeBomQuantity: Function,
-        changeDisplay: Function,
+        changeMode: Function,
         precision: Number,
+        foldable: Boolean,
         allFolded: Boolean,
     };
     static defaultProps = {
@@ -75,6 +75,7 @@ export class BomOverviewControlPanel extends Component {
             target: "current",
             context: {
                 default_bom_id: this.props.data.bom_id,
+                default_product_qty: this.props.bomQuantity,
             },
         };
         return this.action.doAction(action);

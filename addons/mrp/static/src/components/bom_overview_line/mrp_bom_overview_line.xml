@@ -20,16 +20,18 @@
             <t t-else="" t-esc="formatFloat(data.quantity, {'digits': [false, precision]})"/>
         </td>
         <td t-if="showUom" class="text-start" t-esc="data.uom_name"/>
-        <td t-if="showAvailabilities" class="text-end">
-            <t t-if="data.hasOwnProperty('producible_qty')" t-esc="data.producible_qty"/>
-        </td>
-        <td t-if="showAvailabilities" class="text-end">
+        <td t-if="forecastMode" class="text-end">
             <t t-if="hasQuantity">
                 <t t-esc="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> /
                 <t t-esc="formatFloat(data.quantity_on_hand, {'digits': [false, precision]})"/>
             </t>
         </td>
-        <td t-if="showAvailabilities" class="text-center">
+        <td t-if="forecastMode" class="text-center">
+            <div t-if="data.hasOwnProperty('status')" class="o_field_badge">
+                <span t-attf-class="badge rounded-pill o_mrp_overview_badge {{statusBackgroundClass}}" t-out="data.status"/>
+            </div>
+        </td>
+        <td t-if="forecastMode" class="text-center">
             <t t-if="data.hasOwnProperty('availability_state')">
                 <span t-attf-class="{{availabilityColorClass}}" t-esc="data.availability_display"/>
                 <t t-if="['bom', 'component'].includes(data.type)">
@@ -37,19 +39,17 @@
                 </t>
             </t>
         </td>
-        <td t-if="showLeadTimes" class="text-end">
+        <td t-if="forecastMode" class="text-end">
             <span t-if="hasLeadTime"><t t-esc="data.lead_time"/> Days</span>
         </td>
-        <td t-if="showLeadTimes">
+        <td t-if="forecastMode">
             <div t-if="data.route_name">
                 <span t-attf-class="{{ data.route_alert ? 'text-danger' : '' }}"><t t-esc="data.route_name"/>: </span>
                 <a href="#" t-on-click.prevent="() => this.goToRoute(data.route_type)" t-esc="data.route_detail"/>
             </div>
         </td>
-        <td t-if="showCosts" t-attf-class="text-end {{ data.type == 'component' ? 'opacity-50' : '' }}" t-esc="formatMonetary(data.bom_cost)"/>
-        <td t-if="showCosts" class="text-end">
-            <span t-if="data.hasOwnProperty('prod_cost')" t-esc="formatMonetary(data.prod_cost)"/>
-        </td>
+        <td t-else=""/>
+        <td t-attf-class="text-end {{ data.type == 'component' ? 'opacity-50' : '' }}" t-esc="formatMonetary(data.bom_cost)"/>
         <td t-if="showAttachments" class="text-center">
             <span t-if="data.has_attachments">
                 <a href="#" role="button" t-on-click.prevent="goToAttachment" class="fa fa-fw o_button_icon fa-files-o"/>
