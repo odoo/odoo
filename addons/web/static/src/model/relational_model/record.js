@@ -996,7 +996,7 @@ export class Record extends DataPoint {
         }
         const changes = this._getChanges();
         delete changes.id; // id never changes, and should not be written
-        if (!creation && !Object.keys(changes).length) {
+        if (!creation && !Object.keys(changes).length && !reload) {
             return true;
         }
         if (this.model._urgentSave && this.model.useSendBeaconToSaveUrgently) {

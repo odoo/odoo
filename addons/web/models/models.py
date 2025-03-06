@@ -68,7 +68,8 @@ class Base(models.AbstractModel):
 
     def web_save(self, vals, specification: Dict[str, Dict], next_id=None) -> List[Dict]:
         if self:
-            self.write(vals)
+            if len(vals):
+                self.write(vals)
         else:
             self = self.create(vals)
         if next_id:

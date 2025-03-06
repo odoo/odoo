@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.base.tests.test_mimetypes import SVG, JPG
@@ -38,6 +39,30 @@ class TestWebSave(TransactionCase):
         # Modify an existing record, with unity specification
         result = person.web_save({'name': 'lpe'}, {'display_name': {}})
         self.assertEqual(result, [{'id': person.id, 'display_name': 'lpe'}])
+
+    def test_web_save_write_wo_values(self):
+        ''' Test the web_save method on an existing record. Without values'''
+
+        person = self.env["test_new_api.person"].create({"name": "ged"})
+        # Pretend setup happened in an older write_date
+        before = self.cr.now() - timedelta(milliseconds=1)
+        person._write({"write_date": before})
+        person.invalidate_recordset(["create_date", "write_date"])
+
+        write_date_before = person.write_date
+
+        # Modify an existing record, without unity specification (it should return only the id)
+        result = person.web_save({}, {})
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result, [{'id': person.id}])
+        write_date_after = person.write_date
+        self.assertEqual(write_date_before, write_date_after)
+
+        # Modify an existing record, with unity specification
+        result = person.web_save({}, {'display_name': {}})
+        self.assertEqual(result, [{'id': person.id, 'display_name': 'ged'}])
+        write_date_after = person.write_date
+        self.assertEqual(write_date_before, write_date_after)
 
     def test_web_save_computed_stored_binary(self):
         [result] = self.env['test_new_api.binary_svg'].web_save(
