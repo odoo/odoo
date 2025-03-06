@@ -27,6 +27,7 @@ import {
     Component,
     onMounted,
     onPatched,
+    status,
     onWillPatch,
     onWillRender,
     useExternalListener,
@@ -215,7 +216,9 @@ export class ListRenderer extends Component {
             // HACK: we need to wait for the next tick to be sure that the Field components are patched.
             // OWL don't wait the patch for the children components if the children trigger a patch by himself.
             await Promise.resolve();
-
+            if (status(this) === "destroyed") {
+                return;
+            }
             if (this.activeElement !== this.uiService.activeElement) {
                 return;
             }
