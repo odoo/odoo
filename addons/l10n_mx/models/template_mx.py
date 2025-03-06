@@ -57,18 +57,19 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_accounts_data_values(self, company, template_data):
         accounts_data = super()._get_accounts_data_values(company, template_data)
         Account = self.env['account.account']
-        if not Account.search([('code','=','403.01.01'),('company_id','=',company.id)], limit=1):
-            accounts_data.update({
-                'default_cash_difference_income_account_id' : {
-                    'name': _('Other Income'),
-                    'code': '403.01.01'
-                },
-            })
-        if not Account.search([('code','=','601.84.02'),('company_id','=',company.id)], limit=1):
-            accounts_data.update({
-                'default_cash_difference_expense_account_id': {
-                    'name': 'Cash Difference Loss',
-                    'code': '601.84.02',
-                }
-            })
+        if company.account_fiscal_country_id.code == 'MX':
+            if not Account.search([('code','=','403.01.01'),('company_id','=',company.id)], limit=1):
+                accounts_data.update({
+                    'default_cash_difference_income_account_id' : {
+                        'name': _('Other Income'),
+                        'code': '403.01.01'
+                    },
+                })
+            if not Account.search([('code','=','601.84.02'),('company_id','=',company.id)], limit=1):
+                accounts_data.update({
+                    'default_cash_difference_expense_account_id': {
+                        'name': 'Cash Difference Loss',
+                        'code': '601.84.02',
+                    }
+                })
         return accounts_data
