@@ -221,10 +221,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         if config['db_replica_host'] or config['test_enable'] or 'replica' in config['dev_mode']:  # by default, only use readonly pool if we have a db_replica_host defined.
             self._db_readonly = sql_db.db_connect(db_name, readonly=True)
 
-        # cursor for test mode; None means "normal" mode
-        self.test_cr: Cursor | None = None
-        self.test_lock: threading.RLock | None = None
-
         # field dependencies
         self.field_depends: Collector[Field, Field] = Collector()
         self.field_depends_context: Collector[Field, str] = Collector()
@@ -878,9 +874,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     def setup_signaling(self) -> None:
         """ Setup the inter-process signaling on this registry. """
-        if self.in_test_mode():
-            return
-
         with self.cursor() as cr:
             # The `orm_signaling_registry` sequence indicates when the registry
             # must be reloaded.
@@ -922,9 +915,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Check whether the registry has changed, and performs all necessary
         operations to update the registry. Return an up-to-date registry.
         """
-        if self.in_test_mode():
-            return self
-
         with nullcontext(cr) if cr is not None else closing(self.cursor(readonly=True)) as cr:
             assert cr is not None
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
@@ -1010,30 +1000,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             self.reset_changes()
             raise
 
-    def in_test_mode(self) -> bool:
-        """ Test whether the registry is in 'test' mode. """
-        return self.test_cr is not None
-
-    def enter_test_mode(self, cr: Cursor, test_readonly_enabled: bool = True) -> None:
-        """ Enter the 'test' mode, where one cursor serves several requests. """
-        assert self.test_cr is None
-        self.test_cr = cr
-        self.test_readonly_enabled = test_readonly_enabled
-        self.test_lock = threading.RLock()
-        assert Registry._saved_lock is None
-        Registry._saved_lock = Registry._lock
-        Registry._lock = DummyRLock()
-
-    def leave_test_mode(self) -> None:
-        """ Leave the test mode. """
-        assert self.test_cr is not None
-        self.test_cr = None
-        del self.test_readonly_enabled
-        del self.test_lock
-        assert Registry._saved_lock is not None
-        Registry._lock = Registry._saved_lock
-        Registry._saved_lock = None
-
     def cursor(self, /, readonly: bool = False) -> BaseCursor:
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
@@ -1042,13 +1008,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 Acquire a read/write cursor on the primary database in case no
                 replica exists or that no readonly cursor could be acquired.
         """
-        if self.test_cr is not None:
-            # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            if readonly and not self.test_readonly_enabled:
-                _logger.info('Explicitly ignoring readonly flag when generating a cursor')
-            assert self.test_lock is not None
-            return sql_db.TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
-
         if readonly and self._db_readonly is not None:
             try:
                 return self._db_readonly.cursor()
