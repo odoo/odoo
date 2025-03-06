@@ -211,12 +211,12 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         )
         self.livechat_channel.user_ids = fr_op + en_op
         self.env["discuss.channel"].search([("livechat_channel_id", "=", self.livechat_channel.id)]).unlink()
-        self.start_tour("/fr", "chatbot_fw_operator_matching_lang")
+        self.start_tour("/fr", "chatbot_fw_operator_matching_lang_fr")
         channel = self.livechat_channel.channel_ids[0]
         self.assertIn(channel.channel_member_ids.partner_id.user_ids, fr_op)
         self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, en_op)
         self.env["discuss.channel"].search([("livechat_channel_id", "=", self.livechat_channel.id)]).unlink()
-        self.start_tour("/en", "chatbot_fw_operator_matching_lang")
+        self.start_tour("/en", "chatbot_fw_operator_matching_lang_en")
         channel = self.livechat_channel.channel_ids[0]
         self.assertIn(channel.channel_member_ids.partner_id.user_ids, en_op)
         self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, fr_op)
