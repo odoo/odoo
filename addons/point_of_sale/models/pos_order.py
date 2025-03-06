@@ -1148,6 +1148,7 @@ class PosOrder(models.Model):
                 for pack_lot in line.pack_lot_ids:
                     PosOrderLineLot += pack_lot.copy()
                 line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
+            refund_order._compute_prices()
             refund_orders |= refund_order
         return refund_orders
 
