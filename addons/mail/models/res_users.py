@@ -29,6 +29,12 @@ class ResUsers(models.Model):
     presence_ids = fields.One2many("mail.presence", "user_id", groups="base.group_system")
     # sudo: res.users - can access presence of accessible user
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    forced_im_status = fields.Selection([
+        ("away", "Away"),
+        ("busy", "Busy"),
+        ("offline", "Offline")],
+        "Forced IM Status",
+    )
 
     _notification_type = models.Constraint(
         "CHECK (notification_type = 'email' OR NOT share)",
@@ -60,7 +66,7 @@ class ResUsers(models.Model):
     @api.depends("presence_ids.status")
     def _compute_im_status(self):
         for user in self:
-            user.im_status = user.presence_ids.status or "offline"
+            user.im_status = user.forced_im_status or user.presence_ids.status or "offline"
 
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
