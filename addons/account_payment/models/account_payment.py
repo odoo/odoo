@@ -131,8 +131,6 @@ class AccountPayment(models.Model):
         # able to create payments
         transactions = payments_need_tx.sudo()._create_payment_transaction()
 
-        res = super(AccountPayment, self - payments_need_tx).action_post()
-
         for tx in transactions:  # Process the transactions with a payment by token
             tx._send_payment_request()
 
@@ -141,7 +139,7 @@ class AccountPayment(models.Model):
         payments_tx_done = payments_need_tx.filtered(
             lambda p: p.payment_transaction_id.state == 'done'
         )
-        super(AccountPayment, payments_tx_done).action_post()
+        res = super(AccountPayment, self - payments_need_tx + payments_tx_done).action_post()
         payments_tx_not_done = payments_need_tx.filtered(
             lambda p: p.payment_transaction_id.state != 'done'
         )
