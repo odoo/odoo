@@ -178,3 +178,4 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'is_published': True,
         })
         self.start_tour("/shop", 'update_billing_shipping_address', login="website_user")
+
