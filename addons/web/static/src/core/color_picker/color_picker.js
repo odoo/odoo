@@ -1,4 +1,4 @@
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
@@ -58,6 +58,16 @@ export class ColorPicker extends Component {
             currentCustomColor: this.props.state.selectedColor,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
+        this.solidTabRef = useRef("solidTabRef");
+
+        onMounted(() => {
+            if (this.solidTabRef.el) {
+                this.solidTabButtons = [
+                    ...this.solidTabRef.el.querySelectorAll(".o_colorpicker_section"),
+                    ...this.solidTabRef.el.querySelectorAll(".o_color_section"),
+                ].map((n) => [...n.querySelectorAll("button")]);
+            }
+        });
     }
 
     get selectedColor() {
@@ -112,6 +122,29 @@ export class ColorPicker extends Component {
     getCurrentGradientColor() {
         if (isColorGradient(this.props.state.selectedColor)) {
             return this.props.state.selectedColor;
+        }
+    }
+
+    colorPickerNavigation(ev) {
+        if (!this.solidTabButtons.length || !ev.target.classList.contains("o_color_button")) {
+            return;
+        }
+        const row = this.solidTabButtons.findIndex((row) => row.includes(ev.target));
+        if (row === -1) {
+            return;
+        }
+        const col = this.solidTabButtons[row].indexOf(ev.target);
+        if (col === -1) {
+            return;
+        }
+        if (ev.key === "ArrowDown" && row + 1 < this.solidTabButtons.length) {
+            this.solidTabButtons[row + 1][col]?.focus();
+        } else if (ev.key === "ArrowUp" && row - 1 >= 0) {
+            this.solidTabButtons[row - 1][col]?.focus();
+        } else if (ev.key === "ArrowRight" && col + 1 < this.solidTabButtons[row].length) {
+            this.solidTabButtons[row][col + 1]?.focus();
+        } else if (ev.key === "ArrowLeft" && col - 1 >= 0) {
+            this.solidTabButtons[row][col - 1]?.focus();
         }
     }
 }

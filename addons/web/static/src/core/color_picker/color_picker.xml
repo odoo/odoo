@@ -27,7 +27,9 @@
             <div class="p-1"
                 t-on-click="onColorApply"
                 t-on-mouseover="onColorHover"
-                t-on-mouseout="onColorHoverOut">
+                t-on-mouseout="onColorHoverOut"
+                t-ref="solidTabRef"
+                t-on-keydown="colorPickerNavigation">
                 <div class="o_colorpicker_section">
                     <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn o_color_button"/>
                     <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn o_color_button"/>
