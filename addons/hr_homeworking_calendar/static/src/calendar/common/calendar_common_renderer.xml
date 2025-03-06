@@ -32,7 +32,7 @@
         </button>
     </div>
 
-    <div t-name="hr_homeworking_calendar.SingleCalendarButtonWorkLocation" class="o_worklocation_btn w-100 d-flex align-items-center">
+    <div t-if="!isResourceBasedApppointment" t-name="hr_homeworking_calendar.SingleCalendarButtonWorkLocation" class="o_worklocation_btn w-100 d-flex align-items-center">
         <div t-if="workLocationSetForCurrentUser" class="w-100 d-flex align-items-center wl_action o_homework_single">
             <t t-if="worklocation.display">
                 <button t-attf-class='o_worklocation_text border-0 rounded-pill px-lg-2 py-0 text-nowrap wl_color_{{worklocation.colorIndex}}'>
