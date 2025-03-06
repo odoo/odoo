@@ -3,6 +3,10 @@
 import { DEFAULT_EVENT_TYPES } from "../hoot_utils";
 import { generateSeed } from "../mock/math";
 
+/**
+ * @typedef {keyof typeof FILTER_SCHEMA} SearchFilter
+ */
+
 //-----------------------------------------------------------------------------
 // Global
 //-----------------------------------------------------------------------------
