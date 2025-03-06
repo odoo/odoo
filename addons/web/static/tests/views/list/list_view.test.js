@@ -17797,3 +17797,23 @@ test(`display the field's falsy_value_label for false group, if defined`, async 
 
     expect(`tbody tr:nth-child(3)`).toHaveText("I'm the false group (1)");
 });
+
+test(`hide pager in the list view with sample data`, async () => {
+    Foo._records = [];
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list sample="1">
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </list>
+        `,
+        noContentHelp: "click to add a partner",
+    });
+
+    expect(".o_content").toHaveClass("o_view_sample_data");
+    expect(".o_cp_pager").not.toBeVisible();
+});
