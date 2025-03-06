@@ -662,13 +662,13 @@ class PickerMobileInDialog extends PickerMobile {
     }
 
     get pickerProps() {
-        const {
-            PickerComponent,
-            onSelect,
-            onClose,
-            close,
-            ...emojiPickerProps
-        } = this.props;
+        const { ...emojiPickerProps } = this.props;
+
+        // Remove unwanted properties
+        delete emojiPickerProps.PickerComponent;
+        delete emojiPickerProps.onSelect;
+        delete emojiPickerProps.onClose;
+        delete emojiPickerProps.close;
 
         return {
             ...emojiPickerProps,

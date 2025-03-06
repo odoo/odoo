@@ -126,7 +126,7 @@ export class BottomSheet extends Component {
         // Step 2: Determine snap points
         this.calculateSnapPoints();
 
-        // Step 3: Apply styles
+        // Step 3: Apply Dimensions
         this.applyDimensions();
 
         // Step 4: Set initial position
