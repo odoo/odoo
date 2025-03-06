@@ -1166,7 +1166,7 @@ registry.category("web_tour.tours").add("test_sync_set_pricelist", {
             assertCurrentOrderDirty(false),
             ProductScreen.isShown(),
             ProductScreen.clickLine("Coca-Cola"),
-            ProductScreen.clickPriceList("Restaurant Pricelist"),
+            ProductScreen.clickPriceList("Second Pricelist"),
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),

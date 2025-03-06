@@ -49,6 +49,10 @@ export class PosOrder extends PosOrderAccounting {
         if (!this.user_id && this.models["res.users"]) {
             this.user_id = this.user;
         }
+
+        if (!this.config_id) {
+            this.config_id = this.config;
+        }
     }
 
     initState() {

@@ -216,7 +216,9 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         })
 
         pricelist = cls.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
+        second_pricelist = cls.env['product.pricelist'].create({'name': 'Second Pricelist'})
         cls.pos_config.write({'pricelist_id': pricelist.id})
+        cls.pos_config.write({'available_pricelist_ids': [(6, 0, [pricelist.id, second_pricelist.id])]})
 
         cls.starter_course = cls.env['pos.course'].create({
             'name': 'Test - Starter',
@@ -834,10 +836,13 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(note[0]["text"], "Demo note")
 
     def test_sync_set_pricelist(self):
+        self.pos_config.write({
+            'use_pricelist': True,
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_sync_set_pricelist')
         order = self.pos_config.current_session_id.order_ids[0]
-        self.assertEqual(order.pricelist_id.name, "Restaurant Pricelist")
+        self.assertEqual(order.pricelist_id.name, "Second Pricelist")
 
     def test_delete_line_release_table(self):
         self.pos_config.with_user(self.pos_user).open_ui()
