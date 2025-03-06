@@ -22,7 +22,7 @@ import { session } from "@web/session";
 import { ListCogMenu } from "./list_cog_menu";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SelectionBox } from "@web/views/view_components/selection_box";
-import { useExportRecords } from "@web/views/view_hook";
+import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
 import {
     Component,
@@ -183,6 +183,7 @@ export class ListController extends Component {
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()
         );
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
     }
 
     get modelParams() {
@@ -256,7 +257,7 @@ export class ListController extends Component {
     }
 
     onDeleteSelectedRecords() {
-        this.model.root.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps);
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps);
     }
 
     /**

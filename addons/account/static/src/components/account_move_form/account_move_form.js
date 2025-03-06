@@ -6,6 +6,7 @@ import { FormCompiler } from "@web/views/form/form_compiler";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { FormController } from '@web/views/form/form_controller';
 import { useService } from "@web/core/utils/hooks";
+import { deleteConfirmationMessage } from "@web/core/confirmation_dialog/confirmation_dialog";
 import {_t} from "@web/core/l10n/translation";
 
 
@@ -32,9 +33,9 @@ export class AccountMoveFormController extends FormController {
 
 
     async deleteRecord() {
-        if ( !await this.account_move_service.addDeletionDialog(this, this.model.root.resId)) {
-            return super.deleteRecord(...arguments);
-        }
+        const deleteConfirmationDialogProps = this.deleteConfirmationDialogProps;
+        deleteConfirmationDialogProps.body = await this.account_move_service.getDeletionDialogBody(deleteConfirmationMessage, this.model.root.resId);
+        this.deleteRecordsWithConfirmation(deleteConfirmationDialogProps, [this.model.root]);
     }
 }
 
