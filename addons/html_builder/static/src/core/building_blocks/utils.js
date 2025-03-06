@@ -2,6 +2,7 @@ import { isTextNode } from "@html_editor/utils/dom_info";
 import {
     onMounted,
     onWillDestroy,
+    onWillStart,
     useComponent,
     useEffect,
     useEnv,
@@ -243,6 +244,10 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
         onMounted(env.selectableContext.update);
         onWillDestroy(() => {
             env.selectableContext.removeSelectableItem(selectableItem);
+        });
+        onWillStart(async () => {
+            await Promise.resolve();
+            state.isActive = isSelectableActive();
         });
     }
 
