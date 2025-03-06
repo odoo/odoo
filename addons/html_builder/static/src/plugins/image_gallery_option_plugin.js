@@ -34,23 +34,39 @@ class ImageGalleryOption extends Plugin {
                 load: ({ editingElement }) => this.processImages(editingElement),
                 apply: ({ editingElement, param: { mainParam: mode }, loadResult }) => {
                     if (mode !== this.getMode(editingElement)) {
-                        const images = loadResult.images;
-                        this.setImages(editingElement, mode, images);
-                        const clonedSelectedImage = loadResult.clonedSelectedImage;
-                        if (clonedSelectedImage && !this.dependencies.history.getIsPreviewing()) {
-                            // We want to update the container to the equivalent cloned image.
-                            // This has to be done in the new step so we manually add a step
-                            this.dependencies.history.addStep();
-                            this.dependencies["builder-options"].updateContainers(
-                                clonedSelectedImage
-                            );
-                        }
+                        this.setImages(editingElement, mode, loadResult.images);
+                        this.restoreSelection(loadResult.imageToSelect);
                     }
                 },
                 isApplied: ({ editingElement, param: { mainParam: mode } }) =>
                     mode === this.getMode(editingElement),
             },
+            setImageGalleryColumns: {
+                load: ({ editingElement }) => this.processImages(editingElement),
+                apply: ({ editingElement, param: { mainParam: columns }, loadResult }) => {
+                    if (columns !== this.getColumns(editingElement)) {
+                        editingElement.dataset.columns = columns;
+                        this.setImages(
+                            editingElement,
+                            this.getMode(editingElement),
+                            loadResult.images
+                        );
+                        this.restoreSelection(loadResult.imageToSelect);
+                    }
+                },
+                isApplied: ({ editingElement, param: { mainParam: columns } }) =>
+                    columns === this.getColumns(editingElement),
+            },
         };
+    }
+
+    restoreSelection(imageToSelect) {
+        if (imageToSelect && !this.dependencies.history.getIsPreviewing()) {
+            // We want to update the container to the equivalent cloned image.
+            // This has to be done in the new step so we manually add a step
+            this.dependencies.history.addStep();
+            this.dependencies["builder-options"].updateContainers(imageToSelect);
+        }
     }
 
     cleanForSave({ root }) {
@@ -284,8 +300,8 @@ class ImageGalleryOption extends Plugin {
     async processImages(editingElement, newImages = []) {
         await this.transformImagesToWebp(newImages);
         this.setImageProperties(editingElement, newImages);
-        const { clonedImgs, clonedSelectedImage } = await this.cloneContainerImages(editingElement);
-        return { images: [...clonedImgs, ...newImages], clonedSelectedImage };
+        const { clonedImgs, imageToSelect } = await this.cloneContainerImages(editingElement);
+        return { images: [...clonedImgs, ...newImages], imageToSelect };
     }
 
     setImageProperties(imageGalleryElement, images) {
@@ -339,7 +355,7 @@ class ImageGalleryOption extends Plugin {
         const imagesHolder = this.getImageHolder(imageGalleryElement);
         const clonedImgs = [];
         const imgLoaded = [];
-        let clonedSelectedImage;
+        let imageToSelect;
         const currentContainers = this.dependencies["builder-options"].getContainers();
         for (const image of imagesHolder) {
             // Only on Chrome: appended images are sometimes invisible
@@ -353,12 +369,12 @@ class ImageGalleryOption extends Plugin {
                 })
             );
             if (currentContainers.at(-1)?.element === image) {
-                clonedSelectedImage = newImg;
+                imageToSelect = newImg;
             }
             clonedImgs.push(newImg);
         }
         await Promise.all(imgLoaded);
-        return { clonedImgs, clonedSelectedImage };
+        return { clonedImgs, imageToSelect };
     }
 
     /**

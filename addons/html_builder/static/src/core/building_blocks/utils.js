@@ -628,7 +628,7 @@ export function getAllActionsAndOperations(comp) {
                             if (!applySpec.load) {
                                 return;
                             }
-                            const shouldToggle = !comp.env.actionBus;
+                            const shouldToggle = !comp.env.selectableContext;
                             if (shouldToggle && isApplied()) {
                                 // The element will be cleaned, do not load
                                 return;

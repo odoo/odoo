@@ -9,17 +9,23 @@
     <BuilderRow label.translate="Mode">
         <!-- TODO: No mode when implementing layout slideshow -->
         <BuilderSelect>
-            <BuilderSelectItem action="'setImageGalleryLayout'" actionParam="'grid'">Grid</BuilderSelectItem>
-            <BuilderSelectItem action="'setImageGalleryLayout'" actionParam="'masonry'">Masonry</BuilderSelectItem>
+            <BuilderSelectItem id="'image_gallery_grid_id'" action="'setImageGalleryLayout'" actionParam="'grid'">Grid</BuilderSelectItem>
+            <BuilderSelectItem id="'image_gallery_masonry_id'" action="'setImageGalleryLayout'" actionParam="'masonry'">Masonry</BuilderSelectItem>
             <BuilderSelectItem action="'setImageGalleryLayout'" actionParam="'nomode'">Float</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <!-- TODO: No image spacing when implementing layout slideshow -->
     <BuilderRow
         label.translate="Images Spacing">
         <BuilderRange action="'setClassRange'" actionParam="['o_spc-none','o_spc-small','o_spc-medium','o_spc-big']" max="3"/>
     </BuilderRow>
 
+    <BuilderRow label.translate="Columns" t-if="isActiveItem('image_gallery_grid_id') || isActiveItem('image_gallery_masonry_id')">
+        <BuilderSelect>
+            <t t-foreach="[1,2,3,4,6,12]" t-as="column" t-key="column">
+                <BuilderSelectItem action="'setImageGalleryColumns'" actionParam="column"><t t-esc="column"/></BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
 </t>
 
 </templates>
