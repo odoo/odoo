@@ -1,10 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Argentina - Accounting',
+<<<<<<< 17.0
     'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/argentina.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ar'],
     'version': '3.5',
+||||||| 9937984a67f1a7d899c20460e6cd168d2eff4a71
+    'icon': '/base/static/img/country_flags/ar.png',
+    'version': "3.5",
+=======
+    'icon': '/base/static/img/country_flags/ar.png',
+    'version': "3.6",
+>>>>>>> ece5a2d1e919a0f71ca25836f413e709652ae03f
     'description': """
 Functional
 ----------
