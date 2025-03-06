@@ -5,8 +5,13 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { download } from "@web/core/network/download";
 import { rpc } from "@web/core/network/rpc";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
+import {
+    deleteConfirmationMessage,
+    ConfirmationDialog,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 
 import { useComponent, useEffect } from "@odoo/owl";
+import { DynamicList } from "@web/model/relational_model/dynamic_list";
 
 /**
  * Allows for a component (usually a View component) to handle links with
@@ -180,5 +185,34 @@ export function useExportRecords(env, context, getDefaultExportList) {
             getExportedFields: _getExportedFields,
             root,
         });
+    };
+}
+
+export function useDeleteRecords(model) {
+    function getDefaultDialogProps(records) {
+        const isDynamicList = model.root instanceof DynamicList;
+        let body = deleteConfirmationMessage;
+        if (
+            records?.length > 1 ||
+            (isDynamicList && (model.root.isDomainSelected || model.root.selection.length > 1))
+        ) {
+            body = _t("Are you sure you want to delete these records?");
+        }
+        let confirm = () => records.forEach((r) => r.delete());
+        if (isDynamicList) {
+            confirm = () => model.root.deleteRecords(records);
+        }
+        return {
+            body,
+            cancel: () => {},
+            cancelLabel: _t("No, keep it"),
+            confirm,
+            confirmLabel: _t("Delete"),
+            title: _t("Bye-bye, record!"),
+        };
+    }
+    return (dialogProps, records) => {
+        const defaultProps = getDefaultDialogProps(records);
+        model.dialog.add(ConfirmationDialog, { ...defaultProps, ...dialogProps });
     };
 }
