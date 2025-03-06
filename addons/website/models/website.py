@@ -2,6 +2,7 @@
 
 import base64
 import fnmatch
+import functools
 import hashlib
 import inspect
 import json
@@ -1541,9 +1542,12 @@ class Website(models.Model):
 
         for rule in router.iter_rules():
             if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
-                if rule.endpoint.func.__func__ in sitemap_endpoint_done:
+                endpoint_func = rule.endpoint.func
+                if isinstance(endpoint_func, functools.partial): # follow partial in case of redirect
+                    endpoint_func = endpoint_func.func
+                if endpoint_func.__func__ in sitemap_endpoint_done:
                     continue
-                sitemap_endpoint_done.add(rule.endpoint.func.__func__)
+                sitemap_endpoint_done.add(endpoint_func.__func__)
 
                 func = rule.endpoint.routing['sitemap']
                 if func is False:
