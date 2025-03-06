@@ -49,6 +49,23 @@ export function onWaterfallOdooChartItemClick(getters, chart) {
     });
 }
 
+export function onGeoOdooChartItemClick(getters, chart) {
+    return navigateInOdooMenuOnClick(getters, chart, (chartJsItem) => {
+        const label = chartJsItem.element.feature.properties.name;
+        const { datasets, labels } = chart.dataSource.getData();
+        const index = labels.indexOf(label);
+        if (index === -1) {
+            return {};
+        }
+        const dataset = datasets[0];
+        let name = labels[index];
+        if (dataset.label) {
+            name += ` / ${dataset.label}`;
+        }
+        return { name, domain: dataset.domains[index] };
+    });
+}
+
 function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
     return async (event, items) => {
         const env = getters.getOdooEnv();
@@ -59,6 +76,9 @@ function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
             return;
         }
         const { name, domain } = getDomainFromChartItem(items[0]);
+        if (!domain || !name) {
+            return;
+        }
         await navigateTo(
             env,
             chart.actionXmlId,
@@ -80,6 +100,23 @@ function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
 export function onOdooChartItemHover() {
     return (event, items) => {
         if (items.length > 0) {
+            event.native.target.style.cursor = "pointer";
+        } else {
+            event.native.target.style.cursor = "";
+        }
+    };
+}
+
+export function onGeoOdooChartItemHover() {
+    return (event, items) => {
+        if (!items.length) {
+            event.native.target.style.cursor = "";
+            return;
+        }
+
+        const item = items[0];
+        const data = event.chart.data.datasets?.[item.datasetIndex]?.data?.[item.index];
+        if (data?.value !== undefined) {
             event.native.target.style.cursor = "pointer";
         } else {
             event.native.target.style.cursor = "";
