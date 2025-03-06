@@ -15,6 +15,7 @@ import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { contains } from "@web/../tests/web_test_helpers";
 import { execCommand } from "./_helpers/userCommands";
+import { getDefaultTextColor } from "./_helpers/color";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -508,7 +509,6 @@ describe("color preview", () => {
     });
 
     test("should preview color in table on hover in solid tab", async () => {
-        const defaultTextColor = "color: rgb(55, 65, 81);";
         const { el } = await setupEditor(`
             <table class="table table-bordered o_table">
                 <tbody>
@@ -535,12 +535,12 @@ describe("color preview", () => {
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="" style="background-color: rgb(206, 0, 0); ${defaultTextColor}">
+                        <td class="" style="background-color: rgb(206, 0, 0); color: ${getDefaultTextColor()};">
                             <p>[<br></p>
                         </td>
                     </tr>
                     <tr>
-                        <td class="" style="background-color: rgb(206, 0, 0); ${defaultTextColor}">
+                        <td class="" style="background-color: rgb(206, 0, 0); color: ${getDefaultTextColor()};">
                             <p>]<br></p>
                         </td>
                     </tr>
@@ -570,7 +570,6 @@ describe("color preview", () => {
     });
 
     test("should preview color in table on hover in custom tab", async () => {
-        const defaultTextColor = "color: rgb(55, 65, 81);";
         const { el } = await setupEditor(`
             <table class="table table-bordered o_table">
                 <tbody>
@@ -599,12 +598,12 @@ describe("color preview", () => {
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="bg-black" style="${defaultTextColor}">
+                        <td class="bg-black" style="color: ${getDefaultTextColor()};">
                             <p>[<br></p>
                         </td>
                     </tr>
                     <tr>
-                        <td class="bg-black" style="${defaultTextColor}">
+                        <td class="bg-black" style="color: ${getDefaultTextColor()};">
                             <p>]<br></p>
                         </td>
                     </tr>

@@ -2,6 +2,7 @@ import { test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
+import { getDefaultTextColor } from "./_helpers/color";
 
 test("should apply a color to a slice of text in a span in a font", async () => {
     await testEditor({
@@ -112,7 +113,6 @@ test("should not apply color on an uneditable element", async () => {
 });
 
 test("should apply color with default text color on block when applying background color", async () => {
-    const defaultTextColor = "color: rgb(55, 65, 81);";
     await testEditor({
         contentBefore: unformat(`
                 <table><tbody>
@@ -123,20 +123,19 @@ test("should apply color with default text color on block when applying backgrou
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
         contentAfter: unformat(`
                 <table><tbody>
-                    <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}">[ab</td></tr>
-                    <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}">cd]</td></tr>
+                    <tr><td style="background-color: rgb(255, 0, 0); color: ${getDefaultTextColor()};">[ab</td></tr>
+                    <tr><td style="background-color: rgb(255, 0, 0); color: ${getDefaultTextColor()};">cd]</td></tr>
                 </tbody></table>
             `),
     });
 });
 
 test("should remove color from block when removing background color", async () => {
-    const defaultTextColor = "color: rgb(55, 65, 81);";
     await testEditor({
         contentBefore: unformat(`
             <table><tbody>
-                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}">[ab</td></tr>
-                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}">cd]</td></tr>
+                <tr><td style="background-color: rgb(255, 0, 0); color: ${getDefaultTextColor()};">[ab</td></tr>
+                <tr><td style="background-color: rgb(255, 0, 0); color: ${getDefaultTextColor()};">cd]</td></tr>
             </tbody></table>
         `),
         stepFunction: setColor("", "backgroundColor"),
@@ -150,7 +149,6 @@ test("should remove color from block when removing background color", async () =
 });
 
 test("should not apply background color on an uneditable selected cell in a table", async () => {
-    const defaultTextColor = "color: rgb(55, 65, 81);";
     await testEditor({
         contentBefore: unformat(`
                 <table><tbody>
@@ -162,9 +160,9 @@ test("should not apply background color on an uneditable selected cell in a tabl
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
         contentAfter: unformat(`
                 <table><tbody>
-                    <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}">[ab</td></tr>
+                    <tr><td style="background-color: rgb(255, 0, 0); color: ${getDefaultTextColor()};">[ab</td></tr>
                     <tr><td contenteditable="false">cd</td></tr>
-                    <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}">ef]</td></tr>
+                    <tr><td style="background-color: rgb(255, 0, 0); color: ${getDefaultTextColor()};">ef]</td></tr>
                 </tbody></table>
             `),
     });
