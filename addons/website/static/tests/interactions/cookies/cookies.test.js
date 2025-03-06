@@ -130,5 +130,5 @@ test("remove warning, show and update iframe src after accepting cookies", async
     expect("iframe").toBeVisible();
     expect("iframe").toHaveAttribute("src", "/");
     expect("iframe").not.toHaveAttribute("data-nocookie-src");
-    expect("[data-need-cookies-approval]").not.toHaveAttribute("data-need-cookies-approval");
+    expect("[data-need-cookies-approval]").not.toHaveCount();
 });
