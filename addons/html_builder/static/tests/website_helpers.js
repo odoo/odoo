@@ -65,6 +65,8 @@ export async function setupWebsiteBuilder(
         loadIframeBundles = false,
         hasToCreateWebsite = true,
         styleContent,
+        headerContent = "",
+        beforeWrapwrapContent = "",
     } = {}
 ) {
     // TODO: fix when the iframe is reloaded and become empty (e.g. discard button)
@@ -86,7 +88,13 @@ export async function setupWebsiteBuilder(
                 style.innerHTML = styleContent;
                 iframe.contentDocument.head.appendChild(style);
             }
-            iframe.contentDocument.body.innerHTML = `<div id="wrapwrap"><div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div></div>`;
+            iframe.contentDocument.documentElement.setAttribute(
+                "data-main-object",
+                "website.page(4,)"
+            );
+            iframe.contentDocument.body.innerHTML = `
+                ${beforeWrapwrapContent}
+                <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div></div>`;
             resolve(el);
         };
     });
