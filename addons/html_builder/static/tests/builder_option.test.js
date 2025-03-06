@@ -4,7 +4,9 @@ import {
     addActionOption,
     addOption,
     defineWebsiteModels,
+    insertCategorySnippet,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithDummySnippet,
 } from "./website_helpers";
 import { xml } from "@odoo/owl";
 import { queryOne } from "@odoo/hoot-dom";
@@ -89,4 +91,11 @@ test("Container fallback to a valid ancestor if target dissapear", async () => {
     await contains("[data-action-id='customAction']").click();
     expectOptionContainerToInclude(editor, queryOne(":iframe .test-ancestor"));
     expect("[data-action-id='ancestorAction']").toHaveCount(1);
+});
+
+test("Dropping a snippet opens the related containers", async () => {
+    const { getEditor } = await setupWebsiteBuilderWithDummySnippet();
+    const editor = getEditor();
+    await insertCategorySnippet();
+    expectOptionContainerToInclude(editor, queryOne(":iframe .s_test"));
 });

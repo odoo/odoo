@@ -377,6 +377,15 @@ export async function confirmAddSnippet(snippetName) {
     await animationFrame();
 }
 
+export async function insertCategorySnippet({ group, snippet } = {}) {
+    await contains(
+        `.o-snippets-menu #snippet_groups .o_snippet${
+            group ? `[data-snippet-group=${group}]` : ""
+        } .o_snippet_thumbnail`
+    ).click();
+    await confirmAddSnippet(snippet);
+}
+
 export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) {
     mockService("website", {
         get currentWebsite() {
