@@ -23,7 +23,7 @@
             amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is available.
         </t>
         <t t-else="">
-            <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;" t-out="object.name or ''"></span>
+            <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;" t-out="object.name or ''">S00052</span>
             <t t-if="object.origin">
                 (with reference: <t t-out="object.origin or ''">S00052</t> )
             </t>
