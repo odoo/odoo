@@ -77,7 +77,7 @@ export async function setupWebsiteBuilder(
     let editableContent;
     await mountWithCleanup(WebClient);
     let originalIframeLoaded;
-    let resolveIframeLoaded = () => { };
+    let resolveIframeLoaded = () => {};
     const iframeLoaded = new Promise((resolve) => {
         resolveIframeLoaded = (el) => {
             const iframe = el;
@@ -126,8 +126,8 @@ export async function setupWebsiteBuilder(
             super.setup();
             // See loadAssetsEditBundle override in WebsiteBuilder patch.
             this.websiteEditService = {
-                update: () => { },
-                stop: () => { },
+                update: () => {},
+                stop: () => {},
             };
         },
     });
@@ -372,7 +372,7 @@ export async function confirmAddSnippet(snippetName) {
     if (snippetName) {
         previewSelector += " [data-snippet='" + snippetName + "']";
     }
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
     await contains(previewSelector).click();
     await animationFrame();
 }

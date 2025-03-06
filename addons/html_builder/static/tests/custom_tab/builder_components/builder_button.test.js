@@ -152,12 +152,12 @@ test("clean another action", async () => {
     await click("[data-class-action='my-custom-class1']");
     expect(":iframe .test-options-target").toHaveAttribute(
         "class",
-        "test-options-target my-custom-class1"
+        "test-options-target my-custom-class1 o-paragraph"
     );
     await click("[data-class-action='my-custom-class2']");
     expect(":iframe .test-options-target").toHaveAttribute(
         "class",
-        "test-options-target my-custom-class2"
+        "test-options-target my-custom-class2 o-paragraph"
     );
 });
 test("clean should provide the next action value", async () => {
@@ -287,15 +287,15 @@ test("apply classAction on multi elements", async () => {
     await contains(":iframe .test-options-target").click();
     expect(editableContent).toHaveInnerHTML(`
             <div class="test-options-target">
-                <div class="target-apply">a</div>
-                <div class="target-apply">b</div>
+                <div class="target-apply o-paragraph">a</div>
+                <div class="target-apply o-paragraph">b</div>
             </div>`);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(`
             <div class="test-options-target">
-                <div class="target-apply my-custom-class">a</div>
-                <div class="target-apply my-custom-class">b</div>
+                <div class="target-apply my-custom-class o-paragraph">a</div>
+                <div class="target-apply my-custom-class o-paragraph">b</div>
             </div>`);
 });
 test("hide/display base on applyTo", async () => {
@@ -313,19 +313,19 @@ test("hide/display base on applyTo", async () => {
     });
 
     const { getEditableContent } = await setupWebsiteBuilder(
-        `<div class="parent-target"><div class="child-target">b</div></div>`
+        `<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
     );
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target">b</div></div>`
+        `<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect("[data-class-action='test']").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
+        `<div class="parent-target o-paragraph"><div class="child-target my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect("[data-class-action='test']").toHaveCount(1);

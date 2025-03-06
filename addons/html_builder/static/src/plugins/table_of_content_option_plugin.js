@@ -168,10 +168,6 @@ class TableOfContentOptionPlugin extends Plugin {
             return visibilityId === matchingLinkVisibilityId;
         });
 
-        if (!headingHasChanged && areVisibilityIdsEqual) {
-            return;
-        }
-
         const firstHeadingEl = currentHeadingItems[0]?.el;
         let tocId = firstHeadingEl ? getTocAndHeadingId(firstHeadingEl).tocId : 0;
         const tocEls = this.editable.querySelectorAll("[data-snippet='s_table_of_content']");
@@ -180,9 +176,17 @@ class TableOfContentOptionPlugin extends Plugin {
             const firstHeadingEl = tocEl.querySelector(targetedElements);
             return getTocAndHeadingId(firstHeadingEl).tocId;
         });
+
+        let duplicateTocId = false;
         if (!tocId || otherTocIds.includes(tocId)) {
             tocId = 1 + Math.max(0, ...otherTocIds);
+            duplicateTocId = true;
         }
+
+        if (!headingHasChanged && areVisibilityIdsEqual && !duplicateTocId) {
+            return;
+        }
+
         const headingIds = currentHeadingItems.map(({ el }) => getTocAndHeadingId(el).headingId);
         let maxHeadingIds = Math.max(0, ...headingIds);
 

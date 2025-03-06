@@ -1,11 +1,12 @@
 import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
+import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 
 export class ImageDescription extends Component {
     static components = { Dialog };
     static props = {
-        title: { type: String, optional: true },
+        ...toolbarButtonProps,
         getDescription: Function,
         getTooltip: Function,
         updateImageDescription: Function,

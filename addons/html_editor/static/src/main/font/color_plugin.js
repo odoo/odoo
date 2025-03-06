@@ -64,6 +64,19 @@ export class ColorPlugin extends Plugin {
         selectionchange_handlers: this.updateSelectedColor.bind(this),
         remove_format_handlers: this.removeAllColor.bind(this),
 
+        /** Overridables */
+        /**
+         * Makes the way colors are applied overridable.
+         *
+         * @param {Element} element
+         * @param {string} color hexadecimal or bg-name/text-name class
+         * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
+         */
+        apply_color_style: (element, mode, color) => {
+            element.style[mode] = color;
+            return true;
+        },
+
         /** Predicates */
         has_format_predicates: [
             (node) => hasColor(closestElement(node), "color"),
