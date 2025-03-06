@@ -2263,3 +2263,36 @@ test("many2many: domain in autocompletion", async () => {
     expect.verifySteps([`[("product_ids", "=", [41])]`]);
     expect(".dropdown-menu").toHaveCount(0);
 });
+
+test("preserve virtual operators in sub domains", async () => {
+    Team._fields.active = fields.Boolean();
+    await makeDomainSelector({
+        domain: `[("product_id", "any", [("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)])])]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("matches");
+    expect(getCurrentOperator(1)).toBe("matches");
+    expect(getCurrentOperator(2)).toBe("is");
+    expect(getCurrentOperator(3)).toBe("is not set");
+
+    await contains(".o_tree_editor:eq(1) a:contains('New Rule'):eq(1)").click();
+    expect(getCurrentOperator()).toBe("matches");
+    expect(getCurrentOperator(1)).toBe("matches");
+    expect(getCurrentOperator(2)).toBe("is");
+    expect(getCurrentOperator(3)).toBe("is not set");
+    expect(getCurrentOperator(4)).toBe("=");
+    expect.verifySteps([
+        `[("product_id", "any", ["&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1)])]`,
+    ]);
+
+    await clickOnButtonDeleteNode(4);
+    expect(getCurrentOperator()).toBe("matches");
+    expect(getCurrentOperator(1)).toBe("matches");
+    expect(getCurrentOperator(2)).toBe("is");
+    expect(getCurrentOperator(3)).toBe("is not set");
+    expect.verifySteps([
+        `[("product_id", "any", [("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)])])]`,
+    ]);
+});
