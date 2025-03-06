@@ -43,3 +43,6 @@ class MailMessage(models.Model):
             for records in self._records_by_model_name().values():
                 if issubclass(self.pool[records._name], self.pool["rating.mixin"]):
                     store.add(records, ["rating_avg", "rating_count"], as_thread=True)
+
+    def _filter_empty(self):
+        return super()._filter_empty().filtered(lambda msg: not msg.rating_id)
