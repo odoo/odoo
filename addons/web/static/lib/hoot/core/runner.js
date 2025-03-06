@@ -18,6 +18,7 @@ import {
     deepEqual,
     ensureArray,
     ensureError,
+    formatHumanReadable,
     formatTechnical,
     formatTime,
     getFuzzyScore,
@@ -155,12 +156,19 @@ const formatAssertions = (assertions) => {
         const formattedMessage = message.map((part) => (isLabel(part) ? part[0] : String(part)));
         lines.push(`\n${number}. [${label}] ${formattedMessage.join(" ")}`);
         if (failedDetails) {
-            for (let [key, value] of failedDetails) {
+            for (const detail of failedDetails) {
+                if (Markup.isMarkup(detail, "group")) {
+                    lines.push(
+                        `${number}.${detail.groupIndex}. (${formatHumanReadable(detail.content)})`
+                    );
+                    continue;
+                }
+                let [key, value] = detail;
                 if (Markup.isMarkup(key)) {
                     key = key.content;
                 }
                 if (Markup.isMarkup(value)) {
-                    if (value.technical) {
+                    if (value.type === "technical") {
                         continue;
                     }
                     value = value.content;
