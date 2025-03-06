@@ -141,7 +141,7 @@ function _protectMethod(component, fn) {
 
 export const SERVICES_METADATA = {};
 
-function decorateService(serviceName, service, component) {
+function decorateService(serviceName, service, component, { withUseState = true } = {}) {
     if (SERVICES_METADATA[serviceName]) {
         if (service instanceof Function) {
             return _protectMethod(component, service);
@@ -154,7 +154,7 @@ function decorateService(serviceName, service, component) {
             return result;
         }
     }
-    if (toRaw(service) !== service) {
+    if (toRaw(service) !== service && withUseState) {
         return useState(service);
     }
     return service;
@@ -167,29 +167,32 @@ function decorateService(serviceName, service, component) {
  * @param {K} serviceName
  * @returns {import("services").ServiceFactories[K]}
  */
-export function useService(serviceName) {
+export function useService(serviceName, { asyncCatch } = {}) {
     const component = useComponent();
     const { services } = component.env;
     if (serviceName in services) {
+        console.log("service is already available");
         return decorateService(serviceName, services[serviceName], component);
     }
-    let res = {};
+    const res = useState({});
     onWillStart(async () => {
         await new Promise((resolve, reject) => {
             setTimeout(() => {
                 if (!(serviceName in services)) {
+                    console.log("rejecting");
                     reject(
                         new Error(
                             `Service ${serviceName} is not available in "${component.constructor.name}".`
                         )
                     );
                 } else {
+                    console.log("resolving");
+                    asyncCatch?.();
                     resolve();
                 }
             }, 0);
         });
-        Object.setPrototypeOf(res, services[serviceName]);
-        res = decorateService(serviceName, res, component);
+        Object.setPrototypeOf(res, decorateService(serviceName, services[serviceName], component));
     });
     return res;
 }
