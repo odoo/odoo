@@ -28,7 +28,12 @@ import { ColorSelector } from "./color_selector";
 export class ColorPlugin extends Plugin {
     static id = "color";
     static dependencies = ["selection", "split", "history", "format"];
-    static shared = ["colorElement", "getPropsForColorSelector", , "removeAllColor", "getElementColors"];
+    static shared = [
+        "colorElement",
+        "getPropsForColorSelector",
+        "removeAllColor",
+        "getElementColors",
+    ];
     resources = {
         user_commands: [
             {
