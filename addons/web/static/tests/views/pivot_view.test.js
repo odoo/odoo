@@ -3559,12 +3559,12 @@ test("non empty pivot view with sample data", async () => {
         },
     });
 
-    expect("document").not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(0);
     expect("table").toHaveCount(1);
     await toggleSearchBarMenu();
     await toggleMenuItem("Small Than 0");
-    expect("document").not.toHaveClass("o_view_sample_data");
+    expect(".o_content").not.toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent .abc").toHaveCount(1);
     expect("table").toHaveCount(0);
 });
