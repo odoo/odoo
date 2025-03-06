@@ -45,19 +45,19 @@ class ResPartner(models.Model):
             return {}
         interval_by_calendar = defaultdict()
         calendar_periods_by_employee = defaultdict(list)
-        employees_by_calendar = defaultdict(list)
+        resources_by_calendar = defaultdict(lambda: self.env['resource.resource'])
 
         # Compute employee's calendars's period and order employee by his involved calendars
         employees = sum(employees_by_partner.values(), start=self.env['hr.employee'])
         calendar_periods_by_employee = employees._get_calendar_periods(start_period, stop_period)
         for employee, calendar_periods in calendar_periods_by_employee.items():
             for _start, _stop, calendar in calendar_periods:
-                employees_by_calendar[calendar].append(employee)
+                resources_by_calendar[calendar] += employee.resource_id
 
         # Compute all work intervals per calendar
-        for calendar, employees in employees_by_calendar.items():
+        for calendar, resources in resources_by_calendar.items():
             calendar = calendar or self.env.company.resource_calendar_id # No calendar if fully flexible
-            work_intervals = calendar._work_intervals_batch(start_period, stop_period, resources=employees, tz=timezone(calendar.tz))
+            work_intervals = calendar._work_intervals_batch(start_period, stop_period, resources=resources, tz=timezone(calendar.tz))
             del work_intervals[False]
             # Merge all employees intervals to avoid to compute it multiples times
             if merge:
@@ -75,7 +75,7 @@ class ResPartner(models.Model):
                 if merge:
                     calendar_interval = interval_by_calendar[calendar]
                 else:
-                    calendar_interval = interval_by_calendar[calendar][employee.id]
+                    calendar_interval = interval_by_calendar[calendar][employee.resource_id.id]
                 employee_interval = employee_interval | (calendar_interval & interval)
             schedule_by_employee[employee] = employee_interval
 
