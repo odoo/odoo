@@ -140,12 +140,10 @@ export class Dropdown extends Component {
             () => []
         );
 
-        this.popover = usePopover(DropdownPopover, {
+        const positioningOptions = {
             animation: false,
             arrow: false,
-            closeOnClickAway: (target) => {
-                return this.popoverCloseOnClickAway(target, activeEl);
-            },
+            closeOnClickAway: (target) => this.popoverCloseOnClickAway(target, activeEl),
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
             env: this.__owl__.childEnv,
             holdOnHover: this.props.holdOnHover,
@@ -157,10 +155,11 @@ export class Dropdown extends Component {
                 this.props.menuClass
             ),
             popoverRole: "menu",
-            position: this.position,
             ref: this.menuRef,
             setActiveElement: false,
-        });
+        };
+        Object.defineProperty(positioningOptions, "position", { get: () => this.position });
+        this.popover = usePopover(DropdownPopover, positioningOptions);
 
         // As the popover is in another context we need to force
         // its re-rendering when the dropdown re-renders
