@@ -530,11 +530,26 @@ class Website(models.Model):
             }
         )
 
+    def toggle_template_activation(self, enable=True):
+        footer_template_keys = [
+            'website.template_footer_descriptive',
+            'website.template_footer_call_to_action',
+            'website.template_footer_headline'
+        ]
+        for key in footer_template_keys:
+            footer_template = self.env['ir.ui.view'].with_context(active_test=False).search([('key', '=', key)], limit=1)
+            if footer_template:
+                footer_template.write({'active': enable})
+
     @api.model
     def configurator_apply(self, **kwargs):
         website = self.get_current_website()
         theme_name = kwargs['theme_name']
         theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
+
+        #Temporarily activate the footer template to be able to update the footer content
+        self.toggle_template_activation(enable=True)
+
         redirect_url = theme.button_choose_theme()
 
         website.configurator_done = True
@@ -807,6 +822,52 @@ class Website(models.Model):
         # coverage. But if the target lang is en_XX it's ok to have en_US text.
         text_must_be_translated_for_openai = not text_generation_target_lang.startswith('en_')
         generated_content = {}
+        footer_template_configs = [
+            {
+                "name": "website.footer_custom",
+                "xpath": "//div[contains(@class,'col-lg-5 pt24 pb24')]/p",
+                "br_insertion": {"enabled": True, "sentence_index": 2, "br_count": 2}
+            },
+            {
+                "name": "website.template_footer_descriptive",
+                "xpath": "//div[contains(@class, 'col-lg-5')]/p",
+                "br_insertion": {"enabled": False}
+            },
+            {
+                "name": "website.template_footer_call_to_action",
+                "xpath": {
+                    "heading": "//div[contains(@class, 'col-lg-9')]/h3",
+                    "paragraph": "(//div[contains(@class, 'col-lg-9')]/p)[1]"
+                },
+                "br_insertion": {"enabled": False}
+            },
+            {
+                "name": "website.template_footer_headline",
+                "xpath": "//div[contains(@class, 'col-lg-9')]/p[@class='lead']",
+                "br_insertion": {"enabled": True, "sentence_index": 1, "br_count": 1}
+            }
+        ]
+
+        for config in footer_template_configs:
+            view = self.env['website'].viewref(config["name"])
+            if view:
+                arch = etree.fromstring(view.arch_db)
+                xpaths = config["xpath"]
+                # Extract and store footer text from the template
+                if isinstance(xpaths, dict):
+                    for key, xpath in xpaths.items():
+                        elements = arch.xpath(xpath)
+                        if elements:
+                            footer_text = ''.join(elements[0].itertext()).replace("\n", "").strip()
+                            generated_content[footer_text] = ""
+                            config[key + "_text"] = footer_text
+                else:
+                    elements = arch.xpath(xpaths)
+                    if elements:
+                        footer_text = ''.join(elements[0].itertext()).replace("\n", "").strip()
+                        generated_content[footer_text] = ""
+                        config["text"] = footer_text
+
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = configurator_snippets.get(page_code, [])
             for snippet in snippet_list:
@@ -831,6 +892,33 @@ class Website(models.Model):
                     'industry': industry,
                     'database_id': database_id,
                 })
+                # Update footer templates
+                for config in footer_template_configs:
+                    view = self.env['website'].viewref(config["name"])
+                    xpaths = config["xpath"]
+                    if isinstance(xpaths, dict):
+                        for key in ["heading_text", "paragraph_text"]:
+                            if key in config and config[key] in response:
+                                updated_footer_text = response[config[key]]
+                                view.save(updated_footer_text, xpath=xpaths[key.replace("_text", "")])
+                    else:
+                        if "text" in config and config["text"] in response:
+                            updated_footer_text = response[config["text"]]
+                            # Apply <br/> insertion
+                            if config.get("br_insertion", {}).get("enabled", False):
+                                sentences = updated_footer_text.split(". ")
+                                index = config["br_insertion"].get("sentence_index", 0)
+                                br_count = config["br_insertion"].get("br_count", 1)
+
+                                if len(sentences) > index:
+                                    sentences[index] = ("<br/>" * br_count) + sentences[index]
+                                updated_footer_text = ". ".join(sentences)
+
+                            view.save(updated_footer_text, xpath=config["xpath"])
+
+                # After updating footer templates, deactivate them
+                self.toggle_template_activation(enable=False)
+
                 name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
                 for key in generated_content:
                     if response.get(key):
