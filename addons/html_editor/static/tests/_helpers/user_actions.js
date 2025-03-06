@@ -179,8 +179,8 @@ export async function simulateArrowKeyPress(editor, keys) {
     selection.modify(alter, direction, granularity);
 }
 
-export function unlinkByCommand(editor) {
-    execCommand(editor, "removeLinkFromSelection");
+export async function unlinkByCommand(editor) {
+    await execCommand(editor, "removeLinkFromSelection");
 }
 
 export async function unlinkFromToolbar() {

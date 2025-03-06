@@ -643,7 +643,7 @@ export class LinkPlugin extends Plugin {
         // to remove link from selected images
         const selectedNodes = this.dependencies.selection.getSelectedNodes();
         const selectedImageNodes = selectedNodes.filter((node) => node.tagName === "IMG");
-        if (selectedImageNodes && startLink && endLink && startLink === endLink) {
+        if (selectedImageNodes.length && startLink && endLink && startLink === endLink) {
             for (const imageNode of selectedImageNodes) {
                 let imageLink;
                 if (direction === DIRECTIONS.RIGHT) {
@@ -671,6 +671,15 @@ export class LinkPlugin extends Plugin {
         }
         if (startLink && startLink.isConnected) {
             anchorNode = this.dependencies.split.splitAroundUntil(anchorNode, startLink);
+            if (
+                anchorNode.previousSibling?.nodeName === "A" &&
+                !isVisible(anchorNode.previousSibling)
+            ) {
+                anchorNode.previousSibling.remove();
+            }
+            if (anchorNode.nextSibling?.nodeName === "A" && !isVisible(anchorNode.nextSibling)) {
+                anchorNode.nextSibling.remove();
+            }
             anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
             this.dependencies.selection.setSelection(
                 { anchorNode, anchorOffset, focusNode, focusOffset },
@@ -680,6 +689,15 @@ export class LinkPlugin extends Plugin {
         // Only split the end link if it was not already done above.
         if (endLink && endLink.isConnected) {
             focusNode = this.dependencies.split.splitAroundUntil(focusNode, endLink);
+            if (
+                focusNode.previousSibling?.nodeName === "A" &&
+                !isVisible(focusNode.previousSibling)
+            ) {
+                focusNode.previousSibling.remove();
+            }
+            if (focusNode.nextSibling?.nodeName === "A" && !isVisible(focusNode.nextSibling)) {
+                focusNode.nextSibling.remove();
+            }
             focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
             this.dependencies.selection.setSelection(
                 { anchorNode, anchorOffset, focusNode, focusOffset },
