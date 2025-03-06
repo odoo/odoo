@@ -2199,7 +2199,19 @@ export class PosStore extends WithLazyGetterTrap {
 
     get productsToDisplay() {
         const searchWord = this.searchProductWord.trim();
-        const allProducts = this.models["product.template"].getAll();
+        let allProducts = this.models["product.template"].getAll();
+        // With shared orders, a product can be loaded in the IndexedDB but we do not want to show it.
+        const { limit_categories, iface_available_categ_ids } = this.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            const productIds = new Set([]);
+            for (const categ of iface_available_categ_ids) {
+                for (const p of this.models["product.template"].getBy("pos_categ_ids", categ.id) ||
+                    []) {
+                    productIds.add(p.id);
+                }
+            }
+            allProducts = this.models["product.template"].filter((p) => productIds.has(p.id));
+        }
         let list = [];
 
         if (searchWord !== "") {
@@ -2306,6 +2318,28 @@ export class PosStore extends WithLazyGetterTrap {
 
     weighProduct() {
         return makeAwaitable(this.env.services.dialog, ScaleScreen);
+    }
+
+    clickSaveOrder() {
+        this.syncAllOrders({ orders: [this.getOrder()] });
+        this.notification.add(_t("Order saved for later"), { type: "success" });
+        this.selectEmptyOrder();
+        this.mobile_pane = "right";
+    }
+
+    selectEmptyOrder() {
+        const emptyOrders = this.models["pos.order"].filter(
+            (order) => order.isEmpty() && !order.finalized
+        );
+        if (emptyOrders.length > 0) {
+            this.setOrder(emptyOrders[0]);
+            return;
+        }
+        this.addNewOrder();
+    }
+
+    get showSaveOrderButton() {
+        return this.config.raw.trusted_config_ids.length > 0;
     }
 }
 
