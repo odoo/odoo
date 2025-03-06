@@ -16,7 +16,9 @@ export class ThemeTab extends Component {
     setup() {
         useOptionsSubEnv(() => [this.env.editor.document.body]);
         this.isActiveItem = useIsActiveItem();
-        this.state = useState({});
+        this.state = useState({
+            fontsData: {},
+        });
         this.optionsContainers = this.env.editor.resources["theme_options"];
     }
 }

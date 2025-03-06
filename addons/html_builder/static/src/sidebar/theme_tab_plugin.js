@@ -10,6 +10,7 @@ import { withSequence } from "@html_editor/utils/resource";
 export class ThemeTabPlugin extends Plugin {
     static id = "themeTab";
     static dependencies = ["builderActions", "history", "savePlugin"];
+    static shared = ["makeSCSSCusto"];
     resources = {
         builder_actions: this.getActions(),
         theme_options: [

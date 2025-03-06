@@ -15,6 +15,7 @@ export class BuilderSelect extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         id: { type: String, optional: true },
+        className: { type: String, optional: true },
         slots: Object,
     };
     static components = {

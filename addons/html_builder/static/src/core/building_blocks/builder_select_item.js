@@ -9,6 +9,7 @@ export class BuilderSelectItem extends Component {
         ...clickableBuilderComponentProps,
         id: { type: String, optional: true },
         title: { type: String, optional: true },
+        className: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
     static components = { BuilderComponent };
