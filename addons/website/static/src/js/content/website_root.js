@@ -85,6 +85,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
     _onWidgetsStartRequest: function (ev) {
         ev.data.options = Object.assign({}, ev.data.options || {});
         ev.data.options.editableMode = ev.data.editableMode;
+        ev.data.options.skipInterations = !!ev.data.skipInterations;
         this._super.apply(this, arguments);
     },
     /**

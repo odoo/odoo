@@ -57,7 +57,7 @@ test.tags("desktop")("dynamic snippet products loads items and displays them thr
     });
     const { core } = await startInteractions(`
       <div id="wrapwrap">
-          <section data-snippet="s_dynamic_snippet_products" class="s_dynamic_snippet_products s_dynamic s_dynamic_empty pt32 pb32 o_colored_level s_product_product_borderless_1"
+          <section data-snippet="s_dynamic_snippet_products" class="s_dynamic_snippet_products s_dynamic pt32 pb32 o_colored_level s_product_product_borderless_1"
                   data-name="Products"
                   data-filter-id="3"
                   data-product-category-id="current"
