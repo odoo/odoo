@@ -61,3 +61,8 @@ class DiscussChannelMember(models.Model):
                 ]
             )
         return domain
+
+    def _get_html_link_title(self):
+        if self.channel_id.channel_type == "livechat" and self.partner_id.user_livechat_username:
+            return self.partner_id.user_livechat_username
+        return super()._get_html_link_title()
