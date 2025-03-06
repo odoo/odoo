@@ -176,9 +176,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         })
         self.assertEqual(merge.team_id, self.sales_team_convert)
 
-        # TDE FIXME: not sure the browse in default get of wizard intended to exlude lost, as it browse ids
-        # and exclude inactive leads, but that's not written anywhere ... intended ??
-        self.assertEqual(merge.opportunity_ids, self.leads - self.lead_w_partner_company - self.lead_w_email_lost)
+        self.assertEqual(merge.opportunity_ids, self.leads - self.lead_w_partner_company, 'Should not keep won opps')
         ordered_merge = self.lead_w_contact + self.lead_w_email + self.lead_1 + self.lead_w_partner
         ordered_merge_description = '<br><br>'.join(l.description for l in ordered_merge)
 
@@ -224,8 +222,9 @@ class TestLeadMerge(TestLeadMergeCommon):
         # TDE FIXME: see aa44700dccdc2618e0b8bc94252789264104047c -> no user, no team -> strange
         merge.write({'team_id': self.sales_team_convert.id})
 
-        # TDE FIXME: not sure the browse in default get of wizard intended to exlude lost, as it browse ids
-        # and exclude inactive leads, but that's not written anywhere ... intended ??
+        self.assertEqual(merge.opportunity_ids, self.leads, 'Even lost are included if asked by user')
+        # remove lost lead, otherwise limit of 5 is going to raise
+        merge.write({'opportunity_ids': [(3, self.lead_w_email_lost.id)]})
         self.assertEqual(merge.opportunity_ids, self.leads - self.lead_w_email_lost)
         ordered_merge = self.lead_w_partner_company + self.lead_w_contact + self.lead_w_email + self.lead_w_partner
 
@@ -464,7 +463,9 @@ class TestLeadMerge(TestLeadMergeCommon):
         # run merge and check documents are moved to the master record
         merge = self.env['crm.merge.opportunity'].with_context({
             'active_model': 'crm.lead',
-            'active_ids': self.leads.ids,
+            # with 'active_test' context key, lost are included, which would make 6 leads
+            # while 5 is maximum for manual merge -> exclude it directly
+            'active_ids': (self.leads - self.lead_w_email_lost).ids,
             'active_id': False,
         }).create({
             'team_id': self.sales_team_convert.id,

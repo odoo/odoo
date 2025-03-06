@@ -118,7 +118,7 @@ class CrmLead2opportunityPartner(models.TransientModel):
         return result_opportunity.redirect_lead_opportunity_view()
 
     def _action_merge(self):
-        to_merge = self.duplicated_lead_ids
+        to_merge = (self.duplicated_lead_ids | self.lead_id)
         result_opportunity = to_merge.merge_opportunity(auto_unlink=False)
         result_opportunity.action_unarchive()
 
