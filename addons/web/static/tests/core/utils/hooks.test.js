@@ -1,5 +1,5 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, queryOne } from "@odoo/hoot-dom";
+import { click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
 import {
     contains,
@@ -310,10 +310,20 @@ describe("useService", () => {
                 useService("toy_service");
             }
         }
-
+        const originalHandleError = window.owl.App.prototype.handleError;
+        // Catch the error thrown by the owl and let the runner do its job
+        window.owl.App.prototype.handleError = function (...args) {
+            try {
+                patchWithCleanup(console, { warn: () => {} });
+                return originalHandleError(...args);
+            } catch (error) {
+                console.log(`This error is caught by the runner of the test: ${error.message}`);
+            }
+        };
         await expect(mountWithCleanup(MyComponent)).rejects.toThrow(
-            "Service toy_service is not available"
+            'Service toy_service is not available in "MyComponent".'
         );
+        window.owl.App.prototype.handleError = originalHandleError;
     });
 
     test("service that returns null", async () => {
@@ -673,5 +683,43 @@ describe("useChildRef and useForwardRefToParent", () => {
 
         expect(".my_span").toHaveCount(1);
         expect(parentComponent.someRef.el).toBe(queryOne(".my_span"));
+    });
+
+    test.debug("service becomes available after a delay", async () => {
+        const service = {
+            someVariable: 1,
+            someMethod() {
+                return "Service method called";
+            },
+        };
+        class MyComponent extends Component {
+            static template = xml`
+                <div class="o-MyComponent"><div t-if="myService?.someMethod()" class="o-MyComponent-serviceWorksGood"/>
+                    <t t-esc="myService.someVariable"/>
+                </div>`;
+            static props = ["*"];
+            setup() {
+                window.aku = this;
+                this.myService = useService("delayed_service");
+                def.resolve();
+            }
+        }
+
+        const def = new Deferred();
+        mountWithCleanup(MyComponent);
+        await tick();
+        registry.category("services").add("delayed_service", {
+            name: "delayed_service",
+            start() {
+                // return service;
+                const statefulService = reactive(service);
+                window.aku2 = statefulService;
+                return statefulService;
+            },
+        });
+        await def;
+        await waitFor(".o-MyComponent");
+        await new Promise(() => {});
+        expect(".o-MyComponent-serviceWorksGood").toHaveCount(1);
     });
 });

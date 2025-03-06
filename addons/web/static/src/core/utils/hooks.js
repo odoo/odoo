@@ -1,6 +1,15 @@
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, useComponent, useEffect, useRef, onWillUnmount, useState, toRaw } from "@odoo/owl";
+import {
+    status,
+    useComponent,
+    useEffect,
+    useRef,
+    onWillUnmount,
+    useState,
+    toRaw,
+    onWillStart,
+} from "@odoo/owl";
 
 /**
  * This file contains various custom hooks.
@@ -132,20 +141,7 @@ function _protectMethod(component, fn) {
 
 export const SERVICES_METADATA = {};
 
-/**
- * Import a service into a component
- *
- * @template {keyof import("services").ServiceFactories} K
- * @param {K} serviceName
- * @returns {import("services").ServiceFactories[K]}
- */
-export function useService(serviceName) {
-    const component = useComponent();
-    const { services } = component.env;
-    if (!(serviceName in services)) {
-        throw new Error(`Service ${serviceName} is not available`);
-    }
-    const service = services[serviceName];
+function decorateService(serviceName, service, component, { withUseState = true } = {}) {
     if (SERVICES_METADATA[serviceName]) {
         if (service instanceof Function) {
             return _protectMethod(component, service);
@@ -158,10 +154,47 @@ export function useService(serviceName) {
             return result;
         }
     }
-    if (toRaw(service) !== service) {
+    if (toRaw(service) !== service && withUseState) {
         return useState(service);
     }
     return service;
+}
+
+/**
+ * Import a service into a component
+ *
+ * @template {keyof import("services").ServiceFactories} K
+ * @param {K} serviceName
+ * @returns {import("services").ServiceFactories[K]}
+ */
+export function useService(serviceName, { asyncCatch } = {}) {
+    const component = useComponent();
+    const { services } = component.env;
+    if (serviceName in services) {
+        console.log("service is already available");
+        return decorateService(serviceName, services[serviceName], component);
+    }
+    const res = useState({});
+    onWillStart(async () => {
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!(serviceName in services)) {
+                    console.log("rejecting");
+                    reject(
+                        new Error(
+                            `Service ${serviceName} is not available in "${component.constructor.name}".`
+                        )
+                    );
+                } else {
+                    console.log("resolving");
+                    asyncCatch?.();
+                    resolve();
+                }
+            }, 0);
+        });
+        Object.setPrototypeOf(res, decorateService(serviceName, services[serviceName], component));
+    });
+    return res;
 }
 
 // -----------------------------------------------------------------------------
