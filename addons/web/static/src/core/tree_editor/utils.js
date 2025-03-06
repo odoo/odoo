@@ -1,21 +1,23 @@
-import { unique, zip } from "@web/core/utils/arrays";
-import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
-import {
-    Expression,
-    condition,
-    createVirtualOperators,
-    normalizeValue,
-    isTree,
-} from "@web/core/tree_editor/condition_tree";
-import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
 import {
     deserializeDate,
     deserializeDateTime,
     formatDate,
     formatDateTime,
 } from "@web/core/l10n/dates";
+import { parseTime } from "@web/core/l10n/time";
+import { _t } from "@web/core/l10n/translation";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
+import {
+    Expression,
+    condition,
+    createVirtualOperators,
+    isTree,
+    normalizeValue,
+} from "@web/core/tree_editor/condition_tree";
+import { get_DATETIME_OPTIONS_WITH_SELECT } from "@web/core/tree_editor/tree_editor_datetime_options";
+import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
+import { unique, zip } from "@web/core/utils/arrays";
+import { useService } from "@web/core/utils/hooks";
 import { Within } from "./tree_editor_components";
 
 /**
@@ -40,6 +42,19 @@ function formatValue(val, disambiguate, fieldDef, displayNames) {
         const [, label] = (fieldDef.selection || []).find(([v]) => v === val) || [];
         if (label !== undefined) {
             val = label;
+        }
+    }
+    if (fieldDef?.type === "datetime_option") {
+        if (fieldDef.name in get_DATETIME_OPTIONS_WITH_SELECT()) {
+            const { options } = get_DATETIME_OPTIONS_WITH_SELECT()[fieldDef.name];
+            const [, label] = (options || []).find(([v]) => v === val) || [];
+            if (label !== undefined) {
+                val = label;
+            }
+        } else if (fieldDef.name === "__time" && typeof val === "string") {
+            return parseTime(val, true).toString(true);
+        } else if (fieldDef.name === "__date" && typeof val === "string") {
+            return formatDate(deserializeDate(val));
         }
     }
     if (typeof val === "string") {
@@ -178,14 +193,13 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
 
     const coModeldisplayNames = displayNames[getResModel(fieldDef)];
     const dis = disambiguate(value, coModeldisplayNames);
-    const values =
-        ["within", "is_not_within"].includes(operator)
-            ? [value[0], Within.options.find((option) => option[0] === value[1])[1]]
-            : (Array.isArray(value) ? value : [value])
-                  .slice(0, 21)
-                  .map((val, index) =>
-                      index < 20 ? formatValue(val, dis, fieldDef, coModeldisplayNames) : "..."
-                  );
+    const values = ["within", "is_not_within"].includes(operator)
+        ? [value[0], Within.options.find((option) => option[0] === value[1])[1]]
+        : (Array.isArray(value) ? value : [value])
+              .slice(0, 21)
+              .map((val, index) =>
+                  index < 20 ? formatValue(val, dis, fieldDef, coModeldisplayNames) : "..."
+              );
     let join;
     let addParenthesis = Array.isArray(value);
     switch (operator) {
