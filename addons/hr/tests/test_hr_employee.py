@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from psycopg2.errors import UniqueViolation
 
-from odoo.tests import Form, users
+from odoo.tests import Form, users, HttpCase, tagged
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
@@ -458,3 +458,20 @@ class TestHrEmployee(TestHrCommon):
         employee.resource_calendar_id = False
         self.assertTrue(employee.is_flexible)
         self.assertTrue(employee.is_fully_flexible)
+
+
+@tagged('-at_install', 'post_install')
+class TestHrEmployeeWebJson(HttpCase):
+
+    def test_webjson_employees(self):
+        #check that json employees can be accessed
+        url = "/json/1/employees"
+        self.authenticate('admin', 'admin')
+        CSRF_USER_HEADERS = {
+            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Site": 'none',
+            "Sec-Fetch-User": "?1",
+        }
+        res = self.url_open(url, headers=CSRF_USER_HEADERS)
+        self.assertEqual(res.status_code, 200)
