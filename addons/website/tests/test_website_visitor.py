@@ -185,7 +185,10 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
 
 class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
 
-    readonly_enabled = False
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.set_registry_readonly_mode(False)
 
     def test_visitor_creation_on_tracked_page(self):
         """ Test various flows involving visitor creation and update. """

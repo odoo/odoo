@@ -194,6 +194,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
         # standard untracked website.page
         for readonly_enabled in (True, False):
             self.env.registry.test_readonly_enabled = readonly_enabled
+            self.set_registry_readonly_mode(readonly_enabled)
             with self.subTest(readonly_enabled=readonly_enabled), closing(self.env.cr.savepoint()):
                 select_tables_perf = {
                     'orm_signaling_registry': 1,
@@ -217,7 +218,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
     def test_15_perf_sql_queries_page(self):
         # standard tracked website.page
         for readonly_enabled in (True, False):
-            self.env.registry.test_readonly_enabled = readonly_enabled
+            self.set_registry_readonly_mode(readonly_enabled)
             with self.subTest(readonly_enabled=readonly_enabled), closing(self.env.cr.savepoint()):
                 select_tables_perf = {
                     'orm_signaling_registry': 1,
@@ -250,8 +251,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
         for readonly_enabled in (True, False):
-            self.env.registry.test_readonly_enabled = readonly_enabled
-            with self.subTest(readonly=readonly_enabled), closing(self.env.cr.savepoint()):
+            self.set_registry_readonly_mode(readonly_enabled)
+            with self.subTest(readonly_enabled=readonly_enabled), closing(self.env.cr.savepoint()):
                 select_tables_perf = {
                     'orm_signaling_registry': 1,
                     'website_menu': 1,

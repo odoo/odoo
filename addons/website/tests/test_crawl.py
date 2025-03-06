@@ -147,11 +147,11 @@ class Crawler(HttpCaseWithUserDemo):
 
     def test_10_crawl_public(self):
         t0 = time.time()
-        t0_sql = self.registry.test_cr.sql_log_count
+        t0_sql = self.cr.sql_log_count
         seen = self.crawl('/', msg='Anonymous Coward')
         count = len(seen)
         duration = time.time() - t0
-        sql = self.registry.test_cr.sql_log_count - t0_sql
+        sql = self.cr.sql_log_count - t0_sql
         _logger.runbot("public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
 
     def test_20_crawl_demo(self):
@@ -169,10 +169,10 @@ class Crawler(HttpCaseWithUserDemo):
                 groups += group
         self.env.ref('base.group_user').write({'implied_ids': [(4, group.id) for group in groups]})
         t0 = time.time()
-        t0_sql = self.registry.test_cr.sql_log_count
+        t0_sql = self.cr.sql_log_count
         self.authenticate('demo', 'demo')
         seen = self.crawl('/', msg='demo')
         count = len(seen)
         duration = time.time() - t0
-        sql = self.registry.test_cr.sql_log_count - t0_sql
+        sql = self.cr.sql_log_count - t0_sql
         _logger.runbot("demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)

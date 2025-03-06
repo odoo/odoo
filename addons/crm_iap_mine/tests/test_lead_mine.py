@@ -12,7 +12,7 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
     @classmethod
     def setUpClass(cls):
         super(TestLeadMine, cls).setUpClass()
-        cls.registry.enter_test_mode(cls.cr)
+        cls.registry_enter_test_mode_cls()
 
         cls.test_crm_tags = cls.env['crm.tag'].create([
             {'name': 'TestTag1'},
@@ -30,11 +30,6 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
             'team_id':  cls.sales_team_1.id,
             'user_id': cls.user_sales_leads.id,
         })
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.registry.leave_test_mode()
-        super().tearDownClass()
 
     @users('user_sales_manager')
     def test_mine_error_credit(self):
