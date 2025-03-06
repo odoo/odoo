@@ -4,6 +4,7 @@ import {
     click,
     hover,
     manuallyDispatchProgrammaticEvent,
+    middleClick,
     press,
     queryAll,
     queryAllAttributes,
@@ -9323,6 +9324,39 @@ test(`Can switch to form view on inline tree`, async () => {
 
     await contains(`td.o_list_record_open_form_view`).click();
     expect.verifySteps(["doAction"]);
+});
+
+test(`x2many field, open form view in new window`, async () => {
+    mockService("action", {
+        doAction(params, options) {
+            if (options?.newWindow) {
+                expect.step("opened in a new window");
+                return;
+            }
+            super.doAction(params);
+        },
+        loadState() {},
+    });
+    Partner._records[0].child_ids = [2];
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="child_ids">
+                    <list editable="top" open_form_view="1">
+                        <field name="foo"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`td.o_list_record_open_form_view`).toHaveCount(1);
+
+    await middleClick("td.o_list_record_open_form_view");
+    await animationFrame();
+    expect.verifySteps(["opened in a new window"]);
 });
 
 test(`can toggle column in x2many in sub form view`, async () => {

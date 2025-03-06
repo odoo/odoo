@@ -228,7 +228,7 @@ export class X2ManyField extends Component {
         return evaluateBooleanExpr(invisible, this.list.evalContext);
     }
 
-    async switchToForm(record) {
+    async switchToForm(record, options) {
         await this.props.record.save();
         this.action.doAction(
             {
@@ -239,6 +239,7 @@ export class X2ManyField extends Component {
             },
             {
                 props: { resIds: this.list.resIds },
+                newWindow: options.newWindow,
             }
         );
     }
