@@ -561,13 +561,7 @@ class HolidaysType(models.Model):
                         resources=employee.resource_id
                     )
                     # for flexible resource, the calendar_attendace will return the whole interval as a single attendance
-                    if employee._is_flexible():
-                        closest_allocation_dict =\
-                            calendar._get_attendance_intervals_days_data(calendar_attendance[employee.resource_id.id])
-                    else:
-                        closest_allocation_dict =\
-                            self.env['resource.calendar']._get_attendance_intervals_days_data(
-                                calendar_attendance[employee.resource_id.id])
+                    closest_allocation_dict = calendar._get_attendance_intervals_days_data(calendar_attendance[employee.resource_id.id])
                     if leave_type.request_unit in ['hour']:
                         closest_allocation_duration = closest_allocation_dict['hours']
                     else:

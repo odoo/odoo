@@ -4,7 +4,7 @@
 import itertools
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from functools import partial
 from itertools import chain
 
@@ -381,8 +381,8 @@ class ResourceCalendar(models.Model):
 
     def _handle_flexible_leave_interval(self, dt0, dt1, leave):
         """Hook method to handle flexible leave intervals. Can be overridden in other modules."""
-        dt0 = dt0.replace(hour=0, minute=0, second=0)
-        dt1 = dt1.replace(hour=23, minute=59, second=59)
+        dt0 = datetime.combine(dt0, time.min)
+        dt1 = datetime.combine(dt1, time.max)
         return dt0, dt1
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
@@ -517,9 +517,9 @@ class ResourceCalendar(models.Model):
             # take durations in days proportionally to what is left of the interval.
             interval_hours = (stop - start).total_seconds() / 3600
             day_hours[start.date()] += interval_hours
-            if self.flexible_hours:
+            if self.flexible_hours and self.hours_per_day:
                 day_days[start.date()] += interval_hours / self.hours_per_day
-            elif meta and meta.mapped('duration_hours'):
+            else:
                 day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
 
         return {
