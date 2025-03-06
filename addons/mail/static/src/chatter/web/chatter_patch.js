@@ -324,7 +324,7 @@ patch(Chatter.prototype, {
             partner_ids: [this.store.self.id],
         });
         this.store.insert(data);
-        this.onFollowerChanged(thread);
+        this.onFollowerChanged();
     },
 
     onActivityChanged(thread) {
@@ -377,7 +377,7 @@ patch(Chatter.prototype, {
         const thread = this.state.thread;
         if (thread.selfFollower) {
             await thread.selfFollower.remove();
-            this.onFollowerChanged(thread);
+            this.onFollowerChanged();
         }
     },
 
@@ -387,7 +387,7 @@ patch(Chatter.prototype, {
         this.props.record?.load();
     },
 
-    onFollowerChanged(thread) {
+    onFollowerChanged() {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
     },
