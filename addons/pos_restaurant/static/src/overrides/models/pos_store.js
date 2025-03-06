@@ -361,4 +361,7 @@ patch(PosStore.prototype, {
     _shouldLoadOrders() {
         return super._shouldLoadOrders() || this.config.module_pos_restaurant;
     },
+    get showSaveOrderButton() {
+        return super.showSaveOrderButton && !this.config.module_pos_restaurant;
+    },
 });
