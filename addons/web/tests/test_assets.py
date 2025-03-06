@@ -184,7 +184,7 @@ class TestWebAssetsCursors(HttpCase):
         )
 
     def test_web_binary_keep_cursor_rw(self):
-        self.env.registry.test_readonly_enabled = False
+        self.set_registry_readonly_mode(False)
         self.assertEqual(
             self._get_generate_cursors_readwriteness(),
             [

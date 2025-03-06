@@ -3,5 +3,4 @@
 
 from . import chatbot
 from . import main
-from . import test
 from . import webclient
