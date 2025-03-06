@@ -1460,7 +1460,7 @@ class SaleOrder(models.Model):
             invoice_vals = order._prepare_invoice()
             invoiceable_lines = order._get_invoiceable_lines(final)
 
-            if not any(not line.display_type for line in invoiceable_lines):
+            if all(line.display_type for line in invoiceable_lines):
                 continue
 
             invoice_line_vals = []
@@ -1478,7 +1478,7 @@ class SaleOrder(models.Model):
                     invoice_item_sequence += 1
                 invoice_line_vals.append(
                     Command.create(
-                        line._prepare_invoice_line(sequence=invoice_item_sequence)
+                        line._prepare_down_payment_line(sequence=invoice_item_sequence)
                     ),
                 )
                 invoice_item_sequence += 1
@@ -1559,59 +1559,6 @@ class SaleOrder(models.Model):
                 self.invoice_ids._set_reversed_entry(moves_to_switch)
 
         for move in moves:
-            if final:
-                # Downpayment might have been determined by a fixed amount set by the user.
-                # This amount is tax included. This can lead to rounding issues.
-                # E.g. a user wants a 100€ DP on a product with 21% tax.
-                # 100 / 1.21 = 82.64, 82.64 * 1,21 = 99.99
-                # This is already corrected by adding/removing the missing cents on the DP invoice,
-                # but must also be accounted for on the final invoice.
-
-                delta_amount = 0
-                for order_line in self.order_line:
-                    if not order_line.is_downpayment:
-                        continue
-                    inv_amt = order_amt = 0
-                    for invoice_line in order_line.invoice_lines:
-                        sign = 1 if invoice_line.move_id.is_inbound() else -1
-                        if invoice_line.move_id == move:
-                            inv_amt += invoice_line.price_total * sign
-                        elif invoice_line.move_id.state != 'cancel':  # filter out canceled dp lines
-                            order_amt += invoice_line.price_total * sign
-                    if inv_amt and order_amt:
-                        # if not inv_amt, this order line is not related to current move
-                        # if no order_amt, dp order line was not invoiced
-                        delta_amount += inv_amt + order_amt
-
-                if not move.currency_id.is_zero(delta_amount):
-                    receivable_line = move.line_ids.filtered(
-                        lambda aml: aml.account_id.account_type == 'asset_receivable')[:1]
-                    product_lines = move.line_ids.filtered(
-                        lambda aml: aml.display_type == 'product' and aml.is_downpayment)
-                    tax_lines = move.line_ids.filtered(
-                        lambda aml: aml.tax_line_id.amount_type not in (False, 'fixed'))
-                    if tax_lines and product_lines and receivable_line:
-                        line_commands = [Command.update(receivable_line.id, {
-                            'amount_currency': receivable_line.amount_currency + delta_amount,
-                        })]
-                        delta_sign = 1 if delta_amount > 0 else -1
-                        for lines, attr, sign in (
-                            (product_lines, 'price_total', -1 if move.is_inbound() else 1),
-                            (tax_lines, 'amount_currency', 1),
-                        ):
-                            remaining = delta_amount
-                            lines_len = len(lines)
-                            for line in lines:
-                                if move.currency_id.compare_amounts(remaining, 0) != delta_sign:
-                                    break
-                                amt = delta_sign * max(
-                                    move.currency_id.rounding,
-                                    abs(move.currency_id.round(remaining / lines_len)),
-                                )
-                                remaining -= amt
-                                line_commands.append(Command.update(line.id, {attr: line[attr] + amt * sign}))
-                        move.line_ids = line_commands
-
             move.message_post_with_source(
                 'mail.message_origin_link',
                 render_values={'self': move, 'origin': move.line_ids.sale_line_ids.order_id},
@@ -2021,6 +1968,60 @@ class SaleOrder(models.Model):
         }
         del context
         return down_payments_section_line
+
+    def _prepare_down_payment_lines_values_from_base_lines(self, down_payment_base_lines):
+        """ Convert the base lines passed as parameter representing a down payment into a list
+        of dictionaries to be converted into sale order lines in the current sale order.
+
+        :param down_payment_base_lines: A list of base lines (see '_prepare_base_line_for_taxes_computation').
+        :return: A list of dictionaries to create new sale order lines.
+        """
+        self.ensure_one()
+        sequence = max(self.order_line.mapped('sequence') or 10) + 1
+        so_line_values_list = []
+        matched_base_lines = []
+
+        # Down payment section
+        if not any(line.display_type and line.is_downpayment for line in self.order_line):
+            so_line_values_list.append({
+                'order_id': self.id,
+                'display_type': 'line_section',
+                'is_downpayment': True,
+                'sequence': sequence,
+            })
+            matched_base_lines.append(None)
+            sequence += 1
+
+        # Base lines.
+        for base_line in down_payment_base_lines:
+            so_line_values_list.append({
+                'order_id': self.id,
+                'is_downpayment': True,
+                'product_uom_qty': 0.0,
+                'price_unit': base_line['price_unit'],
+                'tax_ids': [Command.set(base_line['tax_ids'].ids)],
+                'analytic_distribution': base_line['analytic_distribution'],
+                'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(base_line),
+                'sequence': sequence,
+            })
+            matched_base_lines.append(base_line)
+            sequence += 1
+        return so_line_values_list, matched_base_lines
+
+    def _add_down_payment_lines_from_base_lines(self, down_payment_base_lines):
+        """ Add the base lines passed as parameter as sale order lines into the current sale order.
+
+        :param down_payment_base_lines: A list of base lines (see '_prepare_base_line_for_taxes_computation').
+        """
+        self.ensure_one()
+        down_payment_so_lines_values_list, matched_base_lines = \
+            self._prepare_down_payment_lines_values_from_base_lines(down_payment_base_lines)
+        down_payment_so_lines = self.env['sale.order.line'] \
+            .with_context(sale_no_log_for_new_lines=True) \
+            .create(down_payment_so_lines_values_list)
+        for so_line, base_line in zip(down_payment_so_lines, matched_base_lines):
+            if base_line:
+                base_line['sale_line_ids'] = so_line
 
     def _get_prepayment_required_amount(self):
         """ Return the minimum amount needed to confirm automatically the quotation.

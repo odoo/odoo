@@ -209,12 +209,14 @@ class TestTaxCommonSale(TestTaxCommon):
         super().setUpClass()
         cls.foreign_currency_pricelist = cls.env['product.pricelist'].create({
             'name': "TestTaxCommonSale",
+            'currency_id': cls.foreign_currency.id,
             'company_id': cls.env.company.id,
         })
 
     def convert_document_to_sale_order(self, document):
         order_date = '2020-01-01'
-        currency = self.setup_other_currency(document['currency'].name.upper(), rates=[(order_date, document['rate'])])
+        currency = document['currency']
+        self._ensure_rate(currency, order_date, document['rate'])
         self.foreign_currency_pricelist.currency_id = currency
         order = self.env['sale.order'].create({
             'date_order': order_date,
@@ -224,7 +226,7 @@ class TestTaxCommonSale(TestTaxCommon):
             'order_line': [
                 Command.create({
                     'name': str(i),
-                    'product_id': self.product_a.id,
+                    'product_id': (base_line['product_id'] or self.product_a).id,
                     'price_unit': base_line['price_unit'],
                     'discount': base_line['discount'],
                     'product_uom_qty': base_line['quantity'],
@@ -238,8 +240,11 @@ class TestTaxCommonSale(TestTaxCommon):
     def assert_sale_order_tax_totals_summary(self, sale_order, expected_values, soft_checking=False):
         self._assert_tax_totals_summary(sale_order.tax_totals, expected_values, soft_checking=soft_checking)
         cash_rounding_base_amount_currency = sale_order.tax_totals.get('cash_rounding_base_amount_currency', 0.0)
-        self.assertRecordValues(sale_order, [{
-            'amount_untaxed': expected_values['base_amount_currency'] + cash_rounding_base_amount_currency,
-            'amount_tax': expected_values['tax_amount_currency'],
-            'amount_total': expected_values['total_amount_currency'] + cash_rounding_base_amount_currency,
-        }])
+        expected_amounts = {}
+        if 'base_amount_currency' in expected_values:
+            expected_amounts['amount_untaxed'] = expected_values['base_amount_currency'] + cash_rounding_base_amount_currency
+        if 'tax_amount_currency' in expected_values:
+            expected_amounts['amount_tax'] = expected_values['tax_amount_currency']
+        if 'total_amount_currency' in expected_values:
+            expected_amounts['amount_total'] = expected_values['total_amount_currency']
+        self.assertRecordValues(sale_order, [expected_amounts])
