@@ -2721,6 +2721,17 @@ export class PosStore extends WithLazyGetterTrap {
         });
         await validation.validateOrder(false);
     }
+
+    clickSaveOrder() {
+        this.syncAllOrders({ orders: [this.getOrder()] });
+        this.notification.add(_t("Order saved for later"), { type: "success" });
+        this.setOrder(this.getEmptyOrder());
+        this.mobile_pane = "right";
+    }
+
+    get showSaveOrderButton() {
+        return this.config.raw.trusted_config_ids.length > 0;
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
