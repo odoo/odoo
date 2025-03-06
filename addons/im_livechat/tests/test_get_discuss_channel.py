@@ -65,18 +65,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["res.partner"],
             self._filter_partners_fields(
                 {
-                    "active": True,
-                    "avatar_128_access_token": limited_field_access_token(
-                        operator.partner_id, "avatar_128"
-                    ),
-                    "country": False,
-                    "id": operator.partner_id.id,
-                    "im_status": "offline",
-                    "is_public": False,
-                    "user_livechat_username": "Michel Operator",
-                    "write_date": fields.Datetime.to_string(operator.write_date),
-                },
-                {
                     "active": False,
                     "avatar_128_access_token": limited_field_access_token(
                         self.partner_root, "avatar_128"
@@ -89,6 +77,18 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "out_of_office_date_end": False,
                     "userId": self.user_root.id,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
+                },
+                {
+                    "active": True,
+                    "avatar_128_access_token": limited_field_access_token(
+                        operator.partner_id, "avatar_128"
+                    ),
+                    "country": False,
+                    "id": operator.partner_id.id,
+                    "im_status": "offline",
+                    "is_public": False,
+                    "user_livechat_username": "Michel Operator",
+                    "write_date": fields.Datetime.to_string(operator.write_date),
                 },
             ),
         )
@@ -118,16 +118,19 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["res.partner"],
             self._filter_partners_fields(
                 {
-                    "active": True,
+                    "active": False,
                     "avatar_128_access_token": limited_field_access_token(
-                        operator.partner_id, "avatar_128"
+                        self.partner_root, "avatar_128"
                     ),
-                    "country": False,
-                    "id": operator.partner_id.id,
-                    "im_status": "offline",
-                    "is_public": False,
-                    "user_livechat_username": "Michel Operator",
-                    "write_date": fields.Datetime.to_string(operator.write_date),
+                    "email": "odoobot@example.com",
+                    "id": self.user_root.partner_id.id,
+                    "im_status": "bot",
+                    "isInternalUser": True,
+                    "is_company": False,
+                    "name": "OdooBot",
+                    "out_of_office_date_end": False,
+                    "userId": self.user_root.id,
+                    "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
                     "active": True,
@@ -148,19 +151,16 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "write_date": fields.Datetime.to_string(test_user.write_date),
                 },
                 {
-                    "active": False,
+                    "active": True,
                     "avatar_128_access_token": limited_field_access_token(
-                        self.partner_root, "avatar_128"
+                        operator.partner_id, "avatar_128"
                     ),
-                    "email": "odoobot@example.com",
-                    "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "isInternalUser": True,
-                    "is_company": False,
-                    "name": "OdooBot",
-                    "out_of_office_date_end": False,
-                    "userId": self.user_root.id,
-                    "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
+                    "country": False,
+                    "id": operator.partner_id.id,
+                    "im_status": "offline",
+                    "is_public": False,
+                    "user_livechat_username": "Michel Operator",
+                    "write_date": fields.Datetime.to_string(operator.write_date),
                 },
             ),
         )
@@ -218,6 +218,21 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["res.partner"],
             self._filter_partners_fields(
                 {
+                    "active": False,
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.partner_root, "avatar_128"
+                    ),
+                    "email": "odoobot@example.com",
+                    "id": self.user_root.partner_id.id,
+                    "im_status": "bot",
+                    "isInternalUser": True,
+                    "is_company": False,
+                    "name": "OdooBot",
+                    "out_of_office_date_end": False,
+                    "userId": self.user_root.id,
+                    "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
+                },
+                {
                     "active": True,
                     "avatar_128_access_token": limited_field_access_token(
                         operator.partner_id, "avatar_128"
@@ -234,21 +249,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "userId": operator.id,
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.partner_id.write_date),
-                },
-                {
-                    "active": False,
-                    "avatar_128_access_token": limited_field_access_token(
-                        self.partner_root, "avatar_128"
-                    ),
-                    "email": "odoobot@example.com",
-                    "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "isInternalUser": True,
-                    "is_company": False,
-                    "name": "OdooBot",
-                    "out_of_office_date_end": False,
-                    "userId": self.user_root.id,
-                    "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
             ),
         )
