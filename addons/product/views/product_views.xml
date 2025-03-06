@@ -676,7 +676,15 @@ action = {
                                         groups="product.group_product_variant"
                                         options="{'color_field': 'color'}"/>
                             </div>
-                            <field name="image_128" widget="image" alt="Product" invisible="not image_128" class="ms-auto" options="{'size': [55, 55]}"/>
+                            <field
+                                name="image_128"
+                                widget="image"
+                                alt="Product"
+                                invisible="not image_128"
+                                class="ms-auto"
+                                options="{'size': [55, 55]}"
+                                style="max-height: 55px;"
+                            />
                         </div>
                     </t>
                 </templates>
