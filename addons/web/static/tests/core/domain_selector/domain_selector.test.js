@@ -2460,3 +2460,36 @@ test("Hierarchical operators", async () => {
         { message: "no hierarchical operator if allow_hierachy_operators is set to false" }
     );
 });
+
+test("preserve virtual operators in sub domains", async () => {
+    Team._fields.active = fields.Boolean();
+    await makeDomainSelector({
+        domain: `[("product_id", "any", [("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)])])]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("matches");
+    expect(getCurrentOperator(1)).toBe("matches");
+    expect(getCurrentOperator(2)).toBe("is");
+    expect(getCurrentOperator(3)).toBe("is not set");
+
+    await contains(".o_tree_editor:eq(1) a:contains('New Rule'):eq(1)").click();
+    expect(getCurrentOperator()).toBe("matches");
+    expect(getCurrentOperator(1)).toBe("matches");
+    expect(getCurrentOperator(2)).toBe("is");
+    expect(getCurrentOperator(3)).toBe("is not set");
+    expect(getCurrentOperator(4)).toBe("is equal");
+    expect.verifySteps([
+        `[("product_id", "any", ["&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1)])]`,
+    ]);
+
+    await clickOnButtonDeleteNode(4);
+    expect(getCurrentOperator()).toBe("matches");
+    expect(getCurrentOperator(1)).toBe("matches");
+    expect(getCurrentOperator(2)).toBe("is");
+    expect(getCurrentOperator(3)).toBe("is not set");
+    expect.verifySteps([
+        `[("product_id", "any", [("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)])])]`,
+    ]);
+});
