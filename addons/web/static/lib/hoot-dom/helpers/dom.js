@@ -66,6 +66,7 @@ import { waitUntil } from "./time";
  * }} QueryRectOptions
  *
  * @typedef {{
+ *  inline?: boolean;
  *  raw?: boolean;
  * }} QueryTextOptions
  *
@@ -651,6 +652,7 @@ const selectorError = (pseudoClass, message) =>
 const R_CHAR = /[\w-]/;
 const R_QUOTE_CONTENT = /^\s*(['"])?([^]*?)\1\s*$/;
 const R_ROOT_ELEMENT = /^(HTML|HEAD|BODY)$/;
+const R_LINEBREAK = /\s*\n+\s*/g;
 /**
  * \s without \n and \v
  */
@@ -918,10 +920,13 @@ export function getNodeText(node, options) {
     } else {
         content = node.textContent;
     }
-    if (options?.raw) {
-        return content;
+    if (!options?.raw) {
+        content = content.replace(R_HORIZONTAL_WHITESPACE, " ").trim();
     }
-    return content.replace(R_HORIZONTAL_WHITESPACE, " ").trim();
+    if (options?.inline) {
+        content = content.replace(R_LINEBREAK, " ");
+    }
+    return content;
 }
 
 /**
@@ -1212,7 +1217,7 @@ export function getActiveElement(node) {
         if (contentDocument.activeElement === contentDocument.body) {
             // Active element is the body of the iframe:
             // -> returns that element
-            return contentDocument.activeElement
+            return contentDocument.activeElement;
         } else {
             // Active element is something else than the body:
             // -> get the active element inside the iframe document
