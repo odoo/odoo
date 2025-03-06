@@ -41,7 +41,7 @@ class AbstractAttachmentView extends Component {
             attachment.eq(this.state.thread.mainAttachment)
         );
         this.state.thread.setMainAttachmentFromIndex(
-            index === this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
+            index >= this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
         );
     }
 
@@ -50,7 +50,7 @@ class AbstractAttachmentView extends Component {
             attachment.eq(this.state.thread.mainAttachment)
         );
         this.state.thread.setMainAttachmentFromIndex(
-            index === 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
+            index <= 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
         );
     }
 
