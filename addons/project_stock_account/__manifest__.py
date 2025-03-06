@@ -12,4 +12,7 @@
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'demo': [
+        'data/project_stock_account_demo.xml',
+    ],
 }
