@@ -48,12 +48,14 @@ export class ColorPlugin extends Plugin {
             {
                 id: "forecolor",
                 groupId: "color",
+                title: _t("Font Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("foreground"),
             },
             {
                 id: "backcolor",
                 groupId: "color",
+                title: _t("Background Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("background"),
             },
