@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 
 from markupsafe import Markup
 
+from odoo import Command
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
@@ -295,6 +296,10 @@ class AdvancedFollowersTest(MailCommon):
             'name': 'Default track subtype', 'default': True, 'internal': False,
             'res_model': 'mail.test.track'
         })
+        cls.sub_track_parent_def = Subtype.create({
+            'name': 'Parent track subtype', 'default': False, 'res_model': 'mail.test.track',
+            'parent_id': cls.sub_track_def.id, 'relation_field': 'parent_id'
+        })
 
         # mail.test.container subtypes (aka: project records)
         cls.umb_nodef = Subtype.create({
@@ -471,6 +476,19 @@ class AdvancedFollowersTest(MailCommon):
             follower_emp.subtype_ids, defaults + parents,
             'AutoSubscribe: at create auto subscribe as creator + from parent take both subtypes'
         )
+
+        container.message_follower_ids = [Command.clear()]
+        parent_track = self.env['mail.test.track'].with_user(self.user_employee).create({
+            'name': 'Task-Like',
+            'container_id': container.id,
+        })
+
+        child_track = self.env['mail.test.track'].with_user(self.user_admin).create({
+            'name': 'Task-Like Test-sub-task',
+            'parent_id': parent_track.id,
+            'container_id': container.id,
+        })
+        self.assertIn(self.user_employee.partner_id, child_track.message_follower_ids.partner_id, 'The partner from the parent has not been added as follower.')
 
 
 @tagged('mail_followers')
