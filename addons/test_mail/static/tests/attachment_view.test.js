@@ -11,6 +11,9 @@ import {
     startServer,
     patchUiSize,
     SIZES,
+    createFile,
+    dragenterFiles,
+    dropFiles,
 } from "@mail/../tests/mail_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -129,6 +132,48 @@ test("Attachment view popout controls test", async () => {
     await click(".o_attachment_preview .o_attachment_control");
     await animationFrame();
     expect(".o_attachment_preview").not.toBeVisible();
+});
+
+test("Chatter main attachment: can change from non-viewable to viewable", async () => {
+    const pyEnv = await startServer();
+    const recordId = pyEnv['mail.test.simple.main.attachment'].create({});
+    const irAttachmentId = pyEnv['ir.attachment'].create({
+        mimetype: 'text/plain',
+        name: "Blah.txt",
+        res_id: recordId,
+        res_model: 'mail.test.simple.main.attachment',
+    });
+    pyEnv['mail.message'].create({
+        attachment_ids: [irAttachmentId],
+        model: 'mail.test.simple.main.attachment',
+        res_id: recordId,
+    });
+    pyEnv['mail.test.simple.main.attachment'].write([recordId], {message_main_attachment_id : irAttachmentId});
+
+    registerArchs({
+        "mail.test.simple.main.attachment,false,form": `
+            <form string="Test document">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    patchUiSize({ size: SIZES.XXL });
+    await start();
+    await openFormView("mail.test.simple.main.attachment", recordId);
+
+    // Add a PDF file
+    const pdfFile = await createFile({ name: "invoice.pdf", contentType: "application/pdf" });
+    await dragenterFiles(".o-mail-Chatter", [pdfFile]);
+    await dropFiles(".o-mail-Dropzone", [pdfFile]);
+    await contains(".o_attachment_preview");
+    await contains(".o-mail-Attachment > iframe", { count: 0 }); // The viewer tries to display the text file not the PDF
+
+    // Switch to the PDF file in the viewer
+    await click(".o_move_next");
+    await contains(".o-mail-Attachment > iframe"); // There should be iframe for PDF viewer
 });
 
 test("Attachment view / chatter popout across multiple records test", async () => {
