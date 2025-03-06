@@ -7,14 +7,14 @@
                 <img class="o-mail-Follower-avatar me-2 rounded o_object_fit_cover" t-att-src="props.follower.partner.avatarUrl" alt=""/>
                 <span class="flex-shrink text-truncate" t-esc="props.follower.partner.name"/>
             </a>
-            <t t-if="props.follower.isEditable">
-                <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev)">
+            <div t-if="props.follower.isEditable" class="d-flex align-items-center me-2">
+                <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev)">
                     <i class="fa fa-fw fa-pencil"/>
-                </button>
-                <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Remove this follower" aria-label="Remove this follower" t-on-click="(ev) => this.onClickRemove(ev)">
-                    <i class="fa fa-fw fa-remove"/>
-                </button>
-            </t>
+                </span>
+                <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Remove this follower" aria-label="Remove this follower" t-on-click="(ev) => this.onClickRemove(ev)">
+                    <i class="oi fa-fw oi-close"/>
+                </span>
+            </div>
         </DropdownItem>
     </t>
 
