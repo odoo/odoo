@@ -16,7 +16,7 @@ test("#wrap element has the 'DRAG BUILDING BLOCKS HERE' message", async () => {
 });
 
 test("drop beside dropzone inserts the snippet", async () => {
-    const { contentEl, snippetContent } = await setupHTMLBuilder();
+    const { contentEl } = await setupHTMLBuilder();
     const { moveTo, drop } = await contains(
         ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
@@ -26,5 +26,10 @@ test("drop beside dropzone inserts the snippet", async () => {
     await drop();
     await confirmAddSnippet();
     expect(".o_add_snippet_dialog").toHaveCount(0);
-    expect(contentEl).toHaveInnerHTML(snippetContent);
+    expect(contentEl)
+        .toHaveInnerHTML(`<section class="s_test" data-snippet="s_test" data-name="Test">
+    <div class="test_a o-paragraph">
+        <br>
+    </div>
+</section>`);
 });

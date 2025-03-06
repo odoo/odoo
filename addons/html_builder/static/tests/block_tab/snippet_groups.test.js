@@ -24,7 +24,7 @@ function getBasicSection(content, { name, withColoredLevelClass = false }) {
     return unformat(`<section class="${className}" data-snippet="s_test" ${
         name ? `data-name="${name}"` : ""
     }>
-        <div class="test_a">${content}</div>
+        <div class="test_a o-paragraph">${content}</div>
     </section>`);
 }
 

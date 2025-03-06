@@ -172,8 +172,8 @@ export class FontPlugin extends Plugin {
                 namespaces: ["compact", "expanded"],
                 description: _t("Select font style"),
                 Component: FontSelector,
+                title: _t("Font style"),
                 props: {
-                    title: _t("Font style"),
                     getItems: () => fontItems,
                     getDisplay: () => this.font,
                     onSelected: (item) => {
@@ -192,7 +192,6 @@ export class FontPlugin extends Plugin {
                 description: _t("Select font size"),
                 Component: FontSizeSelector,
                 props: {
-                    title: _t("Font size"),
                     getItems: () => this.fontSizeItems,
                     getDisplay: () => this.fontSize,
                     onFontSizeInput: (size) => {
@@ -292,9 +291,9 @@ export class FontPlugin extends Plugin {
         const block = closestBlock(anchorNode);
         const tagName = block.tagName.toLowerCase();
 
-        const matchingItems = fontItems.filter((item) => {
-            return item.selector ? block.matches(item.selector) : item.tagName === tagName;
-        });
+        const matchingItems = fontItems.filter((item) =>
+            item.selector ? block.matches(item.selector) : item.tagName === tagName
+        );
 
         const matchingItemsWitoutExtraClass = matchingItems.filter((item) => !item.extraClass);
 
