@@ -68,7 +68,9 @@ export class OrderWidget extends Component {
             (acc, [key, value]) => {
                 if (value.qty && value.qty > 0) {
                     const line = this.selfOrder.models["pos.order.line"].getBy("uuid", key);
-                    acc.count += value.qty;
+                    if (!value.part_of_combo) {
+                        acc.count += value.qty;
+                    }
                     acc.price += line.getDisplayPrice();
                 }
                 return acc;
