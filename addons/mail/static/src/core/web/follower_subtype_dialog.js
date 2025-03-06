@@ -48,7 +48,6 @@ export class FollowerSubtypeDialog extends Component {
 
     async onClickApply() {
         const selectedSubtypes = this.state.subtypes.filter((s) => s.followed);
-        const thread = this.props.follower.thread;
         if (selectedSubtypes.length === 0) {
             await this.props.follower.remove();
         } else {
@@ -69,7 +68,7 @@ export class FollowerSubtypeDialog extends Component {
                 { type: "success" }
             );
         }
-        this.props.onFollowerChanged(thread);
+        this.props.onFollowerChanged();
         this.props.close();
     }
 
