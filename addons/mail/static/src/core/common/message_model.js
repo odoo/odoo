@@ -6,6 +6,7 @@ import {
     prettifyMessageContent,
 } from "@mail/utils/common/format";
 import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
+import { markup } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { stateToUrl } from "@web/core/browser/router";
@@ -32,6 +33,23 @@ export class Message extends Record {
     attachment_ids = Record.many("ir.attachment", { inverse: "message" });
     author = Record.one("Persona");
     body = Record.attr("", { html: true });
+    richBody = Record.attr("", {
+        compute() {
+            const knownEmojisRegex = this.store.env.services["mail.core.common"].knownEmojisRegex;
+            if (!knownEmojisRegex) {
+                return this.body;
+            }
+            return markup(
+                this.body.replaceAll(knownEmojisRegex, (codepoints) => {
+                    const shortcodes =
+                        this.store.env.services["mail.core.common"].shortcodesByCodepoints[
+                            codepoints
+                        ];
+                    return `<span title="${shortcodes.join(", ")}">${codepoints}</span>`;
+                })
+            );
+        },
+    });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {DateTime} */
     date = Record.attr(undefined, { type: "datetime" });
