@@ -57,12 +57,12 @@
     </xpath>
     <xpath expr="." position="inside">
         <t t-call="website.snippet_options_background_options"
-            t-arg-selector="'.s_media_list_item'"
-            t-arg-target="'&gt; .row'"
-            t-arg-with_colors="True"
-            t-arg-with_images="False"
-            t-arg-with_color_combinations="True"
-            t-arg-with_gradients="True"/>
+            selector.f=".s_media_list_item"
+            target.f="&gt; .row"
+            with_colors="True"
+            with_images="False"
+            with_color_combinations="True"
+            with_gradients="True"/>
         <div data-js="Box" data-selector=".s_media_list_item" data-target="&gt; .row">
             <t t-call="website.snippet_options_border_widgets"/>
             <t t-call="website.snippet_options_shadow_widgets"/>

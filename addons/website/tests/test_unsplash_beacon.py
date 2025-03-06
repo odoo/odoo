@@ -11,7 +11,7 @@ class TestUnsplashBeacon(odoo.tests.HttpCase):
         # Create page with unsplash image.
         page = self.env['website.page'].search([('url', '=', '/'), ('website_id', '=', 1)])
         page.arch = '''<t name="Homepage" t-name="website.homepage1">
-        <t t-call="website.layout" t-argf-pageName="homepage">
+        <t t-call="website.layout" pageName.f="homepage">
             <div id="wrap" class="oe_structure oe_empty">
                 <img src="/unsplash/pYyOZ8q7AII/306/fairy.jpg"/>
                 <!--

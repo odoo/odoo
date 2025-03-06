@@ -43,14 +43,14 @@
             </label>
         </div>
         <t t-call="website.dialog.addFont.singlePreview"
-            t-argf-previewLabel="Light"
-            t-arg-previewWeight="300"/>
+            previewLabel.f="Light"
+            previewWeight="300"/>
         <t t-call="website.dialog.addFont.singlePreview"
-            t-argf-previewLabel="Regular"
-            t-arg-previewWeight="400"/>
+            previewLabel.f="Regular"
+            previewWeight="400"/>
         <t t-call="website.dialog.addFont.singlePreview"
-            t-argf-previewLabel="Bold"
-            t-arg-previewWeight="700"/>
+            previewLabel.f="Bold"
+            previewWeight="700"/>
     </t>
     <t t-name="website.dialog.addFont">
         <Dialog title="this.props.title" size="'xl'">

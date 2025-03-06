@@ -553,10 +553,11 @@
                 <t t-set="can_unlink_comment" t-value="user.karma >= unlink_comment_required_karma"/>
                 <div class="flex-grow-1 py-2 opacity-75">
                     <header>
-                        <span t-call="website_forum.author_box">
-                            <t t-set="object" t-value="message"/>
-                            <t t-set="compact" t-value="True"/>
-                            <t t-set="show_name" t-value="True"/>
+                        <span>
+                            <t t-call="website_forum.author_box"
+                                object="message"
+                                compact="True"
+                                show_name="True"/>
                         </span>
                         <span class="ms-2 mb-2 small text-muted"><small class="o_wforum_relative_datetime"/></span>
                         <span t-if="_question_creator == _comment_author" class="badge ms-2 border border-dark text-reset">

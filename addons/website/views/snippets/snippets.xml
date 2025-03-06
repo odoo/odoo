@@ -680,8 +680,8 @@
 
 <template id="snippet_options_border_widgets">
     <t t-call="website.snippet_options_border_line_widgets"
-        t-argf-label.translate="Border"
-        t-arg-with_bs_class="True"/>
+        label.translate.f="Border"
+        with_bs_class="True"/>
     <we-input string="Round Corners"
               t-if="not no_border_radius"
               t-att-data-apply-to="apply_to"
@@ -719,14 +719,14 @@
 
 <template id="snippet_options_header_box">
     <t t-call="website.snippet_options_border_widgets"
-        t-arg-so_rounded_no_dependencies="True"
-        t-arg-width_variable="'menu-border-width'"
-        t-arg-style_variable="'menu-border-style'"
-        t-arg-color_variable="'menu-border-color'"
-        t-arg-radius_variable="'menu-border-radius'"
-        t-arg-no_border_radius="_no_border_radius"/>
+        so_rounded_no_dependencies="True"
+        width_variable.f="menu-border-width"
+        style_variable.f="menu-border-style"
+        color_variable.f="menu-border-color"
+        radius_variable.f="menu-border-radius"
+        no_border_radius="_no_border_radius"/>
     <t t-call="website.snippet_options_shadow_widgets"
-        t-arg-shadow_variable="'menu-box-shadow'"/>
+        shadow_variable.f="menu-box-shadow"/>
 </template>
 
 <template id="snippet_options_conditional_visibility">
@@ -834,20 +834,20 @@
         <!-- Binding the option on the snippet if it is not a s_card with a
              handler parent -->
         <t t-call="web_editor.snippet_options_version_control"
-            t-argf-selector="[data-snippet]"
-            t-argf-exclude="div:is(#{card_parent_handlers}) > .s_card"/>
+            selector.f="[data-snippet]"
+            exclude.f="div:is(#{card_parent_handlers}) > .s_card"/>
 
         <!-- Binding the option on the s_card handler parent -->
         <t t-call="web_editor.snippet_options_version_control"
-            t-argf-selector="#{card_parent_handlers}"
-            t-argf-target="> .s_card"/>
+            selector.f="#{card_parent_handlers}"
+            target.f="> .s_card"/>
     </xpath>
 
     <!-- Font Awesome icons -->
     <xpath expr="//div[@data-js='FontawesomeTools']" position="inside">
         <t t-call="website.snippet_options_border_line_widgets"
-            t-argf-label.translate="Border"
-            t-arg-with_bs_class="True"/>
+            label.translate.f="Border"
+            with_bs_class="True"/>
     </xpath>
 
     <!-- =================================================================== -->
@@ -907,14 +907,14 @@
     <!-- Dedicated colorpicker so that there is not 3 level of
          o_colored_level. Use inline-style color for the same reason. -->
     <t t-call="website.snippet_options_background_options"
-        t-arg-selector="'section'"
-        t-arg-target="'> .carousel:not(.s_carousel_cards)'"
-        t-arg-with_colors="True"
-        t-arg-with_images="True"
-        t-arg-with_videos="True"
-        t-arg-with_shapes="True"
-        t-arg-with_gradients="True"
-        t-arg-with_color_combinations="True"/>
+        selector.f="section"
+        target.f="> .carousel:not(.s_carousel_cards)"
+        with_colors="True"
+        with_images="True"
+        with_videos="True"
+        with_shapes="True"
+        with_gradients="True"
+        with_color_combinations="True"/>
 
     <t t-call="website.snippet_options_carousel"/>
     <t t-call="website.snippet_options_carousel_bottom_controllers"/>
@@ -983,10 +983,10 @@
                 <we-button data-select-layout="normal" data-name="normal_mode">Cols</we-button>
             </we-button-group>
             <t t-call="website.column_count_option"
-                t-arg-with_grid="True"/>
+                with_grid="True"/>
         </we-row>
         <t t-call="website.grid_layout_options"
-            t-arg-indent="True"/>
+            indent="True"/>
     </div>
 
     <!--  Vertical Alignment -->
@@ -994,7 +994,7 @@
          data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image"
          data-target=".row">
         <t t-call="website.vertical_alignment_option"
-            t-arg-indent="True"/>
+            indent="True"/>
     </div>
 
     <!-- Move snippets around -->
@@ -1022,30 +1022,30 @@
     <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_item'"/>
 
     <t t-call="website.snippet_options_background_options"
-        t-arg-selector="both_bg_color_image_selector"
-        t-arg-exclude="both_bg_color_image_exclude"
-        t-arg-with_colors="True"
-        t-arg-with_images="True"
-        t-arg-with_videos="True"
-        t-arg-with_shapes="True"
-        t-arg-with_color_combinations="True"
-        t-arg-with_gradients="True"/>
+        selector="both_bg_color_image_selector"
+        exclude="both_bg_color_image_exclude"
+        with_colors="True"
+        with_images="True"
+        with_videos="True"
+        with_shapes="True"
+        with_color_combinations="True"
+        with_gradients="True"/>
 
     <t t-call="website.snippet_options_background_options"
-        t-arg-selector="only_bg_color_selector"
-        t-arg-exclude="only_bg_color_exclude"
-        t-arg-with_colors="True"
-        t-arg-with_images="False"
-        t-arg-with_color_combinations="True"
-        t-arg-with_gradients="True"/>
+        selector="only_bg_color_selector"
+        exclude="only_bg_color_exclude"
+        with_colors="True"
+        with_images="False"
+        with_color_combinations="True"
+        with_gradients="True"/>
 
     <t t-call="website.snippet_options_background_options"
-        t-arg-selector="only_bg_image_selector"
-        t-arg-exclude="only_bg_image_exclude"
-        t-arg-with_colors="False"
-        t-arg-with_images="True"
-        t-arg-with_videos="True"
-        t-arg-with_shapes="True"/>
+        selector="only_bg_image_selector"
+        exclude="only_bg_image_exclude"
+        with_colors="False"
+        with_images="True"
+        with_videos="True"
+        with_shapes="True"/>
 
     <!-- Grid mode columns -->
     <div data-js="GridColumns"
@@ -1267,7 +1267,7 @@
          data-no-check="true"
          groups="website.group_website_designer">
         <t t-call="website.snippet_options_header_box"
-            t-arg-_no_border_radius="True"/>
+            _no_border_radius="True"/>
     </div>
 
     <div data-selector="#wrapwrap > header"
@@ -1739,8 +1739,8 @@
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
         <we-row string="Background" class="o_we_full_row">
             <t t-call="web_editor.snippet_options_background_color_widget"
-                t-arg-with_color_combinations="True"
-                t-arg-with_gradients="True"/>
+                with_color_combinations="True"
+                with_gradients="True"/>
             <we-button-group class="ms-auto">
                 <we-imagepicker title="Image" data-background="" data-button-style="true"/>
                 <we-button class="fa fa-fw fa-ban" title="None" data-background="">
@@ -1865,46 +1865,46 @@
 
             <t t-if="request.geoip.country_code">
                 <t t-call="website.snippet_options_conditional_visibility"
-                    t-argf-option_name.translate="Country"
-                    t-argf-attribute_rule="visibilityValueCountryRule"
-                    t-argf-save_attribute="visibilityValueCountry"
-                    t-argf-attribute_name="data-country"
-                    t-argf-model="res.country"
-                    t-argf-call_with="code"
-                    t-argf-data_fields="[&quot;code&quot;]"/>
+                    option_name.translate.f="Country"
+                    attribute_rule.f="visibilityValueCountryRule"
+                    save_attribute.f="visibilityValueCountry"
+                    attribute_name.f="data-country"
+                    model.f="res.country"
+                    call_with.f="code"
+                    data_fields.f="[&quot;code&quot;]"/>
             </t>
             <t t-if="len(current_website.language_ids) > 1">
                 <t t-call="website.snippet_options_conditional_visibility"
-                    t-argf-option_name.translate="Languages"
-                    t-argf-attribute_rule="visibilityValueLangRule"
-                    t-argf-save_attribute="visibilityValueLang"
-                    t-argf-attribute_name="lang"
-                    t-argf-model="res.lang"
-                    t-argf-call_with="code"
-                    t-argf-domain="[[&quot;id&quot;, &quot;in&quot;, {{current_website.language_ids.ids}}]]"
-                    t-argf-data_fields="[&quot;code&quot;]"/>
+                    option_name.translate.f="Languages"
+                    attribute_rule.f="visibilityValueLangRule"
+                    save_attribute.f="visibilityValueLang"
+                    attribute_name.f="lang"
+                    model.f="res.lang"
+                    call_with.f="code"
+                    domain.f="[[&quot;id&quot;, &quot;in&quot;, {{current_website.language_ids.ids}}]]"
+                    data_fields.f="[&quot;code&quot;]"/>
             </t>
             <t t-call="website.snippet_options_conditional_visibility"
-                t-argf-option_name.translate="UTM Campaign"
-                t-argf-attribute_rule="visibilityValueUtmCampaignRule"
-                t-argf-save_attribute="visibilityValueUtmCampaign"
-                t-argf-attribute_name="data-utm-campaign"
-                t-argf-model="utm.campaign"
-                t-argf-call_with="display_name"/>
+                option_name.translate.f="UTM Campaign"
+                attribute_rule.f="visibilityValueUtmCampaignRule"
+                save_attribute.f="visibilityValueUtmCampaign"
+                attribute_name.f="data-utm-campaign"
+                model.f="utm.campaign"
+                call_with.f="display_name"/>
             <t t-call="website.snippet_options_conditional_visibility"
-                t-argf-option_name.translate="UTM Medium"
-                t-argf-attribute_rule="visibilityValueUtmMediumRule"
-                t-argf-save_attribute="visibilityValueUtmMedium"
-                t-argf-attribute_name="data-utm-medium"
-                t-argf-model="utm.medium"
-                t-argf-call_with="display_name"/>
+                option_name.translate.f="UTM Medium"
+                attribute_rule.f="visibilityValueUtmMediumRule"
+                save_attribute.f="visibilityValueUtmMedium"
+                attribute_name.f="data-utm-medium"
+                model.f="utm.medium"
+                call_with.f="display_name"/>
             <t t-call="website.snippet_options_conditional_visibility"
-                t-argf-option_name.translate="UTM Source"
-                t-argf-attribute_rule="visibilityValueUtmSourceRule"
-                t-argf-save_attribute="visibilityValueUtmSource"
-                t-argf-attribute_name="data-utm-source"
-                t-argf-model="utm.source"
-                t-argf-call_with="display_name"/>
+                option_name.translate.f="UTM Source"
+                attribute_rule.f="visibilityValueUtmSourceRule"
+                save_attribute.f="visibilityValueUtmSource"
+                attribute_name.f="data-utm-source"
+                model.f="utm.source"
+                call_with.f="display_name"/>
             <we-select string="Users"
                 class="o_we_sublevel_1"
                 data-dependencies="visibility_conditional"

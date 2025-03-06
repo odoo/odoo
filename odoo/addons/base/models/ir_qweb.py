@@ -246,7 +246,7 @@ Serves the called template in place of the current ``t-call`` node.
 Here are the different steps performed by the generated python code:
 
 #. copy the ``values`` dictionary;
-#  define values from ``t-arg``, ``t-argf`` or ``t-argf-*.translate``;
+#  define values from attributes or attributeName``.f`` for formated string;
 #. render the content (``_compile_directive_inner_content``) of the tag in a
    separate method called with the previous copied values. This values can be
    updated via t-set. The visible content of the rendering of the sub-content
@@ -2199,12 +2199,13 @@ class IrQweb(models.AbstractModel):
             """, level))
 
         # args
+        is_deprecated_version = not any(not key.startswith('t-') for key in el.attrib) and any(n.tag == 't' and n.attrib.get('t-set') for n in el)
         for key in list(el.attrib):
-            if key.startswith('t-argf-'):
-                name = key[7:-10] if key.endswith('.translate') else key[7:]
+            if key.endswith('.f') or key.endswith('.translate'):
+                name = key.partition('.')[0]
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value)}", level))
-            elif key.startswith('t-arg-'):
+            elif not key.startswith('t-'):
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"t_call_values[{key[6:]!r}] = {self._compile_expr(value)}", level))
             elif key == 't-args':

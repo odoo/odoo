@@ -16,17 +16,17 @@
                     <h3>Coffees</h3>
                     <ul class="list-unstyled my-3">
                         <t t-call="website.s_pricelist_cafe_item"
-                            t-argf-name.translate="Coffee Latte"
-                            t-argf-price="$4.50"
-                            t-argf-description.translate="Sleek, minimalist space offering meticulously brewed coffee and espresso drinks using freshly roasted beans."/>
+                            name.translate.f="Coffee Latte"
+                            price.f="$4.50"
+                            description.translate.f="Sleek, minimalist space offering meticulously brewed coffee and espresso drinks using freshly roasted beans."/>
                         <t t-call="website.s_pricelist_cafe_item"
-                            t-argf-name.translate="Cappuccino"
-                            t-argf-price="$4.25"
-                            t-argf-description.translate="A vibrant spot known for its expertly crafted coffee, sourced directly from farmers and roasted to perfection."/>
+                            name.translate.f="Cappuccino"
+                            price.f="$4.25"
+                            description.translate.f="A vibrant spot known for its expertly crafted coffee, sourced directly from farmers and roasted to perfection."/>
                         <t t-call="website.s_pricelist_cafe_item"
-                            t-argf-name.translate="Espresso"
-                            t-argf-price="$4.10"
-                            t-argf-description.translate="Artisanal espresso with a focus on direct trade and exceptional quality in a chic, comfortable setting."/>
+                            name.translate.f="Espresso"
+                            price.f="$4.10"
+                            description.translate.f="Artisanal espresso with a focus on direct trade and exceptional quality in a chic, comfortable setting."/>
                     </ul>
                 </div>
                 <div class="s_pricelist_cafe_col col-lg-4 d-lg-block d-none o_snippet_mobile_invisible s_col_no_resize">
@@ -36,17 +36,17 @@
                     <h3>Teas</h3>
                     <ul class="list-unstyled my-3">
                         <t t-call="website.s_pricelist_cafe_item"
-                            t-argf-name.translate="Earl Grey"
-                            t-argf-price="$3.50"
-                            t-argf-description.translate="A classic black tea blend infused with the aromatic essence of bergamot, offering a fragrant, citrusy flavor."/>
+                            name.translate.f="Earl Grey"
+                            price.f="$3.50"
+                            description.translate.f="A classic black tea blend infused with the aromatic essence of bergamot, offering a fragrant, citrusy flavor."/>
                         <t t-call="website.s_pricelist_cafe_item"
-                            t-argf-name.translate="Jasmine Green Tea"
-                            t-argf-price="$3.00"
-                            t-argf-description.translate="Delicate green tea scented with jasmine blossoms, providing a soothing and floral experience."/>
+                            name.translate.f="Jasmine Green Tea"
+                            price.f="$3.00"
+                            description.translate.f="Delicate green tea scented with jasmine blossoms, providing a soothing and floral experience."/>
                         <t t-call="website.s_pricelist_cafe_item"
-                            t-argf-name.translate="Chamomile Tea"
-                            t-argf-price="$4.00"
-                            t-argf-description.translate="Herbal tea made from dried chamomile flowers, known for its calming properties and gentle, apple-like flavor."/>
+                            name.translate.f="Chamomile Tea"
+                            price.f="$4.00"
+                            description.translate.f="Herbal tea made from dried chamomile flowers, known for its calming properties and gentle, apple-like flavor."/>
                     </ul>
                 </div>
             </div>
@@ -84,11 +84,11 @@
         <!-- Add products -->
         <div data-js="MultipleItems" data-selector=".s_pricelist_cafe">
             <t t-call="website.s_pricelist_cafe_add_product_widget"
-                t-argf-apply_to="> :has(.s_pricelist_cafe_item):not(:has(.row > div:has(.s_pricelist_cafe_item)))"/>
+                apply_to.f="> :has(.s_pricelist_cafe_item):not(:has(.row > div:has(.s_pricelist_cafe_item)))"/>
         </div>
         <div data-js="MultipleItems" data-selector=".s_pricelist_cafe .row > div">
             <t t-call="website.s_pricelist_cafe_add_product_widget"
-                t-argf-apply_to="> :has(.s_pricelist_cafe_item)"/>
+                apply_to.f="> :has(.s_pricelist_cafe_item)"/>
         </div>
     </xpath>
     <!-- Toggle descriptions -->
@@ -96,9 +96,9 @@
         <div data-js="Pricelist" data-selector=".s_pricelist_cafe">
             <we-checkbox string="Descriptions" data-toggle-description="true" data-items-class="s_pricelist_cafe_item" data-description-class="s_pricelist_cafe_item_description" data-no-preview="true"/>
             <t t-call="website.snippet_options_border_line_widgets"
-                t-argf-label.translate="Separator"
-                t-argf-direction="top"
-                t-argf-apply_to=".s_pricelist_cafe_item_line"/>
+                label.translate.f="Separator"
+                direction.f="top"
+                apply_to.f=".s_pricelist_cafe_item_line"/>
         </div>
         <div data-selector=".s_pricelist_cafe_item" data-drop-near=".s_pricelist_cafe_item"/>
     </xpath>

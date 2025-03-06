@@ -81,8 +81,7 @@ TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
 def is_translatable_attrib(key):
     return (
         key in TRANSLATED_ATTRS or
-        (key.endswith('.translate') and (key.startswith('t-attf-') or key.startswith('t-argf-'))) or
-        key.startswith('t-valuef.translate-')
+        (key.endswith('.translate') and (key.startswith('t-attf-') or key.endswith('.f')))
     )
 
 def is_translatable_attrib_value(node):
@@ -140,7 +139,7 @@ def translate_xml_node(node, callback, parse, serialize):
             # be translated as a whole using the `o_translate_inline` class.
             "o_translate_inline" in node.attrib.get("class", "").split()
             or node.tag in TRANSLATED_ELEMENTS
-            and not any(key.startswith("t-") for key in node.attrib)
+            and not any(key.startswith("t-") or key.endswith(".f") or key.endswith(".translate") for key in node.attrib)
             and all(translatable(child) for child in node)
         )
 
@@ -232,7 +231,7 @@ def translate_xml_node(node, callback, parse, serialize):
                     (key == 'value' and is_translatable_attrib_value(node)) or
                     (key == 'text' and is_translatable_attrib_text(node))
                 ):
-                    if key.startswith('t-'):
+                    if key.endswith('.f') or key.endswith('.translate'):
                         value = translate_format_string_expression(val.strip(), callback)
                     else:
                         value = callback(val.strip())
