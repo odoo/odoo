@@ -571,6 +571,7 @@ export const editorCommands = {
             const element = closestElement(node);
             element.style.removeProperty('color');
             element.style.removeProperty('background');
+            element.style.removeProperty('-webkit-text-fill-color');
             if (hasAnyFontSizeClass(element)) {
                 hasFontSizeClass = true;
             }
@@ -773,11 +774,40 @@ export const editorCommands = {
             return selectedNodes.flatMap(node => {
                 let font = closestElement(node, 'font') || closestElement(node, 'span');
                 const children = font && descendants(font);
-                if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
+                const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
+                if (
+                    font &&
+                    (font.nodeName === "FONT" || (font.nodeName === "SPAN" && font.style[mode])) &&
+                    (isColorGradient(color) || !hasInlineGradient)
+                ) {
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter(child => selectedNodes.includes(child));
                     if (selectedChildren.length) {
-                        font = splitAroundUntil(selectedChildren, font);
+                        const closestGradientEl = closestElement(node, '[style*="background-image"]');
+                        const isGradientBeingUpdated = closestGradientEl && isColorGradient(color);
+                        const splitnode = isGradientBeingUpdated ? closestGradientEl : font;
+                        font = splitAroundUntil(selectedChildren, splitnode);
+                        if (isGradientBeingUpdated) {
+                            const classRegex = mode === 'color' ?  TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
+                            // When updating a gradient, remove color applied to
+                            // its descendants.This ensures the gradient remains
+                            // visible without being overwritten by a descendant's color.
+                            for (const node of descendants(font)) {
+                                if (
+                                    node.nodeType === Node.ELEMENT_NODE &&
+                                    (node.style[mode] || classRegex.test(node.className))
+                                ) {
+                                    colorElement(node, "", mode);
+                                    node.style.webkitTextFillColor = "";
+                                }
+                            }
+                        } else if (
+                            mode === "color" &&
+                            (font.style.webkitTextFillColor ||
+                                closestGradientEl && closestGradientEl.classList.contains("text-gradient"))
+                        ) {
+                            font.style.webkitTextFillColor = color;
+                        }
                     } else {
                         font = [];
                     }
@@ -808,8 +838,12 @@ export const editorCommands = {
                         font = previous;
                     } else {
                         // No <font> found: insert a new one.
+                        const isTextGradient = hasInlineGradient && font.classList.contains("text-gradient");
                         font = document.createElement('font');
                         node.after(font);
+                        if (isTextGradient && mode === "color") {
+                            font.style.webkitTextFillColor = color;
+                        }
                     }
                     if (node.textContent) {
                         font.appendChild(node);
