@@ -6,7 +6,14 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
 
-    def assert_sale_order_global_discount(self, sale_order, amount_type, amount, expected_values, soft_checking=False):
+    def assert_sale_order_global_discount(
+        self,
+        sale_order,
+        amount_type,
+        amount,
+        expected_values,
+        soft_checking=False,
+    ):
         if amount_type == 'percent':
             discount_type = 'so_discount'
             discount_percentage = amount / 100.0
@@ -23,7 +30,11 @@ class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
                 'discount_amount': discount_amount,
             })
         discount_wizard.action_apply_discount()
-        self._assert_tax_totals_summary(sale_order.tax_totals, expected_values, soft_checking=soft_checking)
+        self._assert_tax_totals_summary(
+            sale_order.tax_totals,
+            expected_values,
+            soft_checking=soft_checking,
+        )
 
     def test_taxes_l10n_in_sale_orders(self):
         for test_mode, document, soft_checking, amount_type, amount, expected_values in self._test_taxes_l10n_in():
