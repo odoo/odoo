@@ -7,4 +7,12 @@ patch(ProductInfoPopup.prototype, {
             self_order_available: !this.props.productTemplate.self_order_available,
         });
     },
+    showSelfOrderToggle() {
+        return (
+            this.pos.config.self_ordering_mode != "nothing" &&
+            (this.pos.config.module_pos_hr
+                ? this.pos.cashier._role === "manager" && this.pos.allowProductCreation()
+                : this.pos.allowProductCreation())
+        );
+    },
 });
