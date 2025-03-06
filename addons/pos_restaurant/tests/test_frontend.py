@@ -207,6 +207,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
         pricelist = cls.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
         cls.pos_config.write({'pricelist_id': pricelist.id})
+        cls.pos_config.write({'available_pricelist_ids': [(4, pricelist.id)]})
 
 
 class TestFrontend(TestFrontendCommon):
@@ -658,6 +659,9 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(order.lines[0].note, "Demo note")
 
     def test_sync_set_pricelist(self):
+        self.pos_config.write({
+            'use_pricelist': True,
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_sync_set_pricelist')
         order = self.pos_config.current_session_id.order_ids[0]
