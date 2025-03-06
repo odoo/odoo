@@ -807,6 +807,10 @@ class ProjectTask(models.Model):
         if not_project_user:
             vals_list = [{k: v for k, v in vals.items() if k in self.SELF_READABLE_FIELDS} for vals in vals_list]
 
+        user_list = []
+        for vals in vals_list:
+            user_list.extend(self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self.env['project.task']))
+        active_user = self.env['res.users'].with_context(active_test=True).search([('id', 'in', user_list)]).ids
         milestone_mapping = self.env.context.get('milestone_mapping', {})
         for task, vals in zip(self, vals_list):
 
@@ -824,6 +828,9 @@ class ProjectTask(models.Model):
                     'parent_id': False,
                 }
                 vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in task.child_ids]
+            if vals['user_ids']:
+                    cache_value = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self.env['project.task'])
+                    vals['user_ids'] = [Command.set(set(cache_value) & set(active_user))]
         return vals_list
 
     def _create_task_mapping(self, copied_tasks):
