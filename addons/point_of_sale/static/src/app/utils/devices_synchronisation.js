@@ -126,7 +126,16 @@ export default class DevicesSynchronisation {
             );
 
             this.processStaticRecords(staticR);
-            await this.processDynamicRecords(dynamicR);
+            const res = await this.processDynamicRecords(dynamicR);
+            if (res && res["pos.order"] && res["pos.order"].length > 0) {
+                const config = this.pos.config;
+                const session = this.pos.session;
+
+                for (const order of res["pos.order"]) {
+                    order.config_id = config;
+                    order.session_id = session;
+                }
+            }
         }
 
         if (Object.keys(response.deleted_record_ids).length) {
@@ -221,7 +230,7 @@ export default class DevicesSynchronisation {
                     new Domain([
                         ["id", "not in", ids],
                         ["state", "=", "draft"],
-                        ["config_id", "in", [config.id, ...config.trusted_config_ids]],
+                        ["config_id", "in", [config.id, ...config.raw.trusted_config_ids]],
                     ]),
                 ]);
 

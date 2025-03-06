@@ -119,6 +119,17 @@ export class PosConfig extends Base {
             height: 256,
         });
     }
+
+    get availablePricelists() {
+        if (!this.use_pricelist) {
+            return [];
+        }
+        const available_pricelists = new Set(this.available_pricelist_ids);
+        if (this.pricelist_id) {
+            available_pricelists.add(this.pricelist_id);
+        }
+        return Array.from(available_pricelists);
+    }
 }
 
 registry.category("pos_available_models").add(PosConfig.pythonModel, PosConfig);
