@@ -13,6 +13,7 @@ export class BuilderOptionsPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         post_undo_handlers: this.restoreContainer.bind(this),
         post_redo_handlers: this.restoreContainer.bind(this),
+        on_add_element_handlers: ({ elementToAdd }) => this.setTarget(elementToAdd),
     };
 
     setup() {
@@ -130,6 +131,10 @@ export class BuilderOptionsPlugin extends Plugin {
         this.lastContainers = newContainers;
         this.dependencies.history.setStepExtra("optionSelection", this.target);
         this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+    }
+
+    setTarget(target) {
+        this.target = target;
     }
 
     getContainers() {
