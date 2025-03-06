@@ -93,7 +93,9 @@ export class MediaPlugin extends Plugin {
                 "contenteditable",
                 el.hasAttribute("contenteditable") ? el.getAttribute("contenteditable") : "false"
             );
-            if (isIconElement(el)) {
+            // Do not update the text if it's already OK to avoid recording a
+            // mutation on Firefox. (Chrome filters them out.)
+            if (isIconElement(el) && el.textContent !== "\u200B") {
                 el.textContent = "\u200B";
             }
         }
