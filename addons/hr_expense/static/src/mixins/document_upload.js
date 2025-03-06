@@ -74,6 +74,9 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
         this.fileInput = useRef('fileInput');
         this.root = useRef("root");
 
+        this.uploadsProcessing = 0;
+        this.createdExpenseIds = [];
+
         useBus(this.env.bus, "change_file_input", async (ev) => {
             this.fileInput.el.files = ev.detail.files;
             await this.onChangeFileInput();
@@ -88,11 +91,26 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
     }
 
     uploadDocument() {
+        this.uploadsProcessing++;
         this.fileInput.el.click();
     }
 
     async onChangeFileInput() {
-        await this._onChangeFileInput([...this.fileInput.el.files]);
+        try {
+            await this._onChangeFileInput([...this.fileInput.el.files]);
+            if (this.uploadsProcessing === 1) {
+                await this.actionService.doAction({
+                    'name': _t("Generate Expenses"),
+                    'res_model': 'hr.expense',
+                    'type': 'ir.actions.act_window',
+                    'views': [[false, this.env.config.viewType], [false, 'form']],
+                    'domain': [['id', 'in', this.createdExpenseIds]],
+                    'context': this.props.context,
+                });
+            }
+        } finally {
+            this.uploadsProcessing--;
+        }
     }
 
     async _onChangeFileInput(files) {
@@ -120,12 +138,12 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
             return;
         }
 
-        const action = await this.orm.call(
+        const createdExpenseIds = await this.orm.call(
             'hr.expense',
             'create_expense_from_attachments',
             [attachmentIds, this.env.config.viewType],
             { context: this.props.context },
         );
-        await this.actionService.doAction(action);
+        this.createdExpenseIds = [...this.createdExpenseIds, ...createdExpenseIds];
     }
 };

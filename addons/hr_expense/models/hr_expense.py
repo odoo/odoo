@@ -8,7 +8,7 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty
+from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty
 
 
 _logger = logging.getLogger(__name__)
@@ -1196,9 +1196,9 @@ class HrExpense(models.Model):
             raise UserError(_("You need to have at least one category that can be expensed in your database to proceed!"))
 
         for attachment in attachments:
-            attachment_name = '.'.join(attachment.name.split('.')[:-1])
+            name = f"Untitled Expense {format_date(self.env, fields.Date.context_today(self))}"
             vals = {
-                'name': attachment_name,
+                'name': name,
                 'price_unit': 0,
                 'product_id': product.id,
             }
@@ -1209,14 +1209,7 @@ class HrExpense(models.Model):
 
             expense._message_set_main_attachment_id(attachment, force=True)
             expenses += expense
-        return {
-            'name': _("Generated Expense(s)"),
-            'res_model': 'hr.expense',
-            'type': 'ir.actions.act_window',
-            'views': [[False, view_type], [False, "form"]],
-            'domain': [('id', 'in', expenses.ids)],
-            'context': self.env.context,
-        }
+        return expenses.ids
 
     def action_show_same_receipt_expense_ids(self):
         self.ensure_one()
