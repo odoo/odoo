@@ -10,6 +10,9 @@ const messagePatch = {
     },
     /** @param {import("models").Thread} thread */
     canForward(thread) {
+        if (!thread) {
+            return false;
+        }
         return (
             !["discuss.channel", "mail.box"].includes(thread.model) &&
             ["comment", "email"].includes(this.message_type)
