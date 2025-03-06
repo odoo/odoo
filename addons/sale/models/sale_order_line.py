@@ -162,8 +162,6 @@ class SaleOrderLine(models.Model):
         store=True, readonly=False, precompute=True,
         context={'active_test': False},
         check_company=True)
-    # Technical field holding custom data for the taxes computation engine.
-    extra_tax_data = fields.Json()
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
@@ -280,6 +278,8 @@ class SaleOrderLine(models.Model):
     amount_to_invoice = fields.Monetary(
         string="Un-invoiced Balance",
         compute='_compute_amount_to_invoice')
+    # Technical field holding custom data for the taxes computation engine.
+    extra_tax_data = fields.Json()
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
     product_type = fields.Selection(related='product_id.type', depends=['product_id'])

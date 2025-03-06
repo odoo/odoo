@@ -2579,8 +2579,8 @@ class AccountTax(models.Model):
     @api.model
     def _reduce_base_lines_with_grouping_function(self, base_lines, grouping_function=None):
         """ Create the new base lines that will get the discount.
-        Since they no longer contain fixed taxes, we can remove the quantity and aggregate them depending the grouping_function passed
-        as parameter.
+        Since they no longer contain fixed taxes, we can remove the quantity and aggregate them depending on
+        the grouping_function passed as parameter.
 
         :param base_lines:          The base lines to be aggregated.
         :param grouping_function:   An optional function taking a base line as parameter and returning a grouping key
