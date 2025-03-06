@@ -1210,11 +1210,12 @@ const _keyDown = async (target, eventInit) => {
     };
 
     const { ctrlKey, key, shiftKey } = keyDownEvent;
+    const initialValue = target.value;
     let inputData = null;
     let inputType = null;
     let nextSelectionEnd = null;
     let nextSelectionStart = null;
-    let nextValue = target.value;
+    let nextValue = initialValue;
     let triggerSelect = false;
 
     if (isEditable(target)) {
@@ -1417,7 +1418,7 @@ const _keyDown = async (target, eventInit) => {
         }
     }
 
-    if (target.value !== nextValue) {
+    if (initialValue !== nextValue) {
         target.value = nextValue;
         const inputEventInit = {
             data: inputData,
