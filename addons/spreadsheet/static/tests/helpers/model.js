@@ -76,7 +76,7 @@ export async function makeSpreadsheetMockEnv(params = {}) {
     if (params.serverData?.views) {
         addViewsFromServerData(params.serverData);
     }
-    const env = getMockEnv() || (await makeMockEnv());
+    const env = getMockEnv() || (await makeMockEnv(null, { lazy: false }));
     return env;
 }
 

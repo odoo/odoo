@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { FILTER_KEYS } from "../core/config";
+import { FILTER_KEYS, FILTER_SCHEMA } from "../core/config";
 import { createUrlFromId } from "../core/url";
 
 /**
@@ -73,7 +73,31 @@ export class HootLink extends Component {
      * @param {PointerEvent} ev
      */
     onClick(ev) {
-        this.props.onClick?.(ev);
+        if (ev.altKey) {
+            const { config } = this.env.runner;
+            const { id, type, options } = this.props;
+            if (!(type in FILTER_SCHEMA)) {
+                return;
+            }
+
+            ev.preventDefault();
+
+            const set = new Set(config[type] || []);
+            const [include, ignore] = options?.ignore ? [`-${id}`, id] : [id, `-${id}`];
+            if (set.has(include)) {
+                // ID is in list:
+                // -> remove it
+                set.delete(include);
+            } else {
+                // ID is not in the list:
+                // -> add it and remove its counterpart
+                set.add(include);
+                set.delete(ignore);
+            }
+            config[type] = [...set];
+        } else {
+            this.props.onClick?.(ev);
+        }
     }
 
     updateHref() {

@@ -226,7 +226,7 @@ const orm = async (model, method, args, kwargs) => {
             id: nextRpcId++,
             jsonrpc: "2.0",
             method: "call",
-            params: { args, kwargs, method, model },
+            params: { data: { ["res.partner"]: [] } },
         }),
         headers: {
             "Content-Type": "application/json",

@@ -18,6 +18,7 @@ import {
     deepEqual,
     ensureArray,
     ensureError,
+    formatHumanReadable,
     formatTechnical,
     formatTime,
     getFuzzyScore,
@@ -35,12 +36,16 @@ import { cleanupNetwork } from "../mock/network";
 import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
-import { HootFixtureElement, makeFixtureManager } from "./fixture";
+import { HootFixtureElement, destroy, makeFixtureManager } from "./fixture";
 import { LOG_LEVELS, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag, getTagSimilarities } from "./tag";
 import { Test, testError } from "./test";
 import { EXCLUDE_PREFIX, createUrlFromId, setParams } from "./url";
+
+// Import all helpers for debug mode
+import * as hootDom from "@odoo/hoot-dom";
+import * as hootMock from "@odoo/hoot-mock";
 
 /**
  * @typedef {{
@@ -141,12 +146,19 @@ const formatAssertions = (assertions) => {
         const formattedMessage = message.map((part) => (isLabel(part) ? part[0] : String(part)));
         lines.push(`\n${number}. [${label}] ${formattedMessage.join(" ")}`);
         if (failedDetails) {
-            for (let [key, value] of failedDetails) {
+            for (const detail of failedDetails) {
+                if (Markup.isMarkup(detail, "group")) {
+                    lines.push(
+                        `${number}.${detail.groupIndex}. (${formatHumanReadable(detail.content)})`
+                    );
+                    continue;
+                }
+                let [key, value] = detail;
                 if (Markup.isMarkup(key)) {
                     key = key.content;
                 }
                 if (Markup.isMarkup(value)) {
-                    if (value.technical) {
+                    if (value.type === "technical") {
                         continue;
                     }
                     value = value.content;
@@ -278,6 +290,19 @@ const warnUserEvent = (ev) => {
     removeEventListener(ev.type, warnUserEvent);
 };
 
+class HootDebugHelpers {
+    /**
+     * @param {Runner} runner
+     */
+    constructor(runner) {
+        $assign(this, hootDom, hootMock, {
+            destroy,
+            getFixture: runner.fixture.get,
+        });
+    }
+}
+
+const DEBUG_NAMESPACE = "hoot";
 const WARNINGS = {
     viewport: "Viewport size does not match the expected size for the current preset",
     tagNames:
@@ -1049,6 +1074,13 @@ export class Runner {
             test.runCount++;
 
             if (this.debug) {
+                const helpers = new HootDebugHelpers(this);
+                if (DEBUG_NAMESPACE in globalThis) {
+                    logger.debug(`Hoot helpers available:`, helpers);
+                } else {
+                    globalThis[DEBUG_NAMESPACE] = helpers;
+                    logger.debug(`Hoot helpers available from \`window.${DEBUG_NAMESPACE}\``);
+                }
                 return new Promise(() => {});
             }
             if (this.config.bail && this._failed >= this.config.bail) {
@@ -1705,10 +1737,12 @@ export class Runner {
             );
             if (activeSingleTests.length !== 1) {
                 logger.logGlobalWarning(
-                    `disabling debug mode: ${activeSingleTests.length} tests will be run`
+                    `Disabling debug mode: ${activeSingleTests.length} tests will be run`
                 );
                 this.config.debugTest = false;
                 this.debug = false;
+            } else {
+                logger.logGlobalWarning("Debug mode is active");
             }
         }
 
