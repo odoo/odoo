@@ -1,8 +1,4 @@
-import {
-    deleteConfirmationMessage,
-    AlertDialog,
-    ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
@@ -218,22 +214,6 @@ export class DynamicList extends DataPoint {
         } else {
             this.unarchive(isSelected);
         }
-    }
-
-    deleteRecordsWithConfirmation(dialogProps = {}, records) {
-        let body = deleteConfirmationMessage;
-        if (this.isDomainSelected || this.selection.length > 1) {
-            body = _t("Are you sure you want to delete these records?");
-        }
-        const defaultProps = {
-            body,
-            cancel: () => {},
-            cancelLabel: _t("No, keep it"),
-            confirm: () => this.deleteRecords(records),
-            confirmLabel: _t("Delete"),
-            title: _t("Bye-bye, record!"),
-        };
-        this.model.dialog.add(ConfirmationDialog, { ...defaultProps, ...dialogProps });
     }
 
     // -------------------------------------------------------------------------
