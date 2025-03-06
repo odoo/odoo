@@ -67,6 +67,14 @@ export class Thread extends Record {
     allMessages = Record.many("mail.message", {
         inverse: "thread",
     });
+    storeAsAllChannels = Record.one("Store", {
+        compute() {
+            if (this.model === "discuss.channel") {
+                return this.store;
+            }
+        },
+        eager: true,
+    });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
     group_public_id = Record.one("res.groups");
