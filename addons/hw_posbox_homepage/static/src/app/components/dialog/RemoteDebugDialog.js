@@ -26,6 +26,7 @@ export class RemoteDebugDialog extends Component {
 
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/generate_password",
+                method: "POST",
             });
 
             this.state.password = data.password;
@@ -73,7 +74,7 @@ export class RemoteDebugDialog extends Component {
                     This allows someone who give a ngrok authtoken to gain remote access to your IoT Box,
                     and thus your entire local network. Only enable this for someone you trust.
                 </div>
-                <div class="d-flex flex-row gap-2 mb-4">
+                <div t-if="!store.base.server_status" class="d-flex flex-row gap-2 mb-4">
                     <input placeholder="Password" t-att-value="this.state.password" class="form-control" readonly="readonly" />
                     <button class="btn btn-primary btn-sm" t-on-click="generatePassword">
                         <div t-if="this.state.loading" class="spinner-border spinner-border-sm" role="status">
