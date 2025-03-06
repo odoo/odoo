@@ -250,7 +250,7 @@ export class SelfOrder extends Reactive {
             tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
             qty: qty,
             note: customer_note || "",
-            price_unit: productPrice.total_excluded,
+            price_unit: productPrice.pricelist_price,
             price_extra: 0,
         };
 
@@ -864,7 +864,7 @@ export class SelfOrder extends Reactive {
             this.currency
         );
 
-        return taxesData;
+        return { pricelist_price: price, ...taxesData };
     }
     getProductDisplayPrice(productTemplate, product) {
         const taxesData = this.getProductPriceInfo(productTemplate, product);
