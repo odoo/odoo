@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.TopMenuVisibilityOption">
+    <BuilderRow label.translate="Header Position">
+        <BuilderSelect preview="false" action="'setWebsiteHeaderVisibilty'">
+            <BuilderSelectItem actionValue="'overTheContent'" id="'overTheContent'">Over The Content</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'regular'">Regular</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>    
+    <t t-if="isActiveItem('overTheContent')">
+        <BuilderRow label.translate="Background" level="1">
+            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'background-color'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Text Color" level="1">
+            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'color'"/>
+        </BuilderRow>
+    </t>
+</t>
+
+<t t-name="html_builder.HideFooterOption">
+    <BuilderRow label.translate="Page Visibility">
+        <BuilderCheckbox classAction="'d-none o_snippet_invisible'" action="'setPageWebsiteDirty'" inverseAction="true"/>
+    </BuilderRow>
+</t>
+
+</templates>
