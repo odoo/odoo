@@ -512,8 +512,8 @@ describe("Link creation", () => {
             const { el } = await setupEditor("<p>H[el]lo</p>");
             await waitFor(".o-we-toolbar");
             // link button should be enabled
-            expect('.o-we-toolbar button[title="link"]').not.toHaveClass("disabled");
-            expect('.o-we-toolbar button[title="link"]').not.toHaveAttribute("disabled");
+            expect('.o-we-toolbar button[name="link"]').not.toHaveClass("disabled");
+            expect('.o-we-toolbar button[name="link"]').not.toHaveAttribute("disabled");
             await click(".o-we-toolbar .fa-link");
             await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
                 "#"

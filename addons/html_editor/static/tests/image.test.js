@@ -93,6 +93,7 @@ test("shape_circle and shape_rounded are mutually exclusive", async () => {
     expect(img).not.toHaveClass("rounded-circle");
 });
 
+test.tags("mobile");
 test("can undo a shape", async () => {
     const { editor } = await setupEditor(`
         <img src="${base64Img}">

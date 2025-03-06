@@ -48,6 +48,7 @@ import {
     getService,
     installLanguages,
     makeServerError,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -3423,11 +3424,9 @@ test(`editable list view: basic char field edition`, async () => {
     expect(`.o_field_cell:eq(0)`).toHaveText("abc", {
         message: "changes should be saved correctly",
     });
+    expect(`.o_data_row:eq(0)`).not.toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
-    expect(`.o_data_row`).not.toHaveClass("o_selected_row", {
-        message: "saved row should be in readonly mode",
-    });
-    expect(Foo._records[0].foo).toBe("abc", {
+    expect(MockServer.env["foo"].browse(1)[0].foo).toBe("abc", {
         message: "the edition should have been properly saved",
     });
 });
@@ -12659,7 +12658,7 @@ test(`char field edition in editable grouped list`, async () => {
     await contains(`.o_data_cell`).click();
     await contains(`.o_selected_row .o_data_cell [name=foo] input`).edit("pla");
     await contains(`.o_list_button_save`).click();
-    expect(Foo._records[3].foo).toBe("pla", {
+    expect(MockServer.env["foo"].browse(4)[0].foo).toBe("pla", {
         message: "the edition should have been properly saved",
     });
     expect(`.o_data_row:eq(0):contains(pla)`).toHaveCount(1);
@@ -16063,13 +16062,15 @@ test(`list view with default_group_by`, async () => {
         expect.step(`web_read_group${readGroupCount}`);
         switch (readGroupCount) {
             case 1:
-                return expect(kwargs.groupby).toEqual(["bar"]);
-            case 2:
-                return expect(kwargs.groupby).toEqual(["m2m"]);
             case 3:
-                return expect(kwargs.groupby).toEqual(["bar"]);
-            case 4:
-                return expect(kwargs.groupby).toEqual(["bar"]);
+            case 4: {
+                expect(kwargs.groupby).toEqual(["bar"]);
+                break;
+            }
+            case 2: {
+                expect(kwargs.groupby).toEqual(["m2m"]);
+                break;
+            }
         }
     });
 
@@ -16121,10 +16122,14 @@ test(`list view with multi-fields default_group_by`, async () => {
         readGroupCount++;
         expect.step(`web_read_group${readGroupCount}`);
         switch (readGroupCount) {
-            case 1:
-                return expect(kwargs.groupby).toEqual(["foo"]);
-            case 2:
-                return expect(kwargs.groupby).toEqual(["bar"]);
+            case 1: {
+                expect(kwargs.groupby).toEqual(["foo"]);
+                break;
+            }
+            case 2: {
+                expect(kwargs.groupby).toEqual(["bar"]);
+                break;
+            }
         }
     });
 
@@ -16262,7 +16267,7 @@ test(`Properties: boolean`, async () => {
     await contains(`.o_field_cell.o_boolean_cell`).click();
     await contains(`.o_field_cell.o_boolean_cell input`).click();
     await contains(`.o_list_button_save`).click();
-    expect(`.o_field_cell.o_boolean_cell input`).not.toBeChecked();
+    expect(`.o_field_cell.o_boolean_cell input:first`).not.toBeChecked();
     expect.verifySteps(["web_save"]);
 });
 
