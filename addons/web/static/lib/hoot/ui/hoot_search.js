@@ -25,7 +25,7 @@ import { HootTagButton } from "./hoot_tag_button";
  * @typedef {{
  * }} HootSearchProps
  *
- * @typedef {"suites" | "tags" | "tests"} SearchCategory
+ * @typedef {import("../core/config").SearchFilter} SearchFilter
  *
  * @typedef {import("../core/tag").Tag} Tag
  *
@@ -37,22 +37,13 @@ import { HootTagButton } from "./hoot_tag_button";
 //-----------------------------------------------------------------------------
 
 const {
-    Boolean,
+    Math: { abs: $abs },
     Object: { entries: $entries, values: $values },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-/**
- *
- * @param {Record<string, number>} values
- */
-const formatIncludes = (values) =>
-    $entries(values)
-        .filter(([id, value]) => Math.abs(value) === INCLUDE_LEVEL.url)
-        .map(([id, value]) => (value >= 0 ? id : `${EXCLUDE_PREFIX}${id}`));
 
 /**
  * @param {string} query
@@ -154,7 +145,7 @@ const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
                 class="flex items-center gap-1"
                 type="submit"
                 title="Run this filter"
-                t-on-pointerdown="() => this.updateParams(true)"
+                t-on-pointerdown="updateFilterParam"
             >
                 <h4 class="text-primary m-0">
                     Filter using
@@ -230,7 +221,7 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
             </h4>
             <ul class="flex flex-col overflow-y-auto gap-1">
                 <t t-foreach="getTop(env.runner.rootSuites)" t-as="job" t-key="job.id">
-                    <t t-set="category" t-value="'suites'" />
+                    <t t-set="category" t-value="'suite'" />
                     ${templateIncludeWidget("li")}
                 </t>
             </ul>
@@ -243,7 +234,7 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
             </h4>
             <ul class="flex flex-col overflow-y-auto gap-1">
                 <t t-foreach="getTop(env.runner.tags.values())" t-as="job" t-key="job.id">
-                    <t t-set="category" t-value="'tags'" />
+                    <t t-set="category" t-value="'tag'" />
                     ${templateIncludeWidget("li")}
                 </t>
             </ul>
@@ -340,7 +331,7 @@ export class HootSearch extends Component {
         </search>
     `;
 
-    categories = ["suites", "tests", "tags"];
+    categories = ["suite", "test", "tag"];
     useTextFilter = false;
     refresh = refresh;
     title = title;
@@ -355,6 +346,7 @@ export class HootSearch extends Component {
     }
 
     updateSuggestions = debounce(() => {
+        this.state.empty = this.isEmpty();
         this.state.categories = this.findSuggestions();
         this.state.showDropdown = true;
     }, 16);
@@ -364,7 +356,7 @@ export class HootSearch extends Component {
 
         runner.beforeAll(() => {
             this.state.categories = this.findSuggestions();
-            this.state.empty &&= !this.hasFilters();
+            this.state.empty = this.isEmpty();
         });
         runner.afterAll(() => this.focusSearchInput());
 
@@ -376,11 +368,11 @@ export class HootSearch extends Component {
         this.state = useState({
             categories: {
                 /** @type {Suite[]} */
-                suites: [],
+                suite: [],
                 /** @type {Tag[]} */
-                tags: [],
+                tag: [],
                 /** @type {Test[]} */
-                tests: [],
+                test: [],
             },
             disabled: false,
             empty: !query.trim(),
@@ -393,7 +385,11 @@ export class HootSearch extends Component {
             "click",
             (ev) => {
                 if (this.runnerState.status !== "running") {
-                    this.state.showDropdown = ev.composedPath().includes(this.rootRef.el);
+                    const shouldOpen = ev.composedPath().includes(this.rootRef.el);
+                    if (shouldOpen && !this.state.showDropdown) {
+                        this.updateSuggestions();
+                    }
+                    this.state.showDropdown = shouldOpen;
                 }
             },
             { capture: true }
@@ -403,7 +399,7 @@ export class HootSearch extends Component {
     /**
      * @param {string} query
      * @param {Map<string, Suite | Tag | Test>} items
-     * @param {SearchCategory} category
+     * @param {SearchFilter} category
      */
     filterItems(query, items, category) {
         const checked = this.runnerState.includeSpecs[category];
@@ -412,7 +408,7 @@ export class HootSearch extends Component {
         const remaining = [];
         let checkedCount = 0;
         for (const item of items.values()) {
-            const value = Math.abs(checked[item.id]);
+            const value = $abs(checked[item.id]);
             if (value === INCLUDE_LEVEL.url) {
                 result.push(item);
                 checkedCount++;
@@ -431,9 +427,9 @@ export class HootSearch extends Component {
         const { suites, tags, tests } = this.env.runner;
         const pattern = getPattern(this.state.query);
         return {
-            suites: this.filterItems(pattern, suites, "suites"),
-            tags: this.filterItems(pattern, tags, "tags"),
-            tests: this.filterItems(pattern, tests, "tests"),
+            suite: this.filterItems(pattern, suites, "suite"),
+            tag: this.filterItems(pattern, tags, "tag"),
+            test: this.filterItems(pattern, tests, "test"),
         };
     }
 
@@ -442,20 +438,20 @@ export class HootSearch extends Component {
     }
 
     getCategoryCounts() {
-        const includeSpecs = this.runnerState.includeSpecs;
+        const { includeSpecs } = this.runnerState;
         const counts = [];
         for (const category of this.categories) {
             let include = 0;
             let exclude = 0;
             for (const value of $values(includeSpecs[category])) {
                 switch (value) {
-                    case 1:
-                    case 2: {
+                    case +INCLUDE_LEVEL.url:
+                    case +INCLUDE_LEVEL.tag: {
                         include++;
                         break;
                     }
-                    case -1:
-                    case -2: {
+                    case -INCLUDE_LEVEL.url:
+                    case -INCLUDE_LEVEL.tag: {
                         exclude++;
                         break;
                     }
@@ -497,12 +493,12 @@ export class HootSearch extends Component {
         return [...items].sort((a, b) => b.weight - a.weight).slice(0, 5);
     }
 
-    hasFilters() {
-        return Boolean(
+    isEmpty() {
+        return !(
             this.state.query.trim() ||
-                $values(this.runnerState.includeSpecs).some((values) =>
-                    $values(values).some((value) => Math.abs(value) === INCLUDE_LEVEL.url)
-                )
+            $values(this.runnerState.includeSpecs).some((values) =>
+                $values(values).some((value) => $abs(value) === INCLUDE_LEVEL.url)
+            )
         );
     }
 
@@ -510,7 +506,7 @@ export class HootSearch extends Component {
      * @param {number} value
      */
     isReadonly(value) {
-        return Math.abs(value) > 1;
+        return $abs(value) > INCLUDE_LEVEL.url;
     }
 
     /**
@@ -521,13 +517,17 @@ export class HootSearch extends Component {
     }
 
     /**
-     * @param {SearchCategory} categoryId
+     * @param {SearchFilter} categoryId
      * @param {string} id
      * @param {"exclude" | "include"} value
      */
     onIncludeChange(categoryId, id, value) {
         if (value === "include" || value === "exclude") {
-            this.setInclude(categoryId, id, value === "include" ? +1 : -1);
+            this.setInclude(
+                categoryId,
+                id,
+                value === "include" ? +INCLUDE_LEVEL.url : -INCLUDE_LEVEL.url
+            );
         } else {
             this.setInclude(categoryId, id, 0);
         }
@@ -600,11 +600,10 @@ export class HootSearch extends Component {
      */
     onSearchInputInput(ev) {
         this.state.query = ev.currentTarget.value;
-        this.state.empty = !this.hasFilters();
 
         this.env.ui.resultsPage = 0;
 
-        this.updateParams(true);
+        this.updateFilterParam();
         this.updateSuggestions();
     }
 
@@ -616,7 +615,6 @@ export class HootSearch extends Component {
             case "Backspace": {
                 if (ev.currentTarget.selectionStart === 0 && ev.currentTarget.selectionEnd === 0) {
                     this.uncheckLastCategory();
-                    this.state.empty = !this.hasFilters();
                 }
                 break;
             }
@@ -634,21 +632,12 @@ export class HootSearch extends Component {
     }
 
     /**
-     * @param {SearchCategory} categoryId
+     * @param {SearchFilter} categoryId
      * @param {string} id
      * @param {number} [value]
      */
     setInclude(categoryId, id, value) {
-        if (value) {
-            this.runnerState.includeSpecs[categoryId][id] = value;
-        } else {
-            delete this.runnerState.includeSpecs[categoryId][id];
-            if (!this.hasFilters()) {
-                this.state.empty = true;
-            }
-        }
-
-        this.updateParams(false);
+        this.env.runner.include(categoryId, id, value);
     }
 
     /**
@@ -656,9 +645,8 @@ export class HootSearch extends Component {
      */
     setQuery(query) {
         this.state.query = query;
-        this.state.empty = false;
 
-        this.updateParams(true);
+        this.updateFilterParam();
         this.updateSuggestions();
         this.focusSearchInput();
     }
@@ -674,64 +662,51 @@ export class HootSearch extends Component {
         } else {
             this.state.query = `/${query}/`;
         }
-        this.updateParams(true);
+        this.updateFilterParam();
         this.updateSuggestions();
     }
 
     uncheckLastCategory() {
-        const checked = this.runnerState.includeSpecs;
         for (const category of [...this.categories].reverse()) {
             let foundItemToUncheck = false;
-            for (const [key, value] of $entries(checked[category])) {
+            for (const [key, value] of $entries(this.runnerState.includeSpecs[category])) {
                 if (this.isReadonly(value)) {
                     continue;
                 }
                 foundItemToUncheck = true;
-                delete checked[category][key];
+                this.setInclude(category, key, 0);
             }
             if (foundItemToUncheck) {
-                this.updateParams();
                 return true;
             }
         }
         return false;
     }
 
-    /**
-     * @param {boolean} [setUseTextFilter]
-     */
-    updateParams(setUseTextFilter) {
-        if (typeof setUseTextFilter === "boolean") {
-            this.useTextFilter = setUseTextFilter;
-        }
-        if (this.useTextFilter) {
-            this.config.filter = this.state.query.trim();
-            this.config.suite = [];
-            this.config.tag = [];
-            this.config.test = [];
-        } else {
-            this.config.filter = "";
-            this.config.suite = formatIncludes(this.runnerState.includeSpecs.suites);
-            this.config.tag = formatIncludes(this.runnerState.includeSpecs.tags);
-            this.config.test = formatIncludes(this.runnerState.includeSpecs.tests);
-        }
+    updateFilterParam() {
+        this.useTextFilter = true;
+
+        this.config.filter = this.state.query.trim();
+        this.config.suite = [];
+        this.config.tag = [];
+        this.config.test = [];
     }
 
     /**
-     * @param {SearchCategory} categoryId
+     * @param {SearchFilter} categoryId
      * @param {string} id
      */
     toggleInclude(categoryId, id) {
         const currentValue = this.runnerState.includeSpecs[categoryId][id];
-        if (currentValue > 1 || currentValue < -1) {
+        if (this.isReadonly(currentValue)) {
             return; // readonly
         }
         if (currentValue > 0) {
-            this.setInclude(categoryId, id, -1);
+            this.setInclude(categoryId, id, -INCLUDE_LEVEL.url);
         } else if (currentValue < 0) {
             this.setInclude(categoryId, id, 0);
         } else {
-            this.setInclude(categoryId, id, +1);
+            this.setInclude(categoryId, id, +INCLUDE_LEVEL.url);
         }
     }
 
