@@ -989,3 +989,27 @@ class StockQuant(TransactionCase):
         action = quant.action_view_stock_moves()
         history = self.env['stock.move.line'].search(action['domain'])
         self.assertTrue(history)
+
+    def test_import_existing_quant(self):
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_lot.id,
+            'company_id': self.env.company.id,
+        })
+        self.env = self.env(user=self.stock_user)
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product_lot.id,
+            'inventory_quantity': 5.0,
+            'location_id': self.stock_location.id,
+            'lot_id': lot1.id,
+        })
+
+        self.env['stock.quant'].with_context(import_file=True, inventory_mode=True).create({
+            'product_id': self.product_lot.id,
+            'inventory_quantity': 3.0,
+            'location_id': self.stock_location.id,
+            'lot_id': lot1.id,
+        })
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product_lot.id), ('location_id', '=', self.stock_location.id), ('lot_id', '=', lot1.id)])
+        self.assertEqual(quant.inventory_quantity, 3.0, 'Imported inventory adjustment should replace the existing one completely')
