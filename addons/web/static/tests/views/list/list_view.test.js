@@ -16397,3 +16397,23 @@ test('select records range with shift click on several page', async () => {
     await contains(`.o_data_row .o_list_record_selector input`).click({ shiftKey: true });
     expect(`.o_list_selection_box`).toHaveText("1\nselected\n Select all 4");
 });
+
+test("hide pager in the list view with sample data", async () => {
+    Foo._records = [];
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree sample="1">
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </tree>
+        `,
+        noContentHelp: "click to add a partner",
+    });
+
+    expect(".o_content").toHaveClass("o_view_sample_data");
+    expect(".o_cp_pager").not.toBeVisible();
+});

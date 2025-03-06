@@ -14014,3 +14014,25 @@ test.tags("desktop")("drag and drop records and quickly open a record", async ()
     await animationFrame();
     expect(".o_form_view").toHaveCount(1);
 });
+
+test("hide pager in the kanban view with sample data", async () => {
+    Partner._records = [];
+
+    await mountView({
+        arch: `
+            <kanban sample="1">
+                <templates>
+                    <div t-name="kanban-box">
+                        <field name="foo"/>
+                        <field name="int_field"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        noContentHelp: "No content helper",
+    });
+
+    expect(".o_content").toHaveClass("o_view_sample_data");
+    expect(".o_cp_pager").not.toBeVisible();
+});
