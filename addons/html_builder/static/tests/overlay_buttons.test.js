@@ -277,21 +277,23 @@ test("applying overlay button  should wait for actions in progress", async () =>
 
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").click();
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
 
     await contains(":iframe .test-options-target").click();
     await contains(".overlay .test_button").click();
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
 
     customActionDef.resolve();
     await tick();
     expect(editable).toHaveInnerHTML(
-        `<div class="test-options-target customAction overlayButton">plop</div>`
+        `<div class="test-options-target o-paragraph customAction overlayButton">plop</div>`
     );
 
     undo(editor);
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target customAction">plop</div>`);
+    expect(editable).toHaveInnerHTML(
+        `<div class="test-options-target customAction o-paragraph">plop</div>`
+    );
 
     undo(editor);
-    expect(editable).toHaveInnerHTML(`<div class="test-options-target">plop</div>`);
+    expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
 });
