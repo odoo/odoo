@@ -18004,4 +18004,20 @@ QUnit.module("Views", (hooks) => {
 
         await clickSave(target);
     });
+
+    QUnit.test("hide pager in the list view with sample data", async (assert) => {
+        await makeView({
+            type: "list",
+            arch: `
+                <tree sample="1">
+                    <field name="date"/>
+                </tree>`,
+            serverData,
+            domain: Domain.FALSE.toList(),
+            resModel: "foo",
+        });
+
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
+        assert.isNotVisible(target.querySelector(".o_cp_pager"));
+    });
 });
