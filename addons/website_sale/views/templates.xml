@@ -253,7 +253,13 @@
                                 t-att-content="product.name"
                                 t-field="product.name"
                             />
-                            <a t-if="not product.website_published" role="button" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">
+                            <a
+                                t-if="not product.website_published"
+                                class="btn btn-sm btn-danger"
+                                t-att-href="product_href"
+                                role="button"
+                                title="This product is unpublished."
+                            >
                                 Unpublished
                             </a>
                         </h6>
@@ -326,7 +332,7 @@
                     href="#"
                     t-attf-class="dropdown-toggle btn px-2"
                     data-bs-toggle="dropdown"
-                    >
+                >
                     <small class="d-none d-md-inline opacity-75">Pricelist:</small>
                     <span class="d-none d-md-inline" t-esc="pricelist and pricelist.name or ' - '" />
                     <i class="fa fa-map-o d-md-none" role="img"/>
@@ -339,7 +345,7 @@
                             t-att-href="'/shop/change_pricelist/%s' % pl.id"
                             t-attf-class="dropdown-item {{_is_active and 'active'}}"
                             t-att-aria-current="_is_active and 'true' or 'false'"
-                            >
+                        >
                             <span
                                 class="switcher_pricelist"
                                 t-att-data-pl_id="pl.id"
@@ -421,9 +427,13 @@
                         {{hasLeftColumn and 'o_wsale_has_sidebar'}}
                         {{editionPreviews and 'o_wsale_edit_preview_enabled'}}"
                     t-attf-style="--o-wsale-products-grid-gap: {{gap}};"
-                    >
+                >
                     <div class="row o_wsale_products_main_row flex-nowrap">
-                        <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky align-self-start col clearfix">
+                        <aside
+                            t-if="hasLeftColumn"
+                            id="products_grid_before"
+                            class="d-none d-lg-block position-sticky align-self-start col clearfix"
+                        >
                             <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 pt-2 px-lg-2 pb-lg-5 ps-2 overflow-y-scroll">
                                 <t
                                     t-set="is_sidebar_collapsible"
@@ -453,7 +463,7 @@
                         <div id="products_grid" t-attf-class="col">
                             <t
                                 t-set="_header_has_content"
-                                t-value="category or opt_wsale_categories_top or (not is_view_active('website_sale.floating_bar') and (opt_wsale_attributes_top or is_view_active('website_sale.search') or is_view_active('website_sale.sort') or hasPricelistDropdown))"
+                                t-value="category or opt_wsale_categories_top or (not opt_wsale_floating_bar and (opt_wsale_attributes_top or is_view_active('website_sale.search') or is_view_active('website_sale.sort') or hasPricelistDropdown))"
                             />
 
                             <header
@@ -478,10 +488,10 @@
                                         t-att-href="backUrl"
                                         role="button"
                                         title="Back"
-                                        >
+                                    >
                                         <i class="oi oi-arrow-left" role="img"/>
                                     </a>
-                                    <h1 t-attf-class="mb-0 lh-lg {{search and 'base-fs font-sans-serif' or 'fs-3'}} {{search and category and 'mb-2'}}">
+                                    <h1 t-attf-class="mb-0 lh-lg {{search and 'base-fs font-sans-serif' or 'fs-3'}} {{search and bool(category) and 'mb-2'}}">
                                         <t t-if="search and category">
                                             <span class="text-muted">Searching</span>
                                             <span class="badge text-bg-info fw-normal base-fs">
@@ -515,24 +525,30 @@
                                         Drag building blocks here to customize the header for
                                         "<t t-esc='category.name'/>" category.
                                     </t>
-                                    <div id="category_header"
+                                    <div
+                                        id="category_header"
                                         t-att-data-editor-message="editor_msg"
-                                        t-field="category.website_description"/>
+                                        t-field="category.website_description"
+                                    />
                                 </t>
                                 <t t-if="opt_wsale_categories_top"
-                                   t-call="website_sale.filmstrip_categories"/>
+                                   t-call="website_sale.filmstrip_categories"
+                                />
                                 <div
-                                    t-if="not is_view_active('website_sale.floating_bar')"
+                                    t-if="not opt_wsale_floating_bar"
                                     class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between gap-1 gap-lg-2 gap-xl-3"
-                                    >
+                                >
                                     <t t-if="is_view_active('website_sale.search')">
                                         <t t-set="_has_all_sibligns" t-value="hasPricelistDropdown and is_view_active('website_sale.sort') and wsale_has_filters_btn"></t>
-                                        <div t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}"
+                                        <!-- Desktop Search button -->
+                                        <div
+                                            t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}"
                                             t-call="website_sale.search"
-                                            >
-                                            <t t-if="category" t-set="placeholder" t-value="'Search in ' + category.name"/>
+                                        >
+                                            <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
                                             <t t-set="search" t-value="original_search or search"/>
                                         </div>
+                                        <!-- Mobile Search button -->
                                         <a
                                             t-attf-class="btn o_not_editable {{_has_all_sibligns and 'd-inline-block d-sm-none' or 'd-none'}} me-auto btn-{{navClass}}"
                                             data-bs-target="#o_wsale_search_modal"
@@ -540,7 +556,7 @@
                                             role="button"
                                             title="Search Products"
                                             href="#"
-                                            >
+                                        >
                                             <i class="oi oi-search" role="img"/>
                                         </a>
                                     </t>
@@ -552,14 +568,21 @@
                                         t-if="is_view_active('website_sale.sort')"
                                         t-call="website_sale.sort"
                                     />
-                                    <button t-if="wsale_has_filters_btn"
-                                            t-attf-class="btn btn-{{navClass}} position-relative {{not wsale_has_filters_btn_lg and 'd-lg-none'}} {{not is_view_active('website_sale.search') and 'ms-auto'}} text-nowrap"
-                                            title="Filters"
-                                            data-bs-toggle="offcanvas"
-                                            data-bs-target="#o_wsale_offcanvas">
+                                    <button
+                                        t-if="wsale_has_filters_btn"
+                                        t-attf-class="btn btn-{{navClass}} position-relative {{not wsale_has_filters_btn_lg and 'd-lg-none'}} {{not is_view_active('website_sale.search') and 'ms-auto'}} text-nowrap"
+                                        title="Filters"
+                                        data-bs-toggle="offcanvas"
+                                        data-bs-target="#o_wsale_offcanvas"
+                                    >
                                         <i class="oi oi-settings-adjust" role="img"/>
                                         <small t-attf-class="ms-1 {{(hasPricelistDropdown and is_view_active('website_sale.search') and is_view_active('website_sale.sort')) and 'd-none d-md-inline-block'}}">Filters</small>
-                                        <span t-if="isFilteringByPrice or attrib_set or tags" t-attf-class="position-absolute top-0 start-100 translate-middle border border-{{navClass}} rounded-circle bg-danger p-1"><span class="visually-hidden">filters active</span></span>
+                                        <span
+                                            t-if="isFilteringByPrice or attrib_set or tags"
+                                            t-attf-class="position-absolute top-0 start-100 translate-middle border border-{{navClass}} rounded-circle bg-danger p-1"
+                                        >
+                                            <span class="visually-hidden">filters active</span>
+                                        </span>
                                     </button>
                                 </div>
                                 <div t-if="original_search and products" class="alert alert-warning mt8">
@@ -569,8 +592,10 @@
 
                             <div t-if="products" class="o_wsale_products_grid_table_wrapper">
                                 <t t-set="grid_md_allow_custom_cols" t-value="hasLeftColumn"/>
-                                <t t-set="grid_md_use_3col"
-                                   t-value="(not hasLeftColumn and ppr == 4) or (opt_wsale_fullwidth and ppr > 3)"/>
+                                <t
+                                    t-set="grid_md_use_3col"
+                                    t-value="(not hasLeftColumn and ppr == 4) or (opt_wsale_fullwidth and ppr > 3)"
+                                />
 
                                 <section
                                     id="o_wsale_products_grid"
@@ -587,8 +612,7 @@
                                                 <t t-set="col_height" t-value="td_product['y']"/>
                                                 <t t-set="col_width"
                                                    t-value="12 // ppr * td_product['x']"/>
-                                                <t t-set="col_class"
-                                                   t-valuef="g-col-6"/>
+                                                <t t-set="col_class" t-valuef="g-col-6"/>
                                                 <t t-set="col_class_lg"
                                                    t-value="'g-col-lg-' + str(col_width)"/>
                                                 <t t-set="col_class_md"
@@ -630,7 +654,7 @@
                                         t-attf-href="/shop?search={{search}}"
                                         t-attf-title="Search {{search}} globally"
                                         class="d-block pb-5"
-                                        >
+                                    >
                                         Search globally
                                     </a>
                                 </t>
@@ -638,7 +662,7 @@
                                     t-ignore="true"
                                     groups="sales_team.group_sale_manager"
                                     class="alert alert-info d-inline-block mx-auto"
-                                    >
+                                >
                                     Click <i>'New'</i> in the top-right corner to create your first product.
                                 </div>
                             </div>
@@ -695,7 +719,7 @@
         active="False"
         name="Mobile: Show 1 product for row"
         inherit_id="website_sale.products"
-        >
+    >
         <xpath expr="//t[@t-set='col_class']" position="attributes">
             <attribute name="t-valuef">g-col-12</attribute>
         </xpath>
@@ -753,12 +777,12 @@
                 href="#"
                 t-attf-class="dropdown-toggle btn px-2"
                 data-bs-toggle="dropdown"
-                >
+            >
                 <span class="d-md-none">Sort By</span>
                 <small class="d-none d-md-inline opacity-75">Sort By:</small>
                 <span class="d-none d-md-inline">
                     <t t-if="isSortingBy" t-out="isSortingBy[0][1]"/>
-                    <span t-else="1" t-field="website.shop_default_sort"/>
+                    <span t-else="" t-field="website.shop_default_sort"/>
                 </span>
                 <i t-if="_icon_classes" t-attf-class="fa fa-sort {{_icon_classes}}" role="img"/>
             </a>
@@ -770,7 +794,7 @@
                         rel="noindex,nofollow"
                         t-att-href="keep('/shop', order=sortby[0])"
                         t-attf-class="dropdown-item {{_is_active and 'active'}}"
-                        >
+                    >
                         <span t-out="sortby[1]"/>
                     </a>
                 </t>
@@ -814,7 +838,7 @@
             <div
                 if="is_view_active('website_sale.search') and (opt_wsale_attributes or opt_wsale_attributes_top)"
                 class="offcanvas-body flex-grow-0 overflow-visible"
-                >
+            >
                 <t t-call="website_sale.search">
                     <t t-if="category" t-set="placeholder" t-value="'Search in ' + category.name"/>
                     <t t-set="search" t-value="original_search or search"/>
@@ -1052,7 +1076,12 @@
     </template>
 
     <!-- Floating Toolbar -->
-    <template id="website_sale.floating_bar" name="Shop Floating Bar" inherit_id="website_sale.products" active="False">
+    <template
+        id="website_sale.floating_bar"
+        name="Shop Floating Bar"
+        inherit_id="website_sale.products"
+        active="False"
+    >
         <xpath expr="//div[hasclass('o_wsale_products_main_row')]" position="attributes">
             <attribute name="class" add="position-relative" separator=" "/>
         </xpath>
@@ -1067,7 +1096,7 @@
                 class="modal fade css_editable_mode_hidden"
                 aria-hidden="true"
                 tabindex="-1"
-                >
+            >
                 <div class="modal-dialog modal-lg pt-5">
                     <div class="modal-content mt-5 bg-transparent border-0">
                         <div class="o_container_small">
@@ -1104,11 +1133,11 @@
             <div
                 id="o_wsale_floating_bar_rail"
                 class="o_not_editable position-absolute top-0 bottom-0 d-flex justify-content-end align-items-end p-0"
-                >
+            >
                 <nav
                     id="o_wsale_floating_bar"
                     t-attf-class="navbar position-sticky z-3 d-flex gap-1 gap-lg-2 flex-shrink-0 bg-body rounded mb-2 px-2 px-lg-3 shadow {{floatBar_hasSearch and 'ps-1 ps-lg-1'}}  {{floatBar_hasPricelist and 'o_wsale_has_pricelist'}}"
-                    >
+                >
                     <div t-if="floatBar_hasSearch">
                         <a
                             t-attf-class="btn o_not_editable {{(wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist) and 'me-n2'}}"
@@ -1117,7 +1146,7 @@
                             role="button"
                             title="Search Products"
                             href="#"
-                            >
+                        >
                             <i class="oi oi-search" role="img"/>
                         </a>
                     </div>
@@ -1131,15 +1160,16 @@
                         t-call="website_sale.sort"
                     />
                     <button
-                            t-if="wsale_has_filters_btn"
-                            t-attf-class="btn btn-{{navClass}} position-relative {{not wsale_has_filters_btn_lg and 'd-lg-none'}}"
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#o_wsale_offcanvas">
+                        t-if="wsale_has_filters_btn"
+                        t-attf-class="btn btn-{{navClass}} position-relative {{not wsale_has_filters_btn_lg and 'd-lg-none'}}"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#o_wsale_offcanvas"
+                    >
                         <i class="oi oi-settings-adjust" role="img"/>
                         <span
                             t-if="isFilteringByPrice or attrib_set or tags"
                             t-attf-class="position-absolute top-0 start-100 translate-middle rounded-circle bg-danger p-1"
-                            >
+                        >
                             <span class="visually-hidden">filters active</span>
                         </span>
                     </button>
