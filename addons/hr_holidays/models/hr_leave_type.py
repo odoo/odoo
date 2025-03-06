@@ -560,9 +560,8 @@ class HolidaysType(models.Model):
                         datetime.combine(closest_expiration_date, time.max).replace(tzinfo=pytz.UTC),
                         resources=employee.resource_id
                     )
-                    closest_allocation_dict =\
-                        self.env['resource.calendar']._get_attendance_intervals_days_data(
-                            calendar_attendance[employee.resource_id.id])
+                    # for flexible resource, the calendar_attendace will return the whole interval as a single attendance
+                    closest_allocation_dict = calendar._get_attendance_intervals_days_data(calendar_attendance[employee.resource_id.id])
                     if leave_type.request_unit in ['hour']:
                         closest_allocation_duration = closest_allocation_dict['hours']
                     else:
