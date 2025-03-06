@@ -13,7 +13,7 @@ import { insertListInSpreadsheet } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
-import { mockService, makeServerError } from "@web/../tests/web_test_helpers";
+import { mockService, makeServerError, fields } from "@web/../tests/web_test_helpers";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import { user } from "@web/core/user";
@@ -21,6 +21,7 @@ import {
     getBasicServerData,
     defineSpreadsheetActions,
     defineSpreadsheetModels,
+    Partner,
 } from "@spreadsheet/../tests/helpers/data";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
@@ -961,6 +962,57 @@ test("See records when clicking on a waterfall chart bar", async () => {
         ["date", "<", "2020-03-01"],
         ["bar", "=", false],
     ]);
+});
+
+test("See records when clicking on a geo chart country", async () => {
+    const country_id = fields.Many2one({ string: "Country", relation: "res.country" });
+    Partner._fields = { ...Partner._fields, country_id };
+    Partner._records = [
+        { id: 1, country_id: 1, probability: 10 },
+        { id: 2, country_id: 2, probability: 2 },
+    ];
+
+    const fakeActionService = {
+        doAction: async (request, options = {}) => {
+            if (request.type === "ir.actions.act_window") {
+                expect.step("do-action");
+                expect(request.res_model).toBe("partner");
+                expect(request.name).toBe("Belgium / Probability");
+                expect(request.domain).toEqual([["country_id", "=", 1]]);
+            }
+        },
+    };
+    mockService("action", fakeActionService);
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_geo",
+        modelConfig: { external: { geoJsonService: { getAvailableRegions: () => [] } } },
+        definition: {
+            type: "odoo_geo",
+            legendPosition: "top",
+            metaData: {
+                groupBy: ["country_id"],
+                measure: "probability",
+                resModel: "partner",
+                order: null,
+            },
+            searchParams: { context: {}, domain: [], groupBy: [], orderBy: [] },
+            cumulative: true,
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect.verifySteps([]);
+    const mockElement = { feature: { properties: { name: "Belgium" } } };
+    await runtime.chartJsConfig.options.onClick(undefined, [
+        { datasetIndex: 0, index: 0, element: mockElement },
+    ]);
+    expect.verifySteps(["do-action"]);
 });
 
 test("import/export action xml id", async () => {
