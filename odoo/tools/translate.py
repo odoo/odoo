@@ -1069,15 +1069,15 @@ class TarFileWriter:
 
 # Methods to export the translation file
 def trans_export(lang, modules, buffer, format, cr):
-    reader = TranslationModuleReader(cr, modules=modules, lang=lang)
-    writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
-    writer.write_rows(reader)
+    if reader := TranslationModuleReader(cr, modules=modules, lang=lang):
+        writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
+        writer.write_rows(reader)
 
 # pylint: disable=redefined-builtin
 def trans_export_records(lang, model_name, ids, buffer, format, cr):
-    reader = TranslationRecordReader(cr, model_name, ids, lang=lang)
-    writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
-    writer.write_rows(reader)
+    if reader := TranslationRecordReader(cr, model_name, ids, lang=lang):
+        writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
+        writer.write_rows(reader)
 
 
 def _push(callback, term, source_line):
@@ -1214,6 +1214,9 @@ class TranslationReader:
     def __iter__(self):
         for module, source, name, res_id, ttype, comments, _record_id, value in self._to_translate:
             yield (module, ttype, name, res_id, source, value, comments)
+
+    def __bool__(self):
+        return bool(next(iter(self._to_translate), False))
 
     def _push_translation(self, module, ttype, name, res_id, source, comments=None, record_id=None, value=None):
         """ Insert a translation that will be used in the file generation

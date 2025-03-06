@@ -6,6 +6,7 @@ import base64
 import io
 
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 from odoo.tools.translate import trans_export, trans_export_records
 
 NEW_LANG_KEY = '__new__'
@@ -47,7 +48,13 @@ class BaseLanguageExport(models.TransientModel):
             else:
                 mods = sorted(this.mapped('modules.name')) or ['all']
                 trans_export(lang, mods, buf, this.format, self._cr)
-            out = base64.encodebytes(buf.getvalue())
+            if out := buf.getvalue():
+                out = base64.encodebytes(out)
+            else:
+                raise UserError(_(
+                    "No translatable terms were found for the selected %(target)s.",
+                    target=(_('models') if this.export_type == 'model' else _('modules'))
+                ))
 
         filename = 'new'
         if lang:
