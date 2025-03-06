@@ -88,8 +88,7 @@ class TestIrModel(TransactionCase):
         # the database before setUpClass(), which is not correct.  Instead, a
         # test cursor will correspond to the state of the database of cls.cr at
         # that point, i.e., before the call to setUp().
-        cls.registry.enter_test_mode(cls.cr)
-        cls.addClassCleanup(cls.registry.leave_test_mode)
+        cls.registry_enter_test_mode_cls()
 
         # model and records for banana stages
         cls.env['ir.model'].create({

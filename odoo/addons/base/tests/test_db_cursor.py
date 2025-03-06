@@ -10,9 +10,10 @@ from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 
 from odoo import api
 from odoo.modules.registry import Registry
-from odoo.sql_db import db_connect, TestCursor
+from odoo.sql_db import db_connect
 from odoo.tests import common
 from odoo.tests.common import BaseCase, HttpCase
+from odoo.tests.test_cursor import TestCursor
 from odoo.tools.misc import config
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
@@ -127,8 +128,7 @@ class TestTestCursor(common.TransactionCase):
     def setUp(self):
         super().setUp()
         # make the registry in test mode
-        self.registry.enter_test_mode(self.cr)
-        self.addCleanup(self.registry.leave_test_mode)
+        self.registry_enter_test_mode()
         # now we make a test cursor for self.cr
         self.cr = self.registry.cursor()
         self.addCleanup(self.cr.close)
@@ -310,8 +310,7 @@ class TestCursorHooks(common.TransactionCase):
         self.assertEqual(self.log, ['preR', 'postR'])
 
     def test_hooks_on_testcursor(self):
-        self.registry.enter_test_mode(self.cr)
-        self.addCleanup(self.registry.leave_test_mode)
+        self.registry_enter_test_mode()
 
         cr = self.registry.cursor()
 

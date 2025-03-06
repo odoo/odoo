@@ -77,8 +77,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         Ensure that an invoice with an early discount payment term
         and no invoice date can be previewed or printed.
         """
-        self.registry.enter_test_mode(self.cr)
-        self.addCleanup(self.registry.leave_test_mode)
+        self.registry_enter_test_mode()
         out_invoice = self.env['account.move'].create([{
             'move_type': 'out_invoice',
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
