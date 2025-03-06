@@ -118,3 +118,4 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code == 'in':
             company = company or self.env.company
             company._update_l10n_in_is_gst_registered()
+            company._update_l10n_in_fiscal_position_based_on_lut()
