@@ -15,7 +15,7 @@ import { useModelWithSampleData } from "@web/model/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
-import { useExportRecords } from "@web/views/view_hook";
+import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { KanbanCogMenu } from "./kanban_cog_menu";
 import { KanbanRenderer } from "./kanban_renderer";
@@ -210,6 +210,7 @@ export class KanbanController extends Component {
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()
         );
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
     }
 
     get display() {
@@ -382,9 +383,7 @@ export class KanbanController extends Component {
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),
                 callback: () =>
-                    this.model.root.deleteRecordsWithConfirmation(
-                        this.deleteConfirmationDialogProps
-                    ),
+                    this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps),
             },
         };
     }
@@ -394,7 +393,7 @@ export class KanbanController extends Component {
     }
 
     deleteRecord(record) {
-        this.model.root.deleteRecordsWithConfirmation({}, [record]);
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, [record]);
     }
 
     async openRecord(record, { newWindow } = {}) {

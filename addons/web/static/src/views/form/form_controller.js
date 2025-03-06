@@ -1,9 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import {
-    deleteConfirmationMessage,
-    ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
@@ -24,6 +21,7 @@ import { Field } from "@web/views/fields/field";
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useViewCompiler } from "@web/views/view_compiler";
+import { useDeleteRecords } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 
@@ -335,6 +333,8 @@ export class FormController extends Component {
         if (this.env.inDialog) {
             useFormViewInDialog();
         }
+
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
     }
 
     get cogMenuProps() {
@@ -577,22 +577,17 @@ export class FormController extends Component {
 
     get deleteConfirmationDialogProps() {
         return {
-            title: _t("Bye-bye, record!"),
-            body: deleteConfirmationMessage,
             confirm: async () => {
                 await this.model.root.delete();
                 if (!this.model.root.resId) {
                     this.env.config.historyBack();
                 }
             },
-            confirmLabel: _t("Delete"),
-            cancel: () => {},
-            cancelLabel: _t("No, keep it"),
         };
     }
 
     async deleteRecord() {
-        this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, [this.model.root]);
     }
 
     async beforeExecuteActionButton(clickParams) {
