@@ -17,6 +17,25 @@ class ProductProduct(models.Model):
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         return super(ProductProduct, self.with_context(with_expiration=to_date or datetime.datetime.now()))._compute_quantities_dict(lot_id, owner_id, package_id, from_date, to_date)
 
+    free_qty = fields.Float(help="Available quantity (computed as Quantity On Hand "
+             "- reserved quantity - quantity to remove)\n"
+             "In a context with a single Stock Location, this includes "
+             "goods stored in this location, or any of its children.\n"
+             "In a context with a single Warehouse, this includes "
+             "goods stored in the Stock Location of this Warehouse, or any "
+             "of its children.\n"
+             "Otherwise, this includes goods stored in any Stock Location "
+             "with 'internal' type.")
+
+    virtual_available = fields.Float(help="Forecast quantity (computed as Quantity On Hand "
+             "- Outgoing + Incoming - Quantity to Remove)\n"
+             "In a context with a single Stock Location, this includes "
+             "goods stored in this location, or any of its children.\n"
+             "In a context with a single Warehouse, this includes "
+             "goods stored in the Stock Location of this Warehouse, or any "
+             "of its children.\n"
+             "Otherwise, this includes goods stored in any Stock Location "
+             "with 'internal' type.")
 
 
 class ProductTemplate(models.Model):

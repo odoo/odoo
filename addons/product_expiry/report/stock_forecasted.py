@@ -38,7 +38,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             return self.env['product.template'].browse(product_templates).product_variant_ids.filtered(lambda p: p.use_expiration_date)
         return self.env['product.product'].browse(products).filtered(lambda p: p.use_expiration_date)
 
-    def _free_stock_lines(self, product, free_stock, wh_location_ids, read):
+    def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
         res = []
         if product.use_expiration_date:
             reserved_expired, unreserved_expired = self.env['stock.quant']._read_group(self._get_expired_quant_domain(wh_location_ids, product.ids), aggregates=['reserved_quantity:sum', 'available_quantity:sum'])[0]
@@ -46,14 +46,19 @@ class StockForecasted_Product_Product(models.AbstractModel):
             if not float_is_zero(unreserved_expired, precision_rounding=product.uom_id.rounding):
                 res += [self.with_context(removal_date=-1)._prepare_report_line(unreserved_expired, product=product, read=read)]
             # Insert the "To remove on" lines here, before the free stock line
-            res += [
-                self.with_context(removal_date=removal_date)._prepare_report_line(free_stock, product=product, read=read)
-                for removal_date, free_stock in self.env['stock.quant']._read_group(
-                    self._get_quant_domain(wh_location_ids, product.ids),
-                    ['removal_date:day'], ['available_quantity:sum']
-                )
-                if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding)
-            ]
+
+            to_reduce = sum(d['taken_from_stock'] for d in moves_data.values())
+
+            for removal_date, free_stock_at_date in self.env['stock.quant']._read_group(
+                self._get_quant_domain(wh_location_ids, product.ids),
+                ['removal_date:day'], ['available_quantity:sum']
+            ):
+                to_reduce_here = min(to_reduce, free_stock_at_date)
+                to_reduce -= to_reduce_here
+                free_stock_at_date -= to_reduce_here
+                if not float_is_zero(free_stock_at_date, precision_rounding=product.uom_id.rounding):
+                    res.append(self.with_context(removal_date=removal_date)._prepare_report_line(free_stock_at_date, product=product, read=read))
+
             # Compensate for any reserved products that are no longer fresh
             free_stock += reserved_expired
-        return res + super()._free_stock_lines(product, free_stock, wh_location_ids, read)
+        return res + super()._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)

@@ -60,7 +60,7 @@ class ProductProduct(models.Model):
     free_qty = fields.Float(
         'Free To Use Quantity ', compute='_compute_quantities', search='_search_free_qty',
         digits='Product Unit', compute_sudo=False,
-        help="Forecast quantity (computed as Quantity On Hand "
+        help="Available quantity (computed as Quantity On Hand "
              "- reserved quantity)\n"
              "In a context with a single Stock Location, this includes "
              "goods stored in this location, or any of its children.\n"
