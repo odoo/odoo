@@ -81,6 +81,18 @@ export class WebsitePreview extends Component {
 
             const encodedPath = encodeURIComponent(this.path);
             if (!session.website_bypass_domain_redirect // Used by the Odoo support (bugs to be expected)
+                    // As a stable fix, we chose to never redirect to the right
+                    // domain anymore in this case. We still do when using the
+                    // website switcher, but not when reaching the "default"
+                    // website. The goal is to better support users typing
+                    // mysupercompany.odoo.com explicitly to enter their
+                    // backend instead of mysupercompany.be.
+                    // Bugs are to be expected while editing/using the website
+                    // mysupercompany.be from mysupercompany.odoo.com though,
+                    // but it should be the case only in specific/advanced
+                    // situations.
+                    // TODO remove this code properly in master.
+                    && 1 === 0
                     && this.websiteDomain
                     && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
                 // The website domain might be the naked one while the naked one

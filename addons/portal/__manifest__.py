@@ -95,6 +95,7 @@ a dependency towards website editing and customization capabilities.""",
             "portal/static/src/chatter/scss/primary_variables.scss",  # to force interprise primary color
             ("include", "web._assets_bootstrap_backend"),
             "web/static/src/scss/mimetypes.scss",
+            'web/static/src/scss/ui.scss',
             "web/static/src/libs/fontawesome/css/font-awesome.css",
             "web/static/lib/odoo_ui_icons/style.css",
             "web/static/src/webclient/webclient.scss",

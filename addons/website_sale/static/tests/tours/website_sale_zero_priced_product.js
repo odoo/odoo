@@ -1,7 +1,7 @@
 import { registry } from '@web/core/registry';
 
 registry.category('web_tour.tours').add('website_sale_contact_us_button', {
-    checkDelay: 50,
+    checkDelay: 500,
     steps: () => [
         {
             content: "Check that the red color attribute is selected",

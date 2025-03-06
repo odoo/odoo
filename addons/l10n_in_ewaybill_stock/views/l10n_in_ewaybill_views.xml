@@ -38,7 +38,7 @@
                         <group>
                             <field name="ewaybill_date" invisible="not ewaybill_date"/>
                             <field name="document_number"/>
-                            <field name="document_date" readonly="1"/>
+                            <field name="document_date" invisible="picking_type_code == 'incoming'" readonly="1"/>
                         </group>
                     </group>
                     <group name="partners" string="Address Details">

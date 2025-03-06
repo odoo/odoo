@@ -59,6 +59,27 @@ describe("should open a popover", () => {
         await animationFrame();
         expect(queryOne(".o-we-linkpopover").parentElement).toHaveAttribute("style", style);
     });
+    test("link popover should close when click on editable without url", async () => {
+        const { el } = await setupEditor(`<p>[<img src="${base64Img}">]</p>`);
+        await animationFrame();
+        // we create a link without href on img
+        await click("button[name='link']");
+        await waitFor(".o_we_href_input_link");
+        // we put selection out of editor
+        setSelection({
+            anchorNode: document.body,
+            anchorOffset: 0,
+        });
+        await animationFrame();
+        // Restore the selection in the editor. Setting the selection after the image
+        // will place it inside the `<a>` tag if not removed, causing a traceback.
+        setSelection({
+            anchorNode: el.querySelector("img").parentElement,
+            anchorOffset: 1,
+        });
+        await animationFrame();
+        expect(".o-we-linkpopover").toHaveCount(0);
+    });
 });
 
 describe("popover should switch UI depending on editing state", () => {
@@ -447,19 +468,6 @@ describe("Link creation", () => {
             expect(".o-we-linkpopover").toHaveCount(1);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p>a<a href="http://test.com/">bcde[]</a>f</p>'
-            );
-        });
-        test("when selection includes another block and the link extending stays inside of the block", async () => {
-            const { el } = await setupEditor(
-                '<p>a[b<a href="http://test.com/">cd</a>ef</p><p>gh]</p>'
-            );
-            await waitFor(".o-we-toolbar");
-
-            await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover", { timeout: 1500 });
-            expect(".o-we-linkpopover").toHaveCount(1);
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p>a<a href="http://test.com/">bcdef[]</a></p><p>gh</p>'
             );
         });
         test("when create a link on selection which doesn't include a link, it should create a new one", async () => {

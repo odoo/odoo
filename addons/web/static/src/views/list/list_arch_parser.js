@@ -138,6 +138,7 @@ export class ListArchParser {
                     // can decode it later...
                     node: encodeObjectForTemplate({ attrs: widgetInfo.attrs }).slice(1, -1),
                     className: node.getAttribute("class") || "",
+                    widgetInfo,
                 };
                 columns.push({
                     ...widgetInfo,

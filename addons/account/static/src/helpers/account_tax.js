@@ -110,11 +110,15 @@ export const accountTaxHelpers = {
         if (tax.price_include) {
             // Case: special mode is False or 'total_included'
             if (!special_mode || special_mode === "total_included") {
-                if (!tax.include_base_amount) {
+                if (tax.include_base_amount) {
                     for (const other_tax of get_tax_after()) {
-                        if (other_tax.price_include) {
+                        if (!other_tax.is_base_affected) {
                             add_extra_base(other_tax, -1)
                         }
+                    }
+                } else {
+                    for (const other_tax of get_tax_after()) {
+                        add_extra_base(other_tax, -1)
                     }
                 }
                 for (const other_tax of get_tax_before()) {
@@ -123,9 +127,11 @@ export const accountTaxHelpers = {
 
             // Case: special_mode = 'total_excluded'
             } else {
-                for (const other_tax of get_tax_after()) {
-                    if (!other_tax.price_include || tax.include_base_amount) {
-                        add_extra_base(other_tax, 1);
+                if (tax.include_base_amount) {
+                    for (const other_tax of get_tax_after()) {
+                        if (other_tax.is_base_affected) {
+                            add_extra_base(other_tax, 1);
+                        }
                     }
                 }
             }

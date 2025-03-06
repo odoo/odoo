@@ -806,6 +806,14 @@ class PosConfig(models.Model):
         except (TypeError, ValueError, OverflowError):
             return default_limit
 
+    def _get_limited_partner_count(self):
+        default_limit = 100
+        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_customer_count', default_limit)
+        try:
+            return int(config_param)
+        except (TypeError, ValueError, OverflowError):
+            return default_limit
+
     def get_limited_partners_loading(self):
         return self.env.execute_query(SQL("""
             WITH pm AS
@@ -824,7 +832,7 @@ class PosConfig(models.Model):
             )
             ORDER BY  COALESCE(pm.order_count, 0) DESC,
                       NAME limit %s;
-        """, self.company_id.id, 100))
+        """, self.company_id.id, self._get_limited_partner_count()))
 
     def action_pos_config_modal_edit(self):
         return {
@@ -1082,3 +1090,12 @@ class PosConfig(models.Model):
     def _get_available_pricelists(self):
         self.ensure_one()
         return self.available_pricelist_ids if self.use_pricelist else self.pricelist_id
+
+    @api.model
+    def _set_default_pos_load_limit(self):
+        param_model = self.env["ir.config_parameter"]
+        if not param_model.get_param("point_of_sale.limited_product_count"):
+            param_model.set_param("point_of_sale.limited_product_count", 20000)
+
+        if not param_model.get_param("point_of_sale.limited_customer_count"):
+            param_model.set_param("point_of_sale.limited_customer_count", 100)

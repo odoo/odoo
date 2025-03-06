@@ -618,8 +618,8 @@ msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
 "                                Instead, it is used to decompose a BoM into its components when:"
 msgstr ""
-"לא מייצרים מסמך הנדסי (BoM) מסוג ערכה באמצעות הזמנה לייצור..<br/>במקום זאת, "
-"הוא משמש לפירוק מסמך הנדסי לרכיביו כאשר:"
+"לא מייצרים מסמך הנדסי (BoM) מסוג ערכה באמצעות הזמנה לייצור.<br/>\n"
+"במקום זאת, הוא משמש לפירוק מסמך הנדסי לרכיביו כאשר:"
 
 #. module: mrp
 #. odoo-python
@@ -632,7 +632,7 @@ msgstr "הוראת ייצור כבר בוצעה או בוטלה."
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr "מוצר עם מסמך הנדסי מסוג ערכה אינו יכול להיות בעל כלל הזמנה אוטומטיים."
+msgstr " לא ניתן להגדיר כללי הזמנה אוטומטיים עבור מוצר עם עץ מוצר מסוג ערכה."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
@@ -766,7 +766,7 @@ msgstr "דוח הקצאות"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Allocation Report Labels"
-msgstr "תיוגי דוח הקצאה"
+msgstr "תוויות דוח הקצאה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_reception_report
@@ -903,7 +903,7 @@ msgstr "הדפסה אוטומטית של דוח הקצאה"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
 msgid "Auto Print Allocation Report Labels"
-msgstr "הדפסה אוטומטית של תיוגי דוח הקצאה"
+msgstr "הדפסה אוטומטית של תוויות דוח הקצאה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -4074,7 +4074,7 @@ msgstr "ליקוט לפני מיקום ייצור"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Pieces"
-msgstr ""
+msgstr "חלקים"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4556,7 +4556,7 @@ msgstr "מוצרים"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
 msgid "Progress Done (%)"
-msgstr ""
+msgstr "התקדמות בוצעה (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_cancel
@@ -4654,7 +4654,7 @@ msgstr "אנליסטים כמותיים"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__rating_ids
@@ -4890,7 +4890,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 msgid "Scheduling Information"
-msgstr ""
+msgstr "מידע תכנון"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_scrap
