@@ -18,6 +18,36 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
 
+        tax_10_inc = self.env['account.tax'].create({
+            "name": "10% incl",
+            "amount": 10,
+            "amount_type": "percent",
+            "type_tax_use": "sale",
+            "price_include_override": "tax_included",
+            "include_base_amount": True,
+        })
+
+        tax_10_excl = self.env['account.tax'].create({
+            "name": "10% excl",
+            "amount": 10,
+            "amount_type": "percent",
+            "type_tax_use": "sale",
+        })
+
+        self.env['product.product'].create({
+            'name': 'Yummy Burger',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': [Command.set([tax_10_inc.id])],
+        })
+
+        self.env['product.product'].create({
+            'name': 'Taxi Burger',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': [Command.set([tax_10_inc.id, tax_10_excl.id])],
+        })
+
         # With preset location choices
         self.start_tour(self_route, "self_kiosk_each_counter_takeaway_in")
         self.start_tour(self_route, "self_kiosk_each_counter_takeaway_out")
