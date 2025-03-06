@@ -1309,21 +1309,6 @@ class SaleOrderLine(models.Model):
             res['account_id'] = False
         return res
 
-    def _prepare_down_payment_line(self, **optional_values):
-        """ After using the down payment wizard in 'percentage' / 'fixed' mode, order lines are added to the SO
-        to reflect the generated invoices but those don't have any impact on the SO total.
-        After that, when using the down payment wizard in 'delivered' mode, those order lines has to be converted
-        into invoice lines. This is done by this current method.
-
-        :param optional_values: Optional additional values to be added to the invoice line values.
-        :return: A python dictionary to be passed to account.move.line's create method.
-        """
-        self.ensure_one()
-        values = self._prepare_invoice_line(**optional_values)
-        # TODO: That's weird to reverse the extra_tax_data here but I don't have to do the same for the quantity itself
-        values['extra_tax_data'] = self.env['account.tax']._reverse_quantity_base_line_extra_tax_data(values['extra_tax_data'])
-        return values
-
     def _set_analytic_distribution(self, inv_line_vals, **optional_values):
         if self.analytic_distribution and not self.display_type:
             inv_line_vals['analytic_distribution'] = self.analytic_distribution

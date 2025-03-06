@@ -2809,7 +2809,7 @@ class AccountTax(models.Model):
         computation_key='down_payment',
         grouping_function=None,
     ):
-        """ Prepare negative lines to be added representing a down payment.
+        """ Prepare the base lines to be added representing a down payment.
 
         :param base_lines:          A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
         :param company:             The company of the base lines.

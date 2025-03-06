@@ -1476,10 +1476,20 @@ class SaleOrder(models.Model):
                     )
                     down_payment_section_added = True
                     invoice_item_sequence += 1
+
+                optional_values = {'sequence': invoice_item_sequence}
+
+                # When creating the final invoice, we want to express the lines representing
+                # the full order but negate the already created down payment lines.
+                # At this point, on the sale order, the down payment lines have a positive
+                # price unit, a positive 'extra_tax_data' and a quantity of 0.0.
+                if line.is_downpayment:
+                    optional_values['quantity'] = -1.0
+                    optional_values['extra_tax_data'] = self.env['account.tax']\
+                        ._reverse_quantity_base_line_extra_tax_data(line.extra_tax_data)
+
                 invoice_line_vals.append(
-                    Command.create(
-                        line._prepare_down_payment_line(sequence=invoice_item_sequence)
-                    ),
+                    Command.create(line._prepare_invoice_line(**optional_values)),
                 )
                 invoice_item_sequence += 1
 
