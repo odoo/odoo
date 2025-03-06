@@ -117,6 +117,9 @@
             <t t-name="menu">
                 <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
             </t>
+            <xpath expr="//t/a[@download='']" position="before">
+                <a role="menuitem" class="dropdown-item" type="object" name="action_preview_attachment">Preview</a>
+            </xpath>
        </field>
    </record>
 </odoo>
