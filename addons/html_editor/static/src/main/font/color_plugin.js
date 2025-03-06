@@ -33,7 +33,6 @@ export class ColorPlugin extends Plugin {
     static shared = [
         "colorElement",
         "getPropsForColorSelector",
-        ,
         "removeAllColor",
         "getElementColors",
     ];
