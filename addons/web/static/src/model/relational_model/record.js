@@ -990,6 +990,12 @@ export class Record extends DataPoint {
         const changes = this._getChanges();
         delete changes.id; // id never changes, and should not be written
         if (!creation && !Object.keys(changes).length) {
+            if (nextId) {
+                return this.model.load({ resId: nextId });
+            }
+            this._changes = markRaw({});
+            this.data = { ...this._values };
+            this.dirty = false;
             return true;
         }
         if (this.model._urgentSave && this.model.useSendBeaconToSaveUrgently && !this.model.env.inDialog) {
