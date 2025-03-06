@@ -251,21 +251,21 @@ function normalizeCondition(condition) {
 
 /**
  * @param {AST[]} ASTs
- * @param {boolean} distributeNot
+ * @param {Options} [options={}]
  * @param {boolean} [negate=false]
  * @returns {{ tree: Tree, remaimingASTs: AST[] }}
  */
-function _construcTree(ASTs, distributeNot, negate = false) {
+function _construcTree(ASTs, options = {}, negate = false) {
     const [firstAST, ...tailASTs] = ASTs;
 
     if (firstAST.type === 1 && firstAST.value === "!") {
-        return _construcTree(tailASTs, distributeNot, !negate);
+        return _construcTree(tailASTs, options, !negate);
     }
 
     const tree = { type: firstAST.type === 1 ? "connector" : "condition" };
     if (tree.type === "connector") {
         tree.value = firstAST.value;
-        if (distributeNot && negate) {
+        if (options.distributeNot && negate) {
             tree.value = tree.value === "&" ? "|" : "&";
             tree.negate = false;
         } else {
@@ -280,7 +280,7 @@ function _construcTree(ASTs, distributeNot, negate = false) {
         tree.value = toValue(valueAST);
         if (["any", "not any"].includes(tree.operator)) {
             try {
-                tree.value = treeFromDomain(formatAST(valueAST));
+                tree.value = treeFromDomain(formatAST(valueAST), options);
             } catch {
                 tree.value = Array.isArray(tree.value) ? tree.value : [tree.value];
             }
@@ -292,8 +292,8 @@ function _construcTree(ASTs, distributeNot, negate = false) {
         for (let i = 0; i < 2; i++) {
             const { tree: child, remaimingASTs: otherASTs } = _construcTree(
                 remaimingASTs,
-                distributeNot,
-                distributeNot && negate
+                options,
+                options.distributeNot && negate
             );
             remaimingASTs = otherASTs;
             addChild(tree, child);
@@ -304,15 +304,14 @@ function _construcTree(ASTs, distributeNot, negate = false) {
 
 /**
  * @param {AST[]} initialASTs
- * @param {Object} options
- * @param {boolean} [options.distributeNot=false]
+ * @param {Options} [options={}]
  * @returns {Tree}
  */
-function construcTree(initialASTs, options) {
+function construcTree(initialASTs, options = {}) {
     if (!initialASTs.length) {
         return connector("&");
     }
-    const { tree } = _construcTree(initialASTs, options.distributeNot);
+    const { tree } = _construcTree(initialASTs, options);
     return tree;
 }
 

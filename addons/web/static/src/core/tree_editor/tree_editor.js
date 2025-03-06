@@ -37,6 +37,10 @@ function collectDifferences(tree, otherTree) {
         if (formatValue(tree.path) !== formatValue(otherTree.path)) {
             return [{ type: "other" }];
         }
+        if (tree.operator === otherTree.operator && ["any", "not_any"].includes(tree.operator)) {
+            restoreVirtualOperators(tree.value, otherTree.value);
+            return [];
+        }
         if (formatValue(tree.value) !== formatValue(otherTree.value)) {
             return [{ type: "other" }];
         }
