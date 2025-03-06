@@ -13,6 +13,9 @@
                         t-on-click="() => this.pos.selectPreset()">
                         <span t-esc="currentOrder.preset_id?.name" />
                     </button>
+                    <button t-if="this.pos.showSaveOrderButton" t-att-disabled="this.pos.getOrder().isEmpty()" class="btn btn-light btn-lg" t-on-click="() => this.pos.clickSaveOrder()">
+                        <i class="fa fa-upload"/>
+                    </button>
                     <button class="button mobile-more-button btn btn-secondary btn-lg ms-auto" t-on-click="props.onClickMore">
                         <i class="fa fa-fw fa-ellipsis-v" aria-hidden="true" />
                     </button>

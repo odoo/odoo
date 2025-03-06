@@ -190,7 +190,7 @@ export default class DevicesSynchronisation {
                     new Domain([
                         ["id", "not in", ids],
                         ["state", "=", "draft"],
-                        ["config_id", "in", [config.id, ...config.trusted_config_ids]],
+                        ["config_id", "in", [config.id, ...config.raw.trusted_config_ids]],
                     ]),
                 ]);
 
