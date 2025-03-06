@@ -71,11 +71,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'code': 'YY',
         })
 
-        cls.tax_tags = cls.env['account.account.tag'].create({
+        cls.tax_tags = cls.env['account.account.tag'].create([{
             'name': 'tax_tag_%s' % str(i),
             'applicability': 'taxes',
             'country_id': cls.company_data['company'].account_fiscal_country_id.id,
-        } for i in range(8))
+        } for i in range(8)])
 
         cls.cash_basis_tax_a_third_amount = cls.env['account.tax'].create({
             'name': 'tax_1',

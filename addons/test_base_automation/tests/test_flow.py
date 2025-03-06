@@ -983,11 +983,11 @@ action = {
         ):
             with patch.object(self.env.cr, '_now', now := datetime.datetime.now()):
                 past_date = now - datetime.timedelta(1)
-                self.env["base.automation.lead.test"].create({
+                self.env["base.automation.lead.test"].create([{
                     'name': f'lead {i}',
                     # 2 without a date, 8 set in past, 5 set in future
                     'date_automation_last': False if i < 2 else past_date if i < 10 else now + datetime.timedelta(minutes=i),
-                } for i in range(15))
+                } for i in range(15)])
             with common.freeze_time('2020-01-01 03:01:01'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # process records
                 self.env["base.automation"]._cron_process_time_based_actions()

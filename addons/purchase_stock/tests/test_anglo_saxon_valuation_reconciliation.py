@@ -311,10 +311,10 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'account_type': 'income',
         })
 
-        tax_tags = self.env['account.account.tag'].create({
+        tax_tags = self.env['account.account.tag'].create([{
             'name': 'tax_tag_%s' % str(i),
             'applicability': 'taxes',
-        } for i in range(8))
+        } for i in range(8)])
 
         cash_basis_tax_a_third_amount = self.env['account.tax'].create({
             'name': 'tax_1',
