@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { press, queryAllTexts, queryOne, click } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -430,4 +430,27 @@ test("Many2ManyTagsAvatarField: make sure that the arch context is passed to the
 
     expect(".modal .o_form_view").toHaveCount(1);
     expect.verifySteps(["onchange with context given"]);
+});
+
+test("Many2ManyTagsAvatarField: Check if edit_tags work", async () => {
+    onRpc(({ method, model, args }) => {
+        if (method === "get_formview_id") {
+            return false;
+        }
+    });
+    Partner._views = {
+        "form, false": `<form><field name="name"/></form>`,
+    };
+    await mountView({
+        type: "list",
+        resModel: "turtle",
+        arch: `<list editable="top">
+                <field name="partner_ids" widget="many2many_tags_avatar" options="{'edit_tags': True}"/>
+            </list>`,
+    });
+    expect(".many2many_tags_avatar_field_container span").toHaveCount(2);
+    click(".many2many_tags_avatar_field_container > span");
+    await animationFrame();
+    // Form view loaded
+    expect("div.o_form_view.o_view_controller").toHaveCount(1);
 });
