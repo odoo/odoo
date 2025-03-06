@@ -278,12 +278,12 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             value = not value
 
         current_website_id = self._context.get('website_id')
-        is_published = [('is_published', '=', value)]
         if current_website_id:
+            is_published = [('is_published', '=', True)]
             on_current_website = self.env['website'].website_domain(current_website_id)
-            return (['!'] if value is False else []) + expression.AND([is_published, on_current_website])
+            return ([] if value else ['!']) + expression.AND([is_published, on_current_website])
         else:  # should be in the backend, return things that are published anywhere
-            return is_published
+            return [('is_published', '=', value)]
 
     def open_website_url(self):
         website_id = False
