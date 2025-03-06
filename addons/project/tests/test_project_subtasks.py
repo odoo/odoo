@@ -514,3 +514,38 @@ class TestProjectSubtasks(TestProjectCommon):
             subtask_form.parent_id = self.env['project.task']
 
         self.assertTrue(invisible_subtask.display_in_project)
+
+    def test_display_in_project_is_correctly_set_when_parent_task_changes(self):
+        task = self.env['project.task'].create({
+            'name': 'Parent task',
+            'project_id': self.project_goats.id,
+            'child_ids': [
+                Command.create({'name': 'Sub-task 1', 'project_id': self.project_goats.id}),
+                Command.create({'name': 'Sub-task 1', 'project_id': self.project_pigs.id}),
+            ],
+        })
+        subtask_1, subtask_2 = task.child_ids
+
+        self.assertFalse(subtask_1.display_in_project)
+        self.assertTrue(subtask_2.display_in_project)
+
+        form_view = self.env.ref("project.project_task_convert_to_subtask_view_form")
+        with Form(subtask_1, view=form_view) as subtask_form:
+            subtask_form.parent_id = self.env['project.task']
+
+        self.assertTrue(subtask_1.display_in_project)
+
+        with Form(subtask_1, view=form_view) as subtask_form:
+            subtask_form.parent_id = task
+
+        self.assertFalse(subtask_1.display_in_project)
+
+        with Form(subtask_2, view=form_view) as subtask_form:
+            subtask_form.parent_id = self.env['project.task']
+
+        self.assertTrue(subtask_2.display_in_project)
+
+        with Form(subtask_2, view=form_view) as subtask_form:
+            subtask_form.parent_id = task
+
+        self.assertTrue(subtask_2.display_in_project)
