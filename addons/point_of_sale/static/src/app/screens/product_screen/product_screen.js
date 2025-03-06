@@ -335,6 +335,16 @@ export class ProductScreen extends Component {
     }
 
     get products() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories) {
+            const products = [];
+            for (const categ of iface_available_categ_ids) {
+                products.push(
+                    ...this.pos.models["product.product"].getBy("pos_categ_ids", categ.id)
+                );
+            }
+            return [...new Set(products)];
+        }
         return this.pos.models["product.product"].getAll();
     }
 

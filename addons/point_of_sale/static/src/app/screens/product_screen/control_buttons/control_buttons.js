@@ -41,7 +41,9 @@ export class ControlButtons extends Component {
                 item: "none",
             },
         ];
-        for (const fiscalPos of this.pos.models["account.fiscal.position"].getAll()) {
+        for (const fiscalPos of this.pos.models["account.fiscal.position"].filter((fp) =>
+            this.pos.config.fiscal_position_ids.map((fiscal_pos) => fiscal_pos.id).includes(fp.id)
+        )) {
             fiscalPosList.push({
                 id: fiscalPos.id,
                 label: fiscalPos.name,
@@ -79,14 +81,18 @@ export class ControlButtons extends Component {
      * @returns {Array}
      */
     getPricelistList() {
-        const selectionList = this.pos.models["product.pricelist"].map((pricelist) => ({
-            id: pricelist.id,
-            label: pricelist.name,
-            isSelected:
-                this.currentOrder.pricelist_id &&
-                pricelist.id === this.currentOrder.pricelist_id.id,
-            item: pricelist,
-        }));
+        const selectionList = this.pos.models["product.pricelist"]
+            .filter((pricelist) =>
+                this.pos.config.available_pricelist_ids.map((p) => p.id).includes(pricelist.id)
+            )
+            .map((pricelist) => ({
+                id: pricelist.id,
+                label: pricelist.name,
+                isSelected:
+                    this.currentOrder.pricelist_id &&
+                    pricelist.id === this.currentOrder.pricelist_id.id,
+                item: pricelist,
+            }));
 
         if (!this.pos.config.pricelist_id) {
             selectionList.push({
