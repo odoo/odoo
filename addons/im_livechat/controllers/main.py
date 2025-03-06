@@ -110,6 +110,13 @@ class LivechatController(http.Controller):
         store = Store()
         user_id = None
         country_id = None
+<<<<<<< saas-18.2
+||||||| a07e5dee0add323b735a315826324f241ac12600
+        guest = request.env["mail.guest"]
+=======
+        channel = request.env["discuss.channel"]
+        guest = request.env["mail.guest"]
+>>>>>>> efdee66aae9b875bcb8cd9a3348a8bb88b09da5f
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
             user_id = request.env.user.id
@@ -183,6 +190,13 @@ class LivechatController(http.Controller):
             channel = channel.with_context(guest=guest)  # a new guest was possibly created
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
+            if guest:
+                store.add_global_values(guest_token=guest._format_auth_cookie())
+        request.env["res.users"].with_context(guest=guest)._init_store_data(store)
+        guest._bus_send_store(store)
+        if channel:
+            # Make sure not to send the channel on the guest bus, otherwise
+            # "isLoaded" value could be overwritten.
             store.add(
                 channel,
                 extra_fields={
@@ -190,9 +204,17 @@ class LivechatController(http.Controller):
                     "scrollUnread": False,
                 },
             )
+<<<<<<< saas-18.2
             if guest:
                 store.add_global_values(guest_token=guest._format_auth_cookie())
         request.env["res.users"]._init_store_data(store)
+||||||| a07e5dee0add323b735a315826324f241ac12600
+            if guest:
+                store.add_global_values(guest_token=guest._format_auth_cookie())
+        request.env["res.users"].with_context(guest=guest)._init_store_data(store)
+        guest._bus_send_store(store)
+=======
+>>>>>>> efdee66aae9b875bcb8cd9a3348a8bb88b09da5f
         return store.get_result()
 
     def _post_feedback_message(self, channel, rating, reason):
