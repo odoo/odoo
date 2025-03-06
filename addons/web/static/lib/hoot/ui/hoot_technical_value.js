@@ -59,7 +59,7 @@ export class HootTechnicalValue extends Component {
 
     static template = xml`
         <t t-if="isMarkup">
-            <t t-if="value.technical">
+            <t t-if="value.type === 'technical'">
                 <pre class="hoot-technical" t-att-class="value.className">
                     <t t-foreach="value.content" t-as="subValue" t-key="subValue_index">
                         <HootTechnicalValue value="subValue" />
