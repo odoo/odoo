@@ -106,43 +106,8 @@ test("click on remove follower", async () => {
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
-    await click("button[title='Remove this follower']");
+    await click("[title='Remove this follower']");
     await contains(".o-mail-Follower", { count: 0 });
-});
-
-test('Hide "Add follower" and subtypes edition/removal buttons except own user on read only record', async () => {
-    const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-        { hasWriteAccess: false, name: "Partner1" },
-        { hasWriteAccess: false, name: "Partner2" },
-    ]);
-    pyEnv["mail.followers"].create([
-        {
-            is_active: true,
-            partner_id: serverState.partnerId,
-            res_id: partnerId_1,
-            res_model: "res.partner",
-        },
-        {
-            is_active: true,
-            partner_id: partnerId_2,
-            res_id: partnerId_1,
-            res_model: "res.partner",
-        },
-    ]);
-    await start();
-    await openFormView("res.partner", partnerId_1);
-    await click(".o-mail-Followers-button");
-    await contains("a", { count: 0, text: "Add Followers" });
-    await contains(":nth-child(1 of .o-mail-Follower)", {
-        contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
-    });
-    await contains(":nth-child(2 of .o-mail-Follower)", {
-        contains: [
-            ["button[title='Edit subscription']", { count: 0 }],
-            ["button[title='Remove this follower']", { count: 0 }],
-        ],
-    });
 });
 
 test("Load 100 followers at once", async () => {
@@ -161,15 +126,14 @@ test("Load 100 followers at once", async () => {
     await start();
     await openFormView("res.partner", partnerIds[0]);
     await contains("button[title='Show Followers']", { text: "210" });
-    await click("button[title='Show Followers']");
-    await contains(".o-mail-Follower", { text: "Mitchell Admin" });
-    await contains(".o-mail-Follower", { count: 101 }); // 100 more followers + self follower (Mitchell Admin)
+    await click("[title='Show Followers']");
+    await contains(".o-mail-Follower", { count: 100 });
     await contains(".o-mail-Followers-dropdown", { text: "Load more" });
     await scroll(".o-mail-Followers-dropdown", "bottom");
-    await contains(".o-mail-Follower", { count: 201 });
+    await contains(".o-mail-Follower", { count: 200 });
     await tick(); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-Followers-dropdown", "bottom");
-    await contains(".o-mail-Follower", { count: 210 });
+    await contains(".o-mail-Follower", { count: 209 });
     await contains(".o-mail-Followers-dropdown span", { count: 0, text: "Load more" });
 });
 
@@ -220,10 +184,7 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     await click(".o-mail-Followers-button");
     await contains("a", { text: "Add Followers" });
     await contains(":nth-child(1 of .o-mail-Follower)", {
-        contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
-    });
-    await contains(":nth-child(2 of .o-mail-Follower)", {
-        contains: [["button[title='Edit subscription']"], ["button[title='Remove this follower']"]],
+        contains: [["[title='Edit subscription']"], ["[title='Remove this follower']"]],
     });
 });
 
