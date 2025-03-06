@@ -9,6 +9,9 @@ const messagePatch = {
         return this.canForward(thread) && !this.is_note;
     },
     canForward(thread) {
+        if (!thread) {
+            return false;
+        }
         return (
             !["discuss.channel", "mail.box"].includes(thread.model) &&
             ["comment", "email"].includes(this.message_type)
