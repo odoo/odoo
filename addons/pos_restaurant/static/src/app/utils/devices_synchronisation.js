@@ -56,5 +56,6 @@ patch(DevicesSynchronisation.prototype, {
                 await this.pos.deleteOrders([...syncedOrder, ...localOrders]);
             }
         }
+        return result;
     },
 });
