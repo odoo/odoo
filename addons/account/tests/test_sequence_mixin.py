@@ -473,6 +473,32 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.create_move(date='2022-01-01', name='MISC/2021/22/00001', post=True) # year does not match
         self.create_move(date='2022-01-01', name='MISC/2022/22/00001', post=True)  # fix the year in the name
 
+    def test_journal_override_sequence_not_matching_everything(self):
+        """Ensure sequence regex can be overriden with a regular expression not matching every string"""
+        regex = r'^(?P<prefix1>.*?)?(?P<year>\d{4})(?P<prefix2>.*?)(?P<seq>\d+)$'
+
+        move = self.create_move(date='2020-01-01')
+        move.journal_id.sequence_override_regex = regex
+
+        # check if we can create a move
+        next_move = self.create_move(date='2020-01-01', name='MISC/2020/21/00001')
+        next_move.action_post()
+        self.assertEqual(next_move.name, 'MISC/2020/21/00001')
+        # check if the regex is not cleared (regex may be cleared if the name does not match, which shouldn't be the case)
+        self.assertEqual(next_move.journal_id.sequence_override_regex, regex)
+
+        # check if the name can be automatically generated
+        next_move = self.create_move(date='2021-01-01')
+        next_move.action_post()
+        self.assertEqual(next_move.name, 'MISC/2021/21/00001')
+        # check if the regex is not cleared (regex may be cleared if the name does not match, which shouldn't be the case)
+        self.assertEqual(next_move.journal_id.sequence_override_regex, regex)
+
+        # check if a Validation error is thrown when an invalid name is specified
+        with self.assertRaises(ValidationError):
+            self.create_move(date='2022-01-01', name='MISC/2021/22/00001', post=True) # year does not match
+        self.create_move(date='2022-01-01', name='MISC/2022/22/00001', post=True)  # fix the year in the name
+
     def test_journal_sequence_ordering(self):
         """Entries are correctly sorted when posting multiple at once."""
         self.test_move.name = 'XMISC/2016/00001'

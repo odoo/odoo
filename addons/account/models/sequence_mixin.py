@@ -132,8 +132,12 @@ class SequenceMixin(models.AbstractModel):
             # make the seq the only matching group
             regex = self._make_regex_non_capturing(record._sequence_fixed_regex.replace(r"?P<seq>", ""))
             matching = re.match(regex, sequence)
-            record.sequence_prefix = sequence[:matching.start(1)]
-            record.sequence_number = int(matching.group(1) or 0)
+            if matching:
+                record.sequence_prefix = sequence[:matching.start(1)]
+                record.sequence_number = int(matching.group(1) or 0)
+            else:
+                record.sequence_prefix = ''
+                record.sequence_number = int(0)
 
     @api.model
     def _deduce_sequence_number_reset(self, name):
