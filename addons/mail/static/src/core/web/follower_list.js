@@ -1,9 +1,10 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { FollowerSubtypeDialog } from "./follower_subtype_dialog";
 import { useVisible } from "@mail/utils/common/hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Follower } from "@mail/core/web/follower";
+import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
 
 /**
  * @typedef {Object} Props
@@ -15,7 +16,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
-    static components = { DropdownItem };
+    static components = { DropdownItem, Follower };
     static props = ["onAddFollowers?", "onFollowerChanged?", "thread", "dropdown"];
 
     setup() {
@@ -51,34 +52,22 @@ export class FollowerList extends Component {
         });
     }
 
-    /**
-     * @param {MouseEvent} ev
-     * @param {import("models").Follower} follower
-     */
-    onClickDetails(ev, follower) {
-        this.store.openDocument({ id: follower.partner.id, model: "res.partner" });
-        this.props.dropdown.close();
+    async onClickFollow() {
+        this.props.thread.follow();
+        this.props.onFollowerChanged?.();
     }
 
-    /**
-     * @param {MouseEvent} ev
-     * @param {import("models").Follower} follower
-     */
-    async onClickEdit(ev, follower) {
+    async onClickUnfollow() {
+        if (this.props.thread.selfFollower) {
+            await this.props.thread.selfFollower.remove();
+            this.props.onFollowerChanged?.();
+        }
+    }
+
+    async onClickEdit() {
         this.env.services.dialog.add(FollowerSubtypeDialog, {
-            follower,
-            onFollowerChanged: () => this.props.onFollowerChanged?.(this.props.thread),
+            follower: this.props.thread.selfFollower,
+            onFollowerChanged: () => this.props.onFollowerChanged?.(),
         });
-        this.props.dropdown.close();
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     * @param {import("models").Follower} follower
-     */
-    async onClickRemove(ev, follower) {
-        const thread = this.props.thread;
-        await follower.remove();
-        this.props.onFollowerChanged?.(thread);
     }
 }
