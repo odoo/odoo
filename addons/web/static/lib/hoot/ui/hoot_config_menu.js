@@ -21,7 +21,7 @@ import { HootCopyButton } from "./hoot_copy_button";
 //-----------------------------------------------------------------------------
 
 const {
-    Object: { entries: $entries },
+    Object: { entries: $entries, values: $values },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -360,10 +360,7 @@ export class HootConfigMenu extends Component {
         } else {
             if (ev.altKey) {
                 // Aggregate all event types
-                this.config.events = Object.values(CASE_EVENT_TYPES).reduce(
-                    (acc, t) => acc + t.value,
-                    0
-                );
+                this.config.events = $values(CASE_EVENT_TYPES).reduce((acc, t) => acc + t.value, 0);
             } else {
                 this.config.events |= nType;
             }
