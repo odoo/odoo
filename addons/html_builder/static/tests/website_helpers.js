@@ -434,6 +434,9 @@ export async function waitForSnippetDialog() {
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
 }
 
+/**
+ * @param {string | string[]} snippetName
+ */
 export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) {
     mockService("website", {
         get currentWebsite() {
@@ -445,8 +448,13 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
             };
         },
     });
-    const snippetEl = await getStructureSnippet(snippetName);
-    return setupWebsiteBuilder(snippetEl.outerHTML, {
+
+    let html = "";
+    const snippetNames = Array.isArray(snippetName) ? snippetName : [snippetName];
+    for (const name of snippetNames) {
+        html += (await getStructureSnippet(name)).outerHTML;
+    }
+    return setupWebsiteBuilder(html, {
         ...options,
         hasToCreateWebsite: false,
     });
