@@ -697,18 +697,23 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         Test that user is not granted the group account secured if only entries from a journal without 'Hash on Post' is
         secured. Once entries from a journal without 'Hash on Post' are secured, the user is granted the access rights.
         """
+        group_account_secured = self.env.ref('account.group_account_secured')
+        # `group_account_secured` can be by default in user groups (e.g. l10n_de)
+        group_account_secured_in_user_groups = group_account_secured in self.env.user.group_ids.all_implied_ids
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
         move = self._init_and_post([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000]}])
         self.assertNotEqual(move.inalterable_hash, False)
-        # Since only moves from a journal with 'Hash on Post' have been secured, user shouldn't be granted access rights
-        self.assertFalse(self.env.ref('account.group_account_secured') in self.env.user.group_ids.all_implied_ids)
+        # Unless `group_account_secured` was by default in user groups, user shouldn't be granted access rights since
+        # only moves from a journal with 'Hash on Post' have been secured
+        if not group_account_secured_in_user_groups:
+            self.assertFalse(group_account_secured in self.env.user.group_ids.all_implied_ids)
 
         # Once moves from a journal without 'Hash on Post' is secured, user should be granted secured group access rights
         in_invoice = self.init_invoice("in_invoice", self.partner_a, "2023-01-01", amounts=[1000], post=True)
         wizard = self.env['account.secure.entries.wizard'].create({'hash_date': '2023-01-02'})
         wizard.action_secure_entries()
         self.assertNotEqual(in_invoice.inalterable_hash, False)
-        self.assertTrue(self.env.ref('account.group_account_secured') in self.env.user.group_ids.all_implied_ids)
+        self.assertTrue(group_account_secured in self.env.user.group_ids.all_implied_ids)
 
     def test_wizard_hashes_all_journals(self):
         """
