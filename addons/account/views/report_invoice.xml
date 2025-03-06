@@ -195,7 +195,8 @@
                                                 <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
                                             </td>
                                             <td name="td_subtotal" class="text-end o_price_total">
-                                                <span class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+                                                <span t-if="o.company_price_include == 'tax_excluded'" class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+                                                <span t-if="o.company_price_include == 'tax_included'" class="text-nowrap" t-field="line.price_total">31.05</span>
                                             </td>
                                         </t>
                                         <t t-elif="line.display_type == 'line_section'">
