@@ -7156,7 +7156,7 @@ test("one2many list editable: add new line before onchange returns", async () =>
     def.resolve();
     await animationFrame();
     expect(".o_data_row").toHaveCount(2);
-    expect(".o_data_row").not.toHaveClass("o_selected_row");
+    expect(".o_data_row:first").not.toHaveClass("o_selected_row");
 });
 
 test("editable list: multiple clicks on Add an item do not create invalid rows", async () => {

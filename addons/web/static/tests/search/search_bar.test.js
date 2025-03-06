@@ -1272,7 +1272,7 @@ test("edit a filter", async () => {
 
     await clickOnButtonDeleteNode();
     expect(SELECTORS.condition).toHaveCount(0);
-    expect(`.modal footer button`).not.toBeEnabled();
+    expect(`.modal footer button:first`).not.toBeEnabled();
 
     await contains(`.modal ${SELECTORS.addNewRule}`).click();
     expect(SELECTORS.condition).toHaveCount(1);
@@ -1890,33 +1890,30 @@ test("subitems do not have a load more item if there is no more records availabl
     await expect(".o_searchview_autocomplete .o-dropdown-item.o_indent").toHaveText("(no result)");
 });
 
-test(
-    "single name_search call and no flicker when holding ArrowRight",
-    async function () {
-        onRpc(({ method }) => {
-            if (method === "name_search") {
-                expect.step(method);
-            }
-        });
-
-        await mountWithSearch(SearchBar, {
-            resModel: "partner",
-            searchMenuTypes: [],
-            searchViewId: false,
-        });
-
-        await editSearch("a");
-        await press("arrowdown");
-        await press("arrowleft");
-        await animationFrame();
-
-        for (let i = 0; i < 3; i++) {
-            await press("arrowright", { repeat: i > 0 });
-            await animationFrame();
-            expect(".o_menu_item.o_indent").toHaveCount(0);
-            expect("input.o_searchview_input").toBeFocused();
+test("single name_search call and no flicker when holding ArrowRight", async function () {
+    onRpc(({ method }) => {
+        if (method === "name_search") {
+            expect.step(method);
         }
-        await press("arrowright");
-        expect.verifySteps(["name_search"]);
+    });
+
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+
+    await editSearch("a");
+    await press("arrowdown");
+    await press("arrowleft");
+    await animationFrame();
+
+    for (let i = 0; i < 3; i++) {
+        await press("arrowright", { repeat: i > 0 });
+        await animationFrame();
+        expect(".o_menu_item.o_indent").toHaveCount(0);
+        expect("input.o_searchview_input").toBeFocused();
     }
-);
+    await press("arrowright");
+    expect.verifySteps(["name_search"]);
+});
