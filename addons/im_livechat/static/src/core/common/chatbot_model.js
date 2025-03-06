@@ -12,10 +12,17 @@ export class Chatbot extends Record {
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
 
+    forwarded;
     isTyping = false;
     isProcessingAnswer = false;
     script = Record.one("chatbot.script");
-    currentStep = Record.one("ChatbotStep");
+    currentStep = Record.one("ChatbotStep", {
+        onUpdate() {
+            if (this.currentStep?.operatorFound) {
+                this.forwarded = true;
+            }
+        },
+    });
     steps = Record.many("ChatbotStep");
     thread = Record.one("Thread", {
         inverse: "chatbot",
@@ -86,7 +93,11 @@ export class Chatbot extends Record {
      * @param {import("models").Message} message
      */
     async processAnswer(message) {
-        if (this.thread.notEq(message.thread) || !this.currentStep?.expectAnswer) {
+        if (
+            this.forwarded ||
+            this.thread.notEq(message.thread) ||
+            !this.currentStep?.expectAnswer
+        ) {
             return;
         }
         if (this.currentStep.type === "free_input_multi") {

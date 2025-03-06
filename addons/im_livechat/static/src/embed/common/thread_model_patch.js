@@ -104,7 +104,11 @@ patch(Thread.prototype, {
     },
     /** @returns {Promise<import("models").Message} */
     async post(body, postData, extraData = {}) {
-        if (this.chatbot && this.chatbot.currentStep?.type !== "free_input_multi") {
+        if (
+            this.chatbot &&
+            !this.chatbot.forwarded &&
+            this.chatbot.currentStep?.type !== "free_input_multi"
+        ) {
             this.chatbot.isProcessingAnswer = true;
         }
         if (this.channel_type === "livechat" && this.isTransient) {
@@ -149,6 +153,9 @@ patch(Thread.prototype, {
 
     get composerDisabled() {
         const step = this.chatbot?.currentStep;
+        if (this.chatbot?.forwarded && this.livechat_active) {
+            return false;
+        }
         return (
             super.composerDisabled ||
             this.chatbot?.isProcessingAnswer ||
