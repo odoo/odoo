@@ -3643,14 +3643,14 @@ class TestMrpOrder(TestMrpCommon):
         picking_type_1 = self.env['stock.picking.type'].create({
             'name': 'new_picking_type_1',
             'code': 'mrp_operation',
-            'sequence_code': 'PT1',
+            'sequence_code': 'BWH/PT1/',
             'default_location_src_id': self.stock_location_components.id,
             'default_location_dest_id': self.env.ref('stock.stock_location_stock').id,
             'warehouse_id': self.warehouse_1.id,
         })
         picking_type_2 = picking_type_1.copy({
             'name': 'new_picking_type_2',
-            'sequence_code': 'PT2'
+            'sequence_code': 'BWH/PT2/'
         })
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_1
