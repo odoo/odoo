@@ -12,9 +12,10 @@
                     <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                     <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                 </group>
-                <group string="Opportunities" invisible="name != 'merge'">
+                <group string="Opportunities" invisible="name != 'merge'" col="4">
                     <field name="lead_id" invisible="1"/>
-                    <field name="duplicated_lead_ids" nolabel="1">
+                    <field name="duplicated_lead_ids" nolabel="1" colspan="4"
+                        context="{'search_default_filter_won_status_pending': 1, 'crm_lead_view_list_short': 1}">
                         <list>
                             <field name="create_date"/>
                             <field name="name"/>
