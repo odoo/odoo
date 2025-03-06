@@ -419,7 +419,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
 
             # Unused remaining stock.
-            lines += self._free_stock_lines(product, free_stock, wh_location_ids, read)
+            lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
 
             # In moves not used.
             for in_ in ins_per_product[product.id]:
@@ -428,7 +428,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 lines.append(self._prepare_report_line(in_['qty'], move_in=in_['move'], read=read))
         return lines
 
-    def _free_stock_lines(self, product, free_stock, wh_location_ids, read):
+    def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
         if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding):
             return [self._prepare_report_line(free_stock, product=product, read=read)]
         return []
