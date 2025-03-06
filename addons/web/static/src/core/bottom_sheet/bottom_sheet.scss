@@ -9,11 +9,11 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 100svh;
+    height: 100dvh;
     z-index: $zindex-offcanvas;
     opacity: 0;
     transform-style: preserve-3d;
-    contain: layout paint;
+    contain: layout paint size;
 
     // Scroll container for gesture handling
     &_rail {
@@ -27,11 +27,6 @@
         &::-webkit-scrollbar {
             display: none;
         }
-    }
-
-    // Enable snap behavior only when snapping is active
-    &.o_bottom_sheet_snapping &_rail {
-        scroll-snap-type: y mandatory;
     }
 
     // Backdrop overlay
@@ -66,16 +61,20 @@
     // The actual sheet
     &_sheet {
         --offcanvas-box-shadow: #{$box-shadow};
-        border-radius: $border-radius-lg $border-radius-lg 0 0;
+
         max-width: map-get($grid-breakpoints, sm);
         margin: 0 map-get($spacers, 2);
         min-height: var(--sheet-initial-height, 50svh);
         max-height: var(--sheet-max-height, 90svh);
+        border-radius: $border-radius-lg $border-radius-lg 0 0;
+        border: $border-width solid var(--BottomSheet-Sheet-borderColor, transparent);
+        border-bottom-width: 0;
         visibility: visible;
         transition: none;
         will-change: transform;
-        border: $border-width solid $border-color;
-        border-bottom-width: 0;
+        contain: content;
+        backface-visibility: hidden;
+        perspective: 1000;
 
         @include media-breakpoint-up(sm) {
             margin: 0 auto;
@@ -99,8 +98,43 @@
             }
         }
 
-        .offcanvas-header {
-            --offcanvas-padding-y: 0;
+        .o_bottom_sheet_header.offcanvas-header {
+            --offcanvas-padding-y: #{map-get($spacers, 2)};
+
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+
+            .btn-close {
+                justify-self: end;
+            }
+
+            .offcanvas-title {
+                padding: 0 map-get($spacers, 1);
+                text-align: center;
+                font-weight: $o-font-weight-medium;
+            }
+
+            &.o_no_back {
+                grid-template-columns: auto 1fr;
+
+                .offcanvas-title {
+                    text-align: left;
+                    padding-left: 0;
+                    grid-column: 1;
+                }
+
+                .btn-close {
+                    grid-column: 2;
+                }
+            }
+
+            &.o_no_title {
+                grid-template-columns: 1fr 1fr;
+
+                .btn-close {
+                    grid-column: 2;
+                }
+            }
         }
 
         .offcanvas-body {
@@ -137,9 +171,12 @@
             font-size: $h5-font-size;
         }
 
-        --dropdown-divider-bg: #{$border-color};
-
         &.o-dropdown-bottom-sheet {
+            .dropdown-divider {
+                --dropdown-divider-bg: #{$border-color};
+                margin: map-get($spacers, 2) ($offcanvas-padding-x * .5);
+            }
+
             .dropdown-item {
                 --dropdown-item-padding-y: #{map-get($spacers, 3)};
                 --dropdown-item-padding-x: #{$offcanvas-padding-x * .5};
@@ -153,6 +190,11 @@
                 }
             }
         }
+    }
+
+    // Enable snap behavior
+    &.o_bottom_sheet_snapping &_rail {
+        scroll-snap-type: y mandatory;
     }
 
     &.o_bottom_sheet_extended .o_bottom_sheet_sheet {

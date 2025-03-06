@@ -1,7 +1,27 @@
+/**
+ * BottomSheet
+ *
+ * This component uses native browser scroll mechanics rather than transform-based gesture
+ * handling. It creates a scrollable overlay where the sheet's position and interactions
+ * are controlled through scroll events and scroll-snap points. Advantages:
+ *
+ * - Avoids expensive gesture calculations and transform operations
+ * - Utilizes the browser's native scroll optimization and hardware acceleration
+ * - Naturally handles nested scrollable areas through the browser's native scroll-chaining
+ * - Minimizes overhead by delegating motion handling to the browser
+ * - No need for gesture arbitration or delegation logic
+ * - Preserves native keyboard navigation
+ * - Make use of the browser's scrolling momentum and bouncing effects
+ *
+ * @class
+ */
+
+
 import { Component, useState, useRef, onMounted, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
+import { getViewportDimensions, useViewportChange } from "@web/core/utils/dvu";
 
 export class BottomSheet extends Component {
     static template = "web.BottomSheet";
@@ -38,9 +58,9 @@ export class BottomSheet extends Component {
             isPositionedReady: false,       // Sheet is ready for display
             isExtended: false,              // Sheet is in extended position
             isDismissing: false,            // Sheet is being dismissed
-            isSnapping: false,              // Snap behavior enabled
+            isSnappingEnabled: false,       // Scroll Snap behavior enabled
             progress: 0,                    // Visual progress (0-1)
-            isInForcedExtendedMode: false   // Track forced extended mode
+            isInForcedExtendedMode: false   // Forced extended mode on launch
         });
 
         // Measurements and configuration (not reactive)
@@ -67,8 +87,18 @@ export class BottomSheet extends Component {
         this.sheetBodyRef = useRef("sheetBody");
         this.bottomSheetService = useService("bottomSheet");
 
-        // Create throttled version of scroll handler
+        // Track setTimeout IDs
+        this.snapTimeoutId = null;
+
+        // Create throttled version for onScroll
         this.throttledOnScroll = useThrottleForAnimation(this.onScroll.bind(this));
+
+        // useViewportChange uses throttle by default
+        useViewportChange(() => {
+            if (this.state.isPositionedReady && !this.state.isDismissing) {
+                this.updateDimensions();
+            }
+        });
 
         onMounted(() => {
             this.initializeSheet();
@@ -83,7 +113,10 @@ export class BottomSheet extends Component {
         }, () => []);
     }
 
-    // Main initialization method
+    /**
+     * Main initialization method for the sheet
+     * Sets up measurements, snap points, and event handlers
+     */
     initializeSheet() {
         if (!this.containerRef.el || !this.scrollRailRef.el || !this.sheetRef.el) return;
 
@@ -107,14 +140,66 @@ export class BottomSheet extends Component {
 
         // Wait for CSS animation to complete before enabling snap
         const animationDuration = this.getAnimationDuration('--BottomSheet-slideIn-duration');
-        setTimeout(() => {
-            this.state.isSnapping = true;
+        if (this.snapTimeoutId) {
+            clearTimeout(this.snapTimeoutId);
+        }
+        this.snapTimeoutId = setTimeout(() => {
+            this.state.isSnappingEnabled = true;
+            this.snapTimeoutId = null;
         }, animationDuration);
     }
 
-    // Step 1: Take measurements
+    /**
+     * Updates dimensions when viewport changes
+     * Recalculates measurements and snap points while preserving extended state
+     */
+    updateDimensions() {
+        // Store extended state
+        const wasExtended = this.state.isExtended;
+
+        // Temporarily disable snapping during update
+        this.state.isSnappingEnabled = false;
+
+        // Clear any existing timeout
+        if (this.snapTimeoutId) {
+            clearTimeout(this.snapTimeoutId);
+            this.snapTimeoutId = null;
+        }
+
+        // Update measurements with new viewport dimensions
+        this.measureDimensions();
+        this.calculateSnapPoints();
+        this.applyDimensions();
+
+        // Determine new scroll position based on previous state
+        let newScrollTop;
+        if (wasExtended && this.snapPoints.extended) {
+            newScrollTop = this.snapPoints.extended;
+        } else if (this.snapPoints.initial) {
+            newScrollTop = this.snapPoints.initial;
+        } else {
+            newScrollTop = 0;
+        }
+
+        // Update scroll position
+        this.scrollRailRef.el.scrollTop = newScrollTop;
+
+        // Re-enable snapping after a short delay
+        this.snapTimeoutId = setTimeout(() => {
+            this.state.isSnappingEnabled = true;
+            this.snapTimeoutId = null;
+        }, 50);
+
+        // Update progress value
+        this.updateProgressValue(newScrollTop);
+    }
+
+    /**
+     * Takes measurements of viewport and sheet dimensions
+     * Calculates natural height and other key measurements
+     */
     measureDimensions() {
-        const viewportHeight = window.innerHeight;
+        const viewportHeight = getViewportDimensions().height;
 
         // Calculate heights based on percentages
         const initialHeightPx = (this.props.initialHeightPercent / 100) * viewportHeight;
@@ -141,7 +226,10 @@ export class BottomSheet extends Component {
         };
     }
 
-    // Step 2: Determine snap points
+    /**
+     * Determines appropriate snap points based on content and viewport size
+     * Sets dismiss, initial, and extended snap points
+     */
     calculateSnapPoints() {
         const { naturalHeight, initialHeight, extendedHeight } = this.measurements;
 
@@ -164,7 +252,10 @@ export class BottomSheet extends Component {
         }
     }
 
-    // Step 3: Apply styles based on measurements and snap points
+    /**
+     * Applies calculated dimensions to the DOM elements
+     * Sets CSS variables and styles based on measurements and snap points
+     */
     applyDimensions() {
         const container = this.containerRef.el;
         const sheet = this.sheetRef.el;
@@ -197,12 +288,14 @@ export class BottomSheet extends Component {
         }
     }
 
-    // Step 4: Set initial position
+    /**
+     * Sets the initial position of the sheet
+     * Configures initial scroll position and overflow behavior
+     */
     positionSheet() {
         const scrollRail = this.scrollRailRef.el;
         const bodyContent = this.sheetBodyRef.el;
 
-        // Determine starting position and scroll value
         let scrollValue;
 
         if (this.props.startExpanded && this.snapPoints.extended) {
@@ -232,7 +325,9 @@ export class BottomSheet extends Component {
         scrollRail.scrollTop = scrollValue || 0;
     }
 
-    // Step 5: Setup event handlers
+    /**
+     * Sets up event handlers for scroll and touch events
+     */
     setupEventHandlers() {
         const scrollRail = this.scrollRailRef.el;
         const bodyContent = this.sheetBodyRef.el;
@@ -250,7 +345,10 @@ export class BottomSheet extends Component {
         }
     }
 
-    // Scroll event handler
+    /**
+     * Handles scroll events on the rail element
+     * Updates progress, handles position snapping, and triggers dismissal
+     */
     onScroll() {
         if (!this.scrollRailRef.el) return;
 
@@ -303,7 +401,12 @@ export class BottomSheet extends Component {
         }
     }
 
-    // Calculate and update progress value
+    /**
+     * Calculates and updates the progress value based on scroll position
+     * This affects visual properties like backdrop opacity
+     *
+     * @param {number} scrollTop - Current scroll position
+     */
     updateProgressValue(scrollTop) {
         const { initial, extended } = this.snapPoints;
         let progress = 0;
@@ -332,7 +435,11 @@ export class BottomSheet extends Component {
         }
     }
 
-    // Update content scrolling based on extended state
+    /**
+     * Updates content scrolling behavior based on sheet position
+     *
+     * @param {boolean} isExtended - Whether the sheet is in extended position
+     */
     updateContentScrolling(isExtended) {
         if (!this.sheetBodyRef.el) return;
 
@@ -350,7 +457,11 @@ export class BottomSheet extends Component {
         }
     }
 
-    // Snap to a specific position
+    /**
+     * Snaps the sheet to a specific position
+     *
+     * @param {string} position - Target position ('dismiss', 'initial', or 'extended')
+     */
     snapToPosition(position) {
         if (!this.scrollRailRef.el) return;
 
@@ -375,14 +486,16 @@ export class BottomSheet extends Component {
         });
     }
 
-    // Slide out animation
+    /**
+     * Initiates the slide out animation and dismissal
+     */
     slideOut() {
         // Prevent duplicate calls
         if (this.state.isDismissing) return;
 
         // Update state to trigger animation
         this.state.isDismissing = true;
-        this.state.isSnapping = false;
+        this.state.isSnappingEnabled = false;
 
         // Get animation duration
         const animationDuration = this.getAnimationDuration('--BottomSheet-slideOut-duration');
@@ -399,7 +512,12 @@ export class BottomSheet extends Component {
         }, animationDuration);
     }
 
-    // Get animation duration from CSS variable
+    /**
+     * Gets animation duration from CSS variable
+     *
+     * @param {string} property - CSS variable name
+     * @returns {number} - Duration in milliseconds
+     */
     getAnimationDuration(property) {
         if (!this.containerRef.el) return 300;
 
@@ -418,13 +536,18 @@ export class BottomSheet extends Component {
         return parseFloat(durationStr) || 300;
     }
 
-    // Public API methods
+    /**
+     * Expands the sheet to extended position (public API)
+     */
     expandSheet() {
         if (this.snapPoints.extended) {
             this.snapToPosition('extended');
         }
     }
 
+    /**
+     * Collapses the sheet to initial position (public API)
+     */
     collapseSheet() {
         if (this.snapPoints.initial) {
             this.snapToPosition('initial');
@@ -433,10 +556,16 @@ export class BottomSheet extends Component {
         }
     }
 
+    /**
+     * Closes the sheet (public API)
+     */
     close() {
         this.slideOut();
     }
 
+    /**
+     * Handles back button press (public API)
+     */
     back() {
         if (this.props.onBack) {
             this.props.onBack();

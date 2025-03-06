@@ -1,14 +1,12 @@
 import { markEventHandled } from "@web/core/utils/misc";
 
 import {
-    App,
     Component,
     onMounted,
     onPatched,
     onWillPatch,
     onWillStart,
     onWillUnmount,
-    useComponent,
     useEffect,
     useExternalListener,
     useRef,
@@ -23,9 +21,6 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Deferred } from "../utils/concurrency";
-import { Dialog } from "../dialog/dialog";
-import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
-import { getTemplate } from "@web/core/templates";
 
 /**
  * @typedef Emoji
@@ -501,7 +496,6 @@ export class EmojiPicker extends Component {
  * @param {function} [props.onClose]
  */
 export function usePicker(PickerComponent, ref, props, options = {}) {
-    const component = useComponent();
     const targets = [];
     const state = useState({ isOpen: false });
     const ui = useService("ui");
@@ -552,7 +546,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                 onSelect: (...args) => {
                     const func = openProps?.onSelect ?? props?.onSelect;
                     const res = func?.(...args);
-                    
+
                     // If onSelect doesn't return false, close the picker after selection
                     if (res !== false) {
                         setTimeout(() => {
