@@ -1445,6 +1445,10 @@ class AccountMoveLine(models.Model):
         # it changes the dependencies.
         self.env.add_to_compute(self._fields['debit'], container['records'])
         self.env.add_to_compute(self._fields['credit'], container['records'])
+        container['records']._conditional_add_to_compute('amount_currency', lambda line: (
+            line.move_id.move_type == 'entry' and
+            line.display_type == 'product'
+        ))
 
     @api.model_create_multi
     def create(self, vals_list):
