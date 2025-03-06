@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="delivery.PickupLocationField" t-inherit="web.Many2OneField" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='props.readonly']" position="inside">
+            <button
+                type="button"
+                class="btn btn-secondary fa fa-pencil px-2 py-1 ms-2"
+                tabindex="-1"
+                draggable="false"
+                t-on-click="onSelectLocation"/>
+        </xpath>
+    </t>
+</templates>

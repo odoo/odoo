@@ -51,6 +51,7 @@ class StockMove(models.Model):
         if any(rule.propagate_carrier for rule in self.rule_id):
             vals['carrier_tracking_ref'] = carrier_tracking_ref
             vals['carrier_id'] = carrier_id
+        vals['delivery_address_id'] = self.group_id.sale_id.delivery_address_id.id
         return vals
 
     def _key_assign_picking(self):

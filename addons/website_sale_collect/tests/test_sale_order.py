@@ -77,7 +77,7 @@ class TestSaleOrder(ClickAndCollectCommon):
                 })
             ]
         )
-        unavailable_ol = cart._get_unavailable_order_lines(self.warehouse.id)
+        unavailable_ol = cart._get_unavailable_lines(self.warehouse.id)
         self.assertFalse(unavailable_ol.product_id.ids)
 
     def test_out_of_stock_product_is_unavailable(self):
@@ -89,7 +89,7 @@ class TestSaleOrder(ClickAndCollectCommon):
                 }),
             ]
         )
-        unavailable_ol = cart._get_unavailable_order_lines(self.warehouse.id)
+        unavailable_ol = cart._get_unavailable_lines(self.warehouse.id)
         self.assertIn(self.product_2.id, unavailable_ol.product_id.ids)
 
     def test_product_in_different_warehouse_is_unavailable(self):
@@ -102,5 +102,5 @@ class TestSaleOrder(ClickAndCollectCommon):
                 })
             ]
         )
-        unavailable_ol = cart._get_unavailable_order_lines(self.warehouse_2.id)
+        unavailable_ol = cart._get_unavailable_lines(self.warehouse_2.id)
         self.assertIn(self.storable_product.id, unavailable_ol.product_id.ids)

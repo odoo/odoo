@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_stock_delivery" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.stock_delivery</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="delivery_address_id" readonly="state in ['cancel', 'done']" string="Delivery Address" invisible="picking_type_code != 'outgoing' or delivery_method != 'classic'"/>
+                <field name="delivery_address_id" readonly="1" string="Pickup Point" invisible="picking_type_code != 'outgoing' or delivery_method != 'pickup_point'" widget="pickup_location_many2one"/>
+                <field name="delivery_address_id" readonly="1" string="Delivery Store" invisible="picking_type_code != 'outgoing' or delivery_method != 'store'" widget="pickup_location_many2one"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
