@@ -172,6 +172,23 @@ test("compile a button with id on mobile", async () => {
     expect(`button[id=action_button]`).toHaveCount(1);
 });
 
+test("compile a button with disabled", async () => {
+    Partner._views = {
+        form: /*xml*/ `
+            <form>
+                <button id="action_button" string="ActionButton" name="action_button" type="object" disabled="disabled"/>
+            </form>
+        `,
+    };
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        resId: 1,
+    });
+    expect(`button[id=action_button]`).toHaveAttribute("disabled")
+});
+
 test.tags("desktop");
 test("statusbar stay visible when scrolling (sticky)", async () => {
     Partner._views = {

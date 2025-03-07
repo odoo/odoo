@@ -366,8 +366,14 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     content: "go to Account security Tab",
     trigger: "a.nav-link:contains(Account Security)",
     run: "click",
-}, ...closeProfileDialog({
-    content: "check that test_user user has been de-totp'd",
-    totp_state: false,
-}),
+}, {
+    content: "check 2FA button",
+    trigger: 'body',
+    run: () => {
+        const button = document.querySelector('button[name=action_totp_enable_wizard]').disabled
+        if (!button) {
+            console.error("2FA button should be disabled.");
+        }
+    },
+}
 ]})
