@@ -162,10 +162,14 @@ export class SnippetModel extends Reactive {
                     id: uniqueId(),
                     title: snippetEl.getAttribute("name"),
                     name: snippetEl.children[0].dataset.snippet,
+                    content: snippetEl.children[0],
+                    viewId: parseInt(snippetEl.dataset.oeSnippetId),
                     thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
-                    isCustom: false,
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
-                    isDisabled: false, // TODO
+                    isCustom: false,
+
+                    isDisabled: false,
+                    forbidSanitize: false,
                 };
                 const moduleId = snippetEl.dataset.moduleId;
                 if (moduleId) {
@@ -173,11 +177,9 @@ export class SnippetModel extends Reactive {
                         moduleId,
                         isInstallable: !!moduleId,
                     });
-                } else {
-                    Object.assign(snippet, {
-                        content: snippetEl.children[0],
-                        viewId: parseInt(snippetEl.dataset.oeSnippetId),
-                    });
+                }
+                if (snippetEl.dataset.oeForbidSanitize) {
+                    Object.assign(snippet, { forbidSanitize: snippetEl.dataset.oeForbidSanitize });
                 }
                 switch (snippetCategory.id) {
                     case "snippet_groups":

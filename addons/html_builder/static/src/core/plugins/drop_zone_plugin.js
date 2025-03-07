@@ -6,8 +6,17 @@ import { closest, touching } from "@web/core/utils/ui";
 
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
-    static dependencies = ["history"];
-    static shared = ["displayDropZone", "dragElement", "clearDropZone", "getAddElement"];
+    static dependencies = ["history", "setup_editor_plugin"];
+    static shared = [
+        "displayDropZone",
+        "dragElement",
+        "clearDropZone",
+        "getAddElement",
+        "getDropRootElement",
+        "getSelectorSiblings",
+        "getSelectorChildren",
+        "getSelectors",
+    ];
 
     resources = {
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
@@ -15,6 +24,7 @@ export class DropZonePlugin extends Plugin {
 
     setup() {
         this.dropZoneElements = [];
+        this.dropzoneSelectors = this.getResource("dropzone_selector");
     }
 
     /**
@@ -31,36 +41,170 @@ export class DropZonePlugin extends Plugin {
         return true;
     }
 
-    isDroppable(el, { selector, exclude = false }) {
-        return el.matches(selector) && !el.matches(exclude);
+    /**
+     * Returns the root element in which the elements can be dropped.
+     * (e.g. if a modal or a dropdown is open, the snippets must be dropped only
+     * in this element)
+     *
+     * @returns {HTMLElement|undefined}
+     */
+    getDropRootElement() {
+        const openModalEl = this.editable.querySelector(".modal.show");
+        if (openModalEl) {
+            return openModalEl;
+        }
+        const openDropdownEl = this.editable.querySelector(
+            ".o_editable.dropdown-menu.show, .dropdown-menu.show .o_editable.dropdown-menu"
+        );
+        if (openDropdownEl) {
+            return openDropdownEl.parentNode;
+        }
+        const openOffcanvasEl = this.editable.querySelector(".offcanvas.show");
+        if (openOffcanvasEl) {
+            return openOffcanvasEl;
+        }
     }
 
-    getAll(selector) {
-        return [...this.editable.querySelectorAll(selector)];
-    }
-
+    /**
+     * Gets the selectors that determine where the given snippet can be placed.
+     *
+     * @param {Object} snippet
+     * @returns {Object} [selectorChildren, selectorSiblings]
+     */
     getSelectors(snippet) {
-        const selectorSiblings = [];
-        const selectorChildren = [];
+        const snippetEl = snippet.content;
+        let selectorChildren = [];
+        let selectorSiblings = [];
+        const selectorExcludeAncestor = [];
 
-        for (const dropZoneSelector of this.getResource("dropzone_selector")) {
-            const { selector, exclude, dropIn, dropNear } = dropZoneSelector;
-            if (!this.isDroppable(snippet.content, { selector, exclude })) {
-                continue;
+        const editableAreaEls = this.dependencies.setup_editor_plugin.getEditableAreas();
+        const rootEl = this.getDropRootElement();
+        this.dropzoneSelectors.forEach((dropzoneSelector) => {
+            const {
+                selector,
+                exclude = false,
+                dropIn,
+                dropNear,
+                excludeAncestor,
+                excludeNearParent,
+            } = dropzoneSelector;
+            if (snippetEl.matches(selector) && !snippetEl.matches(exclude)) {
+                if (dropNear) {
+                    selectorSiblings.push(
+                        ...this.getSelectorSiblings(editableAreaEls, rootEl, {
+                            selector: dropNear,
+                            excludeNearParent,
+                        })
+                    );
+                }
+                if (dropIn) {
+                    selectorChildren.push(
+                        ...this.getSelectorChildren(editableAreaEls, rootEl, { selector: dropIn })
+                    );
+                }
+                if (excludeAncestor) {
+                    selectorExcludeAncestor.push(excludeAncestor);
+                }
             }
+        });
 
-            if (dropNear) {
-                selectorSiblings.push(...this.getAll(dropNear));
-            }
-            if (dropIn) {
-                selectorChildren.push(...this.getAll(dropIn));
-            }
+        // Prevent dropping an element into another one.
+        // (E.g. ToC inside another ToC)
+        if (selectorExcludeAncestor.length) {
+            const excludeAncestor = selectorExcludeAncestor.join(",");
+            selectorChildren = selectorChildren.filter((el) => !el.closest(excludeAncestor));
+            selectorSiblings = selectorSiblings.filter((el) => !el.closest(excludeAncestor));
         }
 
+        // TODO add excludeAncestors in dropzone_selectors
+        // TODO checkSanitize here ?
+
         return {
-            selectorSiblings,
-            selectorChildren,
+            selectorChildren: new Set(selectorChildren),
+            selectorSiblings: new Set(selectorSiblings),
         };
+    }
+
+    /**
+     * Checks the condition for a sibling/children to be valid.
+     *
+     * @param {HTMLElement} el A selectorSibling or selectorChildren element
+     * @param {HTMLElement} rootEl the root element in which we can drop
+     * @returns {Boolean}
+     */
+    checkSelectors(el, rootEl) {
+        if (rootEl && !rootEl.contains(el)) {
+            return false;
+        }
+        // Drop only in visible elements.
+        const invisibleClasses =
+            ".o_snippet_invisible, .o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
+        if (el.closest(invisibleClasses) && el.closest("[data-invisible]")) {
+            return false;
+        }
+        // Drop only in open dropdown and offcanvas elements.
+        if (
+            (el.closest(".dropdown-menu") && !el.closest(".dropdown-menu.show")) ||
+            (el.closest(".offcanvas") && !el.closest(".offcanvas.show"))
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Returns all the elements matching the `dropNear` selector, that are
+     * contained in editable elements. They correspond to elements next to which
+     * an element can be dropped (= siblings).
+     *
+     * @param {Array<HTMLElement>} editableAreaEls the editable elements
+     * @param {HTMLElement} rootEl the root element in which we can drop
+     * @param {String} selector `dropNear` selector
+     * @param {String} excludeParent selector allowing to exclude the siblings
+     * with a parent matching it.
+     * @returns {Array<HTMLElement>}
+     */
+    getSelectorSiblings(editableAreaEls, rootEl, { selector, excludeParent = false }) {
+        const filterFct = (el) =>
+            this.checkSelectors(el, rootEl) &&
+            // Do not drop blocks into an image field.
+            !el.parentNode.closest("[data-oe-type=image]") &&
+            !el.matches(".o_not_editable *") &&
+            !el.matches(".o_we_no_overlay") &&
+            (excludeParent ? !el.parentNode.matches(excludeParent) : true);
+
+        const dropAreaEls = [];
+        editableAreaEls.forEach((el) => {
+            const areaEls = [...el.querySelectorAll(selector)].filter(filterFct);
+            dropAreaEls.push(...areaEls);
+        });
+        return dropAreaEls;
+    }
+
+    /**
+     * Returns all the elements matching the `dropIn` selector, that are
+     * contained in editable elements. They correspond to the elements in which
+     * elements can be dropped as children.
+     *
+     * @param {Array<HTMLElement>} editableAreaEls the editable elements
+     * @param {HTMLElement} rootEl the root element in which we can drop
+     * @param {String} selector `dropIn` selector
+     * @returns {Array<HTMLElement>}
+     */
+    getSelectorChildren(editableAreaEls, rootEl, { selector }) {
+        const filterFct = (el) =>
+            this.checkSelectors(el, rootEl) &&
+            // Do not drop blocks into an image field.
+            !el.closest("[data-oe-type=image]") &&
+            !el.matches('.o_not_editable :not([contenteditable="true"]), .o_not_editable');
+
+        const dropAreaEls = [];
+        editableAreaEls.forEach((el) => {
+            const areaEls = el.matches(selector) ? [el] : [];
+            areaEls.push(...el.querySelectorAll(selector));
+            dropAreaEls.push(...areaEls.filter(filterFct));
+        });
+        return dropAreaEls;
     }
 
     createDropZone() {
@@ -71,11 +215,9 @@ export class DropZonePlugin extends Plugin {
         return dropZoneEl;
     }
 
-    displayDropZone(snippet) {
+    displayDropZone(selectorSiblings, selectorChildren) {
         this.clearDropZone();
 
-        // TODO need to imp check old website
-        const { selectorChildren, selectorSiblings } = this.getSelectors(snippet);
         const targets = [];
         for (const el of selectorChildren) {
             targets.push(...el.children);
