@@ -4,12 +4,19 @@ import { registry } from "@web/core/registry";
 export class DonationForm extends Interaction {
     static selector = ".o_donation_payment_form";
     dynamicContent = {
-        ".o_amount_input": { "t-on-focus": this.onFocusAmountInput },
+        ".o_amount_input": {
+            "t-on-focus": this.onFocusAmountInput,
+            "t-on-click": this.onClickAmountInput,
+        },
         "#donation_comment_checkbox": { "t-on-change.withTarget": this.onDonationCommentChange },
         "input[type='radio']": { "t-on-change": this.onSelectRadioButton },
         "#other_amount_value": { "t-on-input": this.onChangeAmountInput },
     };
 
+    setup() {
+        super.setup();
+        this.inputNumberCount = null;
+    }
     /**
      * @param {Event} ev
      */
@@ -17,6 +24,22 @@ export class DonationForm extends Interaction {
         const otherAmountEl = this.el.querySelector("#other_amount");
         if (otherAmountEl) {
             otherAmountEl.checked = true;
+        }
+    }
+    /**
+     * To prevent showing the message on the first appearance of the minimum input
+     * value, we check if the previous click had the minimum value. If it did, we
+     * display the message; otherwise, we update the stored value.
+     *
+     * @param {Event} ev
+     */
+    onClickAmountInput(ev) {
+        const inputEl = ev.currentTarget;
+        if (this.inputNumberCount === inputEl.value && inputEl.min === inputEl.value) {
+            this.el.querySelector("#warningMinMessageId")?.classList.remove("d-none");
+        }
+        if (!isNaN(parseFloat(inputEl.value))) {
+            this.inputNumberCount = inputEl.value;
         }
     }
     /**
@@ -44,7 +67,8 @@ export class DonationForm extends Interaction {
         const warningMinMessageEl = this.el.querySelector("#warningMinMessageId");
         const value = parseFloat(inputEl.value);
         warningMessageEl.classList.toggle("d-none", value);
-        warningMinMessageEl?.classList.toggle("d-none", value ? inputEl.min < value : true);
+        warningMinMessageEl?.classList.toggle("d-none", value ? inputEl.min <= value : true);
+        this.inputNumberCount = value;
     }
     /**
      * Handles the selection of donation amount options.
@@ -61,6 +85,7 @@ export class DonationForm extends Interaction {
         this.el.querySelector("#other_amount_value").value = "";
         this.el.querySelector("#warningMinMessageId").classList.add("d-none");
         this.el.querySelector("#warningMessageId").classList.add("d-none");
+        this.inputNumberCount = null;
     }
 }
 
