@@ -39,6 +39,7 @@ export class Chart extends Interaction {
 
         const categoryAxis = {
             type: "category",
+            stacked: this.el.dataset.stacked === "true",
         };
 
         const chartData = {
