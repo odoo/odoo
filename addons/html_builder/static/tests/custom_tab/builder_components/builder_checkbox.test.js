@@ -18,17 +18,17 @@ test("Click on checkbox", async () => {
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
     expect(".o-checkbox .form-check-input:checked").toHaveCount(0);
-    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target">b</div>`);
+    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target o-paragraph">b</div>`);
 
     await contains(".o-checkbox").click();
     expect(".o-checkbox .form-check-input:checked").toHaveCount(1);
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target checkbox-action">b</div>`
+        `<div class="test-options-target o-paragraph checkbox-action">b</div>`
     );
 
     await contains(".o-checkbox").click();
     expect(".o-checkbox .form-check-input:checked").toHaveCount(0);
-    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target">b</div>`);
+    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target o-paragraph">b</div>`);
 });
 test("hide/display base on applyTo", async () => {
     addOption({
