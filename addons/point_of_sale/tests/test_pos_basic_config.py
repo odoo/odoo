@@ -856,9 +856,8 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         def open_and_check(pos_data):
             self.config = pos_data['config']
-            self.open_new_session()
+            self.open_new_session(pos_data['amount_paid'])
             session = self.pos_session
-            session.set_opening_control(pos_data['amount_paid'], False)
             self.assertEqual(session.cash_register_balance_start, pos_data['amount_paid'])
 
         pos01_config = self.config
