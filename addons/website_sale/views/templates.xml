@@ -1286,7 +1286,12 @@
             <t t-set="additional_title" t-value="product.name" />
             <div id="wrap" class="js_sale o_wsale_product_page">
                 <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS</t>
-                <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" t-att-data-editor-message="editor_message"/>
+                <t t-set="tooltip_message">Shared between all products</t>
+                <div class="oe_structure oe_empty oe_structure_not_nearest"
+                    id="oe_structure_website_sale_product_1"
+                    t-att-data-editor-message="editor_message"
+                    t-att-data-shared-block-message="tooltip_message"
+                />
                 <section id="product_detail"
                          t-attf-class="oe_website_sale container my-3 my-lg-4 #{'discount'
                             if combination_info['has_discounted_price'] else ''}"
@@ -1493,6 +1498,7 @@
                             <div
                                 id="o_product_terms_and_share"
                                 class="d-flex justify-content-between flex-column flex-md-row align-items-md-end gap-3 mb-3"
+                                t-att-data-shared-block-message="tooltip_message"
                             />
                         </div>
                     </div>
@@ -1502,7 +1508,11 @@
                     t-field="product.website_description"
                     class="oe_structure oe_empty mt16"
                 />
-                <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" t-att-data-editor-message="editor_message"/>
+                <div class="oe_structure oe_empty oe_structure_not_nearest mt16"
+                    id="oe_structure_website_sale_product_2"
+                    t-att-data-editor-message="editor_message"
+                    t-att-data-shared-block-message="tooltip_message"
+                />
             </div>
         </t>
     </template>

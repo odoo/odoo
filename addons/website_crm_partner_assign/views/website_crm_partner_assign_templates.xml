@@ -7,11 +7,20 @@
         <t t-set="additional_title">Resellers</t>
         <div id="wrap">
             <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS</t>
-            <div class="oe_structure oe_empty" id="oe_structure_website_crm_partner_assign_layout_1" t-att-data-editor-message="editor_message"/>
+            <t t-set="tooltip_message">Shared between all resellers</t>
+            <div class="oe_structure oe_empty"
+                id="oe_structure_website_crm_partner_assign_layout_1"
+                t-att-data-editor-message="editor_message"
+                t-att-data-shared-block-message="tooltip_message"
+            />
             <div class="container my-4">
                 <t t-out="0" />
             </div>
-            <div class="oe_structure oe_empty" id="oe_structure_website_crm_partner_assign_layout_2" t-att-data-editor-message="editor_message"/>
+            <div class="oe_structure oe_empty"
+                id="oe_structure_website_crm_partner_assign_layout_2"
+                t-att-data-editor-message="editor_message"
+                t-att-data-shared-block-message="tooltip_message"
+            />
         </div>
     </t>
 </template>
