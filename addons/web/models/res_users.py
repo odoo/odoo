@@ -25,3 +25,6 @@ class ResUsers(models.Model):
 
     def _on_webclient_bootstrap(self):
         self.ensure_one()
+
+    def _should_captcha_login(self, credential):
+        return credential['type'] == 'password'
