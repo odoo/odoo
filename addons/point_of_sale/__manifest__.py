@@ -16,6 +16,7 @@
         'data/digest_data.xml',
         'data/pos_note_data.xml',
         'data/point_of_sale_tour.xml',
+        'data/ir_config_parameter_data.xml',
         'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_close_session_wizard.xml',
