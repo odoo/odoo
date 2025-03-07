@@ -54,5 +54,17 @@ class ProductProduct(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+<<<<<<< 34c89850b859e4bfda36666dd562a35bd4de65ed
     service_tracking = fields.Selection(selection_add=[('repair', 'Repair Order')],
                                         ondelete={'repair': 'set default'})
+||||||| 00f87b91f4675c4aa801b4c04acd8e2f2494bf22
+    create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user')
+=======
+    create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user')
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        if not (self.env.user.has_group('stock.group_stock_user') or self.env.is_superuser()):
+            default = dict(default or {}, create_repair=False)
+        return super().copy_data(default)
+>>>>>>> 3253e499b738e0d6789ac9c8059f19d6973ad1d4
