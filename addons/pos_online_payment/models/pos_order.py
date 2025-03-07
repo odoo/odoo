@@ -8,7 +8,7 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     online_payment_method_id = fields.Many2one('pos.payment.method', compute="_compute_online_payment_method_id")
-    next_online_payment_amount = fields.Float(string='Next online payment amount to pay', digits=0, required=False) # unlimited precision
+    next_online_payment_amount = fields.Monetary(string='Next online payment amount to pay')
 
     @api.depends('config_id.payment_method_ids')
     def _compute_online_payment_method_id(self):
