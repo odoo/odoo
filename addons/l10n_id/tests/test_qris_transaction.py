@@ -8,9 +8,9 @@ from unittest.mock import patch
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestQrisTransaction(AccountTestInvoicingCommon):
     """ Testing the behaviours of QRIS Transaction """
+    chart_template = 'id'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_chart_template('id')
     def setUpClass(cls):
         super().setUpClass()
         cls.invoice = cls.env['account.move'].create({

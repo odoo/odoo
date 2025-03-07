@@ -6,9 +6,9 @@ from odoo.tests import tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLRO(TestUBLCommon):
+    country_code = 'RO'
 
     @classmethod
-    @TestUBLCommon.setup_country('ro')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].write({

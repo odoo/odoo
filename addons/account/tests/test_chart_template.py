@@ -156,6 +156,8 @@ CSV_DATA = {
 @tagged('post_install', '-at_install')
 @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
 class TestChartTemplate(AccountTestInvoicingCommon):
+    country_code = 'BE'
+    skip_common_data = True
 
     @classmethod
     def _use_chart_template(cls, company, chart_template_ref=None):
@@ -163,8 +165,11 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             cls.env['account.chart.template'].try_loading("test", company=company, install_demo=False)
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('be')
     @patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping)
+    def setup_independent_company(cls, **create_values):
+        return super().setup_independent_company(**create_values)
+
+    @classmethod
     def setUpClass(cls):
         """
             Setups a company with a custom chart template, containing a tax and a fiscal position.

@@ -10,9 +10,9 @@ from freezegun import freeze_time
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestQris(AccountTestInvoicingCommon):
     """ Test QRIS QR generation on invoices and auto-payment registration"""
+    chart_template = 'id'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_chart_template('id')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].qr_code = True

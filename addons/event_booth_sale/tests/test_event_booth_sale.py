@@ -14,9 +14,7 @@ from odoo.tools import float_compare
 class TestEventBoothSaleWData(TestEventBoothSaleCommon, TestSalesCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestEventBoothSaleWData, cls).setUpClass()
-
+    def setUpCommonData(cls):
         cls.event_0 = cls.env['event.event'].create({
             'name': 'TestEvent',
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),

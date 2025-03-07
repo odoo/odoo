@@ -7,9 +7,9 @@ from odoo import Command
 
 @odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
+    country_code = 'BE'
 
     @classmethod
-    @TestPointOfSaleHttpCommon.setup_country('be')
     def setUpClass(cls):
         super().setUpClass()
 

@@ -6,9 +6,9 @@ from odoo.tests import Form, tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestDDT(TestSaleCommon):
+    country_code = 'IT'
 
     @classmethod
-    @TestSaleCommon.setup_country('it')
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].write({

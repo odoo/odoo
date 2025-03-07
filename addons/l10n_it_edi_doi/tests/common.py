@@ -6,9 +6,9 @@ from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdiDoi(TestItEdi):
+    country_code = 'IT'
 
     @classmethod
-    @TestItEdi.setup_country('it')
     def setUpClass(cls):
         super().setUpClass()
 

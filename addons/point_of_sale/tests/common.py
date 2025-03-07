@@ -4,7 +4,7 @@ from datetime import datetime
 
 from odoo import fields, tools
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.tests import Form
+from odoo.tests import Form, data_depends
 
 import logging
 
@@ -19,9 +19,7 @@ def archive_products(env):
 class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         cls.company_data_2 = cls.setup_other_company()
 
         cls.company_data['company'].write({
@@ -147,10 +145,9 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
     this class.
     """
 
+    @data_depends('_create_categ_anglo')
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         cls.company_data['company'].write({
             'point_of_sale_update_stock_quantities': 'real',
             'country_id': cls.env['res.country'].create({

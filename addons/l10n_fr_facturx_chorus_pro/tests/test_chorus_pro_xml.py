@@ -8,9 +8,9 @@ from odoo.addons.l10n_fr_facturx_chorus_pro.models.account_edi_xml_ubl_bis3 impo
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestChorusProXml(AccountTestInvoicingCommon):
+    country_code = 'FR'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('fr')
     def setUpClass(cls):
         super().setUpClass()
         cls.company = cls.company_data['company']

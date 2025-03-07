@@ -7,8 +7,8 @@ import datetime
 
 
 class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
+    country_code = 'HU'
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('hu')
     def setUpClass(cls):
         super().setUpClass()
 

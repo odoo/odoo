@@ -10,6 +10,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdi(AccountTestInvoicingCommon):
+    country_code = 'IT'
 
     class RepartitionLine:
         def __init__(self, factor_percent, repartition_type, tag_ids):
@@ -34,7 +35,6 @@ class TestItEdi(AccountTestInvoicingCommon):
         }) for line in lines])
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('it')
     def setUpClass(cls):
         super().setUpClass()
 

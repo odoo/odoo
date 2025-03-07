@@ -10,9 +10,9 @@ _logger = logging.getLogger(__name__)
 
 
 class TestAr(AccountTestInvoicingCommon):
+    chart_template = 'ar_ri'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_chart_template('ar_ri')
     def setUpClass(cls):
         super().setUpClass()
 

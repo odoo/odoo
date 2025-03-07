@@ -12,9 +12,9 @@ from odoo.tests import tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestVNEDI(AccountTestInvoicingCommon):
+    country_code = 'VN'
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('vn')
     def setUpClass(cls):
         super().setUpClass()
 

@@ -7,9 +7,7 @@ from odoo.addons.base.tests.common import BaseCommon
 class UomCommon(BaseCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
+    def setUpCommonData(cls):
         cls.uom_gram = cls.quick_ref('uom.product_uom_gram')
         cls.uom_kgm = cls.quick_ref('uom.product_uom_kgm')
         cls.uom_ton = cls.quick_ref('uom.product_uom_ton')

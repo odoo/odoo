@@ -9,9 +9,9 @@ from odoo.tests import tagged
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
+    country_code = 'BE'
 
     @classmethod
-    @TestUBLCommon.setup_country("be")
     def setUpClass(cls):
         super().setUpClass()
 
