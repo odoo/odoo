@@ -21,6 +21,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
 import { Component, useState } from "@odoo/owl";
+import { getDeleteOrArchiveDialogProps } from "../delete_with_archive_hook";
 
 const { DateTime } = luxon;
 
@@ -107,6 +108,7 @@ export class CalendarController extends Component {
             editRecord: this.editRecord.bind(this),
             setDate: this.setDate.bind(this),
         };
+        this.getDeleteOrArchiveDialogProps = getDeleteOrArchiveDialogProps();
     }
 
     get currentDate() {
@@ -372,8 +374,12 @@ export class CalendarController extends Component {
         };
     }
 
-    deleteRecord(record) {
-        this.displayDialog(ConfirmationDialog, this.deleteConfirmationDialogProps(record));
+    async getDeleteOrArchiveConfirmationDialogProps(recordId) {
+        return await this.getDeleteOrArchiveDialogProps(this.props.resModel, [recordId]);
+    }
+
+    async deleteRecord(record) {
+        return this.displayDialog(ConfirmationDialog, await this.getDeleteOrArchiveConfirmationDialogProps(record.id) || this.deleteConfirmationDialogProps(record));
     }
 
     onWillStartModel() {}

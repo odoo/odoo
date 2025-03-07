@@ -4367,6 +4367,27 @@ class BaseModel(metaclass=MetaModel):
 
         return records
 
+    @api.model
+    def get_restrict_constraints(self, ids):
+        return {
+            "models_with_blocking_records": (', ').join([
+                f"{model.lower()}s" for model in {
+                    model_name
+                    for field_name, model, model_name in [
+                        (field.name, field.model, field.model_id.display_name)
+                        for field in self.env["ir.model.fields"].search([
+                            ("store", "=", True),
+                            ("ttype", "=", "many2one"),
+                            ("on_delete", "=", "restrict"),
+                            ("relation", "=", self._name),
+                        ])
+                    ] if self.env[model].search_count([(field_name, 'in', ids)] + ([] if 'active' not in self.env[model] else [('active', 'in', (True, False))]))
+                }
+            ]),
+            "records_active": 'active' in self and all(self.mapped('active')),
+            "model": self.env['ir.model'].search([('model', '=', self._name)]).name,
+        }
+
     def _prepare_create_values(self, vals_list):
         """ Clean up and complete the given create values, and return a list of
         new vals containing:
