@@ -44,7 +44,6 @@ patch(DevicesSynchronisation.prototype, {
 
                         const line = order.lines.pop();
                         line.update({ order_id: uniqOrder });
-                        line.setDirty();
                         watcher++;
                     }
                 }

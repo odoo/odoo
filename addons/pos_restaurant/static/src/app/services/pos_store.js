@@ -140,7 +140,7 @@ patch(PosStore.prototype, {
                     orphanLine.qty
                 );
             } else {
-                const serializedLine = orphanLine.serialize();
+                const serializedLine = { ...orphanLine.raw };
                 serializedLine.order_id = destOrder.id;
                 delete serializedLine.uuid;
                 delete serializedLine.id;
@@ -298,7 +298,7 @@ patch(PosStore.prototype, {
 
             for (const detail of beforeMergeDetails) {
                 const line = order.lines.find((l) => l.uuid === detail.uuid);
-                const serializedLine = line.serialize();
+                const serializedLine = { ...line.raw };
                 delete serializedLine.uuid;
                 delete serializedLine.id;
                 const course = courseByLines[detail.uuid];
@@ -720,7 +720,7 @@ patch(PosStore.prototype, {
             Object.fromEntries(
                 tables.map((t) => [
                     t.id,
-                    { ...t.serialize({ orm: true }), parent_id: t.parent_id?.id || false },
+                    { ...t.serializeForORM(), parent_id: t.parent_id?.id || false },
                 ])
             ),
         ]);

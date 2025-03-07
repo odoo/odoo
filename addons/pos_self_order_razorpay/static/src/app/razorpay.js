@@ -66,7 +66,7 @@ export class Razorpay {
     async processPayment(order) {
         try {
             const initial_response = await rpc(`/kiosk/payment/${this.pos_config.id}/kiosk`, {
-                order: order.serialize({ orm: true }),
+                order: order.serializeForORM(),
                 access_token: this.access_token,
                 payment_method_id: this.razorpayPaymentMethod.id,
             });
