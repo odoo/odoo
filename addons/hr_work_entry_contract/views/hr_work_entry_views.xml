@@ -8,25 +8,7 @@
             <xpath expr="//calendar" position="attributes">
                 <attribute name="js_class">work_entries_calendar</attribute>
                 <attribute name="show_date_picker">0</attribute>
-                <attribute name="scales">month</attribute>
-                <attribute name="aggregate">duration</attribute>
-                <attribute name="multi_create_view">hr_work_entry_contract.calendar_multi_create</attribute>
             </xpath>
-        </field>
-    </record>
-
-    <record id="calendar_multi_create" model="ir.ui.view">
-        <field name="name">calendar_multi_create</field>
-        <field name="model">hr.work.entry</field>
-        <field name="arch" type="xml">
-            <form>
-                <group>
-                    <field name="duration"/>
-                    <field name="name"/>
-                    <field name="work_entry_type_id"/>
-                    <field name="country_id" invisible="1" />
-                </group>
-            </form>
         </field>
     </record>
 
