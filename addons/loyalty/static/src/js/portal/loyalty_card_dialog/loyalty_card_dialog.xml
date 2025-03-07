@@ -36,7 +36,7 @@
                             t-key="line_index"
                             class="row px-2"
                         >
-                            <div class="col-7">
+                            <div class="col-7 text-truncate">
                                 <t t-if="line.order_id and line.order_portal_url">
                                     <a t-att-href="line.order_portal_url">
                                         <t t-out="line.description"/>
