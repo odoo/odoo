@@ -15,15 +15,15 @@ import {
     getSnippetStructure,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithDummySnippet,
+    waitForSnippetDialog,
 } from "../website_helpers";
 
 defineWebsiteModels();
 
 function getBasicSection(content, { name, withColoredLevelClass = false }) {
     const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
-    return unformat(`<section class="${className}" data-snippet="s_test" ${
-        name ? `data-name="${name}"` : ""
-    }>
+    return unformat(`<section class="${className}" data-snippet="s_test" ${name ? `data-name="${name}"` : ""
+        }>
         <div class="test_a o-paragraph">${content}</div>
     </section>`);
 }
@@ -112,15 +112,18 @@ test("open add snippet dialog + switch snippet category", async () => {
         },
     });
     expect(queryAllTexts(".o-snippets-menu #snippet_groups .o_snippet")).toEqual(["A", "B"]);
-    await click(queryFirst(".o-snippets-menu #snippet_groups .o_snippet_thumbnail"));
-    await waitFor(".o_add_snippet_dialog");
+    await click(
+        queryFirst(
+            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+        )
+    );
+    await waitForSnippetDialog();
     expect(queryAllTexts(".o_add_snippet_dialog aside .list-group .list-group-item")).toEqual([
         "A",
         "B",
     ]);
     expect(".o_add_snippet_dialog aside .list-group .list-group-item.active").toHaveText("A");
 
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 2000 });
     expect(
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap"
     ).toHaveCount(2);
@@ -186,8 +189,12 @@ test("search snippet in add snippet dialog", async () => {
             ),
         },
     });
-    await click(queryFirst(".o-snippets-menu #snippet_groups .o_snippet_thumbnail"));
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 1000 });
+    await click(
+        queryFirst(
+            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+        )
+    );
+    await waitForSnippetDialog();
     expect("aside .list-group .list-group-item").toHaveCount(2);
     const snippetsDescriptionProcessed = snippetsDescription(true);
     expect(
@@ -262,10 +269,14 @@ test("add snippet dialog with imagePreview", async () => {
             ),
         },
     });
-    await click(queryFirst(".o-snippets-menu #snippet_groups .o_snippet_thumbnail"));
+    await click(
+        queryFirst(
+            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+        )
+    );
     const previewSnippetIframeSelector =
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
+    await waitForSnippetDialog();
     expect(`${previewSnippetIframeSelector}`).toHaveCount(2);
     const snippetsDescriptionProcessed = snippetsDescription(true);
     expect(`${previewSnippetIframeSelector}:first`).toHaveInnerHTML(
@@ -306,8 +317,12 @@ test("insert snippet structure", async () => {
         `<section class="o_colored_level"><p>Text</p></section>`
     );
 
-    await click(queryFirst(".o-snippets-menu #snippet_groups .o_snippet_thumbnail"));
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
+    await click(
+        queryFirst(
+            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+        )
+    );
+    await waitForSnippetDialog();
     const previewSelector =
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
     expect(previewSelector).toHaveCount(1);
@@ -315,8 +330,7 @@ test("insert snippet structure", async () => {
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML(
-        `<section class="o_colored_level"><p>Text</p></section>${
-            snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
+        `<section class="o_colored_level"><p>Text</p></section>${snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
         }`
     );
 });
@@ -365,7 +379,7 @@ test("drag&drop snippet structure", async () => {
         unformat(`<section class="o_colored_level"><p>Text</p></section>`)
     );
 
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
+    await waitForSnippetDialog();
     const previewSelector =
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
     expect(previewSelector).toHaveCount(1);
@@ -373,8 +387,7 @@ test("drag&drop snippet structure", async () => {
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML(
-        `${
-            snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
+        `${snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
         }<section class="o_colored_level"><p>Text</p></section>`
     );
 });

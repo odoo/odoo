@@ -11,6 +11,7 @@ import {
     getSnippetStructure,
     invisibleEl,
     setupWebsiteBuilder,
+    waitForSnippetDialog,
 } from "./website_helpers";
 
 defineWebsiteModels();
@@ -72,8 +73,12 @@ test("Add an element on the invisible elements tab", async () => {
             ),
         },
     });
-    await click(queryFirst(".o-snippets-menu #snippet_groups .o_snippet_thumbnail"));
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
+    await click(
+        queryFirst(
+            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+        )
+    );
+    await waitForSnippetDialog();
     await contains(
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap"
     ).click();
