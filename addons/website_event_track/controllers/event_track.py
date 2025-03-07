@@ -572,7 +572,7 @@ class EventTrackController(http.Controller):
         return {'success': True}
 
     @http.route(['''/event/<model("event.event"):event>/track/<model("event.track"):track>/ics'''], type='http', auth="public")
-    def event_track_ics_file(self, event, track, **kwargs):
+    def event_track_ics_file(self, event, track):
         lang = request.context.get('lang', request.env.user.lang)
         if request.env.user._is_public():
             lang = request.cookies.get('frontend_lang')
