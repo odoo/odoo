@@ -19,9 +19,10 @@ export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
     static props = {
         config: { type: Object },
+        migrateHTML: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        hasFullHtml: false,
+        migrateHTML: true,
     };
 
     setup() {
@@ -107,12 +108,13 @@ export class HtmlViewer extends Component {
      * @returns { string | Markup }
      */
     formatValue(value) {
-        if (this.props.config.isFixedValue) {
-            return value;
+        let newVal = fixInvalidHTML(value);
+        if (this.props.migrateHTML) {
+            newVal = this.htmlUpgradeManager.processForUpgrade(newVal, {
+                containsComplexHTML: this.props.config.hasFullHtml,
+                env: this.env,
+            });
         }
-        const newVal = this.htmlUpgradeManager.processForUpgrade(fixInvalidHTML(value), {
-            env: this.env,
-        });
         if (instanceofMarkup(value)) {
             return markup(newVal);
         }

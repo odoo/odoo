@@ -109,7 +109,6 @@ export const CORE_PLUGINS = [
     DeletePlugin,
     DialogPlugin,
     DomPlugin,
-    EditorVersionPlugin,
     FormatPlugin,
     HistoryPlugin,
     InputPlugin,
@@ -185,5 +184,6 @@ export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,
     ...MAIN_PLUGINS,
     ...EMBEDDED_COMPONENT_PLUGINS,
+    EditorVersionPlugin,
     QWebPlugin,
 ];
