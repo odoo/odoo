@@ -83,7 +83,7 @@ test("check invisible element after save", async () => {
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave[0]).toBe(
         `<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">
-        <section class="o_colored_level">
+        <section class="o_colored_level" data-oe-version="1.1">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-3 d-lg-none o_snippet_desktop_invisible" data-invisible="1">
