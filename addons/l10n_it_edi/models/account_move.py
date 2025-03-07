@@ -244,44 +244,17 @@ class AccountMove(models.Model):
         invoice_lines = []
         lines = self.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section'))
         base_lines = [invl._convert_to_tax_base_line_dict() for invl in lines]
-        inverse_factor = (-1 if reverse_charge_refund else 1)
-        for num, line in enumerate(base_lines):
-            sign = -1 if line['record'].move_id.is_inbound() else 1
-            line['sequence'] = num
-            line['price_subtotal'] = line['record'].balance * sign if convert_to_euros else line['price_subtotal']
-            line['price_subtotal'] = line['price_subtotal'] * inverse_factor
-            if line['discount'] != 100.0 and line['quantity']:
-                gross_price = line['price_subtotal'] / (1 - line['discount'] / 100.0)
-                line['discount_amount_before_dispatching'] = (gross_price - line['price_subtotal']) * inverse_factor
-                line['gross_price_subtotal'] = line['currency'].round(gross_price * inverse_factor)
-                line['price_unit'] = gross_price / abs(line['quantity'])
-            else:
-                line['gross_price_subtotal'] = line['currency'].round(line['price_unit'] * line['quantity'])
-                line['discount_amount_before_dispatching'] = line['gross_price_subtotal']
-
-        template = self.env['ir.qweb']._load('l10n_it_edi.account_invoice_line_it_FatturaPA')[0]
-        flat_discount_element = template.find('.//ScontoMaggiorazione/Percentuale')
-        if flat_discount_element is not None:
-            downpayment_lines = []
-            if not is_downpayment:
-                # Negative lines linked to down payment should stay negative
-                for line_dict in base_lines:
-                    line = line_dict['record']
-                    if line.price_subtotal < 0 and line._get_downpayment_lines():
-                        downpayment_lines.append(line_dict)
-                        base_lines.remove(line_dict)
-            dispatch_result = self.env['account.tax']._dispatch_negative_lines(base_lines)
-            base_lines = sorted(
-                dispatch_result['result_lines'] + dispatch_result['orphan_negative_lines'] + dispatch_result['nulled_candidate_lines']
-                + downpayment_lines,
-                key=itemgetter('sequence')
-            )
-        else:
-            # The template needs to be updated to be able to handle negative lines
-            if any(line['price_subtotal'] < 0 for line in base_lines):
-                raise UserError(_("To handle negative lines, we need you to update your module 'Italy - E-invoicing'"))
-
         for num, line_dict in enumerate(base_lines):
+            if reverse_charge_refund:
+                line_dict['price_subtotal'] = -line_dict['price_subtotal']
+
+            line_dict['subtotal_price_eur'] = line_dict['price_subtotal']/line_dict['rate'] if convert_to_euros else line_dict['price_subtotal']
+
+            if line_dict['discount'] != 100.0 and line_dict['quantity']:
+                line_dict['price_unit'] = line_dict['subtotal_price_eur'] / ((1 - (line_dict['discount'] or 0.0) / 100.0) * abs(line_dict['quantity']))
+            else:
+                line_dict['price_unit'] = line_dict['price_unit'] / line_dict['rate'] if convert_to_euros else line_dict['price_unit']
+
             line = line_dict['record']
             description = line.name
 
@@ -300,10 +273,10 @@ class AccountMove(models.Model):
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
-                'subtotal_price_eur': (line_dict['gross_price_subtotal'] - line_dict.get('discount_amount', 0.0)) * inverse_factor,
-                'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict.get('discount_amount', 0.0)) * inverse_factor * line_dict['rate'],
+                'subtotal_price_eur': line_dict['currency'].round(line_dict['subtotal_price_eur']),
+                'subtotal_price': line_dict['currency'].round(line_dict['price_subtotal']),
                 'unit_price': line_dict['price_unit'],
-                'discount_amount': ((line_dict.get('discount_amount', 0.0) - line_dict['discount_amount_before_dispatching']) / line.quantity) if line.quantity else 0,
+                'discount_amount': 0,  # kept because we didn't do a get in the line we removed from the template
                 'vat_tax': line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0),
                 'downpayment_moves': downpayment_moves,
                 'discount_type': (
