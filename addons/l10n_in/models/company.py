@@ -76,6 +76,14 @@ class ResCompany(models.Model):
     )
     l10n_in_gstin_status_feature = fields.Boolean(string="Check GST Number Status")
 
+    @api.depends('l10n_in_upi_id')
+    def _compute_qr_code(self):
+        # EXTENDS 'account'
+        indian_companies = self.filtered(lambda c: c.country_code == 'IN')
+        for company in indian_companies:
+            company.qr_code = bool(company.l10n_in_upi_id)
+        super(ResCompany, self - indian_companies)._compute_qr_code()
+
     def _inverse_l10n_in_tds_feature(self):
         for company in self:
             if company.l10n_in_tds_feature:

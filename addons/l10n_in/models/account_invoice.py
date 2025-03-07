@@ -599,7 +599,11 @@ class AccountMove(models.Model):
 
     def _generate_qr_code(self, silent_errors=False):
         self.ensure_one()
-        if self.company_id.country_code == 'IN' and self.company_id.l10n_in_upi_id:
+        if (
+            self.company_id.l10n_in_upi_id
+            and self.amount_residual
+            and self.move_type == 'out_invoice'
+        ):
             payment_url = 'upi://pay?pa=%s&pn=%s&am=%s&tr=%s&tn=%s' % (
                 self.company_id.l10n_in_upi_id,
                 self.company_id.name,
