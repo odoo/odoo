@@ -11,7 +11,7 @@
                 SOLD:
             </div>
 
-            <t t-set="ProductUnit" t-as="pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit')" />
+            <t t-set="ProductUnit" t-value="pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit')" />
 
             <div class="orderlines">
                 <t t-foreach="products" t-as="category" t-key="category['name']">
