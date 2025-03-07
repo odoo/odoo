@@ -377,11 +377,19 @@ class AccountMoveSend(models.AbstractModel):
         """
         # create an attachment that will become 'invoice_pdf_report_file'
         # note: Binary is used for security reason
+<<<<<<< 18.0:addons/account/models/account_move_send.py
         attachment_to_create = [invoice_data['pdf_attachment_values'] for invoice_data in invoices_data.values() if invoice_data.get('pdf_attachment_values')]
         if not attachment_to_create:
             return
 
         attachments = self.env['ir.attachment'].create(attachment_to_create)
+||||||| a05910f4d96304dfe02d7c7ec6d4f61a27288edb:addons/account/wizard/account_move_send.py
+        attachment_to_create = [invoice_data['pdf_attachment_values'] for invoice_data in invoices_data.values()]
+        attachments = self.env['ir.attachment'].create(attachment_to_create)
+=======
+        attachment_to_create = [invoice_data['pdf_attachment_values'] for invoice_data in invoices_data.values()]
+        attachments = self.sudo().env['ir.attachment'].create(attachment_to_create)
+>>>>>>> f3dec43f25e873a81c83a504692d580c2ae8888a:addons/account/wizard/account_move_send.py
         res_id_to_attachment = {attachment.res_id: attachment for attachment in attachments}
 
         for invoice, invoice_data in invoices_data.items():
@@ -708,8 +716,108 @@ class AccountMoveSend(models.AbstractModel):
             else:
                 move.sending_data = False
 
+<<<<<<< 18.0:addons/account/models/account_move_send.py
         # Return generated attachments.
         attachments = self.env['ir.attachment']
         for move, move_data in success.items():
             attachments += self._get_invoice_extra_attachments(move) or move_data['proforma_pdf_attachment']
         return attachments
+||||||| a05910f4d96304dfe02d7c7ec6d4f61a27288edb:addons/account/wizard/account_move_send.py
+        to_download = {move: move_data for move, move_data in moves_data.items() if move_data.get('download')}
+        if to_download:
+            attachment_ids = []
+            for move, move_data in to_download.items():
+                attachment_ids += self._get_invoice_extra_attachments(move).ids or move_data.get('proforma_pdf_attachment').ids
+            if attachment_ids:
+                if kwargs.get('bypass_download'):
+                    return attachment_ids
+                return self._download(attachment_ids, to_download)
+
+        return {'type': 'ir.actions.act_window_close'}
+
+    def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False, **kwargs):
+        """ Create the documents and send them to the end customers.
+        If we are sending multiple invoices and not downloading them we will process the moves asynchronously.
+        :param force_synchronous:   Flag indicating if the method should be done synchronously.
+        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
+                                    proforma PDF report instead.
+        """
+        self.ensure_one()
+
+        if self.mode == 'invoice_multi' and self.checkbox_send_mail and not self.mail_template_id:
+            raise UserError(_('Please select a mail template to send multiple invoices.'))
+
+        force_synchronous = force_synchronous or self.checkbox_download
+        process_later = self.mode == 'invoice_multi' and not force_synchronous
+        if process_later:
+            # Set sending information on moves
+            for move in self.move_ids:
+                move.send_and_print_values = self._get_wizard_values()
+            self.env.ref('account.ir_cron_account_move_send')._trigger()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'info',
+                    'title': _('Sending invoices'),
+                    'message': _('Invoices are being sent in the background.'),
+                    'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+
+        return self._process_send_and_print(
+            self.move_ids,
+            wizard=self,
+            allow_fallback_pdf=allow_fallback_pdf,
+            **kwargs,
+        )
+=======
+        to_download = {move: move_data for move, move_data in moves_data.items() if move_data.get('download')}
+        if to_download:
+            attachment_ids = []
+            for move, move_data in to_download.items():
+                attachment_ids += self._get_invoice_extra_attachments(move).ids or move_data.get('proforma_pdf_attachment').ids
+            if attachment_ids:
+                if kwargs.get('bypass_download'):
+                    return attachment_ids
+                return self._download(attachment_ids, to_download)
+
+        return {'type': 'ir.actions.act_window_close'}
+
+    def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False, **kwargs):
+        """ Create the documents and send them to the end customers.
+        If we are sending multiple invoices and not downloading them we will process the moves asynchronously.
+        :param force_synchronous:   Flag indicating if the method should be done synchronously.
+        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
+                                    proforma PDF report instead.
+        """
+        self.ensure_one()
+
+        if self.mode == 'invoice_multi' and self.checkbox_send_mail and not self.mail_template_id:
+            raise UserError(_('Please select a mail template to send multiple invoices.'))
+
+        force_synchronous = force_synchronous or self.checkbox_download
+        process_later = self.mode == 'invoice_multi' and not force_synchronous
+        if process_later:
+            # Set sending information on moves
+            for move in self.move_ids:
+                move.send_and_print_values = self._get_wizard_values()
+            self.env.ref('account.ir_cron_account_move_send')._trigger()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'info',
+                    'title': _('Sending invoices'),
+                    'message': _('Invoices are being sent in the background.'),
+                    'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
+
+        return self._process_send_and_print(
+            self.move_ids.sudo(),
+            wizard=self,
+            allow_fallback_pdf=allow_fallback_pdf,
+            **kwargs,
+        )
+>>>>>>> f3dec43f25e873a81c83a504692d580c2ae8888a:addons/account/wizard/account_move_send.py
