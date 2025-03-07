@@ -2,6 +2,7 @@
 <odoo>
     <record id="europe_vat" model="res.country.group">
         <field name="name">European Union VAT</field>
+        <field name="code">EU-VAT</field>
         <field name="country_ids" eval="[Command.set([
             ref('base.at'),ref('base.be'),ref('base.bg'),ref('base.hr'),ref('base.cy'),
             ref('base.cz'),ref('base.dk'),ref('base.ee'),ref('base.fi'),ref('base.fr'),
