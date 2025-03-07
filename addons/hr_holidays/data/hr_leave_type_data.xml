@@ -501,6 +501,47 @@
         <field name="country_id" ref="base.id"/>
     </record>
 
+<!-- JO : Jordan -->
+    <record id="l10n_jo_leave_type_unpaid_sick" model="hr.leave.type">
+        <field name="name">Sick Leave (Unpaid)</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
+    <record id="l10n_jo_leave_type_maternity" model="hr.leave.type">
+        <field name="name">Maternity Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
+    <record id="l10n_jo_leave_type_pilgrimage" model="hr.leave.type">
+        <field name="name">Pilgrimage Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
+    <record id="l10n_jo_leave_type_paternity" model="hr.leave.type">
+        <field name="name">Paternity Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
+    <record id="l10n_jo_leave_type_study" model="hr.leave.type">
+        <field name="name">Study Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
 <!-- LU : Luxemburg -->
     <record id="l10n_lu_leave_type_situational_unemployment" model="hr.leave.type">
         <field name="name">Unemployment (Weather / Situational)</field>
