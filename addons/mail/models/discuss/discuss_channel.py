@@ -1312,6 +1312,17 @@ class DiscussChannel(models.Model):
         )
         return Store(unknown_members).add(self, "member_count").get_result()
 
+    def _message_update_content(self, message, body, attachment_ids=None, partner_ids=None,
+                                strict=True, **kwargs):
+        if not body and not attachment_ids:
+            message.write({'parent_id': False})
+        return super()._message_update_content(message, body, attachment_ids, partner_ids, strict, **kwargs)
+
+    def _get_message_updated_fields(self):
+        return super()._get_message_updated_fields() + [
+            Store.One("parent_id", rename="parentMessage")
+        ]
+
     # ------------------------------------------------------------
     # COMMANDS
     # ------------------------------------------------------------
