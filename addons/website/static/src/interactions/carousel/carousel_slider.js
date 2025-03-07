@@ -21,9 +21,21 @@ export class CarouselSlider extends Interaction {
         },
     };
     carouselOptions = undefined;
-
+    OLD_AUTO_SLIDING_SNIPPETS = ["s_image_gallery"];
     setup() {
         this.maxHeight = undefined;
+        this.hasInterval = ![undefined, "false", "0"].includes(this.el.dataset.bsInterval);
+        if (!this.hasInterval || !this.el.dataset.bsRide) {
+            // If bsInterval is 0, false, or undefined, it means no auto slide
+            const carouselBS = window.Carousel.getOrCreateInstance(this.el, this.carouselOptions);
+            carouselBS.cycle = () => {};
+            this.el.dataset.bsRide = "noAutoSlide";
+        } else if (this.hasInterval && this.el.dataset.bsRide === "noAutoSlide") {
+            // If bsInterval is set and bsRide is noAutoSlide, then we need to set it to true
+            // except for the OLD_AUTO_SLIDING_SNIPPETS where we need to set it to carousel
+            const snippetName = this.el.closest("[data-snippet]")?.dataset.snippet;
+            this.el.dataset.bsRide = this.OLD_AUTO_SLIDING_SNIPPETS.includes(snippetName) ? "carousel" : "true";
+        }
     }
 
     start() {
