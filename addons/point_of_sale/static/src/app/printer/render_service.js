@@ -91,6 +91,16 @@ const applyWhenMounted = async ({ el, container, callback }) => {
     return res;
 };
 
+const sanitizeNodeText = (element) => {
+    if (element.nodeType === Node.TEXT_NODE) {
+        element.textContent = element.textContent.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, ""); // eslint-disable-line no-control-regex
+        return;
+    }
+    for (const child of element.childNodes) {
+        sanitizeNodeText(child);
+    }
+};
+
 /**
  * This function assumes that the `renderer` service is available.
  */
@@ -101,6 +111,7 @@ export const htmlToCanvas = async (el, options) => {
     if (options.addEmailMargins === true) {
         $(".pos-receipt-print").css({ padding: "15px", "padding-bottom": "30px" });
     }
+    sanitizeNodeText(el);
     return await applyWhenMounted({
         el,
         container: document.querySelector(".render-container"),
