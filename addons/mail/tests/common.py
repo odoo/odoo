@@ -1221,6 +1221,7 @@ class MailCommon(common.TransactionCase, MailCase):
             'country_id': cls.env.ref('base.be').id,
             'email': 'test.admin@test.example.com',
             'notification_type': 'inbox',
+            'phone': '0455135790',
         })
         cls.partner_admin = cls.env.ref('base.partner_admin')
         cls.company_admin = cls.user_admin.company_id
