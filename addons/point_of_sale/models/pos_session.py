@@ -1701,6 +1701,8 @@ class PosSession(models.Model):
         return self.config_id.open_ui()
 
     def set_opening_control(self, cashbox_value: int, notes: str):
+        if self.state != 'opening_control':
+            return
         self.state = 'opened'
         self.start_at = fields.Datetime.now()
         self.name = self.config_id.name + self.env['ir.sequence'].with_context(
