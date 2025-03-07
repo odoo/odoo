@@ -4,9 +4,8 @@ import { Base } from "./related_models";
 export class PosConfig extends Base {
     static pythonModel = "pos.config";
 
-    setup() {
-        super.setup(...arguments);
-
+    initState() {
+        super.initState();
         this.uiState = {};
     }
 
@@ -31,7 +30,7 @@ export class PosConfig extends Base {
     get printerCategories() {
         const set = new Set();
         for (const relPrinter of this.models["pos.printer"].getAll()) {
-            const printer = relPrinter.serialize();
+            const printer = relPrinter.raw;
             for (const id of printer.product_categories_ids) {
                 set.add(id);
             }

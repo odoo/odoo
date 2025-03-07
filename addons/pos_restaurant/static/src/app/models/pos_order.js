@@ -7,8 +7,11 @@ patch(PosOrder.prototype, {
         super.setup(...arguments);
         if (this.config.module_pos_restaurant) {
             this.customer_count = this.customer_count || 1;
-            this.uiState.selected_course_uuid = undefined;
         }
+    },
+    initState() {
+        super.initState();
+        this.uiState.selected_course_uuid = undefined;
     },
     getCustomerCount() {
         return this.customer_count;
@@ -107,7 +110,7 @@ patch(PosOrder.prototype, {
         }
     },
     get courses() {
-        return this.course_ids.sort((a, b) => a.index - b.index);
+        return this.course_ids.toSorted((a, b) => a.index - b.index);
     },
     hasCourses() {
         return this.course_ids.length > 0;

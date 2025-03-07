@@ -9,7 +9,7 @@ import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { CustomerDisplayPosAdapter } from "@point_of_sale/customer_display/customer_display_adapter";
 import { useIdleTimer } from "./utils/use_idle_timer";
 import useTours from "./hooks/use_tours";
-
+import { init as initDebugFormatters } from "./utils/debug-formatter";
 /**
  * Chrome is the root component of the PoS App.
  */
@@ -30,6 +30,9 @@ export class Chrome extends Component {
         // TODO: Should we continue on exposing posmodel as global variable?
         window.posmodel = reactivePos;
         useOwnDebugContext();
+        if (this.env.debug) {
+            initDebugFormatters();
+        }
 
         if (odoo.use_pos_fake_tours) {
             window.pos_fake_tour = useTours();

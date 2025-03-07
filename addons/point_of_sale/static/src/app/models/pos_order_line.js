@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { constructFullProductName, uuidv4, constructAttributeString } from "@point_of_sale/utils";
+import { constructFullProductName, constructAttributeString } from "@point_of_sale/utils";
 import { Base } from "./related_models";
 import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat } from "@web/core/utils/numbers";
@@ -18,9 +18,11 @@ export class PosOrderline extends Base {
             this.delete();
             return;
         }
-        this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.setFullProductName();
+    }
 
+    initState() {
+        super.initState();
         // Data that are not saved in the backend
         this.uiState = {
             hasChange: true,
@@ -179,7 +181,6 @@ export class PosOrderline extends Base {
         if (!this.product_id.to_weight && setQuantity) {
             this.setQuantityByLot();
         }
-        this.setDirty();
     }
 
     setDiscount(discount) {
@@ -193,7 +194,6 @@ export class PosOrderline extends Base {
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
         this.order_id.recomputeOrderData();
-        this.setDirty();
     }
 
     setLinePrice() {
@@ -266,8 +266,6 @@ export class PosOrderline extends Base {
                 )
             );
         }
-
-        this.setDirty();
         return true;
     }
 
@@ -387,7 +385,6 @@ export class PosOrderline extends Base {
             ? 0
             : parseFloat("" + price);
         this.price_unit = ProductPrice.round(parsed_price || 0);
-        this.setDirty();
     }
 
     getUnitPrice() {
@@ -573,7 +570,6 @@ export class PosOrderline extends Base {
 
     setCustomerNote(note) {
         this.customer_note = note || "";
-        this.setDirty();
     }
 
     getCustomerNote() {
@@ -678,7 +674,6 @@ export class PosOrderline extends Base {
         return this.note || "[]";
     }
     setNote(note) {
-        this.setDirty();
         this.note = note || "[]";
     }
     setHasChange(isChange) {
@@ -711,21 +706,6 @@ export class PosOrderline extends Base {
     }
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
-    }
-    setDirty(processedLines = new Set()) {
-        if (processedLines.has(this)) {
-            return;
-        }
-        processedLines.add(this);
-        super.setDirty();
-        const linesToSetDirty = [
-            this.combo_parent_id,
-            ...(this.combo_parent_id?.combo_line_ids || []),
-            ...(this.combo_line_ids || []),
-        ].filter(Boolean);
-        for (const line of linesToSetDirty) {
-            line.setDirty(processedLines);
-        }
     }
 }
 

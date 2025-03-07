@@ -1,5 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { toRaw } from "@odoo/owl";
+import { expect, test, describe } from "@odoo/hoot";
 import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 
 describe("models with backlinks", () => {
@@ -41,8 +40,8 @@ describe("models with backlinks", () => {
             expect(readP1).toEqual(p1);
 
             // Test the one2many relationship from category to products
-            expect(readC1.product_ids.includes(toRaw(p1))).toBe(true);
-            expect(readC1.product_ids.includes(toRaw(p2))).toBe(true);
+            expect(readC1.product_ids.includes(p1)).toBe(true);
+            expect(readC1.product_ids.includes(p2)).toBe(true);
 
             // Test the many2one relationship from products to category
             expect(readP1.category_id).toEqual(c1);
@@ -339,19 +338,19 @@ describe("models with backlinks", () => {
             const t2 = models["product.tag"].create({ product_ids: [["link", p1, p2]] });
 
             const readT1 = models["product.tag"].read(t1.id);
-            expect(readT1).toEqual(toRaw(t1));
+            expect(readT1).toEqual(t1);
             const readP1 = models["product.product"].read(p1.id);
-            expect(readP1).toEqual(toRaw(p1));
+            expect(readP1).toEqual(p1);
 
             expect(readT1.product_ids.includes(p1)).toBe(true);
             expect(readT1.product_ids.includes(p2)).toBe(true);
             expect(readT1.product_ids.includes(p3)).toBe(true);
-            expect(readP1.tag_ids.includes(toRaw(t1))).toBe(true);
-            expect(readP1.tag_ids.includes(toRaw(t2))).toBe(true);
+            expect(readP1.tag_ids.includes(t1)).toBe(true);
+            expect(readP1.tag_ids.includes(t2)).toBe(true);
 
             const readMany = models["product.product"].readMany([p2.id, p3.id]);
-            expect(readMany[0]).toBe(toRaw(p2));
-            expect(readMany[1]).toBe(toRaw(p3));
+            expect(readMany[0]).toBe(p2);
+            expect(readMany[1]).toBe(p3);
         });
 
         test("update operation, many2many", () => {
@@ -455,11 +454,11 @@ describe("models with backlinks", () => {
                 expect(readN4).toEqual(n4);
 
                 expect([n1, n2, n3].every((n) => readN4.parent_ids.includes(n))).toBe(true);
-                expect([n4, n5].every((n) => readN1.child_ids.includes(toRaw(n)))).toBe(true);
+                expect([n4, n5].every((n) => readN1.child_ids.includes(n))).toBe(true);
 
                 const readMany = models["note.note"].readMany([n2.id, n3.id]);
-                expect(readMany[0]).toBe(toRaw(n2));
-                expect(readMany[1]).toBe(toRaw(n3));
+                expect(readMany[0]).toBe(n2);
+                expect(readMany[1]).toBe(n3);
             });
 
             test("update operation, many2many", () => {
@@ -539,7 +538,7 @@ describe("models without backlinks", () => {
             const category = models["product.category"].create({});
             const product = models["product.product"].create({ category_id: category });
             expect(product.category_id).toBe(category);
-            expect(category["<-product.product.category_id"]).toEqual([product]);
+            expect(category.backLink("<-product.product.category_id")).toEqual([product]);
         });
 
         test("read operation 5", () => {
@@ -554,7 +553,7 @@ describe("models without backlinks", () => {
             const readP1 = models["product.product"].read(p1.id);
             expect(readP1).toEqual(p1);
 
-            expect(readC1["<-product.product.category_id"]).toEqual([p1, p2]);
+            expect(readC1.backLink("product.product.category_id")).toEqual([p1, p2]);
 
             expect(readP1.category_id).toEqual(c1);
         });
@@ -567,7 +566,7 @@ describe("models without backlinks", () => {
             expect(p1.category_id).toBe(undefined);
             p1.update({ category_id: c1 });
             expect(p1.category_id).toBe(c1);
-            expect(c1["<-product.product.category_id"]).toEqual([p1]);
+            expect(c1.backLink("product.product.category_id")).toEqual([p1]);
         });
 
         test("update operation, unlink many2one", () => {
@@ -575,11 +574,11 @@ describe("models without backlinks", () => {
             const p1 = models["product.product"].create({ category_id: {} });
             const c1 = p1.category_id;
 
-            expect(c1["<-product.product.category_id"]).toEqual([p1]);
+            expect(c1.backLink("product.product.category_id")).toEqual([p1]);
 
             p1.update({ category_id: undefined });
             expect(p1.category_id).toBe(undefined);
-            expect(c1["<-product.product.category_id"].length).toBe(0);
+            expect(c1.backLink("product.product.category_id").length).toBe(0);
         });
 
         test("delete operation, many2one item", () => {
@@ -588,7 +587,7 @@ describe("models without backlinks", () => {
             const c1 = models["product.category"].create({});
 
             p1.update({ category_id: c1 });
-            expect(c1["<-product.product.category_id"]).toEqual([p1]);
+            expect(c1.backLink("<-product.product.category_id")).toEqual([p1]);
 
             c1.delete();
             expect(models["product.category"].read(c1.id)).toBe(undefined);
@@ -619,7 +618,7 @@ describe("models without backlinks", () => {
             });
 
             expect(product.tag_ids.includes(tag1)).toBe(true);
-            expect(tag1["<-product.product.tag_ids"].includes(product)).toBe(true);
+            expect(tag1.backLink("product.product.tag_ids").includes(product)).toBe(true);
         });
 
         test("read operation 6", () => {
@@ -636,9 +635,9 @@ describe("models without backlinks", () => {
             const readP1 = models["product.product"].read(p1.id);
             expect(readP1).toEqual(p1);
 
-            expect([p1, p2, p3].every((p) => t1["<-product.product.tag_ids"].includes(p))).toBe(
-                true
-            );
+            expect(
+                [p1, p2, p3].every((p) => t1.backLink("<-product.product.tag_ids").includes(p))
+            ).toBe(true);
             expect([t1, t2].every((t) => p1.tag_ids.includes(t))).toBe(true);
 
             const readMany = models["product.product"].readMany([p2.id, p3.id]);
@@ -653,11 +652,11 @@ describe("models without backlinks", () => {
 
             p1.update({ tag_ids: [["link", t1]] });
             expect(p1.tag_ids.includes(t1)).toBe(true);
-            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(true);
-            expect(t1["<-product.product.tag_ids"].includes(p2)).toBe(false);
+            expect(t1.backLink("<-product.product.tag_ids").includes(p1)).toBe(true);
+            expect(t1.backLink("<-product.product.tag_ids").includes(p2)).toBe(false);
 
             p2.update({ tag_ids: [["link", t1]] });
-            expect(t1["<-product.product.tag_ids"].includes(p2)).toBe(true);
+            expect(t1.backLink("<-product.product.tag_ids").includes(p2)).toBe(true);
         });
 
         test("update operation, unlink", () => {
@@ -666,11 +665,11 @@ describe("models without backlinks", () => {
             const t1 = models["product.tag"].create({});
 
             p1.update({ tag_ids: [["link", t1]] });
-            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(true);
+            expect(t1.backLink("<-product.product.tag_ids").includes(p1)).toBe(true);
             expect(p1.tag_ids.includes(t1)).toBe(true);
 
             p1.update({ tag_ids: [["unlink", t1]] });
-            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(false);
+            expect(t1.backLink("<-product.product.tag_ids").includes(p1)).toBe(false);
             expect(p1.tag_ids.length).toBe(0);
         });
 
@@ -678,17 +677,14 @@ describe("models without backlinks", () => {
             const models = getModels();
             const tag1 = models["product.tag"].create({});
             const tag2 = models["product.tag"].create({});
-            const product = models["product.product"].create({ tag_ids: [[tag1, tag2]] });
-
+            const product = models["product.product"].create({ tag_ids: [tag1, tag2] });
             models["product.product"].update(product, { tag_ids: [["clear"]] });
             const updatedProduct = models["product.product"].read(product.id);
             expect(updatedProduct.tag_ids.length).toBe(0);
-
             models["product.product"].update(product, { tag_ids: [["link", tag1, tag2]] });
             expect([tag1, tag2].every((t) => product.tag_ids.includes(t))).toBe(true);
-
             models["product.product"].update(product, { tag_ids: [["clear"]] });
-            expect(tag1["<-product.product.tag_ids"].includes(product)).toBe(false);
+            expect(tag1.backLink("<-product.product.tag_ids").includes(product)).toBe(false);
         });
 
         test("delete operation", () => {
@@ -700,56 +696,15 @@ describe("models without backlinks", () => {
             p1.update({ tag_ids: [["link", t1]] });
             p2.update({ tag_ids: [["link", t1]] });
 
-            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(true);
+            expect(t1.backLink("<-product.product.tag_ids").includes(p1)).toBe(true);
 
             p1.delete();
             expect(models["product.product"].read(p1.id)).toBe(undefined);
-            expect(t1["<-product.product.tag_ids"].includes(p1)).toBe(false);
+            expect(t1.backLink("<-product.product.tag_ids").includes(p1)).toBe(false);
 
             t1.delete();
             expect(models["product.tag"].read(t1.id)).toBe(undefined);
             expect(p1.tag_ids.length).toBe(0);
         });
-    });
-});
-
-describe("Base data", () => {
-    test("baseData is updated when the record id is updated", () => {
-        const { models, baseData } = createRelatedModels(
-            {
-                "pos.order": { name: { type: "char" }, uuid: { name: "uuid", type: "char" } },
-            },
-            {},
-            {
-                dynamicModels: ["pos.order"],
-                databaseIndex: {
-                    "pos.order": ["uuid"],
-                },
-                databaseTable: {
-                    "pos.order": { key: "uuid" },
-                },
-            }
-        );
-
-        const order1 = models["pos.order"].create({ name: "Order 1" });
-        expect(baseData["pos.order"][order1.id].id).toBe(order1.id);
-        const oldId = order1.id;
-
-        // Update
-        models.loadData({
-            "pos.order": [
-                {
-                    id: 22,
-                    uuid: order1.uuid,
-                    name: "Order 1",
-                },
-            ],
-        });
-
-        const updatedOrder = models["pos.order"].get(22);
-        expect(updatedOrder).not.toBe(undefined);
-
-        expect(baseData["pos.order"][oldId]).toBeEmpty(); // Old Basedata is deleted
-        expect(baseData["pos.order"][updatedOrder.id].id).toBe(updatedOrder.id);
     });
 });

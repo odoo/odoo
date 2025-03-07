@@ -1,47 +1,16 @@
 import { serializeDateTime } from "@web/core/l10n/dates";
-
-const simpleSerialization = (record, opts, { X2MANY_TYPES, DATE_TIME_TYPE }) => {
-    const result = {};
-    const ownFields = record.model.fields;
-    for (const name in ownFields) {
-        const field = ownFields[name];
-        if (field.type === "many2one") {
-            result[name] = record[name]?.id || record.raw[name] || false;
-        } else if (X2MANY_TYPES.has(field.type)) {
-            const ids = [...record[name]].map((record) => record.id);
-            result[name] = ids.length ? ids : record.raw[name] || [];
-        } else if (DATE_TIME_TYPE.has(field.type) && typeof record[name] === "object") {
-            result[name] = serializeDateTime(record[name]);
-        } else if (typeof record[name] === "object") {
-            result[name] = JSON.stringify(record[name]);
-        } else {
-            result[name] = record[name] !== undefined ? record[name] : false;
-        }
-    }
-    return result;
-};
+import { X2MANY_TYPES, DATE_TIME_TYPE } from "./utils";
 
 const deepSerialization = (
     record,
     opts,
-    {
-        DYNAMIC_MODELS,
-        X2MANY_TYPES,
-        DATE_TIME_TYPE,
-        serialized = {},
-        uuidMapping = {},
-        parentRelInverseName = null,
-        stack = [],
-    }
+    { serialized = {}, uuidMapping = {}, parentRelInverseName = null, stack = [] }
 ) => {
     const result = {};
     const { fields, name: currentModel } = record.model;
-
+    const DYNAMIC_MODELS = opts.dynamicModels;
     const recursiveSerialize = (childRecord, parentRelInverseName) =>
         deepSerialization(childRecord, opts, {
-            DYNAMIC_MODELS,
-            X2MANY_TYPES,
-            DATE_TIME_TYPE,
             serialized,
             uuidMapping,
             parentRelInverseName,
@@ -56,11 +25,17 @@ const deepSerialization = (
 
         const relatedModel = field.relation;
         const targetModel = field.model;
-        const relatedCommands = record.models.commands[relatedModel];
         const modelCommands = record.models.commands[currentModel];
 
-        if (DYNAMIC_MODELS.includes(relatedModel) && !serialized[relatedModel]) {
-            serialized[relatedModel] = {};
+        if (relatedModel) {
+            if (!record.models[relatedModel]) {
+                // Ignore not "loaded" model
+                continue;
+            }
+
+            if (DYNAMIC_MODELS.includes(relatedModel) && !serialized[relatedModel]) {
+                serialized[relatedModel] = {};
+            }
         }
         if (DYNAMIC_MODELS.includes(currentModel) && !serialized[currentModel]) {
             serialized[currentModel] = { [record.uuid]: record.uuid };
@@ -78,14 +53,9 @@ const deepSerialization = (
                         continue;
                     }
 
-                    if (
-                        typeof childRecord.id === "number" &&
-                        relatedCommands.update.has(childRecord.id)
-                    ) {
+                    if (typeof childRecord.id === "number" && childRecord._dirty) {
                         toUpdate.push(childRecord);
-                        if (opts.clear) {
-                            relatedCommands.update.delete(childRecord.id);
-                        }
+                        childRecord._dirty = false;
                     } else if (typeof childRecord.id !== "number") {
                         toCreate.push(childRecord);
                     }
@@ -111,14 +81,16 @@ const deepSerialization = (
                     ],
                 ]);
             } else {
-                result[fieldName] = record[fieldName].map((childRecord) => {
-                    if (typeof childRecord.id !== "number") {
-                        throw new Error(
-                            `Trying to create a non serializable record '${relatedModel}'`
-                        );
-                    }
-                    return childRecord.id;
-                });
+                result[fieldName] = record[fieldName]
+                    .filter((childRecord) => childRecord.id)
+                    .map((childRecord) => {
+                        if (typeof childRecord.id !== "number") {
+                            throw new Error(
+                                `Trying to create a non serializable record '${relatedModel}'`
+                            );
+                        }
+                        return childRecord.id;
+                    });
             }
 
             if (modelCommands.unlink.has(fieldName) || modelCommands.delete.has(fieldName)) {
@@ -139,19 +111,17 @@ const deepSerialization = (
                 processRecords(modelCommands.unlink.get(fieldName) || [], 3);
                 processRecords(modelCommands.delete.get(fieldName) || [], 2);
 
-                if (opts.clear) {
-                    [modelCommands.unlink, modelCommands.delete].forEach((commands) => {
-                        const commandList = commands.get(fieldName) || [];
-                        const remainingCommands = commandList.filter(
-                            ({ parentId }) => parentId !== record.id
-                        );
-                        if (remainingCommands.length) {
-                            commands.set(fieldName, remainingCommands);
-                        } else {
-                            commands.delete(fieldName);
-                        }
-                    });
-                }
+                [modelCommands.unlink, modelCommands.delete].forEach((commands) => {
+                    const commandList = commands.get(fieldName) || [];
+                    const remainingCommands = commandList.filter(
+                        ({ parentId }) => parentId !== record.id
+                    );
+                    if (remainingCommands.length) {
+                        commands.set(fieldName, remainingCommands);
+                    } else {
+                        commands.delete(fieldName);
+                    }
+                });
             }
             continue;
         }
@@ -173,7 +143,7 @@ const deepSerialization = (
                 serialized[relatedModel][record[fieldName].uuid] = record[fieldName];
             }
             if (typeof recordId === "number" && recordId >= 0) {
-                result[fieldName] = record[fieldName].id;
+                result[fieldName] = recordId;
             } else if (record[fieldName] === undefined) {
                 result[fieldName] = false;
             }
@@ -197,6 +167,8 @@ const deepSerialization = (
         res[key] = getValue();
     }
 
+    record._dirty = false;
+
     // Cleanup: remove empty entries from uuidMapping.
     for (const key in uuidMapping) {
         if (
@@ -211,15 +183,9 @@ const deepSerialization = (
     return result;
 };
 
-export const recursiveSerialization = (record, opts, { X2MANY_TYPES, DATE_TIME_TYPE }) => {
-    if (!opts.orm) {
-        return simpleSerialization(record, opts, { X2MANY_TYPES, DATE_TIME_TYPE });
-    }
+export const ormSerialization = (record, opts) => {
     const uuidMapping = {};
     const result = deepSerialization(record, opts, {
-        DYNAMIC_MODELS: record._dynamicModels,
-        X2MANY_TYPES,
-        DATE_TIME_TYPE,
         uuidMapping,
     });
     if (Object.keys(uuidMapping).length !== 0) {

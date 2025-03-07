@@ -189,8 +189,10 @@ export class ProductTemplate extends Base {
         const productTmpl = variant.product_tmpl_id || this;
         const standardPrice = variant ? variant.standard_price : this.standard_price;
         const basePrice = variant ? variant.lst_price : this.list_price;
-        const productTmplRules = productTmpl["<-product.pricelist.item.product_tmpl_id"] || [];
-        const productRules = product["<-product.pricelist.item.product_id"] || [];
+        const productTmplRules =
+            productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || [];
+        const productRules =
+            (product && product.backLink("<-product.pricelist.item.product_id")) || [];
         const rulesIds = [...productTmplRules, ...productRules].map((rule) => rule.id);
 
         let price = basePrice + (price_extra || 0);

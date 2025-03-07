@@ -119,7 +119,7 @@ export class DebugWidget extends Component {
     exportOrders({ paid = true } = {}) {
         const orders = this.pos.models["pos.order"]
             .filter((order) => order.finalized === paid)
-            .map((o) => o.serialize({ orm: true }));
+            .map((o) => o.serializeForORM());
 
         const blob = this._createBlob(orders);
         const url = URL.createObjectURL(blob);
@@ -171,7 +171,7 @@ export class DebugWidget extends Component {
             }
 
             const missing = await this.pos.data.missingRecursive(data);
-            this.pos.data.models.loadData(missing, [], true);
+            this.pos.data.models.connectNewData(missing);
             this.notification.add(_t("%s orders imported", data["pos.order"].length));
         }
     }

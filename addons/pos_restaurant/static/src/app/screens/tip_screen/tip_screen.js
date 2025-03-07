@@ -87,7 +87,7 @@ export class TipScreen extends Component {
             );
         }
 
-        const serializedTipLine = order.getSelectedOrderline().serialize({ orm: true });
+        const serializedTipLine = order.getSelectedOrderline().serializeForORM();
         order.getSelectedOrderline().delete();
         const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
         await this.pos.data.write("pos.order", [serverId], {

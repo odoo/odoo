@@ -4,10 +4,6 @@ import { Base } from "./related_models";
 export class ProductTemplateAttributeValue extends Base {
     static pythonModel = "product.template.attribute.value";
 
-    setup() {
-        super.setup(...arguments);
-    }
-
     get exclusions() {
         const values = this.models["product.template.attribute.value"].filter((value) =>
             value.exclude_for.some(({ value_ids }) => value_ids.some(({ id }) => id === this.id))

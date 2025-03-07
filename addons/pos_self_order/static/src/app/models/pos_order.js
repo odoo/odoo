@@ -4,6 +4,9 @@ import { patch } from "@web/core/utils/patch";
 patch(PosOrder.prototype, {
     setup() {
         super.setup(...arguments);
+    },
+    initState() {
+        super.initState();
         this.uiState = {
             ...this.uiState,
             lineChanges: {},

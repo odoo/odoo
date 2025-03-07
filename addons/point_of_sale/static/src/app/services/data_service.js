@@ -132,15 +132,7 @@ export class PosData extends Reactive {
                         remove.push(record[params.key]);
                     }
                 } else {
-                    const serializedData = record.serialize();
-                    const uiState =
-                        typeof record.uiState === "object" ? record.serializeState() : "{}";
-                    const serializedRecord = {
-                        ...serializedData,
-                        JSONuiState: JSON.stringify(uiState),
-                        id: record.id,
-                    };
-                    put.push(serializedRecord);
+                    put.push(record.serializeForIndexedDB());
                 }
             }
 
@@ -180,14 +172,7 @@ export class PosData extends Reactive {
 
         const preLoadData = await this.preLoadData(data);
         const missing = await this.missingRecursive(preLoadData);
-        const results = this.models.loadData(missing, [], true, true);
-        for (const data of Object.values(results)) {
-            for (const record of data) {
-                if (record.raw.JSONuiState) {
-                    record.setupState(JSON.parse(record.raw.JSONuiState));
-                }
-            }
-        }
+        const results = this.models.loadConnectedData(missing, []);
 
         await this.checkAndDeleteMissingOrders(results);
 
@@ -282,8 +267,8 @@ export class PosData extends Reactive {
         delete data["pos.order"];
         delete data["pos.order.line"];
 
-        this.models.loadData(data, this.modelToLoad);
-        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
+        this.models.loadConnectedData(data, this.modelToLoad);
+        this.models.loadConnectedData({ "pos.order": order, "pos.order.line": orderlines }, []);
     }
 
     async loadFieldsAndRelations() {
@@ -329,9 +314,8 @@ export class PosData extends Reactive {
             };
         }
 
-        const { models, baseData } = createRelatedModels(relations, modelClasses, this.opts);
+        const { models } = createRelatedModels(relations, modelClasses, this.opts);
 
-        this.baseData = baseData;
         this.fields = fields;
         this.relations = relations;
         this.models = models;
@@ -359,8 +343,10 @@ export class PosData extends Reactive {
             });
 
             this.models[model].addEventListener("update", (params) => {
-                const record = this.models[model].get(params.id).raw;
-
+                const record = this.models[model].get(params.id)?.raw;
+                if (!record) {
+                    return; // the record may be deleted
+                }
                 for (const [key, value] of Object.entries(record)) {
                     if (value instanceof Base) {
                         record[key] = value.id;
@@ -474,9 +460,8 @@ export class PosData extends Reactive {
                             }
                         }
 
-                        localRecord.update(formattedForUpdate);
-                        const baseData = Object.assign(this.baseData[model][record.id], values);
-                        this.synchronizeServerDataInIndexedDB({ [model]: [baseData] });
+                        localRecord.update(formattedForUpdate, { omitUnknownField: true });
+                        this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
                     } else {
                         nonExistentRecords.push(record);
                     }
@@ -497,13 +482,13 @@ export class PosData extends Reactive {
             ) {
                 const data = await this.missingRecursive({ [model]: result });
                 this.synchronizeServerDataInIndexedDB(data);
-                const results = this.models.loadData(data);
+                const results = this.models.connectNewData(data);
                 result = results[model];
             } else if (type === "write") {
-                const recordBaseData = this.baseData[model][ids[0]];
-                if (recordBaseData) {
-                    Object.assign(recordBaseData, values);
-                    this.synchronizeServerDataInIndexedDB({ [model]: [recordBaseData] });
+                const localRecord = this.models[model].get(ids[0]);
+                if (localRecord) {
+                    localRecord.update(values, { omitUnknownField: true });
+                    this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
                 }
             }
 
@@ -661,7 +646,7 @@ export class PosData extends Reactive {
         for (const id of ids) {
             const record = this.models[model].get(id);
             delete vals.id;
-            record.update(vals);
+            record.update(vals, { omitUnknownField: true });
 
             const dataToUpdate = {};
             const keysToUpdate = Object.keys(vals);
@@ -722,8 +707,7 @@ export class PosData extends Reactive {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
         if (data) {
             this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
-            const results = this.models.loadData(data, [], true);
-            return results;
+            return this.models.connectNewData(data);
         }
         return false;
     }

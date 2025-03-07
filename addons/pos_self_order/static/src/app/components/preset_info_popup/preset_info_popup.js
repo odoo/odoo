@@ -40,7 +40,7 @@ export class PresetInfoPopup extends Component {
                 state_id: this.state.stateId,
                 zip: this.state.zip,
             });
-            const partner = this.selfOrder.models.loadData(result);
+            const partner = this.selfOrder.models.connectNewData(result);
             this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${partner["res.partner"][0].name}`;
             this.selfOrder.currentOrder.partner_id = partner["res.partner"][0];
         } else {

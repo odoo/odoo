@@ -146,7 +146,6 @@ export class CartPage extends Component {
 
         if (lastChange) {
             line.qty = lastChange.qty;
-            line.setDirty();
         } else {
             this.selfOrder.removeLine(line);
         }
@@ -165,11 +164,8 @@ export class CartPage extends Component {
         for (const cline of this.selfOrder.currentOrder.lines) {
             if (cline.combo_parent_id?.uuid === line.uuid) {
                 this._changeQuantity(cline, increase);
-                cline.setDirty();
             }
         }
-
-        line.setDirty();
     }
 
     async changeQuantity(line, increase) {
