@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class SetupEditorPlugin extends Plugin {
     static id = "setup_editor_plugin";
-
+    static shared = ["getEditableAreas"];
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.setContenteditable.bind(this),
@@ -73,5 +73,21 @@ export class SetupEditorPlugin extends Plugin {
             '.oe_structure.oe_empty, [data-oe-type="html"]'
         );
         editableEls.forEach((el) => el.setAttribute("contenteditable", !el.matches(":empty")));
+    }
+
+    /**
+     * Gets all the editable elements contained in the given root element (or
+     * the editable if none is specified), including this element.
+     *
+     * @param {HTMLElement|undefined} rootEl
+     * @returns {Array<HTMLElement}
+     */
+    getEditableAreas(rootEl) {
+        const editableEl = rootEl || this.editable;
+        const editablesAreaEls = [...editableEl.querySelectorAll(".o_editable")];
+        if (editableEl.matches(".o_editable")) {
+            editablesAreaEls.unshift(editableEl);
+        }
+        return editablesAreaEls;
     }
 }
