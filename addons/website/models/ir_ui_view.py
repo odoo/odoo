@@ -10,6 +10,7 @@ from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
+from odoo.tools.json import scriptsafe as json
 
 _logger = logging.getLogger(__name__)
 
@@ -478,6 +479,26 @@ class IrUiView(models.Model):
     def save(self, value, xpath=None):
         self.ensure_one()
         current_website = self.env['website'].get_current_website()
+        has_page_access = self.env['website.page'].has_access('read')
+        page_id = None
+        if has_page_access:
+            page_id = self.page_ids.id
+        if page_id:
+            # remove page IDs from untouched configurator pages since the configurator page is modified
+            param_key = f'website.untouched_configurator_pages.{current_website.id}'
+            untouched_configurator_pages = json.loads(self.env['ir.config_parameter'].sudo().get_param(param_key, '{}'))
+            page_ids = list(untouched_configurator_pages.values())
+            if page_id in page_ids:
+                key_to_remove = None
+                for key, config_page_id in untouched_configurator_pages.items():
+                    if config_page_id == page_id:
+                        key_to_remove = key
+                        break
+
+                if key_to_remove:
+                    del untouched_configurator_pages[key_to_remove]
+            self.env['ir.config_parameter'].sudo().set_param(param_key, json.dumps(untouched_configurator_pages))
+
         # xpath condition is important to be sure we are editing a view and not
         # a field as in that case `self` might not exist (check commit message)
         if xpath and self.key and current_website:
