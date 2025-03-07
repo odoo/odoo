@@ -42,7 +42,7 @@ import { toPyValue } from "@web/core/py_js/py_utils";
 
 /**
  * @typedef {Object} Options
- * @property {(value: Value) => (null|Object)} [getFieldDef]
+ * @property {(value: Value | Couple) => (null|Object)} [getFieldDef]
  * @property {boolean} [distributeNot]
  */
 
@@ -79,6 +79,13 @@ const EXCHANGE = {
 };
 
 const COMPARATORS = ["<", "<=", ">", ">=", "in", "not in", "==", "is", "!=", "is not"];
+
+export class Couple {
+    constructor(x, y) {
+        this._first = x;
+        this._second = y;
+    }
+}
 
 export class Expression {
     constructor(ast) {
@@ -280,7 +287,10 @@ function _construcTree(ASTs, options = {}, negate = false) {
         tree.value = toValue(valueAST);
         if (["any", "not any"].includes(tree.operator)) {
             try {
-                tree.value = treeFromDomain(formatAST(valueAST), options);
+                tree.value = treeFromDomain(formatAST(valueAST), {
+                    ...options,
+                    getFieldDef: (p) => options.getFieldDef?.(new Couple(tree.path, p)) || null,
+                });
             } catch {
                 tree.value = Array.isArray(tree.value) ? tree.value : [tree.value];
             }
