@@ -115,7 +115,7 @@ class EditWebsiteSystray extends Component {
 
 export const systrayItem = {
     Component: EditWebsiteSystray,
-    isDisplayed: (env) => env.services.website.currentWebsite.metadata.editable || env.services.website.currentWebsite.metadata.translatable,
+    isDisplayed: (env) => env.services.website.isRestrictedEditor && (env.services.website.currentWebsite.metadata.editable || env.services.website.currentWebsite.metadata.translatable),
 };
 
 registry.category("website_systray").add("EditWebsite", systrayItem, { sequence: 7 });
