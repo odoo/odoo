@@ -7,7 +7,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'Handle checkouts and payments for shops and restaurants.',
-    'depends': ['resource', 'stock_account', 'barcodes', 'web_editor', 'digest', 'phone_validation'],
+    'depends': ['resource', 'stock_account', 'barcodes', 'web_editor', 'digest', 'phone_validation', 'partner_autocomplete'],
     'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/point_of_sale_security.xml',
@@ -200,6 +200,7 @@
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'point_of_sale/static/src/customer_display/customer_display_adapter.js',
+            'partner_autocomplete/static/src/**/*',
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/hoot-dom/**/*",
