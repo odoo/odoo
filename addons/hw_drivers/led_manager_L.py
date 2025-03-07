@@ -32,8 +32,8 @@ class LedManager(Thread):
             time.sleep(STATUS_UPDATE_DELAY_SECONDS)
 
     def _disable_led_triggers(self):
-        subprocess.run(["sudo", "tee", "/sys/class/leds/ACT/trigger"], input="none", text=True)
-        subprocess.run(["sudo", "tee", "/sys/class/leds/PWR/trigger"], input="none", text=True)
+        subprocess.run(["sudo", "tee", "/sys/class/leds/ACT/trigger"], input=b"none", stdout=subprocess.DEVNULL)
+        subprocess.run(["sudo", "tee", "/sys/class/leds/PWR/trigger"], input=b"none", stdout=subprocess.DEVNULL)
 
     def _set_green_led(self, value):
         if self.green_led_on == value:
@@ -42,13 +42,17 @@ class LedManager(Thread):
         if helpers.raspberry_pi_model == 5:
             # 'ACT' LED is inverted on Raspberry Pi 5
             value = not value
-        subprocess.run(["sudo", "tee", "/sys/class/leds/ACT/brightness"], input="1" if value else "0", text=True)
+        subprocess.run(
+            ["sudo", "tee", "/sys/class/leds/ACT/brightness"], input=b"1" if value else b"0", stdout=subprocess.DEVNULL
+        )
 
     def _set_red_led(self, value):
         if self.red_led_on == value:
             return
         self.red_led_on = value
-        subprocess.run(["sudo", "tee", "/sys/class/leds/PWR/brightness"], input="1" if value else "0", text=True)
+        subprocess.run(
+            ["sudo", "tee", "/sys/class/leds/PWR/brightness"], input=b"1" if value else b"0", stdout=subprocess.DEVNULL
+        )
 
     def _blink_green_led(self):
         if not self.blinking:
