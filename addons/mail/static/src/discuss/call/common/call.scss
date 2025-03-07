@@ -7,6 +7,11 @@
     min-height: 50%;
     background: var(--o-discuss-Call-bgColor, #{$dark});
 
+    &.o-compact {
+        height: auto;
+        min-height: auto;
+    }
+
     &.o-minimized {
         height: 20%; // ensures that the view returns to the right height when resized
         min-height: #{"max(20%, 130px)"};
@@ -42,6 +47,11 @@
     min-width: var(--width);
     min-height: var(--height);
     aspect-ratio: 16/9;
+    
+    &.o-active {
+        width: 100%;
+        height: auto;
+    }
 }
 
 .o-discuss-Call-sidebarToggler {
