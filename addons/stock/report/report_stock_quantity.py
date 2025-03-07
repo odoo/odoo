@@ -57,10 +57,8 @@ WITH
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
         LEFT JOIN warehouse_cte dest ON
-            CASE
-                WHEN m.state != 'done' THEN dest.sl_id = COALESCE(m.location_final_id, m.location_dest_id)
-                WHEN m.state = 'done' THEN dest.sl_id = m.location_dest_id
-            END
+            (m.state != 'done' AND dest.sl_id = COALESCE(m.location_final_id, m.location_dest_id)) OR
+            (m.state = 'done' AND dest.sl_id = m.location_dest_id)
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
         WHERE pt.is_storable = true AND
