@@ -775,6 +775,16 @@
         <field name="is_leave" eval="True"/>
     </record>
 
+<!-- JO : Jordan -->
+    <record id="l10n_jo_work_entry_type_sick_leave_unpaid" model="hr.work.entry.type">
+        <field name="name">Sick Leave (Unpaid)</field>
+        <field name="color">7</field>
+        <field name="code">SICKLEAVE0</field>
+        <field name="is_leave" eval="True"/>
+        <field name="country_id" ref="base.jo"/>
+        <field name="amount_rate">1</field>  <!-- Unpaid, but treated in a separate rule -->
+    </record>
+
 <!-- LU : Luxemburg -->
     <record id="l10n_lu_work_entry_type_situational_unemployment" model="hr.work.entry.type">
         <field name="name">Situational Unemployment</field>
