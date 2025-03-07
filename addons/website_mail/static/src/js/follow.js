@@ -37,6 +37,19 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
             self._toggleSubscription(true, data[0].email, $jsFollowToEnable);
             self._toggleSubscription(false, data[0].email, $jsFollowEls.not($jsFollowToEnable));
             $jsFollowEls.removeClass('d-none');
+            // TODO handle from xml in master
+            // We explicitly added the input element because
+            // groups="base.group_public" is applied to it. As a result, in
+            // internal or portal use, only the Subscribe/Unsubscribe buttons
+            // are displayed. This ensures that the input element is included if
+            // the user is not a public user.
+            if (self.isUser && !$jsFollowEls[0].querySelector(".js_follow_email")) {
+                const inputEl = document.createElement("input");
+                inputEl.setAttribute("type", "email");
+                inputEl.setAttribute("class", "js_follow_email form-control");
+                inputEl.setAttribute("placeholder", "your email...");
+                $jsFollowEls[0].prepend(inputEl);
+            }
         };
 
         const records = {};
