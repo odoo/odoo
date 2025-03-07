@@ -20,15 +20,9 @@ function addBefore(target, operation) {
     if (previousSibling?.nodeType === Node.TEXT_NODE) {
         const [text1, text2] = previousSibling.data.split(RSTRIP_REGEXP);
         previousSibling.data = text1.trimEnd();
-        if (nodes[0].nodeType === Node.TEXT_NODE) {
-            mergeTextNodes(previousSibling, nodes[0]);
-        }
         if (text2 && nodes.some((n) => n.nodeType !== Node.TEXT_NODE)) {
             const textNode = document.createTextNode(text2);
             target.before(textNode);
-            if (textNode.previousSibling.nodeType === Node.TEXT_NODE) {
-                mergeTextNodes(textNode.previousSibling, textNode);
-            }
         }
     }
 }
@@ -142,16 +136,6 @@ function getNodes(element, operation) {
     return nodes;
 }
 
-/**
- * @param {Text} first
- * @param {Text} second
- * @param {boolean} [trimEnd=true]
- */
-function mergeTextNodes(first, second, trimEnd = true) {
-    first.data = (trimEnd ? first.data.trimEnd() : first.data) + second.data;
-    second.remove();
-}
-
 function splitAndTrim(str, separator) {
     return str.split(separator).map((s) => s.trim());
 }
@@ -201,12 +185,12 @@ function modifyAttributes(target, operation) {
 function removeNode(node) {
     const { nextSibling, previousSibling } = node;
     node.remove();
-    if (nextSibling?.nodeType === Node.TEXT_NODE && previousSibling?.nodeType === Node.TEXT_NODE) {
-        mergeTextNodes(
-            previousSibling,
-            nextSibling,
-            previousSibling.parentElement.firstChild === previousSibling
-        );
+    if (
+        nextSibling?.nodeType === Node.TEXT_NODE &&
+        previousSibling?.nodeType === Node.TEXT_NODE &&
+        previousSibling.parentElement.firstChild === previousSibling
+    ) {
+        previousSibling.data = previousSibling.data.trimEnd();
     }
 }
 
