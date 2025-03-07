@@ -35,7 +35,7 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     expect("span.o-dropdown-item").toHaveCount(3);
     await contains("span.o-dropdown-item").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;name&quot;:&quot;First&quot;}]">b</div>`
+        `<div class="test-options-target o-paragraph" data-test="[{&quot;id&quot;:1,&quot;name&quot;:&quot;First&quot;}]">b</div>`
     );
     expect("table tr").toHaveCount(1);
 

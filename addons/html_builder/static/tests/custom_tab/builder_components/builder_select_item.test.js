@@ -115,14 +115,14 @@ test("hide/display BuilderSelect based on applyTo", async () => {
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b">b</div></div>`
+        `<div class="parent-target"><div class="child-target b o-paragraph">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect(".options-container button.dropdown-toggle").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b my-custom-class">b</div></div>`
+        `<div class="parent-target"><div class="child-target b my-custom-class o-paragraph">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect(".options-container button.dropdown-toggle").toHaveCount(1);
@@ -145,12 +145,12 @@ test("hide/display BuilderSelectItem base on applyTo", async () => {
                 </BuilderSelect>`,
     });
     const { getEditableContent } = await setupWebsiteBuilder(
-        `<div class="parent-target"><div class="child-target">b</div></div>`
+        `<div class="parent-target"><div class="child-target o-paragraph">b</div></div>`
     );
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target">b</div></div>`
+        `<div class="parent-target"><div class="child-target o-paragraph">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect(".options-container button.dropdown-toggle").toHaveCount(1);
@@ -159,7 +159,7 @@ test("hide/display BuilderSelectItem base on applyTo", async () => {
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
+        `<div class="parent-target"><div class="child-target my-custom-class o-paragraph">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     await contains(".options-container button.dropdown-toggle").click();
@@ -208,7 +208,7 @@ test("use BuilderSelect with styleAction", async () => {
 
     await contains(".o-dropdown--menu div:contains(dotted)").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target" style="border-style: dotted;">b</div>`
+        `<div class="parent-target o-paragraph" style="border-style: dotted;">b</div>`
     );
     expect(".we-bg-options-container .dropdown").toHaveText("dotted");
 });
