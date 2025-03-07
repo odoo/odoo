@@ -42,8 +42,9 @@ test("dropping a new snippet starts its interaction", async () => {
     await openBuilderSidebar();
     await waitFor(".o-website-builder_sidebar.o_builder_sidebar_open");
     expect.verifySteps([]);
+
     await contains(
-        `.o-snippets-menu #snippet_groups .o_snippet:contains('Text') .o_snippet_thumbnail`
+        `.o-snippets-menu #snippet_groups .o_snippet[data-snippet-group='text'] .o_snippet_thumbnail_area`
     ).click();
     await confirmAddSnippet("s_title");
     expect.verifySteps(["update"]);
