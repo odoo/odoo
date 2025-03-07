@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -46,6 +46,7 @@ export class SearchBarMenu extends Component {
         }
         this.fields = sortBy(fields, "string");
         // Favorite
+        this.state = useState({ sharedFavoritesExpanded: false });
         useBus(this.env.searchModel, "update", this.render);
     }
 
@@ -130,9 +131,15 @@ export class SearchBarMenu extends Component {
     }
 
     get sharedFavorites() {
-        return this.env.searchModel.getSearchItems(
+        const sharedFavorites = this.env.searchModel.getSearchItems(
             (searchItem) => searchItem.type === "favorite" && searchItem.userId === false
         );
+        if (sharedFavorites.length <= 4 || this.state.sharedFavoritesExpanded) {
+            this.state.sharedFavoritesExpanded = true;
+        } else {
+            sharedFavorites.length = 3;
+        }
+        return sharedFavorites;
     }
 
     get otherItems() {

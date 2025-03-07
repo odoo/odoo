@@ -5,15 +5,12 @@ import { editValue } from "@web/../tests/core/tree_editor/condition_tree_editor_
 import {
     contains,
     editFavorite,
-    editFavoriteName,
     getFacetTexts,
     isItemSelected,
     mockService,
     mountWithSearch,
     onRpc,
-    saveFavorite,
     toggleMenuItem,
-    toggleSaveFavorite,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { defineSearchBarModels } from "./models";
@@ -241,15 +238,9 @@ test("edit a favorite with a groupby", async () => {
     expect(`.o_group_by_menu .o_menu_item:not(.o_add_custom_group_menu)`).toHaveCount(0);
 });
 
-test("shared favorites are grouped under a dropdown if there are more than 10", async () => {
-    onRpc("create_or_replace", ({ args, route }) => {
-        expect.step(route);
-        const irFilter = args[0];
-        expect(irFilter.domain).toBe(`[]`);
-        return [10]; // fake serverSideId
-    });
+test("shared favorites are partially shown if there is more than 4", async () => {
     const irFilters = [];
-    for (let i = 1; i < 11; i++) {
+    for (let i = 1; i < 6; i++) {
         irFilters.push({
             context: "{}",
             domain: "[('foo', '=', 'a')]",
@@ -267,14 +258,9 @@ test("shared favorites are grouped under a dropdown if there are more than 10", 
         activateFavorite: false,
     });
     await toggleSearchBarMenu();
-    expect(".o_favorite_menu .o-dropdown-item").toHaveCount(10);
-    await toggleSaveFavorite();
-    await editFavoriteName("My favorite11");
-    await contains(".o-checkbox:eq(1)").click();
-    await saveFavorite();
-    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_or_replace"]);
-    expect(".o_favorite_menu .o-dropdown-item").toHaveCount(0);
-    expect(".o_favorite_menu .o_menu_item:contains(Shared filters)").toHaveCount(1);
-    await contains(".o_favorite_menu .o_menu_item:contains(Shared filters)").click();
-    expect(".o_favorite_menu .o-dropdown-item").toHaveCount(11);
+    expect(".o_favorite_menu .o_favorite_item").toHaveCount(3);
+    expect(".o_favorite_menu .o_expand_shared_favorites").toHaveCount(1);
+    await contains(".o_favorite_menu .o_expand_shared_favorites").click();
+    expect(".o_favorite_menu .o_expand_shared_favorites").toHaveCount(0);
+    expect(".o_favorite_menu .o_favorite_item").toHaveCount(5);
 });
