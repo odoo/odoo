@@ -199,3 +199,36 @@ class TestAutomation(TransactionCaseWithUserDemo):
 
         allowed_models = self.env['ir.model'].search(domain)
         self.assertTrue(base_model._name not in allowed_models.mapped('model'), "The base model should not be in the allowed models")
+
+    def test_automation_rule_to_execute_cron(self):
+        """
+        Test the creation of an automation rule that executes a cron job with a failed query.
+
+        This test verifies that an automation rule can be created to execute a cron job and ensures that
+        no "InFailedSqlTransaction" error appears in the logs when the cron job run.
+        """
+        automation = self.env["base.automation"].create({
+            "name": "Execute cron Alsh",
+            "trigger": "on_time_created",
+            "model_id": self.env.ref("base.model_res_partner").id,
+            "trg_date_range": -1,
+            "trg_date_range_type": "hour",
+            "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
+        })
+
+        action = self.env["ir.actions.server"].create({
+            "name": "Set Active To False",
+            "base_automation_id": automation.id,
+            "model_id": self.env.ref("base.model_res_partner").id,
+            "state": "object_create",
+            "update_path": "active",
+            "update_boolean_value": "false",
+            "crud_model_id": self.env.ref("base.model_res_currency").id,
+        })
+
+        automation.write({"action_server_ids": [Command.link(action.id)]})
+        with self.assertLogs(level="ERROR") as log_capture:
+            # Manually run the cron
+            self.env["base.automation"]._check()
+        logs_output = "\n".join(log_capture.output)
+        self.assertNotIn("InFailedSqlTransaction", logs_output, "Error: InFailedSqlTransaction found in logs!")
