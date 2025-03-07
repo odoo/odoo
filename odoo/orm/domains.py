@@ -277,6 +277,10 @@ class Domain:
         """~Domain"""
         return DomainNot(self)
 
+    def _negate(self, model: BaseModel) -> Domain:
+        """Apply (propagate) negation onto this domain. """
+        return ~self
+
     def __add__(self, other):
         """Domain + [...]
 
@@ -464,56 +468,10 @@ class DomainNot(Domain):
         return ~(self.child.map_conditions(function))
 
     def _optimize(self, model: BaseModel) -> Domain:
-        """Optimization step.
-
-        Push down the operator as much as possible.
-        """
-        child = self.child
-        # and/or push down
-        # not not a  <=>  a
-        # not (a or b)  <=>  (not a and not b)
-        # not (a and b)  <=>  (not a or not b)
-        if isinstance(child, (DomainNary, DomainNot)):
-            # invert implemented in the child domain
-            return (~child)._optimize(model)
-        # run optimization for the children
-        child = child._optimize(model)
-        result = self._rewrite_inverse_condition(child, model)
-        if result is not child:
-            return result._optimize(model)
-        if child is self.child:
-            return self
-        return ~child
+        return self.child._optimize(model)._negate(model)
 
     def _optimize_for_sql(self, model: BaseModel) -> Domain:
-        domain = self._optimize(model)
-        if domain is not self:
-            return domain._optimize_for_sql(model)
-        # run optimization for the children
-        child = self.child._optimize_for_sql(model)
-        result = self._rewrite_inverse_condition(child, model)
-        if result is not child:
-            return result._optimize_for_sql(model)
-        if child is self.child:
-            return self
-        return ~child
-
-    @staticmethod
-    def _rewrite_inverse_condition(condition: Domain, model: BaseModel) -> Domain:
-        if not isinstance(condition, DomainCondition):
-            return condition
-        # inverse of the operators is handled by construction
-        # except for inequalities for which we must know the field's type
-        if ineq_operator := _INVERSE_INEQUALITY.get(condition.operator):
-            # Inverse and add a condition "or field is null"
-            # when the field does not have a falsy value.
-            # Having a falsy value is handled correctly in the SQL generation.
-            return (
-                Domain(condition.field_expr, 'in', OrderedSet([False])) if condition._field(model).falsy_value is None else _FALSE_DOMAIN
-            ) | Domain(condition.field_expr, ineq_operator, condition.value)
-        if isinstance(result := ~condition, DomainCondition):
-            return result
-        return condition
+        return self.child._optimize_for_sql(model)._negate(model)
 
     def __eq__(self, other):
         return isinstance(other, DomainNot) and self.child == other.child
@@ -592,6 +550,9 @@ class DomainNary(Domain):
 
     def __invert__(self):
         return self.INVERSE([~child for child in self.children])
+
+    def _negate(self, model):
+        return self.INVERSE([child._negate(model) for child in self.children], _level=self._opt_level)
 
     def iter_conditions(self):
         for child in self.children:
@@ -752,10 +713,25 @@ class DomainCondition(Domain):
 
     def __invert__(self):
         # do it only for simple fields (not expressions)
-        # inequalities are handled in the DomainNot
+        # inequalities are handled in _negate()
         if "." not in self.field_expr and (neg_op := _INVERSE_OPERATOR.get(self.operator)):
-            return DomainCondition(self.field_expr, neg_op, self.value)
+            return DomainCondition(self.field_expr, neg_op, self.value, level=self._opt_level)
         return super().__invert__()
+
+    def _negate(self, model):
+        # inverse of the operators is handled by construction
+        # except for inequalities for which we must know the field's type
+        if neg_op := _INVERSE_INEQUALITY.get(self.operator):
+            # Inverse and add a self "or field is null"
+            # when the field does not have a falsy value.
+            # Having a falsy value is handled correctly in the SQL generation.
+            condition = DomainCondition(self.field_expr, neg_op, self.value, level=self._opt_level)
+            if self._field(model).falsy_value is None:
+                is_null = DomainCondition(self.field_expr, 'in', OrderedSet([False]), level=self._opt_level)
+                condition = is_null | condition
+            return condition
+
+        return super()._negate(model)
 
     def __iter__(self):
         field_expr, operator, value = self.field_expr, self.operator, self.value
