@@ -232,8 +232,7 @@ class WebsitePublishedMixin(models.AbstractModel):
                 # to be rendered by a template even if they were not supposed
                 # to be accessible
                 plain_record = record.sudo(flag=False) if self._context.get('can_publish_unsudo_main_object', False) else record
-                plain_record.check_access_rights('write')
-                plain_record.check_access_rule('write')
+                self.env['website'].get_current_website()._check_user_can_modify(plain_record)
                 record.can_publish = True
             except AccessError:
                 record.can_publish = False
