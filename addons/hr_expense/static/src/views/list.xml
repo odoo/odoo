@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="hr_expense.ListButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
-
-       <!-- hr.expense and hr.expense.sheet -->
-        <xpath expr="//div[hasclass('o_list_buttons')]" position="attributes">
-            <attribute name="class" remove="d-flex" separator=" "/>
-            <attribute name="class" add="d-block d-xl-flex" separator=" "/>
-        </xpath>
-        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+    <t t-name="hr_expense.ListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-set-slot='layout-buttons']" position="inside">
             <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
-            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+            <button type="button" class="d-none d-md-block o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
                 Upload
             </button>
-           <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+           <button type="button" class="d-block d-md-none o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
                 Scan
             </button>
             <button t-if="displayCreateReport()" class="btn btn-secondary" t-on-click="() => this.action_show_expenses_to_submit()">

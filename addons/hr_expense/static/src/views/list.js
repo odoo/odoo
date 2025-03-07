@@ -70,6 +70,7 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         await this.model.root.load();
     }
 }
+ExpenseListController.template = 'hr_expense.ListView';
 
 export class ExpenseListRenderer extends ExpenseDocumentDropZone(ExpenseMobileQRCode(ListRenderer)) {}
 ExpenseListRenderer.template = 'hr_expense.ListRenderer';
@@ -81,14 +82,12 @@ ExpenseDashboardListRenderer.template = 'hr_expense.DashboardListRenderer';
 
 registry.category('views').add('hr_expense_tree', {
     ...listView,
-    buttonTemplate: 'hr_expense.ListButtons',
     Controller: ExpenseListController,
     Renderer: ExpenseListRenderer,
 });
 
 registry.category('views').add('hr_expense_dashboard_tree', {
     ...listView,
-    buttonTemplate: 'hr_expense.ListButtons',
     Controller: ExpenseListController,
     Renderer: ExpenseDashboardListRenderer,
 });
