@@ -393,15 +393,7 @@ export function rgbaToHex(rgba = "") {
             parseFloat(values[3]) * 100
         );
     } else {
-        return (
-            "#" +
-            (rgba.match(/\d{1,3}/g) || [])
-                .map((x) => {
-                    x = parseInt(x).toString(16);
-                    return x.length === 1 ? "0" + x : x;
-                })
-                .join("")
-        );
+        return rgbToHex(rgba);
     }
 }
 
