@@ -53,7 +53,6 @@ export class PaymentScreen extends Component {
 
     onMounted() {
         const order = this.pos.get_order();
-        this.pos.addPendingOrder([order.id]);
 
         for (const payment of order.payment_ids) {
             const pmid = payment.payment_method_id.id;
