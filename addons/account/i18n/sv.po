@@ -1166,6 +1166,8 @@ msgstr "<span class=\"text-warning\">Mellan risk</span>: Iban"
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"name or name_placeholder or "
+"quick_edit_mode\">Förslag</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1952,7 +1954,7 @@ msgstr "Skuldkonto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "Platshållare för kontoprefix"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2468,7 +2470,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Add a description to your item."
-msgstr ""
+msgstr "Lägg till en beskrivning till ditt föremål."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -3058,6 +3060,9 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
+"Eventuell anmälan fram till och med detta datum kommer att skjutas upp till "
+"ett senare tillfälle, i enlighet med dess journalsekvens. Detta stoppdatum "
+"är oåterkalleligt och tillåter inget undantag."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -3065,6 +3070,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
+"Alla anmälningar fram till och med detta datum kommer att skjutas upp till "
+"en senare tidpunkt, i enlighet med dess journals ordning."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -3073,6 +3080,9 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
+"Alla poster med skatter till och med detta datum kommer att skjutas upp till"
+" en senare tidpunkt, i enlighet med dess journals ordning. "
+"Skattelstoppdatumet ställs in automatiskt när skatteavslutsposten bokförs."
 
 #. module: account
 #. odoo-python
@@ -3098,6 +3108,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Alla inköpsanföranden före och inklusive detta datum kommer att skjutas upp "
+"till ett senare datum, i enlighet med dess journals ordning."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -3105,6 +3117,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Alla försäljningsposter före och inklusive detta datum kommer att skjutas "
+"upp till ett senare datum, i enlighet med dess journals ordning."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -4067,6 +4081,7 @@ msgstr "Kan inte skapa ett försäljningsdokument i en icke försäljningsjourna
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
+"Det går inte att skapa en periodiseringspost med order i olika valutor."
 
 #. module: account
 #. odoo-python
@@ -4497,7 +4512,7 @@ msgstr "Klicka"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Click here to add a description to your product."
-msgstr ""
+msgstr "Klicka här för att lägga till en beskrivning av din produkt."
 
 #. module: account
 #. odoo-javascript
@@ -5181,7 +5196,7 @@ msgstr "Skapa den första avrundningen av kontanter"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Create the product."
-msgstr ""
+msgstr "Skapa produkten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -7309,7 +7324,7 @@ msgstr "Figurtyp"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Fill in the details of the product or see the suggestion."
-msgstr ""
+msgstr "Fyll i detaljerna för produkten eller se förslaget."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -7320,7 +7335,7 @@ msgstr "Filter för multivat"
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr ""
+msgstr "Filtrera på kontot eller dess visningsnamn istället"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -7331,7 +7346,7 @@ msgstr "Bokföringskonto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
 msgid "Financial Accounts Prefixes"
-msgstr ""
+msgstr "Finansiella kontons prefix"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -9247,7 +9262,7 @@ msgstr "Är mellan"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Är Coa installerad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -10655,7 +10670,7 @@ msgstr "Namn"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
-msgstr ""
+msgstr "Namn platshållare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
@@ -10672,7 +10687,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "Närmast"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -11634,7 +11649,7 @@ msgstr "PDF utan betalning"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "PEPPOL Electronic Invoicing"
-msgstr ""
+msgstr "PEPPOL elektronisk fakturering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -13999,13 +14014,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
-msgstr ""
+msgstr "Sätt ett pris."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Ställ in ett värde större än 0,0 för att aktivera en kreditgränskontroll"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14301,7 +14317,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Standard communication"
-msgstr ""
+msgstr "Standardkommunikation"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -14328,7 +14344,7 @@ msgstr "Uttalande"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "Påstående %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -15056,6 +15072,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
+"%s Diagrammallen ska inte väljas direkt. Istället bör du direkt välja "
+"kartmallen som är relaterad till ditt land."
 
 #. module: account
 #. odoo-python
@@ -15967,6 +15985,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is"
 " set for invoices."
 msgstr ""
+"Sändningen av fakturor är inte korrekt inställd, se till att rapporten som "
+"används är inställd för fakturor."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -17015,6 +17035,9 @@ msgid ""
 "                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
+"Utlöser varningar när du skapar fakturor och försäljningsorder för partners "
+"med en total fordran som överstiger en gräns. Ställ in ett värde större än "
+"0,0 för att aktivera en kreditgränskontroll"
 
 #. module: account
 #. odoo-python
@@ -17693,12 +17716,16 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
+"Säljarens räkningar kan förgenereras baserat på köp\n"
+"                   beställningar eller kvitton. Detta gör att du kan kontrollera räkningar\n"
+"                   du får från din leverantör enligt utkastet\n"
+"                   dokument i Odoo."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Verify the price and update if necessary."
-msgstr ""
+msgstr "Verifiera priset och uppdatera vid behov."
 
 #. module: account
 #. odoo-javascript
@@ -18014,7 +18041,7 @@ msgstr "Du kan bara ändra period/konto för bokförda verifikat."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Du kan bara generera försäljningsdokument."
 
 #. module: account
 #. odoo-python
@@ -18140,7 +18167,7 @@ msgstr "Du kan inte radera en rapport som har varianter."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Du kan inte generera fakturor som inte bokförs."
 
 #. module: account
 #. odoo-python
@@ -18594,7 +18621,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot switch the type of a document which has been posted once."
-msgstr ""
+msgstr "Du kan inte byta typ av ett dokument som har postats en gång."
 
 #. module: account
 #. odoo-python
