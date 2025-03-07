@@ -39,9 +39,5 @@
             <field name="perm_write" eval="False"/>
             <field name="perm_unlink" eval="False"/>
         </record>
-
-        <record id="base.default_user" model="res.users">
-            <field name="group_ids" eval="[(4,ref('im_livechat.im_livechat_group_manager'))]"/>
-        </record>
     </data>
 </odoo>

@@ -6,6 +6,10 @@
             <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
         </record>
 
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('product.group_product_manager'))]"/>
+        </record>
+
         <!-- Expensable products -->
         <record id="expense_product" model="product.product">
             <field name="name">Restaurant Expenses</field>

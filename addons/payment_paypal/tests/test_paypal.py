@@ -26,7 +26,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     def test_order_payload_values_for_public_user(self):
         """ If a payment is made with the public user we need to make sure that the
             email address is not sent to PayPal and that we provide the country code of the company instead."""
-        tx = self._create_transaction(flow='direct', partner_id=self.public_user.id)
+        tx = self._create_transaction(flow='direct', partner_id=self.public_user.partner_id.id)
         payload = tx._paypal_prepare_order_payload()
         customer_payload = payload['payment_source']['paypal']
         self.assertTrue('email_address' not in customer_payload)

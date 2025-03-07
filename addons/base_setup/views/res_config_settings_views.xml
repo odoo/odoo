@@ -115,10 +115,9 @@
 
                     <block title="Permissions" id="user_default_rights">
                         <setting string="Default Access Rights" help="Set custom access rights for new users" title="By default, new users get highest access rights for all installed apps. If unchecked, new users will only have basic employee access." id="access_rights">
-                            <field name="user_default_rights"/>
-                            <div class="content-group" invisible="not user_default_rights">
+                            <div class="content-group">
                                 <div class="mt8">
-                                    <button type="object" name="open_default_user" string="Default Access Rights" icon="oi-arrow-right" class="btn-link"/>
+                                    <button type="object" name="open_new_user_default_groups" string="Default Access Rights" icon="oi-arrow-right" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
