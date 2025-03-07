@@ -28,6 +28,10 @@
         border: 5px solid map-get($theme-colors, 'primary');
     }
 
+    &:has(input:focus) {
+        box-shadow: $btn-focus-box-shadow;
+    }
+
     &.custom_value {
         background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
     }
