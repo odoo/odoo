@@ -406,6 +406,7 @@ class IrHttp(models.AbstractModel):
             "code": lang_data.code,
             "direction": lang_data.direction,
             "date_format": lang_data.date_format,
+            "short_date_format": lang_data.short_date_format,
             "time_format": lang_data.time_format,
             "short_time_format": lang_data.short_time_format,
             "grouping": lang_data.grouping,
