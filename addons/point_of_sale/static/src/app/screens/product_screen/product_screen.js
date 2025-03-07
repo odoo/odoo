@@ -124,9 +124,15 @@ export class ProductScreen extends Component {
     }
 
     getCategoriesAndSub() {
-        const rootCategories = this.pos.models["pos.category"].filter(
-            (category) => !category.parent_id
-        );
+        const limitedCategoryIds = this.pos.limitedCategoryIds;
+
+        let isRootCategory = (category) => !category.parent_id;
+        if (limitedCategoryIds) {
+            isRootCategory = (category) =>
+                !category.parent_id && limitedCategoryIds.includes(category.id);
+        }
+
+        const rootCategories = this.pos.models["pos.category"].filter(isRootCategory);
         const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
         const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
         return this.getCategoriesList(rootCategories, allParents, 0)
@@ -335,6 +341,13 @@ export class ProductScreen extends Component {
     }
 
     get products() {
+        const limitedCategoryIds = this.pos.limitedCategoryIds;
+        if (limitedCategoryIds) {
+            const limitedCategIdsSet = new Set(limitedCategoryIds);
+            return this.pos.models["product.product"].filter((product) =>
+                product.pos_categ_ids.some((category) => limitedCategIdsSet.has(category.id))
+            );
+        }
         return this.pos.models["product.product"].getAll();
     }
 
@@ -464,10 +477,9 @@ export class ProductScreen extends Component {
             ["sale_ok", "=", true],
         ];
 
-        const { limit_categories, iface_available_categ_ids } = this.pos.config;
-        if (limit_categories && iface_available_categ_ids.length > 0) {
-            const categIds = iface_available_categ_ids.map((categ) => categ.id);
-            domain.push(["pos_categ_ids", "in", categIds]);
+        const limitedCategoryIds = this.pos.limitedCategoryIds;
+        if (limitedCategoryIds) {
+            domain.push(["pos_categ_ids", "in", limitedCategoryIds]);
         }
         const product = await this.pos.data.searchRead(
             "product.product",

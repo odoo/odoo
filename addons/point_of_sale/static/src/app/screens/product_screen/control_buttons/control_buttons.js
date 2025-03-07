@@ -79,14 +79,19 @@ export class ControlButtons extends Component {
      * @returns {Array}
      */
     getPricelistList() {
-        const selectionList = this.pos.models["product.pricelist"].map((pricelist) => ({
-            id: pricelist.id,
-            label: pricelist.name,
-            isSelected:
-                this.currentOrder.pricelist_id &&
-                pricelist.id === this.currentOrder.pricelist_id.id,
-            item: pricelist,
-        }));
+        const availablePricelistIds = this.pos.config.available_pricelist_ids.map(
+            (pricelist) => pricelist.id
+        );
+        const selectionList = this.pos.models["product.pricelist"]
+            .filter((pricelist) => availablePricelistIds.includes(pricelist.id))
+            .map((pricelist) => ({
+                id: pricelist.id,
+                label: pricelist.name,
+                isSelected:
+                    this.currentOrder.pricelist_id &&
+                    pricelist.id === this.currentOrder.pricelist_id.id,
+                item: pricelist,
+            }));
 
         if (!this.pos.config.pricelist_id) {
             selectionList.push({
