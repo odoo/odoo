@@ -100,6 +100,7 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
         }
         return searchDomain;
     },
+<<<<<<< 18.0
     /**
      * @override
      */
@@ -116,6 +117,18 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     _getMainPageUrl() {
         return "/shop";
     },
+||||||| f39f97b50a13aaf20fc9c96227b50e167959c43c
+    /**
+     * @override
+     */
+    _getRpcParameters: function () {
+        const productTemplateId = $("#product_details").find(".product_template_id");
+        return Object.assign(this._super.apply(this, arguments), {
+            productTemplateId: productTemplateId && productTemplateId.length ? productTemplateId[0].value : undefined,
+        });
+    },
+=======
+>>>>>>> 3c0f66d3db99b6b4484e91b7cc600c147cdd48b6
 });
 
 const DynamicSnippetProductsCard = WebsiteSale.extend({
