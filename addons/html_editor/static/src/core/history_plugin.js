@@ -319,8 +319,19 @@ export class HistoryPlugin extends Plugin {
     setIdOnRecords(records) {
         for (const record of records) {
             if (record.type === "childList" && record.addedNodes.length) {
-                for (const node of record.addedNodes) {
-                    this.setNodeId(node);
+                const { addedNodes, removedNodes } = record;
+                if (this.isSameTextContentMutation(record)) {
+                    const oldId = this.nodeToIdMap.get(removedNodes[0]);
+                    if (oldId) {
+                        this.nodeToIdMap.delete(removedNodes[0]);
+                        this.idToNodeMap.delete(oldId);
+                        this.nodeToIdMap.set(addedNodes[0], oldId);
+                        this.idToNodeMap.set(oldId, addedNodes[0]);
+                    }
+                } else {
+                    for (const node of addedNodes) {
+                        this.setNodeId(node);
+                    }
                 }
             }
         }
@@ -386,11 +397,32 @@ export class HistoryPlugin extends Plugin {
                 if (!attributeCache.get(record.target)[record.attributeName]) {
                     continue;
                 }
+            } else if (record.type === "childList" && this.isSameTextContentMutation(record)) {
+                continue;
             }
             filteredRecords.push(record);
         }
         // @todo @phoenix allow an option to filter mutation records.
         return filteredRecords;
+    }
+
+    /**
+     * Check if a mutation consists of removing and adding a single text node
+     * with the same text content, which occurs in Firefox but is optimized
+     * away in Chrome.
+     *
+     * @param { MutationRecord } record
+     */
+    isSameTextContentMutation(record) {
+        const { addedNodes, removedNodes } = record;
+        return (
+            record.type === "childList" &&
+            addedNodes.length === 1 &&
+            removedNodes.length === 1 &&
+            addedNodes[0].nodeType === Node.TEXT_NODE &&
+            removedNodes[0].nodeType === Node.TEXT_NODE &&
+            addedNodes[0].textContent === removedNodes[0].textContent
+        );
     }
 
     /**
