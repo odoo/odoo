@@ -42,7 +42,7 @@ class ResUsers(models.Model):
 
     @api.depends('res_users_settings_id.livechat_username')
     def _compute_livechat_username(self):
-        for user in self:
+        for user in self.sudo():
             user.livechat_username = user.res_users_settings_id.livechat_username
 
     def _inverse_livechat_username(self):
@@ -52,7 +52,7 @@ class ResUsers(models.Model):
 
     @api.depends('res_users_settings_id.livechat_lang_ids')
     def _compute_livechat_lang_ids(self):
-        for user in self:
+        for user in self.sudo():
             user.livechat_lang_ids = user.res_users_settings_id.livechat_lang_ids
 
     def _inverse_livechat_lang_ids(self):
@@ -62,7 +62,7 @@ class ResUsers(models.Model):
 
     @api.depends("res_users_settings_id.livechat_expertise_ids")
     def _compute_livechat_expertise_ids(self):
-        for user in self:
+        for user in self.sudo():
             user.livechat_expertise_ids = user.res_users_settings_id.livechat_expertise_ids
 
     def _inverse_livechat_expertise_ids(self):
