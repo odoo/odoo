@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps2)",
         },
         {
-            trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps1) i",
+            trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps1) i:not(:visible)",
             run: "click",
         },
         {
@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             trigger: ".o_kanban_record:not(.o_kanban_ghost):only",
         },
         {
-            trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps1) i",
+            trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps1) i:not(:visible)",
             run: "click",
         },
         {
