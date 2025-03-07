@@ -39,19 +39,19 @@ patch(Thread.prototype, {
         );
     },
     get disconnectedText() {
-        const lastPoll = this.props.thread.livechatVisitorMember.persona.last_poll;
-        if (!lastPoll) {
+        const offlineSince = this.props.thread.livechatVisitorMember.persona.offline_since;
+        if (!offlineSince) {
             return _t("Visitor is disconnected");
         }
         const userLocale = { locale: user.lang };
-        if (lastPoll.hasSame(DateTime.now(), "day")) {
+        if (offlineSince.hasSame(DateTime.now(), "day")) {
             return _t("Visitor is disconnected since %(time)s", {
-                time: lastPoll.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
+                time: offlineSince.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
             });
         }
-        if (lastPoll.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
+        if (offlineSince.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
             return _t("Visitor is disconnected since yesterday at %(time)s", {
-                time: lastPoll.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
+                time: offlineSince.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
             });
         }
         return _t("Visitor is disconnected");
