@@ -62,21 +62,31 @@ class MailMessage(models.Model):
                     )
 
     def _author_to_store(self, store: Store):
-        messages_w_author_channel = self.filtered(
-            lambda message: message.author_id
-            and message.model == "discuss.channel"
-            and message.res_id
-        )
-        channel_by_message = messages_w_author_channel._record_by_message()
-        messages_w_author_livechat = messages_w_author_channel.filtered(
-            lambda message: channel_by_message[message].channel_type == "livechat"
-        )
-        super(MailMessage, self - messages_w_author_livechat)._author_to_store(store)
+        def livechat_messages_w_author_field(author_field):
+            msgs = self.filtered(
+                lambda m: getattr(m, author_field) and m.model == "discuss.channel" and m.res_id
+            )
+            record = msgs._record_by_message()
+            return msgs.filtered(lambda m: record[m].channel_type == "livechat")
+
+        livechat_messages_w_author = livechat_messages_w_author_field("author_id")
+        livechat_messages_w_guest_author = livechat_messages_w_author_field("author_guest_id")
+        remaining = self - (livechat_messages_w_author | livechat_messages_w_guest_author)
+
+        super(MailMessage, remaining)._author_to_store(store)
         store.add(
-            messages_w_author_livechat,
+            livechat_messages_w_author,
             Store.One(
                 "author_id",
-                ["avatar_128", "is_company", "user_livechat_username", "user"],
+                ["avatar_128", "is_company", "offline_since", "user_livechat_username", "user"],
+                rename="author",
+            ),
+        )
+        store.add(
+            livechat_messages_w_guest_author,
+            Store.One(
+                "author_guest_id",
+                ["avatar_128", "offline_since", "name"],
                 rename="author",
             ),
         )
