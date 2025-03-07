@@ -3,7 +3,7 @@ import { constructFullProductName, uuidv4, constructAttributeString } from "@poi
 import { Base } from "./related_models";
 import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat } from "@web/core/utils/numbers";
-import { roundCurrency, formatCurrency } from "./utils/currency";
+import { formatCurrency } from "./utils/currency";
 import { _t } from "@web/core/l10n/translation";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { getTaxesAfterFiscalPosition } from "@point_of_sale/app/models/utils/tax_utils";
@@ -619,15 +619,6 @@ export class PosOrderline extends Base {
     getComboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
         return allLines.reduce((total, line) => total + line.getBasePrice() / line.qty, 0);
-    }
-
-    getOldUnitDisplayPrice() {
-        return (
-            this.displayDiscountPolicy() === "without_discount" &&
-            roundCurrency(this.unitDisplayPrice, this.currency) <
-                roundCurrency(this.getTaxedlstUnitPrice(), this.currency) &&
-            this.getTaxedlstUnitPrice()
-        );
     }
 
     getPriceString() {
