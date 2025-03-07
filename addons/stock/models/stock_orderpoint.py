@@ -597,7 +597,8 @@ class StockWarehouseOrderpoint(models.Model):
         domain = [
             ('create_uid', '=', SUPERUSER_ID),
             ('trigger', '=', 'manual'),
-            ('qty_to_order', '<=', 0)
+            ('qty_to_order', '<=', 0),
+            '|', ('snoozed_until', '=', False), ('snoozed_until', '<', fields.Datetime.now()),
         ]
         if self.ids:
             expression.AND([domain, [('ids', 'in', self.ids)]])
