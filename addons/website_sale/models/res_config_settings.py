@@ -130,6 +130,8 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('website_domain')
     def _compute_gmc_xml_url(self):
         for config in self:
+            # Uses `config.get_base_url()` which fallbacks to `web.base.url` if `website_domain` is
+            # not set.
             config.gmc_xml_url = urljoin(config.get_base_url(), '/gmc.xml')
 
     def _inverse_account_on_checkout(self):

@@ -7,7 +7,7 @@ import time
 
 from odoo.fields import Command
 
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers.gmc import WebsiteSaleGMC
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
@@ -17,7 +17,7 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.WebsiteSaleController = WebsiteSale()
+        cls.WebsiteSaleGMCController = WebsiteSaleGMC()
         cls.website.enabled_gmc_src = True
 
         # Prepare products

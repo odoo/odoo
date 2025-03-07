@@ -146,7 +146,7 @@ class Website(models.Model):
         default="Not Available For Sale",
     )
 
-    enabled_gmc_src = fields.Boolean(string="Google Merchant Center Data Source", default=False)
+    enabled_gmc_src = fields.Boolean(string="Google Merchant Center Data Source")
 
     currency_id = fields.Many2one(
         string="Default Currency",

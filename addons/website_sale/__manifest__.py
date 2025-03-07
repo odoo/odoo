@@ -29,8 +29,8 @@
 
         # QWeb templates
         'views/delivery_form_templates.xml',
-        'views/templates.xml',
         'views/gmc_templates.xml',
+        'views/templates.xml',
 
         # Model views.
         'views/account_move_views.xml',

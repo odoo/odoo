@@ -21,7 +21,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.website.enabled_gmc_src = False
 
         with self.assertRaises(NotFound), self.mock_public_request():
-            self.WebsiteSaleController.gmc_data_source()
+            self.WebsiteSaleGMCController.gmc_data_source()
 
     def test_gmc_xml_correct_xml_format(self):
         response = self.url_open('/gmc.xml')
