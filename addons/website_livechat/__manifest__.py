@@ -5,7 +5,7 @@
     'summary': 'Chat with your website visitors',
     'version': '1.0',
     'description': """
-Allow website visitors to chat with the collaborators. This module also brings a feedback tool for the livechat and web pages to display your channel with its ratings on the website.
+Allow website visitors to chat with the collaborators.
     """,
     'depends': ['website', 'im_livechat'],
     'installable': True,
@@ -14,7 +14,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'views/website_livechat.xml',
         'views/res_config_settings_views.xml',
         'views/im_livechat_chatbot_script_view.xml',
-        'views/website_livechat_view.xml',
         'views/website_visitor_views.xml',
         'views/im_livechat_channel_add.xml',
         'security/ir.model.access.csv',
