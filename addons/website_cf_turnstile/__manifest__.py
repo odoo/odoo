@@ -15,12 +15,14 @@ This module implements Cloudflare Turnstile so that you can prevent bot spam on 
     'assets': {
         'web.assets_frontend': [
             'website_cf_turnstile/static/src/interactions/**/*.js',
+            'website_cf_turnstile/static/src/interactions/**/*.xml',
         ],
         'web.assets_unit_tests': [
             'website_cf_turnstile/static/tests/**/*',
         ],
         'web.assets_unit_tests_setup': [
             'website_cf_turnstile/static/src/interactions/**/*.js',
+            'website_cf_turnstile/static/src/interactions/**/*.xml',
         ],
     },
     'license': 'LGPL-3',
