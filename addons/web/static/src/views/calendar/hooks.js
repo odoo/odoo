@@ -97,6 +97,7 @@ export function useFullCalendar(refName, params) {
         } catch (e) {
             throw new Error(`Cannot instantiate FullCalendar\n${e.message}`);
         }
+
     });
 
     onPatched(() => {
