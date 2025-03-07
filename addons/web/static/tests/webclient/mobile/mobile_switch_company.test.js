@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
     mountWithCleanup,
@@ -9,8 +9,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { cookie } from "@web/core/browser/cookie";
-import { MobileSwitchCompanyMenu } from "@web/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu";
 import { user } from "@web/core/user";
+import { MobileSwitchCompanyMenu } from "@web/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu";
 
 const ORIGINAL_TOGGLE_DELAY = MobileSwitchCompanyMenu.toggleDelay;
 
@@ -28,13 +28,13 @@ function patchUserActiveCompanies(cids) {
 
 describe.current.tags("mobile");
 
-async function toggle(index) {
-    await contains(`[data-company-id] [role=menuitemcheckbox]:eq(${index})`).click();
-}
+const clickConfirm = () => contains(".o_switch_company_menu_buttons button:first").click();
 
-async function confirm() {
-    await contains(".o_switch_company_menu_buttons button:first").click();
-}
+/**
+ * @param {number} index
+ */
+const toggleCompany = async (index) =>
+    contains(`[data-company-id] [role=menuitemcheckbox]:eq(${index})`).click();
 
 beforeEach(() => {
     serverState.companies = [
@@ -45,7 +45,7 @@ beforeEach(() => {
 });
 
 test("basic rendering", async () => {
-    await createSwitchCompanyMenu();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
 
     expect(".o_burger_menu_companies").toHaveProperty("tagName", "DIV");
     expect(".o_burger_menu_companies").toHaveClass("o_burger_menu_companies");
@@ -85,10 +85,10 @@ test("companies can be toggled: toggle a second company", async () => {
      *   [x] Company 2      -> toggle
      *   [ ] Company 3
      */
-    await toggle(1);
+    await toggleCompany(1);
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(1);
-    await confirm();
+    await clickConfirm();
     expect(cookie.get("cids")).toEqual("1-2");
 });
 
@@ -110,14 +110,14 @@ test("can toggle multiple companies at once", async () => {
      *   [x] Company 2      -> toggle all
      *   [x] Company 3      -> toggle all
      */
-    await toggle(0);
-    await toggle(1);
-    await toggle(2);
+    await toggleCompany(0);
+    await toggleCompany(1);
+    await toggleCompany(2);
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(1);
 
     expect.verifySteps([]);
-    await confirm();
+    await clickConfirm();
     expect(cookie.get("cids")).toEqual("2-3");
 });
 
@@ -142,8 +142,8 @@ test("single company selected: toggling it off will keep it", async () => {
      *   [ ] Company 2
      *   [ ] Company 3
      */
-    await toggle(0);
-    await confirm();
+    await toggleCompany(0);
+    await clickConfirm();
     expect(cookie.get("cids")).toEqual("1");
     expect(user.activeCompanies.map((c) => c.id)).toEqual([1]);
     expect(user.activeCompany.id).toBe(1);
@@ -248,16 +248,16 @@ test("companies can be logged in even if some toggled within delay", async () =>
 });
 
 test("show confirm and reset buttons only when selection has changed", async () => {
-    await createSwitchCompanyMenu();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
     expect(".o_switch_company_menu_buttons").toHaveCount(0);
-    await toggle(1);
+    await toggleCompany(1);
     expect(".o_switch_company_menu_buttons button").toHaveCount(2);
-    await toggle(1);
+    await toggleCompany(1);
     expect(".o_switch_company_menu_buttons").toHaveCount(0);
 });
 
 test("No collapse and no search input when less that 10 companies", async () => {
-    await createSwitchCompanyMenu();
+    await mountWithCleanup(MobileSwitchCompanyMenu);
     expect(".o_burger_menu_companies .fa-caret-right").toHaveCount(0);
     expect(".o_burger_menu_companies .visually-hidden input").toHaveCount(1);
 });

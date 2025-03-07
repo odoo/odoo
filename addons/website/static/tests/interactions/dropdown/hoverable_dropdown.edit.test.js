@@ -1,7 +1,4 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { hover, leave } from "@odoo/hoot-dom";
@@ -12,8 +9,10 @@ setupInteractionWhiteList("website.hoverable_dropdown");
 
 describe.current.tags("interaction_dev");
 
-test.tags("desktop")("[EDIT] onMouseLeave doesn't work in edit mode", async () => {
-    const { core } = await startInteractions(`
+test.tags("desktop");
+test("[EDIT] onMouseLeave doesn't work in edit mode", async () => {
+    const { core } = await startInteractions(
+        `
         <header class="o_hoverable_dropdown" style="display: flex; height: 50px; background-color: #CCFFCC;">
             <div class="dropdown" style="margin: auto;">
                 <a class="dropdown-toggle">Dropdown</a>
@@ -24,7 +23,9 @@ test.tags("desktop")("[EDIT] onMouseLeave doesn't work in edit mode", async () =
                 </div>
             </div>
         </header>
-    `, { waitForStart: true, editMode: true });
+    `,
+        { waitForStart: true, editMode: true }
+    );
     await switchToEditMode(core);
     expect(".dropdown-toggle").not.toHaveClass("show");
     expect(".dropdown-menu > a").not.toBeVisible();
@@ -36,8 +37,10 @@ test.tags("desktop")("[EDIT] onMouseLeave doesn't work in edit mode", async () =
     expect(".dropdown-menu > a").toBeVisible();
 });
 
-test.tags("desktop")("[EDIT] onMouseEnter doesn't work in edit mode if another dropdown is opened", async () => {
-    const { core } = await startInteractions(`
+test.tags("desktop");
+test("[EDIT] onMouseEnter doesn't work in edit mode if another dropdown is opened", async () => {
+    const { core } = await startInteractions(
+        `
         <header class="o_hoverable_dropdown" style="display: flex; height: 50px; background-color: #CCFFCC;">
             <div id="D1" class="dropdown" style="margin: auto;">
                 <a class="dropdown-toggle">Dropdown 1</a>
@@ -56,7 +59,9 @@ test.tags("desktop")("[EDIT] onMouseEnter doesn't work in edit mode if another d
                 </div>
             </div>
         </header>
-    `, { waitForStart: true, editMode: true });
+    `,
+        { waitForStart: true, editMode: true }
+    );
     await switchToEditMode(core);
     expect(".dropdown-toggle").not.toHaveClass("show");
     expect(".dropdown-menu > a").not.toBeVisible();

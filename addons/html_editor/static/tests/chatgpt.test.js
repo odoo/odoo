@@ -1,12 +1,12 @@
 import { expect, test } from "@odoo/hoot";
-import { setupEditor } from "./_helpers/editor";
-import { getActiveElement, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
+import { press, queryAll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { insertText } from "./_helpers/user_actions";
-import { getContent } from "./_helpers/selection";
-import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
 import { loadLanguages } from "@web/core/l10n/translation";
+import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
+import { setupEditor } from "./_helpers/editor";
+import { getContent } from "./_helpers/selection";
+import { insertText } from "./_helpers/user_actions";
 
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { DEFAULT_ALTERNATIVES_MODES } from "../src/main/chatgpt/chatgpt_alternatives_dialog";
@@ -298,7 +298,7 @@ test("press escape to close ChatGPT dialog", async () => {
     // Expect the ChatGPT Prompt Dialog to be open.
     const promptDialogHeaderSelector = `.o_dialog .modal-header:contains("${PROMPT_DIALOG_TITLE}")`;
     await waitFor(promptDialogHeaderSelector);
-    expect(getActiveElement()).toBe(queryOne('.modal [name="promptInput"]'));
+    expect('.modal [name="promptInput"]').toBeFocused();
 
     await press("escape");
     await animationFrame();

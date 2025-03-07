@@ -8,6 +8,7 @@ import {
     keyDown,
     keyUp,
     leave,
+    on,
     pointerDown,
     press,
     queryAll,
@@ -16,6 +17,7 @@ import {
     queryOne,
     queryText,
     resize,
+    scroll,
     setInputFiles,
 } from "@odoo/hoot-dom";
 import {
@@ -78,6 +80,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { FileInput } from "@web/core/file_input/file_input";
 
+import { browser } from "@web/core/browser/browser";
 import { currencies } from "@web/core/currency";
 import { registry } from "@web/core/registry";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
@@ -90,7 +93,6 @@ import { kanbanView } from "@web/views/kanban/kanban_view";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
 import { WebClient } from "@web/webclient/webclient";
-import { browser } from "@web/core/browser/browser";
 
 const { IrAttachment } = webModels;
 
@@ -12715,26 +12717,26 @@ test("scroll on group unfold and progressbar click", async () => {
         "has_group",
         "web_search_read",
     ]);
-    queryOne(".o_content").scrollTo = (params) => {
-        expect.step("scrolled");
-        expect(params.top).toBe(0);
-    };
+    queryOne(".o_content").style.maxHeight = "80px";
+    on(".o_content", "scroll", () => expect.step("scrolled"));
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanProgressBars(0)[0]).click();
 
     expect.verifySteps([
+        "scrolled",
         "web_read_group",
         "web_search_read",
         "read_progress_bar",
         "web_read_group",
         "web_read_group",
-        "scrolled",
     ]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanColumn(1)).click();
 
-    expect.verifySteps(["web_search_read", "scrolled"]);
+    expect.verifySteps(["scrolled", "web_search_read"]);
 });
 
 test.tags("desktop");

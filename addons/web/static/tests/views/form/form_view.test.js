@@ -1662,15 +1662,8 @@ test(`reset local state when switching to another view`, async () => {
 test.tags("desktop");
 test(`trying to leave an invalid form view should not change the navbar`, async () => {
     defineMenus([
-        {
-            id: "root",
-            children: [
-                { id: 1, children: [], name: "App0", appID: 1, xmlid: "menu_1", actionID: 1 },
-                { id: 2, children: [], name: "App1", appID: 2, xmlid: "menu_2", actionID: 2 },
-            ],
-            name: "root",
-            appID: "root",
-        },
+        { id: 1, name: "App0", actionID: 1 },
+        { id: 2, name: "App1", actionID: 2 },
     ]);
 
     defineActions([
@@ -5825,8 +5818,6 @@ test(`switching to non-existing record`, async () => {
 
 test.tags("desktop");
 test(`switching to non-existing record on desktop`, async () => {
-    expect.errors(1);
-
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5837,7 +5828,9 @@ test(`switching to non-existing record on desktop`, async () => {
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(3);
 
+    expect.errors(1);
     await contains(`.o_pager_next`).click();
+    expect.verifyErrors([Error]);
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(2);
 
@@ -7678,7 +7671,6 @@ test(`autofocus first visible field`, async () => {
 
 test(`on a touch screen, fields are not focused`, async () => {
     mockTouch(true);
-    after(() => mockTouch(false));
 
     await mountView({
         type: "form",
@@ -10338,6 +10330,7 @@ test("resequence list lines when previous resequencing crashed", async () => {
         "tbody.ui-sortable tr:nth-child(2)"
     );
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(getNames()).toEqual(["first line", "second line"]);
 
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
