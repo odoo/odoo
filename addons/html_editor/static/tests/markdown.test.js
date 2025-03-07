@@ -3,6 +3,9 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { testEditor } from "./_helpers/editor";
 import { insertText } from "./_helpers/user_actions";
 
+const base64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
 describe("inline code", () => {
     test("should convert text into inline code (start)", async () => {
         await testEditor({
@@ -165,6 +168,78 @@ describe("inline code", () => {
             contentBefore: "<p>````[]</p>",
             stepFunction: async (editor) => insertText(editor, "`"),
             contentAfter: "<p>`````[]</p>",
+        });
+    });
+
+    test("should wrap selected text in inline code", async () => {
+        await testEditor({
+            contentBefore: "<p>a[bc]d</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>a<code class="o_inline_code">bc[]</code>\u200Bd</p>',
+        });
+    });
+
+    test("should wrap selected text in inline code and merge with existing inline code if selected", async () => {
+        await testEditor({
+            contentBefore: '<p>ab[c<code class="o_inline_code">de</code>fg]h</p>',
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: '<p>ab<code class="o_inline_code">cdefg[]</code>\u200Bh</p>',
+        });
+        await testEditor({
+            contentBefore:
+                '<p>ab[c<font style="color: rgb(255, 0, 0);">d<code class="o_inline_code">e</code></font>fg]h</p>',
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter:
+                '<p>ab<code class="o_inline_code">c<font style="color: rgb(255, 0, 0);">de</font>fg[]</code>\u200Bh</p>',
+        });
+    });
+
+    test("should split selected inline element and wrap only the selected text in inline code", async () => {
+        await testEditor({
+            contentBefore: "<p>ab[cd<strong>ef]g</strong>h</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter:
+                '<p>ab<code class="o_inline_code">cd<strong>ef[]</strong></code>\u200B<strong>g</strong>h</p>',
+        });
+    });
+
+    test("should wrap only text in inline code when both text and an image are selected", async () => {
+        await testEditor({
+            contentBefore: `<p>ab[cd<img src="${base64Img}">ef]gh</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: `<p>ab<code class="o_inline_code">cd</code><img src="${base64Img}">\u200B<code class="o_inline_code">ef[]</code>\u200Bgh</p>`,
+        });
+    });
+
+    test("should wrap only text in inline code when selection includes text and a link", async () => {
+        await testEditor({
+            contentBefore: `<p>ab[cd<a href="#">test</a>ef]gh</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: `<p>ab<code class="o_inline_code">cd</code><a href="#">test</a>\u200B<code class="o_inline_code">ef[]</code>\u200Bgh</p>`,
+        });
+    });
+
+    test("should wrap only the selected text in inline code when selection partially includes a link", async () => {
+        await testEditor({
+            contentBefore: `<p>ab[cd<a href="#">te]st</a>ef</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: `<p>ab<code class="o_inline_code">cd[]</code>\u200B<a href="#">test</a>ef</p>`,
+        });
+    });
+
+    test("should not apply inline code when selection spans multiple block elements", async () => {
+        await testEditor({
+            contentBefore: "<p>a[b</p><p>cd</p><p>e]f</p>",
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: "<p>a`[]f</p>",
+        });
+    });
+
+    test("should not apply inline code when only an image is selected", async () => {
+        await testEditor({
+            contentBefore: `<p>ab[<img src="${base64Img}">]cd</p>`,
+            stepFunction: async (editor) => insertText(editor, "`"),
+            contentAfter: "<p>ab`[]cd</p>",
         });
     });
 });
