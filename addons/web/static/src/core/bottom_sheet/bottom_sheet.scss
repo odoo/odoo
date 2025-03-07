@@ -33,9 +33,9 @@
     &_backdrop {
         position: fixed;
         inset: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: -1;
+        background-color: rgba(0, 0, 0, 0.8);
         opacity: var(--BottomSheet-progress, 0);
+        backdrop-filter: blur(1px) grayscale(80%);
         transition: opacity 0.2s ease;
         pointer-events: auto;
         touch-action: none;

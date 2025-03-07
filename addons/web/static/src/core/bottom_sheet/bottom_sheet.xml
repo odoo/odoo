@@ -9,6 +9,7 @@
                 'o_bottom_sheet_dismissing': state.isDismissing,
                 'o_bottom_sheet_snapping': state.isSnappingEnabled,
             }"
+            t-attf-style="--BottomSheet-progress: {{state.progress}}"
             t-att-data-sheet-id="props.id"
             t-ref="container"
             >

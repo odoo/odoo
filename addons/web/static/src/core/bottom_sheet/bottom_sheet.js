@@ -408,30 +408,11 @@ export class BottomSheet extends Component {
      * @param {number} scrollTop - Current scroll position
      */
     updateProgressValue(scrollTop) {
-        const { initial, extended } = this.snapPoints;
-        let progress = 0;
-
-        if (initial && extended) {
-            // Two snap points case
-            if (scrollTop <= initial) {
-                // 0 to 0.5 range (dismiss to initial)
-                progress = (scrollTop / initial) * 0.5;
-            } else {
-                // 0.5 to 1 range (initial to extended)
-                progress = 0.5 + ((scrollTop - initial) / (extended - initial)) * 0.5;
-            }
-        } else if (initial) {
-            // Only initial snap point
-            progress = (scrollTop / initial);
-        } else if (extended) {
-            // Only extended snap point
-            progress = (scrollTop / extended);
-        }
+        const progress = scrollTop/getViewportDimensions().height;
 
         // Only update if changed significantly
         if (Math.abs(this.state.progress - progress) > 0.01) {
             this.state.progress = progress;
-            this.containerRef.el.style.setProperty('--BottomSheet-progress', progress);
         }
     }
 
