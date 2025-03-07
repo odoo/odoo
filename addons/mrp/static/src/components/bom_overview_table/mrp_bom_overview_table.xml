@@ -6,7 +6,7 @@
             <div t-if="!!data.components || !!data.lines || !!data.operations" class="container-fluid">
                 <div class="d-flex mb-5">
                     <div class="me-auto">
-                        <h2><a href="#" t-on-click.prevent="goToProduct" t-esc="data.name"/></h2>
+                        <h2><button class="btn btn-link p-0 fs-2"  t-on-click.prevent="goToProduct" t-esc="data.name"/></h2>
                         <hr t-if="data.bom_code"/>
                         <h6 t-if="data.bom_code">Reference: <t t-esc="data.bom_code"/></h6>
                     </div>
