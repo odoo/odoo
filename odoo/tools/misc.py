@@ -623,10 +623,12 @@ POSIX_TO_LDML = {
     'B': 'MMMM',
     #'c': '',
     'd': 'dd',
+    '-d': 'd',
     'H': 'HH',
     'I': 'hh',
     'j': 'DDD',
     'm': 'MM',
+    '-m': 'M',
     'M': 'mm',
     'p': 'a',
     'S': 'ss',
@@ -651,6 +653,7 @@ def posix_to_ldml(fmt: str, locale: babel.Locale) -> str:
     """
     buf = []
     pc = False
+    minus = False
     quoted = []
 
     for c in fmt:
@@ -671,7 +674,13 @@ def posix_to_ldml(fmt: str, locale: babel.Locale) -> str:
                 buf.append(locale.date_formats['short'].pattern)
             elif c == 'X': # time format, seems to include seconds. short does not
                 buf.append(locale.time_formats['medium'].pattern)
+            elif c == '-':
+                minus = True
+                continue
             else: # look up format char in static mapping
+                if minus:
+                    c = '-' + c
+                    minus = False
                 buf.append(POSIX_TO_LDML[c])
             pc = False
         elif c == '%':
@@ -1505,10 +1514,14 @@ def format_datetime(
     lang = get_lang(env, lang_code)
 
     locale = babel_locale_parse(lang.code or lang_code)  # lang can be inactive, so `lang`is empty
-    if not dt_format:
+    if not dt_format or dt_format == 'medium':
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)
         dt_format = '%s %s' % (date_format, time_format)
+    elif dt_format == 'short':
+        short_date_format = posix_to_ldml(lang.short_date_format, locale=locale)
+        short_time_format = posix_to_ldml(lang.short_time_format, locale=locale)
+        dt_format = '%s %s' % (short_date_format, short_time_format)
 
     # Babel allows to format datetime in a specific language without change locale
     # So month 1 = January in English, and janvier in French
@@ -1557,8 +1570,10 @@ def format_time(
 
     lang = get_lang(env, lang_code)
     locale = babel_locale_parse(lang.code)
-    if not time_format:
+    if not time_format or time_format == 'medium':
         time_format = posix_to_ldml(lang.time_format, locale=locale)
+    elif time_format == 'short':
+        time_format = posix_to_ldml(lang.short_time_format, locale=locale)
 
     return babel.dates.format_time(localized_time, format=time_format, locale=locale)
 
