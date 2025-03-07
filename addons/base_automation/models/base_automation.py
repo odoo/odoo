@@ -53,7 +53,7 @@ class BaseAutomation(models.Model):
         'ir.model.fields', string='Trigger Date',
         compute='_compute_trg_date_id',
         readonly=False, store=True,
-        domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]",
+        domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime')), ('name', '!=', 'write_date')]",
         help="""When should the condition be triggered.
                 If present, will be checked by the scheduler. If empty, will be checked at creation and update.""")
     trg_date_range = fields.Integer(
@@ -117,6 +117,12 @@ class BaseAutomation(models.Model):
         )
         if invalid:
             invalid.trg_date_id = False
+
+    @api.constrains('trg_date_id')
+    def _check_field_name(self):
+        for record in self:
+            if record.trg_date_id and record.trg_date_id.name == 'write_date':
+                raise exceptions.ValidationError(_("You cannot set this field to last updated on."))
 
     @api.depends('trigger')
     def _compute_trg_date_range_data(self):
