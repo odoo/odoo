@@ -236,3 +236,11 @@ def generate_idempotency_key(tx, scope=None):
     """
     database_uuid = tx.env['ir.config_parameter'].sudo().get_param('database.uuid')
     return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()
+
+def get_normalized_field(field):
+    """ Remove unicode characters, such as \u200b coming from pasted emails, or secret keys
+
+    :return: The normalized field after removing non ascii characters.
+    :rtype: str
+    """
+    return field.encode('ascii', 'ignore').decode('utf-8')
