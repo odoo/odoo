@@ -60,7 +60,7 @@ from .tools import (
     clean_context, config, CountingStream, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, frozendict,
     get_lang, LastOrderedSet, lazy_classproperty, OrderedSet, ormcache,
-    partition, populate, Query, ReversedIterable, split_every, unique, SQL,
+    partition, populate, Query, ReversedIterable, split_every, unique, SQL, groupby
 )
 from .tools.lru import LRU
 from .tools.translate import _, _lt
@@ -1018,21 +1018,26 @@ class BaseModel(metaclass=MetaModel):
         import_compatible = self.env.context.get('import_compat', True)
         lines = []
 
-        def splittor(rs):
-            """ Splits the self recordset in batches of 1000 (to avoid
-            entire-recordset-prefetch-effects) & removes the previous batch
-            from the cache after it's been iterated in full
-            """
-            for idx in range(0, len(rs), 1000):
-                sub = rs[idx:idx+1000]
-                for rec in sub:
-                    yield rec
-                sub.invalidate_recordset()
-        if not _is_toplevel_call:
-            splittor = lambda rs: rs
+        if _is_toplevel_call:
 
-        # memory stable but ends up prefetching 275 fields (???)
-        for record in splittor(self):
+            def fetch_fields(records, field_paths):
+                if not records:
+                    return
+                fnames_by_path = dict(groupby(
+                    [path for path in field_paths if path and path[0] not in ('id', '.id')],
+                    lambda path: path[0],
+                ))
+                records.fetch(list(fnames_by_path))
+                for fname, paths in fnames_by_path.items():
+                    field = records._fields[fname]
+                    if not field.relational:
+                        continue
+                    paths = [path[1:] or ['display_name'] for path in paths]
+                    fetch_fields(records[fname], paths)
+
+            fetch_fields(self, fields)
+
+        for record in self:
             # main line of record, initially empty
             current = [''] * len(fields)
             lines.append(current)
