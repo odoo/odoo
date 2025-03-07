@@ -76,9 +76,7 @@ patch(PaymentScreen.prototype, {
      * @override
      */
     async _postPushOrderResolve(order, server_ids) {
-        for (const order_id of server_ids) {
-            await this._postProcessLoyalty(this.pos.models["pos.order"].get(order_id));
-        }
+        await this._postProcessLoyalty(order);
         return super._postPushOrderResolve(order, server_ids);
     },
     async _postProcessLoyalty(order) {
@@ -195,7 +193,7 @@ patch(PaymentScreen.prototype, {
                 old_id: item.old_id,
             }));
             this.pos.data.call("pos.order", "add_loyalty_history_lines", [
-                [this.currentOrder.id],
+                [order.id],
                 loyaltyPoints,
                 couponUpdates,
             ]);

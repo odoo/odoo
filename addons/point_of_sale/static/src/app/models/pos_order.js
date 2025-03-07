@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { random5Chars, uuidv4 } from "@point_of_sale/utils";
+import { random5Chars } from "@point_of_sale/utils";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
@@ -22,7 +22,6 @@ export class PosOrder extends Base {
         this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
         this.state = vals.state || "draft";
-        this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.last_order_preparation_change = vals.last_order_preparation_change
             ? JSON.parse(vals.last_order_preparation_change)
             : {
@@ -33,32 +32,30 @@ export class PosOrder extends Base {
               };
         this.general_customer_note = vals.general_customer_note || "";
         this.internal_note = vals.internal_note || "";
-        if (!vals.lines) {
-            this.lines = [];
-        }
 
         if (!this.date_order) {
             this.date_order = DateTime.now();
         }
+    }
 
+    initState() {
+        super.initState();
         // !!Keep all uiState in one object!!
-        if (!this.uiState) {
-            this.uiState = {
-                unmerge: {},
-                lastPrint: false,
-                lineToRefund: {},
-                displayed: true,
-                booked: false,
-                screen_data: {},
-                selected_orderline_uuid: undefined,
-                selected_paymentline_uuid: undefined,
-                locked: this.state !== "draft",
-                // Pos restaurant specific to most proper way is to override this
-                TipScreen: {
-                    inputTipAmount: "",
-                },
-            };
-        }
+        this.uiState = {
+            unmerge: {},
+            lastPrint: false,
+            lineToRefund: {},
+            displayed: true,
+            booked: false,
+            screen_data: {},
+            selected_orderline_uuid: undefined,
+            selected_paymentline_uuid: undefined,
+            locked: this.state !== "draft",
+            // Pos restaurant specific to most proper way is to override this
+            TipScreen: {
+                inputTipAmount: "",
+            },
+        };
     }
 
     get user() {
@@ -974,11 +971,9 @@ export class PosOrder extends Base {
     }
     setGeneralCustomerNote(note) {
         this.general_customer_note = note || "";
-        this.setDirty();
     }
     setInternalNote(note) {
         this.internal_note = note || "";
-        this.setDirty();
     }
 
     get orderChange() {

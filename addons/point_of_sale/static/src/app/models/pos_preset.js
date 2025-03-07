@@ -6,9 +6,8 @@ const { DateTime } = luxon;
 export class PosPreset extends Base {
     static pythonModel = "pos.preset";
 
-    setup() {
-        super.setup(...arguments);
-
+    initState() {
+        super.initState();
         this.uiState = {
             availabilities: {},
         };

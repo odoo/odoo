@@ -1012,7 +1012,9 @@ export class PosStore extends WithLazyGetterTrap {
      * @returns {name: string, id: int, role: string}
      */
     getCashier() {
-        this.user.role = this.user._raw.role;
+        if (!this.user.role) {
+            this.user.role = this.user.raw.role;
+        }
         return this.user;
     }
     getCashierUserId() {
@@ -1200,7 +1202,9 @@ export class PosStore extends WithLazyGetterTrap {
         let orders = options.orders || [...orderToCreate, ...orderToUpdate];
 
         // Filter out orders that are already being synced
-        orders = orders.filter((order) => !this.syncingOrders.has(order.id));
+        orders = orders.filter(
+            (order) => !this.syncingOrders.has(order.id) && (order.isDirty() || options.force)
+        );
 
         try {
             const orderIdsToDelete = this.getOrderIdsToDelete();
@@ -1223,14 +1227,12 @@ export class PosStore extends WithLazyGetterTrap {
                 order.recomputeOrderData();
             }
 
-            const serializedOrder = orders.map((order) =>
-                order.serialize({ orm: true, clear: true })
-            );
+            const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
             });
             const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadData(missingRecords, [], false, true);
+            const newData = this.models.loadData(missingRecords, [], { connectRecords: false });
 
             for (const line of newData["pos.order.line"]) {
                 const refundedOrderLine = line.refunded_orderline_id;
