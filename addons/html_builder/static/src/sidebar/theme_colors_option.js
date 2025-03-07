@@ -1,0 +1,88 @@
+import { Component, onMounted } from "@odoo/owl";
+import { getCSSVariableValue } from "@html_builder/utils/utils_css";
+import { useDomState } from "@html_builder/core/utils";
+import { BuilderRow } from "@html_builder/core/building_blocks/builder_row";
+import { BuilderSelect } from "@html_builder/core/building_blocks/builder_select";
+import { BuilderColorPicker } from "@html_builder/core/building_blocks/builder_colorpicker";
+import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_select_item";
+import { BuilderContext } from "@html_builder/core/building_blocks/builder_context";
+
+export class ThemeColorsOption extends Component {
+    static template = "html_builder.ThemeColorsOption";
+    static components = {
+        BuilderRow,
+        BuilderSelect,
+        BuilderColorPicker,
+        BuilderSelectItem,
+        BuilderContext,
+    };
+    static props = {};
+    setup() {
+        this.palettes = this.getPalettes();
+        this.state = useDomState(() => ({
+            presets: this.getPresets(),
+        }));
+        onMounted(() => {
+            this.iframeDocument = document.querySelector("iframe").contentWindow.document;
+            this.state.presets = this.getPresets();
+        });
+    }
+
+    getPalettes() {
+        const palettes = [];
+        const style = window.getComputedStyle(document.documentElement);
+        const allPaletteNames = getCSSVariableValue("palette-names", style)
+            .split(", ")
+            .map((name) => name.replace(/'/g, ""));
+        for (const paletteName of allPaletteNames) {
+            const palette = {
+                name: paletteName,
+                colors: [],
+            };
+            [1, 3, 2].forEach((c) => {
+                const color = getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
+                palette.colors.push(color);
+            });
+            palettes.push(palette);
+        }
+        return palettes;
+    }
+
+    getPresets() {
+        const presets = [];
+        for (let i = 1; i <= 5; i++) {
+            const preset = {
+                id: i,
+                background: this.getColor(`o-cc${i}-bg`),
+                backgroundGradient: this.getColor(`o-cc${i}-bg-gradient`),
+                text: this.getColor(`o-cc${i}-text`),
+                headings: this.getColor(`o-cc${i}-headings`),
+                primaryBtn: this.getColor(`o-cc${i}-btn-primary`),
+                primaryBtnText: this.getColor(`o-cc${i}-btn-primary-text`),
+                primaryBtnBorder: this.getColor(`o-cc${i}-btn-primary-border`),
+                secondaryBtn: this.getColor(`o-cc${i}-btn-secondary`),
+                secondaryBtnText: this.getColor(`o-cc${i}-btn-secondary-text`),
+                secondaryBtnBorder: this.getColor(`o-cc${i}-btn-secondary-border`),
+            };
+
+            // TODO: check if this is necessary
+            if (preset.backgroundGradient) {
+                preset.backgroundGradient += ", url('/web/static/img/transparent.png')";
+            }
+            presets.push(preset);
+        }
+        return presets;
+    }
+
+    getColor(color) {
+        if (!this.iframeDocument) {
+            return "";
+        }
+        if (!this.iframeStyle) {
+            this.iframeStyle = this.iframeDocument.defaultView.getComputedStyle(
+                this.iframeDocument.documentElement
+            );
+        }
+        return getCSSVariableValue(color, this.iframeStyle);
+    }
+}

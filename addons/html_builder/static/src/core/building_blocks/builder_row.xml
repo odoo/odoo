@@ -10,10 +10,15 @@
                     t-on-click="toggleCollapseContent"
                     t-att-aria-expanded="state.expanded ? 'true' : 'false'"
                     t-att-aria-controls="collapseContentId"/>
-            <div class="d-flex hb-row-label" style="flex-grow: 0.4; flex-basis: 0; min-width: 0;" t-att-data-tooltip="props.tooltip" t-on-click="toggleCollapseContent">
-                <span class="text-nowrap text-truncate" t-out="props.label"/>
-            </div>
-            <div class="d-flex" style="flex-grow: 0.6; flex-basis: 0; min-width: 0; gap: 4px;" t-ref="content">
+            <t t-if="props.label">
+                <div class="d-flex hb-row-label" style="flex-grow: 0.4; flex-basis: 0; min-width: 0;" t-att-data-tooltip="props.tooltip" t-on-click="toggleCollapseContent">
+                    <span class="text-nowrap text-truncate" t-out="props.label"/>
+                </div>
+                <div class="d-flex" style="flex-grow: 0.6; flex-basis: 0; min-width: 0; gap: 4px;" t-ref="content">
+                    <t t-slot="default"/>
+                </div>
+            </t>
+            <div t-else="" class="d-flex" style="flex-grow: 1; flex-basis: 0; min-width: 0; gap: 4px;" t-ref="content">
                 <t t-slot="default"/>
             </div>
         </div>
