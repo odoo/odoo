@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Copyright 2015-2018,2020,2022 Ivan Yelizariev <https://twitter.com/yelizariev>
+    Copyright 2015 igallyamov <https://github.com/igallyamov>
+    Copyright 2016 Stanislav Krotov <https://it-projects.info/team/ufaks>
+    Copyright 2017 Ilmir Karamov <https://it-projects.info/team/ilmir-k>
+    Copyright 2017 auyeung112002 <https://github.com/auyeung112002>
+    Copyright 2020 Denis Mudarisov <https://it-projects.info/team/trojikman>
+    License MIT (https://opensource.org/licenses/MIT).
+    License OPL-1 (https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html#odoo-apps) for derivative work.-->
+<odoo>
+    <template id="login_layout" inherit_id="web.login_layout" priority="8">
+        <xpath expr="//div[@t-if='not disable_footer']" position="replace" />
+    </template>
+    <template id="web_layout" inherit_id="web.layout">
+        <xpath expr="//title" position="replace">
+            <title t-out="title" />
+        </xpath>
+        <xpath expr="//link[@rel='shortcut icon']" position="replace">
+            <t
+                t-set="favicon"
+                t-value="request and request.env['ir.config_parameter'].sudo().get_param('web_debranding.favicon_url', '')"
+            />
+            <link
+                t-if="favicon"
+                rel="shortcut icon"
+                t-att-href="favicon"
+                type="image/x-icon"
+            />
+        </xpath>
+    </template>
+    <template
+        id="brand_promotion_message"
+        inherit_id="web.brand_promotion_message"
+        priority="99"
+    >
+        <xpath expr="//t[@t-out]" position="replace">
+
+        </xpath>
+    </template>
+</odoo>

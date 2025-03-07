@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View for License Plate Orders -->
+        <record id="view_license_plate_orders_tree" model="ir.ui.view">
+            <field name="name">license.plate.orders.tree</field>
+            <field name="model">license.plate.orders</field>
+            <field name="arch" type="xml">
+                <tree string="License Plate Orders">
+                    <field name="name"/>
+                    <field name="picking_id"/>
+                    <field name="partner_id"/>
+                    <field name="tenant_code_id"/>
+                    <field name="site_code_id"/>
+                    <field name="license_plate_order_line_ids" widget="many2many_tags"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View for License Plate Orders -->
+        <record id="view_license_plate_orders_form" model="ir.ui.view">
+            <field name="name">license.plate.orders.form</field>
+            <field name="model">license.plate.orders</field>
+            <field name="arch" type="xml">
+                <form string="License Plate Order">
+                    <header>
+                        <field name="license_plate_state" widget="statusbar"
+                               statusbar_visible="available,not_available"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <!-- License Plate Name, Editable for Supervisor and Admin -->
+                                <field name="name" readonly="False"
+                                       groups="custom_odooship_decanting_process.group_shiperoo_admin,custom_odooship_decanting_process.group_shiperoo_supervisor"/>
+                                <!-- Automation Manual, Editable for Supervisor and Admin -->
+                                <field name="automation_manual" readonly="False"
+                                       groups="custom_odooship_decanting_process.group_shiperoo_admin,custom_odooship_decanting_process.group_shiperoo_supervisor"/>
+                                <!-- Other fields -->
+                                <field name="delivery_receipt_order_id" readonly="True"/>
+                                <field name="picking_id" readonly="True"/>
+                                <field name="location_dest_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="tenant_code_id"/>
+                                <field name="site_code_id"/>
+                                <field name="state" string="DR License Plate State" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Product Details">
+                            <!-- Product Details, Editable for Supervisor and Admin -->
+                            <field name="license_plate_order_line_ids">
+                                <tree editable="bottom" create="1" edit="1" delete="1">
+                                    <field name="name" column_invisible="True"/>
+                                    <field name="product_id"/>
+                                    <field name="sku_code"/>
+                                    <field name="quantity"/>
+                                    <field name="remaining_qty"/>
+                                    <field name="is_remaining_qty" column_invisible="1"/>
+                                    <field name="state" column_invisible="True"/>
+                                    <field name="sequence" column_invisible="True"/>
+                                    <button name="action_open_update_qty_wizard" type="object" string="Update Quantity" class="btn-primary"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View for License Plate Orders Line -->
+        <record id="view_license_plate_orders_line_tree" model="ir.ui.view">
+            <field name="name">license.plate.orders.line.tree</field>
+            <field name="model">license.plate.orders.line</field>
+            <field name="arch" type="xml">
+                <tree string="License Plate Orders Lines">
+                    <field name="name"/>
+                    <field name="license_plate_orders_id"/>
+                    <field name="product_id"/>
+                    <field name="quantity"/>
+                    <field name="sku_code"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View for License Plate Orders Line -->
+        <record id="view_license_plate_orders_line_form" model="ir.ui.view">
+            <field name="name">license.plate.orders.line.form</field>
+            <field name="model">license.plate.orders.line</field>
+            <field name="arch" type="xml">
+                <form string="License Plate Order Line">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="license_plate_orders_id"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="sku_code"/>
+                            <field name="state"/>
+                        </group>
+                        <footer>
+                            <button name="button_close_license_plate" type="object"
+                                    string="Close License Plate"
+                                    class="btn-primary"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search view for License Plate Orders -->
+        <record id="view_license_plate_orders_search" model="ir.ui.view">
+            <field name="name">license.plate.orders.search</field>
+            <field name="model">license.plate.orders</field>
+            <field name="arch" type="xml">
+                <search string="License Plate Orders">
+                    <field name="name" string="License Plate Barcode"/>
+                    <field name="picking_id" string="Receipt Number"/>
+                    <!-- Filters -->
+                    <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                    <filter name="filter_in_progress" string="In Progress" domain="[('state', '=', 'in_progress')]"/>
+                    <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
+                    <filter name="filter_available" string="Available" domain="[('license_plate_state', '=', 'available')]"/>
+                    <filter name="filter_not_available" string="Not Available" domain="[('license_plate_state', '=', 'not_available')]"/>
+
+                    <!-- Group By Options -->
+                    <group expand="1" string="Group By">
+                        <filter name="group_by_partner" string="Customer" context="{'group_by': 'partner_id'}"/>
+                        <filter name="group_by_tenant_code" string="Tenant Code" context="{'group_by': 'tenant_code_id'}"/>
+                        <filter name="group_by_site_code" string="Site Code" context="{'group_by': 'site_code_id'}"/>
+                        <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action for License Plate Orders -->
+        <record id="action_license_plate_orders" model="ir.actions.act_window">
+            <field name="name">License Plate Orders</field>
+            <field name="res_model">license.plate.orders</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_license_plate_orders_tree"/>
+        </record>
+
+        <!-- Action for License Plate Orders Line -->
+        <record id="action_license_plate_orders_line" model="ir.actions.act_window">
+            <field name="name">License Plate Orders Lines</field>
+            <field name="res_model">license.plate.orders.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_license_plate_orders_line_tree"/>
+        </record>
+    </data>
+</odoo>
