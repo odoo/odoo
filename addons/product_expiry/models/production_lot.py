@@ -15,7 +15,7 @@ class StockLot(models.Model):
     use_date = fields.Datetime(string='Best before Date', compute='_compute_dates', store=True, readonly=False,
         help='This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet.')
     removal_date = fields.Datetime(string='Removal Date', compute='_compute_dates', store=True, readonly=False,
-        help='This is the date on which the goods with this Serial Number should be removed from the stock. This date will be used in FEFO removal strategy.')
+        help='This is the date on which the goods with this Serial Number should be removed from the stock and not be counted in the Fresh On Hand Stock anymore. This date will be used in FEFO removal strategy.')
     alert_date = fields.Datetime(string='Alert Date', compute='_compute_dates', store=True, readonly=False,
         help='Date to determine the expired lots and serial numbers using the filter "Expiration Alerts".')
     product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Expiration Date has been reached.")

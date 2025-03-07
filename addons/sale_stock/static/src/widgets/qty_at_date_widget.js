@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Component, onWillRender } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+import { _t } from "@web/core/l10n/translation";
 
 export class QtyAtDatePopover extends Component {
     static template = "sale_stock.QtyAtDatePopover";
@@ -27,6 +28,14 @@ export class QtyAtDatePopover extends Component {
                 sale_line_to_match_id: this.props.record.resId,
             },
         });
+    }
+
+    get forecastedLabel() {
+        return _t('Forecasted Stock')
+    }
+
+    get availableLabel() {
+        return _t('Available')
     }
 }
 

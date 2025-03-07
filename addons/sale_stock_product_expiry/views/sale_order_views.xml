@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_sale_stock_expiry" model="ir.ui.view">
+            <field name="name">sale.order.line.list.sale.stock.qty.expiry</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock_qty"/>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <xpath expr="//page/field[@name='order_line']/form/group/group/div[@name='ordered_qty']/field[@name='product_uom_id']" position="after">
+                    <field name="use_expiration_date" column_invisible="True"/> <!-- Needed in JS widget -->
+                </xpath>
+                <xpath expr="//page/field[@name='order_line']/list/field[@name='qty_delivered']" position="after">
+                    <field name="use_expiration_date" column_invisible="True"/> <!-- Needed in JS widget -->
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
