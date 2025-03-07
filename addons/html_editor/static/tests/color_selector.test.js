@@ -491,8 +491,8 @@ test("gradient picker correctly shows the current selected gradient", async () =
     expect("button.active:contains('Linear')").toHaveCount(1);
     expect(".o_rgba_div input").toHaveCount(0);
     expect("input[name='angle']").toHaveValue("2");
-    expect("input[name='firstColorPercentage']").toHaveValue(10);
-    expect("input[name='secondColorPercentage']").toHaveValue(90);
+    expect("input[name='custom gradient percentage color 1']").toHaveValue(10);
+    expect("input[name='custom gradient percentage color 2']").toHaveValue(90);
 });
 
 test("gradient picker does change the selector gradient color", async () => {
@@ -507,10 +507,34 @@ test("gradient picker does change the selector gradient color", async () => {
     await animationFrame();
     expect("button.active:contains('Linear')").toHaveCount(1);
     await contains("input[name='angle'").edit("10");
-    await contains("input[name='firstColorPercentage']").edit(30);
-    await contains("input[name='secondColorPercentage']").edit(50);
+    await contains("input[name='custom gradient percentage color 1']").edit(30);
+    await contains("input[name='custom gradient percentage color 2']").edit(50);
     expect("font.text-gradient").toHaveStyle({
         backgroundImage: "linear-gradient(10deg, rgb(255, 204, 51) 30%, rgb(226, 51, 255) 50%)",
+    });
+});
+
+test("gradient picker allow adding gradient color", async () => {
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 0, 255) 10%, rgb(0, 255, 0) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    expect("button.active:contains('Linear')").toHaveCount(1);
+    await click(".custom-gradient-configurator .gradient-preview");
+    await animationFrame();
+    expect("input[name='custom gradient percentage color 1']").toHaveValue(10);
+    expect("input[name='custom gradient percentage color 2']").toHaveValue(50); // todo simulate click position ?
+    expect("input[name='custom gradient percentage color 3']").toHaveValue(90);
+    expect("font.text-gradient").toHaveStyle({
+        backgroundImage:
+            "linear-gradient(2deg, rgb(255, 0, 255) 10%, rgb(128, 128, 128) 50%, rgb(0, 255, 0) 90%)",
     });
 });
 
