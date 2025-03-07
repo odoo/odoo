@@ -508,7 +508,7 @@ describe("color preview", () => {
     });
 
     test("should preview color in table on hover in solid tab", async () => {
-        const defaultTextColor = "color: rgb(55, 65, 81);";
+        // const defaultTextColor = "color: rgb(55, 65, 81);";
         const { el } = await setupEditor(`
             <table class="table table-bordered o_table">
                 <tbody>
@@ -525,6 +525,7 @@ describe("color preview", () => {
                 </tbody>
             </table>
         `);
+        const defaultTextColor = "color: " + getComputedStyle(el).color + ";";
         await waitFor(".o-we-toolbar");
         await animationFrame();
         await click(".o-select-color-background");
@@ -570,7 +571,6 @@ describe("color preview", () => {
     });
 
     test("should preview color in table on hover in custom tab", async () => {
-        const defaultTextColor = "color: rgb(55, 65, 81);";
         const { el } = await setupEditor(`
             <table class="table table-bordered o_table">
                 <tbody>
@@ -587,6 +587,7 @@ describe("color preview", () => {
                 </tbody>
             </table>
         `);
+        const defaultTextColor = "color: " + getComputedStyle(el).color + ";";
         await waitFor(".o-we-toolbar");
         await animationFrame();
         await click(".o-select-color-background");

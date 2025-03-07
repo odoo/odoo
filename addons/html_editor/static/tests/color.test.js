@@ -112,7 +112,8 @@ test("should not apply color on an uneditable element", async () => {
 });
 
 test("should apply color with default text color on block when applying background color", async () => {
-    const defaultTextColor = "color: rgb(55, 65, 81);";
+    const defaultTextColor = "color: " + getComputedStyle(document.body).color + ";";
+
     await testEditor({
         contentBefore: unformat(`
                 <table><tbody>
@@ -131,7 +132,7 @@ test("should apply color with default text color on block when applying backgrou
 });
 
 test("should remove color from block when removing background color", async () => {
-    const defaultTextColor = "color: rgb(55, 65, 81);";
+    const defaultTextColor = "color: " + getComputedStyle(document.body).color + ";";
     await testEditor({
         contentBefore: unformat(`
             <table><tbody>
@@ -150,7 +151,7 @@ test("should remove color from block when removing background color", async () =
 });
 
 test("should not apply background color on an uneditable selected cell in a table", async () => {
-    const defaultTextColor = "color: rgb(55, 65, 81);";
+    const defaultTextColor = "color: " + getComputedStyle(document.body).color + ";";
     await testEditor({
         contentBefore: unformat(`
                 <table><tbody>
