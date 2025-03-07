@@ -20,6 +20,6 @@ class ResPartner(models.Model):
         for partner in self:
             branch_code = '000'
             if partner.country_id.code == 'PH' and partner.vat:
-                match = partner.__check_vat_ph_re.match(partner.vat)
+                match = partner._check_vat_ph_re.match(partner.vat)
                 branch_code = match and match.group(1) and match.group(1)[1:] or branch_code
             partner.branch_code = branch_code
