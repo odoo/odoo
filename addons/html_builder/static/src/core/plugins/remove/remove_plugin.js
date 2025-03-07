@@ -94,6 +94,7 @@ export class RemovePlugin extends Plugin {
     removeElement(el) {
         this.updateContainers(el);
         this.removeCurrentTarget(el);
+        this.dispatchTo("after_remove_handlers", el);
     }
 
     removeCurrentTarget(toRemoveEl) {
