@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="website_link.LinkTrackerDialogButtons" t-inherit="web.FormViewDialog.ToOne.buttons">
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
+            <button class="btn btn-primary o_form_button_save" t-on-click="saveButtonClicked" data-hotkey="c">Create &amp; Copy</button>
+        </xpath>
+    </t>
+
+</templates>
