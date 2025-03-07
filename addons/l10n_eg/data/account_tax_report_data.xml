@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
     <record id="tax_report_vat_return" model="account.report">
-        <field name="name">1. VAT Return</field>
+        <field name="name">VAT Return</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.eg"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -194,7 +194,7 @@
         </field>
     </record>
     <record id="tax_report_withholding_tax" model="account.report">
-        <field name="name">2. Withholding Tax</field>
+        <field name="name">WH Tax</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.eg"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -413,7 +413,7 @@
         </field>
     </record>
     <record id="tax_report_schedule_tax" model="account.report">
-        <field name="name">3. Schedule Tax</field>
+        <field name="name">Schedule Tax</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.eg"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -764,7 +764,7 @@
         </field>
     </record>
     <record id="tax_report_other_taxes" model="account.report">
-        <field name="name">4. Other Taxes</field>
+        <field name="name">Other Taxes</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.eg"/>
         <field name="filter_fiscal_position" eval="True"/>
