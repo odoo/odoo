@@ -18,6 +18,7 @@ class AccountMove(models.Model):
         for move in self:
             error_messages = move.partner_bank_id._get_error_messages_for_qr('ch_qr', move.partner_id, move.currency_id)
             move.l10n_ch_is_qr_valid = (
+                move.display_qr_code and
                 move.move_type == 'out_invoice' and
                 not error_messages and
                 (
@@ -32,6 +33,14 @@ class AccountMove(models.Model):
                     )
                 )
             )
+
+    @api.depends('company_id', 'state')
+    def _compute_display_qr_code(self):
+        # Extends account
+        super()._compute_display_qr_code()
+        moves_ch = self.filtered(lambda m: m.company_id.account_fiscal_country_id.code == 'CH')
+        for move in moves_ch:
+            move.display_qr_code = move.state != 'draft'
 
     def get_l10n_ch_qrr_number(self):
         """Generates the QRR reference.
