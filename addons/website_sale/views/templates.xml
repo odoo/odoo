@@ -383,6 +383,19 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
+                            <div
+                                class="oe_structure oe_empty oe_structure_not_nearest"
+                                id="oe_structure_website_sale_sidebar_1"
+                            />
+                            <div t-attf-class="oe_structure oe_structure_solo">
+                                <section
+                                    class="s_text_block"
+                                    data-snippet="s_text_block"
+                                    data-name="Text"
+                                >
+                                    <p/>
+                                </section>
+                            </div>
                             <div class="o_wsale_products_grid_before_rail vh-100 ms-n2 mt-n2 pt-2 p-lg-2 pb-lg-5 ps-2 overflow-y-scroll">
                                 <t
                                     t-set="is_sidebar_collapsible"
@@ -407,6 +420,19 @@
                                         t-valuef="{{is_sidebar_collapsible and 'accordion accordion-flush'}} {{is_sidebar_collapsible and (opt_wsale_categories or len(attributes) > 0) and 'border-top'}}"
                                     />
                                 </t>
+                            </div>
+                            <div
+                                class="oe_structure oe_empty oe_structure_not_nearest"
+                                id="oe_structure_website_sale_sidebar_1"
+                            />
+                            <div t-attf-class="oe_structure oe_structure_solo">
+                                <section
+                                    class="s_text_block"
+                                    data-snippet="s_text_block"
+                                    data-name="Text"
+                                >
+                                    <p/>
+                                </section>
                             </div>
                         </aside>
                         <div id="products_grid"
