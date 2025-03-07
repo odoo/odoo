@@ -222,23 +222,24 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_models() above.
             module = env['ir.module.module'].browse(module_id)
+            if module.exists():
+                if perform_checks:
+                    module._check()
 
-            if perform_checks:
-                module._check()
-
-            if package.state == 'to upgrade':
-                # upgrading the module information
-                module.write(module.get_values_from_terp(package.data))
-            load_data(cr, idref, mode, kind='data', package=package)
-            demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode)
-            cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
-            module.invalidate_model(['demo'])
+                if package.state == 'to upgrade':
+                    # upgrading the module information
+                    module.write(module.get_values_from_terp(package.data))
+                load_data(cr, idref, mode, kind='data', package=package)
+                demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode)
+                cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
+                module.invalidate_model(['demo'])
 
             migrations.migrate_module(package, 'post')
 
-            # Update translations for all installed languages
-            overwrite = odoo.tools.config["overwrite_existing_translations"]
-            module._update_translations(overwrite=overwrite)
+            if module.exists():
+                # Update translations for all installed languages
+                overwrite = odoo.tools.config["overwrite_existing_translations"]
+                module._update_translations(overwrite=overwrite)
 
         if package.name is not None:
             registry._init_modules.add(package.name)
