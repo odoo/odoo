@@ -5,7 +5,7 @@
         <PttAdBanner/>
         <div class="o-discuss-Call user-select-none d-flex position-relative shadow-sm" t-att-class="{
             'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen,
-            'o-compact': props.compact,
+            'o-compact': props.compact and !isMobileOs,
             'o-minimized': minimized,
             'position-relative': !state.isFullscreen,
         }">
