@@ -3,7 +3,6 @@ from ast import literal_eval
 from collections import OrderedDict
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, MissingError
-from odoo.http import request
 from odoo.osv import expression
 from lxml import etree, html
 import logging
@@ -278,21 +277,3 @@ class WebsiteSnippetFilter(models.Model):
     def _get_website_currency(self):
         company = self.env['website'].get_current_website().company_id
         return company.currency_id
-
-     # Move this code in website sale
-    @api.model
-    def get_dummy_product_records(self, template_key, num_of_elements):
-        """
-        Returns a list of dummy records for a given template key
-
-        @param template_key: Template key to identify the snippet
-
-        @return List of dummy records
-        """
-        if not hasattr(request, 'website_routing'):
-            website = request.env['website'].with_context(lang=None).get_current_website()
-            request.website_routing = website.id
-
-        dynamic_filter = self.env.ref("website_sale.dynamic_filter_newest_products")
-        rendered = dynamic_filter and dynamic_filter._render(template_key, num_of_elements, None, with_sample=True) or []
-        return rendered
