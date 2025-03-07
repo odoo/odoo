@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Good ratio to have a large image still small enough to stay under 5MB (common limit)
+    Close to the 2:1 ratio recommended by twitter and these dimensions are recommended by meta
+    https://developers.facebook.com/docs/sharing/webmasters/images/
+    https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/summary-card-with-large-image -->
+    <record id="marketing_card_dimension_business_card" model="card.dimension">
+        <field name="name">Business Card (40:21)</field>
+        <field name="width">600</field>
+        <field name="height">315</field>
+    </record>
+</odoo>
