@@ -386,7 +386,7 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            8,
+            9,
             "Clearbit and Odoo autocomplete options should be shown"
         );
     });
