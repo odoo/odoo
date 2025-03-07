@@ -3,7 +3,7 @@
 
     <t t-name="discuss.Call">
         <PttAdBanner/>
-        <div class="o-discuss-Call user-select-none d-flex position-relative" t-att-class="{
+        <div class="o-discuss-Call user-select-none d-flex position-relative shadow-sm" t-att-class="{
             'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen,
             'o-compact': props.compact,
             'o-minimized': minimized,
@@ -12,6 +12,7 @@
             <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto" t-on-mouseleave="onMouseleaveMain">
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
+                    t-att-class="{'mt-1': minimized}"
                     t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"
                     t-on-click="() => this.showOverlay()"
                     t-on-mousemove="onMousemoveMain"
@@ -21,6 +22,7 @@
                         cardData="cardData"
                         className="'o-discuss-Call-mainCardStyle'"
                         minimized="minimized"
+                        compact="props.compact"
                         thread="props.thread"
                     />
                     <span t-if="env.inChatWindow and visibleMainCards.length > 6" class="fa fa-ellipsis-h ps-1 pe-1"/>
@@ -28,6 +30,7 @@
                         cardData="cardData"
                         className="'o-discuss-Call-mainCardStyle p-1'"
                         minimized="minimized"
+                        compact="props.compact"
                         thread="props.thread"
                     />
                 </div>
