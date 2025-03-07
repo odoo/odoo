@@ -124,9 +124,9 @@ class SendSMS(models.TransientModel):
             records.ensure_one()
             res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=True)
             composer.recipient_single_description = res[records.id]['partner'].name or records._sms_get_default_partners().display_name
-            composer.recipient_single_number = res[records.id]['number'] or ''
+            composer.recipient_single_number = res[records.id]['sanitized'] or res[records.id]['number'] or ''
             if not composer.recipient_single_number_itf:
-                composer.recipient_single_number_itf = res[records.id]['number'] or ''
+                composer.recipient_single_number_itf = res[records.id]['sanitized'] or res[records.id]['number'] or ''
             if not composer.number_field_name:
                 composer.number_field_name = res[records.id]['field_store']
 
