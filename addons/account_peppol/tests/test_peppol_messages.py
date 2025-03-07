@@ -5,6 +5,7 @@ from requests import Session, PreparedRequest, Response
 from unittest.mock import patch
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged, freeze_time
 from odoo.tools.misc import file_open
@@ -17,7 +18,7 @@ FILE_PATH = 'account_peppol/tests/assets'
 
 @freeze_time('2023-01-01')
 @tagged('-at_install', 'post_install')
-class TestPeppolMessage(TestAccountMoveSendCommon):
+class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -315,6 +316,19 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_move_state': 'done',
                 'move_type': 'in_invoice',
             }])
+
+    def test_received_bill_notification(self):
+        self.env.company.peppol_purchase_journal_id.incoming_einvoice_notification_email = 'oops_another_bill@example.com'
+        self.env.company.email = 'hq@example.com'
+
+        with self.mock_mail_gateway():
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+
+        self.assertSentEmail(
+            '"company_1_data" <hq@example.com>',
+            ['oops_another_bill@example.com'],
+            subject='New Electronic Invoices Received',
+        )
 
     def test_validate_partner(self):
         new_partner = self.env['res.partner'].create({
