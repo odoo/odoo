@@ -1704,6 +1704,8 @@ class PosSession(models.Model):
         return self.config_id.open_ui()
 
     def set_opening_control(self, cashbox_value: int, notes: str):
+        if self.state != 'opening_control':
+            return
         self.state = 'opened'
         self.start_at = fields.Datetime.now()
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
