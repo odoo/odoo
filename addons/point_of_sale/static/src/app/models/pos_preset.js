@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
+import { localization } from "@web/core/l10n/localization";
 
 const { DateTime } = luxon;
 
@@ -32,8 +33,8 @@ export class PosPreset extends Base {
 
     get nextSlot() {
         const dateNow = DateTime.now();
-        const sqlDate = dateNow.toFormat("yyyy-MM-dd");
-        return Object.values(this.uiState.availabilities[sqlDate]).find(
+        const formattedDate = dateNow.toFormat(localization.dateFormat);
+        return Object.values(this.uiState.availabilities[formattedDate]).find(
             (s) => !s.isFull && s.datetime > dateNow
         );
     }
@@ -81,7 +82,7 @@ export class PosPreset extends Base {
         for (const i of [...Array(7).keys()]) {
             const dateNow = DateTime.now().plus({ days: i });
             const dayOfWeek = (dateNow.weekday - 1).toString();
-            const date = DateTime.now().plus({ days: i }).toFormat("yyyy-MM-dd");
+            const date = DateTime.now().plus({ days: i }).toFormat(localization.dateFormat);
             const attToday = this.attendance_ids.filter((a) => a.dayofweek === dayOfWeek);
             slots[date] = [];
 
@@ -103,15 +104,17 @@ export class PosPreset extends Base {
 
                 let start = dateOpening;
                 while (start >= dateOpening && start <= dateClosing && interval > 0) {
-                    const sqlDatetime = start.toFormat("yyyy-MM-dd HH:mm:ss");
+                    const formattedDateTime = start.toFormat(localization.dateTimeFormat);
 
-                    if (slots[date][sqlDatetime]) {
-                        slots[date][sqlDatetime].order_ids.add(...(usage[sqlDatetime] || []));
+                    if (slots[date][formattedDateTime]) {
+                        slots[date][formattedDateTime].order_ids.add(
+                            ...(usage[formattedDateTime] || [])
+                        );
                     } else {
-                        slots[date][sqlDatetime] = {
+                        slots[date][formattedDateTime] = {
                             periode: attendance.day_period,
                             datetime: start,
-                            order_ids: new Set(usage[sqlDatetime] || []),
+                            order_ids: new Set(usage[formattedDateTime] || []),
                         };
                     }
 

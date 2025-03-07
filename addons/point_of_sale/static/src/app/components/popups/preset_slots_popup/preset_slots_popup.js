@@ -2,6 +2,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { localization } from "@web/core/l10n/localization";
 
 const { DateTime } = luxon;
 
@@ -18,7 +19,7 @@ export class PresetSlotsPopup extends Component {
         this.state = useState({
             selectedPresetId: this.pos.getOrder().preset_id.id,
             selectedDate: (this.pos.getOrder().preset_time || DateTime.now()).toFormat(
-                "yyyy-MM-dd"
+                localization.dateFormat
             ),
         });
 
@@ -78,11 +79,6 @@ export class PresetSlotsPopup extends Component {
 
     getSlots(presetId) {
         return this.pos.models["pos.preset"].get(presetId).uiState.availabilities;
-    }
-
-    formatDate(date) {
-        const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
-        return dateObj.toFormat("dd/MM/yyyy");
     }
 
     confirm(slot, preset) {

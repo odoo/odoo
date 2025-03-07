@@ -43,11 +43,11 @@ export class PresetInfoPopup extends Component {
             this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${partner["res.partner"][0].name}`;
             this.selfOrder.currentOrder.partner_id = partner["res.partner"][0];
         } else {
-            this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${this.state.name}`;
+            this.selfOrder.currentOrder.floating_order_name = this.state.name;
         }
 
         if (this.preset.needsSlot && this.state.selectedSlot) {
-            this.selfOrder.currentOrder.preset_time = this.state.selectedSlot;
+            this.selfOrder.currentOrder.preset_time = DateTime.fromISO(this.state.selectedSlot);
         }
 
         this.props.callback(true);
@@ -105,7 +105,7 @@ export class PresetInfoPopup extends Component {
             (this.state.stateId || !this.states.length) &&
             this.state.zip;
         return (
-            (!this.preset.needsSlot || DateTime.fromSQL(this.state.selectedSlot).isValid) &&
+            (!this.preset.needsSlot || DateTime.fromISO(this.state.selectedSlot).isValid) &&
             (!this.preset.needsName || this.state.name) &&
             (!this.preset.needsPartner || partnerInfo)
         );
