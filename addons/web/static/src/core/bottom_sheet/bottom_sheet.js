@@ -6,10 +6,9 @@
  * are controlled through scroll events and scroll-snap points. Advantages:
  *
  * - Avoids expensive gesture calculations and transform operations
- * - Utilizes the browser's native scroll optimization and hardware acceleration
- * - Naturally handles nested scrollable areas through the browser's native scroll-chaining
- * - Minimizes overhead by delegating motion handling to the browser
  * - No need for gesture arbitration or delegation logic
+ * - Uses browser's native "scroll-chaining" for nested scrollable areas
+ * - Minimizes overhead by delegating motion handling to the browser
  * - Preserves native keyboard navigation
  * - Make use of the browser's scrolling momentum and bouncing effects
  *
@@ -17,9 +16,10 @@
  */
 
 
-import { Component, useState, useRef, onMounted, useEffect } from "@odoo/owl";
+import { Component, useState, useRef, onMounted, useEffect, useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useThrottleForAnimation, useDebounced } from "@web/core/utils/timing";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
 import { getViewportDimensions, useViewportChange } from "@web/core/utils/dvu";
 
@@ -60,10 +60,10 @@ export class BottomSheet extends Component {
             isDismissing: false,            // Sheet is being dismissed
             isSnappingEnabled: false,       // Scroll Snap behavior enabled
             progress: 0,                    // Visual progress (0-1)
-            isInForcedExtendedMode: false   // Forced extended mode on launch
+            isInForcedExtendedMode: false   // Forced extended mode at launch
         });
 
-        // Measurements and configuration (not reactive)
+        // Measurements and configuration
         this.measurements = {
             viewportHeight: 0,
             naturalHeight: 0,
@@ -87,18 +87,35 @@ export class BottomSheet extends Component {
         this.sheetBodyRef = useRef("sheetBody");
         this.bottomSheetService = useService("bottomSheet");
 
-        // Track setTimeout IDs
-        this.snapTimeoutId = null;
-
         // Create throttled version for onScroll
         this.throttledOnScroll = useThrottleForAnimation(this.onScroll.bind(this));
 
-        // useViewportChange uses throttle by default
+        // Create debounced function to enable snapping
+        this.enableSnapping = useDebounced(() => {
+            this.state.isSnappingEnabled = true;
+        }, 50);
+
+        // Adapt dimensions when mobile virtual-keyboards or browsers bars toggle
         useViewportChange(() => {
             if (this.state.isPositionedReady && !this.state.isDismissing) {
                 this.updateDimensions();
             }
         });
+
+        // Handle "ESC" key press.
+        useHotkey("escape", () => this.slideOut());
+
+        // Handle mobile "back" gesture and "back" navigation button.
+        // Push a history state when the BottomSheet opens, intercept the browser's
+        // history events, prevents navigation by pushing another state and closes the sheet.
+        window.history.pushState({ bottomSheet: true }, "");
+        this.handlePopState = () => {
+            if (this.state.isPositionedReady && !this.state.isDismissing) {
+                window.history.pushState({ bottomSheet: true }, "");
+                this.slideOut();
+            }
+        };
+        useExternalListener(window, "popstate", this.handlePopState);
 
         onMounted(() => {
             this.initializeSheet();
@@ -140,12 +157,10 @@ export class BottomSheet extends Component {
 
         // Wait for CSS animation to complete before enabling snap
         const animationDuration = this.getAnimationDuration('--BottomSheet-slideIn-duration');
-        if (this.snapTimeoutId) {
-            clearTimeout(this.snapTimeoutId);
-        }
-        this.snapTimeoutId = setTimeout(() => {
+
+        // Use setTimeout for the initial animation since it has a specific duration
+        setTimeout(() => {
             this.state.isSnappingEnabled = true;
-            this.snapTimeoutId = null;
         }, animationDuration);
     }
 
@@ -159,12 +174,6 @@ export class BottomSheet extends Component {
 
         // Temporarily disable snapping during update
         this.state.isSnappingEnabled = false;
-
-        // Clear any existing timeout
-        if (this.snapTimeoutId) {
-            clearTimeout(this.snapTimeoutId);
-            this.snapTimeoutId = null;
-        }
 
         // Update measurements with new viewport dimensions
         this.measureDimensions();
@@ -185,10 +194,9 @@ export class BottomSheet extends Component {
         this.scrollRailRef.el.scrollTop = newScrollTop;
 
         // Re-enable snapping after a short delay
-        this.snapTimeoutId = setTimeout(() => {
-            this.state.isSnappingEnabled = true;
-            this.snapTimeoutId = null;
-        }, 50);
+        // Cancel any existing call first
+        this.enableSnapping.cancel();
+        this.enableSnapping();
 
         // Update progress value
         this.updateProgressValue(newScrollTop);
@@ -478,6 +486,9 @@ export class BottomSheet extends Component {
         this.state.isDismissing = true;
         this.state.isSnappingEnabled = false;
 
+        // Cancel any pending snapping operations
+        this.enableSnapping.cancel();
+
         // Get animation duration
         const animationDuration = this.getAnimationDuration('--BottomSheet-slideOut-duration');
 
@@ -500,13 +511,11 @@ export class BottomSheet extends Component {
      * @returns {number} - Duration in milliseconds
      */
     getAnimationDuration(property) {
-        if (!this.containerRef.el) return 300;
+        if (!this.containerRef.el) return 450;
 
-        const durationStr = getComputedStyle(this.containerRef.el)
-            .getPropertyValue(property)
-            .trim();
+        const durationStr = getComputedStyle(this.containerRef.el).getPropertyValue(property).trim();
 
-        if (!durationStr) return 300;
+        if (!durationStr) return 450;
 
         if (durationStr.endsWith('ms')) {
             return parseFloat(durationStr) + 50;
@@ -514,7 +523,7 @@ export class BottomSheet extends Component {
             return (parseFloat(durationStr) * 1000) + 50;
         }
 
-        return parseFloat(durationStr) || 300;
+        return parseFloat(durationStr) || 450;
     }
 
     /**
