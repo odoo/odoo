@@ -347,7 +347,7 @@ export class PosStore extends WithLazyGetterTrap {
         // Create printer with hardware proxy, this will override related model data
         this.unwatched.printers = [];
         for (const relPrinter of this.models["pos.printer"].getAll()) {
-            const printer = relPrinter.serialize();
+            const printer = relPrinter.raw;
             const HWPrinter = this.createPrinter(printer);
 
             HWPrinter.config = printer;
@@ -503,11 +503,7 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        let products = this.models[data.model].readMany(data.ids);
-        if (data.model === "product.template") {
-            products = products.flatMap((p) => p.product_variant_ids);
-        }
-
+        const products = this.models["product.product"].readMany(data.ids);
         this._loadMissingPricelistItems(products);
     }
 
@@ -1001,7 +997,9 @@ export class PosStore extends WithLazyGetterTrap {
      * @returns {name: string, id: int, role: string}
      */
     getCashier() {
-        this.user.role = this.user._raw.role;
+        if (!this.user.role) {
+            this.user.role = this.user.raw.role;
+        }
         return this.user;
     }
     getCashierUserId() {
@@ -1189,7 +1187,9 @@ export class PosStore extends WithLazyGetterTrap {
         let orders = options.orders || [...orderToCreate, ...orderToUpdate];
 
         // Filter out orders that are already being synced
-        orders = orders.filter((order) => !this.syncingOrders.has(order.id));
+        orders = orders.filter(
+            (order) => !this.syncingOrders.has(order.id) && (order.isDirty() || options.force)
+        );
 
         try {
             const orderIdsToDelete = this.getOrderIdsToDelete();
@@ -1212,14 +1212,12 @@ export class PosStore extends WithLazyGetterTrap {
                 order.recomputeOrderData();
             }
 
-            const serializedOrder = orders.map((order) =>
-                order.serialize({ orm: true, clear: true })
-            );
+            const serializedOrder = orders.map((order) => order.serializeForORM());
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
             });
             const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadData(missingRecords, [], false, true);
+            const newData = this.models.loadConnectedData(missingRecords);
 
             for (const line of newData["pos.order.line"]) {
                 const refundedOrderLine = line.refunded_orderline_id;
@@ -2201,7 +2199,6 @@ export class PosStore extends WithLazyGetterTrap {
         if (!list || list.length === 0) {
             return [];
         }
-
         const excludedProductIds = this.getExcludedProductIds();
 
         list = list

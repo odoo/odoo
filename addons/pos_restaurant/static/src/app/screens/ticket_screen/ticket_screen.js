@@ -62,7 +62,7 @@ patch(TicketScreen.prototype, {
             order.state = "paid";
             order.uiState.screen_data.value = { name: "", props: {} };
 
-            const serializedTipLine = order.getSelectedOrderline().serialize({ orm: true });
+            const serializedTipLine = order.getSelectedOrderline().serializeForORM();
             order.getSelectedOrderline().delete();
 
             promises.push(
@@ -78,8 +78,8 @@ patch(TicketScreen.prototype, {
 
                         if (state) {
                             order.update({
-                                isTipped: true,
-                                tipAmount: tipLine[0].price_unit,
+                                is_tipped: true,
+                                tip_amount: tipLine[0].price_unit,
                             });
                         }
                         resolve();
