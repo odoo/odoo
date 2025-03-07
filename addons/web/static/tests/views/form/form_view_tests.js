@@ -12427,7 +12427,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Auto save: error on save when breadcrumb clicked", async function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         registry.category("services").add("error", errorService);
 
@@ -12473,7 +12473,86 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["web_save"]);
         await nextTick();
         assert.containsOnce(target, ".o_error_dialog");
+        assert.containsOnce(target, ".o_error_dialog .btn-primary");
+        assert.containsOnce(target, ".o_error_dialog .btn-secondary");
     });
+
+    QUnit.test(
+        "Auto save: redirect warning on save when breadcrumb clicked",
+        async function (assert) {
+            assert.expect(7);
+
+            registry.category("services").add("error", errorService);
+
+            serverData.actions[1] = {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            };
+
+            serverData.views = {
+                "partner,false,list": `
+                    <tree>
+                        <field name="name"/>
+                    </tree>`,
+                "partner,false,form": `
+                    <form>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </form>`,
+                "partner,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC(route, { method, kwargs }) {
+                    if (method === "web_save") {
+                        assert.step("web_save");
+                        throw makeServerError({
+                            type: `RedirectWarning`,
+                            args: [
+                                "The message",
+                                {
+                                    name: "Sub view",
+                                    res_model: "partner",
+                                    type: "ir.actions.act_window",
+                                    domain: [],
+                                    target: "new",
+                                    views: [[false, "list"]],
+                                    context: { redirected: true },
+                                },
+                                "Button Label",
+                                {},
+                            ],
+                            description: "Beep boop server stuff and technical string",
+                        });
+                    }
+                    if (method === "web_search_read" && kwargs.context.redirected) {
+                        assert.step("redirect_action");
+                    }
+                },
+            });
+            await doAction(webClient, 1);
+            await click(target.querySelector(".o_data_row td.o_data_cell"));
+
+            await editInput(target, ".o_field_widget[name='name'] input", "aaa");
+            await click(target.querySelector(".breadcrumb-item.o_back_button"));
+            assert.verifySteps(["web_save"]);
+            await nextTick();
+            assert.containsOnce(target, ".o_error_dialog");
+            assert.containsOnce(target, ".o_error_dialog .btn-primary");
+            assert.containsN(target, ".o_error_dialog .btn-secondary", 2);
+            await click(target.querySelector(".o_error_dialog .btn-secondary"));
+            await nextTick();
+            assert.verifySteps(["redirect_action"]);
+        }
+    );
 
     QUnit.test("Auto save: save when action changed", async function (assert) {
         assert.expect(6);

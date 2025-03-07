@@ -50,9 +50,6 @@
                         options="{'no_create': True}"
                         invisible="product_id"
                         groups="account.group_account_manager"/>
-                    <field name="deposit_taxes_id"
-                        widget="many2many_tags"
-                        invisible="product_id"/>
                 </group>
                 <group invisible="not has_down_payments">
                     <field name="amount_invoiced"/>

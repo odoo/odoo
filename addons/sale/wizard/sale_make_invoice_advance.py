@@ -133,7 +133,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.depends('sale_order_ids')
     def _compute_display_draft_invoice_warning(self):
         for wizard in self:
-            wizard.display_draft_invoice_warning = wizard.sale_order_ids.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
+            invoice_states = wizard.sale_order_ids._origin.sudo().invoice_ids.mapped('state')
+            wizard.display_draft_invoice_warning = 'draft' in invoice_states
 
     @api.depends('sale_order_ids')
     def _compute_invoice_amounts(self):

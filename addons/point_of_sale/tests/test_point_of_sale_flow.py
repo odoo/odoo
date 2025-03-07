@@ -2259,6 +2259,10 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         product = product_form.save()
         self.assertFalse(product.taxes_id)
 
+        product_form.detailed_type = "consu"
+        product = product_form.save()
+        self.assertFalse(product.combo_ids)
+
     def test_change_is_deducted_from_cash(self):
         self.pos_config.open_ui()
         pos_session = self.pos_config.current_session_id

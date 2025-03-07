@@ -82,6 +82,13 @@ class ProductTemplate(models.Model):
             raise UserError(_("Combo products cannot contains variants or attributes"))
         return super()._onchange_type()
 
+    def write(self, vals):
+        res = super(ProductTemplate, self).write(vals)
+        for product_template in self:
+            if "detailed_type" in vals and vals.get("detailed_type") != "combo":
+                product_template.combo_ids = False
+        return res
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'

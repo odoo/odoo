@@ -272,7 +272,7 @@ class AccountAnalyticPlan(models.Model):
                 prev.field_description = plan.name
             elif not plan.parent_id:
                 column = plan._strict_column_name()
-                self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
+                field = self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
                     'name': column,
                     'field_description': plan.name,
                     'state': 'manual',
@@ -286,6 +286,9 @@ class AccountAnalyticPlan(models.Model):
                 tablename = self.env['account.analytic.line']._table
                 indexname = make_index_name(tablename, column)
                 create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
+                field.write({
+                    'index': True,
+                })
 
 
 class AccountAnalyticApplicability(models.Model):

@@ -95,15 +95,6 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
         }
         return searchDomain;
     },
-    /**
-     * @override
-     */
-    _getRpcParameters: function () {
-        const productTemplateId = $("#product_details").find(".product_template_id");
-        return Object.assign(this._super.apply(this, arguments), {
-            productTemplateId: productTemplateId && productTemplateId.length ? productTemplateId[0].value : undefined,
-        });
-    },
 });
 
 const DynamicSnippetProductsCard = publicWidget.Widget.extend({
