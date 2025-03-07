@@ -103,9 +103,10 @@
                             <field name="write_off_date" invisible="vehicle_type != 'car'"/>
                             <field name="vin_sn"/>
                             <label for="odometer" invisible="vehicle_type != 'car'"/>
-                            <div class="o_row o_hr_narrow_field" invisible="vehicle_type != 'car'">
-                                <field name="odometer"/>
-                                <field name="odometer_unit"/>
+                            <div class="o_row o_fleet_narrow_field" invisible="vehicle_type != 'car'">
+                                <field class="o_fleet_odometer_value" name="odometer"/>
+                                <field class="o_fleet_odometer_unit" name="odometer_unit"/>
+                                <button name="action_open_odometer_report" type="object" class="fa fa-line-chart me-1" title="Odometer Report"/>
                             </div>
                             <field name="manager_id" domain="[('share', '=', False), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
                             <field name="location"/>
@@ -390,27 +391,6 @@
         </field>
     </record>
 
-    <record id='fleet_vehicle_odometer_view_kanban' model='ir.ui.view'>
-        <field name="name">fleet.vehicle.odometer.kanban</field>
-        <field name="model">fleet.vehicle.odometer</field>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
-                <templates>
-                    <t t-name="card">
-                        <div class="d-flex">
-                            <field class="fw-bold" name="vehicle_id"/>
-                            <field class="fw-bold ms-auto" name="date"/>
-                        </div>
-                        <div class="d-flex">
-                            <field name="driver_id"/>
-                            <span class="ms-auto"><field name="value"/> Km</span>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-
     <record id='fleet_vehicle_odometer_view_search' model='ir.ui.view'>
         <field name="name">fleet.vehicle.odometer.search</field>
         <field name="model">fleet.vehicle.odometer</field>
@@ -422,6 +402,7 @@
                 <field name="date"/>
                 <group expand="0" string="Group By">
                     <filter name="groupby_vehicle" context="{'group_by': 'vehicle_id'}" string="Vehicle"/>
+                    <filter name="groupby_date" context="{'group_by': 'date'}" string="Date"/>
                 </group>
             </search>
         </field>
@@ -441,7 +422,7 @@
     <record id='fleet_vehicle_odometer_action' model='ir.actions.act_window'>
         <field name="name">Odometers</field>
         <field name="res_model">fleet.vehicle.odometer</field>
-        <field name="view_mode">list,kanban,form,graph</field>
+        <field name="view_mode">list,form,graph</field>
         <field name="context"></field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
