@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_kh_t7001" model="account.report">
+        <field name="name">Form T7001</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.kh"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="filter_fiscal_position" eval="1"/>
+        <field name="default_opening_date_filter">last_tax_period</field>
+        <field name="only_tax_exigible" eval="True"/>
+        <field name="sequence" eval="5"/>
+        <field name="column_ids">
+            <record id="l10n_kh_t7001_column_balance" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">balance</field>
+            </record>
+            <record id="l10n_kh_t7001_column_tax" model="account.report.column">
+                <field name="name">Tax Amount</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_kr_general_tp_vat_tat" model="account.report.line">
+                <field name="name">II. Total Amount of Taxes</field>
+                <field name="code">TAT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kr_general_tp_vat_tatvat" model="account.report.line">
+                        <field name="name">Value Added Tax</field>
+                        <field name="code">TATVAT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_general_tp_vat_tatvat_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TTVATCF.tax</field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_tatvat_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TTVATP.tax</field>
+                                <field name="subformula">if_above(KHR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_general_tp_vat_tatvatsc" model="account.report.line">
+                        <field name="name">Value Added Tax (State Charge)</field>
+                        <field name="code">TATVATSC</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_kr_general_tp_vat_vatscccf" model="account.report.line">
+                                <field name="name">Credit Carried Forward</field>
+                                <field name="code">VATSCCCF</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_vatscccf_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATSCCF.tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_vatscvsc" model="account.report.line">
+                                <field name="name">VAT State Charge</field>
+                                <field name="code">VATSCVSC</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_vatscvsc_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATSCP.tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_general_tp_vat_tatptoi" model="account.report.line">
+                        <field name="name">Prepayment of Tax on Income</field>
+                        <field name="code">TATPTOI</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_general_tp_vat_tatptoi_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TTPTOICF.tax</field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_tatptoi_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TTPTOIPP.tax</field>
+                                <field name="subformula">if_above(KHR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_general_tp_vat_tatplt" model="account.report.line">
+                        <field name="name">Public Lighting Tax</field>
+                        <field name="code">TATPLT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_general_tp_vat_tatplt_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">T7 01 PLT</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_general_tp_vat_tatstcms" model="account.report.line">
+                        <field name="name">Specific Tax on Certain Marchandises and Services</field>
+                        <field name="code">TATSTCMS</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_general_tp_vat_tatstcms_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_general_tp_vat_tatat" model="account.report.line">
+                        <field name="name">Accomodation Tax</field>
+                        <field name="code">TATAT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_general_tp_vat_tatat_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">T7 01 AT</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_general_tp_vat_tatot" model="account.report.line">
+                        <field name="name">Other Taxes</field>
+                        <field name="code">TATOT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_kr_general_tp_vat_tatot_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_kr_general_tp_vat_tt" model="account.report.line">
+                <field name="name">III Total Transaction</field>
+                <field name="code">TT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_kr_general_tp_vat_ttptoi" model="account.report.line">
+                        <field name="name">1. Prepayment of Tax on Income</field>
+                        <field name="code">TTPTOI</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_kr_general_tp_vat_ttptoicptoi" model="account.report.line">
+                                <field name="name">Current month of Prepayment of tax on income</field>
+                                <field name="code">TTPTOICPTOI</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttptoicptoi_tax"
+                                            model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttptoiclm" model="account.report.line">
+                                <field name="name">Credit last month</field>
+                                <field name="code">TTPTOICLM</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttptoiclm_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttptoipp" model="account.report.line">
+                                <field name="name">PPI to be paid</field>
+                                <field name="code">TTPTOIPP</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttptoipp_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTPTOICPTOI.tax - TTPTOICLM.tax</field>
+                                        <field name="subformula">if_above(KHR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttptoicf" model="account.report.line">
+                                <field name="name">Credit Forward</field>
+                                <field name="code">TTPTOICF</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttptoicf_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTPTOICLM.tax - TTPTOICPTOI.tax</field>
+                                        <field name="subformula">if_above(KHR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_general_tp_vat_ttvat" model="account.report.line">
+                        <field name="name">2. Value Added Tax</field>
+                        <field name="code">TTVAT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_kr_general_tp_vat_ttvatmp" model="account.report.line">
+                                <field name="name">Monthly Purchases of Goods and Services</field>
+                                <field name="code">TTVATMP</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatmpl" model="account.report.line">
+                                        <field name="name">Local Purchasse include VAT 10%</field>
+                                        <field name="code">TTVATMPL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatmplt" model="account.report.line">
+                                                <field name="name">Taxable Person</field>
+                                                <field name="code">TTVATMPLT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmplt_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 03</field>
+                                                    </record>
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmplt_tax"
+                                                            model="account.report.expression">
+                                                        <field name="label">tax</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 04</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_general_tp_vat_ttvatmpi" model="account.report.line">
+                                        <field name="name">Import 10%</field>
+                                        <field name="code">TTVATMPI</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatmpio" model="account.report.line">
+                                                <field name="name">Overseas Suppliers</field>
+                                                <field name="code">TTVATMPIO</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmpio_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 05</field>
+                                                    </record>
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmpio_tax"
+                                                            model="account.report.expression">
+                                                        <field name="label">tax</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 06</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_general_tp_vat_ttvatmpe" model="account.report.line">
+                                        <field name="name">Purchase Exclusive of VAT</field>
+                                        <field name="code">TTVATMPE</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatmpet" model="account.report.line">
+                                                <field name="name">Taxable Pereson</field>
+                                                <field name="code">TTVATMPET</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmpet_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 07</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_kr_general_tp_vat_ttvatmpent" model="account.report.line">
+                                                <field name="name">Non-Taxable Person</field>
+                                                <field name="code">TTVATMPENT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmpent_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 08</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_general_tp_vat_ttvatmpnc" model="account.report.line">
+                                        <field name="name">Non Creditable Purchase</field>
+                                        <field name="code">TTVATMPNC</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatmpnct" model="account.report.line">
+                                                <field name="name">Taxable Person</field>
+                                                <field name="code">TTVATMPNCT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmpnct_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 09</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_kr_general_tp_vat_ttvatmpncnt" model="account.report.line">
+                                                <field name="name">Non-Taxable Person</field>
+                                                <field name="code">TTVATMPNCNT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmpncnt_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 10</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvattit" model="account.report.line">
+                                <field name="name">Total amount of input taxes</field>
+                                <field name="code">TTVATTIT</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvattit_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATMPLT.tax + TTVATMPIO.tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvatms" model="account.report.line">
+                                <field name="name">Monthly Sales of Goods and Services</field>
+                                <field name="code">TTVATMS</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatmsl" model="account.report.line">
+                                        <field name="name">Sales Include VAT 10%</field>
+                                        <field name="code">TTVATMSL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatmslt" model="account.report.line">
+                                                <field name="name">Taxable Pereson</field>
+                                                <field name="code">TTVATMSLT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmslt_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 12</field>
+                                                    </record>
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmslt_tax"
+                                                            model="account.report.expression">
+                                                        <field name="label">tax</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 13</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_kr_general_tp_vat_ttvatmslnt" model="account.report.line">
+                                                <field name="name">Non-Taxable Person</field>
+                                                <field name="code">TTVATMSLNT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmslnt_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 14</field>
+                                                    </record>
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmslnt_tax"
+                                                            model="account.report.expression">
+                                                        <field name="label">tax</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 15</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_general_tp_vat_ttvatmse" model="account.report.line">
+                                        <field name="name">Export 0%</field>
+                                        <field name="code">TTVATMSE</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatmseo" model="account.report.line">
+                                                <field name="name">Overseas Customer</field>
+                                                <field name="code">TTVATMSEO</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmseo_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 16</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_general_tp_vat_ttvatmsev" model="account.report.line">
+                                        <field name="name">Sales Exclude of VAT</field>
+                                        <field name="code">TTVATMSEV</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatmsevt" model="account.report.line">
+                                                <field name="name">Taxable Pereson</field>
+                                                <field name="code">TTVATMSEVT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmsevt_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 17</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_kr_general_tp_vat_ttvatmsevnt" model="account.report.line">
+                                                <field name="name">Non-Taxable Person</field>
+                                                <field name="code">TTVATMSEVNT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatmsevnt_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 18</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvattot" model="account.report.line">
+                                <field name="name">Total amount of output taxes</field>
+                                <field name="code">TTVATTOT</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvattot_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATMSLT.tax + TTVATMSLNT.tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvatp" model="account.report.line">
+                                <field name="name">VAT to be paid</field>
+                                <field name="code">TTVATP</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatp_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATTOT.tax - TTVATTIT.tax</field>
+                                        <field name="subformula">if_above(KHR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvatcf" model="account.report.line">
+                                <field name="name">Credit forward</field>
+                                <field name="code">TTVATCF</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatcf_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATTIT.tax - TTVATTOT.tax</field>
+                                        <field name="subformula">if_above(KHR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_kr_general_tp_vat_ttvatsc" model="account.report.line">
+                        <field name="name">3. Value Added Tax (State charge)</field>
+                        <field name="code">TTVATSC</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_kr_general_tp_vat_ttvatscmp" model="account.report.line">
+                                <field name="name">Monthly Purchases of Goods and Services</field>
+                                <field name="code">TTVATSCMP</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatscmpl" model="account.report.line">
+                                        <field name="name">Local Purchasse include VAT 10%</field>
+                                        <field name="code">TTVATSCMPL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatscmplt" model="account.report.line">
+                                                <field name="name">Taxable Person</field>
+                                                <field name="code">TTVATSCMPLT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatscmplt_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 20</field>
+                                                    </record>
+                                                    <record id="l10n_kr_general_tp_vat_ttvatscmplt_tax"
+                                                            model="account.report.expression">
+                                                        <field name="label">tax</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 21</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_kr_general_tp_vat_ttvatscmpi" model="account.report.line">
+                                        <field name="name">Import 10%</field>
+                                        <field name="code">TTVATSCMPI</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatscmpio" model="account.report.line">
+                                                <field name="name">Overseas Suppliers</field>
+                                                <field name="code">TTVATSCMPIO</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatscmpio_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 22</field>
+                                                    </record>
+                                                    <record id="l10n_kr_general_tp_vat_ttvatscmpio_tax"
+                                                            model="account.report.expression">
+                                                        <field name="label">tax</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 23</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvatscit" model="account.report.line">
+                                <field name="name">Total amount of input taxes</field>
+                                <field name="code">TTVATSCIT</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatscit_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATSCMPLT.tax + TTVATSCMPIO.tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvatscms" model="account.report.line">
+                                <field name="name">Monthly Sales of Goods and Services</field>
+                                <field name="code">TTVATSCMS</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatscmsl" model="account.report.line">
+                                        <field name="name">Sales Include VAT 10%</field>
+                                        <field name="code">TTVATSCMSL</field>
+                                        <field name="hierarchy_level">3</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_kr_general_tp_vat_ttvatscmslt" model="account.report.line">
+                                                <field name="name">Taxable Pereson</field>
+                                                <field name="code">TTVATSCMSLT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatscmslt_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 25</field>
+                                                    </record>
+                                                    <record id="l10n_kr_general_tp_vat_ttvatscmslt_tax"
+                                                            model="account.report.expression">
+                                                        <field name="label">tax</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 26</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_kr_general_tp_vat_ttvatscmslnt"
+                                                    model="account.report.line">
+                                                <field name="name">Non-Taxable Person</field>
+                                                <field name="code">TTVATSCMSLNT</field>
+                                                <field name="hierarchy_level">4</field>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_kr_general_tp_vat_ttvatscmslnt_balance"
+                                                            model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 27</field>
+                                                    </record>
+                                                    <record id="l10n_kr_general_tp_vat_ttvatscmslnt_tax"
+                                                            model="account.report.expression">
+                                                        <field name="label">tax</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">T7 01 28</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvatscot" model="account.report.line">
+                                <field name="name">Total amount of output taxes</field>
+                                <field name="code">TTVATSCOT</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatscot_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATSCMSLT.tax + TTVATSCMSLNT.tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvatscp" model="account.report.line">
+                                <field name="name">VAT state charge</field>
+                                <field name="code">TTVATSCP</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatscp_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATSCOT.tax - TTVATSCIT.tax</field>
+                                        <field name="subformula">if_above(KHR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_kr_general_tp_vat_ttvatsccf" model="account.report.line">
+                                <field name="name">Credit forward</field>
+                                <field name="code">TTVATSCCF</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_kr_general_tp_vat_ttvatsccf_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TTVATSCIT.tax - TTVATSCOT.tax</field>
+                                        <field name="subformula">if_above(KHR(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
