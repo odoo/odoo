@@ -516,16 +516,8 @@ class ProductProduct(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_orderpoint")
         action['context'] = literal_eval(action.get('context'))
         action['context'].pop('search_default_trigger', False)
-        action['context'].update({
-            'search_default_filter_not_snoozed': True,
-        })
-        if self and len(self) == 1:
-            action['context'].update({
-                'default_product_id': self.ids[0],
-                'search_default_product_id': self.ids[0]
-            })
-        else:
-            action['domain'] = expression.AND([action.get('domain') or [], [('product_id', 'in', self.ids)]])
+        action['context']['default_product_ids'] = self.ids
+        action['domain'] = expression.AND([action.get('domain') or [], [('product_id', 'in', self.ids)]])
         return action
 
     def action_view_routes(self):
