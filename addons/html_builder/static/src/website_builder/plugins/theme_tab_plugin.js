@@ -3,6 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { ThemeColorsOption } from "@html_builder/sidebar/theme_colors_option";
 
 export class ThemeTabPlugin extends Plugin {
     static id = "themeTab";
@@ -11,11 +12,7 @@ export class ThemeTabPlugin extends Plugin {
         theme_options: [
             withSequence(
                 10,
-                this.getThemeOptionBlock(
-                    "theme-colors",
-                    _t("Colors"),
-                    "html_builder.ThemeColorsOption"
-                )
+                this.getThemeOptionBlock("theme-colors", _t("Colors"), null, ThemeColorsOption)
             ),
             withSequence(
                 20,
@@ -72,11 +69,20 @@ export class ThemeTabPlugin extends Plugin {
         ],
     };
 
-    getThemeOptionBlock(id, name, template) {
+    getThemeOptionBlock(id, name, template, Component = null) {
         // TODO Have a specific kind of options container that takes the specific parameters like name, no element, no selector...
         const el = this.document.createElement("div");
         el.dataset.name = name;
         this.document.body.appendChild(el); // Currently editingElement needs to be isConnected
+
+        const option = {
+            selector: "*",
+        };
+        if (template) {
+            option.template = template;
+        } else {
+            option.OptionComponent = Component;
+        }
 
         return {
             id: id,
@@ -85,12 +91,7 @@ export class ThemeTabPlugin extends Plugin {
             headerMiddleButton: false,
             isClonable: false,
             isRemovable: false,
-            options: [
-                {
-                    template: template,
-                    selector: "*",
-                },
-            ],
+            options: [option],
             optionsContainerTopButtons: [],
             snippetModel: {},
         };

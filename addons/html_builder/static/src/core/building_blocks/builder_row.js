@@ -13,7 +13,7 @@ export class BuilderRow extends Component {
     static components = { BuilderComponent };
     static props = {
         ...basicContainerBuilderComponentProps,
-        label: String,
+        label: { type: String, optional: true },
         tooltip: { type: String, optional: true },
         slots: { type: Object, optional: true },
         level: { type: Number, optional: true },
