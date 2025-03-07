@@ -183,12 +183,6 @@ class StockPickingType(models.Model):
         repair_records = [(i, d, _('Confirmed')) for i, d in picking_type_id_to_dates.items()]
         return records + repair_records
 
-    def action_repair_overview(self):
-        routing_count = self.env['stock.picking.type'].search_count([('code', '=', 'repair_operation')])
-        if routing_count == 1:
-            return self.env['ir.actions.actions']._for_xml_id('repair.action_repair_order_tree')
-        return self.env['ir.actions.actions']._for_xml_id('repair.action_repair_picking_type_kanban')
-
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
