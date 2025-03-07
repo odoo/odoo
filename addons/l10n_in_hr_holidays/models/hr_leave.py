@@ -46,6 +46,21 @@ class HrLeave(models.Model):
                 total_leaves -= 1
         return total_leaves
 
+    def _l10n_in_apply_exceptional_days(self, leave_days, exceptional_days):
+        self.ensure_one()
+        date_from = self.request_date_from
+        date_to = self.request_date_to
+        exceptional_days_dates = set()
+        calendar = self.resource_calendar_id
+        for holiday in exceptional_days:
+            start_date = holiday.start_date
+            end_date = holiday.end_date
+            exceptional_days_dates.update(start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1))
+        for date in (date_from + timedelta(days=x) for x in range((date_to - date_from).days + 1)):
+            if date in exceptional_days_dates and not calendar._works_on_date(date):
+                leave_days += 1
+        return leave_days
+
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
         result = super()._get_durations(check_leave_type, resource_calendar)
         indian_leaves = self.filtered(lambda c: c.company_id.country_id.code == 'IN')
@@ -67,6 +82,12 @@ class HrLeave(models.Model):
             aggregates=['id:recordset'],
         ))
         for leave in indian_leaves:
+            if exceptional_days := leave.employee_id._get_exceptional_days(leave.date_from, leave.date_to):
+                leave_days, hours = result[leave.id]
+                updated_days = leave._l10n_in_apply_exceptional_days(leave_days, exceptional_days)
+                if updated_days != leave_days:
+                    result[leave.id] = (updated_days, hours)
+
             if leave.holiday_status_id.l10n_in_is_sandwich_leave:
                 days, hours = result[leave.id]
                 updated_days = leave._l10n_in_apply_sandwich_rule(public_holidays, leaves_by_employee.get(leave.employee_id, []))

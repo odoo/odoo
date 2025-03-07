@@ -37,11 +37,7 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
             this.popover.close();
             const date = luxon.DateTime.fromISO(info.dateStr);
             const target = info.dayEl;
-            const mandatory_days_data = await this.orm.call(
-                "hr.employee",
-                "get_mandatory_days_data",
-                [date, date]
-            );
+            const mandatory_days_data = await this.getMandatoryData(info, date);
             mandatory_days_data.forEach((mandatory_day_data) => {
                 mandatory_day_data["start"] = luxon.DateTime.fromISO(mandatory_day_data["start"]);
                 mandatory_day_data["end"] = luxon.DateTime.fromISO(mandatory_day_data["end"]);
@@ -57,6 +53,10 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         } else {
             super.onDateClick(info);
         }
+    }
+
+    async getMandatoryData(info, date) {
+        return await this.orm.call("hr.employee", "get_exceptional_days_data", [date, date]);
     }
 
     getDayCellClassNames(info) {
