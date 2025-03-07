@@ -7,6 +7,7 @@
 
         <record id="group_sale_salesman" model="res.groups">
             <field name="name">User: Own Documents Only</field>
+            <field name="sequence">10</field>
             <field name="category_id" ref="base.module_category_sales_sales"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="comment">the user will have access to his own data in the sales application.</field>
@@ -14,6 +15,7 @@
 
         <record id="group_sale_salesman_all_leads" model="res.groups">
             <field name="name">User: All Documents</field>
+            <field name="sequence">20</field>
             <field name="category_id" ref="base.module_category_sales_sales"/>
             <field name="implied_ids" eval="[(4, ref('group_sale_salesman'))]"/>
             <field name="comment">the user will have access to all records of everyone in the sales application.</field>
@@ -21,6 +23,7 @@
 
         <record id="group_sale_manager" model="res.groups">
             <field name="name">Administrator</field>
+            <field name="sequence">30</field>
             <field name="comment">the user will have an access to the sales configuration as well as statistic reports.</field>
             <field name="category_id" ref="base.module_category_sales_sales"/>
             <field name="implied_ids" eval="[(4, ref('group_sale_salesman_all_leads')),

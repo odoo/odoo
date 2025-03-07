@@ -6,11 +6,13 @@
         </record>
         <record id="fleet_group_user" model="res.groups">
             <field name="name">Officer: Manage all vehicles</field>
+            <field name="sequence">10</field>
             <field name="category_id" ref="base.module_category_human_resources_fleet"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
         <record id="fleet_group_manager" model="res.groups">
             <field name="name">Administrator</field>
+            <field name="sequence">20</field>
             <field name="implied_ids" eval="[(4, ref('fleet_group_user'))]"/>
             <field name="category_id" ref="base.module_category_human_resources_fleet"/>
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>

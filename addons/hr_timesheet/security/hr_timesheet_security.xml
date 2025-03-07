@@ -8,6 +8,7 @@
 
         <record id="group_hr_timesheet_user" model="res.groups">
             <field name="name">User: own timesheets only</field>
+            <field name="sequence">10</field>
             <field name="category_id" ref="base.module_category_services_timesheets"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
@@ -15,12 +16,14 @@
 
         <record id="group_hr_timesheet_approver" model="res.groups">
             <field name="name">User: all timesheets</field>
+            <field name="sequence">20</field>
             <field name="category_id" ref="base.module_category_services_timesheets"/>
             <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
         </record>
 
         <record id="group_timesheet_manager" model="res.groups">
             <field name="name">Administrator</field>
+            <field name="sequence">30</field>
             <field name="category_id" ref="base.module_category_services_timesheets"/>
             <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver')), (4, ref('hr.group_hr_user'))]"/>
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
