@@ -707,6 +707,151 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
     },
 });
 
+<<<<<<< saas-17.4
+||||||| 80c6274c54eba030b4d2aa9e1e0e29df4b550a28
+publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
+    selector: '.oe_website_sale .oe_cart',
+    events: {
+        'click .js_change_billing': '_onClickChangeBilling',
+        'click .js_change_shipping': '_onClickChangeShipping',
+        'click .js_edit_address': '_onClickEditAddress',
+        'click .js_delete_product': '_onClickDeleteProduct',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeBilling: function (ev) {
+        this._onClickChangeAddress(ev, 'all_billing', 'js_change_billing');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeShipping: function (ev) {
+        this._onClickChangeAddress(ev, 'all_shipping', 'js_change_shipping');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeAddress: function (ev, rowAddrClass, cardClass) {
+        var $old = $(`.${rowAddrClass}`).find('.card.border.border-primary');
+        $old.find('.btn-addr').toggle();
+        $old.addClass(cardClass);
+        $old.removeClass('bg-primary border border-primary');
+
+        var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
+        $new.find('.btn-addr').toggle();
+        $new.removeClass(cardClass);
+        $new.addClass('bg-primary border border-primary');
+
+        // TODO this should not be a form, but a clean rpc to /shop/cart/update_address
+        var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
+        $.post($form.attr('action'), $form.serialize()+'&xhr=1');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickEditAddress: function (ev) {
+        // Do not trigger _onClickChangeBilling or _onClickChangeShipping when customer
+        // clicks on the pencil to update the address
+        ev.stopPropagation();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickDeleteProduct: function (ev) {
+        ev.preventDefault();
+        $(ev.currentTarget).closest('.o_cart_product').find('.js_quantity').val(0).trigger('change');
+    },
+});
+=======
+publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
+    selector: '.oe_website_sale .oe_cart',
+    events: {
+        'click .js_change_billing': '_onClickChangeBilling',
+        'click .js_change_shipping': '_onClickChangeShipping',
+        'click .js_edit_address': '_onClickEditAddress',
+        'click .js_delete_product': '_onClickDeleteProduct',
+    },
+
+    /**
+     * @override
+     */
+    async start() {
+        document.querySelector('.o_cta_navigation_placeholder')?.classList.remove('d-none')
+        const ctaContainer = document.querySelector('.o_cta_navigation_container');
+        if (ctaContainer) {
+            const placeholder = document.querySelector('.o_cta_navigation_placeholder');
+            placeholder.style.height = `${ctaContainer.offsetHeight}px`;
+            ctaContainer.style.top = `calc(100% - ${ctaContainer.offsetHeight}px)`;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeBilling: function (ev) {
+        this._onClickChangeAddress(ev, 'all_billing', 'js_change_billing');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeShipping: function (ev) {
+        this._onClickChangeAddress(ev, 'all_shipping', 'js_change_shipping');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeAddress: function (ev, rowAddrClass, cardClass) {
+        var $old = $(`.${rowAddrClass}`).find('.card.border.border-primary');
+        $old.find('.btn-addr').toggle();
+        $old.addClass(cardClass);
+        $old.removeClass('bg-primary border border-primary');
+
+        var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
+        $new.find('.btn-addr').toggle();
+        $new.removeClass(cardClass);
+        $new.addClass('bg-primary border border-primary');
+
+        // TODO this should not be a form, but a clean rpc to /shop/cart/update_address
+        var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');
+        $.post($form.attr('action'), $form.serialize()+'&xhr=1');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickEditAddress: function (ev) {
+        // Do not trigger _onClickChangeBilling or _onClickChangeShipping when customer
+        // clicks on the pencil to update the address
+        ev.stopPropagation();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickDeleteProduct: function (ev) {
+        ev.preventDefault();
+        $(ev.currentTarget).closest('.o_cart_product').find('.js_quantity').val(0).trigger('change');
+    },
+});
+>>>>>>> 39d87bc09a98b0a39014ba7481bc2265d2605e2c
 
 publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     selector: '#o-carousel-product',
