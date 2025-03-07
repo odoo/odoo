@@ -310,10 +310,20 @@ describe("useService", () => {
                 useService("toy_service");
             }
         }
-
+        const originalHandleError = window.owl.App.prototype.handleError;
+        // Catch the error thrown by the owl and let the runner do its job
+        window.owl.App.prototype.handleError = function (...args) {
+            try {
+                patchWithCleanup(console, { warn: () => {} });
+                return originalHandleError(...args);
+            } catch (error) {
+                console.log(`This error is caught by the runner of the test: ${error.message}`);
+            }
+        };
         await expect(mountWithCleanup(MyComponent)).rejects.toThrow(
-            "Service toy_service is not available"
+            'Service toy_service is not available in "MyComponent".'
         );
+        window.owl.App.prototype.handleError = originalHandleError;
     });
 
     test("service that returns null", async () => {

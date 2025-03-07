@@ -1,6 +1,15 @@
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, useComponent, useEffect, useRef, onWillUnmount, useState, toRaw } from "@odoo/owl";
+import {
+    status,
+    useComponent,
+    useEffect,
+    useRef,
+    onWillUnmount,
+    useState,
+    toRaw,
+    onWillStart,
+} from "@odoo/owl";
 
 /**
  * This file contains various custom hooks.
@@ -132,20 +141,7 @@ function _protectMethod(component, fn) {
 
 export const SERVICES_METADATA = {};
 
-/**
- * Import a service into a component
- *
- * @template {keyof import("services").ServiceFactories} K
- * @param {K} serviceName
- * @returns {import("services").ServiceFactories[K]}
- */
-export function useService(serviceName) {
-    const component = useComponent();
-    const { services } = component.env;
-    if (!(serviceName in services)) {
-        throw new Error(`Service ${serviceName} is not available`);
-    }
-    const service = services[serviceName];
+function decorateService(serviceName, service, component) {
     if (SERVICES_METADATA[serviceName]) {
         if (service instanceof Function) {
             return _protectMethod(component, service);
@@ -162,6 +158,40 @@ export function useService(serviceName) {
         return useState(service);
     }
     return service;
+}
+
+/**
+ * Import a service into a component
+ *
+ * @template {keyof import("services").ServiceFactories} K
+ * @param {K} serviceName
+ * @returns {import("services").ServiceFactories[K]}
+ */
+export function useService(serviceName) {
+    const component = useComponent();
+    const { services } = component.env;
+    if (serviceName in services) {
+        return decorateService(serviceName, services[serviceName], component);
+    }
+    let res = {};
+    onWillStart(async () => {
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (!(serviceName in services)) {
+                    reject(
+                        new Error(
+                            `Service ${serviceName} is not available in "${component.constructor.name}".`
+                        )
+                    );
+                } else {
+                    resolve();
+                }
+            }, 0);
+        });
+        Object.setPrototypeOf(res, services[serviceName]);
+        res = decorateService(serviceName, res, component);
+    });
+    return res;
 }
 
 // -----------------------------------------------------------------------------
