@@ -46,6 +46,7 @@ export class Call extends Component {
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
         this.isMobileOs = isMobileOS();
+        this.ui = useService("ui");
         this.state = useState({
             isFullscreen: false,
             sidebar: false,
@@ -193,9 +194,7 @@ export class Call extends Component {
     }
 
     get isControllerFloating() {
-        return (
-            this.state.isFullscreen || (this.props.thread.activeRtcSession && !this.props.compact)
-        );
+        return this.state.isFullscreen || (this.props.thread.activeRtcSession && !this.ui.isSmall);
     }
 
     onMouseleaveMain(ev) {
