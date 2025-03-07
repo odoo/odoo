@@ -1,4 +1,5 @@
 import { describe, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { toggleOrderedList } from "../_helpers/user_actions";
@@ -11,6 +12,14 @@ describe("Range collapsed", () => {
                 contentBeforeEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 stepFunction: toggleOrderedList,
                 contentAfterEdit: `<ol><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ol>`,
+                contentAfter: "<ol><li>[]<br></li></ol>",
+            });
+        });
+
+        test("should turn an empty paragraph into a list with shortcut", async () => {
+            await testEditor({
+                contentBefore: "<p>[]<br></p>",
+                stepFunction: () => press(["control", "shift", "7"]),
                 contentAfter: "<ol><li>[]<br></li></ol>",
             });
         });
@@ -258,6 +267,14 @@ describe("Range not collapsed", () => {
                 contentBefore: "<p>ab</p><p>cd[ef]gh</p>",
                 stepFunction: toggleOrderedList,
                 contentAfter: "<p>ab</p><ol><li>cd[ef]gh</li></ol>",
+            });
+        });
+
+        test("should turn a paragraph into a list with shortcut", async () => {
+            await testEditor({
+                contentBefore: "<p>[abc]</p>",
+                stepFunction: () => press(["control", "shift", "7"]),
+                contentAfter: "<ol><li>[abc]</li></ol>",
             });
         });
 
