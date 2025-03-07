@@ -3,7 +3,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { FileSelector } from "@html_editor/main/media/media_dialog/file_selector";
 import { uploadService } from "@html_editor/main/media/media_dialog/upload_progress_toast/upload_service";
 import { HtmlComposerMessageField } from "@mail/views/web/fields/html_composer_message_field/html_composer_message_field";
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     manuallyDispatchProgrammaticEvent,
     press,
@@ -23,6 +23,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { defineMailModels, mailModels } from "../mail_test_helpers";
+import { nodeSize } from "@html_editor/utils/position";
 
 // Need this hack to use the arch in mountView(...)
 mailModels.MailComposeMessage._views = {};
@@ -195,4 +196,45 @@ test("mention a channel", async () => {
     await press("a");
     await animationFrame();
     expect.verifySteps(["get_mention_suggestions: a"]);
+});
+
+describe("remove checkbox from composer", () => {
+    beforeEach(async () => {
+        await mountViewInDialog({
+            type: "form",
+            resModel: "mail.compose.message",
+            arch: `
+            <form>
+                <field name="body" type="html" widget="html_composer_message" options="{'disable_checkbox': true}"/>
+            </form>`,
+        });
+        const anchorNode = queryOne(`[name='body'] .odoo-editor-editable p`);
+        setSelection({ anchorNode, anchorOffset: 0 });
+        await animationFrame();
+    });
+
+    test("removed checkbox from power buttons", () => {
+        expect(".o_we_power_buttons .power_button[title='Checklist']").not.toBeVisible();
+    });
+
+    test("removed checkbox from powerbox", async () => {
+        await insertText(htmlEditor, "/chec");
+        await animationFrame();
+        expect(
+            ".o-we-powerbox .o-we-command .o-we-command-name > div > i.fa-check-square-o"
+        ).toHaveCount(0);
+    });
+
+    test("disabled checkbox in toolbar", async () => {
+        const anchorNode = queryOne(`[name='body'] .odoo-editor-editable p`);
+        await insertText(htmlEditor, "test");
+        setSelection({
+            anchorNode: anchorNode,
+            anchorOffset: 0,
+            focusNode: anchorNode,
+            focusOffset: nodeSize(anchorNode),
+        });
+        await animationFrame();
+        expect(".o-we-toolbar div[name='list'] button[title='Checklist']").toHaveCount(0);
+    });
 });
