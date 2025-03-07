@@ -132,6 +132,7 @@ class TestOSSUSA(AccountTestInvoicingCommon):
         self.env.user.company_id, self.env.user.company_ids = self.sub_child_company, self.sub_child_company
 
         foreign_country = self.env.ref('base.be')
+        foreign_state = self.env.ref('base.state_be_1')
         self.sub_child_company.country_id = foreign_country
         self.sub_child_company.account_fiscal_country_id = self.sub_child_company.country_id
         self.sub_child_company.vat = "BE0477472701"
@@ -140,6 +141,7 @@ class TestOSSUSA(AccountTestInvoicingCommon):
             "name": "sub branch BE foreign VAT",
             "auto_apply": True,
             "country_id": foreign_country.id,
+            "state_ids": foreign_state.ids,
             "foreign_vat": "BE0477472701",
             "company_id": self.sub_child_company.id,
         })
