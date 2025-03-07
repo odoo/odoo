@@ -2,3 +2,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import gamification_badge_user_wizard
+from . import gamification_current_badge_wizard

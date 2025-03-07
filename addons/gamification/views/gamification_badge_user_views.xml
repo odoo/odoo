@@ -5,7 +5,7 @@
         <field name="name">Badge User Kanban View</field>
         <field name="model">gamification.badge.user</field>
         <field name="arch" type="xml">
-            <kanban action="action_open_badge" type="object">
+            <kanban action="action_open_current_badge" type="object">
                 <field name="create_date"/>
                 <templates>
                     <t t-name="card" class="row g-0">
@@ -15,7 +15,7 @@
                         <main class="col ps-2">
                             <field class="fw-bold fs-5" type="open" name="badge_name"/>
                             <field name="comment"/>
-                            <p>Granted by <field name="create_uid" /> the <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')" /></p>
+                            <p>Granted by <field name="create_uid" /> on <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')" /></p>
                         </main>
                     </t>
                 </templates>
