@@ -102,6 +102,7 @@ export class FormatPlugin extends Plugin {
             { hotkey: "control+i", commandId: "formatItalic" },
             { hotkey: "control+u", commandId: "formatUnderline" },
             { hotkey: "control+5", commandId: "formatStrikethrough" },
+            { hotkey: "control+space", commandId: "removeFormat" },
         ],
         toolbar_groups: withSequence(20, { id: "decoration" }),
         toolbar_items: [
