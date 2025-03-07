@@ -8,15 +8,6 @@ from odoo.osv import expression
 from lxml import etree, html
 import logging
 from random import randint
-from markupsafe import Markup
-from odoo.tools.mail import (
-    is_html_empty, html2plaintext, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
-    email_domain_normalize, email_normalize, email_re,
-    email_split, email_split_and_format, email_split_and_format_normalize, email_split_tuples,
-    single_email_re,
-    formataddr,
-    prepend_html_content,
-)
 
 _logger = logging.getLogger(__name__)
 
@@ -90,8 +81,6 @@ class WebsiteSnippetFilter(models.Model):
             is_sample=is_sample,
             **custom_template_data,
         ))
-        # if is_sample:
-        #     return content
         return [etree.tostring(el, encoding='unicode', method='html') for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()]
 
     def _prepare_values(self, limit=None, search_domain=None):
@@ -290,9 +279,9 @@ class WebsiteSnippetFilter(models.Model):
         company = self.env['website'].get_current_website().company_id
         return company.currency_id
 
-    # Move this code in website sale
+     # Move this code in website sale
     @api.model
-    def get_dummy_product_records(self, template_key):
+    def get_dummy_product_records(self, template_key, num_of_elements):
         """
         Returns a list of dummy records for a given template key
 
@@ -305,12 +294,5 @@ class WebsiteSnippetFilter(models.Model):
             request.website_routing = website.id
 
         dynamic_filter = self.env.ref("website_sale.dynamic_filter_newest_products")
-        rendered = dynamic_filter and dynamic_filter._render(template_key, None, None, with_sample=True) or []
-        # sanitized = html_sanitize(rendered, sanitize_tags=False, strip_classes=True)
-        # return sanitized
-        markupEls = []
-        for renderEl in rendered:
-            markupEls.append(Markup(renderEl))
-        return markupEls
-        # breakpoint()
-        # return etree.tostring(rendered, encoding='unicode', method='html')
+        rendered = dynamic_filter and dynamic_filter._render(template_key, num_of_elements, None, with_sample=True) or []
+        return rendered
