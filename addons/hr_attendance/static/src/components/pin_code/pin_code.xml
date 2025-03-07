@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="hr_attendance.EmployeeBadge">
-    <div class="o_attendance_background d-flex align-items-end justify-content-center flex-grow-1 pt-5 pt-md-4 bg-odoo">
+    <div t-if="employeeAvatar" class="o_attendance_background d-flex align-items-end justify-content-center flex-grow-1 pt-5 pt-md-4 bg-odoo">
         <img class="o_hr_attendance_employee_badge img rounded-circle" t-attf-src="data:image/png;base64,{{employeeAvatar}}" height="80"/>
     </div>
 </t>
