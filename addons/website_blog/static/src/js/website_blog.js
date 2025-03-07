@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { scrollTo } from "@web_editor/js/common/scrolling";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { share } from "./contentshare";
+import { user } from "@web/core/user";
 
 publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
@@ -11,6 +12,8 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         'click #o_wblog_next_container': '_onNextBlogClick',
         'click #o_wblog_post_content_jump': '_onContentAnchorClick',
         'click .o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete': '_onShareArticle',
+        // TODO handle from xml in master
+        "click #edit-in-backend": "_updateBackendHref",
     },
 
     /**
@@ -27,6 +30,21 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Element} el
+     *
+     * TODO : Remove this in the master branch as it will be directly modified.
+     * Updates the href of an anchor tag when tags list is empty.
+     * This will redirect to backend part of the website blog post.
+     */
+    _updateBackendHref(el) {
+        const match = window.location.href.match(/\/([\w-]+)-(\d+)$/i);
+        if (!match) {
+            return;
+        }
+        el.currentTarget.href = `/odoo/website/blog.post/${match[2]}`;
+    },
     /**
      * @private
      * @param {Event} ev
@@ -100,5 +118,28 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      */
     _forumScrollAction: function (el, duration, callback) {
         scrollTo(el, { duration: duration }).then(() => callback());
+    },
+});
+
+publicWidget.registry.follow = publicWidget.registry.follow.extend({
+    /**
+     * TODO handle from xml in master
+     *
+     * @override
+     */
+    start: async function () {
+        const def = await this._super.apply(this, arguments);
+        const isUser = await user.hasGroup("base.group_user");
+        if (!isUser) {
+            return def;
+        }
+        const inputEl = document.createElement("input");
+        inputEl.setAttribute("type", "email");
+        inputEl.setAttribute("class", "js_follow_email form-control");
+        inputEl.setAttribute("placeholder", "your email...");
+
+        const followBlock = this.el.querySelector(".js_follow");
+        followBlock.prepend(inputEl);
+        return def;
     },
 });
