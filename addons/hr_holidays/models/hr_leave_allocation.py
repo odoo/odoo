@@ -374,7 +374,7 @@ class HolidaysAllocation(models.Model):
                 [self.employee_id.id]['hours']
         else:
             planned_worked = worked
-        left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
+        left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt, calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
             domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
         if level.frequency == 'hourly':
             if level.accrual_plan_id.is_based_on_worked_time:
@@ -413,7 +413,7 @@ class HolidaysAllocation(models.Model):
         """
 
         date_to = date_to or fields.Date.today()
-        already_accrued = {allocation.id: allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start' for allocation in self}
+        already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')

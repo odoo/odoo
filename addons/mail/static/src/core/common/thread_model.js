@@ -96,6 +96,8 @@ export class Thread extends Record {
     get canUnpin() {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
+    /** @type {boolean} */
+    can_react = true;
     channelMembers = Record.many("ChannelMember", {
         inverse: "thread",
         onDelete: (r) => r.delete(),
@@ -568,7 +570,11 @@ export class Thread extends Record {
     }
 
     get showUnreadBanner() {
-        return !this.selfMember?.hideUnreadBanner && this.selfMember?.localMessageUnreadCounter > 0;
+        return (
+            !this.selfMember?.hideUnreadBanner &&
+            this.selfMember?.localMessageUnreadCounter > 0 &&
+            this.firstUnreadMessage
+        );
     }
 
     get rpcParams() {

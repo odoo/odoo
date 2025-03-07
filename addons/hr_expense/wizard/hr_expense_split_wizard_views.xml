@@ -42,7 +42,8 @@
                     </group>
                     <field name="split_possible" invisible="1"/>
                     <footer>
-                        <button name="action_split_expense" string="Split Expense" type="object" class="oe_highlight"  data-hotkey="q"/>
+                        <button name="action_split_expense" invisible="split_possible" string="Split Expense" type="object" class="oe_highlight" disabled="disabled"  data-hotkey="q"/>
+                        <button name="action_split_expense" string="Split Expense" invisible="not split_possible" type="object" class="oe_highlight"  data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>

@@ -754,13 +754,19 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('move_type')
+    @api.depends('move_type', 'partner_id')
     def _compute_invoice_default_sale_person(self):
         # We want to modify the sale person only when we don't have one and if the move type corresponds to this condition
         # If the move doesn't correspond, we remove the sale person
         for move in self:
             if move.is_sale_document(include_receipts=True):
-                move.invoice_user_id = move.invoice_user_id or self.env.user
+                if move.partner_id:
+                    move.invoice_user_id = (
+                        move.invoice_user_id
+                        or move.partner_id.user_id
+                        or move.partner_id.commercial_partner_id.user_id
+                        or self.env.user
+                    )
             else:
                 move.invoice_user_id = False
 
@@ -5090,7 +5096,7 @@ class AccountMove(models.Model):
 
     def action_switch_move_type(self):
         if any(move.posted_before for move in self):
-            raise ValidationError(_("You cannot switch the type of a posted document."))
+            raise ValidationError(_("You cannot switch the type of a document which has been posted once."))
         if any(move.move_type == "entry" for move in self):
             raise ValidationError(_("This action isn't available for this document."))
 

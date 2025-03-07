@@ -152,7 +152,10 @@ class AccountEdiProxyClientUser(models.Model):
 
         :param company: the company of the user.
         '''
-        private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(company, name=f"{self.id_client}_{self.edi_identification}.key")
+        private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(
+            company,
+            name=f"{proxy_type}_{edi_mode}_{company.id}.key",
+        )
         edi_identification = self._get_proxy_identification(company, proxy_type)
         if edi_mode == 'demo':
             # simulate registration

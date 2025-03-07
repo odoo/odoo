@@ -104,7 +104,7 @@ class MrpProduction(models.Model):
 
     def pre_button_mark_done(self):
         if self._get_subcontract_move():
-            return True
+            return super(MrpProduction, self.with_context(skip_consumption=True)).pre_button_mark_done()
         return super().pre_button_mark_done()
 
     def _should_postpone_date_finished(self, date_finished):

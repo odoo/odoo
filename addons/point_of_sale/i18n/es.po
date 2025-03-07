@@ -8228,7 +8228,7 @@ msgstr "Propinas"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Tips:"
-msgstr "Consejos:"
+msgstr "Propinas:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -9318,3 +9318,14 @@ msgid ""
 msgstr ""
 "{{ line.has_valid_product_lot() ? 'Lote de producto válido' : 'Lote de "
 "producto no válido'}}"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Este diario está asociado con el método de pago %s que se usa en el pedido "
+"%s en la sesión %s activa del TPV."

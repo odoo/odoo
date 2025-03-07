@@ -1,6 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { cleanTrailingBR, unwrapContents } from "@html_editor/utils/dom";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    childNodes,
+    closestElement,
+    descendants,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -32,6 +37,16 @@ function isLinkActive(selection) {
     }
 
     return false;
+}
+
+/**
+ * @param {EditorSelection} selection
+ */
+function isLinkDisabled(selection) {
+    const blockElements = childNodes(selection.commonAncestorContainer).filter(
+        (el) => isBlock(el) && el.isContentEditable
+    );
+    return blockElements.length >= 1;
 }
 
 function isSelectionHasLink(selection) {
@@ -172,6 +187,7 @@ export class LinkPlugin extends Plugin {
                 groupId: "link",
                 commandId: "toggleLinkTools",
                 isActive: isLinkActive,
+                isDisabled: isLinkDisabled,
             },
             {
                 id: "unlink",
@@ -428,7 +444,7 @@ export class LinkPlugin extends Plugin {
             // note that data-prevent-closing-overlay also used in color picker but link popover
             // and color picker don't open at the same time so it's ok to query like this
             const popoverEl = document.querySelector("[data-prevent-closing-overlay=true]");
-            if (popoverEl?.contains(selectionData.documentSelection.anchorNode)) {
+            if (popoverEl?.contains(selectionData.documentSelection?.anchorNode)) {
                 return;
             }
             this.overlay.close();
@@ -483,40 +499,39 @@ export class LinkPlugin extends Plugin {
                 this.overlay.close();
             }
 
-            const linkProps = {
-                ...props,
-                isImage: false,
-                linkEl: this.linkElement,
-                onApply: (url, label, classes) => {
-                    this.linkElement.href = url;
-                    if (cleanZWChars(this.linkElement.innerText) === label) {
-                        this.overlay.close();
-                        this.dependencies.selection.setSelection(
-                            this.dependencies.selection.getEditableSelection()
-                        );
-                    } else {
-                        const restore = prepareUpdate(...leftPos(this.linkElement));
-                        this.linkElement.innerText = label;
-                        restore();
-                        this.overlay.close();
-                        this.dependencies.selection.setCursorEnd(this.linkElement);
-                    }
-                    if (classes) {
-                        this.linkElement.className = classes;
-                    } else {
-                        this.linkElement.removeAttribute("class");
-                    }
-                    cleanTrailingBR(closestBlock(this.linkElement));
-                    this.dependencies.selection.focusEditable();
-                    this.removeCurrentLinkIfEmtpy();
-                    this.dependencies.history.addStep();
-                },
-                canEdit: !this.linkElement.classList.contains("o_link_readonly"),
-                canUpload: !this.config.disableFile,
-                onUpload: this.config.onAttachmentChange,
-            };
-
             if (linkEl.isConnected) {
+                const linkProps = {
+                    ...props,
+                    isImage: false,
+                    linkEl: this.linkElement,
+                    onApply: (url, label, classes) => {
+                        this.linkElement.href = url;
+                        if (cleanZWChars(this.linkElement.innerText) === label) {
+                            this.overlay.close();
+                            this.dependencies.selection.setSelection(
+                                this.dependencies.selection.getEditableSelection()
+                            );
+                        } else {
+                            const restore = prepareUpdate(...leftPos(this.linkElement));
+                            this.linkElement.innerText = label;
+                            restore();
+                            this.overlay.close();
+                            this.dependencies.selection.setCursorEnd(this.linkElement);
+                        }
+                        if (classes) {
+                            this.linkElement.className = classes;
+                        } else {
+                            this.linkElement.removeAttribute("class");
+                        }
+                        cleanTrailingBR(closestBlock(this.linkElement));
+                        this.dependencies.selection.focusEditable();
+                        this.removeCurrentLinkIfEmtpy();
+                        this.dependencies.history.addStep();
+                    },
+                    canEdit: !this.linkElement.classList.contains("o_link_readonly"),
+                    canUpload: !this.config.disableFile,
+                    onUpload: this.config.onAttachmentChange,
+                };
                 // pass the link element to overlay to prevent position change
                 this.overlay.open({ target: this.linkElement, props: linkProps });
             }
