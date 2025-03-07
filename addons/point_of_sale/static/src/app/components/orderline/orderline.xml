@@ -34,6 +34,14 @@
                             <i class="fa fa-tag pe-1"/><em><t t-esc="discount" />% </em> discount off on <t t-esc="env.utils.formatCurrency(line.allPrices.priceWithTaxBeforeDiscount)"/>
                         </t>
                     </li>
+                    <li class="price-per-unit" t-if="props.mode == 'receipt' || line.price_type !== 'original'">
+                        <t t-if="line.price !== 0">
+                            <i class="fa fa-money center pe-1"/>
+                            <t t-esc="formatCurrency(line.unitDisplayPrice)" />
+                        </t>
+                        /
+                        <t t-if="line.product_id.uom_id?.name" t-esc="line.product_id.uom_id?.name" />
+                    </li>
                     <li t-if="line.customer_note" class="customer-note w-100 rounded text-break bg-opacity-25" t-att-class="{'bg-warning text-warning p-2': this.props.mode === 'display'}">
                         <t t-esc="line.customer_note" />
                     </li>
