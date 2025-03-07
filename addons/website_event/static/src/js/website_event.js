@@ -2,6 +2,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { rpc } from "@web/core/network/rpc";
+import { session } from "@web/session";
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = publicWidget.Widget.extend({
@@ -13,6 +14,11 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         this._super(...arguments);
         this._recaptcha = new ReCaptcha();
         this.notification = this.bindService("notification");
+        // dynamic get rather than import as we don't depend on this module
+        if (session.turnstile_site_key) {
+            const { turnStile } = odoo.loader.modules.get("@website_cf_turnstile/js/turnstile");
+            this._turnstile = turnStile;
+        }
     },
 
     /**
@@ -82,6 +88,7 @@ var EventRegistrationForm = publicWidget.Widget.extend({
             return false;
         }
         const modalEl = new DOMParser().parseFromString(modal, "text/html").body.firstChild;
+        const form = modalEl.querySelector("form#attendee_registration");
         const _onClick = () => {
             buttonEl.disabled = false;
             modalEl.querySelector(".js_goto_event").removeEventListener("click", _onClick);
@@ -97,11 +104,35 @@ var EventRegistrationForm = publicWidget.Widget.extend({
             tokenInput.setAttribute("value", recaptchaToken.token);
             ev.currentTarget.appendChild(tokenInput);
         });
+        // the turnstile container needs to be already appended to the dom before rendering
+        // see modal.js for events
+        modalEl.addEventListener("shown.bs.modal", () => {
+            this._addTurnstile(form);
+        });
         const formModal = Modal.getOrCreateInstance(modalEl, {
             backdrop: "static",
             keyboard: false,
         });
         formModal.show();
+    },
+
+    _addTurnstile: function (form) {
+        if (!this._turnstile) {
+            return false;
+        }
+
+        const turnstileNodes = [...this._turnstile.addTurnstile("website_event_registration")];
+        turnstileNodes[0].classList.add("float-end");
+
+        const modalFooter = form.querySelector("div.modal-footer");
+        const formButton = form.querySelector("button[type=submit]");
+
+        this._turnstile.disableSubmit(formButton);
+        for (const node of turnstileNodes) {
+            modalFooter.appendChild(node);
+        }
+
+        return true;
     },
 });
 
