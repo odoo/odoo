@@ -5,7 +5,7 @@
         <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
             <t t-if="section.filters.length gt 0 or section.canAddFilter">
                 <div
-                    class="o_calendar_filter d-flex flex-column gap-1 mt-4 mb-2"
+                    class="o_calendar_filter d-flex flex-column gap-1 mt-3 mb-2"
                     t-att-data-name="section.fieldName"
                 >
                     <t t-if="section.label">
@@ -87,6 +87,7 @@
                     class="o_cw_filter_title flex-grow-1 text-truncate lh-base"
                     t-esc="filter.label"
                 />
+                <span t-if="filter.aggregatedValue" t-esc="filter.aggregatedValue"/>
             </label>
             <t t-if="filter.canRemove">
                 <button
