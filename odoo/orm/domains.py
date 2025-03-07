@@ -249,12 +249,12 @@ class Domain:
     @staticmethod
     def AND(items: Iterable) -> Domain:
         """Build the conjuction of domains: (item1 AND item2 AND ...)"""
-        return DomainAnd.apply(items)
+        return DomainAnd.apply(Domain(item) for item in items)
 
     @staticmethod
     def OR(items: Iterable) -> Domain:
         """Build the disjuction of domains: (item1 OR item2 OR ...)"""
-        return DomainOr.apply(items)
+        return DomainOr.apply(Domain(item) for item in items)
 
     def __setattr__(self, name, value):
         if hasattr(self, name):
@@ -263,18 +263,14 @@ class Domain:
 
     def __and__(self, other):
         """Domain & Domain"""
-        if isinstance(other, DomainAnd):
-            return other.__rand__(self)
         if isinstance(other, Domain):
-            return Domain.AND([self, other])
+            return DomainAnd.apply([self, other])
         return NotImplemented
 
     def __or__(self, other):
         """Domain | Domain"""
-        if isinstance(other, DomainOr):
-            return other.__ror__(self)
         if isinstance(other, Domain):
-            return Domain.OR([self, other])
+            return DomainOr.apply([self, other])
         return NotImplemented
 
     def __invert__(self):
@@ -395,49 +391,45 @@ class DomainBool(Domain):
     It is NOT considered as a condition and these constants are removed
     from nary domains.
     """
-    __slots__ = ("__value",)
-    __value: bool
+    __slots__ = ("value",)
+    value: bool
 
     def __new__(cls, value: bool):
         """Create a constant domain."""
         self = object.__new__(cls)
-        self.__value = value
+        self.value = value
         return self
 
     def __eq__(self, other):
-        return isinstance(other, DomainBool) and self.__value == other.__value
+        return isinstance(other, DomainBool) and self.value == other.value
 
     def __hash__(self):
-        return hash(self.__value)
-
-    @property
-    def value(self) -> bool:
-        return self.__value
+        return hash(self.value)
 
     def is_true(self) -> bool:
-        return self.__value
+        return self.value
 
     def is_false(self) -> bool:
-        return not self.__value
+        return not self.value
 
     def __invert__(self):
-        return _FALSE_DOMAIN if self.__value else _TRUE_DOMAIN
+        return _FALSE_DOMAIN if self.value else _TRUE_DOMAIN
 
     def __and__(self, other):
         if isinstance(other, Domain):
-            return other if self.__value else self
+            return other if self.value else self
         return NotImplemented
 
     def __or__(self, other):
         if isinstance(other, Domain):
-            return self if self.__value else other
+            return self if self.value else other
         return NotImplemented
 
     def __iter__(self):
-        yield _TRUE_LEAF if self.__value else _FALSE_LEAF
+        yield _TRUE_LEAF if self.value else _FALSE_LEAF
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
-        return SQL("TRUE") if self.__value else SQL("FALSE")
+        return SQL("TRUE") if self.value else SQL("FALSE")
 
 
 # singletons, available though Domain.TRUE and Domain.FALSE
@@ -553,9 +545,9 @@ class DomainNary(Domain):
         return self
 
     @classmethod
-    def apply(cls, items: Iterable) -> Domain:
+    def apply(cls, items: Iterable[Domain]) -> Domain:
         """Return the result of combining AND/OR to a collection of domains."""
-        children = cls._flatten(Domain(item) for item in items)
+        children = cls._flatten(items)
         if len(children) == 1:
             return children[0]
         return cls(children)
@@ -674,14 +666,7 @@ class DomainAnd(DomainNary):
         # simple optimization to append children
         if isinstance(other, DomainAnd):
             return DomainAnd(self.children + other.children)
-        if isinstance(other, Domain) and not isinstance(other, DomainBool):
-            return DomainAnd([*self.children, other])
         return super().__and__(other)
-
-    def __rand__(self, other):
-        if isinstance(other, Domain) and not isinstance(other, DomainBool):
-            return DomainAnd([other, *self.children])
-        return NotImplemented
 
 
 class DomainOr(DomainNary):
@@ -699,14 +684,7 @@ class DomainOr(DomainNary):
         # simple optimization to append children
         if isinstance(other, DomainOr):
             return DomainOr(self.children + other.children)
-        if isinstance(other, Domain) and not isinstance(other, DomainBool):
-            return DomainOr([*self.children, other])
         return super().__or__(other)
-
-    def __ror__(self, other):
-        if isinstance(other, Domain) and not isinstance(other, DomainBool):
-            return DomainOr([other, *self.children])
-        return NotImplemented
 
 
 class DomainCondition(Domain):
