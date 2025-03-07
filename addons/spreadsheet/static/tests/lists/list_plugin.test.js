@@ -503,6 +503,7 @@ test("Preload currency of monetary field", async function () {
                 expect(Object.keys(spec).length).toBe(2);
                 expect(spec.currency_id).toEqual({
                     fields: {
+                        display_name: {},
                         name: {},
                         symbol: {},
                         decimal_places: {},
@@ -513,6 +514,16 @@ test("Preload currency of monetary field", async function () {
             }
         },
     });
+});
+
+test("add currency field after the list has been loaded", async function () {
+    const { model } = await createSpreadsheetWithList({
+        columns: ["pognon"],
+    });
+    setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
+    await waitForDataLoaded(model);
+    setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+    expect(getEvaluatedCell(model, "A2").value).toBe("EUR");
 });
 
 test("fetch all and only required fields", async function () {

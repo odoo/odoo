@@ -97,6 +97,7 @@ export class ListDataSource extends OdooViewsDataSource {
                     spec[field.currency_field] = {
                         fields: {
                             ...spec[field.currency_field]?.fields,
+                            display_name: {},
                             name: {}, // currency code
                             symbol: {},
                             decimal_places: {},
