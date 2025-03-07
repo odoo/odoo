@@ -63,7 +63,7 @@ class TestStockLandedCostsLots(TestLotValuation):
         (picking_1 | picking_2).move_ids.picked = True
         (picking_1 | picking_2).button_validate()
 
-        og_layer = picking_2.move_ids.stock_valuation_layer_ids | picking_1.move_ids.stock_valuation_layer_ids
+        og_layer = (picking_2.move_ids.stock_valuation_layer_ids | picking_1.move_ids.stock_valuation_layer_ids).sorted('product_id')
         lc_form = Form(self.env['stock.landed.cost'])
         lc_form.picking_ids = (picking_1 | picking_2)
         with lc_form.cost_lines.new() as cost_line:
