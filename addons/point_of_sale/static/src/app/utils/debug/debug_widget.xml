@@ -14,15 +14,6 @@
                     role="img" aria-label="Dismiss"><i class="fa fa-fw fa-times" /></div>
                 <div class="content overflow-hidden">
 
-                    <div class="debug-electronic-scale">
-                        <h5 class="category">Electronic Scale</h5>
-                        <input t-model="state.weightInput" type="text" class="weight form-control"></input>
-                        <ul class="d-flex flex-column align-items-start mb-3 px-0">
-                            <li class="set_weight btn btn-link" t-on-click="setWeight">Set Weight</li>
-                            <li class="reset_weight btn btn-link" t-on-click="resetWeight">Reset</li>
-                        </ul>
-                    </div>
-
                     <div class="debug-barcode-scanner">
                         <h5 class="category">Barcode Scanner</h5>
                         <ul class="d-flex flex-column align-items-start mb-3 px-0">
@@ -61,7 +52,6 @@
                     <div class="debug-hardware-status d-flex flex-column">
                         <h5 class="category">Hardware Status</h5>
                         <ul class="mb-3 p-0">
-                            <li class="status weighing">Weighing</li>
                             <li class="button btn btn-link display_refresh" t-on-click="refreshDisplay">
                                 Refresh Display
                             </li>
