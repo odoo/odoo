@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { scrollTo } from "@web_editor/js/common/scrolling";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { share } from "./contentshare";
+import { user } from "@web/core/user";
 
 publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
@@ -117,5 +118,28 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      */
     _forumScrollAction: function (el, duration, callback) {
         scrollTo(el, { duration: duration }).then(() => callback());
+    },
+});
+
+publicWidget.registry.follow = publicWidget.registry.follow.extend({
+    /**
+     * TODO handle from xml in master
+     *
+     * @override
+     */
+    start: async function () {
+        const def = await this._super.apply(this, arguments);
+        const isUser = await user.hasGroup("base.group_user");
+        if (!isUser) {
+            return def;
+        }
+        const inputEl = document.createElement("input");
+        inputEl.setAttribute("type", "email");
+        inputEl.setAttribute("class", "js_follow_email form-control");
+        inputEl.setAttribute("placeholder", "your email...");
+
+        const followBlock = this.el.querySelector(".js_follow");
+        followBlock.prepend(inputEl);
+        return def;
     },
 });
