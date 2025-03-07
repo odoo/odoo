@@ -3,6 +3,7 @@
 import json
 import math
 import re
+import base64
 
 from werkzeug import urls
 from werkzeug.exceptions import Forbidden
@@ -399,10 +400,11 @@ class CustomerPortal(Controller):
                 partner_sudo == current_partner and current_partner.can_edit_vat()
             )
         address_fields = (country_sudo and country_sudo.get_address_fields()) or ['city', 'zip']
-
+        # breakpoint()
         return {
             'partner_sudo': partner_sudo,  # If set, customer is editing an existing address
             'partner_id': partner_sudo.id,
+            'website' : request.website,
             'current_partner': current_partner,
             'commercial_partner': current_partner.commercial_partner_id,
             'is_commercial_address': not current_partner or partner_sudo == commercial_partner,
