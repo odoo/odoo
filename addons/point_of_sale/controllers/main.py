@@ -135,6 +135,14 @@ class PosController(PortalAccount):
                 else:
                     errors['generic'] = _("No sale order found.")
 
+        elif request.httprequest.method == 'GET':
+            if kwargs.get('order_uuid'):
+                order = self.env['pos.order'].sudo().search([('uuid', '=', kwargs['order_uuid'])], limit=1)
+                form_values.update({
+                    'pos_reference': order.pos_reference if order.exists() else '',
+                    'date_order': order.date_order.strftime("%Y-%m-%d") if order.exists() else '',
+                })
+
         return request.render("point_of_sale.ticket_request_with_code", {
             'errors': errors,
             'banner_error': " ".join(errors.values()),
