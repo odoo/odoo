@@ -96,7 +96,6 @@ export class RtcSession extends Record {
     mainVideoStreamType;
     // RTC stats
     connectionState;
-    logStep;
 
     get channel() {
         return this.channel_member_id?.thread;
