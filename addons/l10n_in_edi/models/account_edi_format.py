@@ -568,7 +568,10 @@ class AccountEdiFormat(models.Model):
         def l10n_in_grouping_key_generator(base_line, tax_data):
             invl = base_line['record']
             tax = tax_data['tax']
-            tags = tax.invoice_repartition_line_ids.tag_ids
+            if tax_data.get('is_reverse_charge'):
+                tags = tax.invoice_repartition_line_ids.filtered(lambda l: l.factor_percent < 0).tag_ids
+            else:
+                tags = tax.invoice_repartition_line_ids.filtered(lambda l: l.factor_percent >= 0).tag_ids
             line_code = "other"
             if not invl.currency_id.is_zero(tax_data['tax_amount_currency']):
                 if any(tag in tags for tag in self.env.ref("l10n_in.tax_tag_cess")):
