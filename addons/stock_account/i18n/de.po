@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -585,11 +586,11 @@ msgstr "Verknüpft mit"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
-"Los %(lot)s hat eine negative Menge im Bestand. Verbessern Sie diese"
-"                         Menge, bevor Sie die Losbewertung aktivieren"
+"Los %(lot)s hat eine negative Menge im Bestand.\n"
+"Korrigieren Sie diese Menge, bevor Sie die Losbewertung aktivieren/deaktivieren."
 
 #. module: stock_account
 #. odoo-python
@@ -681,6 +682,16 @@ msgstr "Ausgehend"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Produkt"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
+"Das Produkt %(product)s hat eine Menge ohne Lose an einem bewerteten Lagerort %(location)s.\n"
+"Bitte weisen Sie Lose zu all Ihren Mengen zu, bevor Sie die Losbwertung aktivieren."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -563,9 +563,11 @@ msgstr "다음과 연결됨"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
-msgstr "로트 %(lot)s의 재고 수량이 음수입니다. 로트 평가를 활성화하기 전에 이 수량을 수정하세요. "
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
+msgstr ""
+"로트 %(lot)s에 있는 재고 수량이 음수입니다.\n"
+"로트 재고 평가를 활성화/비활성화하기 전에 수량을 수정하세요."
 
 #. module: stock_account
 #. odoo-python
@@ -655,6 +657,16 @@ msgstr "출고"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "품목"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
+"%(product)s 품목 중에 %(location)s 평가 위치에 있는 수량은 로트가 지정되지 않았습니다. 로트 평가 활성화 전에 모든"
+" 수량에 로트를 지정하세요."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
