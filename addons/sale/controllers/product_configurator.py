@@ -41,7 +41,7 @@ class SaleProductConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env['product.template'].browse(product_template_id)
+        product_template = self._get_product_template(product_template_id)
 
         combination = request.env['product.template.attribute.value']
         if ptav_ids:
@@ -114,7 +114,7 @@ class SaleProductConfiguratorController(Controller):
         :rtype: int
         :return: The product created, as a `product.product` id.
         """
-        product_template = request.env['product.template'].browse(product_template_id)
+        product_template = self._get_product_template(product_template_id)
         combination = request.env['product.template.attribute.value'].browse(ptav_ids)
         product = product_template._create_product_variant(combination)
         return product.id
@@ -156,7 +156,7 @@ class SaleProductConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env['product.template'].browse(product_template_id)
+        product_template = self._get_product_template(product_template_id)
         pricelist = request.env['product.pricelist'].browse(pricelist_id)
         product_uom = request.env['uom.uom'].browse(product_uom_id)
         currency = request.env['res.currency'].browse(currency_id)
@@ -208,7 +208,7 @@ class SaleProductConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env['product.template'].browse(product_template_id)
+        product_template = self._get_product_template(product_template_id)
         parent_combination = request.env['product.template.attribute.value'].browse(
             parent_ptav_ids + ptav_ids
         )
@@ -231,6 +231,9 @@ class SaleProductConfiguratorController(Controller):
             ) for optional_product_template in product_template.optional_product_ids if
             self._should_show_product(optional_product_template, parent_combination)
         ]
+
+    def _get_product_template(self, product_template_id):
+        return request.env['product.template'].browse(product_template_id)
 
     def _get_product_information(
         self,
