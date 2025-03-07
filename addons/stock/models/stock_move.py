@@ -2387,3 +2387,10 @@ Please change the quantity done or the rounding precision of your unit of measur
             ),
             'readOnly': False,
         }
+
+    def _is_qty_incoming(self):
+        """ Overridden in sale & purchase stock bridge modules to determine which way, either
+        'in' or 'out', a move's quantity should be counted as it relates to the
+        received or delivered quantity of it's corresponding order line.
+        """
+        return False
