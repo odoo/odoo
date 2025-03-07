@@ -28,4 +28,11 @@ class Product(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user')
+    create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user', copy=False)
+
+    def copy(self, default=None):
+        copied_tmpl = super().copy(default)
+        if(not self.env.user.has_group('stock.group_stock_user')):
+            return copied_tmpl
+        copied_tmpl.create_repair = self.create_repair
+        return copied_tmpl
