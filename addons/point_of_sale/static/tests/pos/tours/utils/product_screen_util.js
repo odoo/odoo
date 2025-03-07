@@ -670,6 +670,7 @@ export function checkTaxAmount(amount) {
     };
 }
 
+<<<<<<< saas-18.1:addons/point_of_sale/static/tests/pos/tours/utils/product_screen_util.js
 export function checkRoundingAmountIsNotThere() {
     return [
         {
@@ -720,6 +721,13 @@ export function verifyOrderlineSequence(products) {
             index + 1
         }) span:contains("${productName}")`,
     }));
+||||||| c8ebc003f4a68875c3d73b17494898cac9f124e7:addons/point_of_sale/static/tests/tours/utils/product_screen_util.js
+=======
+export function checkExtraPrice(amount) {
+    return {
+        trigger: `.price-tag.py-1:contains(${amount})`,
+    };
+>>>>>>> 5a26402d33570dd6ad18be122aac74bfe8397445:addons/point_of_sale/static/tests/tours/utils/product_screen_util.js
 }
 
 export function addDiscount(discount) {
