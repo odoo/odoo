@@ -318,14 +318,14 @@ test("hide/display base on applyTo", async () => {
     const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target o-paragraph"><div class="child-target o-paragraph">b</div></div>`
+        `<div class="parent-target o-paragraph"><div class="child-target">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect("[data-class-action='test']").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target o-paragraph"><div class="child-target my-custom-class o-paragraph">b</div></div>`
+        `<div class="parent-target o-paragraph"><div class="child-target my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect("[data-class-action='test']").toHaveCount(1);
