@@ -182,7 +182,7 @@ export class DebugWidget extends Component {
             }
 
             const missing = await this.pos.data.missingRecursive(data);
-            this.pos.data.models.loadData(missing, [], true);
+            this.pos.data.models.loadData(missing, []);
             this.notification.add(_t("%s orders imported", data["pos.order"].length));
         }
     }

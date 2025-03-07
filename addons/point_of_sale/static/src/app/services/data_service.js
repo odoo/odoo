@@ -177,11 +177,11 @@ export class PosData extends Reactive {
 
         const preLoadData = await this.preLoadData(data);
         const missing = await this.missingRecursive(preLoadData);
-        const results = this.models.loadData(missing, [], true, true);
+        const results = this.models.loadData(missing, [], { connectRecords: false });
         for (const data of Object.values(results)) {
             for (const record of data) {
                 if (record.raw.JSONuiState) {
-                    record.setupState(JSON.parse(record.raw.JSONuiState));
+                    record.restoreState(JSON.parse(record.raw.JSONuiState));
                 }
             }
         }
@@ -294,8 +294,10 @@ export class PosData extends Reactive {
         delete data["pos.order"];
         delete data["pos.order.line"];
 
-        this.models.loadData(data, this.modelToLoad);
-        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
+        this.models.loadData(data, this.modelToLoad, { connectRecords: false });
+        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines }, [], {
+            connectRecords: false,
+        });
     }
 
     async loadFieldsAndRelations() {
@@ -341,9 +343,8 @@ export class PosData extends Reactive {
             };
         }
 
-        const { models, baseData } = createRelatedModels(relations, modelClasses, this.opts);
+        const { models } = createRelatedModels(relations, modelClasses, this.opts);
 
-        this.baseData = baseData;
         this.fields = fields;
         this.relations = relations;
         this.models = models;
@@ -371,8 +372,10 @@ export class PosData extends Reactive {
             });
 
             this.models[model].addEventListener("update", (params) => {
-                const record = this.models[model].get(params.id).raw;
-
+                const record = this.models[model].get(params.id)?.raw;
+                if (!record) {
+                    return; // the record may be deleted
+                }
                 for (const [key, value] of Object.entries(record)) {
                     if (value instanceof Base) {
                         record[key] = value.id;
@@ -486,9 +489,8 @@ export class PosData extends Reactive {
                             }
                         }
 
-                        localRecord.update(formattedForUpdate);
-                        const baseData = Object.assign(this.baseData[model][record.id], values);
-                        this.synchronizeServerDataInIndexedDB({ [model]: [baseData] });
+                        localRecord.update(formattedForUpdate, { omitUnknownField: true });
+                        this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
                     } else {
                         nonExistentRecords.push(record);
                     }
@@ -509,11 +511,14 @@ export class PosData extends Reactive {
             ) {
                 const data = await this.missingRecursive({ [model]: result });
                 this.synchronizeServerDataInIndexedDB(data);
-                const results = this.models.loadData(data);
+                const results = this.models.loadData(data, []);
                 result = results[model];
             } else if (type === "write") {
-                const baseData = Object.assign(this.baseData[model][ids[0]], values);
-                this.synchronizeServerDataInIndexedDB({ [model]: [baseData] });
+                const localRecord = this.models[model].get(ids[0]);
+                if (localRecord) {
+                    localRecord.update(values, { omitUnknownField: true });
+                    this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
+                }
             }
 
             return result;
@@ -651,7 +656,7 @@ export class PosData extends Reactive {
         for (const id of ids) {
             const record = this.models[model].get(id);
             delete vals.id;
-            record.update(vals);
+            record.update(vals, { omitUnknownField: true });
 
             const dataToUpdate = {};
             const keysToUpdate = Object.keys(vals);
@@ -712,7 +717,7 @@ export class PosData extends Reactive {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
         if (data) {
             this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
-            const results = this.models.loadData(data, [], true);
+            const results = this.models.loadData(data, []);
             return results;
         }
         return false;

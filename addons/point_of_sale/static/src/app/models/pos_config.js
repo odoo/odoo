@@ -4,9 +4,8 @@ import { Base } from "./related_models";
 export class PosConfig extends Base {
     static pythonModel = "pos.config";
 
-    setup() {
-        super.setup(...arguments);
-
+    initState() {
+        super.initState();
         this.uiState = {};
     }
 

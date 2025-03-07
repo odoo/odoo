@@ -157,6 +157,7 @@ export class SplitBillScreen extends Component {
                 }
                 const data = line.serialize();
                 delete data.uuid;
+                delete data.id;
                 const newLine = this.pos.models["pos.order.line"].create(
                     {
                         ...data,

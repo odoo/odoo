@@ -60,7 +60,7 @@ export const getTaxesValues = (
 
     const results = baseLine.tax_details;
     for (const taxData of results.taxes_data) {
-        Object.assign(taxData, taxData.tax);
+        Object.assign(taxData, taxData.tax.raw);
     }
     return results;
 };
