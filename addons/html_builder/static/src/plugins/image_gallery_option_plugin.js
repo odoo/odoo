@@ -18,6 +18,8 @@ class ImageGalleryOption extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.updateAlertBanner.bind(this),
         on_reorder_items_handlers: this.reorderGalleryItems.bind(this),
+        on_remove_handlers: this.onRemove.bind(this),
+        after_remove_handlers: this.afterRemove.bind(this),
     };
 
     getActions() {
@@ -399,6 +401,23 @@ class ImageGalleryOption extends Plugin {
         return imageGalleryElement.querySelector(
             ".container, .container-fluid, .o_container_small"
         );
+    }
+
+    onRemove(elementToRemove) {
+        // If the removed element is an image from a gallery, store the gallery element for afterRemove
+        if (elementToRemove.matches(".s_image_gallery img")) {
+            this.imageRemovedGalleryElement = elementToRemove.closest(".s_image_gallery");
+        }
+    }
+
+    afterRemove(elementRemoved) {
+        // If the removed element is an image from a gallery, relayout the gallery
+        if (this.imageRemovedGalleryElement) {
+            const mode = this.getMode(this.imageRemovedGalleryElement);
+            const images = this.getImages(this.imageRemovedGalleryElement);
+            this.setImages(this.imageRemovedGalleryElement, mode, images);
+            this.imageRemovedGalleryElement = undefined;
+        }
     }
 
     reorderItems(itemsEls, newItemPosition) {
