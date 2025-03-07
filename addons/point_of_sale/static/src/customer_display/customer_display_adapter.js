@@ -90,9 +90,6 @@ export class CustomerDisplayPosAdapter {
                 line.getUnitDisplayPriceBeforeDiscount(),
                 line.currency
             ),
-            oldUnitPrice: line.getOldUnitDisplayPrice()
-                ? formatCurrency(line.getOldUnitDisplayPrice(), line.currency)
-                : "",
         };
     }
 
