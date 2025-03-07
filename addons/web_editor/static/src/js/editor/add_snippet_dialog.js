@@ -10,7 +10,6 @@ import {
     onMounted,
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
-import { rpc } from "@web/core/network/rpc";
 
 export class RenameCustomSnippetDialog extends Component {
     static template = "web_editor.RenameCustomSnippetDialog";
@@ -99,7 +98,6 @@ export class AddSnippetDialog extends Component {
      * @returns {object} snippets
      */
     getSnippetGroups() {
-        debugger;
         return [...this.props.snippets.values()]
             .filter(snippet =>
                 !snippet.excluded
@@ -116,7 +114,6 @@ export class AddSnippetDialog extends Component {
      * Inserts the snippets from the selected snippetGroup into the <iframe>.
      */
     async insertSnippets() {
-        debugger;
         const insertSnippetsCallID = ++this.currentInsertSnippetsCallID;
 
         // First, filter out snippets which are never supposed to be shown
@@ -177,51 +174,6 @@ export class AddSnippetDialog extends Component {
             snippetsToDisplay = snippetsToDisplay.filter(snippet => {
                 return snippet.group === this.state.groupSelected;
             });
-        }
-
-        if (this.state.groupSelected === "products") {
-            const xmlIdToElementsMap = snippetsToDisplay.reduce((acc, snippet) => {
-                const xmlId = snippet.content[0]?.querySelector("div[data-xml-id]")?.dataset.xmlId;
-                const numberOfElements = parseInt(snippet.data.numberOfElements) || 4;
-                if (xmlId) {
-                    acc[xmlId] = numberOfElements;
-                }
-                return acc;
-            }, {});
-
-            if (Object.keys(xmlIdToElementsMap).length) {
-                const data = await rpc("/web_editor/get_snippet_data", {
-                    template_data: xmlIdToElementsMap,
-                    csrf_token: odoo.csrf_token,
-                });
-                for (const [xmlId, snippets] of Object.entries(data)) {
-                    const snippet = snippetsToDisplay.find(
-                        (snippet) =>
-                            snippet.content[0]?.querySelector("div[data-xml-id]")?.dataset.xmlId ===
-                            xmlId
-                    );
-                    if (snippet) {
-                        const firstProductEl = new DOMParser().parseFromString(
-                            snippets[0],
-                            "text/html"
-                        ).body.firstChild;
-                        snippet.content[0]
-                            ?.querySelector("div[data-xml-id]")
-                            ?.replaceWith(firstProductEl);
-
-                        for (let i = 1; i < snippets.length; i++) {
-                            const productEl = new DOMParser().parseFromString(
-                                snippets[i],
-                                "text/html"
-                            ).body.firstChild;
-                            firstProductEl.parentNode.insertBefore(
-                                productEl,
-                                firstProductEl.nextSibling
-                            );
-                        }
-                    }
-                }
-            }
         }
 
         // Create the new 2-column structure

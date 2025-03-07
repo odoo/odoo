@@ -79,6 +79,7 @@ class QueryURL:
             path = path_prefix + path
         return path
 
+
 class Website(Home):
 
     @http.route('/', auth="public", website=True, sitemap=True)
