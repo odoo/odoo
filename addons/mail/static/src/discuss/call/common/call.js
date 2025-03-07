@@ -2,6 +2,7 @@ import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import {
     Component,
@@ -44,6 +45,13 @@ export class Call extends Component {
         this.grid = useRef("grid");
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
+<<<<<<< master
+||||||| c89f7d6a368499969a6b63390382f6051192b353
+        this.ui = useService("ui");
+=======
+        this.ui = useService("ui");
+        this.isMobileOs = isMobileOS();
+>>>>>>> 2e4308a344dbf85e8e15d0131392e2f3643875ac
         this.state = useState({
             isFullscreen: false,
             sidebar: false,
