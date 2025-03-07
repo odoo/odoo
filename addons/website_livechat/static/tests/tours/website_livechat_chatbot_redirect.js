@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { delay } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
     url: "/contactus",
@@ -41,6 +42,14 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
             isActive: ["desktop"],
             trigger:
                 ".o-livechat-root:shadow .o-mail-Message:contains('Go to the /chatbot-redirect page')",
+        },
+        {
+            isActive: ["mobile"], //chatwindow is folded on mobile
+            trigger: ".o-livechat-root:shadow .o-mail-ChatBubble[name='Redirection Bot']",
+            async run(helpers) {
+                await delay(500);
+                await helpers.click();
+            },
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Message:last:contains('Tadam')",

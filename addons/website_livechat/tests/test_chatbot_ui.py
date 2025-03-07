@@ -8,7 +8,7 @@ from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
 @tests.tagged('post_install', '-at_install')
-class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, ChatbotCase):
+class TestLivechatChatbotUICommon(TestGetOperatorCommon, TestWebsiteLivechatCommon, ChatbotCase):
     def setUp(self):
         super().setUp()
         self.env['im_livechat.channel'].search([
@@ -25,6 +25,52 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         })
 
         self.env.ref('website.default_website').channel_id = self.livechat_channel.id
+
+    def chatbot_redirect_tour(self):
+        chatbot_redirect_script = self.env["chatbot.script"].create(
+            {"title": "Redirection Bot"}
+        )
+        question_step, _ = tuple(
+            self.env["chatbot.script.step"].create([
+                {
+                    "chatbot_script_id": chatbot_redirect_script.id,
+                    "message": "Hello, were do you want to go?",
+                    "step_type": "question_selection",
+                },
+                {
+                    "chatbot_script_id": chatbot_redirect_script.id,
+                    "message": "Tadam, we are on the page you asked for!",
+                    "step_type": "text",
+                }
+            ])
+        )
+        self.env["chatbot.script.answer"].create([
+            {
+                "name": "Go to the #chatbot-redirect anchor",
+                "redirect_link": "#chatbot-redirect",
+                "script_step_id": question_step.id,
+            },
+            {
+                "name": "Go to the /chatbot-redirect page",
+                "redirect_link": "/chatbot-redirect",
+                "script_step_id": question_step.id,
+            },
+        ])
+        livechat_channel = self.env["im_livechat.channel"].create({
+            'name': 'Redirection Channel',
+            'rule_ids': [Command.create({
+                'regex_url': '/contactus',
+                'chatbot_script_id': chatbot_redirect_script.id,
+            })]
+        })
+        default_website = self.env.ref("website.default_website")
+        default_website.channel_id = livechat_channel.id
+        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.start_tour("/contactus", "website_livechat.chatbot_redirect")
+
+
+@tests.tagged("post_install", "-at_install")
+class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
 
     def _check_complete_chatbot_flow_result(self):
         operator = self.chatbot_script.operator_partner_id
@@ -131,46 +177,7 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         self.start_tour(test_page_url, "website_livechat_chatbot_test_page_tour", login="bob_user")
 
     def test_chatbot_redirect(self):
-        chatbot_redirect_script = self.env["chatbot.script"].create(
-            {"title": "Redirection Bot"}
-        )
-        question_step, _ = tuple(
-            self.env["chatbot.script.step"].create([
-                {
-                    "chatbot_script_id": chatbot_redirect_script.id,
-                    "message": "Hello, were do you want to go?",
-                    "step_type": "question_selection",
-                },
-                {
-                    "chatbot_script_id": chatbot_redirect_script.id,
-                    "message": "Tadam, we are on the page you asked for!",
-                    "step_type": "text",
-                }
-            ])
-        )
-        self.env["chatbot.script.answer"].create([
-            {
-                "name": "Go to the #chatbot-redirect anchor",
-                "redirect_link": "#chatbot-redirect",
-                "script_step_id": question_step.id,
-            },
-            {
-                "name": "Go to the /chatbot-redirect page",
-                "redirect_link": "/chatbot-redirect",
-                "script_step_id": question_step.id,
-            },
-        ])
-        livechat_channel = self.env["im_livechat.channel"].create({
-            'name': 'Redirection Channel',
-            'rule_ids': [Command.create({
-                'regex_url': '/contactus',
-                'chatbot_script_id': chatbot_redirect_script.id,
-            })]
-        })
-        default_website = self.env.ref("website.default_website")
-        default_website.channel_id = livechat_channel.id
-        self.env.ref("website.default_website").channel_id = livechat_channel.id
-        self.start_tour("/contactus", "website_livechat.chatbot_redirect")
+        self.chatbot_redirect_tour()
 
     def test_chatbot_trigger_selection(self):
         chatbot_trigger_selection = self.env["chatbot.script"].create(
@@ -317,3 +324,11 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         )
         self.env.ref("website.default_website").channel_id = livechat_channel.id
         self.start_tour("/", "website_livechat.chatbot_continue_tour")
+
+
+@tests.tagged("post_install", "-at_install")
+class TestLivechatChatbotUIMoblie(TestLivechatChatbotUICommon):
+    browser_size = '375x667'
+
+    def test_chatbot_redirect_mobile(self):
+        self.chatbot_redirect_tour()
