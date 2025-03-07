@@ -259,7 +259,7 @@ class AutomationDecantingOrdersProcess(models.Model):
         url_automation_putaway = (
             "https://shiperooconnect-prod.automation.shiperoo.com/api/interface/automationputaway"
             if is_production == 'True'
-            else "https://shiperooconnect.automation.shiperoo.com/api/interface/automationputaway"
+            else "https://shiperooconnect-dev.automation.shiperoo.com/api/interface/automationputaway"
         )
         headers = {
             'Content-Type': 'application/json'
