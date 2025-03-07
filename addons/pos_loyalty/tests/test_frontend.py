@@ -528,6 +528,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("GiftCardProgramTour2")
         # Check that gift cards are used
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
+        loyalty_history = self.env['loyalty.history'].search([('card_id','=',gift_card_program.coupon_ids.id)])
+        self.assertEqual(loyalty_history.used, 3.2)
 
     def test_ewallet_program(self):
         """
