@@ -29,6 +29,7 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
             }
         return values
 
+<<<<<<< saas-17.4
     def _task_get_search_domain(self, search_in, search, milestones_allowed, project):
         if search_in == 'sale_order':
             return ['|', ('sale_order_id.name', 'ilike', search), ('sale_line_id.name', 'ilike', search)]
@@ -40,6 +41,27 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
     def _prepare_project_sharing_session_info(self, project, task=None):
         session_info = super()._prepare_project_sharing_session_info(project, task)
         session_info['action_context'].update({
+||||||| fe59408877823b1537a1734aba8306435a3d0912
+    def _task_get_search_domain(self, search_in, search):
+        search_domain = [super()._task_get_search_domain(search_in, search)]
+        if search_in in ('sale_order', 'all'):
+            search_domain.append(['|', ('sale_order_id.name', 'ilike', search), ('sale_line_id.name', 'ilike', search)])
+        if search_in in ('invoice', 'all'):
+            search_domain.append([('sale_order_id.invoice_ids.name', 'ilike', search)])
+        return OR(search_domain)
+=======
+    def _task_get_search_domain(self, search_in, search):
+        search_domain = [super()._task_get_search_domain(search_in, search)]
+        if search_in in ('sale_order', 'all'):
+            search_domain.append(['|', ('sale_order_id.name', 'ilike', search), ('sale_line_id.name', 'ilike', search)])
+        if search_in in ('invoice', 'all'):
+            search_domain.append([('sale_order_id.invoice_ids.name', 'ilike', search)])
+        return OR(search_domain)
+
+    def _prepare_project_sharing_session_info(self, project, task=None):
+        session_info = super()._prepare_project_sharing_session_info(project, task)
+        session_info['user_context'].update({
+>>>>>>> b7e37d1fd24df46ad8f0759d7ef82871302baf46
             'allow_billable': project.allow_billable,
         })
         return session_info
