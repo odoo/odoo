@@ -1,4 +1,4 @@
-import { rgbToHex } from "@html_editor/utils/color";
+import { rgbToHex, rgbaToHex } from "@html_editor/utils/color";
 import { expect, getFixture, test } from "@odoo/hoot";
 
 test("should convert an rgb color to hexadecimal", async () => {
@@ -14,6 +14,7 @@ test("should convert an rgba color to hexadecimal (background is hexadecimal)", 
     parent.append(node);
     // white with 50% opacity over blue = light blue
     expect(rgbToHex("rgba(255, 255, 255, 0.5)", node)).toBe("#7f7fff");
+    expect(rgbaToHex("rgba(0, 0, 255, 0.5)")).toBe("#0000ff7f");
 });
 
 test("should convert an rgba color to hexadecimal (background is color name)", async () => {
@@ -24,6 +25,7 @@ test("should convert an rgba color to hexadecimal (background is color name)", a
     parent.append(node);
     // white with 50% opacity over blue = light blue
     expect(rgbToHex("rgba(255, 255, 255, 0.5)", node)).toBe("#7f7fff");
+    expect(rgbaToHex("rgba(0, 0, 255, 0.5)")).toBe("#0000ff7f");
 });
 
 test("should convert an rgba color to hexadecimal (background is rgb)", async () => {
@@ -34,6 +36,7 @@ test("should convert an rgba color to hexadecimal (background is rgb)", async ()
     parent.append(node);
     // white with 50% opacity over blue = light blue
     expect(rgbToHex("rgba(255, 255, 255, 0.5)", node)).toBe("#7f7fff");
+    expect(rgbaToHex("rgba(0, 0, 255, 0.5)")).toBe("#0000ff7f");
     parent.remove();
 });
 

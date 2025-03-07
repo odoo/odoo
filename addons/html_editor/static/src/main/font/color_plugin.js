@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import {
     isColorGradient,
-    rgbToHex,
+    rgbaToHex,
     hasColor,
     hasAnyNodesColor,
     TEXT_CLASSES_REGEX,
@@ -101,11 +101,11 @@ export class ColorPlugin extends Plugin {
         const hasTextGradientClass = el.classList.contains("text-gradient");
 
         this.selectedColors.color =
-            hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color);
+            hasGradient && hasTextGradientClass ? backgroundImage : rgbaToHex(elStyle.color);
         this.selectedColors.backgroundColor =
             hasGradient && !hasTextGradientClass
                 ? backgroundImage
-                : rgbToHex(elStyle.backgroundColor);
+                : rgbaToHex(elStyle.backgroundColor);
     }
 
     /**
@@ -316,7 +316,7 @@ export class ColorPlugin extends Plugin {
         const usedCustomColors = new Set();
         for (const font of allFont) {
             if (isCSSColor(font.style[mode])) {
-                usedCustomColors.add(rgbToHex(font.style[mode]));
+                usedCustomColors.add(rgbaToHex(font.style[mode]));
             }
         }
         return usedCustomColors;

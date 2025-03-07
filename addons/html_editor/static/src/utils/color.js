@@ -119,6 +119,40 @@ export function rgbToHex(rgb = "", node = null) {
 }
 
 /**
+ * @param {string} rgb
+ * @param {HTMLElement} [node]
+ * @returns {string}
+ */
+export function rgbaToHex(rgb = "") {
+    if (rgb.startsWith("#")) {
+        return rgb;
+    } else if (rgb.startsWith("rgba")) {
+        const values = rgb.match(/[\d.]{1,5}/g) || [];
+        const alpha = parseFloat(values.pop());
+        const hexRgb = values
+            .map((value) => {
+                const hex = parseInt(value).toString(16);
+                return hex.length === 1 ? "0" + hex : hex;
+            })
+            .join("");
+        const hexAlpha = Math.floor(alpha * 255).toString(16);
+        const finalAlpha = hexAlpha.length === 1 ? "0" + hexAlpha : hexAlpha;
+
+        return "#" + hexRgb + finalAlpha;
+    } else {
+        return (
+            "#" +
+            (rgb.match(/\d{1,3}/g) || [])
+                .map((x) => {
+                    x = parseInt(x).toString(16);
+                    return x.length === 1 ? "0" + x : x;
+                })
+                .join("")
+        );
+    }
+}
+
+/**
  * @param {string|number} name
  * @returns {boolean}
  */
