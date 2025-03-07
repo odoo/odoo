@@ -159,7 +159,7 @@ export class RecipientsInput extends Component {
                                 const partner = partners[0];
                                 this.insertAdditionalRecipient({
                                     email: partner.email,
-                                    name: partner.name,
+                                    name: name,
                                     partner_id: partner.id,
                                     persona: { type: "partner", id: partner.id },
                                 });

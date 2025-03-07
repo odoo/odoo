@@ -425,6 +425,10 @@ class Base(models.AbstractModel):
         suggested_recipients = {}
         for record in self:
             followers = record.message_partner_ids if is_mail_thread else record.env['res.partner']
+            if followers:
+                partner_fields = record._mail_get_partner_fields()
+                for field in partner_fields:
+                    followers -= record[field]
             partners = self.env['res.partner'].browse(tools.misc.unique(
                 p.id for p in (suggested[record.id]['partners'] + records_partners[record.id]) if p not in followers
             ))
