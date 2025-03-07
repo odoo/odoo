@@ -749,6 +749,11 @@ class AccountReconcileModel(models.Model):
         self.env['account.move'].flush_model()
         self.env['account.move.line'].flush_model()
 
+        table_and_field_to_match_text_location_field = (
+            ('account_move_line', 'name', 'match_text_location_label'),
+            ('account_move_line__move_id', 'name', 'match_text_location_note'),
+            ('account_move_line__move_id', 'ref', 'match_text_location_reference'),
+        )
         aml_domain = self._get_invoice_matching_amls_domain(st_line, partner)
         query = self.env['account.move.line']._where_calc(aml_domain)
         tables, where_clause, where_params = query.get_sql()
@@ -774,11 +779,9 @@ class AccountReconcileModel(models.Model):
             '''
             all_params += where_params
         if numerical_tokens:
-            for table_alias, field in (
-                ('account_move_line', 'name'),
-                ('account_move_line__move_id', 'name'),
-                ('account_move_line__move_id', 'ref'),
-            ):
+            for table_alias, field, match_text_location_field in table_and_field_to_match_text_location_field:
+                if not self[match_text_location_field]:
+                    continue
                 sub_queries.append(rf'''
                     SELECT
                         account_move_line_id as id,
@@ -798,11 +801,9 @@ class AccountReconcileModel(models.Model):
                 ''')
 
         if exact_tokens:
-            for table_alias, field in (
-                ('account_move_line', 'name'),
-                ('account_move_line__move_id', 'name'),
-                ('account_move_line__move_id', 'ref'),
-            ):
+            for table_alias, field, match_text_location_field in table_and_field_to_match_text_location_field:
+                if not self[match_text_location_field]:
+                    continue
                 sub_queries.append(rf'''
                     SELECT
                         account_move_line_id as id,
