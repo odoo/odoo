@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import wTourUtils from '@website/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 /**
  * The purpose of these tours is to check the systray visibility:
@@ -134,7 +135,7 @@ const canEdit = () => [
     },
 ];
 
-const cannotEdit = () => [{
+const cannotEdit = () => [stepUtils.waitIframeIsReady(), {
     content: "Check Edit is not available",
     trigger: '.o_menu_systray:not(:has(.o_edit_website_container))',
 }];
