@@ -759,7 +759,7 @@ class ProductTemplate(models.Model):
         if tags:
             if isinstance(tags, str):
                 tags = tags.split(',')
-            domains.append([('product_variant_ids.all_product_tag_ids', 'in', tags)])
+            domains.append([('product_variant_ids.all_product_tag_ids.id', 'in', tags)])
         if min_price:
             domains.append([('list_price', '>=', min_price)])
         if max_price:
