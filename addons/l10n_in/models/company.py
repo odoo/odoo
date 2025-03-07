@@ -38,6 +38,7 @@ class ResCompany(models.Model):
     )
     l10n_in_pan_type = fields.Char(string="PAN Type", compute="_compute_l10n_in_pan_type")
     l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
+    l10n_in_qr_code = fields.Boolean(string="UPI QR Code")
 
     # TDS/TCS settings
     l10n_in_tds_feature = fields.Boolean(
