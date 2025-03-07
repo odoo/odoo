@@ -632,32 +632,6 @@ export class OdooEditor extends EventTarget {
                         this.execCommand('setTag', 'P');
                     },
                 },
-                {
-                    category: this.options._t('Widgets'),
-                    name: this.options._t('3 Stars'),
-                    priority: 20,
-                    description: this.options._t('Insert a rating over 3 stars'),
-                    fontawesome: 'fa-star-o',
-                    callback: () => {
-                        let html = '\u200B<span contenteditable="false" class="o_stars o_three_stars">';
-                        html += Array(3).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
-                        html += '</span>\u200B';
-                        this.execCommand('insert', parseHTML(this.document, html));
-                    },
-                },
-                {
-                    category: this.options._t('Widgets'),
-                    name: this.options._t('5 Stars'),
-                    priority: 10,
-                    description: this.options._t('Insert a rating over 5 stars'),
-                    fontawesome: 'fa-star',
-                    callback: () => {
-                        let html = '\u200B<span contenteditable="false" class="o_stars o_five_stars">';
-                        html += Array(5).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
-                        html += '</span>\u200B';
-                        this.execCommand('insert', parseHTML(this.document, html));
-                    },
-                },
                 ...(this.options.commands || []),
                 ...(!this.options.commands || !this.options.commands.find(c => c.name === this.options._t('Separator')) ? [
                     {
