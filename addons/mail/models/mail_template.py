@@ -53,10 +53,10 @@ class MailTemplate(models.Model):
     email_from = fields.Char('From',
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
-    user_id = fields.Many2one('res.users', string='User', domain="[('share', '=', False)]", help='The template belongs to this user')
+    user_id = fields.Many2one('res.users', string='Owner', domain="[('share', '=', False)]", help='The template belongs to this user')
     # recipients
     use_default_to = fields.Boolean(
-        'Default recipients',
+        'Default Recipients',
         default=True,
         help="Default recipients of the record:\n"
              "- partner (using id on a partner or the partner_id field) OR\n"
@@ -99,6 +99,17 @@ class MailTemplate(models.Model):
     can_write = fields.Boolean(compute='_compute_can_write',
                                help='The current user can edit the template.')
     is_template_editor = fields.Boolean(compute="_compute_is_template_editor")
+
+    has_dynamic_reports = fields.Boolean(compute='_compute_has_dynamic_reports')
+
+    @api.depends('model_id')
+    def _compute_has_dynamic_reports(self):
+        templates_grouped_by_model = self.grouped('model_id')
+        for model, templates in templates_grouped_by_model.items():
+            has_dynamic_reports = len(self.env['ir.actions.report'].search(
+                [('binding_model_id', '=', model.id)], limit=1)) > 0
+            for template in templates:
+                template.has_dynamic_reports = has_dynamic_reports
 
     # Overrides of mail.render.mixin
     @api.depends('model')
