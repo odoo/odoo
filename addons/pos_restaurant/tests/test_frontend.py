@@ -465,3 +465,30 @@ class TestFrontend(TestFrontendCommon):
         orders = self.env['pos.order'].search([])
         self.assertEqual(orders[0].user_id.id, self.pos_user.id, "Pos user not registered on order")
         self.assertEqual(orders[1].user_id.id, self.pos_admin.id, "Pos admin not registered on order")
+
+    def test_tax_in_merge_table_order_line(self):
+        """
+        Test that when merging orders of two tables in POS restaurant, the product tax is applied on the order lines of the destination table.
+        """
+        drinks_category = self.env['pos.category'].search([('name', '=', 'Drinks'), ('sequence', '=', 2)])
+        product_1 = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 2.20,
+            'name': 'product_1',
+            'taxes_id': self.tax_sale_a,
+            'pos_categ_ids': [(4, drinks_category.id)]
+        })
+        product_2 = self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 2.20,
+            'name': 'product_2',
+            'taxes_id': self.tax_sale_a,
+            'pos_categ_ids': [(4, drinks_category.id)]
+        })
+        self.pos_config.is_order_printer = False
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_tax_in_merge_table_order_line_tour', login="pos_admin")
+        line_1 = self.env['pos.order.line'].search([('full_product_name', '=', 'product_1')])
+        line_2 = self.env['pos.order.line'].search([('full_product_name', '=', 'product_2')])
+        self.assertEqual(line_1.tax_ids, self.tax_sale_a)
+        self.assertEqual(line_2.tax_ids, self.tax_sale_a)

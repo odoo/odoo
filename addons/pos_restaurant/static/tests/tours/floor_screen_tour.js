@@ -279,3 +279,24 @@ registry.category("web_tour.tours").add("test_create_floor_tour", {
             FloorScreen.addFloor("AAA"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_tax_in_merge_table_order_line_tour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickFloor("Main Floor"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("product_1"),
+            ProductScreen.orderlineIsToOrder("product_1"),
+            ProductScreen.clickOrderButton(),
+            FloorScreen.clickFloor("Main Floor"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("product_2"),
+            ProductScreen.orderlineIsToOrder("product_2"),
+            ProductScreen.clickOrderButton(),
+            FloorScreen.isShown(),
+            FloorScreen.linkTables("5", "4"),
+            FloorScreen.isChildTable("5"),
+        ].flat(),
+});
