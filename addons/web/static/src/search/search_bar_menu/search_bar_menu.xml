@@ -124,18 +124,10 @@
                         <t t-if="favoriteItems.length">
                             <div role="separator" class="dropdown-divider"/>
                         </t>
-                        <t t-if="sharedFavoritesItems.length > 10">
-                            <AccordionItem class="'o_shared_favorites text-truncate'" description.translate="Shared filters">
-                                <t t-foreach="sharedFavoritesItems" t-as="item" t-key="item.id">
-                                    <t t-call="web.SearchBarMenu.FavoriteItem" />
-                                </t>
-                            </AccordionItem>
+                        <t t-foreach="sharedFavoritesItems" t-as="item" t-key="item.id">
+                            <t t-call="web.SearchBarMenu.FavoriteItem" />
                         </t>
-                        <t t-else="">
-                            <t t-foreach="sharedFavoritesItems" t-as="item" t-key="item.id">
-                                <t t-call="web.SearchBarMenu.FavoriteItem" />
-                            </t>
-                        </t>
+                        <DropdownItem t-if="!this.state.sharedFavoritesExpanded" class="'o_menu_item o_expand_shared_favorites'" closingMode="'none'" onSelected.bind="() => this.state.sharedFavoritesExpanded = true">More...</DropdownItem>
                         <div t-if="sharedFavoritesItems.length" role="separator" class="dropdown-divider"/>
                         <t t-set="currentGroup" t-value="null"/>
                         <t t-foreach="otherItems" t-as="item" t-key="item.key">
@@ -154,14 +146,14 @@
 
     <t t-name="web.SearchBarMenu.FavoriteItem">
         <t t-set="item" t-value="item" />
-        <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+        <CheckboxItem class="{ 'o_menu_item o_favorite_item text-truncate': true, selected: item.isActive }"
                             checked="item.isActive"
                             closingMode="'none'"
                             onSelected="() => this.onFavoriteSelected(item.id)"
         >
             <span class="d-flex p-0 align-items-center justify-content-between">
                 <span t-esc="item.description" t-att-title="item.description.length > 15 ? item.description : ''" class="text-truncate flex-grow-1"/>
-                <i class="ms-1 fa fa-pencil"
+                <i class="ms-1 fa fa-pencil d-none"
                     title="Edit favorite"
                     t-on-click.stop="() => this.editFavorite(item.id)"
                 />
