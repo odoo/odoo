@@ -55,7 +55,7 @@ def transpile_javascript(url, content):
         content = s(content)
     if legacy_odoo_define:
         content += legacy_odoo_define
-    return content
+    return convert_gettext(url, content)
 
 
 URL_RE = re.compile(r"""
@@ -228,6 +228,30 @@ def convert_export_class_default(content):
     """
     repl = r"""\g<space>const \g<identifier> = __exports[Symbol.for("default")] = \g<type> \g<identifier>"""
     return EXPORT_CLASS_DEFAULT_RE.sub(repl, content)
+
+
+GETTEXT_RE = re.compile(r"""
+    ^
+    \s*(?:var|let|const)\s*
+    {\s*
+        (?:\s*\w+\s*,)*         # maybe other import
+        (_t)
+        (?:\s*,\s*\w+)*
+    \s*}
+    \s*=\s*require\(
+        [^)]+?                  # anything that isn't a closing parenthesis
+    \)\s*;?                     # close parenthesis, end statement
+""", re.MULTILINE | re.VERBOSE)
+
+
+def convert_gettext(url, content):
+    module_name = URL_RE.match(url)["module"]
+    def rename_gettext(match_):
+        match_ = match_.group(0).replace("_t", "__namespacedGettext")
+        match_ += f"""\nconst _t = (...args) => __namespacedGettext("{module_name}", ...args);\n"""
+        return match_
+    return GETTEXT_RE.sub(rename_gettext, content)
+
 
 EXPORT_VAR_RE = re.compile(r"""
     ^
