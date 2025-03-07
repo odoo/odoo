@@ -61,7 +61,9 @@ export class BlockTab extends Component {
                 const id = element.dataset.id;
                 const snippet = this.snippetModel.getSnippet(category, id);
                 this.dragState = { category, id, snippet };
-                this.dropzonePlugin.displayDropZone(snippet);
+                const { selectorSiblings, selectorChildren } =
+                    this.dropzonePlugin.getSelectors(snippet);
+                this.dropzonePlugin.displayDropZone(selectorSiblings, selectorChildren);
             },
             onDrag: ({ element, x, y }) => {
                 this.dropzonePlugin.dragElement(element, x, y);
@@ -96,7 +98,9 @@ export class BlockTab extends Component {
             return;
         }
         if (!position) {
-            this.dropzonePlugin.displayDropZone(snippet);
+            const { selectorSiblings, selectorChildren } =
+                this.dropzonePlugin.getSelectors(snippet);
+            this.dropzonePlugin.displayDropZone(selectorSiblings, selectorChildren);
         }
         const addElement = this.dropzonePlugin.getAddElement(position);
         if (!addElement) {
