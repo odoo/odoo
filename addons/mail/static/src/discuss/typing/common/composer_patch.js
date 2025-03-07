@@ -29,6 +29,10 @@ patch(Composer.prototype, {
             this.stopTyping();
         });
     },
+    onInput(ev) {
+        super.onInput(ev);
+        this.detectTyping();
+    },
     /**
      * Notify the server of the current typing status
      *
@@ -47,7 +51,11 @@ patch(Composer.prototype, {
         }
     },
     detectTyping() {
-        const value = this.props.composer.text;
+        const value = this.state.isHtmlEditor
+            ? new DOMParser().parseFromString(this.props.composer.htmlBody, "text/html").body
+                  .textContent
+            : this.props.composer.text;
+        // debugger
         if (this.thread?.model === "discuss.channel" && value.startsWith("/")) {
             const [firstWord] = value.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);

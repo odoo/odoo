@@ -4,6 +4,8 @@ import {
     convertBrToLineBreak,
     htmlToTextContentInline,
     prettifyMessageContent,
+    getNonEditableMentions,
+    isEmpty,
 } from "@mail/utils/common/format";
 import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
@@ -292,15 +294,7 @@ export class Message extends Record {
         compute() {
             return (
                 !this.body ||
-                [
-                    "",
-                    "<p></p>",
-                    "<p><br></p>",
-                    "<p><br/></p>",
-                    "<div></div>",
-                    "<div><br></div>",
-                    "<div><br/></div>",
-                ].includes(
+                isEmpty(
                     this.body
                         .replace('<span class="o-mail-Message-edited"></span>', "")
                         .replace(/\s/g, "")
@@ -442,8 +436,16 @@ export class Message extends Record {
         this.store.env.services.notification.add(notification, { type });
     }
 
-    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
-        if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
+    async edit(
+        { body, isHtmlBody },
+        attachments = [],
+        { mentionedChannels = [], mentionedPartners = [] } = {}
+    ) {
+        if (
+            (convertBrToLineBreak(this.body) === body ||
+                getNonEditableMentions(this.body).toString() === body.toString()) &&
+            attachments.length === 0
+        ) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
@@ -457,7 +459,7 @@ export class Message extends Record {
             attachment_tokens: attachments
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.access_token),
-            body: await prettifyMessageContent(body, { validMentions }),
+            body: await prettifyMessageContent(body, { isHtmlBody, validMentions }),
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             ...this.thread.rpcParams,

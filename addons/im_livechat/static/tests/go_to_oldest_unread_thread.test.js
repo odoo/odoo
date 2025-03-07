@@ -131,7 +131,9 @@ test("Tab livechat picks ended livechats last", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Visitor 4" });
     await contains(".o-mail-ChatWindow", { text: "Visitor 4" });
-    await contains(".o-mail-Composer-input[placeholder='Message Visitor 4…']:focus");
+    await contains(
+        ".o-mail-Composer.o-focused .o-mail-Composer-input p[o-we-hint-text='Message Visitor 4…']"
+    );
     await withGuest(guestIds[1], () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -161,7 +163,9 @@ test("Tab livechat picks ended livechats last", async () => {
     await press("Tab");
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindow", { text: "Visitor 3" });
-    await contains(".o-mail-Composer-input[placeholder='Message Visitor 3…']:focus");
+    await contains(
+        ".o-mail-Composer.o-focused .o-mail-Composer-input p[o-we-hint-text='Message Visitor 3…']"
+    );
     await withGuest(guestIds[0], () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -245,7 +249,7 @@ test("switching to folded chat window unfolds it", async () => {
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
         text: "Visitor 12",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
 });
 
@@ -303,7 +307,7 @@ test("switching to hidden chat window unhides it", async () => {
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
         text: "Visitor 11",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
 });
 

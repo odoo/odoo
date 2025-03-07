@@ -103,7 +103,7 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
     },
     /** @returns {Promise<import("models").Message} */
-    async post(body, postData, extraData = {}) {
+    async post({ body, isHtmlBody }, postData, extraData = {}) {
         if (this.chatbot && this.chatbot.currentStep?.type !== "free_input_multi") {
             this.chatbot.isProcessingAnswer = true;
         }

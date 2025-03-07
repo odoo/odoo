@@ -14,7 +14,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
-import { convertBrToLineBreak } from "./format";
+import { convertBrToLineBreak, getNonEditableMentions } from "./format";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -441,6 +441,7 @@ export function useMessageEdition() {
             rawMsg.composer = {
                 mentionedPartners: rawMsg.recipients,
                 text,
+                htmlBody: getNonEditableMentions(rawMsg.body),
                 selection: {
                     start: text.length,
                     end: text.length,

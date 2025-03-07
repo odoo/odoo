@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Composer-inputArea')]" position="replace">
+            <Wysiwyg t-if="state.active" class="'w-100 p-2 text-break overflow-auto'" config="wysiwyg.config" onLoad.bind="onLoadWysiwyg" onBlur.bind="onBlurWysiwyg"/>
+            <div t-else="" class="o-mail-Composer-input-disabled w-100 p-2 text-break overflow-auto"/>
+        </xpath>
+    </t>
+</templates>

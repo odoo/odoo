@@ -2,7 +2,7 @@ import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record"
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 
-import { reactive } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -417,7 +417,7 @@ export class Store extends BaseStore {
     /**
      * Get the parameters to pass to the message post route.
      */
-    async getMessagePostParams({ body, postData, thread }) {
+    async getMessagePostParams({ body, isHtmlBody, postData, thread }) {
         const {
             attachments,
             cannedResponseIds,
@@ -427,11 +427,31 @@ export class Store extends BaseStore {
             mentionedPartners,
         } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
-        const validMentions = this.getMentionsFromText(body, {
-            mentionedChannels,
-            mentionedPartners,
-        });
-        const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
+        let validMentions = {};
+        if (isHtmlBody) {
+            const htmlBody = new DOMParser().parseFromString(body, "text/html");
+            const threadsInBody = htmlBody.querySelectorAll(".o_channel_redirect");
+            const partnersInBody = htmlBody.querySelectorAll(".o_mail_redirect");
+            validMentions.threads = mentionedChannels.filter((thread) =>
+                Array.from(threadsInBody).some(
+                    (t) =>
+                        t.dataset.oeModel === thread.model &&
+                        t.dataset.oeId === thread.id.toString()
+                )
+            );
+            validMentions.partners = mentionedPartners.filter((partner) =>
+                Array.from(partnersInBody).some((p) => p.dataset.oeId === partner.id.toString())
+            );
+            validMentions.specialMentions = this.specialMentions
+                .filter((special) => body.includes(`@${special.label}`))
+                .map((special) => special.label);
+        } else {
+            validMentions = this.getMentionsFromText(body, {
+                mentionedChannels,
+                mentionedPartners,
+            });
+        }
+        const partner_ids = validMentions.partners.map((partner) => partner.id) ?? [];
         const recipientEmails = [];
         if (!isNote) {
             const allRecipients = [...thread.suggestedRecipients, ...thread.additionalRecipients];
@@ -446,7 +466,7 @@ export class Store extends BaseStore {
             partner_ids.push(...recipientIds);
         }
         postData = {
-            body: await prettifyMessageContent(body, { validMentions }),
+            body: await prettifyMessageContent(body, { isHtmlBody, validMentions }),
             email_add_signature: emailAddSignature,
             message_type: "comment",
             subtype_xmlid: subtype,
@@ -457,7 +477,7 @@ export class Store extends BaseStore {
         if (partner_ids.length) {
             Object.assign(postData, { partner_ids });
         }
-        if (thread.model === "discuss.channel" && validMentions?.specialMentions.length) {
+        if (thread.model === "discuss.channel" && validMentions.specialMentions?.length) {
             postData.special_mentions = validMentions.specialMentions;
         }
         const params = {
@@ -580,7 +600,9 @@ export class Store extends BaseStore {
         const { count, data, messages } = await rpc(thread.getFetchRoute(), {
             ...thread.getFetchParams(),
             fetch_params: {
-                search_term: await prettifyMessageContent(searchTerm), // formatted like message_post
+                search_term: await prettifyMessageContent(markup(searchTerm), {
+                    generateLink: false,
+                }), // formatted like message_post
                 before,
             },
         });

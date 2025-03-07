@@ -37,9 +37,12 @@ const composerPatch = {
         markEventHandled(ev, "Composer.onClickAddGif");
     },
     async sendGifMessage(gif) {
-        await this._sendMessage(gif.url, {
-            parentId: this.props.messageToReplyTo?.message?.id,
-        });
+        await this._sendMessage(
+            { body: gif.url, isHtmlBody: false },
+            {
+                parentId: this.props.messageToReplyTo?.message?.id,
+            }
+        );
     },
 };
 patch(Composer.prototype, composerPatch);
