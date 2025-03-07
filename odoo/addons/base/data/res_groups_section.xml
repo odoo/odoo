@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record model="res.groups.privilege" id="res_groups_privilege_administration">
+        <field name="name">Administration</field>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_master_data">
+        <field name="name">Master Data</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record model="res.groups.privilege" id="res_groups_privilege_contact">
+        <field name="name">Contact</field>
+        <field name="section_id" ref="res_groups_section_master_data"/>
+    </record>
+
+    <record model="res.groups.privilege" id="res_groups_privilege_export">
+        <field name="name">Export</field>
+        <field name="section_id" ref="res_groups_section_master_data"/>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_sales">
+        <field name="name">Sales</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_services">
+        <field name="name">Services</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_accounting">
+        <field name="name">Accounting</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_inventory">
+        <field name="name">Inventory</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_manufacturing">
+        <field name="name">Manufacturing</field>
+        <field name="sequence">6</field>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_website">
+        <field name="name">Website</field>
+        <field name="sequence">7</field>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_marketing">
+        <field name="name">Marketing</field>
+        <field name="sequence">8</field>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_human_resources">
+        <field name="name">Human Resources</field>
+        <field name="sequence">9</field>
+    </record>
+
+    <record model="res.groups.section" id="res_groups_section_productivity">
+        <field name="name">Productivity</field>
+        <field name="sequence">10</field>
+    </record>
+
+</odoo>

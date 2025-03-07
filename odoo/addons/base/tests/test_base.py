@@ -165,16 +165,16 @@ class TestGroups(TransactionCase):
         self.assertItemsEqual(groups.ids, [g.id for g in all_groups if 'Sale' in g.full_name],
                               "did not match search for 'Sale'")
 
-        groups = all_groups.search([('full_name', 'like', 'Technical')])
-        self.assertItemsEqual(groups.ids, [g.id for g in all_groups if 'Technical' in g.full_name],
-                              "did not match search for 'Technical'")
+        groups = all_groups.search([('full_name', 'like', 'Master Data')])
+        self.assertItemsEqual(groups.ids, [g.id for g in all_groups if 'Master Data' in g.full_name],
+                              "did not match search for 'Master Data'")
 
         groups = all_groups.search([('full_name', 'like', 'Sales /')])
         self.assertItemsEqual(groups.ids, [g.id for g in all_groups if 'Sales /' in g.full_name],
                               "did not match search for 'Sales /'")
 
-        groups = all_groups.search([('full_name', 'in', ['Administration / Access Rights','Contact Creation'])])
-        self.assertTrue(groups, "did not match search for 'Administration / Access Rights' and 'Contact Creation'")
+        groups = all_groups.search([('full_name', 'in', ['Administration / Administrator','Creation'])])
+        self.assertTrue(groups, "did not match search for 'Administration / Administrator' and 'Creation'")
 
     def test_res_group_has_cycle(self):
         # four groups with no cycle, check them all together
