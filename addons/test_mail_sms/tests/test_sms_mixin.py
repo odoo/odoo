@@ -38,14 +38,13 @@ class TestSMSNoThread(TestSMSCommon, TestSMSRecipients):
             composer = composer_form.save()
             self.assertTrue(composer.comment_single_recipient)
             self.assertEqual(composer.composition_mode, 'comment')
-            # TDE FIXME: recipient should be found but is invalid
             self.assertEqual(composer.recipient_valid_count, 0)
             self.assertEqual(composer.recipient_invalid_count, 1)
-            self.assertFalse(composer.recipient_single_description)
-            self.assertFalse(composer.recipient_single_number)
-            self.assertFalse(composer.recipient_single_number_itf)
-            self.assertFalse(composer.recipient_single_valid)
-            self.assertFalse(composer.number_field_name)
+            self.assertEqual(composer.recipient_single_description, self.partner_1.name)
+            self.assertEqual(composer.recipient_single_number, '0456001122')
+            self.assertEqual(composer.recipient_single_number_itf, '0456001122')
+            self.assertTrue(composer.recipient_single_valid)
+            self.assertEqual(composer.number_field_name, 'mobile')
             self.assertFalse(composer.numbers)
             self.assertFalse(composer.sanitized_numbers)
 
@@ -64,9 +63,8 @@ class TestSMSNoThread(TestSMSCommon, TestSMSRecipients):
             # TDE FIXME: mono/mass mode should be fixed
             self.assertFalse(composer.comment_single_recipient)
             self.assertEqual(composer.composition_mode, 'comment')
-            # TDE FIXME: recipient should be found but is invalid
-            self.assertEqual(composer.recipient_valid_count, 0)
-            self.assertEqual(composer.recipient_invalid_count, 1)
+            self.assertEqual(composer.recipient_valid_count, 1)
+            self.assertEqual(composer.recipient_invalid_count, 0)
             self.assertFalse(composer.recipient_single_description)
             self.assertFalse(composer.recipient_single_number)
             self.assertFalse(composer.recipient_single_number_itf)
@@ -81,7 +79,7 @@ class TestSMSNoThread(TestSMSCommon, TestSMSRecipients):
     def test_composer_comment_res_users(self):
         for ctx, expected in [
             ({}, {}),
-            ({'default_field_name': 'mobile'}, {}),
+            ({'default_number_field_name': 'mobile'}, {}),
         ]:
             with self.subTest(ctx=ctx):
                 with self.with_user('employee'):
@@ -92,14 +90,17 @@ class TestSMSNoThread(TestSMSCommon, TestSMSRecipients):
                     composer = composer_form.save()
                     self.assertTrue(composer.comment_single_recipient)
                     self.assertEqual(composer.composition_mode, 'comment')
-                    # TDE FIXME: recipient should be found but is invalid
-                    self.assertEqual(composer.recipient_valid_count, 0)
-                    self.assertEqual(composer.recipient_invalid_count, 1)
-                    self.assertFalse(composer.recipient_single_description)
-                    self.assertFalse(composer.recipient_single_number)
-                    self.assertFalse(composer.recipient_single_number_itf)
-                    self.assertFalse(composer.recipient_single_valid)
-                    self.assertFalse(composer.number_field_name)
+                    if ctx.get('default_number_field_name') == 'mobile':
+                        self.assertEqual(composer.recipient_valid_count, 0)
+                        self.assertEqual(composer.recipient_invalid_count, 1)
+                    else:
+                        self.assertEqual(composer.recipient_valid_count, 1)
+                        self.assertEqual(composer.recipient_invalid_count, 0)
+                    self.assertEqual(composer.recipient_single_description, self.user_admin.name)
+                    self.assertEqual(composer.recipient_single_number, '0455135790')
+                    self.assertEqual(composer.recipient_single_number_itf, '0455135790')
+                    self.assertTrue(composer.recipient_single_valid)
+                    self.assertEqual(composer.number_field_name, ctx.get('default_number_field_name', 'phone'))
                     self.assertFalse(composer.numbers)
                     self.assertFalse(composer.sanitized_numbers)
 
