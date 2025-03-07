@@ -566,9 +566,12 @@ class DiscussChannelMember(models.Model):
             ],
         )
 
+    def _get_html_link_title(self):
+        return self.partner_id.name if self.partner_id else self.guest_id.name
+
     def _get_html_link(self, *args, for_persona=False, **kwargs):
         if not for_persona:
             return self._get_html_link(*args, **kwargs)
         if self.partner_id:
-            return self.partner_id._get_html_link(title=f"@{self.partner_id.name}")
+            return self.partner_id._get_html_link(title=f"@{self._get_html_link_title()}")
         return Markup("<strong>%s</strong>") % self.guest_id.name
