@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_customization.ProductInfoPopup" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension">
+        <xpath expr="//div[@class='section-inventory mt-3 mb-4 pb-4 border-bottom text-start']" position="after">
+            <div t-if="props.product.available_in_pos" class="section-pos-description mt-3 mb-4 pb-4 border-bottom text-start">
+                <h3 class="section-title">POS Description</h3>
+                <div class="section-pos-description-body">
+                    <span t-out="props.product.pos_description || 'N/A'" />
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

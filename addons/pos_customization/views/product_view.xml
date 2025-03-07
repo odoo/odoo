@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_form_view_pos_custom" model="ir.ui.view">
+        <field name="name">product.template.form.pos.custom</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="point_of_sale.product_template_form_view" />
+        <field name="arch" type="xml">
+            <!-- make public_description visible as well -->
+            <xpath expr="//group[@name='public_description']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <!-- pos_description below public_descripiton in UI  -->
+            <xpath expr="//group[@name='public_description']" position="inside">
+                <group string="POS Description" name="pos_description_group">
+                    <field name="pos_description" nolabel="1" placeholder="Enter POS-specific description here"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
