@@ -21,9 +21,14 @@ export class Attachment extends FileModelMixin(Record) {
 
     thread = Record.one("Thread", { inverse: "attachments" });
     res_name;
-    message = Record.one("mail.message", { inverse: "attachment_ids" });
+    message_ids = Record.many("mail.message", { inverse: "attachment_ids" });
     /** @type {luxon.DateTime} */
     create_date = Record.attr(undefined, { type: "datetime" });
+
+    get message() {
+        // make it better, filter only in current thread?
+        return this.message_ids[0];
+    }
 
     get isDeletable() {
         if (this.message && !this.store.self.isInternalUser) {
