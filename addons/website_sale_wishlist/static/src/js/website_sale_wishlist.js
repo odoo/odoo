@@ -98,11 +98,11 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                 return rpc('/shop/wishlist/add', {
                     product_id: productId,
                 }).then(function () {
-                    var $navButton = $('header .o_wsale_my_wish').first();
+                    var navButtonEl = document.querySelectorAll('header .o_wsale_my_wish')[0];
                     self.wishlistProductIDs.push(productId);
                     sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(self.wishlistProductIDs));
                     self._updateWishlistView();
-                    wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
+                    wSaleUtils.animateClone(navButtonEl, $el[0].closest('form'), 25, 40);
                     // It might happen that `onChangeVariant` is called at the same time as this function.
                     // In this case we need to set the button to disabled again.
                     // Do this only if the productID is still the same.
