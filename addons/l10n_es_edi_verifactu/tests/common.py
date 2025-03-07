@@ -85,11 +85,11 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         return response
 
     def _mock_request(self, mock_response):
-        _request_function = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_document.L10nEsEdiVerifactuDocument._request'
+        _request_function = 'odoo.addons.l10n_es_edi_verifactu.models.verifactu_request.L10nEsEdiVerifactuRequest._soap_request'
         return mock.patch(_request_function, return_value=mock_response)
 
-    def _mock_format_record_document_errors(self, errors, title):
-        """Mock the computation of field `errors` of model 'l10n_es_edi_verifactu.record_document' from a list of errors.
+    def _mock_format_document_errors(self, errors, title):
+        """Mock the computation of field `errors` of model 'l10n_es_edi_verifactu.document' from a list of errors.
         1. Same content
         2. Mock the sanitizing performed when writing the content to an 'Html' field
         """
@@ -99,18 +99,18 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         }
         return html_sanitize(self.env['account.move.send']._format_error_html(error))
 
-    def _mock_format_record_document_response_parsing_errors(self, errors):
+    def _mock_format_document_response_parsing_errors(self, errors):
         title = _("There was an issue parsing the reponse from the AEAT")
-        return self._mock_format_record_document_errors(errors, title)
+        return self._mock_format_document_errors(errors, title)
 
-    def _mock_format_record_document_response_record_errors(self, errors):
+    def _mock_format_document_response_record_errors(self, errors):
         title = _("The Veri*Factu record contains the following errors according to the AEAT")
-        return self._mock_format_record_document_errors(errors, title)
+        return self._mock_format_document_errors(errors, title)
 
-    def _mock_format_record_document_response_document_errors(self, errors):
+    def _mock_format_document_response_document_errors(self, errors):
         title = _("There was an issue sending the batch document to the AEAT")
-        return self._mock_format_record_document_errors(errors, title)
+        return self._mock_format_document_errors(errors, title)
 
-    def _mock_format_record_document_generation_errors(self, errors):
+    def _mock_format_document_generation_errors(self, errors):
         title = _("The Veri*Factu record could not be created")
-        return self._mock_format_record_document_errors(errors, title)
+        return self._mock_format_document_errors(errors, title)

@@ -88,7 +88,7 @@
                     <page
                         id="verifactu_tab"
                         string="Veri*Factu"
-                        invisible="not l10n_es_edi_verifactu_required and not l10n_es_edi_verifactu_record_document_ids"
+                        invisible="not l10n_es_edi_verifactu_required and not l10n_es_edi_verifactu_document_ids"
                     >
                         <group>
                             <field name="l10n_es_edi_verifactu_errors" groups="base.group_no_one"/>
@@ -98,16 +98,16 @@
                             <field name="l10n_es_edi_verifactu_state"
                                    invisible="not l10n_es_edi_verifactu_required and not l10n_es_edi_verifactu_state"/>
                         </group>
-                        <group string="Veri*Factu Records">
-                            <field name="l10n_es_edi_verifactu_record_document_ids"
+                        <group string="Veri*Factu Documents">
+                            <field name="l10n_es_edi_verifactu_document_ids"
                                    colspan="2"
                                    nolabel="1"
                                    readonly="True">
-                                <tree string="Veri*Factu Records">
+                                <tree string="Veri*Factu Documents">
                                     <field name="create_date"/>
                                     <field name="id"/>
                                     <field name="response_time"/>
-                                    <field name="record_type"/>
+                                    <field name="document_type"/>
                                     <field name="state" widget="badge"
                                            decoration-danger="state not in ('accepted', 'registered_with_errors')"
                                            decoration-warning="state == 'registered_with_errors'"

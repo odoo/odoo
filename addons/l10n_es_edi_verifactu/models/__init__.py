@@ -8,6 +8,5 @@ from . import res_company
 from . import res_config_settings
 from . import verifactu_certificate
 from . import verifactu_document
-from . import verifactu_record_document
-from . import verifactu_response_parser
+from . import verifactu_request
 from . import verifactu_xml

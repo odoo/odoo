@@ -12,7 +12,7 @@
         'views/account_move_views.xml',
         'views/account_tax_views.xml',
         'views/l10n_es_edi_verifactu_certificate_views.xml',
-        'views/l10n_es_edi_verifactu_record_document_views.xml',
+        'views/l10n_es_edi_verifactu_document_views.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_views.xml',
         'views/soap_templates.xml',

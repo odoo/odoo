@@ -12,20 +12,20 @@ class AccountMove(models.Model):
         for move in self:
             move.l10n_es_edi_verifactu_required = move.country_code == 'ES' and move.company_id.l10n_es_edi_verifactu_required
 
-    @api.depends('l10n_es_edi_verifactu_state', 'l10n_es_edi_verifactu_record_document_ids', 'l10n_es_edi_verifactu_record_document_ids.state')
+    @api.depends('l10n_es_edi_verifactu_state', 'l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.state')
     def _compute_show_reset_to_draft_button(self):
         """
         Disallow resetting to draft in the following cases:
         * The move is registered with the AEAT
-        * We are waiting to sent a record document (registration) to the AEAT.
+        * We are waiting to sent a document (registration) to the AEAT.
         """
         # EXTENDS 'account'
         super()._compute_show_reset_to_draft_button()
         for move in self:
             if move.l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted'):
                 move.show_reset_to_draft_button = False
-            waiting_record_documents = move.l10n_es_edi_verifactu_record_document_ids.filtered(lambda rd: not rd.state)
-            if waiting_record_documents:
+            waiting_documents = move.l10n_es_edi_verifactu_document_ids.filtered(lambda rd: not rd.state)
+            if waiting_documents:
                 move.show_reset_to_draft_button = False
 
     def _l10n_es_edi_verifactu_get_record_values(self, cancellation=False):

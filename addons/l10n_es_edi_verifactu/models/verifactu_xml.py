@@ -33,7 +33,7 @@ def _path_get(dictionary, slash_path, default=None):
 
 class L10nEsEdiVerifactuXml(models.AbstractModel):
     _name = 'l10n_es_edi_verifactu.xml'
-    _description = "Handles the generation of XML strings for Veri*Factu records ('l10n_es_edi_verifactu.record_document' and 'l10n_es_edi_verifactu.document')"
+    _description = "Handles the generation of XML strings for Veri*Factu documents and request ('l10n_es_edi_verifactu.document' and 'l10n_es_edi_verifactu.request')"
 
     @api.model
     def _format_date_fecha_type(self, date):

@@ -46,7 +46,7 @@ class AccountMoveSend(models.TransientModel):
     @api.depends('l10n_es_edi_verifactu_send_readonly')
     def _compute_l10n_es_edi_verifactu_warnings(self):
         for wizard in self:
-            waiting_moves = wizard.move_ids.filtered(lambda m: m.l10n_es_edi_verifactu_record_document_ids.filtered(lambda rd: not rd.state))
+            waiting_moves = wizard.move_ids.filtered(lambda m: m.l10n_es_edi_verifactu_document_ids.filtered(lambda rd: not rd.state))
             wizard.l10n_es_edi_verifactu_warnings = _(
                 "The following entries will be skipped. They are already waiting to send Veri*Factu records to the AEAT: %s",
                 ', '.join(waiting_moves.mapped('name'))
@@ -62,12 +62,12 @@ class AccountMoveSend(models.TransientModel):
             if invoice_data.get('l10n_es_edi_verifactu_send')
         ]).filtered(lambda move: move.l10n_es_edi_verifactu_required)
 
-        created_record_document = invoices_to_send.l10n_es_edi_verifactu_mark_for_next_batch()
+        created_document = invoices_to_send.l10n_es_edi_verifactu_mark_for_next_batch()
 
         for invoice in invoices_to_send:
-            # The creation of a record document is skipped for `invoice` in case there are waiting record documents
-            record_document = created_record_document.get(invoice)
-            if record_document and record_document.state == 'creating_failed':
+            # The creation of a document is skipped for `invoice` in case there are waiting documents
+            document = created_document.get(invoice)
+            if document and document.state == 'creating_failed':
                 invoices_data[invoice]['error'] = {
                     'error_title': _("The Veri*Factu record XML could not be created for all invoices."),
                     'errors': [_("See the 'Veri*Factu' tab for more information.")],

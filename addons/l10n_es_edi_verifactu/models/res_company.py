@@ -16,9 +16,9 @@ class ResCompany(models.Model):
         string="Veri*Factu Test Environment",
         default=True,
     )
-    l10n_es_edi_verifactu_last_record_document_id = fields.Many2one(
+    l10n_es_edi_verifactu_last_document_id = fields.Many2one(
         string='Last Veri*Factu Record',
-        comodel_name='l10n_es_edi_verifactu.record_document',
+        comodel_name='l10n_es_edi_verifactu.document',
         readonly=True,
         help="Last succesfully generated Veri*Factu Record."
     )

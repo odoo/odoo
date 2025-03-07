@@ -101,14 +101,14 @@ class PosOrder(models.Model):
                 order.l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
             # Register the invoice instead
             invoice = order.account_move
-            if invoice.l10n_es_edi_verifactu_required and invoice and not invoice.l10n_es_edi_verifactu_record_document_ids:
+            if invoice.l10n_es_edi_verifactu_required and invoice and not invoice.l10n_es_edi_verifactu_document_ids:
                 invoice.l10n_es_edi_verifactu_mark_for_next_batch()
 
         return res
 
     def l10n_es_edi_verifactu_button_send(self):
-        created_record_documents = self.l10n_es_edi_verifactu_mark_for_next_batch()
-        skipped_orders = self.filtered(lambda order: not created_record_documents.get(order))
+        created_documents = self.l10n_es_edi_verifactu_mark_for_next_batch()
+        skipped_orders = self.filtered(lambda order: not created_documents.get(order))
         if skipped_orders and len(self) == 1:
             raise UserError(_("The order is waiting to send a Veri*Factu record to the AEAT already."))
         # In other cases we just silently skip them

@@ -23,8 +23,8 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
             ],
         })
         invoice.action_post()
-        record_document = invoice._l10n_es_edi_verifactu_create_record_document()
-        xml, errors = record_document._create_batch_xml()
+        document = invoice._l10n_es_edi_verifactu_create_document()
+        xml, errors = document._create_batch_xml()
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_1.xml")
 
         # Test the credit note
@@ -38,8 +38,8 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
         credit_note = invoice.reversal_move_id
         credit_note.invoice_date = '2019-02-11'
         credit_note.action_post()
-        record_document = credit_note._l10n_es_edi_verifactu_create_record_document()
-        xml, errors = record_document._create_batch_xml()
+        document = credit_note._l10n_es_edi_verifactu_create_document()
+        xml, errors = document._create_batch_xml()
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_1_credit_note.xml")
 
     def test_invoice_2(self):
@@ -61,8 +61,8 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
             ],
         })
         invoice.action_post()
-        record_document = invoice._l10n_es_edi_verifactu_create_record_document()
-        xml, errors = record_document._create_batch_xml()
+        document = invoice._l10n_es_edi_verifactu_create_document()
+        xml, errors = document._create_batch_xml()
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_2.xml")
 
     def test_invoice_3(self):
@@ -87,11 +87,11 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
         invoice.action_post()
         self.assertEqual(invoice.amount_total, 1090.0)
 
-        record_document = invoice._l10n_es_edi_verifactu_create_record_document()
+        document = invoice._l10n_es_edi_verifactu_create_document()
         expected_qr_code_url = '/report/barcode/?barcode_type=QR&value=https%3A%2F%2Fprewww2.aeat.es%2Fwlpl%2FTIKE-CONT%2FValidarQR%3Fnif%3D59962470K%26numserie%3DINV%2F2019%2F00001%26fecha%3D30-01-2019%26importe%3D1100.00&barLevel=M&width=180&height=180'
         self.assertEqual(invoice.l10n_es_edi_verifactu_qr_code, expected_qr_code_url)
 
-        xml, errors = record_document._create_batch_xml()
+        xml, errors = document._create_batch_xml()
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_3.xml")
 
     def test_invoice_multicurrency_1(self):
@@ -108,8 +108,8 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
             ],
         })
         invoice.action_post()
-        record_document = invoice._l10n_es_edi_verifactu_create_record_document()
-        xml, errors = record_document._create_batch_xml()
+        document = invoice._l10n_es_edi_verifactu_create_document()
+        xml, errors = document._create_batch_xml()
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_multi_currency_1.xml")
 
     def test_multiple_invoices_with_predecessor(self):
@@ -157,19 +157,19 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
             'Huella': 'FA5DC48A0640BEB02A05160FD30020D1EA67FC1B400800ECDD9FC785E137C864',
         }
 
-        record_document0 = invoices[0]._l10n_es_edi_verifactu_create_record_document(
+        document0 = invoices[0]._l10n_es_edi_verifactu_create_document(
             previous_record_identifier=previous_record_identifier,
         )
-        record_document1 = invoices[1]._l10n_es_edi_verifactu_create_record_document(
-            cancellation=True, previous_record_identifier=record_document0.record_identifier,
+        document1 = invoices[1]._l10n_es_edi_verifactu_create_document(
+            cancellation=True, previous_record_identifier=document0.record_identifier,
         )
-        record_document2 = invoices[2]._l10n_es_edi_verifactu_create_record_document(
-            previous_record_identifier=record_document1.record_identifier,
+        document2 = invoices[2]._l10n_es_edi_verifactu_create_document(
+            previous_record_identifier=document1.record_identifier,
         )
-        record_documents = self.env['l10n_es_edi_verifactu.record_document'].browse([
-            record_document0.id, record_document1.id, record_document2.id,
+        documents = self.env['l10n_es_edi_verifactu.document'].browse([
+            document0.id, document1.id, document2.id,
         ])
-        xml, errors = record_documents._create_batch_xml()
+        xml, errors = documents._create_batch_xml()
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_multiple_invoices_with_predecessor.xml")
 
     def test_invoice_cancellation_1(self):
@@ -185,8 +185,8 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
             ],
         })
         invoice.action_post()
-        record_document = invoice._l10n_es_edi_verifactu_create_record_document(cancellation=True)
-        xml, errors = record_document._create_batch_xml()
+        document = invoice._l10n_es_edi_verifactu_create_document(cancellation=True)
+        xml, errors = document._create_batch_xml()
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_cancellation_1.xml")
 
     def test_invoice_simplified_partner(self):
@@ -201,6 +201,6 @@ class TestL10nEsEdiVerifactuXml(TestL10nEsEdiVerifactuCommon):
             ],
         })
         invoice.action_post()
-        record_document = invoice._l10n_es_edi_verifactu_create_record_document()
-        xml, errors = record_document._create_batch_xml()
+        document = invoice._l10n_es_edi_verifactu_create_document()
+        xml, errors = document._create_batch_xml()
         self._assert_verifactu_xml(xml, "l10n_es_edi_verifactu/tests/files/test_invoice_simplified_partner.xml")
