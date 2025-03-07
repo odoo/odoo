@@ -1,8 +1,13 @@
 import { isColorGradient } from "@web/core/utils/colors";
 import { Component, useState } from "@odoo/owl";
-import { useColorPicker } from "@web/core/color_picker/color_picker";
+import {
+    useColorPicker,
+    DEFAULT_COLORS,
+    DEFAULT_THEME_COLOR_VARS,
+} from "@web/core/color_picker/color_picker";
 import { effect } from "@web/core/utils/reactive";
 import { toolbarButtonProps } from "../toolbar/toolbar";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
@@ -16,13 +21,21 @@ export class ColorSelector extends Component {
         applyColorResetPreview: Function,
         getUsedCustomColors: Function,
         colorPrefix: { type: String },
+        focusEditable: Function,
     };
 
     setup() {
         this.state = useState({});
+        const htmlStyle = getHtmlStyle(document);
+        this.DEFAULT_THEME_COLORS = DEFAULT_THEME_COLOR_VARS.map((color) =>
+            getCSSVariableValue(color, htmlStyle)
+        );
         effect(
             (selectedColors) => {
                 this.state.selectedColor = selectedColors[this.props.mode];
+                this.state.defaultTab = this.getCorrespondingColorTab(
+                    selectedColors[this.props.mode]
+                );
             },
             [this.props.getSelectedColors()]
         );
@@ -37,8 +50,30 @@ export class ColorSelector extends Component {
                 getUsedCustomColors: this.props.getUsedCustomColors,
                 colorPrefix: this.props.colorPrefix,
             },
-            { onClose: () => this.props.applyColorResetPreview() }
+            {
+                onClose: () => {
+                    this.props.applyColorResetPreview();
+                    this.props.focusEditable();
+                },
+            }
         );
+    }
+
+    getCorrespondingColorTab(color) {
+        if (
+            !color ||
+            [
+                ...DEFAULT_COLORS.flat(),
+                ...this.DEFAULT_THEME_COLORS,
+                getCSSVariableValue("body-color", getHtmlStyle(document)), // Default applied color
+            ].includes(color.toUpperCase())
+        ) {
+            return "solid";
+        } else if (isColorGradient(color)) {
+            return "gradient";
+        } else {
+            return "custom";
+        }
     }
 
     getSelectedColorStyle() {

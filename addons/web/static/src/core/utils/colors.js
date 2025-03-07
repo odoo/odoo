@@ -144,14 +144,8 @@ export function convertHslToRgb(h, s, l) {
 }
 /**
  * Converts RGBA color components to a normalized CSS color: if the opacity
- * is invalid or equal to 100, a hex is returned; otherwise a rgba() css color
- * is returned.
- *
- * Those choice have multiple reason:
- * - A hex color is more common to c/c from other utilities on the web and is
- *   also shorter than rgb() css colors
- * - Opacity in hexadecimal notations is not supported on all browsers and is
- *   also less common to use.
+ * is invalid or equal to 100, a hex color excluding opacity is returned;
+ * otherwise a hex color including opacity component is returned.
  *
  * @static
  * @param {integer} r - [0, 255]
@@ -177,13 +171,21 @@ export function convertRgbaToCSSColor(r, g, b, a) {
     ) {
         return false;
     }
-    if (typeof a !== "number" || isNaN(a) || a < 0 || Math.abs(a - 100) < Number.EPSILON) {
-        const rr = r < 16 ? "0" + r.toString(16) : r.toString(16);
-        const gg = g < 16 ? "0" + g.toString(16) : g.toString(16);
-        const bb = b < 16 ? "0" + b.toString(16) : b.toString(16);
+    const rr = r < 16 ? "0" + r.toString(16) : r.toString(16);
+    const gg = g < 16 ? "0" + g.toString(16) : g.toString(16);
+    const bb = b < 16 ? "0" + b.toString(16) : b.toString(16);
+    if (
+        typeof a !== "number" ||
+        isNaN(a) ||
+        a < 0 ||
+        a > 100 ||
+        Math.abs(a - 100) < Number.EPSILON
+    ) {
         return `#${rr}${gg}${bb}`.toUpperCase();
     }
-    return `rgba(${r}, ${g}, ${b}, ${parseFloat((a / 100.0).toFixed(3))})`;
+    const alpha = Math.round((a / 100) * 255);
+    const aa = alpha < 16 ? "0" + alpha.toString(16) : alpha.toString(16);
+    return `#${rr}${gg}${bb}${aa}`.toUpperCase();
 }
 /**
  * Converts a CSS color (rgb(), rgba(), hexadecimal) to RGBA color components.
