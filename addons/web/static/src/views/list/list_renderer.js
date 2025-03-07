@@ -133,6 +133,25 @@ export class ListRenderer extends Component {
             Object.assign(this.optionalActiveFields, this.computeOptionalActiveFields());
             this.columns = this.getActiveColumns(this.props.list);
             this.withHandleColumn = this.columns.some((col) => col.widget === "handle");
+            /** 
+             * When we have a group-by filter applied on a list view having aggregated columns,
+             * fixing the column widths could lead to the label of the grouped field being clipped
+             * by the aggregated column's fields. Hence we move the aggregated columns to the end.
+             * ex:
+             *   TH0   AG1   TH1   TH2   TH3   AG2   TH4   AG3
+             *    0     1     2     3     4     5     6     7
+             * will change when grouped as:
+             *   TH0   TH1   TH2   TH3   TH4   AG1   AG2   AG3
+             *    0     1     2     3     4     5     6     7
+             *    <--- groupby field ---->    <-aggregated cols->
+             * 
+             * This is done to prevent the clipping of the groupby field due to the aggregated columns.
+             */
+            if (this.props.list.isGrouped) {
+                const aggregatedColumns = this.columns.filter((col) => this.aggregatedFieldNames.includes(col.name));
+                this.columns = this.columns.filter((col) => !aggregatedColumns.includes(col));
+                this.columns.push(...aggregatedColumns);
+            }
         });
         let dataRowId;
         this.rootRef = useRef("root");
@@ -864,6 +883,16 @@ export class ListRenderer extends Component {
 
     get displayRowCreates() {
         return this.isX2Many && this.canCreate;
+    }
+
+    /**
+     * Return a list of field names that are aggregated in the list view.
+     *
+     * @readonly
+     * @type {list[string]}
+     */
+    get aggregatedFieldNames() {
+        return Object.keys(this.fields).filter((fieldName) => "aggregator" in this.fields[fieldName])
     }
 
     // Group headers logic:

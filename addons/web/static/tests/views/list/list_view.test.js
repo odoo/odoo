@@ -1541,6 +1541,27 @@ test(`basic grouped list rendering with widget="handle" col`, async () => {
     expect(`.o_group_header:eq(0) .o_list_number`).toHaveCount(0);
 });
 
+test("list grouped by filter having aggregated columns", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="date"/>
+                <field name="qux"/>
+                <field name="text"/>
+            </tree>
+        `,
+        groupBy: ["foo"],
+    });
+    expect(queryAllTexts(`thead th`)).toEqual(["", "Foo", "Date", "Text", "Int field", "Qux"], {
+        message: "aggregated fields should be moved to the end"
+    });
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "4");
+});
+
 test(`basic grouped list rendering with a date field between two fields with a aggregator`, async () => {
     await mountView({
         resModel: "foo",
@@ -1556,10 +1577,12 @@ test(`basic grouped list rendering with a date field between two fields with a a
     });
     expect(`thead th`).toHaveCount(4); // record selector + Foo + Int + Date + Int
     expect(`thead th.o_list_record_selector`).toHaveCount(1);
-    expect(queryAllTexts(`thead th`)).toEqual(["", "Int field", "Date", "Int field"]);
+    expect(queryAllTexts(`thead th`)).toEqual(["", "Date", "Int field", "Int field"]);
     expect(`tr.o_group_header`).toHaveCount(2);
     expect(`th.o_group_name`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_header:eq(0) td`)).toEqual(["-4", "", "-4"]);
+    expect(queryAllTexts(`.o_group_header:eq(0) td`)).toEqual(["-4", "-4"], {
+        message: "there should 2 tds with the aggregated columns"
+    });
 });
 
 test(`basic grouped list rendering 1 col without selector`, async () => {
@@ -1651,14 +1674,15 @@ test(`basic grouped list rendering 7 cols with aggregates and selector`, async (
         `,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(5);
-    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "3");
-    expect(`.o_group_header:eq(0) td`).toHaveCount(3, {
-        message: "there should be 3 tds (aggregates + fields in between)",
+    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(3, {
+        message: "there should be 1 grouped field spanning 5 columns + 2 aggregate cols that are moved to the end"
     });
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "2", {
-        message:
-            "header last cell should span on the two last fields (to give space for the pager) (colspan 2)",
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "6");
+    expect(`.o_group_header:eq(0) td`).toHaveCount(2, {
+        message: "there should be 2 tds (aggregates)",
+    });
+    expect(`.o_group_header:eq(0) th`).toHaveCount(1, {
+        message: "there should be only one group header cell since the aggregated fields are pushed to the end",
     });
 });
 
@@ -1679,14 +1703,17 @@ test(`basic grouped list rendering 7 cols with aggregates, selector and optional
         `,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(5);
-    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "3");
-    expect(`.o_group_header:eq(0) td`).toHaveCount(3, {
-        message: "there should be 3 tds (aggregates + fields in between)",
+    expect(`.o_group_header:eq(0) th, .o_group_header:eq(0) td`).toHaveCount(4, {
+        message: "there should be 4 headers: 1 grouped field, 2 aggregate fields, 1 pager",
     });
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "3", {
-        message:
-            "header last cell should span on the two last fields (to give space for the pager) (colspan 2)",
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "6", {
+        message: "header cell should span on the 6 first columns (selector + 5 non-aggregated fields)",
+    });
+    expect(`.o_group_header:eq(0) td`).toHaveCount(2, {
+        message: "there should be 2 tds (aggregates)",
+    });
+    expect(`.o_group_header:eq(0) th`).toHaveCount(2, {
+        message: "there should be one group header cell and one for pager",
     });
 });
 
@@ -1704,8 +1731,8 @@ test(`basic grouped list rendering 4 cols with aggregates, selector and openForm
         `,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
-    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "2");
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "3");
+    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "1");
 });
 
 test(`basic grouped list rendering 4 cols with aggregates, selector, optional and openFormView`, async () => {
@@ -1722,7 +1749,7 @@ test(`basic grouped list rendering 4 cols with aggregates, selector, optional an
         `,
         groupBy: ["bar"],
     });
-    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "3");
     expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "1");
 });
 
