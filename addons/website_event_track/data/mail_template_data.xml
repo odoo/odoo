@@ -186,6 +186,25 @@
             </field>
         </record>
 
+    <record id="mail_message_track_test" model="mail.message">
+        <field name="model">res.partner</field>
+        <field name="res_id" ref="base.res_partner_address_28"/>
+        <field name="body" type="html"><p>Hello! This is an example of track.</p></field>
+        <field name="message_type">email</field>
+<!--        <field name="subtype_id" ref="mail.mt_comment"/>-->
+<!--        <field name="author_id" ref="base.partner_demo"/>-->
+        <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M:00')"/>
+    </record>
+
+    <record id="mail_notification_track_test" model="mail.notification">
+<!--        <field name="author_id" ref="base.partner_admin"/>-->
+        <field name="mail_message_id" ref="mail_message_track_test"/>
+<!--        <field name="res_partner_id" ref="base.res_partner_address_28"/>-->
+        <field name="notification_type">email</field>
+<!--        <field name="notification_status">exception</field>-->
+<!--        <field name="failure_type">mail_smtp</field>-->
+    </record>
+
 </data>
 
 </odoo>

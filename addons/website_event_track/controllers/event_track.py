@@ -547,7 +547,10 @@ class EventTrackController(http.Controller):
 
     @http.route('/event/send_email_reminder', type="jsonrpc", auth="public", website=True)
     def send_email_reminder(self, track_id, email_to):
-        template = self.env.ref("website_event_track.mail_template_data_track_reminder", raise_if_not_found=False)
+        # template = self.env.ref("website_event_track.mail_template_data_track_reminder", raise_if_not_found=False)
+        template = self.env.ref("website_event_track.mail_notification_track_test", raise_if_not_found=False)
+        print("The template")
+        print(template)
         if not template:
             return {'success': False, 'error': 'missing_template'}
 
