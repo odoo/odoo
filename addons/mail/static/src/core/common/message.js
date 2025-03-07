@@ -38,9 +38,9 @@ import { url } from "@web/core/utils/urls";
 import { messageActionsRegistry, useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
+import { NotificationMessage } from "./notification_message";
 
 /**
  * @typedef {Object} Props
@@ -72,6 +72,7 @@ export class Message extends Component {
         ImStatus,
         Popover: MessageNotificationPopover,
         RelativeTime,
+        NotificationMessage,
     };
     static defaultProps = {
         hasActions: true,
@@ -99,7 +100,6 @@ export class Message extends Component {
 
     setup() {
         super.setup();
-        this.escape = escape;
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
             isEditing: false,
@@ -230,13 +230,6 @@ export class Message extends Component {
             o_object_fit_contain: this.props.message.author?.is_company,
             o_object_fit_cover: !this.props.message.author?.is_company,
         };
-    }
-
-    get authorName() {
-        if (this.message.author) {
-            return this.message.author.name;
-        }
-        return this.message.email_from;
     }
 
     get authorAvatarUrl() {
@@ -380,25 +373,6 @@ export class Message extends Component {
                     { capture: true, once: true }
                 );
             }
-        }
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     */
-    async onClickNotificationMessage(ev) {
-        this.store.handleClickOnLink(ev, this.props.thread);
-        const { oeType, oeId } = ev.target.dataset;
-        if (oeType === "highlight") {
-            await this.env.messageHighlight?.highlightMessage(
-                this.store["mail.message"].insert({
-                    id: Number(oeId),
-                    res_id: this.props.thread.id,
-                    model: this.props.thread.model,
-                    thread: this.props.thread,
-                }),
-                this.props.thread
-            );
         }
     }
 
