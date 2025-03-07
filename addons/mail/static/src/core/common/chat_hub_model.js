@@ -1,7 +1,10 @@
+import { CloseAllConfirmation } from "@mail/core/common/close_all_confirmation";
+
 import { browser } from "@web/core/browser/browser";
 import { Record } from "./record";
 
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
+import { _t } from "@web/core/l10n/translation";
 
 export const CHAT_HUB_KEY = "mail.ChatHub";
 
@@ -13,6 +16,7 @@ export class ChatHub extends Record {
     WINDOW_GAP = 10; // for a single end, multiply by 2 for left and right together.
     WINDOW_INBETWEEN = 5;
     WINDOW = 380; // same value as $o-mail-ChatWindow-width
+    CW_INACTIVITY_TIMEOUT = 60 * 1000; // chat window inactivity timeout (1 minute) in milliseconds
 
     /** @returns {import("models").ChatHub} */
     static new() {
@@ -49,9 +53,18 @@ export class ChatHub extends Record {
     async closeAll() {
         await this.initPromise;
         const promises = [];
-        for (const cw of [...this.opened, ...this.folded]) {
-            promises.push(cw.close({ notifyState: false }));
-        }
+        this.store.env.services.dialog.add(CloseAllConfirmation, {
+            title: _t("Close all conversations"),
+            message: _t("Close all inactive chat windows older than one minute?"),
+            onConfirm: () => {
+                const currentTime = Date.now();
+                for (const cw of [...this.opened, ...this.folded]) {
+                    if (currentTime - cw.thread.lastInterestDt > this.CW_INACTIVITY_TIMEOUT) {
+                        promises.push(cw.close({ notifyState: true }));
+                    }
+                }
+            },
+        });
         await Promise.all(promises);
         this.save(); // sync only once at the end
     }
