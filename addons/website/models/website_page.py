@@ -94,9 +94,10 @@ class Page(models.Model):
 
     @api.depends_context('uid')
     def _compute_can_publish(self):
+        super()._compute_can_publish()
         is_designer = self.env.user.has_group('website.group_website_designer')
         for record in self:
-            record.can_publish = is_designer
+            record.can_publish = record.can_publish or is_designer
 
     def _get_most_specific_pages(self):
         ''' Returns the most specific pages in self. '''
