@@ -20,6 +20,50 @@ class PosConfig(models.Model):
         forbidden_keys.append('floor_ids')
         return forbidden_keys
 
+    def _configs_that_might_be_interested(self):
+        self.ensure_one()
+        configs_that_share_floors = self.floor_ids.mapped('pos_config_ids') - self
+        return super()._configs_that_might_be_interested() + configs_that_share_floors
+
+    def _interested_in_this_change(self, original_config, record):
+        self.ensure_one()
+        return (
+            super()._interested_in_this_change(original_config, record)
+            or (
+                record._name == "pos.order"
+                and record.table_id
+                and record.table_id.floor_id.id in self.floor_ids.ids
+            )
+            or (
+                record._name == "pos.order.line"
+                and record.order_id.table_id
+                and record.order_id.table_id.floor_id.id in self.floor_ids.ids
+            )
+            or (
+                record._name == "pos.payment"
+                and record.order_id.table_id
+                and record.order_id.table_id.floor_id.id in self.floor_ids.ids
+            )
+            or (
+                record._name == "pos.preparation.order"
+                and record.order_id.table_id
+                and record.order_id.table_id.floor_id.id in self.floor_ids.ids
+            )
+            or (
+                record._name == "pos.preparation.orderline"
+                and record.preparation_order_id.order_id.table_id
+                and record.order_id.table_id.floor_id.id in self.floor_ids.ids
+            )
+            or (
+                record._name == "restaurant.table"
+                and record.floor_id.id in self.floor_ids.ids
+            )
+            or (
+                record._name == "restaurant.floor"
+                and record.id in self.floor_ids.ids
+            )
+        )
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

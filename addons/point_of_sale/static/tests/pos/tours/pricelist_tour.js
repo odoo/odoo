@@ -44,6 +44,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             ...Order.hasTotal(`$ 8.96`),
             ProductScreen.clickPriceList("min_quantity ordering"),
             OfflineUtil.setOnlineMode(),
+
             ProductScreen.closePos(),
         ].flat(),
 });

@@ -31,13 +31,13 @@ export class NoteButton extends Component {
         const oldNote = selectedOrderline.getNote();
         const payload = await this.openTextInput(selectedNote);
         var quantity_with_note = 0;
-        const changes = this.pos.getOrderChanges();
-        for (const key in changes.orderlines) {
-            if (changes.orderlines[key].uuid == selectedOrderline.uuid) {
-                quantity_with_note = changes.orderlines[key].quantity;
-                break;
-            }
-        }
+        // const changes = this.pos.getOrderChanges();
+        // for (const key in changes.orderlines) {
+        //     if (changes.orderlines[key].uuid == selectedOrderline.uuid) {
+        //         quantity_with_note = changes.orderlines[key].quantity;
+        //         break;
+        //     }
+        // }
         const saved_quantity = selectedOrderline.qty - quantity_with_note;
         if (saved_quantity > 0 && quantity_with_note > 0) {
             await this.pos.addLineToCurrentOrder({
