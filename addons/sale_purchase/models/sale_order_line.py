@@ -4,6 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+from odoo.fields import Domain
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 from odoo.tools.misc import get_lang
@@ -226,14 +227,19 @@ class SaleOrderLine(models.Model):
             raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.", self.product_id.display_name))
         return suppliers[0]
 
+    def _get_additional_domain_for_purchase_order_line(self):
+        return  [('sale_order_id', '=', self.order_id.id)]
+
     def _purchase_service_match_purchase_order(self, partner, company=False):
         return self.env['purchase.order.line'].search(
-            [
-                ('partner_id', '=', partner.id),
-                ('state', '=', 'draft'),
-                ('company_id', '=', (company and company or self.env.company).id),
-                ('sale_order_id', '=', self.order_id.id),
-            ],
+            Domain.AND([
+                [
+                  ('partner_id', '=', partner.id),
+                  ('state', '=', 'draft'),
+                  ('company_id', '=', (company and company or self.env.company).id),
+                ],
+                self._get_additional_domain_for_purchase_order_line(),
+            ]),
             order='order_id',
             limit=1,
         ).order_id
