@@ -5,7 +5,7 @@ import logging
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import api, fields, models, modules, tools
+from odoo import api, fields, models, modules, tools, SUPERUSER_ID
 from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
@@ -84,10 +84,10 @@ class EventMail(models.Model):
     interval_type = fields.Selection([
         # attendee based
         ('after_sub', 'After each registration'),
-        # event based: start date
+        # event based: start date (attendee based if multi-slots: slot start date)
         ('before_event', 'Before the event starts'),
         ('after_event_start', 'After the event started'),
-        # event based: end date
+        # event based: end date (attendee based if multi-slots: slot end date)
         ('after_event', 'After the event ended'),
         ('before_event_end', 'Before the event ends')],
         string='Trigger ', default="before_event", required=True)
@@ -147,6 +147,19 @@ class EventMail(models.Model):
         for scheduler in self._filter_template_ref():
             if scheduler.interval_type == 'after_sub':
                 scheduler._execute_attendee_based()
+            elif scheduler.event_id.is_multi_slots:
+                slot_registration_mapping = {
+                    slot.id: registrations
+                    for slot, registrations in self.env['event.registration']._read_group(
+                        domain=[('event_id', '=', scheduler.event_id.id)],
+                        groupby=['slot_id'],
+                        aggregates=['id:recordset']
+                    )
+                }
+                for slot in scheduler.event_id.slot_ids:
+                    scheduler.with_context(
+                        event_mail_registration_ids=slot_registration_mapping.get(slot.id, self.env['event.registration']).ids,
+                    ).with_user(SUPERUSER_ID)._execute_attendee_based(slot_based=True)
             else:
                 # before or after event -> one shot communication, once done skip
                 if scheduler.mail_done:
@@ -210,7 +223,7 @@ class EventMail(models.Model):
             self._send_mail(registrations)
         return True
 
-    def _execute_attendee_based(self):
+    def _execute_attendee_based(self, slot_based=False):
         """ Main scheduler method when running in attendee-based mode aka
         'after_sub'. This relies on a sub model allowing to know which
         registrations have been contacted.
@@ -254,7 +267,7 @@ class EventMail(models.Model):
             ]
         self.env["event.mail.registration"].flush_model(["registration_id", "scheduler_id"])
         new_attendees = self.env["event.registration"].search(new_attendee_domain, limit=cron_limit * 2, order="id ASC")
-        new_attendee_mails = self._create_missing_mail_registrations(new_attendees)
+        new_attendee_mails = self._create_missing_mail_registrations(new_attendees, slot_based)
 
         # fetch attendee schedulers to run (or use the one given in context)
         mail_domain = self.env["event.mail.registration"]._get_skip_domain() + [("scheduler_id", "=", self.id)]
@@ -272,14 +285,17 @@ class EventMail(models.Model):
             self.env.ref('event.event_mail_scheduler')._trigger()
 
         for chunk in tools.split_every(batch_size, new_attendee_mails.ids, self.env["event.mail.registration"].browse):
-            # filter out canceled / draft, and compare to seats_taken (same heuristic)
-            valid_chunk = chunk.filtered(lambda m: m.registration_id.state not in ("draft", "cancel"))
-            # scheduled mails for draft / cancel should be removed as they won't be sent
-            (chunk - valid_chunk).unlink()
+            if not slot_based:
+                # filter out canceled / draft, and compare to seats_taken (same heuristic)
+                valid_chunk = chunk.filtered(lambda m: m.registration_id.state not in ("draft", "cancel"))
+                # scheduled mails for draft / cancel should be removed as they won't be sent
+                (chunk - valid_chunk).unlink()
+            else:
+                valid_chunk = chunk
 
             # send communications, then update only when being in cron mode (aka no
             # context registrations) to avoid concurrent updates on scheduler
-            valid_chunk._execute_on_registrations()
+            valid_chunk._execute_on_registrations(slot_based)
             # if not context_registrations:
             self._refresh_mail_count_done()
             if auto_commit:
@@ -287,19 +303,20 @@ class EventMail(models.Model):
                 # invalidate cache, no need to keep previous content in memory
                 self.env.invalidate_all()
 
-    def _create_missing_mail_registrations(self, registrations):
+    def _create_missing_mail_registrations(self, registrations, slot_based=False):
         new = self.env["event.mail.registration"]
         for scheduler in self:
             for _chunk in tools.split_every(500, registrations.ids, self.env["event.registration"].browse):
                 new += self.env['event.mail.registration'].create([{
-                    'registration_id': registration.id,
+                    'registration_id': False if slot_based else registration.id,
                     'scheduler_id': scheduler.id,
+                    'slot_id': registration.slot_id.id if slot_based else False,
                 } for registration in registrations])
         return new
 
     def _refresh_mail_count_done(self):
         for scheduler in self:
-            if scheduler.interval_type == "after_sub":
+            if scheduler.interval_type == "after_sub" or scheduler.event_id.is_multi_slots:
                 total_sent = self.env["event.mail.registration"].search_count([
                     ("scheduler_id", "=", self.id),
                     ("mail_sent", "=", True),
