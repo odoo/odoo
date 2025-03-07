@@ -8,7 +8,6 @@ import {
     useEffect,
     Component,
     onMounted,
-    onWillStart
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { rpc } from "@web/core/network/rpc";
@@ -38,7 +37,6 @@ export class RenameCustomSnippetDialog extends Component {
 export class AddSnippetDialog extends Component {
     static template = "web_editor.AddSnippetDialog";
     static props = {
-        dynamicSnippetIds: Array,
         close: Function,
         snippets: Object,
         groupSelected: String,
@@ -66,18 +64,6 @@ export class AddSnippetDialog extends Component {
             search: "",
         });
 
-        onWillStart(async () => {
-            let list;
-            this.props.snippets.forEach((value, key) => {
-                if (value.name?.startsWith("s_product_product")) {
-                    const newName = value.name.replace("s_", "dynamic_filter_template_");
-                    list.push(newName);
-                }
-            });
-
-            const data = await rpc("/web_editor/render_dynamic_snippets", list);
-            console.log(data);
-        });
         onMounted(async () => {
             const isFirefox = isBrowserFirefox();
             if (isFirefox) {
@@ -191,6 +177,51 @@ export class AddSnippetDialog extends Component {
             snippetsToDisplay = snippetsToDisplay.filter(snippet => {
                 return snippet.group === this.state.groupSelected;
             });
+        }
+
+        if (this.state.groupSelected === "products") {
+            const xmlIdToElementsMap = snippetsToDisplay.reduce((acc, snippet) => {
+                const xmlId = snippet.content[0]?.querySelector("div[data-xml-id]")?.dataset.xmlId;
+                const numberOfElements = parseInt(snippet.data.numberOfElements) || 4;
+                if (xmlId) {
+                    acc[xmlId] = numberOfElements;
+                }
+                return acc;
+            }, {});
+
+            if (Object.keys(xmlIdToElementsMap).length) {
+                const data = await rpc("/web_editor/get_snippet_data", {
+                    template_data: xmlIdToElementsMap,
+                    csrf_token: odoo.csrf_token,
+                });
+                for (const [xmlId, snippets] of Object.entries(data)) {
+                    const snippet = snippetsToDisplay.find(
+                        (snippet) =>
+                            snippet.content[0]?.querySelector("div[data-xml-id]")?.dataset.xmlId ===
+                            xmlId
+                    );
+                    if (snippet) {
+                        const firstProductEl = new DOMParser().parseFromString(
+                            snippets[0],
+                            "text/html"
+                        ).body.firstChild;
+                        snippet.content[0]
+                            ?.querySelector("div[data-xml-id]")
+                            ?.replaceWith(firstProductEl);
+
+                        for (let i = 1; i < snippets.length; i++) {
+                            const productEl = new DOMParser().parseFromString(
+                                snippets[i],
+                                "text/html"
+                            ).body.firstChild;
+                            firstProductEl.parentNode.insertBefore(
+                                productEl,
+                                firstProductEl.nextSibling
+                            );
+                        }
+                    }
+                }
+            }
         }
 
         // Create the new 2-column structure

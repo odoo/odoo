@@ -159,10 +159,6 @@ class Web_Editor(http.Controller):
 
         return response
 
-    @http.route('/web_editor/render_public_asset', type='jsonrpc', auth='user')
-    def render_public_asset(self, **kwargs):
-        return request.env["ir.ui.view"].with_context(kwargs.get("context")).render_public_asset(kwargs.get("template"), values=kwargs.get("values"))
-
     #------------------------------------------------------
     # Update a checklist in the editor on check/uncheck
     #------------------------------------------------------
@@ -525,17 +521,11 @@ class Web_Editor(http.Controller):
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
 
-    @http.route('/web_editor/get_xml_id', type='jsonrpc', auth='user')
-    def get_xml_id(self):
-        # breakpoint()
-        website_sale_views = request.env['ir.ui.view'].search([('name', '=', 'Products Preview Data')])
-
-        # Print view names and XML IDs
-        xml_ids = [view.xml_id for view in website_sale_views if view.xml_id]
-        
-        return xml_ids
-    
-    @http.route('/web_editor/render_dynamic_snippets', type='jsonrpc', auth='user')
-    def render_dynamic_snippets(self, **kwargs):
-        return request.env["ir.ui.view"].with_context(kwargs.get("context")).render_dynamic_snippets(kwargs.get("template"), values=kwargs.get("values"))
+    @http.route('/web_editor/get_snippet_data', type='jsonrpc', auth='public', website=True)
+    def get_snippet_data(self, template_data, **kwargs):
+        breakpoint()
+        results = {}
+        for key, value in template_data.items():
+            results[key] = request.env['website.snippet.filter'].get_dummy_product_records(key, value)
+        return results
     
