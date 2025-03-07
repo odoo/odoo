@@ -50,6 +50,9 @@
                 <field name="removal_date" optional="hide"/>
                 <field name="expiration_date" optional="hide"/>
             </xpath>
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="display_name" string="Lot/Serial Numbers" decoration-danger="is_expired" decoration-bf="1"/>
+            </xpath>
         </field>
     </record>
 

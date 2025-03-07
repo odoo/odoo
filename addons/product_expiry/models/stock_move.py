@@ -5,7 +5,7 @@ import datetime
 import dateutil.parser as dparser
 from re import findall as re_findall
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import get_lang
 
 
@@ -14,6 +14,30 @@ class StockMove(models.Model):
 
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
+
+    @api.model
+    def action_generate_lot_line_vals(self, *args, **kwargs):
+        vals_list = super().action_generate_lot_line_vals(*args, **kwargs)
+        if len(vals_list) == 0:
+            return vals_list
+
+        product = self.env['product.product'].search([('id', '=', vals_list[0].get('product_id').get('id'))])
+        if not product.use_expiration_date:
+            return vals_list
+
+        picking_ids = [line['picking_id']['id'] for line in vals_list if line.get('picking_id', {}).get('id', False)]
+        pickings = self.env['stock.picking'].search([('id', 'in', set(picking_ids))])
+        picking_dict = { picking.id: picking for picking in pickings }
+
+        for move_line in vals_list:
+            picking_id = move_line.get('picking_id', {}).get('id', False)
+            if picking_id and picking_dict.get(picking_id, False):
+                from_date = picking_dict.get(picking_id).scheduled_date
+            else:
+                from_date = fields.Datetime.today()
+            move_line['expiration_date'] = from_date + datetime.timedelta(days=product.expiration_time)
+
+        return vals_list
 
     def _generate_serial_move_line_commands(self, field_data, location_dest_id=False, origin_move_line=None):
         """Override to add a default `expiration_date` into the move lines values."""
