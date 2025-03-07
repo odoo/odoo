@@ -287,15 +287,15 @@ test("apply classAction on multi elements", async () => {
     await contains(":iframe .test-options-target").click();
     expect(editableContent).toHaveInnerHTML(`
             <div class="test-options-target">
-                <div class="target-apply">a</div>
-                <div class="target-apply">b</div>
+                <div class="target-apply o-paragraph">a</div>
+                <div class="target-apply o-paragraph">b</div>
             </div>`);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(`
             <div class="test-options-target">
-                <div class="target-apply my-custom-class">a</div>
-                <div class="target-apply my-custom-class">b</div>
+                <div class="target-apply my-custom-class o-paragraph">a</div>
+                <div class="target-apply my-custom-class o-paragraph">b</div>
             </div>`);
 });
 test("hide/display base on applyTo", async () => {
