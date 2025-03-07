@@ -70,6 +70,11 @@ export class ListPlugin extends Plugin {
                 run: () => this.toggleListCommand({ mode: "CL" }),
             },
         ],
+        shortcuts: [
+            { hotkey: "control+shift+7", commandId: "toggleListOL" },
+            { hotkey: "control+shift+8", commandId: "toggleListUL" },
+            { hotkey: "control+shift+9", commandId: "toggleListCL" },
+        ],
         toolbar_groups: withSequence(30, { id: "list" }),
         toolbar_items: [
             {

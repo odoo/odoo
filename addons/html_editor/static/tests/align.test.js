@@ -1,4 +1,5 @@
 import { describe, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { testEditor } from "./_helpers/editor";
 import { alignCenter, justify, alignLeft, alignRight } from "./_helpers/user_actions";
 
@@ -84,6 +85,15 @@ describe("left", () => {
                 '<div contenteditable="true" style="text-align: center;"><h1 style="text-align: left;">a[]b</h1></div>',
         });
     });
+
+    test("should left align a container with shortcut", async () => {
+        await testEditor({
+            contentBefore: '<div style="text-align: center;"><p>a[]b</p></div>',
+            stepFunction: () => press(["ctrl", "shift", "l"]),
+            contentAfter:
+                '<div style="text-align: center;"><p style="text-align: left;">a[]b</p></div>',
+        });
+    });
 });
 
 describe("center", () => {
@@ -157,6 +167,15 @@ describe("center", () => {
             stepFunction: alignCenter,
             contentAfter:
                 '<div contenteditable="true" style="text-align: center;"><h1 style="text-align: center;">a[]b</h1></div>',
+        });
+    });
+
+    test("should center align a container with shortcut", async () => {
+        await testEditor({
+            contentBefore: '<div style="text-align: left;"><p>a[]b</p></div>',
+            stepFunction: () => press(["ctrl", "shift", "e"]),
+            contentAfter:
+                '<div style="text-align: left;"><p style="text-align: center;">a[]b</p></div>',
         });
     });
 });
@@ -234,6 +253,14 @@ describe("right", () => {
                 '<div contenteditable="true" style="text-align: center;"><h1 style="text-align: right;">a[]b</h1></div>',
         });
     });
+    test("should right align a container with shortcut", async () => {
+        await testEditor({
+            contentBefore: '<div style="text-align: left;"><p>a[]b</p></div>',
+            stepFunction: () => press(["ctrl", "shift", "r"]),
+            contentAfter:
+                '<div style="text-align: left;"><p style="text-align: right;">a[]b</p></div>',
+        });
+    });
 });
 
 describe("justify", () => {
@@ -307,6 +334,15 @@ describe("justify", () => {
             stepFunction: justify,
             contentAfter:
                 '<div contenteditable="true" style="text-align: center;"><h1 style="text-align: justify;">a[]b</h1></div>',
+        });
+    });
+
+    test("should justify align a container with shortcut", async () => {
+        await testEditor({
+            contentBefore: '<div style="text-align: right;"><p>a[]b</p></div>',
+            stepFunction: () => press(["ctrl", "shift", "j"]),
+            contentAfter:
+                '<div style="text-align: right;"><p style="text-align: justify;">a[]b</p></div>',
         });
     });
 });
