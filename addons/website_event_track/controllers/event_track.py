@@ -560,7 +560,7 @@ class EventTrackController(http.Controller):
             return {'success': False, 'message': _('Invalid data.')}
         request.session['website_event_track.email_reminder'] = valid_email_to
 
-        agenda_urls = track._get_event_track_resource_urls()
+        agenda_urls = track._get_track_calendar_resource_urls()
         context = {
             'google_url': agenda_urls.get('google_url'),
             'iCal_url': agenda_urls.get('iCal_url'),
@@ -577,7 +577,7 @@ class EventTrackController(http.Controller):
         if request.env.user._is_public():
             lang = request.cookies.get('frontend_lang')
         track = track.with_context(lang=lang)
-        files = track._get_ics_file()
+        files = track._get_track_calendar_ics_file()
         if not track.id in files:
             return NotFound()
         content = files[track.id]
