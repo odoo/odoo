@@ -2185,6 +2185,11 @@ export class PosStore extends Reactive {
     get showSaveOrderButton() {
         return this.isOpenOrderShareable();
     }
+
+    get availableCategories() {
+        const { limit_categories, iface_available_categ_ids } = this.config;
+        return limit_categories && iface_available_categ_ids;
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
