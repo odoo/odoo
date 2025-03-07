@@ -226,14 +226,17 @@ class SaleOrderLine(models.Model):
             raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.", self.product_id.display_name))
         return suppliers[0]
 
+    def _get_domain_for_purchase_order_line(self, partner, company=False):
+        return  [
+            ('partner_id', '=', partner.id),
+            ('state', '=', 'draft'),
+            ('company_id', '=', (company and company or self.env.company).id),
+            ('sale_order_id', '=', self.order_id.id),
+        ]
+
     def _purchase_service_match_purchase_order(self, partner, company=False):
         return self.env['purchase.order.line'].search(
-            [
-                ('partner_id', '=', partner.id),
-                ('state', '=', 'draft'),
-                ('company_id', '=', (company and company or self.env.company).id),
-                ('sale_order_id', '=', self.order_id.id),
-            ],
+            self._get_domain_for_purchase_order_line(partner, company),
             order='order_id',
             limit=1,
         ).order_id
