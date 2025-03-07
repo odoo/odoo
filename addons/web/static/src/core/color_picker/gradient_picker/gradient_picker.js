@@ -1,6 +1,6 @@
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { CustomColorPicker as ColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
-import { isColorGradient, rgbaToHex } from "@web/core/utils/colors";
+import { isColorGradient, rgbaToHex, convertCSSColorToRgba } from "@web/core/utils/colors";
 
 export class GradientPicker extends Component {
     static components = { ColorPicker };
@@ -19,10 +19,18 @@ export class GradientPicker extends Component {
         });
         this.positions = useState({ x: 25, y: 25 });
         this.colors = useState([
-            { hex: "#FF00FF", percentage: 0 },
-            { hex: "#00FFFF", percentage: 100 },
+            { hex: "#DF7CC4", percentage: 0 },
+            { hex: "#6C3582", percentage: 100 },
         ]);
-        this.setGradientFromString(this.props.selectedGradient);
+        this.cssGradients = useState({ preview: "", linear: "", radial: "", sliderThumbStyle: "" });
+
+        if (this.props.selectedGradient && isColorGradient(this.props.selectedGradient)) {
+            // initialization of the gradient with the selected value
+            this.setGradientFromString(this.props.selectedGradient);
+        } else {
+            // initialization of the gradient with default value
+            this.onColorGradientChange();
+        }
 
         onWillUpdateProps((newProps) => {
             if (newProps.selectedGradient) {
@@ -41,24 +49,16 @@ export class GradientPicker extends Component {
             ),
         ].filter((color) => rgbaToHex(color[1]) !== "#");
 
-        if (colors.length !== 2) {
-            return;
+        this.colors.splice(0, this.colors.length);
+        for (const color of colors) {
+            this.colors.push({ hex: rgbaToHex(color[1]), percentage: color[2].replace("%", "") });
         }
-
-        this.colors[0] = {
-            hex: rgbaToHex(colors[0][1]),
-            percentage: colors[0][2].replace("%", ""),
-        };
-        this.colors[1] = {
-            hex: rgbaToHex(colors[1][1]),
-            percentage: colors[1][2].replace("%", ""),
-        };
 
         const isLinear = gradient.startsWith("linear-gradient(");
         if (isLinear) {
-            const angle = gradient.match(/([0-9]+)deg/);
+            const angle = gradient.match(/(-?[0-9]+)deg/);
             if (angle) {
-                this.state.angle = angle[1];
+                this.state.angle = parseInt(angle[1]);
             }
         } else {
             this.state.type = "radial";
@@ -70,6 +70,8 @@ export class GradientPicker extends Component {
             this.positions.x = position[1];
             this.positions.y = position[2];
         }
+
+        this.updateCssGradients();
     }
 
     selectType(type) {
@@ -78,8 +80,11 @@ export class GradientPicker extends Component {
     }
 
     onAngleChange(ev) {
-        this.state.angle = ev.target.value;
-        this.onColorGradientChange();
+        const angle = parseInt(ev.target.value);
+        if (!isNaN(angle)) {
+            this.state.angle = angle;
+            this.onColorGradientChange();
+        }
     }
 
     onPositionChange(position, ev) {
@@ -101,21 +106,95 @@ export class GradientPicker extends Component {
     onColorPercentageChange(colorIndex, ev) {
         this.state.currentColorIndex = colorIndex;
         this.colors[colorIndex].percentage = ev.target.value;
-        if (this.colors[0].percentage > this.colors[1].percentage) {
-            this.colors[1].percentage = this.colors[0].percentage;
-        }
+        this.sortColors();
         this.onColorGradientChange();
     }
 
-    onColorGradientChange() {
-        if (this.state.type === "linear") {
-            this.props.onGradientChange(
-                `linear-gradient(${this.state.angle}deg, ${this.colors[0].hex} ${this.colors[0].percentage}%, ${this.colors[1].hex} ${this.colors[1].percentage}%)`
+    onGradientPreviewClick(ev) {
+        const width = parseInt(window.getComputedStyle(ev.target).width, 10);
+        const percentage = Math.round((100 * ev.offsetX) / width);
+        this.addColorStop(percentage);
+    }
+
+    addColorStop(percentage) {
+        let color;
+
+        let previousColor = this.colors.findLast((color) => color.percentage <= percentage);
+        let nextColor = this.colors.find((color) => color.percentage > percentage);
+        if (!previousColor && nextColor) {
+            // Click position is before the first color
+            color = nextColor.hex;
+        } else if (!nextColor && previousColor) {
+            //  Click position is after the last color
+            color = previousColor.hex;
+        } else if (nextColor && previousColor) {
+            const previousRatio =
+                (nextColor.percentage - percentage) /
+                (nextColor.percentage - previousColor.percentage);
+            const nextRatio = 1 - previousRatio;
+
+            previousColor = convertCSSColorToRgba(previousColor.hex);
+            nextColor = convertCSSColorToRgba(nextColor.hex);
+
+            const red = Math.round(previousRatio * previousColor.red + nextRatio * nextColor.red);
+            const green = Math.round(
+                previousRatio * previousColor.green + nextRatio * nextColor.green
             );
-        } else {
-            this.props.onGradientChange(
-                `radial-gradient(circle ${this.state.size} at ${this.positions.x}% ${this.positions.y}%, ${this.colors[0].hex} ${this.colors[0].percentage}%, ${this.colors[1].hex} ${this.colors[1].percentage}%)`
+            const blue = Math.round(
+                previousRatio * previousColor.blue + nextRatio * nextColor.blue
             );
+            const opacity = Math.round(
+                previousRatio * previousColor.opacity + nextRatio * nextColor.opacity
+            );
+            color = `rgba(${red}, ${green}, ${blue}, ${opacity / 100})`;
         }
+
+        this.colors.push({ hex: color, percentage });
+        this.sortColors();
+        this.state.currentColorIndex = this.colors.findIndex(
+            (color) => color.percentage === percentage
+        );
+        this.onColorGradientChange();
+    }
+
+    removeColor(colorIndex) {
+        if (this.colors.length <= 2) {
+            return;
+        }
+        this.colors.splice(colorIndex, 1);
+        this.state.currentColorIndex = 0;
+        this.onColorGradientChange();
+    }
+
+    sortColors() {
+        this.colors = this.colors.sort((a, b) => a.percentage - b.percentage);
+    }
+
+    updateCssGradients() {
+        const gradientColors = this.colors
+            .map((color) => `${color.hex} ${color.percentage}%`)
+            .join(", ");
+        let sliderThumbStyle = "";
+        // color the slider thumb with the color of the gradient
+        for (let i = 0; i < this.colors.length; i++) {
+            const selector = `.gradient-colors div:nth-child(${i + 1}) input[type="range"]`;
+            const style = `background-color: ${this.colors[i].hex};`;
+            sliderThumbStyle += `${selector}::-webkit-slider-thumb { ${style} }\n`;
+            sliderThumbStyle += `${selector}::-moz-range-thumb { ${style} }\n`;
+        }
+
+        this.cssGradients.preview = `linear-gradient(90deg, ${gradientColors})`;
+        this.cssGradients.linear = `linear-gradient(${this.state.angle}deg, ${gradientColors})`;
+        this.cssGradients.radial = `radial-gradient(circle ${this.state.size} at ${this.positions.x}% ${this.positions.y}%, ${gradientColors})`;
+        this.cssGradients.sliderThumbStyle = sliderThumbStyle;
+    }
+
+    onColorGradientChange() {
+        this.updateCssGradients();
+        this.props?.onGradientChange(this.cssGradients[this.state.type]);
+    }
+
+    get currentColorHex() {
+        return this.colors?.[this.state.currentColorIndex]?.hex || "#000000";
     }
 }
