@@ -13,6 +13,7 @@ import {
     onWillDestroy,
     markup,
     useExternalListener,
+    status,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
@@ -42,6 +43,7 @@ export class ImageCrop extends Component {
         this.elRef = useRef("el");
         this.cropperWrapper = useRef("cropperWrapper");
         this.imageRef = useRef("imageRef");
+        this.cropperOpen = false;
 
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
@@ -64,6 +66,9 @@ export class ImageCrop extends Component {
     }
 
     closeCropper() {
+        if (!this.cropperOpen) {
+            return;
+        }
         this.cropper?.destroy?.();
         this.media.setAttribute("src", this.initialSrc);
         if (
@@ -73,6 +78,7 @@ export class ImageCrop extends Component {
             this.media.classList.add("o_modified_image_to_save");
         }
         this.props?.onClose?.();
+        this.cropperOpen = false;
     }
 
     /**
@@ -90,6 +96,9 @@ export class ImageCrop extends Component {
     }
 
     async show() {
+        if (this.cropperOpen) {
+            return;
+        }
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
         const src = this.media.getAttribute("src");
         const data = { ...this.media.dataset };
@@ -134,6 +143,11 @@ export class ImageCrop extends Component {
         await this.scrollToInvisibleImage();
         // Replacing the src with the original's so that the layout is correct.
         await loadImage(this.originalSrc, this.media);
+        if (status(this) !== "mounted") {
+            // Abort if the component has been destroyed in the meantime
+            // since `this.imageRef.el` is `null` when it is not mounted.
+            return;
+        }
         const cropperImage = this.imageRef.el;
         [cropperImage.style.width, cropperImage.style.height] = [
             this.media.width + "px",
@@ -175,6 +189,7 @@ export class ImageCrop extends Component {
             this.aspectRatios[this.aspectRatio].value,
             this.media.dataset
         );
+        this.cropperOpen = true;
     }
     /**
      * Updates the DOM image with cropped data and associates required
