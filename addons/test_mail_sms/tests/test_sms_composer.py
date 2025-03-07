@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail_sms.tests.common import TestSMSCommon, TestSMSRecipients
+from odoo.tests import tagged
 
 
+@tagged('sms_composer')
 class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
     """ TODO LIST
 
@@ -283,6 +285,7 @@ class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
         self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
 
 
+@tagged('sms_composer')
 class TestSMSComposerBatch(TestSMSCommon):
     @classmethod
     def setUpClass(cls):
@@ -333,6 +336,7 @@ class TestSMSComposerBatch(TestSMSCommon):
             )
 
 
+@tagged('sms_composer')
 class TestSMSComposerMass(TestSMSCommon):
 
     @classmethod
