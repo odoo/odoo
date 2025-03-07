@@ -1,4 +1,4 @@
-import { reactive, useEnv } from "@odoo/owl";
+import { useEnv, useState } from "@odoo/owl";
 import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 
 /**
@@ -18,7 +18,7 @@ import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nestin
  * @returns {DropdownState}
  */
 export function useDropdownState({ onOpen, onClose } = {}) {
-    const state = reactive({
+    const state = useState({
         isOpen: false,
         open: () => {
             state.isOpen = true;
