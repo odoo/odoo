@@ -24,5 +24,7 @@ class PosOrder(models.Model):
     def _prepare_invoice_vals(self):
         res = super()._prepare_invoice_vals()
         if self.config_id.is_spanish and self.is_l10n_es_simplified_invoice:
+            if "partner_id" not in res:
+                res["partner_id"] = self.config_id.simplified_partner_id.id
             res["journal_id"] = self.config_id.l10n_es_simplified_invoice_journal_id.id
         return res
