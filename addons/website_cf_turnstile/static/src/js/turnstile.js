@@ -33,7 +33,7 @@ const turnStile = {
                 if (btnEl && btnEl.classList.contains('cf_form_disabled')) {
                     btnEl.classList.remove('disabled', 'cf_form_disabled');
                 }
-                btnEl.closest('form').querySelector("input.turnstile_captcha_valid').value = 'done';
+                btnEl.closest('form').querySelector('input.turnstile_captcha_valid').value = 'done';
             }
         `;
 
