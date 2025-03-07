@@ -372,7 +372,7 @@ export async function confirmAddSnippet(snippetName) {
     if (snippetName) {
         previewSelector += " [data-snippet='" + snippetName + "']";
     }
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
+    await waitForSnippetDialog();
     await contains(previewSelector).click();
     await animationFrame();
 }
@@ -381,9 +381,18 @@ export async function insertCategorySnippet({ group, snippet } = {}) {
     await contains(
         `.o-snippets-menu #snippet_groups .o_snippet${
             group ? `[data-snippet-group=${group}]` : ""
-        } .o_snippet_thumbnail`
+        } .o_snippet_thumbnail .o_snippet_thumbnail_area`
     ).click();
     await confirmAddSnippet(snippet);
+}
+
+export async function waitForSnippetDialog() {
+    await animationFrame();
+    await loadBundle("html_builder.iframe_add_dialog", {
+        targetDoc: queryOne("iframe.o_add_snippet_iframe").contentDocument,
+        js: false,
+    });
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
 }
 
 export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) {
