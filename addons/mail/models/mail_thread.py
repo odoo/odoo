@@ -263,7 +263,7 @@ class MailThread(models.AbstractModel):
                 threads._name, threads.ids,
                 self.env.user.partner_id.ids, subtypes=None,
                 customer_ids=[],
-                check_existing=False
+                check_existing=True
             )
 
         # auto_subscribe: take values and defaults into account
