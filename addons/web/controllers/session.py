@@ -50,11 +50,9 @@ class Session(http.Controller):
                 return {'uid': None}
 
             request.session.db = db
-            # `request.session.authenticate` sets the env on the request, hence the ability to call `_save_session`
-            # even when the request was initially without db or env.
-            request._save_session()
+            request._save_session(env)
 
-            return request.env['ir.http'].session_info()
+            return env['ir.http'].with_user(request.session.uid).session_info()
 
     @http.route('/web/session/get_lang_list', type='jsonrpc', auth="none")
     def get_lang_list(self):
