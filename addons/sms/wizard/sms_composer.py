@@ -103,7 +103,7 @@ class SendSMS(models.TransientModel):
                 continue
 
             records = composer._get_records()
-            if records and isinstance(records, self.pool['mail.thread']):
+            if records:
                 res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=not composer.comment_single_recipient)
                 composer.recipient_valid_count = len([rid for rid, rvalues in res.items() if rvalues['sanitized']])
                 composer.recipient_invalid_count = len([rid for rid, rvalues in res.items() if not rvalues['sanitized']])
@@ -116,7 +116,7 @@ class SendSMS(models.TransientModel):
     def _compute_recipient_single(self):
         for composer in self:
             records = composer._get_records()
-            if not records or not isinstance(records, self.pool['mail.thread']) or not composer.comment_single_recipient:
+            if not records or not composer.comment_single_recipient:
                 composer.recipient_single_description = False
                 composer.recipient_single_number = ''
                 composer.recipient_single_number_itf = ''
@@ -197,11 +197,12 @@ class SendSMS(models.TransientModel):
             return self._action_send_sms_mass(records)
 
     def _action_send_sms_numbers(self):
+        numbers = self.sanitized_numbers.split(',') if self.sanitized_numbers else [self.recipient_single_number_itf or self.recipient_single_number or '']
         self.env['sms.api']._send_sms_batch([{
             'res_id': 0,
             'number': number,
             'content': self.body,
-        } for number in self.sanitized_numbers.split(',')])
+        } for number in numbers])
         return True
 
     def _action_send_sms_comment_single(self, records=None):
