@@ -8,7 +8,8 @@
             <div t-if="props.showImage and line.product_id.getImageUrl()" class="o_line_container d-flex align-items-center justify-content-center">
                 <img t-attf-style="border-radius: 1rem;" t-att-src="line.product_id.getImageUrl()"/>
             </div>
-            <div class="d-flex flex-column w-100 p-2">
+            <div class="d-flex flex-column w-100"
+                 t-attf-class="{{ line.combo_parent_id?.getFullProductName() ? 'px-2 py-1' : 'p-2' }}">
                 <div class="line-details d-flex justify-content-between align-items-center">
                     <div class="product-name d-flex flex-grow-1 align-items-center pe-2 text-truncate">
                         <span class="qty d-inline-block px-1 fw-bolder">
@@ -26,7 +27,7 @@
                     <div t-if="!props.basic_receipt" t-esc="line.getPriceString()" class="product-price price fw-bolder"/>
                     <div t-if="props.showTaxGroup" t-esc="this.taxGroup" class="text-end" style="width: 2rem"/>
                 </div>
-                <ul class="info-list d-flex flex-column mb-0" t-att-class="{'gap-2 mt-2' : line.customer_note || line.note || line.discount || line.packLotLines?.length}">
+                <ul class="info-list d-flex flex-column mb-0" t-att-class="{'gap-2 mt-1' : line.customer_note || line.note || line.discount || line.packLotLines?.length}">
                     <li t-if="line.discount" class="price-per-unit">
                         <t t-set="discount" t-value="line.getDiscountStr()" />
                         <t t-if="!props.basic_receipt and line.price_unit !== 0 and discount and discount !== '0'">
@@ -41,7 +42,7 @@
                             <li t-if="note.trim() !== ''" t-esc="note" class="internal-note badge rounded text-bg-info" style="font-size: 0.85rem;" />
                         </t>
                     </li>
-                    <li class="row flex-wrap w-100 m-0">
+                    <li t-if="line.product_id.tracking !== 'none'" class="row flex-wrap w-100 m-0">
                         <div class="col-auto px-1">
                             <t t-slot="pack-lot-icon" />
                         </div>
