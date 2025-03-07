@@ -1,3 +1,4 @@
+from . import animal
 from . import mother_base
 from . import mother_inherit_1
 from . import mother_inherit_2
