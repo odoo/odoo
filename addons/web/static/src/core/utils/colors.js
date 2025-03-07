@@ -312,6 +312,21 @@ export function isColorGradient(value) {
 
 export const RGBA_REGEX = /[\d.]{1,5}/g;
 
+export function rgbaToHex(rgba) {
+    if (rgba.startsWith("#")) {
+        return rgba;
+    } else if (rgba.startsWith("rgba")) {
+        const values = rgba.match(RGBA_REGEX) || [];
+        return convertRgbaToCSSColor(
+            parseInt(values[0]),
+            parseInt(values[1]),
+            parseInt(values[2]),
+            parseFloat(values[3]) * 100
+        );
+    } else {
+        return rgbToHex(rgba);
+    }
+}
 /**
  * Takes a color (rgb, rgba or hex) and returns its hex representation. If the
  * color is given in rgba, the background color of the node whose color we're
