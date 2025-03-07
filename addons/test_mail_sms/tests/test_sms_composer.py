@@ -289,6 +289,7 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
         self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
 
 
+@tagged('sms_composer')
 class TestSMSComposerBatch(SMSCommon):
     @classmethod
     def setUpClass(cls):
@@ -339,6 +340,7 @@ class TestSMSComposerBatch(SMSCommon):
             )
 
 
+@tagged('sms_composer')
 class TestSMSComposerMass(SMSCommon):
 
     @classmethod
