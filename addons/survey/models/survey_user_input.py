@@ -5,6 +5,7 @@ import logging
 import textwrap
 import uuid
 
+from collections import Counter
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -54,6 +55,10 @@ class SurveyUser_Input(models.Model):
     scoring_total = fields.Float("Total Score", compute="_compute_scoring_values", store=True, compute_sudo=True, digits=(10, 2))  # stored for perf reasons
     scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
     survey_first_submitted = fields.Boolean(string='Survey First Submitted')
+    most_answered_tag_id = fields.Many2one(
+        'survey.question.answer.tag', string='Most Frequent Tag',
+        compute='_compute_most_answered_tag_id', help="Answer tag most frequently represented in user answers")
+    end_message_selection = fields.Selection(related="survey_id.end_message_selection", readonly=True)
     # live sessions
     is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
     question_time_limit_reached = fields.Boolean("Question Time Limit Reached", compute='_compute_question_time_limit_reached')
@@ -163,6 +168,19 @@ class SurveyUser_Input(models.Model):
                 attempts_number_result = attempts_number_results.get(user_input.id, {})
                 user_input.attempts_number = attempts_number_result.get('attempts_number', 1)
                 user_input.attempts_count = attempts_number_result.get('attempts_count', 1)
+
+    @api.depends('user_input_line_ids.suggested_answer_id')
+    def _compute_most_answered_tag_id(self):
+        for user_input in self:
+            tags = Counter(tag_id
+                           for line in user_input.user_input_line_ids
+                           for tag_id in line.suggested_answer_id.tag_ids)
+            if not tags:
+                user_input.most_answered_tag_id = False
+                continue
+            user_input.most_answered_tag_id = min(
+                (tag for tag, count in tags.items() if count == max(tags.values())),
+                key=lambda t: t.sequence)
 
     @api.model_create_multi
     def create(self, vals_list):
