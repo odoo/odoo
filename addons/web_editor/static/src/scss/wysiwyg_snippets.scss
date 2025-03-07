@@ -1166,13 +1166,16 @@
 
         // Button groups
         we-button-group.o_we_user_value_widget {
+            width: -webkit-fill-available;
+            width: -moz-available;
             we-selection-items {
                 display: flex;
-                max-width: 100%;
+                width: 100%;
 
                 we-button {
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
                     border-radius: 0;
+                    flex: 1;
 
                     + we-button {
                         border-left: none;
@@ -1188,12 +1191,12 @@
         }
         // Only when main option (not in a we-row or something like that...)
         we-customizeblock-option > we-button-group.o_we_user_value_widget we-selection-items {
-            @include large-component();
+            flex: 1 1 auto;
 
             we-button {
                 display: flex;
                 justify-content: center;
-                flex: 0 1 percentage(1/4);
+                flex: 1 1 percentage(1/4);
                 padding: ($o-we-sidebar-content-field-button-group-button-spacing / 4) ($o-we-sidebar-content-field-button-group-button-spacing / 3);
                 text-align: center;
             }
@@ -1575,7 +1578,7 @@
             }
             we-button, .o_we_so_color_palette, we-button-group {
                 &.o_we_user_value_widget {
-                    min-width: auto; // ... except for these ones
+                    min-width: 0; // ... except for these ones
                 }
             }
 
@@ -1621,7 +1624,7 @@
                 width: 100%;
             }
             > div {
-                flex: 0 1 auto;
+                flex: 1 1 auto;
                 min-width: 0;
                 margin-top: $o-we-sidebar-content-field-spacing;
             }
@@ -2593,16 +2596,11 @@ we-button:hover .o_we_shape_animated_label > span {
 
 // GRID LAYOUT
 we-button.o_grid {
-    min-width: fit-content;
     padding-left: 4.5px !important;
     padding-right: 4.5px !important;
 }
 
 we-select.o_grid we-toggler {
-    width: fit-content !important;
-}
-
-we-button-group.o_grid we-selection-items {
     width: fit-content !important;
 }
 
