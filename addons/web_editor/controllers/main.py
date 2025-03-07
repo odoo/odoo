@@ -520,4 +520,3 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
-
