@@ -1,8 +1,9 @@
 // Frontend general
-html, body, #wrapwrap {
+html, body, #wrapwrap:not(.o_safari_browser) {
     width: 100%;
     height: 100%;
 }
+
 #wrapwrap {
     // The z-index is useful to prevent that children with a negative z-index
     // go behind the wrapwrap (we create a new stacking context).
@@ -10,6 +11,11 @@ html, body, #wrapwrap {
     position: relative;
     display: flex;
     flex-flow: column nowrap;
+
+    &:has(.o_safari_browser) {
+        min-height: 100%;
+        width: 100%;
+    }
 
     > * {
         flex: 0 0 auto;
@@ -19,7 +25,7 @@ html, body, #wrapwrap {
     }
 }
 .modal-open #wrapwrap {
-    overflow: hidden;
+    overflow: hidden !important;
 }
 
 // TODO: This whole block can be removed once the scroll bar is moved back from
@@ -27,10 +33,10 @@ html, body, #wrapwrap {
 //       prevent browser to print more than what is above the fold. This block
 //       is moving the scroll to the body when printing the page.
 @media screen {
-    html, body {
+    html:not(:has(.o_safari_browser)), body:not(:has(.o_safari_browser)) {
         overflow: hidden;
     }
-    #wrapwrap {
+    #wrapwrap:not(.o_safari_browser) {
         // ... we delegate the scroll to that top element instead of the window/body
         // This is at least needed for the edit mode to not have a double scrollbar
         // due to the right editor panel (and since we want to minimize the style
