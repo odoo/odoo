@@ -81,12 +81,10 @@ QUnit.module("UpdateFlagFields", (hooks) => {
                                 <field name="is_time_customized"/>
                                 <field name="is_time_limited" readonly="0"
                                     widget="boolean_update_flag" 
-                                    options="{'flagFieldName': 'is_time_customized'}" 
-                                    context="{'referenceValue': parent.session_speed_rating}"/>
+                                    options="{'flagFieldName': 'is_time_customized'}"/>
                                 <field name="time_limit" readonly="0"
                                     widget="integer_update_flag"
-                                    options="{'flagFieldName': 'is_time_customized'}" 
-                                    context="{'referenceValue': parent.session_speed_rating_time_limit}"/>
+                                    options="{'flagFieldName': 'is_time_customized'}"/>
                             </group>
                         </form>
                     </field>
@@ -121,8 +119,10 @@ QUnit.module("UpdateFlagFields", (hooks) => {
         // Open question again
         await click(target.querySelector("tr.o_data_row > td.o_list_char"));
         await changeQuestionTimeLimit(20);
+        await nextTick();
         assertQuestionIsTimeCustomized();  // widget-triggered update to `true` based on `time_limit`
         await changeQuestionTimeLimit(30);
+        await nextTick();
         assertQuestionIsNotTimeCustomized();  // widget-triggered update to `false` based on `time_limit`
         // set question "is_time_limited" => false
         await click(target.querySelector("div[name='is_time_limited'] input"));
