@@ -38,3 +38,7 @@ class ProductProduct(models.Model):
         if field_name == "image_128" and self.sudo().available_in_pos:
             return True
         return super()._can_return_content(field_name, access_token)
+
+    def action_archive(self):
+        self.product_tmpl_id._ensure_unused_in_pos()
+        return super().action_archive()
