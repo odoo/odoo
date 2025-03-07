@@ -27,6 +27,9 @@ export class ProfilingItem extends Component {
             window.location = "/web/#action=base.action_menu_ir_profile";
         }
     }
+    checkIncompleteProfiles() {
+        this.profiling.checkIncompleteProfiles()
+    }
 }
 ProfilingItem.components = { DropdownItem };
 ProfilingItem.template = "web.DebugMenu.ProfilingItem";
