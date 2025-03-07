@@ -11,7 +11,7 @@ test("Click on checkbox", async () => {
         template: xml`<BuilderCheckbox classAction="'checkbox-action'"/>`,
     });
     const { getEditableContent } = await setupWebsiteBuilder(
-        `<div class="test-options-target">b</div>`
+        `<div class="test-options-target o-paragraph">b</div>`
     );
     const editableContent = getEditableContent();
 
@@ -46,14 +46,14 @@ test("hide/display base on applyTo", async () => {
 
     await contains(":iframe .parent-target").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b">b</div></div>`
+        `<div class="parent-target"><div class="child-target b o-paragraph">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect(".options-container .o-checkbox").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b my-custom-class">b</div></div>`
+        `<div class="parent-target"><div class="child-target b my-custom-class o-paragraph">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect(".options-container .o-checkbox").toHaveCount(1);
