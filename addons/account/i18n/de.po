@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2025
-# Larissa Manderfeld, 2025
 # Wil Odoo, 2025
 # Tiffany Chang, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Tiffany Chang, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7692,7 +7692,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"Wenn das aktive Feld auf False gesetzt ist, können Sie die "
+"Wenn das aktive Feld auf Falsch gesetzt ist, können Sie die "
 "Zahlungsbedingungen ausblenden, ohne sie zu entfernen."
 
 #. module: account
@@ -13174,14 +13174,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
-"Setzen Sie Aktiv auf False, um das Konto-Stichwort auszublenden, ohne es zu "
-"entfernen."
+"Setzen Sie Aktiv auf Falsch, um das Konto-Stichwort auszublenden, ohne es zu"
+" entfernen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
-"Setzen Sie Aktiv auf False, um das Journal auszublenden, ohne es zu "
+"Setzen Sie Aktiv auf Falsch, um das Journal auszublenden, ohne es zu "
 "entfernen."
 
 #. module: account
@@ -13189,7 +13189,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr ""
-"Setzen Sie Aktiv auf False, um die Steuer auszublenden, ohne sie zu "
+"Setzen Sie Aktiv auf Falsch, um die Steuer auszublenden, ohne sie zu "
 "entfernen."
 
 #. module: account
@@ -17381,6 +17381,13 @@ msgid ""
 msgstr ""
 "Sie können diesen Bericht nicht löschen (%s), er wird von der PDF-"
 "Generierungsmaschine der Buchhaltung verwendet."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot deprecate an account that is used in a tax distribution."
+msgstr ""
 
 #. module: account
 #. odoo-python

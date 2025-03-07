@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Tiffany Chang, 2024
-# Manon Rondou, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 12:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1615,7 +1615,7 @@ msgid ""
 "Check if you want to group products of this category in point of sale orders"
 msgstr ""
 "Cochez cette case si vous souhaitez regrouper les produits de cette "
-"catégorie dans les bons de commande du point de vente"
+"catégorie dans les commandes clients du point de vente"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -1668,7 +1668,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/generic_components/list_container/list_container.js:0
 msgid "Choose an order"
-msgstr ""
+msgstr "Choisir une commande"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
@@ -4357,7 +4357,7 @@ msgstr "Aucun produit trouvé pour"
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 msgid "No sale order found."
-msgstr "Aucun bon de commande trouvé."
+msgstr "Aucune commande client trouvée."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -9244,3 +9244,14 @@ msgid ""
 msgstr ""
 "{{ state.mode === 'email' ? 'par ex. john.doe@mail.com' : 'par ex. "
 "0123456789' }}"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Ce journal est associé à la méthode de paiement %s utilisée par la commande "
+"%s dans la session de point de vente active %s."

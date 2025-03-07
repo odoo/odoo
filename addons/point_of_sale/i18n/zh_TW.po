@@ -1096,7 +1096,7 @@ msgstr "銀行付款"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "銀行對帳單明細"
+msgstr "銀行結單資料行"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4731,7 +4731,7 @@ msgstr "已付款"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_pain_au_chocolat_product_template
 msgid "Pain au Chocolat"
-msgstr "法式巧克力包"
+msgstr "法式朱古力包"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
@@ -6263,7 +6263,7 @@ msgstr "檢視訂單"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_pain_au_chocolat_product_template
 msgid "Rich buttery pastry with a dark chocolate center."
-msgstr "香濃牛油酥皮，包住黑巧克力。"
+msgstr "香濃牛油酥皮，包住黑朱古力。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8825,3 +8825,12 @@ msgstr "{{ line.has_valid_product_lot() ? '產品批次有效' : '產品批次�
 msgid ""
 "{{ state.mode === 'email' ? 'e.g. john.doe@mail.com' : 'e.g. 0123456789' }}"
 msgstr "{{ state.mode === 'email' ? '例：john.doe@mail.com' : '例：0123456789' }}"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
