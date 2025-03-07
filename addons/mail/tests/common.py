@@ -1373,6 +1373,7 @@ class MailCommon(common.TransactionCase, MailCase):
                 'email': 'test.admin@test.example.com',
                 "name": "Mitchell Admin",
                 'notification_type': 'inbox',
+                'phone': '0455135790',
             })
         # have root available at hand, just in case
         cls.user_root = cls.env.ref('base.user_root')
