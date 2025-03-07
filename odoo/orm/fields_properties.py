@@ -79,9 +79,10 @@ class Properties(Field):
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
-        self._setup_definition_attrs()
+        self._setup_definition_attrs(model_class)
 
-    def _setup_definition_attrs(self):
+
+    def _setup_definition_attrs(self, model_class):
         if self.definition:
             # determine definition_record and definition_record_field
             assert self.definition.count(".") == 1
@@ -91,11 +92,18 @@ class Properties(Field):
             self._depends = (self.definition_record, )
             self.compute = self._compute
 
+
+    def setup(self, model):
+        if not self._setup_done and self.definition_record and self.definition_record_field:
+            definition_record_field = model.env[model._fields[self.definition_record].comodel_name]._fields[self.definition_record_field]
+            definition_record_field.properties_fields += (self,)
+        return super().setup(model)
+
     def setup_related(self, model):
         super().setup_related(model)
         if self.inherited_field and not self.definition:
             self.definition = self.inherited_field.definition
-            self._setup_definition_attrs()
+            self._setup_definition_attrs(model)
 
     # Database/cache format: a value is either None, or a dict mapping property
     # names to their corresponding value, like
@@ -682,6 +690,7 @@ class PropertiesDefinition(Field):
     copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
     prefetch = True
+    properties_fields = ()  # List of Properties fields using that definition
 
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
