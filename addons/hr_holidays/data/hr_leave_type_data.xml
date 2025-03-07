@@ -512,4 +512,62 @@
         <field name="company_id" eval="False"/>
         <field name="country_id" ref="base.sk"/>
     </record>
+
+<!-- SA : Saudi Arabia -->
+    <record id="ksa_sick_leave_75_leave_type" model="hr.leave.type">
+        <field name="name">Sick Leave (75% Paid)</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="ksa_sick_leave_0_leave_type" model="hr.leave.type">
+        <field name="name">Sick Leave (UnPaid)</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="ksa_marriage_leave_type" model="hr.leave.type">
+        <field name="name">Marriage Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="ksa_maternity_leave_type" model="hr.leave.type">
+        <field name="name">Maternity Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="ksa_iddah_leave_type" model="hr.leave.type">
+        <field name="name">Iddah Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="ksa_hajj_leave_type" model="hr.leave.type">
+        <field name="name">Hajj Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="ksa_paternity_leave_type" model="hr.leave.type">
+        <field name="name">Paternity Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="ksa_study_leave_type" model="hr.leave.type">
+        <field name="name">Study Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
 </data></odoo>
