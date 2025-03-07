@@ -28,7 +28,7 @@ export class Persona extends Record {
     static new() {
         const record = super.new(...arguments);
         record.debouncedSetImStatus = debounce(
-            (newStatus) => record.updateImStatus(newStatus),
+            (newStatus) => (record.im_status = newStatus),
             this.IM_STATUS_DEBOUNCE_DELAY
         );
         return record;
@@ -103,10 +103,6 @@ export class Persona extends Record {
 
     get emailWithoutDomain() {
         return this.email.substring(0, this.email.lastIndexOf("@"));
-    }
-
-    updateImStatus(newStatus) {
-        this.im_status = newStatus;
     }
 }
 
