@@ -23,5 +23,11 @@ const messagePatch = {
                 thread?.selfMember?.persona?.isInternalUser)
         );
     },
+    get authorName() {
+        if (this.author?.user_livechat_username && this.thread?.channel_type === "livechat") {
+            return this.author.user_livechat_username;
+        }
+        return super.authorName;
+    },
 };
 patch(Message.prototype, messagePatch);

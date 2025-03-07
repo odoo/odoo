@@ -2,11 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <div t-if="message.isNotification" class="o-mail-NotificationMessage text-break mx-auto text-muted opacity-75 px-3 text-center smaller" t-on-click="onClickNotificationMessage"  t-att-class="props.className" t-ref="root">
-            <i t-if="message.notificationIcon" t-attf-class="{{ message.notificationIcon }} me-1"/>
-            <span class="o-mail-NotificationMessage-author d-inline" t-if="authorName and !message.body.includes(escape(authorName))" t-esc="authorName"/> <t t-out="message.body"/>
-        </div>
-        <ActionSwiper t-else="" onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
+        <ActionSwiper onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative rounded-0"
                 t-att-class="attClass"
                 role="group"
@@ -31,8 +27,8 @@
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }" name="header">
-                            <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author small" t-att-class="getAuthorAttClass()">
-                                <strong class="me-1" t-esc="authorName"/>
+                            <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author small" t-att-class="getAuthorAttClass()">
+                                <strong class="me-1" t-esc="message.authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeShort">
