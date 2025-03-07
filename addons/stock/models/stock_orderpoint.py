@@ -342,11 +342,11 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('replenishment_uom_id', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order_computed(self):
-        orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
-        qty_in_progress_by_orderpoint = orderpoints_to_compute._quantity_in_progress()
         for orderpoint in self:
-            orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order(qty_in_progress_by_orderpoint=qty_in_progress_by_orderpoint)
-        (self - orderpoints_to_compute).qty_to_order_computed = False
+            if not orderpoint.product_id or not orderpoint.location_id:
+                orderpoint.qty_to_order_computed = False
+                continue
+            orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order(qty_in_progress_by_orderpoint=orderpoint._quantity_in_progress())
 
     def _get_qty_to_order(self, force_visibility_days=False, qty_in_progress_by_orderpoint={}):
         self.ensure_one()
