@@ -17,7 +17,7 @@ import { WebsiteDialog } from '../dialog/dialog';
 import { PageOption } from "./page_options";
 import { Component, onWillStart, useEffect, onWillUnmount } from "@odoo/owl";
 import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
-import { router } from "@web/core/browser/router";
+import { router, routerBus } from "@web/core/browser/router";
 import { OptimizeSEODialog } from "@website/components/dialog/seo";
 
 /**
@@ -159,12 +159,22 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                         hasFakeState = true;
                     },
                     onLeave: () => history.back(),
-                    reloadIframe: false
+                    reloadIframe: true
                 });
             };
-            window.addEventListener('popstate', leaveOnBackNavigation);
+
+            const handleBeforePopstate = (ev) => {
+                ev = ev.detail;
+                const action = ev.state?.nextState?.action;
+                if (action === "website" && document.querySelector(".editor_enable")) {
+                    leaveOnBackNavigation();
+                    router.skipLoad = true;
+                }
+            };
+            routerBus.addEventListener("before_popstate", handleBeforePopstate);
+
             return () => {
-                window.removeEventListener('popstate', leaveOnBackNavigation);
+                routerBus.removeEventListener("before_popstate", handleBeforePopstate);
                 if (hasFakeState) {
                     // prevent router from reloading state from scratch
                     // we just want to pop the fake history entry
