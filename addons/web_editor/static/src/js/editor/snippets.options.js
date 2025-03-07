@@ -1582,7 +1582,7 @@ const MultiUserValueWidget = UserValueWidget.extend({
     async setValue(value, methodName) {
         let values = value.split(/\s*\|\s*/g);
         if (values.length === 1) {
-            values = value.split(/\s+/g);
+            values = value.split(/\s*,\s*|\s+/g);
         }
         for (let i = 0; i < this._userValueWidgets.length - 1; i++) {
             await this._userValueWidgets[i].setValue(values.shift() || '', methodName);
