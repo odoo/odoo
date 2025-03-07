@@ -166,7 +166,7 @@ class SaleOrder(models.Model):
                 release_url = (
                     "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
                     if is_production == 'True'
-                    else "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
+                    else "https://shiperooconnect-dev.automation.shiperoo.com/api/odoo_release"
                 )
                 headers = {
                     "Content-Type": "application/json"
