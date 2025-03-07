@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<<<<<<< saas-17.4
+||||||| 33640a63cafd1fe42330be233241538ba2d4bebd
+<t t-name="hr_attendance.EmployeeBadge">
+    <div class="o_attendance_background d-flex align-items-end justify-content-center flex-grow-1 pt-5 pt-md-4 bg-odoo">
+        <img class="o_hr_attendance_employee_badge img rounded-circle" t-attf-src="data:image/png;base64,{{employeeAvatar}}" height="80"/>
+    </div>
+</t>
+
+=======
+<t t-name="hr_attendance.EmployeeBadge">
+    <div t-if="employeeAvatar" class="o_attendance_background d-flex align-items-end justify-content-center flex-grow-1 pt-5 pt-md-4 bg-odoo">
+        <img class="o_hr_attendance_employee_badge img rounded-circle" t-attf-src="data:image/png;base64,{{employeeAvatar}}" height="80"/>
+    </div>
+</t>
+
+>>>>>>> 8dc7a2e46a970f2cc536cd1df2574fb579deed3e
 <t t-name="hr_attendance.KioskPinConfirm">
     <t t-if="this.props.employeeData">
         <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 justify-content-center align-items-center">
