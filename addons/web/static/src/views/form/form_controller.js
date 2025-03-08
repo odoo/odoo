@@ -48,6 +48,7 @@ import {
 } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 import { effect } from "@web/core/utils/reactive";
+import { getDeleteOrArchiveDialogProps } from "../delete_with_archive_hook";
 
 const viewRegistry = registry.category("views");
 
@@ -331,6 +332,7 @@ export class FormController extends Component {
         if (this.env.inDialog) {
             useFormViewInDialog();
         }
+        this.getDeleteOrArchiveDialogProps = getDeleteOrArchiveDialogProps(this.deleteConfirmationDialogProps);
     }
 
     get cogMenuProps() {
@@ -587,8 +589,12 @@ export class FormController extends Component {
         };
     }
 
+    async getDeleteOrArchiveConfirmationDialogProps() {
+        return await this.getDeleteOrArchiveDialogProps(this.props.resModel, [this.props.resId]);
+    }
+
     async deleteRecord() {
-        this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
+        this.dialogService.add(ConfirmationDialog, await this.getDeleteOrArchiveConfirmationDialogProps());
     }
 
     async beforeExecuteActionButton(clickParams) {

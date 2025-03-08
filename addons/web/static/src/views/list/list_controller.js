@@ -23,6 +23,7 @@ import { ListCogMenu } from "./list_cog_menu";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useExportRecords } from "@web/views/view_hook";
+import { getDeleteOrArchiveDialogProps } from "../delete_with_archive_hook";
 
 import {
     Component,
@@ -183,6 +184,7 @@ export class ListController extends Component {
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()
         );
+        this.getDeleteOrArchiveDialogProps = getDeleteOrArchiveDialogProps(this.deleteConfirmationDialogProps);
     }
 
     get modelParams() {
@@ -244,6 +246,10 @@ export class ListController extends Component {
         return {};
     }
 
+    async getDeleteOrArchiveConfirmationDialogProps() {
+        return await this.getDeleteOrArchiveDialogProps(this.props.resModel, await this.model.root.getResIds(true));
+    }
+
     getExportableFields() {
         return unique(
             this.props.archInfo.columns
@@ -255,8 +261,8 @@ export class ListController extends Component {
         );
     }
 
-    onDeleteSelectedRecords() {
-        this.model.root.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps);
+    async onDeleteSelectedRecords() {
+        this.model.root.deleteRecordsWithConfirmation(await this.getDeleteOrArchiveConfirmationDialogProps());
     }
 
     /**
@@ -408,7 +414,7 @@ export class ListController extends Component {
                 sequence: 40,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),
-                callback: () => this.onDeleteSelectedRecords(),
+                callback: async () => await this.onDeleteSelectedRecords(),
             },
         };
     }

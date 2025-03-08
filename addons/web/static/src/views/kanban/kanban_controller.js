@@ -21,6 +21,7 @@ import { KanbanCogMenu } from "./kanban_cog_menu";
 import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
+import { getDeleteOrArchiveDialogProps } from "../delete_with_archive_hook";
 
 import {
     Component,
@@ -207,6 +208,7 @@ export class KanbanController extends Component {
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()
         );
+        this.getDeleteOrArchiveDialogProps = getDeleteOrArchiveDialogProps(this.deleteConfirmationDialogProps);
     }
 
     get display() {
@@ -331,6 +333,10 @@ export class KanbanController extends Component {
         return {};
     }
 
+    async getDeleteOrArchiveConfirmationDialogProps(resId = null) {
+        return await this.getDeleteOrArchiveDialogProps(this.props.resModel, resId ? [resId] : await this.model.root.getResIds(true));
+    }
+
     getExportableFields() {
         return Object.keys(this.model.root.config.activeFields).map((e) => this.props.fields[e]);
     }
@@ -378,9 +384,9 @@ export class KanbanController extends Component {
                 sequence: 40,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),
-                callback: () =>
+                callback: async () =>
                     this.model.root.deleteRecordsWithConfirmation(
-                        this.deleteConfirmationDialogProps
+                        await this.getDeleteOrArchiveConfirmationDialogProps()
                     ),
             },
         };
@@ -390,8 +396,8 @@ export class KanbanController extends Component {
         return evaluateBooleanExpr(modifier, { context: this.props.context });
     }
 
-    deleteRecord(record) {
-        this.model.root.deleteRecordsWithConfirmation({}, [record]);
+    async deleteRecord(record) {
+        this.model.root.deleteRecordsWithConfirmation(await this.getDeleteOrArchiveConfirmationDialogProps(record.resId));
     }
 
     async openRecord(record, { newWindow } = {}) {
