@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
 import { s, span } from "../_helpers/tags";
@@ -9,6 +10,14 @@ test("should make a few characters strikeThrough", async () => {
     await testEditor({
         contentBefore: `<p>ab[cde]fg</p>`,
         stepFunction: strikeThrough,
+        contentAfter: `<p>ab${s(`[cde]`)}fg</p>`,
+    });
+});
+
+test("should make a few characters strikeThrough with shortcut", async () => {
+    await testEditor({
+        contentBefore: `<p>ab[cde]fg</p>`,
+        stepFunction: async () => await press(["alt", "shift", "5"]),
         contentAfter: `<p>ab${s(`[cde]`)}fg</p>`,
     });
 });
