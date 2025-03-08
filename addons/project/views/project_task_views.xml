@@ -407,7 +407,7 @@
                         <group>
                             <field name="project_id"
                                 domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
-                                required="parent_id or child_ids"
+                                required="parent_id or child_ids or is_template"
                                 widget="project"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
@@ -750,6 +750,7 @@
             <field name="arch" type="xml">
                 <list position="attributes">
                     <attribute name="multi_edit">1</attribute>
+                    <attribute name="js_class">project_task_list</attribute>
                 </list>
                 <field name="date_deadline" position="after">
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
@@ -782,7 +783,6 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <list position="attributes">
-                    <attribute name="js_class">project_task_list</attribute>
                     <attribute name="default_group_by">stage_id</attribute>
                 </list>
             </field>
@@ -1117,6 +1117,17 @@
             </field>
         </record>
 
+        <record id="action_server_convert_to_template" model="ir.actions.server">
+            <field name="name">Convert to Template</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="binding_model_id" ref="project.model_project_task"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = record.action_convert_to_template()
+            </field>
+        </record>
+
         <!-- Views for 'Tasks' stat button via Contact form -->
         <record id="view_task_form_res_partner" model="ir.ui.view">
             <field name="name">project.task.form.res.partner</field>
@@ -1281,6 +1292,32 @@
             <field name="sequence" eval="70"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="project_task_graph_view_project_milestone"/>
+        </record>
+
+        <record id="project_task_templates_list" model="ir.ui.view">
+            <field name="name">project.task.templates.list</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project_task_view_tree_base"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[not(@name='name') and not(@name='project_id')]" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_templates_action" model="ir.actions.act_window">
+            <field name="name">Task Templates</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="domain">[('is_template', '=', True)]</field>
+            <field name="context">{'active_test': False, 'default_is_template': True}</field>
+        </record>
+
+        <record id="project_task_templates_action_list" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="project_task_templates_action"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="project.project_task_templates_list"/>
         </record>
 
 </odoo>

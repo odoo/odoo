@@ -30,7 +30,11 @@ export class ProjectProject extends models.Model {
 
     check_access_rights() {
         return Promise.resolve(true);
-    };
+    }
+
+    get_template_tasks() {
+        return [];
+    }
 }
 
 export class ProjectProjectStage extends models.Model {

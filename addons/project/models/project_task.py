@@ -307,6 +307,7 @@ class ProjectTask(models.Model):
             Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !""",
     )
     link_preview_name = fields.Char(compute='_compute_link_preview_name', export_string_translation=False)
+    is_template = fields.Boolean(readonly=True, copy=False, export_string_translation=False)
 
     _recurring_task_has_no_parent = models.Constraint(
         'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))',
@@ -946,6 +947,12 @@ class ProjectTask(models.Model):
     @api.model
     def default_get(self, default_fields):
         vals = super().default_get(default_fields)
+
+        if template_id := self.env.context.get('task_template_id'):
+            template = self.browse(template_id)
+            template_data = template.copy_data()[0]
+            template_data.pop('name')
+            return vals | template_data
 
         # prevent creating new task in the waiting state
         if 'state' in default_fields and vals.get('state') == '04_waiting_normal':
@@ -1906,6 +1913,33 @@ class ProjectTask(models.Model):
                 'type': 'danger',
                 'message': _('Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.'),
             }
+        }
+
+    def action_convert_to_template(self):
+        self.ensure_one()
+        self.action_archive()
+        self.is_template = True
+        self.message_post(body=_("Task converted to template"))
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'project_show_template_notification',
+            'params': {
+                'task_id': self.id,
+                'next': {
+                    'type': 'ir.actions.client',
+                    'tag': 'soft_reload',
+                },
+            },
+        }
+    
+    def action_undo_convert_to_template(self):
+        self.ensure_one()
+        self.action_unarchive()
+        self.is_template = False
+        self.message_post(body=_("Template reverted to task."))
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'soft_reload',
         }
 
     def action_archive(self):
