@@ -4,3 +4,4 @@ from . import main
 from . import reorder
 from . import variant
 from . import website_sale
+from . import portal
