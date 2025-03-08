@@ -17,6 +17,11 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 export class ProductTemplate extends Base {
     static pythonModel = "product.template";
 
+    constructor() {
+        super(...arguments);
+        this.cachedPricelistRules = {};
+    }
+
     prepareProductBaseLineForTaxesComputationExtraValues(
         price,
         pricelist = false,
@@ -194,14 +199,25 @@ export class ProductTemplate extends Base {
         const rulesIds = [...productTmplRules, ...productRules].map((rule) => rule.id);
 
         let price = basePrice + (price_extra || 0);
-        const rules =
-            pricelist?.item_ids?.filter(
-                (rule) =>
-                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
-                    (!rule.min_quantity || quantity >= rule.min_quantity) &&
-                    (!rule.product_id || rule.product_id.id === product?.id) &&
-                    (!rule.categ_id || rule.categ_id.id === product?.categ_id?.id)
-            ) || [];
+        let rules = [];
+        if (pricelist) {
+            const cacheKey = `${pricelist.id}_${rulesIds.join(",")}_${quantity}_${product?.id}_${
+                product?.categ_id?.id
+            }`;
+            if (!Object.prototype.hasOwnProperty.call(this.cachedPricelistRules, cacheKey)) {
+                this.cachedPricelistRules[cacheKey] =
+                    pricelist.item_ids?.filter(
+                        (rule) =>
+                            (rulesIds.includes(rule.id) ||
+                                (!rule.product_id && !rule.product_tmpl_id)) &&
+                            (!rule.min_quantity || quantity >= rule.min_quantity) &&
+                            (!rule.product_id || rule.product_id.id === product?.id) &&
+                            (!rule.categ_id || rule.categ_id.id === product?.categ_id?.id)
+                    ) || [];
+            }
+
+            rules = this.cachedPricelistRules[cacheKey];
+        }
 
         // We take in first assigned product rules instead of common one.
         let commonRule = "";
