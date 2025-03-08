@@ -53,13 +53,18 @@ websiteSaleAddress.include({
         }
     },
 
+    _selectedCountryCode: function() {
+        const countryOption = this.addressForm.country_id;
+        return countryOption.selectedOptions[0].getAttribute("code");
+    },
+
     _selectState: function (id) {
         this.addressForm.querySelector(`select[name="state_id"] > option[value="${id}"]`).selected =
             "selected";
     },
 
     _onChangeZip: function () {
-        if (this.countryCode !== "BR") {
+        if (this.countryCode !== "BR" || this._selectedCountryCode() !== "BR") {
             return;
         }
 
@@ -91,7 +96,7 @@ websiteSaleAddress.include({
     },
 
     _onChangeBrazilianCity: function () {
-        if (this.countryCode !== "BR") {
+        if (this.countryCode !== "BR" || this._selectedCountryCode() !== "BR") {
             return;
         }
 
@@ -128,12 +133,7 @@ websiteSaleAddress.include({
             return res;
         }
 
-        const countryOption = this.addressForm.country_id;
-        const selectedCountryCode = countryOption.value
-            ? countryOption.selectedOptions[0].getAttribute("code")
-            : "";
-
-        if (selectedCountryCode === "BR") {
+        if (this._selectedCountryCode() === "BR") {
             this._setVisibility(".o_standard_address", false); // hide
             this._setVisibility(".o_extended_address", true); // show
             this._onChangeZip();
