@@ -612,3 +612,26 @@ class TestNewPage(common.TransactionCase):
         pages = self.env['website.page'].search([('url', '=', '/snippets')])
         self.assertEqual(len(pages), 1, "Exactly one page should be at /snippets.")
         self.assertNotEqual(pages.key, "website.snippets", "Page's key cannot be website.snippets.")
+
+@tagged('-at_install', 'post_install')
+class TestNewWebsite(common.TransactionCase):
+    def test_new_website_eu_privacy_page(self):
+        company_1 = self.env['res.company'].create({'name': "Company 1", "country_id":
+            self.env.ref('base.us').id})
+        company_2 = self.env['res.company'].create({'name': "Company 2", "country_id":
+            self.env.ref('base.be').id})
+        website_1 = self.env['website'].create({'name': "Website 1 (not EU)", 'company_id':
+            company_1.id})
+        website_2 = self.env['website'].create({'name': "Website 2 (in EU)", 'company_id':
+            company_2.id})
+
+        privacy_page_1 = self.env['website.page'].search([('website_id', '=', website_1.id),
+                                                          ('url', '=', '/privacy')])
+        privacy_page_2 = self.env['website.page'].search([('website_id', '=', website_2.id),
+                                                          ('url', '=', '/privacy')])
+
+        self.assertEqual(len(privacy_page_1), 0, "No privacy page should be created for a non-EU company")
+        self.assertEqual(len(privacy_page_2), 1, "One privacy page should be created for an EU company")
+
+
+

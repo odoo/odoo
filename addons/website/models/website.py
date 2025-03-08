@@ -294,6 +294,7 @@ class Website(models.Model):
         websites.company_id._compute_website_id()
         for website in websites:
             website._bootstrap_homepage()
+            website._bootstrap_privacy_policy_page()
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
@@ -430,6 +431,43 @@ class Website(models.Model):
         :return: True if the url has to be indexed, False otherwise
         """
         return get_base_domain(url.lower(), True) == get_base_domain(self.domain.lower(), True)
+
+    def _bootstrap_privacy_policy_page(self):
+        """
+        Bootstrap the privacy policy page if it's required.
+        """
+        if not self._is_privacy_policy_required():
+            return
+
+        existing_privacy_page = self.env['website.page'].search([
+            ('website_id', '=', self.id),
+            ('url', '=', '/privacy'),
+        ])
+
+        if not existing_privacy_page:
+            privacy_view = self.env.ref('website.privacy_policy', raise_if_not_found=False)
+            if privacy_view:
+                privacy_view.with_context(website_id=self.id).write({'website_id': self.id})
+                specific_privacy_view = self.with_context(website_id=self.id).viewref(
+                    'website.privacy_policy')
+                self.env['website.page'].create({
+                    'is_published': True,
+                    'website_indexed': False,
+                    'url': '/privacy',
+                    'website_id': self.id,
+                    'view_id': specific_privacy_view.id,
+                })
+            # Activate privacy link in copyright footer
+            copyright_privacy_view = self.env.ref('website.footer_copyright_private_policy', raise_if_not_found=False)
+            if copyright_privacy_view:
+                copyright_privacy_view.with_context(website_id=self.id).write({'active': True})
+
+    def _is_privacy_policy_required(self):
+        """
+        Privacy Policy Page is required for EU country websites.
+        """
+        eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
+        return self.company_id.country_id.code in eu_country_codes
 
     # ----------------------------------------------------------
     # Configurator
