@@ -46,6 +46,7 @@ class AccountPayment(models.Model):
         required=True,
         default='draft',
         compute='_compute_state', store=True, readonly=False,
+        tracking=True,
         copy=False,
     )
     is_reconciled = fields.Boolean(string="Is Reconciled", store=True,
