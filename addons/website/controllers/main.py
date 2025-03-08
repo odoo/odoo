@@ -523,7 +523,14 @@ class Website(Home):
                 field_type = field_meta.get('type')
                 if field_type == 'text':
                     if value and field_meta.get('truncate', True):
-                        value = shorten(value, max_nb_chars, placeholder='...')
+                        match_position = value.lower().find(term.lower())
+                        # Term is at the start of the text, truncate it normally
+                        if (match_position + len(term)) < (max_nb_chars - len(term)):
+                            value = shorten(value, max_nb_chars, placeholder='...')
+                        # Term is not at the start so need to slide the value a bit until reach that term
+                        else:
+                            slided_value = "..." + value[match_position - 26:].split(' ', 1)[-1]
+                            value = shorten(slided_value, max_nb_chars, placeholder='...')
                     if field_meta.get('match') and value and term:
                         pattern = '|'.join(map(re.escape, term.split()))
                         if pattern:
