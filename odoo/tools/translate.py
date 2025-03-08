@@ -31,7 +31,7 @@ from tokenize import generate_tokens, STRING, NEWLINE, INDENT, DEDENT
 
 from babel.messages import extract
 from lxml import etree, html
-from markupsafe import escape, Markup
+from markupsafe import escape, Markup, __file__ as _MARKUPSAFE_LOC
 from psycopg2.extras import Json
 
 import odoo
@@ -593,6 +593,11 @@ def _get_translation_source(stack_level: int, module: str = '', lang: str = '', 
         frame = inspect.currentframe()
         for _index in range(stack_level + 1):
             frame = frame.f_back
+
+        # handle `Markup.format()` calls
+        if frame.f_back.f_code.co_filename == _MARKUPSAFE_LOC and frame.f_code.co_name == "format_field":
+            frame = frame.f_back.f_back.f_back.f_back.f_back
+
         lang = lang or _get_lang(frame, default_lang)
     if lang and lang != 'en_US':
         return get_translated_module(module or frame), lang

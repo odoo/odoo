@@ -162,6 +162,10 @@ class TestImport(common.TransactionCase):
         context = {'lang': 'fr_FR'}
         self.assertEqual(str(BOOLEAN_TRANSLATIONS[0]), 'oui')
 
+        # test lazy translation in `Markup.format()` calls
+        safe = Markup("<p>{}</p>").format(BOOLEAN_TRANSLATIONS[0])
+        self.assertEqual(safe, "<p>oui</p>")
+
     def test_import_from_csv_file(self):
         """Test the import from a single CSV file works"""
         with file_open('test_translation_import/i18n/dot.csv', 'rb') as f:
