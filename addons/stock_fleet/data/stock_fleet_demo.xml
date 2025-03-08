@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+
+    <!-- Set `dispatch_management` True for incoming & outgoing picking types. -->
+    <function model="stock.picking.type" name="write">
+        <value model="stock.picking.type" search="[('code', '=', 'incoming')]"/>
+        <value eval="{'dispatch_management': True}"/>
+    </function>
+    <function model="stock.picking.type" name="write">
+        <value model="stock.picking.type" search="[('code', '=', 'outgoing')]"/>
+        <value eval="{'dispatch_management': True}"/>
+    </function>
+
     <record id="vehicle_tag_transport" model="fleet.vehicle.tag" >
         <field name="name">Transport</field>
         <field name="color" eval="5"/>
