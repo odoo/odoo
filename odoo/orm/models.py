@@ -1638,10 +1638,14 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r} for {aggregate_spec!r}.")
         if not func:
             raise ValueError(f"Aggregate method is mandatory for {fname!r}")
-        if func not in READ_GROUP_AGGREGATE:
+        if func not in READ_GROUP_AGGREGATE and func != 'custom':
             raise ValueError(f"Invalid aggregate method {func!r} for {aggregate_spec!r}.")
 
         field = self._fields[fname]
+
+        if func == 'custom':
+            return field.get_custom_aggregator(self, query)
+
         if func == 'recordset' and not (field.relational or fname == 'id'):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
 

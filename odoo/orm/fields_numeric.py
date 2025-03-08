@@ -1,7 +1,7 @@
 from operator import attrgetter
 from xmlrpc.client import MAXINT  # TODO change this
 
-from odoo.tools import float_compare, float_is_zero, float_repr, float_round
+from odoo.tools import float_compare, float_is_zero, float_repr, float_round, SQL
 from odoo.tools.misc import SENTINEL, Sentinel
 
 from .fields import Field
@@ -177,7 +177,8 @@ class Monetary(Field[float]):
     falsy_value = 0.0
 
     currency_field = None
-    aggregator = 'sum'
+    aggregator = 'custom'
+    custom_aggregator = None
 
     def __init__(self, string: str | Sentinel = SENTINEL, currency_field: str | Sentinel = SENTINEL, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
@@ -192,6 +193,24 @@ class Monetary(Field[float]):
             'x_currency_id' if 'x_currency_id' in model._fields else
             None
         )
+
+    def get_custom_aggregator(self, model, query):
+        sql_field = model._field_to_sql(model._table, self.name, query)
+
+        if self.custom_aggregator:
+            return SQL(self.custom_aggregator, sql_field)
+
+        currency_field_name = self.get_currency_field(model)
+        currency_field = model._fields[currency_field_name]
+        if currency_field.store or currency_field.search:
+            return SQL(
+                'CASE WHEN COUNT(DISTINCT %s) = 1 THEN SUM(%s) ELSE NULL END AS %s',
+                model._field_to_sql(model._table, currency_field_name, query),
+                sql_field,
+                SQL(self.name),
+            )
+
+        return SQL('SUM(%s)', sql_field)
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
