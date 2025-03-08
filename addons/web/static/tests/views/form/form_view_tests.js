@@ -5878,6 +5878,103 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbWrite, 1, "one write RPC should have been done");
     });
 
+    QUnit.test("Save record, no changes but dirty (add and remove tag)", async function (assert) {
+        let nbWrite = 0;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+            resId: 1,
+            mockRPC(route) {
+                if (route === "/web/dataset/call_kw/partner/web_save") {
+                    nbWrite++;
+                }
+            },
+        });
+
+        assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+
+        // add a tag
+        await selectDropdownItem(target, "timmy", "gold");
+        assert.containsOnce(target, ".o_field_widget[name=timmy] .o_tag");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=timmy] input").value,
+            "",
+            "many2many_tags should be empty"
+        );
+
+        // remove tag
+        await click(target.querySelector(".o_field_widget[name=timmy] .o_tag .o_delete"));
+        assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+
+        // click on save
+        await clickSave(target);
+
+        assert.strictEqual(nbWrite, 1, "one write RPC should have been done");
+    });
+
+    QUnit.test(
+        "switching to another record from a dirty record but wo changes (add and remove tag)",
+        async function (assert) {
+            let nbWrite = 0;
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+                resIds: [1, 2],
+                resId: 1,
+                mockRPC(route) {
+                    if (route === "/web/dataset/call_kw/partner/web_save") {
+                        nbWrite++;
+                    }
+                },
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_pager_value").textContent,
+                "1",
+                "pager value should be 1"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_pager_limit").textContent,
+                "2",
+                "pager limit should be 2"
+            );
+
+            assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+
+            // add a tag
+            await selectDropdownItem(target, "timmy", "gold");
+            assert.containsOnce(target, ".o_field_widget[name=timmy] .o_tag");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=timmy] input").value,
+                "",
+                "many2many_tags should be empty"
+            );
+
+            // remove tag
+            await click(target.querySelector(".o_field_widget[name=timmy] .o_tag .o_delete"));
+            assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+
+            // click on the pager to switch to the next record (will save record)
+            await click(target.querySelector(".o_pager_next"));
+            assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
+            assert.strictEqual(
+                target.querySelector(".o_pager_value").textContent,
+                "2",
+                "pager value should be 2"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_last_breadcrumb_item").innerText,
+                "second record"
+            );
+
+            assert.strictEqual(nbWrite, 1, "one write RPC should have been done");
+        }
+    );
+
     QUnit.test("do not reload after save when using pager", async function (assert) {
         await makeView({
             type: "form",
