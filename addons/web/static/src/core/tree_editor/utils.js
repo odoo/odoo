@@ -6,6 +6,7 @@ import {
     createVirtualOperators,
     normalizeValue,
     isTree,
+    Couple,
 } from "@web/core/tree_editor/condition_tree";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -82,26 +83,56 @@ export function useMakeGetFieldDef(fieldService) {
     fieldService ||= useService("field");
     const loadFieldInfo = useLoadFieldInfo(fieldService);
     return async (resModel, tree, additionalsPath = []) => {
-        const pathsInTree = getPathsInTree(tree);
+        const pathsInTree = getPathsInTree(tree, true);
+        console.log(pathsInTree);
         const paths = new Set([...pathsInTree, ...additionalsPath]);
         const promises = [];
         const fieldDefs = {};
-        for (const path of paths) {
-            if (typeof path === "string") {
-                promises.push(
-                    loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                        fieldDefs[path] = fieldDef;
+        const loadFieldInfoFromMultiplePaths = (getResModel, fieldDefs, path) => {
+            if (typeof path === "string" && !(path in fieldDefs)) {
+                const prom = getResModel
+                    .then((resModel) => {
+                        if (resModel) {
+                            return loadFieldInfo(resModel, path);
+                        }
+                        return { fieldDef: null };
                     })
+                    .then(({ fieldDef }) => {
+                        fieldDefs[path].fieldDef = fieldDef;
+                        return fieldDef?.relation || null;
+                    });
+                fieldDefs[path] = { prom, subPathsFieldDefs: {} };
+                promises.push(prom);
+            } else if (
+                path instanceof Couple &&
+                typeof path._first === "string" &&
+                path._first in fieldDefs
+            ) {
+                loadFieldInfoFromMultiplePaths(
+                    fieldDefs[path._first].prom,
+                    fieldDefs[path._first].subPathsFieldDefs,
+                    path._second
                 );
             }
+        };
+        for (const path of paths) {
+            loadFieldInfoFromMultiplePaths(Promise.resolve(resModel), fieldDefs, path);
         }
         await Promise.all(promises);
-        return (path) => {
+        const _getFieldDef = (path, fieldDefs) => {
             if (typeof path === "string") {
-                return fieldDefs[path];
+                return fieldDefs[path].fieldDef;
+            }
+            if (
+                path instanceof Couple &&
+                typeof path._first === "string" &&
+                path._first in fieldDefs
+            ) {
+                return _getFieldDef(path._second, fieldDefs[path._first].subPathsFieldDefs);
             }
             return null;
         };
+        return (path) => _getFieldDef(path, fieldDefs);
     };
 }
 
@@ -291,10 +322,16 @@ function _extractIdsRecursive(tree, getFieldDef, idsByModel) {
     return idsByModel;
 }
 
-export function getPathsInTree(tree) {
+export function getPathsInTree(tree, lookInSubTrees = false) {
     const paths = [];
     if (tree.type === "condition") {
         paths.push(tree.path);
+        if (lookInSubTrees && isTree(tree.value)) {
+            const subTreePaths = getPathsInTree(tree.value, lookInSubTrees);
+            for (const p of subTreePaths) {
+                paths.push(new Couple(tree.path, p));
+            }
+        }
     }
     if (tree.type === "connector" && tree.children) {
         for (const child of tree.children) {
