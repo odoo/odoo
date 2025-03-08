@@ -619,7 +619,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'name': 'super product',
             'is_storable': True,
             'seller_ids': [(0, 0, {'partner_id': vendor.id})],
-            'route_ids': buy_route,
         })
         self.env['mrp.bom'].create({
             'product_tmpl_id': product.product_tmpl_id.id,
@@ -649,7 +648,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         # Delete the orderpoint to generate a new one with the manufacture route
         orderpoint_product.unlink()
         # switch the product route to manufacture
-        product.write({'route_ids': [(3, buy_route.id), (4, manu_route.id)]})
+        product.write({'purchase_ok': False})
+        product.route_ids = [Command.unlink(buy_route.id), Command.link(manu_route.id)]
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
             [('product_id', '=', product.id)])
