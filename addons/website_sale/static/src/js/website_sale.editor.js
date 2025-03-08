@@ -6,7 +6,24 @@ import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import "@website/js/editor/snippets.options";
 import { useChildSubEnv } from "@odoo/owl";
-import weUtils from '@web_editor/js/common/utils';
+import weUtils from "@web_editor/js/common/utils";
+import { WebsiteSale } from "@website_sale/js/website_sale";
+
+WebsiteSale.include({
+    destroy() {
+        this._super.apply(this, arguments);
+
+        const allProductsLinkSpanEl = this.el.querySelector("#all_products_link_span");
+        if (allProductsLinkSpanEl) {
+            Popover.getOrCreateInstance(allProductsLinkSpanEl, {
+                content: _t("Will be displayed on all your products"),
+                trigger: "focus",
+                container: "body",
+                placement: "bottom",
+            });
+        }
+    },
+});
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
