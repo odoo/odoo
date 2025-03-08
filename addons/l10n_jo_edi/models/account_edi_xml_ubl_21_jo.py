@@ -12,21 +12,6 @@ JO_CURRENCY = SimpleNamespace(name='JO')
 
 JO_MAX_DP = 9
 
-PAYMENT_CODES_MAP = {
-    'income': {
-        'cash': '011',
-        'receivable': '021',
-    },
-    'sales': {
-        'cash': '012',
-        'receivable': '022',
-    },
-    'special': {
-        'cash': '013',
-        'receivable': '023',
-    }
-}
-
 
 class AccountEdiXmlUBL21JO(models.AbstractModel):
     _name = "account.edi.xml.ubl_21.jo"
@@ -58,9 +43,6 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _get_line_taxable_amount(self, line):
         return self._round_max_dp(self._get_unit_price_jod(line)) * self._round_max_dp(line.quantity) - self._round_max_dp(self._get_line_discount_jod(line))
-
-    def _get_payment_method_code(self, invoice):
-        return PAYMENT_CODES_MAP[invoice.company_id.l10n_jo_edi_taxpayer_type]['receivable']
 
     def _aggregate_totals(self, vals):
         """
@@ -391,7 +373,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             'uuid': invoice.l10n_jo_edi_uuid,
             'document_currency_code': 'JOD',
             'tax_currency_code': 'JOD',
-            'document_type_code_attrs': {'name': self._get_payment_method_code(invoice)},
+            'document_type_code_attrs': {'name': invoice._get_invoice_type_code()},
             'document_type_code': "381" if is_refund else "388",
             'accounting_customer_party_vals': {
                 'party_vals': self._get_empty_party_vals() if is_refund else self._get_partner_party_vals(customer, role='customer'),
