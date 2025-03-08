@@ -299,12 +299,56 @@ class SaleOrder(models.Model):
             **kwargs,
         )
 
+<<<<<<< saas-18.2
         order_line = self._create_new_cart_line(product_id, quantity, **kwargs)
 
         # NOTE: the provided product_id should not be given after `_create_new_cart_line` call as it
         # could be different from the line's product_id (see variant generation logic in
         # `_prepare_order_line_values`).
         self._verify_cart_after_update(order_line)
+||||||| 62ca36f5a347a230eda3cec2d31797fef0c7a13d
+        if (
+            order_line
+            and order_line.product_template_id.type != 'combo'
+            and order_line.price_unit == 0
+            and self.website_id.prevent_zero_price_sale
+            and product.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
+        ):
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
+        if self.only_services:
+            self._remove_delivery_line()
+        elif self.carrier_id:
+            # Recompute the delivery rate.
+            rate = self.carrier_id.rate_shipment(self)
+            if rate['success']:
+                self.order_line.filtered(lambda line: line.is_delivery).price_unit = rate['price']
+            else:
+                self._remove_delivery_line()
+=======
+        if (
+            order_line
+            # Combo product lines will be checked after creating all of their combo item lines.
+            and order_line.product_template_id.type != 'combo'
+            and not order_line.combo_item_id
+            and order_line.price_unit == 0
+            and self.website_id.prevent_zero_price_sale
+            and product.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
+        ):
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
+        if self.only_services:
+            self._remove_delivery_line()
+        elif self.carrier_id:
+            # Recompute the delivery rate.
+            rate = self.carrier_id.rate_shipment(self)
+            if rate['success']:
+                self.order_line.filtered(lambda line: line.is_delivery).price_unit = rate['price']
+            else:
+                self._remove_delivery_line()
+>>>>>>> e8e2c0e62ee41cc168244bcb0698484dbe4fc180
 
         return {
             'line_id': order_line.id,
