@@ -34,6 +34,7 @@ class ProductTemplateAttributeLine(models.Model):
         relation='product_attribute_value_product_template_attribute_line_rel',
         string="Values",
         domain="[('attribute_id', '=', attribute_id)]",
+        required=True,
         ondelete='restrict')
     value_count = fields.Integer(compute='_compute_value_count', store=True)
     product_template_value_ids = fields.One2many(
@@ -60,12 +61,6 @@ class ProductTemplateAttributeLine(models.Model):
     @api.constrains('active', 'value_ids', 'attribute_id')
     def _check_valid_values(self):
         for ptal in self:
-            if ptal.active and not ptal.value_ids:
-                raise ValidationError(_(
-                    "The attribute %(attribute)s must have at least one value for the product %(product)s.",
-                    attribute=ptal.attribute_id.display_name,
-                    product=ptal.product_tmpl_id.display_name,
-                ))
             for pav in ptal.value_ids:
                 if pav.attribute_id != ptal.attribute_id:
                     raise ValidationError(_(

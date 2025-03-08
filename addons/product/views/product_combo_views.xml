@@ -29,7 +29,7 @@
                 <field name="combo_item_ids">
                     <list editable="bottom">
                         <field name="currency_id" column_invisible="True"/>
-                        <field name="product_id"/>
+                        <field name="product_id" domain="[('sale_ok', '=', True)]"/>
                         <field
                             name="lst_price"
                             widget="monetary"
