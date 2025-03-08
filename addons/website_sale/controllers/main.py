@@ -737,7 +737,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def pricelist_change(self, pricelist, **post):
         website = request.env['website'].get_current_website()
-        redirect_url = request.httprequest.referrer
+        redirect_url = request.httprequest.referrer or post.get('r')
         if (
             website.is_pricelist_available(pricelist.id)
             and (

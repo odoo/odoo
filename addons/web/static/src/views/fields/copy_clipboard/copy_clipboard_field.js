@@ -69,9 +69,9 @@ export class CopyClipboardURLField extends CopyClipboardField {
 
 // ----------------------------------------------------------------------------
 
-function extractProps({ attrs }) {
+function extractProps({ string, attrs }) {
     return {
-        string: attrs.string,
+        string,
         disabledExpr: attrs.disabled,
     };
 }

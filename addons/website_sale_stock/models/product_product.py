@@ -66,3 +66,13 @@ class ProductProduct(models.Model):
                 availability = 'https://schema.org/OutOfStock'
             markup_data['offers']['availability'] = availability
         return markup_data
+
+    def _get_gmc_stock_info(self):
+        """ Override to check the stock level if the current product cannot be out of stock.
+
+        Note: self.ensure_one()
+        """
+        gmc_info = super()._get_gmc_stock_info()
+        if not self.allow_out_of_stock_order and self._is_sold_out():
+            gmc_info['availability'] = 'out_of_stock'
+        return gmc_info
