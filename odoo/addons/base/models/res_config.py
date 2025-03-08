@@ -163,11 +163,12 @@ class ResConfigSettings(models.TransientModel):
         if not int(field_value) and module_sudo.state in ('to install', 'installed', 'to upgrade'):
             deps = module_sudo.downstream_dependencies()
             dep_names = (deps | module_sudo).mapped('shortdesc')
-            message = '\n'.join(dep_names)
+            # Prepend each dependency with "- " and join them with newline characters
+            formatted_deps = '\n'.join("- " + dep for dep in dep_names)
             return {
                 'warning': {
                     'title': _('Warning!'),
-                    'message': _('Disabling this option will also uninstall the following modules \n%s', message),
+                    'message': _('Disabling this option will also uninstall the following modules:\n\n%s', formatted_deps),
                 }
             }
         return {}
