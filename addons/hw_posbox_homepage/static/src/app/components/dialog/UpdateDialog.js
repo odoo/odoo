@@ -27,12 +27,6 @@ export class UpdateDialog extends Component {
     }
 
     async getVersionInfo() {
-        if (!this.store.isLinux) {
-            this.state.odooIsUpToDate = true;
-            this.state.imageIsUpToDate = true;
-            this.state.initialization = false;
-            return
-        }
         try {
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/version_info",
@@ -54,8 +48,10 @@ export class UpdateDialog extends Component {
                 url: "/hw_posbox_homepage/update_git_tree",
                 method: "POST",
             });
-            if (data.status === "success") {
-                this.state.isUpToDate = true;
+
+            if (data.status === "error") {
+                this.state.waitRestart = false;
+                console.error(data.message);
             }
         } catch {
             console.warn("Error while updating IoT Box.");
@@ -117,7 +113,7 @@ export class UpdateDialog extends Component {
                     </div>
                 </div>
 
-                <div class="mb-3" t-if="this.store.isLinux">
+                <div class="mb-3">
                     <h6>IoT Box Update</h6>
                     <div t-if="this.state.odooIsUpToDate" class="text-success px-2 small">
                         IoT Box is up to date.
