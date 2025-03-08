@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.WebsiteBuilder">
+    <div class="d-flex h-100 w-100" t-ref="container">
+        <div class="o_website_preview flex-grow-1" t-ref="website_preview">
+            <div class="o_iframe_container">
+                <iframe t-att-src="initialUrl" class="h-100 w-100" t-ref="iframe" t-on-load="onIframeLoad"/>
+                <div t-if="this.state.isMobile" class="o_mobile_preview_layout">
+                    <img alt="phone" src="/html_builder/static/img/phone.png"/>
+                </div>
+            </div>
+        </div>
+        <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
+        <div t-att-class="{'o_builder_sidebar_open': state.isEditing}" class="o-website-builder_sidebar border-start border-dark">
+            <LazyComponent  t-if="state.isEditing" Component="'website.Builder'" props="() => this.menuProps" bundle="'html_builder.assets'"/>
+        </div>
+    </div>
+</t>
+
+</templates>

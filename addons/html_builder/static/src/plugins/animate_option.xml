@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.AnimateOption">
+    <t t-if="this.state.isOptionActive">
+        <BuilderRow label.translate="Animation">
+            <BuilderSelect t-if="!this.isActiveItem('transformImage')" preview="false">
+                <BuilderSelectItem action="'setAnimationMode'" actionValue="''"
+                            classAction="''"
+                            id="'no_animation_opt'">None</BuilderSelectItem>
+                <BuilderSelectItem action="'setAnimationMode'" actionValue="'onAppearance'"
+                            actionParam="{forceAnimation: true}"
+                            classAction="'o_animate'"
+                            id="'animation_on_appearance_opt'">On Appearance</BuilderSelectItem>
+                <BuilderSelectItem action="'setAnimationMode'" actionValue="'onScroll'"
+                            classAction="'o_animate o_animate_on_scroll'"
+                            actionParam="{forceAnimation: true}"
+                            id="'animation_on_scroll_opt'"
+                            t-if="!state.isLimitedEffect">On Scroll</BuilderSelectItem>
+                <BuilderSelectItem action="'setAnimationMode'" actionValue="'onHover'"
+                            classAction="'o_animate_on_hover'"
+                            id="'animation_on_hover_opt'"
+                            t-if="state.canHover">On Hover</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Effect">
+            <BuilderSelect id="'animation_effect_opt'"
+                t-if="state.hasAnimateClass and !this.isActiveItem('animation_on_hover_opt')"
+                action="'setAnimationEffect'" actionParam="''">
+
+                <t t-foreach="state.effectItems" t-as="item" t-key="item.className">
+                    <BuilderSelectItem actionValue="item.className" actionParam="item.directionClass"
+                        t-out="item.label"
+                        t-if="!item.check || item.check()" />
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Direction" t-if="state.hasAnimateClass and !state.isLimitedEffect">
+            <BuilderSelect id="'animation_direction_opt'" action="'forceAnimation'">
+                <t t-foreach="state.directionItems" t-as="item" t-key="item.className">
+                    <BuilderSelectItem classAction="item.className" t-out="item.label" />
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+        <!-- Trigger -->
+        <BuilderRow label.translate="Trigger">
+            <BuilderSelect t-if="this.isActiveItem('animation_on_appearance_opt') and !state.isInDropdown">
+                <BuilderSelectItem classAction="''">First Time Only</BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_animate_both_scroll'">Every Time</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <!-- Intensity -->
+        <BuilderRow label.translate="Intensity" t-if="state.showIntensity">
+            <BuilderRange
+                action="'setAnimateIntensity'"
+                preview="false"
+                min="1"
+                max="100"
+                step="1"
+                displayRangeValue="true"/>
+        </BuilderRow>
+        <!-- Scroll Zone -->
+        <BuilderRow label.translate="Scroll Zone" t-if="this.isActiveItem('animation_on_scroll_opt')" preview="false">
+            <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneStart'" action="'forceAnimation'" />
+            <span class="mx-2">to</span>
+            <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneEnd'" action="'forceAnimation'" />
+        </BuilderRow>
+        <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt')">
+            <!-- Start After -->
+            <BuilderRow label.translate="Start After">
+                <BuilderNumberInput styleAction="'animation-delay'" action="'forceAnimation'" default="0" unit="'s'" />
+            </BuilderRow>
+            <!-- Duration -->
+            <BuilderRow label.translate="Duration">
+                <BuilderNumberInput styleAction="'animation-duration'" action="'forceAnimation'" default="0.4" unit="'s'" />
+            </BuilderRow>
+        </BuilderContext>
+    </t>
+</t>
+
+
+</templates>

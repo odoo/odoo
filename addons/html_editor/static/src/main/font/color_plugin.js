@@ -28,7 +28,12 @@ import { ColorSelector } from "./color_selector";
 export class ColorPlugin extends Plugin {
     static id = "color";
     static dependencies = ["selection", "split", "history", "format"];
-    static shared = ["colorElement", "getPropsForColorSelector", "removeAllColor"];
+    static shared = [
+        "colorElement",
+        "getPropsForColorSelector",
+        "removeAllColor",
+        "getElementColors",
+    ];
     resources = {
         user_commands: [
             {
@@ -60,6 +65,19 @@ export class ColorPlugin extends Plugin {
         selectionchange_handlers: this.updateSelectedColor.bind(this),
         remove_format_handlers: this.removeAllColor.bind(this),
 
+        /** Overridables */
+        /**
+         * Makes the way colors are applied overridable.
+         *
+         * @param {Element} element
+         * @param {string} color hexadecimal or bg-name/text-name class
+         * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
+         */
+        apply_color_style: (element, mode, color) => {
+            element.style[mode] = color;
+            return true;
+        },
+
         /** Predicates */
         has_format_predicates: [
             (node) => hasColor(closestElement(node), "color"),
@@ -79,6 +97,7 @@ export class ColorPlugin extends Plugin {
      */
     getPropsForColorSelector(type) {
         const mode = type === "foreground" ? "color" : "backgroundColor";
+        const title = type === "foreground" ? _t("Font Color") : _t("Background Color");
         return {
             type,
             mode,
@@ -92,6 +111,7 @@ export class ColorPlugin extends Plugin {
             applyColorPreview: (color) => this.applyColorPreview({ color, mode }),
             applyColorResetPreview: this.applyColorResetPreview.bind(this),
             colorPrefix: mode === "color" ? "text-" : "bg-",
+            title,
         };
     }
 
@@ -104,17 +124,23 @@ export class ColorPlugin extends Plugin {
         if (!el) {
             return;
         }
-        const elStyle = getComputedStyle(el);
+
+        Object.assign(this.selectedColors, this.getElementColors(el));
+    }
+
+    getElementColors(element) {
+        const elStyle = getComputedStyle(element);
         const backgroundImage = elStyle.backgroundImage;
         const hasGradient = isColorGradient(backgroundImage);
-        const hasTextGradientClass = el.classList.contains("text-gradient");
+        const hasTextGradientClass = element.classList.contains("text-gradient");
 
-        this.selectedColors.color =
-            hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color);
-        this.selectedColors.backgroundColor =
-            hasGradient && !hasTextGradientClass
-                ? backgroundImage
-                : rgbToHex(elStyle.backgroundColor);
+        return {
+            color: hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color),
+            backgroundColor:
+                hasGradient && !hasTextGradientClass
+                    ? backgroundImage
+                    : rgbToHex(elStyle.backgroundColor),
+        };
     }
 
     /**
@@ -350,11 +376,12 @@ export class ColorPlugin extends Plugin {
      * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
      */
     colorElement(element, color, mode) {
-        const newClassName = element.className
+        const oldClassName = element.getAttribute("class") || "";
+        const newClassName = oldClassName
             .replace(mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX, "")
             .replace(/\btext-gradient\b/g, "") // cannot be combined with setting a background
             .replace(/\s+/, " ");
-        element.className !== newClassName && (element.className = newClassName);
+        oldClassName !== newClassName && element.setAttribute("class", newClassName);
         element.style["background-image"] = "";
         if (mode === "backgroundColor") {
             element.style["background"] = "";
@@ -366,13 +393,13 @@ export class ColorPlugin extends Plugin {
             element.style[mode] = "";
             if (mode === "color") {
                 element.style["background"] = "";
-                element.style["background-image"] = color;
+                this.delegateTo("apply_color_style", element, "background-image", color);
                 element.classList.add("text-gradient");
             } else {
-                element.style["background-image"] = color;
+                this.delegateTo("apply_color_style", element, "background-image", color);
             }
         } else {
-            element.style[mode] = color;
+            this.delegateTo("apply_color_style", element, mode, color);
         }
     }
 }

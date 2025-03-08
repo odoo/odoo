@@ -62,6 +62,14 @@ import { hasTouch, isBrowserChrome } from "@web/core/browser/feature_detection";
  * @property { DeletePlugin['deleteSelection'] } deleteSelection
  */
 
+// @todo @phoenix: move these predicates to different plugins
+export const unremovableNodePredicates = [
+    (node) => node.classList?.contains("oe_unremovable"),
+    // Monetary field
+    (node) => node.matches?.("[data-oe-type='monetary'] > span"),
+];
+
+
 export class DeletePlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input"];
     static id = "delete";
@@ -98,12 +106,7 @@ export class DeletePlugin extends Plugin {
         delete_forward_word_overrides: this.deleteForwardUnmergeable.bind(this),
         delete_forward_line_overrides: this.deleteForwardUnmergeable.bind(this),
 
-        // @todo @phoenix: move these predicates to different plugins
-        unremovable_node_predicates: [
-            (node) => node.classList?.contains("oe_unremovable"),
-            // Monetary field
-            (node) => node.matches?.("[data-oe-type='monetary'] > span"),
-        ],
+        unremovable_node_predicates: unremovableNodePredicates,
         invalid_for_base_container_predicates: (node) => this.isUnremovable(node, this.editable),
     };
 

@@ -122,6 +122,9 @@ export class HistoryPlugin extends Plugin {
         "serializeSelection",
         "stageSelection",
         "undo",
+        "getIsPreviewing",
+        "setStepExtra",
+        "getIsCurrentStepModified",
     ];
     resources = {
         user_commands: [
@@ -170,6 +173,10 @@ export class HistoryPlugin extends Plugin {
         this.clean();
     }
 
+    getIsPreviewing() {
+        return this.isPreviewing;
+    }
+
     clean() {
         this.handleObserverRecords();
         /** @type { HistoryStep[] } */
@@ -180,6 +187,7 @@ export class HistoryPlugin extends Plugin {
             mutations: [],
             id: this.generateId(),
             previousStepId: undefined,
+            extra: {},
         });
         /** @type { Map<string, "consumed"|"undo"|"redo"> } */
         this.stepsStates = new Map();
@@ -281,12 +289,10 @@ export class HistoryPlugin extends Plugin {
      * @returns { MutationRecord[] } processed records
      */
     processNewRecords(records) {
-        this.setIdOnRecords(records);
         records = this.filterMutationRecords(records);
         if (!records.length) {
             return [];
         }
-        this.getResource("handleNewRecords").forEach((cb) => cb(records));
         this.stageRecords(records);
         return records;
     }
@@ -309,7 +315,14 @@ export class HistoryPlugin extends Plugin {
      * @param { MutationRecord[] } records
      */
     handleNewRecords(records) {
-        if (this.processNewRecords(records).length) {
+        const filteredRecords = this.processNewRecords(records);
+        if (filteredRecords.length) {
+            // TODO modify `handleMutations` of web_studio to handle
+            // `undoOperation`
+            const stepState = this.stepsStates.get(this.currentStep.id);
+            this.getResource("handleNewRecords").forEach((cb) => cb(filteredRecords, stepState));
+            // Process potential new records adds by handleNewRecords.
+            this.processNewRecords(this.observer.takeRecords());
             this.dispatchContentUpdated();
         }
     }
@@ -411,11 +424,7 @@ export class HistoryPlugin extends Plugin {
      */
     stageSelection() {
         const selection = this.dependencies.selection.getEditableSelection();
-        if (
-            this.currentStep.mutations.find((m) =>
-                ["characterData", "remove", "add"].includes(m.type)
-            )
-        ) {
+        if (this.getIsCurrentStepModified()) {
             console.warn(
                 `should not have any "characterData", "remove" or "add" mutations in current step when you update the selection`
             );
@@ -427,6 +436,7 @@ export class HistoryPlugin extends Plugin {
      * @param { MutationRecord[] } records
      */
     stageRecords(records) {
+        this.setIdOnRecords(records);
         // @todo @phoenix test this feature.
         // There is a case where node A is added and node B is a descendant of
         // node A where node B was not in the observed tree) then node B is
@@ -552,8 +562,16 @@ export class HistoryPlugin extends Plugin {
         // @todo @phoenix sanitize plugin
         // this.sanitize();
 
-        this.handleObserverRecords();
+        // Set the state of the step here.
+        // That way, the state of undo and redo is truly accessible when
+        // executing the onChange callback.
+        // It is useful for external components if they execute shared.can[Undo|Redo]
         const currentStep = this.currentStep;
+        if (stepState) {
+            this.stepsStates.set(currentStep.id, stepState);
+        }
+        
+        this.handleObserverRecords();
         const currentMutationsCount = currentStep.mutations.length;
         if (currentMutationsCount === 0) {
             return false;
@@ -579,17 +597,15 @@ export class HistoryPlugin extends Plugin {
             selection: {},
             mutations: [],
             previousStepId: undefined,
+            extra: {},
         });
-        // Set the state of the step here.
-        // That way, the state of undo and redo is truly accessible
-        // when executing the onChange callback.
-        // It is useful for external components if they execute shared.can[Undo|Redo]
-        if (stepState) {
-            this.stepsStates.set(currentStep.id, stepState);
-        }
         this.stageSelection();
-        this.dispatchTo("step_added_handlers", { step: currentStep, stepCommonAncestor });
-        this.config.onChange?.();
+        this.dispatchTo("step_added_handlers", {
+            step: currentStep,
+            stepCommonAncestor,
+            isPreviewing: this.isPreviewing,
+        });
+        this.config.onChange?.({ isPreviewing: this.isPreviewing });
         return currentStep;
     }
     canUndo() {
@@ -614,15 +630,17 @@ export class HistoryPlugin extends Plugin {
         lastStep.mutations = [];
 
         const pos = this.getNextUndoIndex();
+        let revertedStep;
         if (pos > 0) {
             // Consider the position consumed.
-            this.stepsStates.set(this.steps[pos].id, "consumed");
-            this.revertMutations(this.steps[pos].mutations, { forNewStep: true });
-            this.setSerializedSelection(this.steps[pos].selection);
+            revertedStep = this.steps[pos];
+            this.stepsStates.set(revertedStep.id, "consumed");
+            this.revertMutations(revertedStep.mutations, { forNewStep: true });
+            this.setSerializedSelection(revertedStep.selection);
             this.addStep({ stepState: "undo" });
             // Consider the last position of the history as an undo.
         }
-        this.dispatchTo("post_undo_handlers");
+        this.dispatchTo("post_undo_handlers", revertedStep);
     }
     redo() {
         this.handleObserverRecords();
@@ -636,13 +654,15 @@ export class HistoryPlugin extends Plugin {
         this.currentStep.mutations = [];
 
         const pos = this.getNextRedoIndex();
+        let revertedStep;
         if (pos > 0) {
-            this.stepsStates.set(this.steps[pos].id, "consumed");
-            this.revertMutations(this.steps[pos].mutations, { forNewStep: true });
-            this.setSerializedSelection(this.steps[pos].selection);
+            revertedStep = this.steps[pos];
+            this.stepsStates.set(revertedStep.id, "consumed");
+            this.revertMutations(revertedStep.mutations, { forNewStep: true });
+            this.setSerializedSelection(revertedStep.selection);
             this.addStep({ stepState: "redo" });
         }
-        this.dispatchTo("post_redo_handlers");
+        this.dispatchTo("post_redo_handlers", revertedStep);
     }
     /**
      * @param { SerializedSelection } selection
@@ -962,17 +982,25 @@ export class HistoryPlugin extends Plugin {
             preview: (...args) => {
                 revertOperation();
                 revertOperation = this.makeSavePoint();
-                operation(...args);
+                this.isPreviewing = true;
+                return operation(...args);
             },
             commit: (...args) => {
                 revertOperation();
+                this.isPreviewing = false;
                 operation(...args);
                 this.addStep();
             },
             revert: () => {
                 revertOperation();
+                revertOperation = () => {};
+                this.isPreviewing = false;
             },
         };
+    }
+
+    getIsPreviewing() {
+        return this.isPreviewing;
     }
     /**
      * Discard the current draft, and, if necessary, consume and revert
@@ -1021,6 +1049,16 @@ export class HistoryPlugin extends Plugin {
         // Register resulting mutations as a new consumed step (prevent undo).
         this.dispatchContentUpdated();
         this.addStep({ stepState: "consumed" });
+    }
+
+    setStepExtra(key, value) {
+        this.currentStep.extra[key] = value;
+    }
+
+    getIsCurrentStepModified() {
+        return this.currentStep.mutations.find((m) =>
+            ["characterData", "remove", "add"].includes(m.type)
+        );
     }
 
     /**

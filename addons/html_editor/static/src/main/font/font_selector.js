@@ -6,6 +6,7 @@ import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 export class FontSelector extends Component {
     static template = "html_editor.FontSelector";
     static props = {
+        title: String,
         getItems: Function,
         getDisplay: Function,
         onSelected: Function,
