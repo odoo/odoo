@@ -11,6 +11,34 @@ patch(ImageSelector.prototype, {
     }
 });
 
+patch(ImageSelector, {
+    mediaExtraClasses: ImageSelector.mediaExtraClasses.concat(
+        "social_media_img", 
+        (props) => {
+            if (
+                props.node
+                && props.node.classList.contains('fa') 
+                && props.node.closest('div')?.classList.contains('s_social_media')
+            ) {
+                return ('social_media_img');
+            };
+        },
+        (props) => {
+            if (
+                props.node
+                && props.node.classList.contains('fa') 
+                && props.node.closest('div')?.classList.contains('s_social_media')
+            ) {
+                for (const element of props.node.classList) {
+                    if (element.match(/fa-\d{1}x/)) {
+                        return element;
+                    }
+                }; 
+            };
+        },
+    )
+});
+
 patch(HtmlImageSelector.prototype, {
     get attachmentsDomain() {
         const domain = super.attachmentsDomain;
