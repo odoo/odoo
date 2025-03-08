@@ -142,24 +142,27 @@ export class ListController extends Component {
         usePager(() => {
             const list = this.model.root;
             const { count, hasLimitedCount, isGrouped, limit, offset } = list;
-            return {
-                offset: offset,
-                limit: limit,
-                total: count,
-                onUpdate: async ({ offset, limit }, hasNavigated) => {
-                    if (this.model.root.editedRecord) {
-                        if (!(await this.model.root.editedRecord.save())) {
-                            return;
+            if (!this.model.useSampleModel) {
+                return {
+                    offset: offset,
+                    limit: limit,
+                    total: count,
+                    onUpdate: async ({ offset, limit }, hasNavigated) => {
+                        if (this.model.root.editedRecord) {
+                            if (!(await this.model.root.editedRecord.save())) {
+                                return;
+                            }
                         }
-                    }
-                    await list.load({ limit, offset });
-                    this.render(true); // FIXME WOWL reactivity
-                    if (hasNavigated) {
-                        this.onPageChangeScroll();
-                    }
-                },
-                updateTotal: !isGrouped && hasLimitedCount ? () => list.fetchCount() : undefined,
-            };
+                        await list.load({ limit, offset });
+                        this.render(true); // FIXME WOWL reactivity
+                        if (hasNavigated) {
+                            this.onPageChangeScroll();
+                        }
+                    },
+                    updateTotal:
+                        !isGrouped && hasLimitedCount ? () => list.fetchCount() : undefined,
+                };
+            }
         });
 
         useEffect(
