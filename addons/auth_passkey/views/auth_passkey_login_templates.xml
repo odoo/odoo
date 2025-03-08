@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template priority="32" id="auth_passkey_login" inherit_id="web.login">
-        <xpath expr="//div[hasclass('oe_login_buttons')]" position="after">
-            <em t-attf-class="d-block text-center text-muted small my-1">- or -</em>
-            <div class="text-center mt-2">
-                <button class="btn btn-link btn-sm passkey_login_link p-0 border-0" type="button">Log in with Passkey</button>
-            </div>
-        </xpath>
         <xpath expr="//input[@name='redirect']" position="before">
             <input type="hidden" name="webauthn_response"/>
+        </xpath>
+    </template>
+
+    <template id="auth_passkey_login_oauth" inherit_id="web.login_oauth" name="Passkey Login OAuth">
+        <xpath expr="//div" position="before">
+            <t t-set="passkey_btn">
+                <button class="passkey_login_link list-group-item list-group-item-action py-2" type="button">
+                    <i class="fa fa-qrcode" role="presentation"/>
+                    Use a Passkey
+                </button>
+            </t>
         </xpath>
     </template>
 </odoo>
