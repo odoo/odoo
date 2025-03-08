@@ -5,14 +5,10 @@ import {registry} from '@web/core/registry';
 import {listView} from '@web/views/list/list_view';
 import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dialog";
 import {DeletePageDialog, DuplicatePageDialog} from '@website/components/dialog/page_properties';
-import {CheckboxItem} from "@web/core/dropdown/checkbox_item";
-
 
 export class PageListController extends PageControllerMixin(listView.Controller) {
-    static template = `website.PageListView`;
     static components = {
         ...listView.Controller.components,
-        CheckboxItem,
     };
 
     /**
