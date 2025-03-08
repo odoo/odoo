@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2025
-# Larissa Manderfeld, 2025
 # Tiffany Chang, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 13:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Tiffany Chang, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1391,6 +1391,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Buchhaltungsberichte für Bangladesch\n"
+"============================================\n"
+"- Körperschaftssteuerberichte\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -3016,7 +3020,7 @@ msgid ""
 msgstr ""
 "\n"
 "Automatisches Einstellen von Produktbildern auf der Grundlage des Barcodes\n"
-" =====================================================\n"
+"=====================================================\n"
 "\n"
 "Dieses Modul integriert mit der API von Google Custom Search, um Produktbilder auf Grundlage von Barcodes\n"
 "festzulegen.\n"
@@ -3040,6 +3044,12 @@ msgid ""
 "- Income tax credits handling\n"
 "- Introduced the income tax slabs calculations\n"
 msgstr ""
+"\n"
+"Personalabrechnungsregeln für Bangladesch.\n"
+"=========================\n"
+"- Berechnung der Gehaltsregeln\n"
+"- Abwicklung von Einkommensteuergutschriften\n"
+"- Einführung der Berechnung der Einkommenssteuertarife\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -7918,6 +7928,11 @@ msgid ""
 "- Basic salaries calculations.\n"
 "- Tax bracket calculations/deductions\n"
 msgstr ""
+"\n"
+"Regeln für die Personalabrechnung und das Ende der Dienstzeit für Pakistan\n"
+"=========================================\n"
+"- Berechnung des Grundgehalts.\n"
+"- Berechnung der Steuerklasse/Abzüge\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -12084,6 +12099,10 @@ msgid ""
 "=======================================================\n"
 "Adds the Corporate Tax Report which can be accessed by going to Accounting > Reporting > Corporate Tax Report\n"
 msgstr ""
+"\n"
+"Vereinigte Arabische Emirate - Körperschaftssteuerberichte\n"
+"=======================================================\n"
+"Fügt den Körperschaftssteuerbericht hinzu, der über Buchhaltung > Berichtswesen > Körperschaftssteuerbericht abgerufen werden kann\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll
@@ -22445,7 +22464,7 @@ msgstr "Das Länderbild anzeigen, wenn das Feld im Datensatz vorhanden ist."
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Display the phone icons even if no_marker is True"
 msgstr ""
-"Zeigen Sie die Telefonsymbole an, auch wenn no_marker auf True gesetzt ist"
+"Zeigen Sie die Telefonsymbole an, auch wenn no_marker auf Wahr gesetzt ist"
 
 #. module: base
 #. odoo-python
@@ -26659,7 +26678,7 @@ msgid ""
 "If True, the session file corresponding to this device\n"
 "                                    no longer exists on the filesystem."
 msgstr ""
-"Falls True, existiert die mit diesem Gerät verbundene Sitzungsdatei\n"
+"Falls Wahr, existiert die mit diesem Gerät verbundene Sitzungsdatei\n"
 "                                    nicht mehr auf dem Dateisystem."
 
 #. module: base
@@ -26728,7 +26747,7 @@ msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
-"Wenn True, dann wird die Aktion nicht in der rechten Werkzeugleiste einer "
+"Wenn Wahr, dann wird die Aktion nicht in der rechten Werkzeugleiste einer "
 "Formularansicht angezeigt."
 
 #. module: base
@@ -26782,8 +26801,8 @@ msgid ""
 "         "
 msgstr ""
 "Wenn diese Ansicht abgeleitet wurde,\n"
-"* Wenn True, erweitert diese Ansicht immer die übergeordnete Ansicht\n"
-"* Wenn False, wird die übergeordnete Ansicht nicht erweitert, kann aber bei Bedarf wieder aktiviert werden\n"
+"* Wenn Wahr, erweitert diese Ansicht immer die übergeordnete Ansicht\n"
+"* Wenn Falsch, wird die übergeordnete Ansicht nicht erweitert, kann aber bei Bedarf wieder aktiviert werden\n"
 "             "
 
 #. module: base
@@ -31186,7 +31205,7 @@ msgstr "Niue"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__false
 msgid "No (False)"
-msgstr "Nein (False)"
+msgstr "Nein (Falsch)"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -33494,7 +33513,7 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
-"Trifft nur zu, wenn diese Sicht eine andere ableitet (inherit_id ist nicht Null/Leer).\n"
+"Trifft nur zu, wenn diese Sicht eine andere ableitet (inherit_id ist nicht Falsch/Null).\n"
 "\n"
 "* Bei Erweiterung (Standard), wenn diese Sicht angefordert wird, wird die naheliegendste Hauptsicht (über inherit_id) gesucht und dieses Modell auf alle mit diesem Modell aus der Hauptsicht ableitenden Sichten angewendet.\n"
 "* Bei primär, wird die naheliegendste Hauptsicht vollständig aufgelöst (selbst wenn diese ein von diesem abweichendes Modell verwendet), dann werden die Vererbungselemente (<xpath/>) aufgerufen und das Ergebnis wird verwendet, als wäre es der tatsächliche Inhalt dieser Sicht.\n"
@@ -41085,6 +41104,16 @@ msgid ""
 "- Taxes\n"
 "- Tax report\n"
 msgstr ""
+"\n"
+"Dies ist das Basismodul zur Verwaltung eines Kontenplans für Bangladesch in Odoo\n"
+"============================\n"
+"Allgemeiner Kontenplan und Lokalisierung für Bangladesch.\n"
+"\n"
+"Aktiviert:\n"
+"\n"
+"- Kontenplan\n"
+"- Steuern\n"
+"- Steuerbericht\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pk
@@ -41975,12 +42004,12 @@ msgstr "Übergangsmodell"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Transient: False"
-msgstr "Übergang: False"
+msgstr "Übergang: Falsch"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Transient: True"
-msgstr "Übergang: True"
+msgstr "Übergang: Wahr"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_transifex
@@ -44229,7 +44258,7 @@ msgstr "Jemen"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__true
 msgid "Yes (True)"
-msgstr "Ja (True)"
+msgstr "Ja (Wahr)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
