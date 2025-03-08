@@ -14,7 +14,6 @@
 # Moshe Flam <pashute@gmail.com>, 2023
 # Adi Sharashov <Adi@laylinetech.com>, 2023
 # david danilov, 2023
-# Sagi Ahiel, 2023
 # yotam katzuni, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # ExcaliberX <excaliberx@gmail.com>, 2023
@@ -34,10 +33,11 @@
 # Mendi Soudry, 2024
 # Yoram Lavi, 2024
 # Eyal arkush, 2025
-# or balmas, 2025
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025
 # Lilach Gilliam <lilach@apprcase.com>, 2025
 # yael terner, 2025
+# Sagi Ahiel, 2025
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
@@ -45,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: yael terner, 2025\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6124,7 +6124,7 @@ msgstr "ריק"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__enable_download
 msgid "Enable Download"
-msgstr ""
+msgstr "אפשר הורדה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6134,7 +6134,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__enable_send_mail
 msgid "Enable Send Mail"
-msgstr ""
+msgstr "אפשר שליחת מייל"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
@@ -12553,7 +12553,7 @@ msgstr "שלח חשבוניות ללקוחות שלך תוך זמן קצר עם 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Send message"
-msgstr "שלח הודעה"
+msgstr "שלח הודעה חיצונית"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -16603,6 +16603,13 @@ msgstr ""
 msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot deprecate an account that is used in a tax distribution."
 msgstr ""
 
 #. module: account
