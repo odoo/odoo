@@ -25,7 +25,7 @@ class PosCategory(models.Model):
 
     name = fields.Char(string='Category Name', required=True, translate=True)
     complete_name = fields.Char(
-        'Complete Name', compute='_compute_complete_name', recursive=True,
+        'Complete Name', compute='_compute_complete_name', recursive=True, translate=True,
         store=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
     child_ids = fields.One2many('pos.category', 'parent_id', string='Children Categories')
@@ -39,11 +39,15 @@ class PosCategory(models.Model):
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
-        for category in self:
-            if category.parent_id:
-                category.complete_name = '%s / %s' % (category.parent_id.complete_name, category.name)
-            else:
-                category.complete_name = category.name
+        languages = self.env['res.lang'].search([('active', '=', True)])
+        for lang in languages:
+            for category in self:
+                if category.parent_id:
+                    category.with_context(lang=lang.code).complete_name = '%s / %s' % (
+                    category.with_context(lang=lang.code).parent_id.complete_name,
+                    category.with_context(lang=lang.code).name)
+                else:
+                    category.with_context(lang=lang.code).complete_name = category.with_context(lang=lang.code).name
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -55,15 +59,10 @@ class PosCategory(models.Model):
     def _load_pos_data_fields(self, config_id):
         return ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color', 'sequence']
 
-    def _get_hierarchy(self) -> List[str]:
-        """ Returns a list representing the hierarchy of the categories. """
-        self.ensure_one()
-        return (self.parent_id._get_hierarchy() if self.parent_id else []) + [(self.name or '')]
-
     @api.depends('parent_id')
     def _compute_display_name(self):
         for cat in self:
-            cat.display_name = " / ".join(cat._get_hierarchy())
+            cat.display_name = cat.complete_name
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open(self):
