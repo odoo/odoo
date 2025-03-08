@@ -222,8 +222,8 @@ expression and add each key-value ``t-options-key="expression value"`` to this
 dict. (for example: ``t-options="{'widget': 'float'}"`` is equal to
 ``t-options-widget="'float'"``)
 
-``t-att``, ``t-att-*`` and ``t-attf-*``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``t-att``, ``t-att-*``, ``t-attf-*`` and ``t-attf-*.translate``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Values**: python expression (or format string expression for ``t-attf-``)
 
 Compile the attributes to create ``values['__qweb_attrs__']`` dictionary code
@@ -234,7 +234,8 @@ and is equal to ``t-attf-class="float_{{1}}")
 
 The attributes come from new namespaces, static elements (not preceded
 by ``t-``) and dynamic attributes ``t-att``, attributes prefixed by ``t-att-``
-(python expression) or ``t-attf`` (format string expression).
+(python expression) or ``t-attf`` (format string expression, translated if
+use ``.translate``).
 
 ``t-call``
 ~~~~~~~~~~
@@ -245,6 +246,7 @@ Serves the called template in place of the current ``t-call`` node.
 Here are the different steps performed by the generated python code:
 
 #. copy the ``values`` dictionary;
+#  define values from attributes or attributeName``.f`` for formated string;
 #. render the content (``_compile_directive_inner_content``) of the tag in a
    separate method called with the previous copied values. This values can be
    updated via t-set. The visible content of the rendering of the sub-content
@@ -316,19 +318,14 @@ The generated code update the key ``values`` dictionary equal to the value
 defined by ``t-value`` expression, ``t-valuef`` format string expression or
 to the ``MarkupSafe`` rendering come from the content of the node.
 
-``t-value``
-~~~~~~~~~~~
-**Values**: python expression
+``t-value``, ``t-valuef`` and ``t-valuef.translate``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Values**: python expression (or format string expression for ``t-attf-``)
 
-The compilation method only validates if ``t-value`` and ``t-set`` are on the
+The compilation method only validates if this directive and ``t-set`` are on the
 same node.
+The format string expression can be translated if use ``.translate``.
 
-``t-valuef``
-~~~~~~~~~~~~
-**Values**: format string expression
-
-The compilation method only validates if ``t-valuef`` and ``t-set`` are on the
-same node.
 
 Technical directives
 --------------------
@@ -393,7 +390,7 @@ from pathlib import Path
 from odoo import api, models, tools
 from odoo.modules import get_module_path
 from odoo.modules.registry import _REGISTRY_CACHES
-from odoo.tools import config, safe_eval, pycompat
+from odoo.tools import config, safe_eval, lazy
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
@@ -557,9 +554,55 @@ class QWebException(Exception):
         return f"QWebException({self.title!r})"
 
 ####################################
-###             QWeb             ###
+###         QwebContent        ###
 ####################################
 
+class QwebContent(lazy):
+    __slots__ = ['_func', '_args', '_cached_value', '_cached_content']
+
+    """ Every xml content are lasy and return and interator """
+    def __init__(self, func, *args):
+        super().__init__(func, *args)
+        object.__setattr__(self, '_cached_content', None)
+
+    @property
+    def _value(self):
+        if self._func is not None:
+            value = Markup(''.join(self._content))
+            object.__setattr__(self, '_func', None)
+            object.__setattr__(self, '_cached_value', value)
+        return self._cached_value
+
+    @property
+    def _content(self):
+        if self._cached_content is None:
+            cached_content = []
+            object.__setattr__(self, '_cached_content', cached_content)
+
+            for item in self._func(*self._args):
+                if isinstance(item, str):
+                    cached_content.append(item)
+                    yield item
+                else:
+                    irQweb, values = self._args
+                    ref, function_name, cached_values = item
+                    t_nocache_function = values['__qweb_loaded_values'].get(function_name)
+                    if not t_nocache_function:
+                        t_call_template_functions, def_name = irQweb._compile(ref)
+                        t_nocache_function = t_call_template_functions[function_name]
+
+                    nocache_values = values['__qweb_root_values'].copy()
+                    nocache_values.update(cached_values)
+                    from_cache_content = list(t_nocache_function(irQweb, nocache_values))
+                    cached_content.extend(from_cache_content)
+                    yield from from_cache_content
+        else:
+            yield from self._cached_content
+
+
+####################################
+###             QWeb             ###
+####################################
 
 class IrQweb(models.AbstractModel):
     """ Base QWeb rendering engine
@@ -575,6 +618,10 @@ class IrQweb(models.AbstractModel):
     @QwebTracker.wrap_render
     @api.model
     def _render(self, template, values=None, **options):
+        result = ''.join(self._render_stream(template, values=values, **options))
+        return Markup(result)
+
+    def _render_stream(self, template, values=None, **options):
         """ render(template, values, **options)
 
         Render the template specified by the given name.
@@ -604,10 +651,7 @@ class IrQweb(models.AbstractModel):
 
         template_functions, def_name = irQweb._compile(template)
         render_template = template_functions[def_name]
-        rendering = render_template(irQweb, values)
-        result = ''.join(rendering)
-
-        return Markup(result)
+        return render_template(irQweb, values)
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
@@ -746,8 +790,8 @@ class IrQweb(models.AbstractModel):
         options = {k: compile_context.get(k) for k in self._get_template_cache_keys() + ['ref', 'ref_name', 'ref_xml']}
 
         # generate code
-
-        def_name = TO_VARNAME_REGEXP.sub(r'_', f'template_{ref}')
+        ref_name = compile_context['ref_name'] or ''
+        def_name = TO_VARNAME_REGEXP.sub(r'_', f'template_{ref_name if "<" not in ref_name else ""}_{ref}')
 
         name_gen = count()
         compile_context['make_name'] = lambda prefix: f"{def_name}_{prefix}_{next(name_gen)}"
@@ -975,6 +1019,7 @@ class IrQweb(models.AbstractModel):
             'escape': escape,
             'VOID_ELEMENTS': VOID_ELEMENTS,
             'QWebException': QWebException,
+            'QwebContent': QwebContent,
             'Exception': Exception,
             'TransactionRollbackError': TransactionRollbackError, # for SerializationFailure in assets
             'ReadOnlySqlTransaction': psycopg2.errors.ReadOnlySqlTransaction,
@@ -1294,10 +1339,10 @@ class IrQweb(models.AbstractModel):
             'call-assets',
             'lang',
             'options',
+            'call',
             'att',
             'field', 'esc', 'raw', 'out',
             'tag-open',
-            'call',
             'set',
             'inner-content',
             'tag-close',
@@ -1442,7 +1487,8 @@ class IrQweb(models.AbstractModel):
 
         # compile the directives still present on the element
         for directive in compile_context['iter_directives']:
-            if ('t-' + directive) in el.attrib:
+            t_directive = f't-{directive}'
+            if t_directive in el.attrib or any(t_directive == key.partition('.')[0] for key in el.attrib):
                 code.extend(self._compile_directive(el, compile_context, directive, level))
             elif directive == 'groups':
                 if directive in el.attrib:
@@ -1573,7 +1619,8 @@ class IrQweb(models.AbstractModel):
         for key in list(el.attrib):
             if key.startswith('t-attf-'):
                 value = el.attrib.pop(key)
-                code.append(indent_code(f"attrs[{key[7:]!r}] = {self._compile_format(value)}", level))
+                name = key[7:-10] if key.endswith('.translate') else key[7:]
+                code.append(indent_code(f"attrs[{name!r}] = {self._compile_format(value)}", level))
             elif key.startswith('t-att-'):
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"attrs[{key[6:]!r}] = {self._compile_expr(value)}", level))
@@ -1658,6 +1705,7 @@ class IrQweb(models.AbstractModel):
         There are 3 kinds of `t-set`:
         * `t-value` containing python code;
         * `t-valuef` containing strings to format;
+        * `t-valuef.translate` containing translated strings to format;
         * whose value is the content of the tag (being Markup safe).
 
         The code will contain the assignment of the dynamically generated value.
@@ -1672,7 +1720,7 @@ class IrQweb(models.AbstractModel):
             if varname != T_CALL_SLOT and varname[0] != '{' and not VARNAME_REGEXP.match(varname):
                 raise ValueError('The varname can only contain alphanumeric characters and underscores.')
 
-            if 't-value' in el.attrib or 't-valuef' in el.attrib or varname[0] == '{':
+            if 't-value' in el.attrib or 't-valuef' in el.attrib or 't-valuef.translate' in el.attrib or varname[0] == '{':
                 el.attrib.pop('t-inner-content') # The content is considered empty.
                 if varname == T_CALL_SLOT:
                     raise SyntaxError('t-set="0" should not be set from t-value or t-valuef')
@@ -1682,6 +1730,9 @@ class IrQweb(models.AbstractModel):
                 code.append(indent_code(f"values[{varname!r}] = {self._compile_expr(expr)}", level))
             elif 't-valuef' in el.attrib:
                 exprf = el.attrib.pop('t-valuef')
+                code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
+            elif 't-valuef.translate' in el.attrib:
+                exprf = el.attrib.pop('t-valuef.translate')
                 code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
             elif varname[0] == '{':
                 code.append(indent_code(f"values.update({self._compile_expr(varname)})", level))
@@ -1693,26 +1744,9 @@ class IrQweb(models.AbstractModel):
                 if content:
                     def_name = compile_context['make_name']('t_set')
                     compile_context['template_functions'][def_name] = [f"def {def_name}(self, values):"] + content
-                    code.append(indent_code(f"""
-                            t_set = []
-                            for item in {def_name}(self, values):
-                                if isinstance(item, str):
-                                    t_set.append(item)
-                                else:
-                                    ref, function_name, cached_values = item
-                                    t_nocache_function = values['__qweb_loaded_values'].get(function_name)
-                                    if not t_nocache_function:
-                                        t_call_template_functions, def_name = self._compile(ref)
-                                        t_nocache_function = t_call_template_functions[function_name]
-
-                                    nocache_values = values['__qweb_root_values'].copy()
-                                    nocache_values.update(cached_values)
-                                    t_set.extend(t_nocache_function(self, nocache_values))
-                        """, level))
-                    expr = "Markup(''.join(t_set))"
+                    code.append(indent_code(f"values[{varname!r}] = QwebContent({def_name}, self, values.copy())", level))
                 else:
-                    expr = "''"
-                code.append(indent_code(f"values[{varname!r}] = {expr}", level))
+                    code.append(indent_code(f"values[{varname!r}] = ''", level))
 
         return code
 
@@ -2017,7 +2051,7 @@ class IrQweb(models.AbstractModel):
         if expr == T_CALL_SLOT and code_options != 'True':
             code.append(indent_code("if True:", level))
             code.extend(tag_open)
-            code.append(indent_code(f"yield from values.get({T_CALL_SLOT}, [])", level + 1))
+            code.append(indent_code(f"if values.get({T_CALL_SLOT}): yield from values[{T_CALL_SLOT}]._content", level + 1))
             code.extend(tag_close)
             return code
         elif ttype == 't-field':
@@ -2034,7 +2068,7 @@ class IrQweb(models.AbstractModel):
             force_display_dependent = True
         else:
             if expr == T_CALL_SLOT:
-                code.append(indent_code(f"content = Markup(''.join(values.get({T_CALL_SLOT}, [])))", level))
+                code.append(indent_code(f"content = values.get({T_CALL_SLOT}, '')", level))
             else:
                 code.append(indent_code(f"content = {self._compile_expr(expr)}", level))
 
@@ -2158,6 +2192,10 @@ class IrQweb(models.AbstractModel):
         """
         expr = el.attrib.pop('t-call')
 
+        el_tag = etree.QName(el.tag).localname if el.nsmap else el.tag
+        if el_tag != 't':
+            raise SyntaxError(f"t-call must be on a <t> element (actually on <{el_tag}>).")
+
         if el.attrib.get('t-call-options'): # retro-compatibility
             el.attrib.set('t-options', el.attrib.pop('t-call-options'))
 
@@ -2182,17 +2220,59 @@ class IrQweb(models.AbstractModel):
         # values (t-out="0" from content and variables from t-set)
         def_name = compile_context['make_name']('t_call')
 
-        # values from content (t-out="0" and t-set inside the content)
-        code_content = [f"def {def_name}(self, values):"]
-        code_content.extend(self._compile_directive(el, compile_context, 'inner-content', 1))
-        self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
-        code_content.extend(self._flush_text(compile_context, 1, rstrip=True))
-        compile_context['template_functions'][def_name] = code_content
+        is_deprecated_version = not any(not key.startswith('t-') for key in el.attrib) and any(n.tag == 't' and n.attrib.get('t-set') for n in el)
 
-        code.append(indent_code(f"""
-            t_call_values = values.copy()
-            t_call_values[{T_CALL_SLOT}] = list({def_name}(self, t_call_values))
-            """, level))
+        # values from content (t-out="0")
+        has_content = bool(list(el))
+        if has_content:
+            code_content = [f"def {def_name}(self, values):"]
+            code_content.extend(self._compile_directive(el, compile_context, 'inner-content', 1))
+            self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
+            code_content.extend(self._flush_text(compile_context, 1, rstrip=True))
+            compile_context['template_functions'][def_name] = code_content
+
+        # values
+        code.append(indent_code("t_call_values = values.copy()", level))
+
+        # args
+        for key in list(el.attrib):
+            if key.endswith('.f') or key.endswith('.translate'):
+                name = key.partition('.')[0]
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value)}", level))
+            elif not key.startswith('t-'):
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"t_call_values[{key!r}] = {self._compile_expr(value)}", level))
+            elif key == 't-args':
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"""
+                    atts_value = {self._compile_expr(value)}
+                    if isinstance(atts_value, dict):
+                        t_call_values.update(atts_value)
+                    elif isinstance(atts_value, (list, tuple)) and not isinstance(atts_value[0], (list, tuple)):
+                        t_call_values.update([atts_value])
+                    elif isinstance(atts_value, (list, tuple)):
+                        t_call_values.update(dict(atts_value))
+                    """, level))
+
+        if not has_content:
+            code.append(indent_code(f"t_call_values[{T_CALL_SLOT}] = ''", level))
+        elif is_deprecated_version:
+            # Old version where there may be t-sets in the content that are used by the t-call.
+            # It should be evaluated immediately.
+            code.append(indent_code(f"""
+                t_call_values['__{T_CALL_SLOT}__'] = list({def_name}(self, t_call_values))
+                t_call_values[{T_CALL_SLOT}] = QwebContent(lambda s, v: t_call_values['__{T_CALL_SLOT}__'], None, None)
+                """, level))
+            if compile_context.get('dev_mode'):
+                _logger.warning(
+                    "Found deprecated t-call formating using t-set whitout t-arg-* @t-call=%r in template %r.",
+                    expr,
+                    compile_context.get('ref', '<unknown>'),
+                )
+        else:
+            # every xml content is lazy
+            code.append(indent_code(f"t_call_values[{T_CALL_SLOT}] = QwebContent({def_name}, self, values.copy())", level))
 
         template = self._compile_format(expr)
 
