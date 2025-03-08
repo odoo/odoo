@@ -1,0 +1,27 @@
+<odoo>
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add custom fields to the order lines list -->
+            <xpath expr="//field[@name='order_line']/list" position="inside">
+                <field name="custom_field_1"/>
+                <field name="custom_field_2"/>
+                <field name="custom_field_3"/>
+				<field name="tax_percent"/>
+            </xpath>
+
+            <!-- Add the total fields at the bottom of the Sales Order form -->
+            <xpath expr="//sheet/group" position="after">
+                <group string="Dettaglio totali">
+                    <field name="total_custom_field_1" readonly="1"/>
+                    <field name="total_custom_field_2" readonly="1"/>
+                    <field name="total_custom_field_3" readonly="1"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
