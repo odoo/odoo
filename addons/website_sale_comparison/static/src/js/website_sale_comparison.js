@@ -6,7 +6,7 @@ import { renderToString } from "@web/core/utils/render";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import website_sale_utils from "@website_sale/js/website_sale_utils";
-
+import { debounce } from "@web/core/utils/timing";
 
 // VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered
@@ -34,6 +34,11 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     start: function () {
         var self = this;
 
+        this.__hideCompareButtonPopoverScroll = debounce(
+            () => this._hideCompareButtonPopoverScroll(),
+            100
+        );
+        window.addEventListener("scroll", this.__hideCompareButtonPopoverScroll);
         self._loadProducts(this.comparelist_product_ids).then(function () {
             self._updateContent('hide');
         });
@@ -76,6 +81,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      */
     destroy: function () {
         this._super.apply(this, arguments);
+        window.removeEventListener("scroll", this.__hideCompareButtonPopoverScroll);
         $(document.body).off('.product_comparaison_widget');
     },
 
@@ -119,7 +125,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             });
         } else {
             this.$('.o_comparelist_limit_warning').show();
-            $('#comparelist .o_product_panel_header').popover('show');
+            this._showCompareButtonPopoverScroll();
         }
     },
 
@@ -127,6 +133,27 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     *
+     * To resolve flickering in show method of popover (tooltip).
+     */
+    _showCompareButtonPopoverScroll() {
+        const panelHeaderEl = document.querySelector("#comparelist .o_product_panel_header");
+        const popoverEl = Popover.getOrCreateInstance(panelHeaderEl);
+        if (!popoverEl.tip?.classList.contains("show")) {
+            popoverEl.show();
+        }
+    },
+    /**
+     * @private
+     *
+     * To hide popover on scroll.
+     */
+    _hideCompareButtonPopoverScroll() {
+        const panelHeaderEl = document.querySelector("#comparelist .o_product_panel_header");
+        Popover.getOrCreateInstance(panelHeaderEl).hide();
+    },
     /**
      * @private
      */
@@ -169,6 +196,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     _addNewProductsImpl: function (product_id) {
         var self = this;
         $('.o_product_feature_panel').addClass('d-md-block');
+        this._updateContent();
         if (!self.comparelist_product_ids.includes(product_id)) {
             self.comparelist_product_ids.push(product_id);
             if (Object.prototype.hasOwnProperty.call(self.product_data, product_id)) {
@@ -197,7 +225,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             }
         });
         if (force !== 'hide' && (this.comparelist_product_ids.length > 1 || force === 'show')) {
-            $('#comparelist .o_product_panel_header').popover('show');
+            this._showCompareButtonPopoverScroll();
         }
         else {
             $('#comparelist .o_product_panel_header').popover('hide');
