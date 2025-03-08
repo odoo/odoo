@@ -2,6 +2,7 @@
 
 import contextlib
 import re
+from urllib.parse import urljoin
 import requests
 from lxml import etree
 from stdnum import get_cc_module, ean
@@ -86,6 +87,11 @@ class ResCompany(models.Model):
         inverse='_inverse_peppol_purchase_journal_id',
     )
     peppol_external_provider = fields.Char(tracking=True)
+    peppol_webhook_endpoint = fields.Char(
+        string='Webhook Endpoint',
+        readonly=True,
+        compute='_compute_peppol_webhook_endpoint'
+    )
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -191,6 +197,10 @@ class ResCompany(models.Model):
                     company.account_peppol_phone_number = company.phone
                 except ValidationError:
                     continue
+
+    def _compute_peppol_webhook_endpoint(self):
+        for company in self:
+            company.peppol_webhook_endpoint = urljoin(company.get_base_url(), '/peppol/webhook')
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
