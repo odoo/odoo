@@ -45,6 +45,50 @@ function loadAnchors(url, body) {
 }
 
 /**
+ * for html_editor not using jquery
+ *
+ * @param {string} url
+ * @param {Node} body the editable for which to recover anchors
+ * @returns {Deferred<string[]>}
+ */
+export function loadAnchorsLinkPopover(url, body) {
+    return new Promise(function (resolve, reject) {
+        if (url === window.location.pathname || url[0] === "#") {
+            resolve(body ? body : document.body.outerHTML);
+        } else if (url.length && !url.startsWith("http")) {
+            $.get(window.location.origin + url).then(resolve, reject);
+        } else {
+            // avoid useless query
+            resolve();
+        }
+    })
+        .then(function (response) {
+            const anchors = Array.from(
+                response.querySelectorAll(
+                    '[id][data-anchor=true], .modal[id][data-display="onClick"]'
+                )
+            ).map((el) => {
+                return "#" + el.id;
+            });
+            // Always suggest the top and the bottom of the page as internal link
+            // anchor even if the header and the footer are not in the DOM. Indeed,
+            // the "scrollTo" function handles the scroll towards those elements
+            // even when they are not in the DOM.
+            if (!anchors.includes("#top")) {
+                anchors.unshift("#top");
+            }
+            if (!anchors.includes("#bottom")) {
+                anchors.push("#bottom");
+            }
+            return anchors;
+        })
+        .catch((error) => {
+            console.debug(error);
+            return [];
+        });
+}
+
+/**
  * Allows the given input to propose existing website URLs.
  *
  * @param {HTMLInputElement} input
