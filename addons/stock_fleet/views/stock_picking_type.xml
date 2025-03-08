@@ -7,8 +7,11 @@
             <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//kanban" position="inside">
+                        <field name="dispatch_management" invisible="1"/>
+                    </xpath>
                     <xpath expr="//div[@name='kanban_menu_section']" position="after">
-                        <t t-if="record.code.raw_value == 'incoming' or record.code.raw_value == 'outgoing'">
+                        <t t-if="record.dispatch_management.raw_value">
                             <div class="col-6">
                                 <h5 role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
                                     <a>Transport Management</a>
@@ -35,4 +38,16 @@
             </field>
         </record>
     </data>
+
+    <record id="view_picking_type_form" model="ir.ui.view">
+        <field name="name">stock.picking.type.form.inherit.stock_fleet</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='auto_batch']" position="before">
+                <field name="dispatch_management"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
