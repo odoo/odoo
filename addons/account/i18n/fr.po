@@ -5861,7 +5861,7 @@ msgstr "Montant de la remise en devise "
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Discount of %(amount)s if paid %(when)s"
-msgstr ""
+msgstr "Remise de %(amount)s si payé %(when)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -17347,6 +17347,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot deprecate an account that is used in a tax distribution."
+msgstr ""
+"Vous ne pouvez pas supprimer un compte utilisé dans une répartition fiscale."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -17607,6 +17615,7 @@ msgstr ""
 #, python-format
 msgid "You cannot switch the type of a document which has been posted once."
 msgstr ""
+"Vous ne pouvez pas changer le type d'un document qui a déjà été validé."
 
 #. module: account
 #. odoo-python
@@ -18238,7 +18247,7 @@ msgstr "avec le PDF d'une facture client comme pièce jointe"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "within %(days)s days"
-msgstr ""
+msgstr "dans un délai de %(days)s jours"
 
 #. module: account
 #. odoo-python

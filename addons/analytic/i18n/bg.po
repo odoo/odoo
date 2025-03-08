@@ -51,7 +51,7 @@ msgstr "<span class=\"o_stat_text\">Аналитични сметки</span>"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "<span class=\"o_stat_text\">Gross Margin</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Брутен марж</span>"
 
 #. module: analytic
 #. odoo-python
@@ -526,7 +526,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
 msgid "Gross Margin"
-msgstr ""
+msgstr "Брутен марж"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -832,6 +832,13 @@ msgid "Search Analytic Lines"
 msgstr "Търсете в аналитични редове"
 
 #. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "See them"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
 msgid ""
 "Select a company for which the analytic distribution will be used (e.g. "
@@ -905,6 +912,15 @@ msgstr "Потребител"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "View"
 msgstr "Преглед"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
+"Whoa there! Moving this account would wipe out your current data. Let's "
+"avoid that, shall we?"
+msgstr ""
 
 #. module: analytic
 #. odoo-python
