@@ -8,6 +8,7 @@ export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
     static props = {
         ...toolbarButtonProps,
+        title: { type: String },
         mode: { type: String },
         type: { type: String },
         getSelectedColors: Function,

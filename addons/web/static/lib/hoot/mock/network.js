@@ -73,7 +73,7 @@ const DEFAULT_URL = "https://www.hoot.test/";
 const HEADER = {
     contentType: "Content-Type",
 };
-const R_INTERNAL_URL = /^(blob|file):/;
+const R_INTERNAL_URL = /^(blob|file|data):/;
 
 /** @type {Set<WebSocket>} */
 const openClientWebsockets = new Set();
@@ -779,7 +779,11 @@ export class MockXMLHttpRequest extends EventTarget {
                 headers: this._headers,
             });
             this._status = response.status;
-            this._response = await response.text();
+            if (new URL(this._url, mockLocation.origin).protocol === "blob:") {
+                this._response = await response.arrayBuffer();
+            } else {
+                this._response = await response.text();
+            }
             this.dispatchEvent(new ProgressEvent("load"));
         } catch (error) {
             this.dispatchEvent(new ProgressEvent("error", { error }));

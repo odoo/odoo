@@ -1,0 +1,35 @@
+.o_we_collapse_toggler {
+    @include o-position-absolute($top: 0, $left: 0);
+    width: $o-we-sidebar-content-indent;
+    height: $o-we-sidebar-content-field-height;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: none;
+    border: none;
+    font-family: FontAwesome;
+
+    &::after {
+        content: '\f0da';
+        position: static;
+        transform: none;
+        color: #9d9d9d;
+
+        .o_rtl & {
+            transform: scaleX(-1);
+        }
+    }
+
+    &.active {
+
+        &::after {
+            content: '\f0d7';
+        }
+        + * {
+            background: none;
+            border: none;
+            box-shadow: none;
+        }
+    }
+}

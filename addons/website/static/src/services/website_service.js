@@ -27,7 +27,7 @@ const ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
 
 export const websiteService = {
     dependencies: ['orm', 'action', 'hotkey'],
-    async start(env, { orm, action, hotkey }) {
+    start(env, { orm, action, hotkey }) {
         let websites = [];
         let currentWebsiteId;
         let currentMetadata = {};
@@ -220,13 +220,14 @@ export const websiteService = {
                 invalidateSnippetCache = value;
             },
 
-            goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
+            goToWebsite({ websiteId, path, edition, translation, lang, htmlBuilder=false } = {}) {
                 this.websiteRootInstance = undefined;
                 if (lang) {
                     invalidateSnippetCache = true;
                     path = `/website/lang/${encodeURIComponent(lang)}?r=${encodeURIComponent(path)}`;
                 }
-                action.doAction('website.website_preview', {
+                const actionName = htmlBuilder ? "egg_website_preview" : 'website.website_preview';
+                action.doAction(actionName, {
                     clearBreadcrumbs: true,
                     additionalContext: {
                         params: {
@@ -247,7 +248,7 @@ export const websiteService = {
                 ]);
             },
             async fetchWebsites() {
-                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name']))];
+                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name', 'language_ids']))];
             },
             async loadWysiwyg() {
                 await ensureJQuery();
