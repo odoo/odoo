@@ -8,7 +8,7 @@
         </xpath>
         <xpath expr="//span[hasclass('o_product_catalog_price')]" position="after">
             <span class="o_product_catalog_price" t-if="env.displayUoM">
-                Price: <t t-out="price"/>
+                <t t-out="price"/>
                 / <span t-att-class="{'fw-bold text-primary': props.purchase_uom}">
                     <t t-if="props.purchase_uom" t-esc="props.purchase_uom.display_name"/>
                     <t t-else="" t-esc="props.uom.display_name"/>

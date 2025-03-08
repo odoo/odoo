@@ -88,6 +88,10 @@ class ProductProduct(models.Model):
              "any of its children.\n"
              "Otherwise, this includes goods leaving any Stock "
              "Location with 'internal' type.")
+    catalog_diff_qty = fields.Float('Catalog Quantity Difference',
+        compute='_compute_quantities', compute_sudo=False,
+        help="Used in Product Catalog\n"
+             "On Hand Quantity - Forecasted Quantity")
 
     orderpoint_ids = fields.One2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules')
     nbr_moves_in = fields.Integer(compute='_compute_nbr_moves', compute_sudo=False, help="Number of incoming stock moves in the past 12 months")
@@ -144,6 +148,7 @@ class ProductProduct(models.Model):
         services.outgoing_qty = 0.0
         services.virtual_available = 0.0
         services.free_qty = 0.0
+        services.catalog_diff_qty = 0.0
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
@@ -221,6 +226,9 @@ class ProductProduct(models.Model):
             res[product_id]['virtual_available'] = float_round(
                 qty_available + res[product_id]['incoming_qty'] - res[product_id]['outgoing_qty'],
                 precision_rounding=rounding)
+            res[product_id]['catalog_diff_qty'] = float_round(
+                res[product_id]['virtual_available'] - res[product_id]['qty_available'], precision_rounding=rounding
+            )
 
         return res
 
