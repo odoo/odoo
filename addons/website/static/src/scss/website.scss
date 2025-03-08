@@ -1040,12 +1040,16 @@ $-transition-duration: 200ms;
 .navbar .o_extra_menu_items > .show {
     > li {
         + li {
-            border-top: 1px solid map-get($grays, '200');
+            border-top: $border-width solid $border-color;
         }
         > a.dropdown-toggle {
-            background-color: map-get($grays, '200');
+            background-color: $body-tertiary-bg;
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+
+            &.active {
+                background-color: var(--dropdown-link-active-bg, $component-active-bg);
+            }
         }
         > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
             position: static;
@@ -1673,6 +1677,10 @@ $ribbon-padding: 100px;
 .o_search_result_item_detail {
     flex: 1;
     word-break: normal !important;
+
+    button:disabled {
+        color: inherit;
+    }
 }
 
 .o_cookies_bar_toggle {
