@@ -454,13 +454,13 @@ class StockMoveLine(models.Model):
                     # Only need to unlink the package level if it's empty. Otherwise will unlink it to still valid move lines.
                     if not package_level.move_line_ids:
                         package_level.unlink()
-        # When we try to write on a reserved move line any fields from `triggers` or directly
-        # `reserved_uom_qty` (the actual reserved quantity), we need to make sure the associated
+        # When we try to write on a reserved move line any fields from `triggers`, result_package_id excepted,
+        # or directly reserved_uom_qty` (the actual reserved quantity), we need to make sure the associated
         # quants are correctly updated in order to not make them out of sync (i.e. the sum of the
         # move lines `reserved_uom_qty` should always be equal to the sum of `reserved_quantity` on
         # the quants). If the new charateristics are not available on the quants, we chose to
         # reserve the maximum possible.
-        if updates or 'quantity' in vals:
+        if (updates and {'result_package_id'}.difference(updates.keys())) or 'quantity' in vals:
             for ml in self:
                 if not ml.product_id.is_storable or ml.state == 'done':
                     continue
