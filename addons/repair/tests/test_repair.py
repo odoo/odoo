@@ -777,3 +777,29 @@ class TestRepair(common.TransactionCase):
         self.assertFalse(move.repair_id)
         self.assertEqual(move.location_id, self.stock_warehouse.lot_stock_id)
         self.assertEqual(move.location_dest_id, self.stock_location_14)
+
+    def test_copy_repair_product_with_different_groups(self):
+        """
+            This test checks if the product can be copied with users that don't have access on the Inventory app
+        """
+        product_templ = self.env['product.template'].create({
+            'name': 'Repair Consumable',
+            'type': 'consu',
+            'create_repair': True,
+        })
+        mitchell_user = self.env['res.users'].create({
+            'name': 'Mitchell not Admin',
+            'login': 'm_user',
+            'email': 'm@user.com',
+            'groups_id': [(6, 0, self.env.ref('base.group_system').ids)],
+        })
+        mitchell_user.write({
+            'groups_id': [(3, self.env.ref('stock.group_stock_user').id), (3, self.env.ref('stock.group_stock_manager').id)]
+        })
+        copied_without_access = product_templ.with_user(mitchell_user).copy()
+        mitchell_user.write({
+            'groups_id': [(4, self.env.ref('stock.group_stock_user').id)]
+        })
+        self.assertFalse(copied_without_access.create_repair)
+        copied_with_access = product_templ.copy().with_user(mitchell_user)
+        self.assertTrue(copied_with_access.create_repair)
