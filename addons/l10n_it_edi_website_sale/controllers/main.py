@@ -6,6 +6,14 @@ from odoo.exceptions import UserError
 from odoo import _
 
 class ItalyWebsiteSaleForm(WebsiteSale):
+    def values_preprocess(self, values):
+        values = super().values_preprocess(values)
+        country_code = request.env['res.country'].browse(int(values.get('country_id'))).code
+        vat = values.get('vat')
+        if not values.get('l10n_it_codice_fiscale') and vat and (country_code == "IT" or vat.startswith("IT")):
+            values['l10n_it_codice_fiscale'] = request.env['res.partner']._l10n_it_normalize_codice_fiscale(vat)
+        return values
+
     def checkout_form_validate(self, mode, all_form_values, data):
         error, error_message = super().checkout_form_validate(mode, all_form_values, data)
         Partner = request.env['res.partner']
