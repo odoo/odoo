@@ -25,6 +25,7 @@ class ResPartner(models.Model):
     # the specific pricelist to compute property_product_pricelist
     # this company dependent field shouldn't have any fallback in ir.default
     specific_property_product_pricelist = fields.Many2one(
+        string="Specific Pricelist",
         comodel_name='product.pricelist',
         company_dependent=True,
     )
