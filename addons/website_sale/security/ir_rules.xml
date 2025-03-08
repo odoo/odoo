@@ -40,4 +40,30 @@
         <field name="domain_force">['|', ('company_id', 'in', [False, website.company_id.id]), ('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="empty_public_categories_rule" model="ir.rule">
+        <field name="name">Hide empty eCommerce categories to non Website Editors</field>
+        <field name="model_id" ref="website_sale.model_product_public_category"/>
+        <field name="domain_force">[('product_tmpl_ids.is_published', '=', True)]</field>
+        <field name="groups" eval="[
+            Command.link(ref('base.group_public')),
+            Command.link(ref('base.group_portal')),
+            Command.link(ref('base.group_user')),
+        ]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="editor_admin_public_categories_rule" model="ir.rule">
+        <field name="name">Full access to Website Editor/Admin on eCommerce categories</field>
+        <field name="model_id" ref="website_sale.model_product_public_category"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[
+            Command.link(ref('website.group_website_restricted_editor')),
+            Command.link(ref('website.group_website_designer')),
+            Command.link(ref('base.group_system')),
+        ]"/>
+    </record>
+
 </odoo>

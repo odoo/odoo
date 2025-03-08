@@ -12,8 +12,9 @@
                     <t
                         t-set="categories"
                         t-value="request.env['product.public.category'].search([
-                            ('parent_id', '=', False)
-                        ])[:8]"
+                            ('parent_id', '=', False),
+                            ('product_tmpl_ids.is_published', '=', True),
+                        ], limit=8)"
                     />
                     <t t-foreach="categories" t-as="category">
                         <div class="col-12 col-lg-3">
