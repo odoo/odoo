@@ -85,6 +85,7 @@ export class LinkPopoverWidget {
             tooltips.push(Tooltip.getOrCreateInstance(el));
         }
         let popoverShown = true;
+        const editable = this.wysiwyg.odooEditor.editable;
         this.$target.popover({
             html: true,
             content: this.$el,
@@ -96,7 +97,7 @@ export class LinkPopoverWidget {
             // 4. ..except if it the click was on a button of the popover content
             // 5. Close when the user click somewhere on the page (not being the link or the popover content)
             trigger: 'manual',
-            boundary: 'viewport',
+            boundary: editable,
             container: this.container,
         })
         .on('show.bs.popover.link_popover', () => {

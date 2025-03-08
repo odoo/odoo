@@ -1,0 +1,16 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.FontSizeSelector">
+        <Dropdown state="dropdown" menuClass="'o_font_size_selector_menu'">
+            <button class="btn btn-light" t-att-title="props.title">
+                <iframe t-ref="iframeContent" style="width: 4ch; height:100%;"/>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="items" t-as="item" t-key="item_index">
+                    <DropdownItem onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
+                        <t t-esc="item.name"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

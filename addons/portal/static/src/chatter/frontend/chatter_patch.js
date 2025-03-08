@@ -11,12 +11,8 @@ patch(Chatter.prototype, {
             // Keep the composer position under the page header on scrolling 
             // unless the header is on the side.
             const headerEl = document.querySelector("#wrapwrap header");
-            if (!this.props.twoColumns && !headerEl.matches(".o_header_sidebar")) {
-                const paddingTop = headerEl
-                    ? headerEl.getBoundingClientRect().height +
-                      15 +
-                      "px"
-                    : "";
+            if (!this.props.twoColumns && headerEl && !headerEl.matches(".o_header_sidebar")) {
+                const paddingTop = headerEl.getBoundingClientRect().height + 15 + "px";
                 this.observer = new window.IntersectionObserver(
                     ([e]) =>
                         (e.target.style.paddingTop =

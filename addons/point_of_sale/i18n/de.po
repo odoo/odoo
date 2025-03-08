@@ -3944,7 +3944,7 @@ msgid ""
 "Only cash and bank journals are allowed."
 msgstr ""
 "Leer lassen, um das Debitorenkonto des Kunden zu verwenden.\n"
-"Definiert das Journal, in dem die kumulierten Zahlungen (oder einzelne Zahlungen, wenn „Kunde identifizieren“ True ist) nach dem Schließen der Sitzung gebucht werden sollen.\n"
+"Definiert das Journal, in dem die kumulierten Zahlungen (oder einzelne Zahlungen, wenn „Kunde identifizieren“ Wahr ist) nach dem Schließen der Sitzung gebucht werden sollen.\n"
 "Beim Kassenjournal wird über die Auszugszeilen direkt auf das Standardkonto im Journal geschrieben.\n"
 "Bei Bankjournalen wird auf das in dieser Zahlungsmethode angegebene Konto für offene Rechnungen geschrieben.\n"
 "Es sind nur Kassen- und Bankjournale zulässig."
@@ -9367,3 +9367,14 @@ msgid ""
 msgstr ""
 "{{ line.has_valid_product_lot() ? 'Gültiges Produktlos' : 'Ungültiges "
 "Produktlos'}}"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Dieses Journal ist mit einer Zahlungsmethode %s verbunden, die im Auftrag %s"
+" der aktiven Kassensitzung %s verwendet wird"

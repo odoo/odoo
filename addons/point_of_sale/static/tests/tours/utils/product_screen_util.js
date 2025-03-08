@@ -650,6 +650,12 @@ export function checkTaxAmount(amount) {
     };
 }
 
+export function checkExtraPrice(amount) {
+    return {
+        trigger: `.price-tag.py-1:contains(${amount})`,
+    };
+}
+
 export function addDiscount(discount) {
     return [
         Numpad.click("%"),

@@ -338,7 +338,7 @@ export class SelfOrder extends Reactive {
             return;
         }
 
-        order = await this.sendDraftOrderToServer();
+        order = await this.sendDraftOrderToServer(paymentMethods.length > 0);
 
         if (!order) {
             return;
@@ -360,7 +360,7 @@ export class SelfOrder extends Reactive {
             // if the order is already saved on the server, we redirect him to the payment page
             // In each mode, we redirect the customer to the payment page directly
             if (payAfter === "meal" && Object.keys(order.changes).length > 0) {
-                await this.sendDraftOrderToServer();
+                await this.sendDraftOrderToServer(paymentMethods.length > 0);
                 this.confirmationPage("order", device, order.access_token);
             } else {
                 this.router.navigate("payment");
@@ -606,7 +606,7 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    async sendDraftOrderToServer() {
+    async sendDraftOrderToServer(to_pay_on_kiosk = false) {
         if (
             Object.keys(this.currentOrder.changes).length === 0 ||
             this.currentOrder.lines.length === 0
@@ -617,11 +617,14 @@ export class SelfOrder extends Reactive {
         try {
             this.currentOrder.recomputeOrderData();
             const data = await rpc(
-                `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
+                `/pos-self-order/process-order-args/${this.config.self_ordering_mode}`,
                 {
                     order: this.currentOrder.serialize({ orm: true }),
                     access_token: this.access_token,
                     table_identifier: this.currentOrder?.table_id?.identifier || false,
+                    context: {
+                        to_pay_on_kiosk,
+                    },
                 }
             );
             const result = this.models.loadData(data);

@@ -2,6 +2,8 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "../browser/browser";
 import { ConnectionLostError, RPCError, rpc } from "../network/rpc";
 import { registry } from "../registry";
+import { session } from "@web/session";
+import { user } from "@web/core/user";
 import {
     ClientErrorDialog,
     ErrorDialog,
@@ -157,3 +159,29 @@ export function defaultHandler(env, error) {
     return true;
 }
 errorHandlerRegistry.add("defaultHandler", defaultHandler, { sequence: 100 });
+
+// -----------------------------------------------------------------------------
+// Frontend visitors errors
+// -----------------------------------------------------------------------------
+
+/**
+ * We don't want to show tracebacks to non internal users. This handler swallows
+ * all errors if we're not an internal user (except in debug or test mode).
+ */
+export function swallowAllVisitorErrors(env, error, originalError) {
+    if (!user.isInternalUser && !odoo.debug && !session.test_mode) {
+        return true;
+    }
+}
+
+if (user.isInternalUser === undefined) {
+    // Only warn about this while on the "frontend": the session info might
+    // apparently not be present in all Odoo screens at the moment... TODO ?
+    if (session.is_frontend) {
+        console.warn(
+            "isInternalUser information is required for this handler to work. It must be available in the page."
+        );
+    }
+} else {
+    registry.category("error_handlers").add("swallowAllVisitorErrors", swallowAllVisitorErrors, { sequence: 0 });
+}
