@@ -2225,6 +2225,15 @@ export class PosStore extends Reactive {
             return `${pm.name} (${fmtAmount})`;
         }
     }
+
+    get limitedCategoryIds() {
+        const { limit_categories, iface_available_categ_ids } = this.config;
+        return (
+            limit_categories &&
+            iface_available_categ_ids.length > 0 &&
+            iface_available_categ_ids.map((category) => category.id)
+        );
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
