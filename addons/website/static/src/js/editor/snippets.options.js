@@ -2462,7 +2462,7 @@ options.registry.Parallax = options.Class.extend({
      * @override
      */
     onMove() {
-        this._refreshPublicWidgets();
+        return this._refreshPublicWidgets();
     },
     /**
      * @override
