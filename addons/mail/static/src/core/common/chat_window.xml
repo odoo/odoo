@@ -5,14 +5,38 @@
     <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column"
         t-att-style="style"
         t-att-class="{
+<<<<<<< saas-17.4
             'w-100 h-100 o-mobile': ui.isSmall,
             'o-folded': props.chatWindow.folded,
             'rounded-top-3': !ui.isSmall,
         }"
+||||||| a1969de6e6a292b14ad1d19c256ead04dc202528
+                'w-100 h-100 o-mobile': ui.isSmall,
+                'o-folded': props.chatWindow.folded or props.chatWindow.hidden,
+                'position-fixed bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
+                'rounded-top-3': !props.chatWindow.hidden and !ui.isSmall,
+                }"
+=======
+                'o-mobile': ui.isSmall,
+                'w-100 h-100': ui.isSmall and !isMobileFoldedForLivechatVisitor,
+                'o-folded': props.chatWindow.folded or props.chatWindow.hidden,
+                'position-fixed d-flex flex-column': !props.chatWindow.hidden,
+                'overflow-hidden bottom-0': !props.chatWindow.hidden and !isMobileFoldedForLivechatVisitor,
+                'rounded-top-3': !props.chatWindow.hidden and !ui.isSmall,
+                'o-isMobileFoldedForLivechatVisitor': isMobileFoldedForLivechatVisitor,
+                'o-moveUp': isMobileFoldedForLivechatVisitor and state.moveUp,
+                }"
+>>>>>>> 26fa82b07ca3df31017bf303fd864725dfc9f3d3
         t-on-keydown="onKeydown"
         tabindex="1"
     >
+<<<<<<< saas-17.4
         <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 border-bottom z-1" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'o-folded': props.chatWindow.folded }">
+||||||| a1969de6e6a292b14ad1d19c256ead04dc202528
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded }">
+=======
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded, 'position-relative rounded-circle': isMobileFoldedForLivechatVisitor }">
+>>>>>>> 26fa82b07ca3df31017bf303fd864725dfc9f3d3
             <t t-if="threadActions.actions.length > 3">
                 <div class="d-flex text-truncate">
                     <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">
@@ -52,18 +76,28 @@
                 <t t-call="mail.ChatWindow.headerContent"/>
             </t>
             <div class="flex-grow-1"/>
+<<<<<<< saas-17.4
             <div t-if="thread and thread.importantCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
                 <t t-out="thread.importantCounter"/>
+||||||| a1969de6e6a292b14ad1d19c256ead04dc202528
+            <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
+                <t t-out="thread.needactionCounter"/>
+=======
+            <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter" t-att-class="{
+                'position-absolute': isMobileFoldedForLivechatVisitor,
+            }" t-att-style="isMobileFoldedForLivechatVisitor ? 'top: -5px; right: -10px;' : ''">
+                <t t-out="thread.needactionCounter"/>
+>>>>>>> 26fa82b07ca3df31017bf303fd864725dfc9f3d3
             </div>
-            <t t-if="threadActions.actions.length > 1" t-call="mail.ChatWindow.dropdownAction">
+            <t t-if="threadActions.actions.length > 1 and !isMobileFoldedForLivechatVisitor" t-call="mail.ChatWindow.dropdownAction">
                 <t t-set="action" t-value="threadActions.actions[0]"/>
             </t>
-            <t t-if="!ui.isSmall and threadActions.actions.length > 2">
+            <t t-if="!ui.isSmall and threadActions.actions.length > 2 and !isMobileFoldedForLivechatVisitor">
                 <t t-call="mail.ChatWindow.dropdownAction">
                     <t t-set="action" t-value="threadActions.actions.at(-2)"/>
                 </t>
             </t>
-            <t t-call="mail.ChatWindow.dropdownAction">
+            <t t-if="!isMobileFoldedForLivechatVisitor" t-call="mail.ChatWindow.dropdownAction">
                 <t t-set="action" t-value="threadActions.actions.at(-1)"/>
                 <t t-set="itemClass" t-value="ui.isSmall ? 'mx-2' : 'me-1'"/>
             </t>
@@ -92,10 +126,30 @@
 </t>
 
 <t t-name="mail.ChatWindow.headerContent">
+<<<<<<< saas-17.4
     <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-attf-class="{{ threadActions.actions.length > 4 ? 'ms-1' : 'ms-3' }} me-1">
         <img class="rounded o_object_fit_cover" t-att-src="thread.avatarUrl" alt="Thread Image"/>
+||||||| a1969de6e6a292b14ad1d19c256ead04dc202528
+    <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-attf-class="{{ threadActions.actions.length > 4 ? 'ms-1' : 'ms-3' }} me-1">
+        <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
+=======
+    <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-att-class="{
+        'ms-1': threadActions.actions.length > 4 and !isMobileFoldedForLivechatVisitor,
+        'ms-3': threadActions.actions.length lte 4 and !isMobileFoldedForLivechatVisitor,
+        'me-1': !isMobileFoldedForLivechatVisitor,
+    }">
+        <img t-att-class="{ 'o-isMobileFoldedForLivechatVisitor rounded-circle': isMobileFoldedForLivechatVisitor, 'rounded': !isMobileFoldedForLivechatVisitor }" t-att-src="thread.imgUrl" alt="Thread Image"/>
+>>>>>>> 26fa82b07ca3df31017bf303fd864725dfc9f3d3
     </div>
+<<<<<<< saas-17.4
     <ThreadIcon t-if="thread and thread.channel_type === 'chat' and thread.correspondent" thread="thread"/>
     <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
+||||||| a1969de6e6a292b14ad1d19c256ead04dc202528
+    <ThreadIcon t-if="thread and thread.type === 'chat' and thread.chatPartner" thread="thread"/>
+    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
+=======
+    <ThreadIcon t-if="thread and thread.type === 'chat' and thread.chatPartner" thread="thread"/>
+    <div t-if="!state.editingName and !isMobileFoldedForLivechatVisitor" class="text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
+>>>>>>> 26fa82b07ca3df31017bf303fd864725dfc9f3d3
 </t>
 </templates>
