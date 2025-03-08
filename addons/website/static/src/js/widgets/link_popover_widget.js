@@ -55,23 +55,23 @@ export class NavbarLinkPopoverWidget extends LinkPopoverWidget {
         this.onEditMenuClick = params.onEditMenuClick;
     }
     /**
-     *
      * @override
      */
     async start() {
         this.isWebsiteDesigner = await this.checkIsWebsiteDesigner();
-        const $removeLink = this.$el.find('.o_we_remove_link');
         // remove link has no sense on navbar menu links, instead show edit menu
+        this.el.querySelector(".o_we_remove_link").remove();
         if (this.isWebsiteDesigner) {
-            const $anchor = $('<a/>', {
-                href: '#', class: 'ms-2 js_edit_menu', title: _t('Edit Menu'),
-                'data-bs-placement': 'top', 'data-bs-toggle': 'tooltip',
-            }).append($('<i/>', {class: 'fa fa-sitemap'}));
-            $removeLink.replaceWith($anchor);
-            $anchor.on('click', () => this.onEditMenuClick(this));
+            const menuEditorBtnEl = Object.assign(document.createElement("a"), {
+                href: "#",
+                className: "js_edit_menu btn btn-sm btn-primary mt-2", 
+                textContent: _t("Menu Editor"),
+            });
+            const fullUrlLinkEl = this.el.querySelector(".o_we_full_url")
+            fullUrlLinkEl.after(menuEditorBtnEl);
+            menuEditorBtnEl.addEventListener("click", () => this.onEditMenuClick(this));
         } else {
-            this.$el.find('.o_we_edit_link').remove();
-            $removeLink.remove();
+            this.el.querySelector(".o_we_edit_link").remove();
         }
 
         return super.start(...arguments);

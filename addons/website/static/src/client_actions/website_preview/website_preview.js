@@ -24,9 +24,20 @@ import {
 } from "@odoo/owl";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 
+const websiteSystrayRegistry = registry.category("website_systray");
+
 class BlockPreview extends Component {
     static template = "website.BlockPreview";
     static props = {};
+}
+
+class CreatePageMessage extends Component {
+    static template = "website.CreatePageMessage";
+    static props = {};
+
+    createPage() {
+        websiteSystrayRegistry.trigger("CREATE-PAGE");
+    }
 }
 
 export class WebsitePreview extends Component {
@@ -34,6 +45,7 @@ export class WebsitePreview extends Component {
     static components = {
         WebsiteEditorComponent,
         BlockPreview,
+        CreatePageMessage,
         WebsiteTranslator,
         ResourceEditor,
         ResizablePanel,
@@ -52,6 +64,7 @@ export class WebsitePreview extends Component {
         this.iframefallback = useRef('iframefallback');
         this.container = useRef('container');
         this.websiteContext = useState(this.websiteService.context);
+        this.websitePage = useState({is404: this.websiteService.is404});
         this.blockedState = useState({
             isBlocked: false,
             showLoader: false,
@@ -63,6 +76,7 @@ export class WebsitePreview extends Component {
 
         useBus(this.websiteService.bus, 'BLOCK', (event) => this.block(event.detail));
         useBus(this.websiteService.bus, 'UNBLOCK', () => this.unblock());
+        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", () => this.websitePage.is404 = this.websiteService.is404);
         useExternalListener(window, "keydown", this._onKeydownRefresh.bind(this));
 
         onWillStart(async () => {

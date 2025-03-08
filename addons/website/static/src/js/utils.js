@@ -495,6 +495,21 @@ export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
     }
 }
 
+/**
+ * Converts a string into a URL-friendly slug.
+ *
+ * @param {string} value - The string to slugify.
+ * @returns {string} The slugified string.
+ */
+export function slugify(value) {
+    // `NFKD` as in `http_routing` python `slugify()`
+    return !value ? "" : value.trim().normalize("NFKD").toLowerCase()
+        .replace(/['’]/g, "-") // Replace apostrophes with hyphens
+        .replace(/\s+/g, "-") // Replace spaces with -
+        .replace(/[^\w-]+/g, "") // Remove all non-word chars
+        .replace(/--+/g, "-"); // Replace multiple - with single -
+}
+
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -511,4 +526,5 @@ export default {
     getParsedDataFor: getParsedDataFor,
     cloneContentEls: cloneContentEls,
     checkAndNotifySEO: checkAndNotifySEO,
+    slugify: slugify,
 };
