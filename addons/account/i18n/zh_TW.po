@@ -3493,7 +3493,7 @@ msgstr "銀行設置"
 #: model:ir.model,name:account.model_account_bank_statement
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank Statement"
-msgstr "銀行對帳單"
+msgstr "銀行結單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_extract
@@ -3503,12 +3503,12 @@ msgstr "銀行結單數碼化"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "銀行對帳單明細"
+msgstr "銀行結單資料行"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
-msgstr "銀行對帳單"
+msgstr "銀行結單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
@@ -3539,8 +3539,8 @@ msgid ""
 "Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
-"銀行對帳單交易在匯入或同步後立即過帳. 他們的交易對象是銀行暫記科目.\n"
-"對帳將後者替換為最終會計科目."
+"匯入或同步完成後，銀行交易會立即過賬，其交易對手會是銀行暫記賬戶。\n"
+"對賬時，暫記賬戶的賬目會被最終賬目取代。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -3569,7 +3569,7 @@ msgstr "銀行設定通用設定"
 msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
-msgstr "銀行對帳單交易將過帳在暫記項目中，直到最終核對允許找到正確的項目為止."
+msgstr "銀行結單的交易會記入暫記賬戶，直至最終對賬時能夠找到正確的賬戶為止。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5941,7 +5941,7 @@ msgstr "設定財政年度起迄及報稅周期。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr "定義銀行對帳單的註冊方式"
+msgstr "定義登記銀行結單的方式"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_applicability__display_account_prefix
@@ -8328,7 +8328,7 @@ msgstr "用 CAMT.053 格式匯入"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CAMT.053"
-msgstr "用CAMT.053格式匯入銀行對帳單"
+msgstr "以 CAMT.053 格式匯入銀行結單"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8338,12 +8338,12 @@ msgstr "以 CSV、XLS 和 XLSX 格式匯入你的銀行對賬單"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in OFX"
-msgstr "用OFX格式匯入銀行對帳單"
+msgstr "以 OFX 格式匯入銀行結單"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in QIF"
-msgstr "用QIF格式匯入銀行對帳單"
+msgstr "以 QIF 格式匯入銀行結單"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -9141,7 +9141,7 @@ msgstr "是手動修改"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_matched
 msgid "Is Matched With a Bank Statement"
-msgstr "與銀行對帳單匹配"
+msgstr "已與銀行結單配對"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_move_sent
@@ -12705,7 +12705,7 @@ msgstr "退款"
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 #: model_terms:ir.actions.act_window,help:account.action_credit_statement_tree
 msgid "Register a bank statement"
-msgstr "登記銀行對帳單"
+msgstr "登記銀行結單"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -13905,7 +13905,7 @@ msgstr "顯示重置為草稿按鈕"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show Unreconciled Bank Statement Line"
-msgstr "顯示未對帳的銀行對帳單明細"
+msgstr "顯示未對賬的銀行結單資料行"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -14956,7 +14956,7 @@ msgstr "銀行分錄的銀行帳戶必須屬於同一公司 (%s)."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "銀行對帳單明細用來銀行對帳"
+msgstr "銀行對賬所使用的銀行結單"
 
 #. module: account
 #. odoo-python
@@ -15818,7 +15818,7 @@ msgstr "在所選日期之前，仍有未對賬的銀行結單資料行。以下
 msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
-msgstr "在您要鎖定的期間內仍有未對帳的銀行對帳單明細. 您應該對帳或刪除它們."
+msgstr "在你想鎖定的期間內，仍有未對賬的銀行結單資料行。你應該為它們進行對賬，或刪除它們。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -16186,8 +16186,8 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"當核銷銀行對帳單或者一個科目的時候，\n"
-"                這被用來快速建立日記帳項目."
+"為銀行結單或賬戶對賬時，\n"
+"                可用作快速建立日記賬項目。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_country_group__exclude_state_ids
@@ -17418,7 +17418,7 @@ msgstr "寫下客戶名稱以<b>創建一個</b>或<b>查看建議</b>。"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr "在此處填寫<b>您的電子郵件地址</b>來測試流程."
+msgstr "在此處填寫<b>你的電子郵件地址</b>來測試流程."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account

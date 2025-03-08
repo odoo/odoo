@@ -3457,6 +3457,14 @@ msgstr ""
 "Ballaststoffreicher Laib. Mit feinem Vollkornmehl gebacken, sehr weich."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+"Make sure to close all sessions first to avoid any issues."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
 msgid "Hour"
 msgstr "Stunde"
@@ -4081,7 +4089,7 @@ msgid ""
 "Only cash and bank journals are allowed."
 msgstr ""
 "Leer lassen, um das Debitorenkonto des Kunden zu verwenden.\n"
-"Definiert das Journal, in dem die kumulierten Zahlungen (oder einzelne Zahlungen, wenn „Kunde identifizieren“ True ist) nach dem Schließen der Sitzung gebucht werden sollen.\n"
+"Definiert das Journal, in dem die kumulierten Zahlungen (oder einzelne Zahlungen, wenn „Kunde identifizieren“ Wahr ist) nach dem Schließen der Sitzung gebucht werden sollen.\n"
 "Beim Kassenjournal wird über die Auszugszeilen direkt auf das Standardkonto im Journal geschrieben.\n"
 "Bei Bankjournalen wird auf das in dieser Zahlungsmethode angegebene Konto für offene Rechnungen geschrieben.\n"
 "Es sind nur Kassen- und Bankjournale zulässig."
@@ -9750,3 +9758,14 @@ msgid ""
 msgstr ""
 "{{ line.hasValidProductLot() ? 'Gültiges Produktlos' : 'Ungültiges "
 "Produktlos'}}"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Dieses Journal ist mit einer Zahlungsmethode %s verbunden, die im Auftrag %s"
+" der aktiven Kassensitzung %s verwendet wird"

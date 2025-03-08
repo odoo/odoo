@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,8 +41,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " debit notes made from this journal"
 msgstr ""
-"Rastita tämä, jos et halua, että tästä lehdestä tehdyille laskuille ja "
-"veloitusilmoituksille käytetään samaa järjestystä"
+"Rastita tämä, jos et halua, että tästä kirjauskansiosta tehdyille laskuille "
+"ja veloituslaskuille käytetään samaa järjestystä"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
@@ -95,7 +96,7 @@ msgstr "Veloituslaskut"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
 msgid "Dedicated Debit Note Sequence"
-msgstr "Oma veloituslaskujen sarja"
+msgstr "Kohdennettu veloituslaskujen järjestys"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
@@ -115,7 +116,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
 msgstr ""
-"Mikäli tyhjä, käyttää kirjauksen päiväkirjaa veloituksen kirjaamiseen."
+"Jos tyhjä, käytetään kirjauskansion kirjaksen kansiota veloituksen "
+"kirjaamiseen."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -124,22 +126,23 @@ msgid ""
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
 "Mikäli korjauksia täytyy tehdä jokaiselle riville, voi olla kätevintä "
-"kopioida ne. Odoo ei kopioi hyvityslaskuista huomioita veloituslaskuihin. "
+"kopioida ne. Me emme kuitenkaan kopioi niitä hyvityslaskuista "
+"veloituslaskuihin. "
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
 msgid "Journal"
-msgstr "Päiväkirja"
+msgstr "Kirjauskansio"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
 msgid "Journal Entry"
-msgstr "Päiväkirjan kirjaus"
+msgstr "Kirjauskansion kirjaus"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
 msgid "Journal Type"
-msgstr "Päiväkirjan tyyppi"
+msgstr "Kirjauskansion tyyppi"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
@@ -185,13 +188,13 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "Kaksikirjaiminen ISO-maaatunnus. \n"
-"Voit hakea tämän kentän avulla nopeasti."
+"Voit tehdä pikahaun tämän kentän avulla."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr "Tähän laskuun luodut veloituslaskut"
+msgstr "Tälle laskulle luodut veloituslaskut"
 
 #. module: account_debit_note
 #. odoo-python
@@ -202,7 +205,7 @@ msgstr "Veloituslasku luotiin kohteesta %s"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
 msgid "Use Specific Journal"
-msgstr "Käytä erityistä päiväkirjaa"
+msgstr "Käytä tiettyä kirjauskansiota"
 
 #. module: account_debit_note
 #. odoo-python
@@ -211,14 +214,14 @@ msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
 msgstr ""
-"Voit tehdä veloitusilmoituksen vain asiakaslaskulle, asiakashyvityslaskussa,"
-" myyjän laskulle tai myyjän hyvityslaskussa."
+"Voit luoda veloituslaskun vain asiakaslaskulle, asiakashyvityslaskulle, "
+"myyjän laskulle tai myyjän hyvityslaskulle."
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid "You can only debit posted moves."
-msgstr "Veloituslaskuja voi luoda vain kirjauksista."
+msgstr "Voit veloittaa vain kirjattuja siirtoja."
 
 #. module: account_debit_note
 #. odoo-python
@@ -227,5 +230,4 @@ msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit"
 " note."
 msgstr ""
-"Et voi tehdä veloitusilmoitusta laskulle, joka on jo linkitetty "
-"veloitusilmoitukseen."
+"Et voi tehdä veloituslaskua laskulle, joka on jo linkitetty veloituslaskuun."

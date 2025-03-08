@@ -1160,7 +1160,7 @@ msgstr "Bagel"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Bakery"
-msgstr "Pâtisserie"
+msgstr "Boulangerie"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1767,7 +1767,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/list_container/list_container.js:0
 msgid "Choose an order"
-msgstr ""
+msgstr "Choisir une commande"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3452,6 +3452,14 @@ msgid ""
 msgstr ""
 "Un pain riche en fibres, préparé avec de la farine complète raffinée pour "
 "une texture moelleuse."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+"Make sure to close all sessions first to avoid any issues."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
@@ -6142,6 +6150,8 @@ msgid ""
 "Print information on the receipt to allow the customer to easily access the "
 "invoice anytime, from Odoo's portal."
 msgstr ""
+"Imprimez les informations sur le reçu pour permettre au client d’accéder "
+"facilement à la facture à tout moment, depuis le portail Odoo."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6700,7 +6710,7 @@ msgstr "Réimprimer une facture"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Request Invoice"
-msgstr ""
+msgstr "Demander une facture"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9741,3 +9751,14 @@ msgstr "{{ !barcodeReader ? 'No nomenclature' : '' }}"
 msgid ""
 "{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}"
 msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Ce journal est associé à la méthode de paiement %s utilisée par la commande "
+"%s dans la session de point de vente active %s."

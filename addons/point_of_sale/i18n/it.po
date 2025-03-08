@@ -3451,6 +3451,14 @@ msgstr ""
 "ottenere una consistenza morbida."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+"Make sure to close all sessions first to avoid any issues."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
 msgid "Hour"
 msgstr "Ora"
@@ -9728,3 +9736,14 @@ msgid ""
 msgstr ""
 "{{ line.hasValidProductLot() ? 'Valid product lot' : 'Iot prodotto non "
 "valido'}}"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Il registro è associato al metodo di pagamento %s utilizzato per l'ordine %s"
+" nella sessione pos attiva %s"

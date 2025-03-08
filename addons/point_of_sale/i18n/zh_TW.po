@@ -1144,7 +1144,7 @@ msgstr "銀行付款"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "銀行對帳單明細"
+msgstr "銀行結單資料行"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3343,6 +3343,14 @@ msgid ""
 msgstr "高纖長包，採用幼細全麥粉烘焙，口感鬆軟。"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+"Make sure to close all sessions first to avoid any issues."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
 msgid "Hour"
 msgstr "小時"
@@ -4058,7 +4066,7 @@ msgstr "批次名稱"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Lot/Serial number(s) required for"
-msgstr ""
+msgstr "以下項目必須有批次/序號："
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__pack_lot_ids
@@ -5073,7 +5081,7 @@ msgstr "已付款"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_pain_au_chocolat_product_template
 msgid "Pain au Chocolat"
-msgstr "法式巧克力包"
+msgstr "法式朱古力包"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
@@ -6653,7 +6661,7 @@ msgstr "檢視訂單"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_pain_au_chocolat_product_template
 msgid "Rich buttery pastry with a dark chocolate center."
-msgstr "香濃牛油酥皮，包住黑巧克力。"
+msgstr "香濃牛油酥皮，包住黑朱古力。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9361,3 +9369,12 @@ msgstr "{{ !barcodeReader ? '條碼命名系統不明' : '' }}"
 msgid ""
 "{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}"
 msgstr "{{ line.hasValidProductLot() ? '產品批次有效' : '產品批次無效' }}"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""

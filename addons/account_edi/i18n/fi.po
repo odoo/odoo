@@ -24,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing error(s)"
-msgstr "%(count)s Sähköisen laskutuksen virhe(et)"
+msgstr "%(count)s Sähköisen laskutuksen virhettä"
 
 #. module: account_edi
 #. odoo-python
@@ -36,19 +36,19 @@ msgstr "%(count)s Sähköisen laskutuksen tiedot"
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing warning(s)"
-msgstr "%(count)s Sähköisen laskutuksen varoitukset"
+msgstr "%(count)s Sähköisen laskutuksen varoitusta"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A cancellation of the EDI has been requested."
-msgstr "EDI-sanoman peruutusta on pyydetty."
+msgstr "EDI:n peruutusta on pyydetty."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A request for cancellation of the EDI has been called off."
-msgstr "EDI-sanoman peruutuksen pyyntö on peruttu."
+msgstr "EDI:n peruutuksen pyyntö on peruttu."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
@@ -84,14 +84,14 @@ msgid ""
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
 "Estää asiakirjan nykyisen toiminnan virheen vakavuuden mukaisesti:\n"
-"   * Info: asiakirjaa ei ole estetty ja kaikki toimii suunnitellusti.\n"
-"   * Varoitus: virhe, joka ei estä sähköisen laskutuksen onnistumasta.\n"
+"   * Info: asiakirjaa ei ole estetty ja kaikki toimii odotetusti.\n"
+"   * Varoitus: virhe, joka ei estä sähköisen laskutuksen onnistumista.\n"
 "   * Virhe: Virhe, joka estää sähköisen laskutuksen käsittelyn."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr "Peruuta EDI-sanoman peruutus"
+msgstr "Peruuta EDI:n peruutus"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -106,7 +106,7 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
-"Ei voida kytkeä pois päältä (%s) tästä päiväkirjasta, koska kaikkia "
+"Ei voida kytkeä pois päältä (%s) tässä kirjauskansiossa, koska kaikkia "
 "dokumentteja ei ole synkronoitu"
 
 #. module: account_edi
@@ -156,12 +156,12 @@ msgstr "EDI-asiakirjat"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_format
 msgid "EDI format"
-msgstr "EDI-muoto"
+msgstr "EDI-formaatti"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr "EDI-muoto, joka tukee tämän päiväkirjan kirjauksia"
+msgstr "EDI-formaatti, joka tukee tämän kirjauskansion siirtoja"
 
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
@@ -200,36 +200,36 @@ msgstr "EDI-virheviesti"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
 msgid "Edi Format"
-msgstr "EDI-muoto"
+msgstr "EDI-formaatti"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr "EDI Näytä Hylkää peruutus -nappi"
+msgstr "EDI; Näytä 'Hylkää peruutus' -painike"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr "EDI näytä Peruuta-painike"
+msgstr "EDI; näytä 'Peruuta'-painike"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
 msgid "Edi Show Force Cancel Button"
-msgstr "EDI: näytä nappi perumisen pakottamiselle"
+msgstr "EDI; näytä 'Pakota peruutus' -painike"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr "EDI web servicejä käsiteltävänä"
+msgstr "EDI; verkkopalvelut, jotka odottavat käsittelyä"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr "Sähköinen EDI-dokumentti kirjaukselle"
+msgstr "Sähköinen EDI-dokumentti tilin siirtoa varten"
 
 #. module: account_edi
 #: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
@@ -259,18 +259,18 @@ msgstr "Virhe"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Force Cancel"
-msgstr "Pakota peruminen"
+msgstr "Pakota peruutus"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
 msgid "Format Name"
-msgstr "Muodon nimi"
+msgstr "Formaatin nimi"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr "Kuinka monta EDI-tietoa on virheetilassa tässä siirrossa?"
+msgstr "Kuinka monta EDI:ä on virheetilassa tässä siirrossa?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -298,19 +298,19 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Virheellinen laskun määritys:\n"
+"Virheellinen laskun konfiguraatio:\n"
 "\n"
 "%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
 msgid "Journal"
-msgstr "Päiväkirja"
+msgstr "Kirjauskansio"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move
 msgid "Journal Entry"
-msgstr "Päiväkirjan kirjaus"
+msgstr "Kirjauskansion kirjaus"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_uid
@@ -338,7 +338,7 @@ msgstr "Nimi"
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
 msgid "Only one edi document by move by format"
-msgstr "Vain yksi EDI-dokumentti kirjauksen ja muodon mukaan"
+msgstr "Vain yksi EDI-dokumentti siirron ja formaatin mukaan"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -348,17 +348,17 @@ msgstr "Käsittele nyt"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr "Luo päiväkirjavientien sekvenssi uudelleen."
+msgstr "Luo Kirjauskansion kirjausten järjestys uudelleen."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
-msgstr "Raporttin"
+msgstr "Rapotin toiminto"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr "Pyydä EDI-peruutusta"
+msgstr "Pyydä EDI:n peruutusta"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -379,13 +379,13 @@ msgstr "Lähetetty"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
 msgid "State"
-msgstr "Alue"
+msgstr "Tila"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr "Tämän kirjauksen kaikkien EDI web servicedien yhteenluettu tila"
+msgstr "Tämän siirron kaikkien EDI verkkopalveluiden yhteenkoottu tila"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -402,8 +402,8 @@ msgstr ""
 msgid ""
 "The following documents have already been sent and cannot be resequenced: %s"
 msgstr ""
-"Seuraavat asiakirjat on jo lähetetty ja niitä ei voida sekvensoida "
-"uudelleen: %s"
+"Seuraavat asiakirjat on jo lähetetty ja niitä ei voida järjestää uudelleen: "
+"%s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -415,7 +415,8 @@ msgstr "Lasku lähetetään pian osoitteeseen"
 msgid ""
 "The text of the last error that happened during Electronic Invoice "
 "operation."
-msgstr "Viimeisin virhe, joka esiintyi sähköisen laskutuksen operaatiosta."
+msgstr ""
+"Viimeisin virhe, joka esiintyi sähköisen laskutuksen operaation aikana."
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
@@ -426,7 +427,7 @@ msgstr "Koodi on jo olemassa"
 #. odoo-python
 #: code:addons/account_edi/models/account_edi_document.py:0
 msgid "This document is being sent by another process already. "
-msgstr "Joku toinen prosessi on jo lähettämässä tätä dokumenttia "
+msgstr "Joku toinen prosessi lähettää jo tätä dokumenttia ."
 
 #. module: account_edi
 #. odoo-python
@@ -441,13 +442,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
 msgid "To Cancel"
-msgstr "Peruttava"
+msgstr "Odottaa peruutusta"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_send
 msgid "To Send"
-msgstr "Lähetettäväksi"
+msgstr "Odottaa lähetystä"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__warning
@@ -463,8 +464,9 @@ msgid ""
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
-"Et voi muokata seuraavaa päiväkirjakirjausta %s, koska sähköinen asiakirja "
-"on jo lähetetty. Käytä sen sijaan 'Pyydä EDI-peruutusta' -painiketta."
+"Et voi muokata seuraavaa kirjauskansion kirjausta %s, koska sähköinen "
+"asiakirja on jo lähetetty. Käytä sen sijaan 'Pyydä EDI:n peruutusta' "
+"-painiketta."
 
 #. module: account_edi
 #. odoo-python
