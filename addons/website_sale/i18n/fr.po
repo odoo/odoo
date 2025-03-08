@@ -10,8 +10,8 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1098,7 +1098,7 @@ msgstr "Capturez le paiement des commandes une fois la livraison effectuée."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Cards"
-msgstr "Cartes"
+msgstr "Cards"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__carousel
@@ -1849,7 +1849,7 @@ msgstr "Assistant de composition d'e-mails"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
 msgid "Embed Code"
-msgstr "Code intégré"
+msgstr "Embed Code"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1983,7 +1983,7 @@ msgstr "Aller au panier"
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Grid"
-msgstr "Grille"
+msgstr "Grid"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2171,7 +2171,7 @@ msgstr "Émettre des factures aux clients"
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
 msgstr ""
-"Il est interdit de modifier un bon de commande qui n'est pas en l'étape "
+"Il est interdit de modifier une commande client qui n'est pas en statut "
 "Brouillon. "
 
 #. module: website_sale
@@ -2226,7 +2226,7 @@ msgstr "Le mois dernier"
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
 #: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
 msgid "Last Online Sales Order"
-msgstr "Dernier bon de commande en ligne"
+msgstr "Dernière commande client en ligne"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__write_uid
@@ -2539,12 +2539,12 @@ msgstr "Nombre de paniers abandonnés"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppr
 msgid "Number of grid columns on the shop"
-msgstr "Nombre de colonnes dans la grille de la boutique"
+msgstr "Nombre de colonnes dans le grid de la boutique"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppg
 msgid "Number of products in the grid on the shop"
-msgstr "Nombre de produits dans la grille de la boutique"
+msgstr "Nombre de produits dans le grid de la boutique"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_picking
@@ -2602,7 +2602,7 @@ msgstr ""
 #: code:addons/website_sale/models/res_partner.py:0
 #, python-format
 msgid "Open Sale Orders"
-msgstr "Ouvrir les bons de commande"
+msgstr "Ouvrir les commandes clients"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -2756,6 +2756,13 @@ msgstr "Jetons de paiement"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "Transactions de paiement"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Payment is already being processed."
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -2992,7 +2999,7 @@ msgstr "Champs supplémentaires de la page produit"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_grid_columns
 msgid "Product Page Grid Columns"
-msgstr "Colonnes de la page produit"
+msgstr "Grid colonnes de la page produit"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_layout
@@ -3383,7 +3390,7 @@ msgstr "Droit"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_seo_optimized
 msgid "SEO optimized"
-msgstr "Référencement optimisé"
+msgstr "SEO optimisé"
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sale_ribbon
@@ -3419,12 +3426,12 @@ msgstr "Rapport d'analyse des ventes"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Bon de commande"
+msgstr "Commande client"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Ligne de bon de commande"
+msgstr "Ligne de commande client"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3554,7 +3561,7 @@ msgstr "Envoyer un e-mail aux clients qui ont abandonné leur panier."
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__seo_name
 msgid "Seo name"
-msgstr "Nom référencement"
+msgstr "SEO nom"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
@@ -3863,6 +3870,13 @@ msgstr "Le jeton d'accès n'est pas valide."
 msgid ""
 "The amount will be displayed strikethroughed on the eCommerce product page"
 msgstr "Le montant sera affiché barré sur la page du produit de l'eCommerce"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python

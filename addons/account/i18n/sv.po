@@ -31,10 +31,10 @@
 # Martin Trigaux, 2024
 # Lasse L, 2024
 # Claes-Johan Dahlin, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2025
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2025
 # Wil Odoo, 2025
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
 # 
 msgid ""
 msgstr ""
@@ -42,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3647,6 +3647,7 @@ msgstr "Kan inte skapa ett försäljningsdokument i en icke försäljningsjourna
 #, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
+"Det går inte att skapa en periodiseringspost med order i olika valutor."
 
 #. module: account
 #. odoo-python
@@ -8299,7 +8300,7 @@ msgstr "Är mellan"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Är Coa installerad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -9732,7 +9733,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "Närmast"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -12848,6 +12849,7 @@ msgstr "Ange ett pris"
 #: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
 msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
+"Ställ in ett värde större än 0,0 för att aktivera en kreditgränskontroll"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -16351,6 +16353,10 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
+"Säljarens räkningar kan förgenereras baserat på köp\n"
+"                   beställningar eller kvitton. Detta gör att du kan kontrollera räkningar\n"
+"                   du får från din leverantör enligt utkastet\n"
+"                   dokument i Odoo."
 
 #. module: account
 #. odoo-javascript
@@ -17006,6 +17012,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot deprecate an account that is used in a tax distribution."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -17261,7 +17274,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a document which has been posted once."
-msgstr ""
+msgstr "Du kan inte byta typ av ett dokument som har postats en gång."
 
 #. module: account
 #. odoo-python

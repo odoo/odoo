@@ -8,8 +8,8 @@
 # Alexandra Jubert, 2022
 # Jolien De Paepe, 2024
 # Martin Trigaux, 2024
-# Manon Rondou, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,7 +70,7 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the new Sales Order."
-msgstr "%(amount)s %(label)s seront ajoutés à votre nouveau bon de commande."
+msgstr "%(amount)s %(label)s seront ajoutés à votre nouvelle commande client."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -115,7 +115,7 @@ msgstr "<strong>Factures :</strong>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Sales Order:</strong>"
-msgstr "<strong>Bon de commande :</strong>"
+msgstr "<strong>Commande client :</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -351,12 +351,12 @@ msgstr "Créer une facture depuis le projet"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
 msgid "Create SO Line from project"
-msgstr "Créer une ligne de bon de commande depuis le projet"
+msgstr "Créer une ligne de commande client depuis le projet"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order
 msgid "Create SO from project"
-msgstr "Créer un bon de commande depuis le projet"
+msgstr "Créer une commande client depuis le projet"
 
 #. module: sale_timesheet
 #. odoo-javascript
@@ -366,18 +366,18 @@ msgstr "Créer un bon de commande depuis le projet"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 #, python-format
 msgid "Create Sales Order"
-msgstr "Créer un bon de commande"
+msgstr "Créer une commande client"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Sales Order from Project"
-msgstr "Créer un bon de commande depuis le projet"
+msgstr "Créer une commande client depuis le projet"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_sale_order
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 msgid "Create a Sales Order"
-msgstr "Créer un bon de commande"
+msgstr "Créer une commande client"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
@@ -422,7 +422,7 @@ msgstr "Évaluations des clients"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
 msgid "Customer of the sales order"
-msgstr "Client du bon de commande"
+msgstr "Client de la commande client"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -769,7 +769,7 @@ msgstr "Pas de facture"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "No Sales Order"
-msgstr "Pas de bons de commande"
+msgstr "Pas de commande client"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -977,7 +977,7 @@ msgstr "Mise à jour du projet"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
 msgid "Project for which we are creating a sales order"
-msgstr "Projet pour lequel nous créons un bon de commande"
+msgstr "Projet pour lequel nous créons une commande client"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
@@ -1005,12 +1005,12 @@ msgstr "Restant"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 msgid "Remaining Days on SO"
-msgstr "Jours restants sur le bon de commande"
+msgstr "Jours restants sur la commande client"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Days on SO:"
-msgstr "Jours restants sur le bon de commande :"
+msgstr "Jours restants sur la commande client :"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
@@ -1024,12 +1024,12 @@ msgstr "Heures restantes disponibles"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 msgid "Remaining Hours on SO"
-msgstr "Heures restantes sur le bon de commande"
+msgstr "Heures restantes sur la commande client"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Hours on SO:"
-msgstr "Heures restantes sur le bon de commande :"
+msgstr "Heures restantes sur la commande client :"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -1042,7 +1042,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
 msgid "Sale Order Analytic Account"
-msgstr "Compte analytique du bon de commande"
+msgstr "Compte analytique de la commande client"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1067,7 +1067,7 @@ msgstr "Facture de paiement d'avance"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, python-format
 msgid "Sales Order"
-msgstr "Bon de commande"
+msgstr "Commande client"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1092,7 +1092,7 @@ msgstr "Ligne de commande"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
 msgid "Sales Orders"
-msgstr "Bons de commande"
+msgstr "Commandes clients"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1119,7 +1119,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr "Bon de commande auquel la tâche est liée."
+msgstr "Commande client à laquelle la tâche est liée."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1133,7 +1133,7 @@ msgstr "Rechercher dans la facture"
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr "Rechercher dans le bon de commande"
+msgstr "Rechercher dans la commande client"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1263,7 +1263,7 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
-"Le bon de commande ne peut pas être créé car vous n'avez pas saisi certains employés ayant entré des feuilles de temps sur ce projet. Veuillez lister tous les employés concernés avant de créer le bon de commande.\n"
+"La commande client ne peut pas être créée car vous n'avez pas saisi certains employés ayant entré des feuilles de temps sur ce projet. Veuillez lister tous les employés concernés avant de créer la commande client.\n"
 "Employé(s) manquant(s) : %s"
 
 #. module: sale_timesheet
@@ -1276,7 +1276,7 @@ msgstr "Le coût du projet est à présent à"
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project has already a sale order."
-msgstr "Le projet a déjà un bon de commande."
+msgstr "Le projet a déjà une commande client."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1293,15 +1293,15 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
-"Le bon de commande ne peut pas être créé car certaines feuilles de temps sur"
-" ce projet sont déjà liées à un autre bon de commande."
+"La commande client ne peut pas être créée car certaines feuilles de temps "
+"sur ce projet sont déjà liées à une autre commande client."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
-msgstr "Le bon de commande sélectionné doit contenir un élément à facturer."
+msgstr "La commande client sélectionnée doit contenir un élément à facturer."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
@@ -1535,7 +1535,7 @@ msgid ""
 "Total amount to invoice on the sales order, including all items (services, "
 "storables, expenses, ...)"
 msgstr ""
-"Le montant total à facture sur le bon de commande, incluant tous les "
+"Le montant total à facturer sur la commande client, incluant tous les "
 "articles (services, notes de frais, stockables,...)"
 
 #. module: sale_timesheet

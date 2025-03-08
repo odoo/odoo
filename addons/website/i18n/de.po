@@ -1414,9 +1414,9 @@ msgid ""
 msgstr ""
 "Eine Code-Serveraktion kann von der Website aus mithilfe eines dedizierten "
 "Controllers ausgeführt werden. Die Adresse lautet "
-"<base>/website/action/<website_path>. Setzen Sie dieses Feld auf True, damit"
-" Benutzer diese Aktion ausführen können. Wenn es auf False gesetzt ist, kann"
-" die Aktion nicht über die Website ausgeführt werden."
+"<base>/website/action/<website_path>. Setzen Sie dieses Feld auf Wahr, damit"
+" Benutzer diese Aktion ausführen können. Wenn es auf Falsch gesetzt ist, "
+"kann die Aktion nicht über die Website ausgeführt werden."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -5518,7 +5518,7 @@ msgstr "Icon"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
 msgid "If True, new accounts will be associated to the current website"
-msgstr "Wenn True, werden neue Konten mit der aktuellen Website verknüpft"
+msgstr "Wenn Wahr, werden neue Konten mit der aktuellen Website verknüpft"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_configurator_feature__menu_sequence
@@ -5572,8 +5572,8 @@ msgid ""
 "         "
 msgstr ""
 "Wenn dieses Sicht abgeleitet wurde,\n"
-"* Wenn True, erweitert diese Sicht immer die übergeordnete Ansicht\n"
-"* Wenn False, wird die übergeordnete Ansicht nicht erweitert, kann aber bei Bedarf wieder aktiviert werden\n"
+"* Wenn Wahr, erweitert diese Sicht immer die übergeordnete Ansicht\n"
+"* Wenn Falsch, wird die übergeordnete Ansicht nicht erweitert, kann aber bei Bedarf wieder aktiviert werden\n"
 "             "
 
 #. module: website
@@ -7521,7 +7521,7 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
-"Trifft nur zu, wenn diese Sicht eine andere ableitet (inherit_id ist nicht Null/Leer).\n"
+"Trifft nur zu, wenn diese Sicht eine andere ableitet (inherit_id ist nicht Falsch/Null).\n"
 "\n"
 "* Bei Erweiterung (Standard), wenn diese Sicht angefordert wird, wird die naheliegendste Hauptsicht (über inherit_id) gesucht und dieses Modell auf alle mit diesem Modell aus der Hauptsicht ableitenden Sichten angewendet.\n"
 "* Bei primär, wird die naheliegendste Hauptsicht vollständig aufgelöst (selbst wenn diese ein von diesem abweichendes Modell verwendet), dann werden die Vererbungselemente (<xpath/>) aufgerufen und das Ergebnis wird verwendet, als wäre es der tatsächliche Inhalt dieser Sicht.\n"
@@ -10365,7 +10365,7 @@ msgstr "Auslöser"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__configurator_done
 msgid "True if configurator has been completed or ignored"
-msgstr "True, wenn der Konfigurator vervollständigt oder ignoriert wurde"
+msgstr "Wahr, wenn der Konfigurator vervollständigt oder ignoriert wurde"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog

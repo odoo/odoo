@@ -6,7 +6,7 @@
 # Martin Trigaux, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Junko Augias, 2023
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,6 +165,13 @@ msgid "Get A Booth"
 msgstr "ブースを入手"
 
 #. module: website_event_booth
+#. odoo-javascript
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#, python-format
+msgid "It looks like your email is linked to an existing account."
+msgstr "Eメールは既存のアカウントにリンクされているようです。"
+
+#. module: website_event_booth
 #: model:ir.model.fields,field_description:website_event_booth.field_website_event_menu__menu_type
 msgid "Menu Type"
 msgstr "メニュータイプ"
@@ -178,6 +185,11 @@ msgstr "携帯電話"
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "Phone"
 msgstr "電話"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
+msgid "Please Sign In."
+msgstr "サインインして下さい。"
 
 #. module: website_event_booth
 #. odoo-javascript

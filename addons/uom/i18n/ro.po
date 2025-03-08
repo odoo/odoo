@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Cozmin Candea <office@terrabit.ro>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2022\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -231,6 +231,7 @@ msgid "Smaller than the reference Unit of Measure"
 msgstr "Mai mică decât unitatea de măsură de referință"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -242,6 +243,13 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Unele câmpuri critice au fost modificate în  %s.\n"
+"Rețineți că datele existente NU vor fi actualizate de această modificare.\n"
+"\n"
+"Având în vedere că unitățile de măsură influențează întregul sistem, acest lucru poate cauza probleme critice.\n"
+"De exemplu, modificarea rotunjirii ar putea afecta balanța stocurilor.\n"
+"\n"
+"Prin urmare, nu se recomandă modificarea unităților de măsură fundamentale într-o bază de date aflată în exploatare."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -264,6 +272,7 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "Raportul conversiei pentru o unitate de masura nu poate fi zero!"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -283,6 +292,7 @@ msgid "The rounding precision must be strictly positive."
 msgstr "Precizia de rotunjire trebuie să fie strict pozitivă."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -297,6 +307,7 @@ msgstr ""
 "aparțină aceleiași categorii."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "The value of ratio could not be Zero"
@@ -367,18 +378,21 @@ msgstr ""
 "măsură: Ore, Zile."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
 msgstr ""
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
@@ -396,6 +410,7 @@ msgid "Volume"
 msgstr "Volum"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "Warning for %s"
