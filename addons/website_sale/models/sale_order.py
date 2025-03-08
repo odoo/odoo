@@ -748,21 +748,23 @@ class SaleOrder(models.Model):
             self.shop_warning = ''
         return warn
 
-    def _is_cart_ready(self):
-        """ Whether the cart is valid and can be confirmed (and paid for)
+    def _get_cart_warning(self):
+        """ Returns a message if the cart is not valid and cannot be confirmed
 
-        :rtype: bool
+        :return: A message to show to the user if something is not right
+        :rtype: str
         """
-        return True
+        return ""
 
     def _check_cart_is_ready_to_be_paid(self):
         """ Whether the cart is valid and the user can proceed to the payment
 
         :rtype: bool
         """
-        if not self._is_cart_ready():
+        if warning := self._get_cart_warning():
             raise ValidationError(_(
-                "Your cart is not ready to be paid, please verify previous steps."
+                "Your cart is not ready to be paid, please verify previous steps.\n%(warning)s",
+                warning=warning,
             ))
 
         if not self.only_services and not self.carrier_id:

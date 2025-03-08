@@ -7,6 +7,7 @@ patch(FinalSteps.prototype, {
     _getSteps: function () {
         return [
             wsTourUtils.goToCheckout(),
+            wsTourUtils.confirmOrder(),
             ...wsTourUtils.payWithTransfer(),
         ];
     }

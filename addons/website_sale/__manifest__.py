@@ -173,6 +173,7 @@
             'website_sale/static/src/js/tours/product_configurator_tour_utils.js',
         ],
         'web.assets_unit_tests': [
+            'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/tests/interactions/**/*',
         ],
         'web.assets_unit_tests_setup': [
