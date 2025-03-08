@@ -2,21 +2,22 @@
 <odoo>
 
     <template id="add_to_compare" inherit_id="website_sale.products_item" name="Comparison List" priority="22">
-        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
+        <xpath expr="//div[hasclass('o_wsale_product_information_text')]" position="after">
             <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <button
-                t-if="product_variant_id and attrib_categories"
-                type="button"
-                role="button"
-                class="d-none d-md-inline-block btn btn-light o_add_compare"
-                title="Compare"
-                aria-label="Compare"
-                t-att-data-product-product-id="product_variant_id"
-                data-action="o_comparelist"
-            >
-                <span class="fa fa-exchange"/>
-            </button>
+            <div class="o_wsale_comparison_checkbox form-check">
+                <input
+                    class="form-check-input o_add_compare"
+                    data-action="o_comparelist"
+                    t-att-data-product-product-id="product_variant_id"
+                    type="checkbox"
+                    t-attf-id="o_wsale_compare_{{product.id}}"
+                    value=""/>
+                <label class="form-check-label small text-muted" t-attf-for="o_wsale_compare_{{product.id}}">
+                    Compare
+                </label>
+            </div>
+
         </xpath>
     </template>
 
