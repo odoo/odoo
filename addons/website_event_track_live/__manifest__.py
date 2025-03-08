@@ -27,6 +27,8 @@
             'website_event_track_live/static/src/js/website_event_track_replay_suggestion.js',
             'website_event_track_live/static/src/js/website_event_track_suggestion.js',
             'website_event_track_live/static/src/js/website_event_track_live.js',
+        ],
+        'website_event_track_live.assets_widget_xml': [
             'website_event_track_live/static/src/xml/**/*',
         ],
     },

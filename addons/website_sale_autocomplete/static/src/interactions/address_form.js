@@ -12,6 +12,10 @@ export class AddressForm extends Interaction {
         ".js_autocomplete_result": { "t-on-click.withTarget": this.onClickAutocompleteResult },
     };
 
+    assetLibs = [
+        "website_sale_autocomplete.assets_widget_xml",
+    ];
+
     setup() {
         this.streetAndNumberInput = this.el.querySelector("input[name='street']");
         this.cityInput = this.el.querySelector("input[name='city']");

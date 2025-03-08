@@ -17,6 +17,9 @@ export const SlideCoursePage = publicWidget.Widget.extend({
         'slide_completed': '_onSlideCompleted',
         'slide_mark_completed': '_onSlideMarkCompleted',
     },
+    assetLibs: [
+        "website_slides.assets_widget_xml",
+    ],
 
     /**
      * Collapse the next category when the current one has just been completed

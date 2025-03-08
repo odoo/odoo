@@ -4,6 +4,10 @@ import { registry } from "@web/core/registry";
 export class WebsiteForumShare extends Interaction {
     static selector = ".website_forum";
 
+    assetLibs = [
+        "website_forum.assets_widget_xml",
+    ];
+
     start() {
         // Retrieve stored social data
         if (sessionStorage.getItem("social_share")) {
