@@ -138,7 +138,7 @@
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
     border-radius: $o-we-sidebar-content-field-border-radius;
     background-color: $o-we-sidebar-content-field-clickable-bg;
-    color: $o-we-sidebar-content-field-clickable-color;
+    color: var(--o-we-sidebar-content-field-color, $o-we-sidebar-content-field-clickable-color);
     text-align: center;
 
     &:not([disabled]):hover, &.active:not(.o_we_no_toggle) {
@@ -279,7 +279,10 @@
     }
     @for $level from 1 through 3 {
         .o_we_sublevel_#{$level} {
+            --o-we-checkbox-hover-color: #{$o-we-fg-light};
+
             @extend %o_we_sublevel;
+            color: $o-we-fg-light;
 
             @if $level > 1 {
                 > we-title {
@@ -882,6 +885,12 @@
                     flex-direction: column;
                 }
             }
+
+            &:hover, &.active {
+                &::after {
+                    color: $o-we-fg-lighter;
+                }
+            }
         }
         %we-icon-button {
             position: relative;
@@ -1109,7 +1118,7 @@
                 justify-content: flex-end;
             }
             &.active, &:hover {
-                color: $o-we-sidebar-content-field-clickable-color;
+                color: var(--o-we-checkbox-hover-color, $o-we-color);
             }
         }
 
@@ -2074,6 +2083,8 @@ we-select.o_we_border_preview_aligned_select {
         flex: 0 1 auto;
     }
     .o_colorpicker_reset {
+        --o-we-sidebar-content-field-color: #{$o-we-fg-light};
+
         @extend %we-generic-button;
         border: 0;
         background-color: transparent;
