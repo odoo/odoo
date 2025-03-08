@@ -762,6 +762,11 @@ class ProductTemplate(models.Model):
         string="Tracking", required=True, default='none', # Not having a default value here causes issues when migrating.
         compute='_compute_tracking', store=True, readonly=False, precompute=True,
         help="Ensure the traceability of a storable product in your warehouse.")
+    serial_sequence_id = fields.Many2one(
+        'ir.sequence', 'Serial/Lot Numbers Sequence', compute='_compute_serial_sequence_id', store=True, precompute=True,
+        help='Technical Field: The Ir.Sequence record that is used to generate serial/lot numbers for this product')
+    serial_prefix_format = fields.Char('Custom Lot/Serial', help='If multiple products share the same prefix, they will share the same sequence, otherwise the sequence will be dedicated to the product')
+    next_serial = fields.Char(compute='_compute_next_serial')
     description_picking = fields.Text('Description on Picking', translate=True)
     description_pickingout = fields.Text('Description on Delivery Orders', translate=True)
     description_pickingin = fields.Text('Description on Receptions', translate=True)
@@ -806,6 +811,34 @@ class ProductTemplate(models.Model):
     @api.depends('type')
     def compute_is_storable(self):
         self.filtered(lambda t: t.type != 'consu' and t.is_storable).is_storable = False
+
+    @api.depends('serial_prefix_format')
+    def _compute_serial_sequence_id(self):
+        valid_sequences = self.env['ir.sequence'].search([('prefix', 'in', self.mapped('serial_prefix_format'))])
+        sequences_by_prefix = {sequence.prefix: sequence for sequence in valid_sequences}
+        for template in self:
+            if template.serial_prefix_format:
+                if template.serial_prefix_format in sequences_by_prefix:
+                    template.serial_sequence_id = sequences_by_prefix[template.serial_prefix_format]
+                else:
+                    new_sequence = self.env['ir.sequence'].create({
+                        'name': f'{template.name} Serial Sequence',
+                        'prefix': template.serial_prefix_format,
+                        'padding': 7,
+                        'company_id': False,
+                    })
+                    template.serial_sequence_id = new_sequence
+                    sequences_by_prefix[template.serial_prefix_format] = new_sequence
+            else:
+                template.serial_sequence_id = self.env['ir.sequence'].search([('code', '=', 'stock.lot.serial')], limit=1)
+
+    @api.depends('serial_prefix_format', 'serial_sequence_id')
+    def _compute_next_serial(self):
+        for template in self:
+            if template.serial_sequence_id:
+                template.next_serial = f'%0{template.serial_sequence_id.padding}d' % template.serial_sequence_id.number_next_actual
+            else:
+                template.next_serial = '0000001'
 
     @api.depends('is_storable')
     def _compute_show_qty_status_button(self):

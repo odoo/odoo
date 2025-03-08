@@ -201,7 +201,12 @@
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
-                    <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="1">
+                    <group string="Traceability" name="traceability" groups="stock.group_production_lot" invisible="tracking == 'none'">
+                        <label for="serial_prefix_format" string="Custom Lot/Serial"/>
+                        <div name="custom_serial" class="o_row oe_inline">
+                            <field name="serial_prefix_format" class="oe_inline"/>
+                            <field name="next_serial" class="oe_inline"/>
+                        </div>
                     </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
                         <field name="property_stock_production"/>
