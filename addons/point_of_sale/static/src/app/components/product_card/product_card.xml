@@ -20,8 +20,16 @@
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
                 <h1 t-if="props.productCartQty"
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/components/product_card/product_card.xml
                     t-out="props.productCartQty"
                     class="product-cart-qty position-absolute bottom-0 end-0 fw-bolder mb-0 px-1 text-muted" />
+||||||| 40b819ded20f769b0a63b73abfefebbdaca390df:addons/point_of_sale/static/src/app/generic_components/product_card/product_card.xml
+                    t-out="props.productCartQty"
+                    class="product-cart-qty text-muted display-6 fw-bolder m-0 mt-auto" />
+=======
+                    t-out="this.productQty"
+                    class="product-cart-qty text-muted display-6 fw-bolder m-0 mt-auto" />
+>>>>>>> 0507f1568463f0902b9ee320f685f72a62d81759:addons/point_of_sale/static/src/app/generic_components/product_card/product_card.xml
             </div>
         </article>
     </t>
