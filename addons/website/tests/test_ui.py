@@ -698,3 +698,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_media_iframe_video(self):
         self.start_tour("/", "website_media_iframe_video", login="admin")
+
+    def test_website_custom_colors_picking(self):
+        self.start_tour('/', 'website_custom_colors_picking', login='admin')
