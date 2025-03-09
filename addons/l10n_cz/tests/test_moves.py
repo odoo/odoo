@@ -40,3 +40,17 @@ class TestAccountCZ(AccountTestInvoicingCommon):
         self.assertEqual(self.invoice_a.date, fields.Date.to_date('2024-05-31'))
         self.assertEqual(self.invoice_a.invoice_currency_rate, 0.042799058421)
         self.assertEqual(self.invoice_a.invoice_line_ids[0].currency_rate, 0.042799058421)
+
+    def test_cz_bank_rec_no_taxable_supply_date(self):
+        """
+        Test that when creating a new bank reconciliation, the taxable payable date is not set automatically.
+        """
+        st_line = self.env['account.bank.statement.line'].create({
+            'amount': 100,
+            'date': '2024-12-31',
+        })
+        wizard = self.env['bank.rec.widget'].with_context(default_st_line_id=st_line.id).new({})
+        wizard._action_validate()
+
+        inv_line = self.env['account.move'].search([('statement_line_id', '=', st_line.id)])
+        self.assertNotEqual(inv_line.taxable_supply_date, st_line.date)
