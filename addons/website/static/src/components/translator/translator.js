@@ -161,7 +161,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const self = this;
         var attrs = ['placeholder', 'title', 'alt', 'value'];
         const $editable = this.getEditableArea();
-        const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>(.*)<\/span>/;
+        const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         let $edited = $();
         attrs.forEach((attr) => {
             const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
