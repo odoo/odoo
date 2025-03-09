@@ -429,6 +429,33 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertEqual(attendance_utc_done.check_out, datetime(2024, 2, 1, 17, 0))
         self.assertEqual(attendance_jpn_pending.check_out, datetime(2024, 2, 1, 21, 0))
 
+    def test_auto_check_out_lunch_period(self):
+        """Honolulu employee checks in on 2024/1/1 at 19 UTC (8:00 local),
+        auto check out cron runs on 2024/1/2 at 4 UTC and 5 UTC (17:00 and 18:00 local)."""
+        Attendance = self.env['hr.attendance']
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1
+        })
+        previous, pending = Attendance.create([{
+            'employee_id': self.honolulu_employee.id,
+            'check_in': datetime(2024, 1, 1, 18, 0),
+            'check_out': datetime(2024, 1, 1, 18, 30)
+        },
+        {
+            'employee_id': self.honolulu_employee.id,
+            'check_in': datetime(2024, 1, 1, 19, 0)
+        }])
+
+        with freeze_time("2024-01-02 4:00:00"):
+            Attendance._cron_auto_check_out()
+            self.assertFalse(pending.check_out)
+
+        with freeze_time("2024-01-02 5:00:00"):
+            Attendance._cron_auto_check_out()
+            # Check out (4:30) = check in (19:00) + expected hours (8h) + lunch (1h) + max_tol (1h) - previous attendances (0h30)
+            self.assertEqual(pending.check_out, datetime(2024, 1, 2, 4, 30))
+
     @freeze_time("2024-02-1 14:00:00")
     def test_absence_management(self):
         self.company.write({
