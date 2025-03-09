@@ -256,6 +256,33 @@ export function enterLotNumber(number) {
     ];
 }
 
+export function enterLotNumbers(numbers) {
+    return numbers
+        .map((number) => [
+            {
+                content: "enter lot number",
+                trigger: ".list-line-input:last()",
+                run: "text " + number,
+            },
+            {
+                content: "Press Enter",
+                trigger: ".list-line-input:last()",
+                run() {
+                    this.$anchor[0].dispatchEvent(
+                        new KeyboardEvent("keyup", { key: "Enter", bubbles: true })
+                    );
+                },
+            },
+        ])
+        .flat()
+        .concat([
+            {
+                content: "click validate lot number",
+                trigger: ".popup .button.confirm",
+            },
+        ]);
+}
+
 export function isShown() {
     return [
         {
