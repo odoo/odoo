@@ -42,6 +42,7 @@ export class ImageCrop extends Component {
         this.elRef = useRef("el");
         this.cropperWrapper = useRef("cropperWrapper");
         this.imageRef = useRef("imageRef");
+        this.cropperOpen = false;
 
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
@@ -64,6 +65,9 @@ export class ImageCrop extends Component {
     }
 
     closeCropper() {
+        if (!this.cropperOpen) {
+            return;
+        }
         this.cropper?.destroy?.();
         this.media.setAttribute("src", this.initialSrc);
         if (
@@ -73,6 +77,7 @@ export class ImageCrop extends Component {
             this.media.classList.add("o_modified_image_to_save");
         }
         this.props?.onClose?.();
+        this.cropperOpen = false;
     }
 
     /**
@@ -90,6 +95,9 @@ export class ImageCrop extends Component {
     }
 
     async show() {
+        if (this.cropperOpen) {
+            return;
+        }
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
         const src = this.media.getAttribute("src");
         const data = { ...this.media.dataset };
@@ -175,6 +183,7 @@ export class ImageCrop extends Component {
             this.aspectRatios[this.aspectRatio].value,
             this.media.dataset
         );
+        this.cropperOpen = true;
     }
     /**
      * Updates the DOM image with cropped data and associates required
