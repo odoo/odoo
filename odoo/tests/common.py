@@ -37,7 +37,7 @@ from datetime import datetime
 from functools import lru_cache, partial
 from itertools import zip_longest as izip_longest
 from passlib.context import CryptContext
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Self
 from unittest.mock import patch, _patch, Mock
 from xmlrpc import client as xmlrpclib
 
@@ -57,7 +57,7 @@ import odoo.orm.registry
 from odoo import api
 from odoo.exceptions import AccessError
 from odoo.fields import Command
-from odoo.modules.registry import Registry
+from odoo.modules.registry import Registry, DummyRLock
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
@@ -65,7 +65,7 @@ from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
 
-from . import case
+from . import case, test_cursor
 
 try:
     # the behaviour of decorator changed in 5.0.5 changing the structure of the traceback when
@@ -285,6 +285,9 @@ class BaseCase(case.TestCase):
     _python_version = sys.version_info
 
     _tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
+
+    _registry_patched = False
+    _registry_readonly_enabled = True
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
@@ -744,6 +747,70 @@ class BaseCase(case.TestCase):
             profile_session=self.profile_session,
             **kwargs)
 
+    @classmethod
+    def registry_enter_test_mode(
+        cls, *, cr: Cursor | None = None, registry: Registry | None = None,
+        register_cleanup: bool = True, test_instance: Self | None = None
+    ):
+        """
+        Puts the given registry in test mode.
+
+        New cursors returned by the registry will be instances of `TestCursor`
+        which will wrap the given cursor.
+
+        :param cr (default = cls.cr): Use given cr instead of cls.cr.
+        :param registry (default = cls.registry): Use given registry instead of cls.registry.
+        :param register_cleanup (default = True): Automatically register the cleanup/classCleanup.
+        :param test_instance (default = None): The instance on which to register the cleanup if not class based.
+        """
+        assert not cls._registry_patched, 'Can only patch registry once'
+
+        test_lock = threading.RLock()
+
+        registry = registry or getattr(cls, 'registry', None)
+        assert registry, 'registry_enter_test_mode requires a registry'
+        cr = cr or getattr(cls, 'cr', None)
+        assert cr, 'registry_enter_test_mode requires a cursor'
+
+        def _patched_cursor(readonly: bool = False):
+            return test_cursor.TestCursor(
+                cr, test_lock, readonly and cls._registry_readonly_enabled
+            )
+
+        cls.registry_patches = [
+            # New cursor should point to the test's cursor
+            patch.object(registry, 'cursor', _patched_cursor),
+            # Disable locking and signaling
+            patch.object(Registry, '_lock', DummyRLock()),
+            patch.object(registry, 'setup_signaling', return_value=None), #noop
+            patch.object(registry, 'check_signaling', return_value=registry),
+        ]
+        for p in cls.registry_patches:
+            p.start()
+        cls._registry_patched = True
+
+        if not register_cleanup:
+            return
+        if test_instance:
+            test_instance.addCleanup(test_instance.registry_leave_test_mode)
+        else:
+            cls.addClassCleanup(cls.registry_leave_test_mode)
+
+    @classmethod
+    def registry_leave_test_mode(cls):
+        assert cls._registry_patched, 'Registry is not patched'
+
+        for p in cls.registry_patches:
+            p.stop()
+        cls.registry_patches.clear()
+        cls._registry_patched = False
+
+    @classmethod
+    def set_registry_readonly_mode(cls, enabled: bool):
+        assert cls._registry_patched, 'Registry is not patched'
+
+        cls._registry_readonly_enabled = enabled
+
 
 class Like:
     """
@@ -949,18 +1016,17 @@ class TransactionCase(BaseCase):
     def enter_registry_test_mode(self):
         """
         Make so that all new cursors opened on this database registry reuse the
-        one currenly used by the tests. See ``Registry.enter_test_mode``.
+        one currenly used by the tests. See ``registry_enter_test_mode``.
         """
         # entering the test mode should flush/invalidate all changes in the
         # current environment because changes happen inside other cursors
         env = self.env
         env.flush_all()
-        registry = env.registry
-        registry.enter_test_mode(env.cr)
+        self.registry_enter_test_mode(register_cleanup=False)
         try:
             yield
         finally:
-            registry.leave_test_mode()
+            self.registry_leave_test_mode()
             env.invalidate_all()
 
 
@@ -1848,7 +1914,6 @@ class JsonRpcException(Exception):
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
     registry_test_mode = True
-    readonly_enabled = True
     browser = None
     browser_size = '1366x768'
     touch_enabled = False
@@ -1860,8 +1925,7 @@ class HttpCase(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         if cls.registry_test_mode:
-            cls.registry.enter_test_mode(cls.cr, cls.readonly_enabled)
-            cls.addClassCleanup(cls.registry.leave_test_mode)
+            cls.registry_enter_test_mode()
 
         ICP = cls.env['ir.config_parameter']
         ICP.set_param('web.base.url', cls.base_url())
