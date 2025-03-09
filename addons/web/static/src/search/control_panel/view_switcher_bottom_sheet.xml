@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.ViewSwitcherBottomSheet">
+        <div class="o_view_switcher_bottom_sheet list-group list-group-flush">
+            <t t-foreach="props.views" t-as="view" t-key="view.type">
+                <div
+                    role="button"
+                    class="list-group-item list-group-action d-flex align-items-center gap-3"
+                    t-att-class="view.type === props.activeViewType ? 'active' : ''"
+                    t-attf-class="{{view.type === props.activeViewType &amp;&amp; props.views.length > 2  ? 'order-0 mb-2' : 'order-1'}}"
+                    t-on-click="() => { this.props.switchView(view.type); this.props.close(); }"
+                    >
+                    <span class="fs-3">
+                        <i class="fa-fw" t-att-class="view.icon" role="img"/>
+                    </span>
+                    <div class="fw-medium" t-out="view.name"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
