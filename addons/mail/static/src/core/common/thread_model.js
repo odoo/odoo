@@ -881,6 +881,10 @@ export class Thread extends Record {
         }
         this.leave();
     }
+
+    _getPyModelName() {
+        return this.model === "discuss.channel" ? "discuss.channel" : "mail.thread";
+    }
 }
 
 Thread.register();

@@ -414,20 +414,69 @@ export class Record {
         return !this.in(collection);
     }
 
-    toData() {
+    toData(options = { depth: false }) {
+        const seenRecords = new Set();
+        const storeData = {};
+        const prefix = this._getPyModelName();
+        let fields = undefined;
+        if (Array.isArray(options)) {
+            fields = options.map((field) => `${prefix}.${field}`);
+        }
+        this._toData(storeData, seenRecords, options.depth, fields, prefix);
+        return storeData;
+    }
+
+    _cleanupData(data) {
+        const fieldsToDelete = [
+            "_",
+            "_fieldsValue",
+            "_proxy",
+            "_proxyInternal",
+            "_raw",
+            "env",
+            "Model",
+        ];
+        fieldsToDelete.forEach((field) => delete data[field]);
+    }
+
+    _getPyModelName() {
+        return this.Model.getName();
+    }
+
+    _toData(storeData, seenRecords, depth = false, fields = undefined, prefix = undefined) {
+        if (seenRecords.has(this.localId)) {
+            return;
+        }
+        seenRecords.add(this.localId);
+
         const recordProxy = this;
         const record = toRaw(recordProxy)._raw;
         const Model = record.Model;
         const data = { ...recordProxy };
         for (const name of Model._.fields.keys()) {
+            const fullFieldName = prefix ? `${prefix}.${name}` : name;
             if (isMany(Model, name)) {
                 data[name] = record._proxyInternal[name].map((recordProxy) => {
                     const record = toRaw(recordProxy)._raw;
-                    return record.toIdData.call(record._proxyInternal);
+                    return record._toDataRelationalRecord.call(
+                        record._proxyInternal,
+                        storeData,
+                        seenRecords,
+                        depth,
+                        fields,
+                        fullFieldName
+                    );
                 });
             } else if (isOne(Model, name)) {
                 const otherRecord = toRaw(record._proxyInternal[name])?._raw;
-                data[name] = otherRecord?.toIdData.call(otherRecord._proxyInternal);
+                data[name] = otherRecord?._toDataRelationalRecord.call(
+                    otherRecord._proxyInternal,
+                    storeData,
+                    seenRecords,
+                    depth,
+                    fields,
+                    fullFieldName
+                );
             } else {
                 // Record.attr()
                 const value = recordProxy[name];
@@ -440,19 +489,33 @@ export class Record {
                 }
             }
         }
-        delete data._;
-        delete data._fieldsValue;
-        delete data._proxy;
-        delete data._proxyInternal;
-        delete data._raw;
-        delete data.Model;
-        return data;
+
+        this._cleanupData(data);
+        const pyModelName = record._getPyModelName();
+        storeData[pyModelName] ||= [];
+        storeData[pyModelName].push(data);
     }
-    toIdData() {
+
+    _toDataRelationalRecord(
+        storeData,
+        seenRecords,
+        depth = false,
+        fields = undefined,
+        prefix = undefined
+    ) {
         const data = this.Model._retrieveIdFromData(this);
+        if (depth || fields?.some((field) => field.startsWith(prefix))) {
+            this._toData(storeData, seenRecords, depth, fields, prefix);
+        }
         for (const [name, val] of Object.entries(data)) {
             if (isRecord(val)) {
-                data[name] = val.toIdData();
+                data[name] = val._toDataRelationalRecord(
+                    storeData,
+                    seenRecords,
+                    depth,
+                    fields,
+                    prefix
+                );
             }
         }
         return data;
