@@ -32,6 +32,7 @@ test("Thread name unchanged when inviting new users", async () => {
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
+        livechat_active: true,
     });
     await start();
     await openDiscuss(channelId);

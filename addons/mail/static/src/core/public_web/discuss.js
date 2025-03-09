@@ -14,7 +14,6 @@ import {
 
 import {
     Component,
-    onMounted,
     onWillUnmount,
     useRef,
     useState,
@@ -43,6 +42,7 @@ export class Discuss extends Component {
     };
     static props = {
         hasSidebar: { type: Boolean, optional: true },
+        thread: { optional: true },
     };
     static defaultProps = { hasSidebar: true };
     static template = "mail.Discuss";
@@ -99,7 +99,6 @@ export class Discuss extends Component {
                 () => [this.thread, this.ui.isSmall]
             );
         }
-        onMounted(() => (this.store.discuss.isActive = true));
         onWillUnmount(() => (this.store.discuss.isActive = false));
         useEffect(
             (memberListAction) => {
@@ -121,7 +120,7 @@ export class Discuss extends Component {
     }
 
     get thread() {
-        return this.store.discuss.thread;
+        return this.props.thread || this.store.discuss.thread;
     }
 
     async onFileUploaded(file) {
