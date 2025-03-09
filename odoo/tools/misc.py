@@ -1559,6 +1559,8 @@ def format_time(
     locale = babel_locale_parse(lang.code)
     if not time_format:
         time_format = posix_to_ldml(lang.time_format, locale=locale)
+    elif time_format == 'short':
+        time_format = posix_to_ldml(lang.short_time_format, locale=locale)
 
     return babel.dates.format_time(localized_time, format=time_format, locale=locale)
 
