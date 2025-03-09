@@ -57,6 +57,10 @@
             'website_event_track/static/src/xml/website_event_pwa.xml',
             'website_event_track/static/src/xml/website_event_track_form_tags_wrapper.xml',
         ],
+        'web.assets_tests': [
+            'website_event_track/static/tests/tours/visitor_email_reminder_tour.js',
+            'website_event_track/static/tests/tours/logged_user_email_reminder_tour.js'
+        ]
     },
     'license': 'LGPL-3',
 }
