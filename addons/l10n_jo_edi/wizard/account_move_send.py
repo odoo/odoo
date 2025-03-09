@@ -26,10 +26,6 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.l10n_jo_edi_is_enabled = wizard.l10n_jo_edi_is_visible
 
-    def _get_invoice_extra_attachments(self, move):
-        # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(move) + move.l10n_jo_edi_xml_attachment_id
-
     def _get_placeholder_mail_attachments_data(self, move):
         # EXTENDS 'account'
         res = super()._get_placeholder_mail_attachments_data(move)
