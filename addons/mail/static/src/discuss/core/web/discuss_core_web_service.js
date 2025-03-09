@@ -41,7 +41,6 @@ export class DiscussCoreWeb {
                 this.store.channels.fetch();
             }
         });
-        this.busService.start();
     }
 }
 

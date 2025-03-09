@@ -1,6 +1,7 @@
+import { EventBus } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
-const BASE_STORAGE_KEY = "EXPIRABLE_STORAGE";
+const BASE_STORAGE_KEY = "EXPIRABLE_STORAGE_";
 const CLEAR_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 function cleanupExpirableStorage() {
@@ -18,11 +19,20 @@ function cleanupExpirableStorage() {
     }
 }
 
+const storageBus = new EventBus();
+const storageFnToWrapper = new Map();
+browser.addEventListener("storage", ({ key, newValue }) => {
+    if (key.startsWith(BASE_STORAGE_KEY)) {
+        const actualKey = key.slice(BASE_STORAGE_KEY.length);
+        storageBus.trigger(actualKey, newValue ? JSON.parse(newValue).value : null);
+    }
+});
+
 export const expirableStorage = {
     /** @param {string} key */
     getItem(key) {
         cleanupExpirableStorage();
-        const item = browser.localStorage.getItem(`${BASE_STORAGE_KEY}_${key}`);
+        const item = browser.localStorage.getItem(`${BASE_STORAGE_KEY}${key}`);
         if (item) {
             return JSON.parse(item).value;
         }
@@ -39,13 +49,29 @@ export const expirableStorage = {
             expires = Date.now() + ttl * 1000;
         }
         browser.localStorage.setItem(
-            `${BASE_STORAGE_KEY}_${key}`,
+            `${BASE_STORAGE_KEY}${key}`,
             JSON.stringify({ value, expires })
         );
     },
     /** @param {string} key */
     removeItem(key) {
-        browser.localStorage.removeItem(`${BASE_STORAGE_KEY}_${key}`);
+        browser.localStorage.removeItem(`${BASE_STORAGE_KEY}${key}`);
+    },
+    /**
+     * @param {string} key
+     * @param {(value: any) => void} fn
+     */
+    onChange(key, fn) {
+        storageFnToWrapper.set(fn, ({ detail }) => fn(detail));
+        storageBus.addEventListener(key, storageFnToWrapper.get(fn));
+    },
+    /**
+     * @param {string} key
+     * @param {(value: any) => void} fn
+     */
+    offChange(key, fn) {
+        storageBus.removeEventListener(key, storageFnToWrapper.get(fn));
+        storageFnToWrapper.delete(fn);
     },
 };
 

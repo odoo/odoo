@@ -93,19 +93,15 @@ export class LivechatService {
                 ? SESSION_STATE.PERSISTED
                 : SESSION_STATE.CREATED;
         }
-        if (this.state === SESSION_STATE.PERSISTED) {
-            await this.busService.addChannel(`mail.guest_${this.guestToken}`);
-        } else {
+        if (this.state !== SESSION_STATE.PERSISTED) {
             this.store.chatHub.preFirstFetchPromise.then(() => {
                 if (!this.store.fetchParams.length) {
                     return;
                 }
                 this.store.initialize({ force: true });
-                this.store.env.services.bus_service.start();
             });
         }
         this.initialized = true;
-        this.env.services["im_livechat.initialized"].ready.resolve();
     }
 
     /**
@@ -141,7 +137,6 @@ export class LivechatService {
         }
         this.thread.fetchNewMessages();
         this.env.services["mail.store"].initialize();
-        this.busService.addChannel(`mail.guest_${this.guestToken}`);
         this.thread.readyToSwapDeferred.then(async () => {
             if (!this.thread) {
                 return;
@@ -193,10 +188,6 @@ export class LivechatService {
      * @param {Object} [saveData]
      */
     _saveLivechatState(saveData) {
-        const { guest_token } = this.store;
-        if (guest_token) {
-            expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, guest_token);
-        }
         const ONE_DAY_TTL = 60 * 60 * 24;
         if (this.thread.uuid) {
             cookie.set(LIVECHAT_UUID_COOKIE, this.thread.uuid, ONE_DAY_TTL);
@@ -280,7 +271,9 @@ export const livechatService = {
                 await livechat.leave({ notifyServer: false });
             }
             if (livechat.available) {
-                livechat.initialize();
+                livechat
+                    .initialize()
+                    .then(() => services["im_livechat.initialized"].ready.resolve());
             }
         })();
         return livechat;
