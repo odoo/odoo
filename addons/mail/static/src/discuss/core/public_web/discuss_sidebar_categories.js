@@ -143,13 +143,27 @@ export class DiscussSidebarChannel extends Component {
         return this.props.thread;
     }
 
+    get subChannels() {
+        return this.env.filteredThreads?.(this.thread.sub_channel_ids);
+    }
+
+    get isAnyChannelOpen() {
+        if (this.thread.eq(this.store.discuss.thread)) {
+            return true;
+        }
+        if (this.subChannels) {
+            return this.subChannels.some((subChannel) => subChannel.eq(this.store.discuss.thread));
+        }
+        return false;
+    }
+
     askConfirmation(body) {
         return new Promise((resolve) => {
             this.dialogService.add(ConfirmationDialog, {
                 body: body,
                 confirmLabel: _t("Leave Conversation"),
                 confirm: resolve,
-                cancel: () => {},
+                cancel: () => { },
             });
         });
     }
