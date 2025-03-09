@@ -16,7 +16,12 @@ import { Component, onMounted, onPatched, useState, xml } from "@odoo/owl";
 
 import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
-import { defineParams, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineParams,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dialog } from "@web/core/dialog/dialog";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
@@ -67,6 +72,24 @@ class MultiLevelDropdown extends Component {
             </t>
         </Dropdown>
     `;
+}
+
+class DropdownInShadowDom extends Component {
+    static components = { SimpleDropdown };
+    static props = [];
+    static template = xml`<div><SimpleDropdown/></div>`;
+}
+class ShadowDom extends Component {
+    static components = { Dropdown, DropdownItem };
+    static props = [];
+    static template = xml`<div class="shadow-root" />`;
+    setup() {
+        onMounted(() => {
+            const shadowRoot = document.querySelector(".shadow-root");
+            const shadowBody = shadowRoot.attachShadow({ mode: "open" });
+            mountWithCleanup(DropdownInShadowDom, { target: shadowBody });
+        });
+    }
 }
 
 function startOpenState() {
@@ -148,6 +171,19 @@ test("close on outside click", async () => {
     await click("div.outside");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
+});
+
+test("close on outside click in shadow dom", async () => {
+    await mountWithCleanup(ShadowDom, { noMainContainer: true });
+
+    const shadowBody = queryOne(".shadow-root").shadowRoot;
+    await contains(DROPDOWN_TOGGLE, { root: shadowBody }).click();
+    await animationFrame();
+    expect(queryAll(DROPDOWN_MENU, { root: shadowBody })).toHaveCount(1);
+
+    await click(".outside", { root: shadowBody });
+    await animationFrame();
+    expect(queryAll(DROPDOWN_MENU, { root: shadowBody })).toHaveCount(0);
 });
 
 test("close on item selection", async () => {
