@@ -1,4 +1,5 @@
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.tests.common import TransactionCase
 
 
@@ -128,3 +129,9 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
         barcode_rule.pattern = r'(300)(.*)'
         with self.assertRaises(ValidationError):
             res = barcode_nomenclature.gs1_decompose_extanded('300bilou4000')
+
+    def test_preprocess_gs1_search_args_product(self):
+        domain = [('barcode', 'in', [])]
+        res = self.env['barcode.nomenclature'].with_context(skip_preprocess_gs1=True)\
+            ._preprocess_gs1_search_args(domain, ['product'])
+        self.assertEqual(res, Domain(domain))
