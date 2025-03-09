@@ -46,6 +46,11 @@
             <field name="sequence">5</field>
         </record>
 
+        <record model="ir.module.category" id="module_category_inventory_product">
+            <field name="name">Products</field>
+            <field name="parent_id" ref="module_category_inventory"/>
+        </record>
+
         <record model="ir.module.category" id="module_category_human_resources">
             <field name="name">Human Resources</field>
             <field name="sequence">45</field>
