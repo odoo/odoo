@@ -50,12 +50,10 @@ export class OutOfFocusService {
                 notificationTitle = author.name;
             }
         }
-        const notificationContent = htmlToTextContentInline(message.body).substring(
-            0,
-            PREVIEW_MSG_MAX_SIZE
-        );
+        const notificationContent =
+            htmlToTextContentInline(message.body) + message.generateTrackingMessage();
         this.sendNotification({
-            message: notificationContent,
+            message: notificationContent.substring(0, PREVIEW_MSG_MAX_SIZE),
             sound: message.thread?.model === "discuss.channel",
             title: notificationTitle,
             type: "info",
