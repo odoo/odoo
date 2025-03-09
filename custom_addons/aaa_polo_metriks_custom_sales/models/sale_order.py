@@ -23,6 +23,7 @@ class SaleOrder(models.Model):
         _logger.debug("************ CUSTOM _onchange_custom_prices")
         self._compute_amounts()
 
+    #TBD - non ha effetto a video, ma sembra funzionare sulla griglia
     @api.depends('order_line.price_subtotal', 'currency_id', 'company_id', 'order_line.custom_price_1','order_line.custom_price_2')
     def _compute_amounts(self):
         _logger.debug("************ CUSTOM _compute_amounts")
