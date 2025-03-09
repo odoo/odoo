@@ -29,7 +29,7 @@
 <template id="forum_all_all_entries">
     <!-- Check if at least one forum without description exist -->
     <t t-set="no_description_exist" t-value="bool(_forums.filtered(lambda f: not f.description))"/>
-    <t t-set="sorted_forums" t-value="_forums.sorted(lambda f: (not f.description, f.sequence, f.id))"/>
+    <t t-set="sorted_forums" t-value="_forums.sorted(lambda f: (f.sequence, not f.description, f.id))"/>
 
     <!-- First, list all forums (those with descriptions first) -->
     <t t-foreach="sorted_forums" t-as="forum">
