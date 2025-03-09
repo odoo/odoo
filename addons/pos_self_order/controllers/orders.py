@@ -10,6 +10,10 @@ from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="json", website=True)
     def process_order(self, order, access_token, table_identifier, device_type):
+        return self.process_order_args(order, access_token, table_identifier, device_type, **{})
+
+    @http.route("/pos-self-order/process-order-args/<device_type>/", auth="public", type="json", website=True)
+    def process_order_args(self, order, access_token, table_identifier, device_type, **kwargs):
         is_takeaway = order.get('takeaway')
         pos_config, table = self._verify_authorization(access_token, table_identifier, is_takeaway)
         pos_session = pos_config.current_session_id

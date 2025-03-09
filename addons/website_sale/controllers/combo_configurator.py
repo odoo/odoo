@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo import _
+from odoo.exceptions import UserError
 from odoo.http import request, route
 from odoo.tools.image import image_data_uri
 
@@ -77,6 +78,17 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
                 )
                 line_ids.append(item_values['line_id'])
 
+        # The price of a combo product (and thus whether it can be added to the cart) can only be
+        # computed after creating all of its combo item lines.
+        combo_product_line = request.env['sale.order.line'].browse(values['line_id'])
+        if (
+            combo_product_line
+            and sum(combo_product_line._get_lines_with_price().mapped('price_unit')) == 0
+            and combo_product_line.order_id.website_id.prevent_zero_price_sale
+        ):
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
         values['notification_info'] = self._get_cart_notification_information(order_sudo, line_ids)
         values['cart_quantity'] = order_sudo.cart_quantity
         request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity

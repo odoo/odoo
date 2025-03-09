@@ -48,6 +48,7 @@ const ChartWidget = publicWidget.Widget.extend({
 
         const categoryAxis = {
             type: "category",
+            stacked: this.el.dataset.stacked === "true",
         };
 
         // Make chart data
