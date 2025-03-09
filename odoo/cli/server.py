@@ -92,44 +92,21 @@ def setup_pid_file():
             fd.write(str(pid))
         atexit.register(rm_pid_file, pid)
 
-def export_translation():
-    from odoo.modules.registry import Registry  # noqa: PLC0415
-    from odoo.tools.translate import trans_export  # noqa: PLC0415
-    dbnames = config['db_name']
-    if len(dbnames) > 1:
-        sys.exit("-d/--database/db_name has multiple database, please provide a single one")
-    if config["language"]:
-        msg = "language %s" % (config["language"],)
-    else:
-        msg = "new language"
-    _logger.info('writing translation file for %s to %s', msg,
-        config["translate_out"])
 
-    fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
-    # .pot is the same fileformat as .po
-    if fileformat == "pot":
-        fileformat = "po"
-
-    with open(config["translate_out"], "wb") as buf:
-        registry = Registry.new(dbnames[0])
-        with registry.cursor() as cr:
-            trans_export(config["language"],
-                config["translate_modules"] or ["all"], buf, fileformat, cr)
-
-    _logger.info('translation file written successfully')
-
-def import_translation():
-    from odoo.modules.registry import Registry  # noqa: PLC0415
-    from odoo.tools.translate import TranslationImporter  # noqa: PLC0415
-    overwrite = config["overwrite_existing_translations"]
-    dbnames = config['db_name']
-    if len(dbnames) > 1:
-        sys.exit("-d/--database/db_name has multiple database, please provide a single one")
-    registry = Registry.new(dbnames[0])
-    with registry.cursor() as cr:
-        translation_importer = TranslationImporter(cr)
-        translation_importer.load_file(config["translate_in"], config["language"])
-        translation_importer.save(overwrite=overwrite)
+def ensure_database(db_name):
+    from odoo.service import db  # noqa: PLC0415
+    try:
+        db._create_empty_database(db_name)
+        config['init']['base'] = True
+        return True
+    except InsufficientPrivilege as err:
+        # We use an INFO loglevel on purpose in order to avoid
+        # reporting unnecessary warnings on build environment
+        # using restricted database access.
+        _logger.info("Could not determine if database %s exists, "
+                     "skipping auto-creation: %s", db_name, err)
+    except db.DatabaseExists:
+        return False
 
 
 def main(args):
@@ -139,26 +116,7 @@ def main(args):
     report_configuration()
 
     for db_name in config['db_name']:
-        from odoo.service import db  # noqa: PLC0415
-        try:
-            db._create_empty_database(db_name)
-            config['init']['base'] = True
-        except InsufficientPrivilege as err:
-            # We use an INFO loglevel on purpose in order to avoid
-            # reporting unnecessary warnings on build environment
-            # using restricted database access.
-            _logger.info("Could not determine if database %s exists, "
-                         "skipping auto-creation: %s", db_name, err)
-        except db.DatabaseExists:
-            pass
-
-    if config["translate_out"]:
-        export_translation()
-        sys.exit(0)
-
-    if config["translate_in"]:
-        import_translation()
-        sys.exit(0)
+        ensure_database(db_name)
 
     stop = config["stop_after_init"]
 
