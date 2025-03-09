@@ -513,3 +513,61 @@ class TestMrpStockReports(TestReportsCommon):
         self.assertEqual(len(repl1), 1)
         self.assertEqual(repl0[0]['summary']['quantity'], 3)
         self.assertEqual(repl1[0]['summary']['quantity'], 5)
+
+    def test_report_price_variants(self):
+        """
+        This tests the MO's report price when a variant is involved
+        """
+        attribute_color = self.env['product.attribute'].create({'name': 'Color'})
+        value_black, value_white = self.env['product.attribute.value'].create([{
+            'name': 'Black',
+            'attribute_id': attribute_color.id
+            },
+            {
+            'name': 'White',
+            'attribute_id': attribute_color.id
+        }])
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product',
+            'type': 'consu',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': attribute_color.id,
+                'value_ids': [(4, value_black.id), (4, value_white.id)],
+            })]
+        })
+        variant_black = product_template.product_variant_ids.filtered(lambda v: 'Black' in v.product_template_attribute_value_ids.mapped('name'))
+        variant_white = product_template.product_variant_ids.filtered(lambda v: 'White' in v.product_template_attribute_value_ids.mapped('name'))
+        variant_black.standard_price = 50
+        variant_white.standard_price = 30
+        bom = self.env['mrp.bom'].create({
+                    'product_tmpl_id': product_template.id,
+                    'type': 'normal',
+        })
+        white_tmpl = self.env['product.template.attribute.value'].search([
+            ('product_attribute_value_id', '=', value_white.id),
+            ('product_tmpl_id', '=', bom.product_tmpl_id.id)
+        ], limit=1)
+        black_tmpl = self.env['product.template.attribute.value'].search([
+            ('product_attribute_value_id', '=', value_black.id),
+            ('product_tmpl_id', '=', bom.product_tmpl_id.id)
+        ], limit=1)
+        self.env['mrp.bom.line'].create([{
+            'bom_id': bom.id,
+            'product_id': variant_black.id,
+            'product_qty': 1,
+            'bom_product_template_attribute_value_ids' : [(6, 0, [black_tmpl.id])],
+        },
+        {
+            'bom_id': bom.id,
+            'product_id': variant_white.id,
+            'product_qty': 1,
+            'bom_product_template_attribute_value_ids' : [(6, 0, [white_tmpl.id])],
+        }])
+        mo = self.env['mrp.production'].create({
+        'product_id': variant_black.id,
+        'product_qty': 1,
+        'bom_id': bom.id,
+        })
+        mo.action_confirm()
+        mo_report = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(mo_report['data']['extras']['unit_bom_cost'], mo_report['data']['extras']['unit_mo_cost'], 'The BoM unit cost should be equal to the sum of the products of said BoM')
