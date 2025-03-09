@@ -13,6 +13,7 @@ const storeServicePatch = {
         this.inPublicPage;
         /** @type {boolean|undefined} */
         this.isChannelTokenSecret;
+        this.discuss_public_thread_data;
         this.discuss_public_thread = Record.one("Thread");
         /** @type {boolean|undefined} */
         this.shouldDisplayWelcomeViewInitially;

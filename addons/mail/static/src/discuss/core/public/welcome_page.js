@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
 
 export class WelcomePage extends Component {
     static props = ["proceed?"];
@@ -22,7 +23,9 @@ export class WelcomePage extends Component {
         this.audioRef = useRef("audio");
         this.videoRef = useRef("video");
         onMounted(() => {
-            if (this.store.discuss_public_thread.default_display_mode === "video_full_screen") {
+            if (
+                this.store.discuss_public_thread_data.default_display_mode === "video_full_screen"
+            ) {
                 this.enableMicrophone();
                 this.enableVideo();
             }
@@ -35,10 +38,18 @@ export class WelcomePage extends Component {
         }
     }
 
-    joinChannel() {
+    async joinChannel() {
         if (this.store.self.type === "guest") {
             this.store.self.updateGuestName(this.state.userName.trim());
         }
+        await rpc("/discuss/channel/join", {
+            channel_id: this.store.discuss_public_thread_data.id,
+        });
+        this.store.discuss_public_thread = this.store.Thread.insert({
+            model: "discuss.channel",
+            id: this.store.discuss_public_thread_data.id,
+        });
+        this.store.discuss_public_thread.setAsDiscussThread();
         browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.audioStream);
         browser.localStorage.setItem(
             "discuss_call_preview_join_video",

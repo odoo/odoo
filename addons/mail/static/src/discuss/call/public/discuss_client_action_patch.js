@@ -11,7 +11,7 @@ patch(DiscussClientAction.prototype, {
         this.rtc = useService("discuss.rtc");
     },
     async joinCallWithWelcomeSettings() {
-        if (this.store.discuss_public_thread.default_display_mode !== "video_full_screen") {
+        if (this.store.discuss_public_thread_data.default_display_mode !== "video_full_screen") {
             return;
         }
         const mute = browser.localStorage.getItem("discuss_call_preview_join_mute") === "true";
