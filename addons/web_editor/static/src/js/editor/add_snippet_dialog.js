@@ -189,6 +189,39 @@ export class AddSnippetDialog extends Component {
         rowEl.appendChild(rightColEl);
         this.iframeDocument.body.appendChild(rowEl);
 
+        const body = this.iframeDocument.querySelector("body");
+        const isSearchInputEmpty = !snippetsToDisplay.length && this.state.search;
+
+        // Set body height dynamically
+        body.style.setProperty("height", isSearchInputEmpty ? "auto" : "30%");
+
+        if (isSearchInputEmpty) {
+            const divBlock = document.createElement("div");
+            divBlock.classList.add(
+                "d-flex",
+                "justify-content-center",
+                "align-items-center",
+                "flex-column"
+            );
+
+            const imageBlock = document.createElement("img");
+            imageBlock.setAttribute("src", "/web/static/img/smiling_face.svg");
+            imageBlock.setAttribute("alt", "No snippets found");
+            imageBlock.classList.add("h-25");
+            divBlock.appendChild(imageBlock);
+
+            const textBlock1 = document.createElement("p");
+            textBlock1.classList.add("fw-bold", "display-3");
+            textBlock1.textContent = "Oops! No snippets found.";
+            divBlock.appendChild(textBlock1);
+
+            const textBlock2 = document.createElement("p");
+            textBlock2.classList.add("fw-bold", "display-3");
+            textBlock2.textContent = "Take a look at the searchbar, there might be a small typo!";
+            divBlock.appendChild(textBlock2);
+
+            rowEl.innerHTML = divBlock.outerHTML;
+        }
         // Split the next computation in chunks. A first big chunk of snippets
         // to be computed first, then the rest in smaller chunks. This allows to
         // make sure that a tab with many snippets (or a one letter search for
