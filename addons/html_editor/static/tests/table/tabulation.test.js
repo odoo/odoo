@@ -32,10 +32,39 @@ describe("move selection with tab/shift+tab", () => {
                 `),
             });
         });
-        test.tags("iframe");
-        test("should move cursor to the end of next cell in an iframe", async () => {
+        test.tags("iframe", "desktop");
+        test("in iframe, desktop: should move cursor to the end of next cell in an iframe", async () => {
             await testEditor({
                 props: { iframe: true },
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("Tab"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab</td>
+                                <td>cd[]</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test.tags("iframe", "mobile");
+        test("in iframe, mobile: should move cursor to the end of next cell in an iframe", async () => {
+            await testEditor({
+                props: { iframe: true, mobile: true },
                 contentBefore: unformat(`
                     <table>
                         <tbody>
