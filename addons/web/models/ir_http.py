@@ -169,6 +169,7 @@ class IrHttp(models.AbstractModel):
             'is_admin': user._is_admin() if session_uid else False,
             'is_system': user._is_system() if session_uid else False,
             'is_public': user._is_public(),
+            "is_internal_user": user._is_internal(),
             'is_website_user': user._is_public() if session_uid else False,
             'uid': session_uid,
             'is_frontend': True,

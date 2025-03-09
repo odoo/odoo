@@ -188,6 +188,7 @@ export function _makeUser(session) {
         login,
         isAdmin,
         isSystem,
+        isInternalUser,
         partnerId,
         homeActionId,
         showEffect,
