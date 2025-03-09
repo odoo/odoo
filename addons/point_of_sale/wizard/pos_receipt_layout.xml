@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_pos_receipt_layout" model="ir.ui.view">
+            <field name="name">Receipt Layout</field>
+            <field name="model">pos.receipt.layout</field>
+            <field name="arch" type="xml">
+                <form class="o_document_layout">
+                    <group>
+                        <group class="o_document_layout_company">
+                            <field name="pos_config_id" invisible="1"/>
+                            <field name="receipt_layout" widget="selection_badge" options="{'size': 'sm'}"/>
+                            <field name="receipt_logo" string="Logo" widget="image" options="{'size': [0, 50]}"/>
+                            <field name="receipt_bg_layout" required="1"/>
+                            <field name="receipt_bg_image" options="{'accepted_file_extensions': 'image/*'}" string="Background Image" invisible="receipt_bg_layout != 'custom'" required="receipt_bg_layout == 'custom'">Upload your file</field>
+                            <field name="receipt_font" string="Text" required="1"/>
+                            <field name="receipt_header" string="Header" placeholder="e.g. Shop Name, Location" />
+                            <field name="receipt_footer" string="Footer" placeholder="Thanks, visit again ..." />
+                            <separator string="Preview Options"/>
+                            <field name="basic_receipt_preview" />
+                        </group>
+                        <div class="o_preview position-relative">
+                            <field name="receipt_preview" widget="receipt_preview_iframe" class="w-100 h-100 d-flex justify-content-center mb-0" />
+                            <div class="receipt_preview_spinner spinner-border position-absolute top-50 start-50" style="width: 40px; height: 40px;" />
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Continue" class="btn-primary" type="object" name="receipt_layout_save" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="x" string="Discard" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
