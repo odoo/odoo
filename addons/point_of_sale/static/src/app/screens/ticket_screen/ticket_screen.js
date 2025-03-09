@@ -76,7 +76,7 @@ export class TicketScreen extends Component {
             nbrByPage: NBR_BY_PAGE,
             page: 1,
             nbrPage: 1,
-            filter: null,
+            filter: "ONGOING",
             search: this.pos.getDefaultSearchDetails(),
             selectedOrderUuid: this.pos.getOrder()?.uuid || null,
             selectedOrderlineIds: {},
@@ -190,6 +190,9 @@ export class TicketScreen extends Component {
                 this.state.selectedOrderlineIds[clickedOrder.id] = firstLine.id;
             }
         }
+    }
+    async onClickReprint() {
+        await this.pos.sendOrderInPreparation(this.getSelectedOrder(), { reprintAll: true });
     }
     async onNextPage() {
         if (this.state.page < this.getNbrPages()) {
