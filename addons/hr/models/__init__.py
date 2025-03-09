@@ -20,4 +20,5 @@ from . import res_users
 from . import res_company
 from . import res_partner
 from . import resource
+from . import resource_calendar
 from . import ir_ui_menu
