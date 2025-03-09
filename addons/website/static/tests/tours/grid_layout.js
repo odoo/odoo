@@ -30,7 +30,7 @@ registerWebsitePreviewTour('website_replace_grid_image', {
     },
     {
         content: "Pick new image",
-        trigger: '.o_select_media_dialog img[title="s_banner_default_image.jpg"]',
+        trigger: '.o_select_media_dialog img[title="s_banner_default_image.webp"]',
         run: "click",
     },
     {
@@ -40,17 +40,17 @@ registerWebsitePreviewTour('website_replace_grid_image', {
     },
     {
         content: "Pick new image",
-        trigger: '.o_select_media_dialog img[title="s_banner_default_image2.jpg"]',
+        trigger: '.o_select_media_dialog img[title="s_banner_default_image2.webp"]',
         run: "click",
     },
     {
         content: "Replace new image",
-        trigger: ':iframe .s_text_image img[src*="s_banner_default_image2.jpg"]',
+        trigger: ':iframe .s_text_image img[src*="s_banner_default_image2.webp"]',
         run: 'dblclick',
     },
     {
         content: "Pick new image",
-        trigger: '.o_select_media_dialog img[title="s_banner_default_image.jpg"]',
+        trigger: '.o_select_media_dialog img[title="s_banner_default_image.webp"]',
         run: "click",
     },
     ...clickOnSave()
@@ -71,7 +71,7 @@ registerWebsitePreviewTour("scroll_to_new_grid_item", {
     changeOption("layout_column", 'we-button[data-add-element="image"]'),
     {
         content: "Select the new image in the media dialog",
-        trigger: '.o_select_media_dialog img[title="s_banner_default_image.jpg"]',
+        trigger: '.o_select_media_dialog img[title="s_banner_default_image.webp"]',
         run: "click",
     }, {
         content: "Check that the page scrolled to the new grid item",
