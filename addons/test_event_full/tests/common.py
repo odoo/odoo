@@ -509,6 +509,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'wishlisted_by_default': True,
             'user_id': self.user_admin.id,
             'partner_id': self.event_speaker.id,
+            'description': 'Performance of Raoul Grosbedon.'
         })
         self.track_1 = self.env['event.track'].create({
             'name': 'Live Testimonial',
@@ -519,6 +520,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'is_published': True,
             'user_id': self.user_admin.id,
             'partner_id': self.event_speaker.id,
+            'description': 'Description of the live.'
         })
         self.track_2 = self.env['event.track'].create({
             'name': 'Our Last Day Together!',
@@ -529,6 +531,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'is_published': True,
             'user_id': self.user_admin.id,
             'partner_id': self.event_speaker.id,
+            'description': 'Description of our last day together.'
         })
 
         self.env.flush_all()
