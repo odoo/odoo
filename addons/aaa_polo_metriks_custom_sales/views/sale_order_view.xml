@@ -5,20 +5,23 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             
-            <!-- Add custom fields to the order lines list -->
+            <!-- colonne custom -->
             <xpath expr="//field[@name='order_line']/list" position="inside">
-                <field name="custom_field_1"/>
-                <field name="custom_field_2"/>
-                <field name="custom_field_3"/>
-				<field name="tax_percent"/>
+                <field name="custom_price_1"/>
+                <field name="custom_price_2"/>
             </xpath>
 
-            <!-- Add the total fields at the bottom of the Sales Order form -->
+            <!-- nascondo campo template standard -->
+            <xpath expr="//field[@name='sale_order_template_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- campi custom -->
             <xpath expr="//sheet/group" position="after">
-                <group string="Dettaglio totali">
-                    <field name="total_custom_field_1" readonly="1"/>
-                    <field name="total_custom_field_2" readonly="1"/>
-                    <field name="total_custom_field_3" readonly="1"/>
+                <group string="Campi custom">
+                    <field name="custom_sale_order_template_id" string="Aggiungi da modello" widget="many2one" options="{'no_create': True}"/>
+                    <field name="total_custom_price_1" readonly="1"/>
+                    <field name="total_custom_price_2" readonly="1"/>
                 </group>
             </xpath>
 
