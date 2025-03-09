@@ -15,21 +15,31 @@ export class MailGroup extends Interaction {
         },
         ".o_mg_subscribe_btn": {
             "t-on-click.prevent": this.onToggleSubscribeClick,
-            "t-att-class": () => ({
-                "btn-primary": !this.isMember,
-                "btn-outline-primary": this.isMember,
-            }),
-            "t-out": () => this.isMember ? _t("Unsubscribe") : _t("Subscribe"),
         },
     };
 
     setup() {
         this.inError = false;
-        this.mailgroupId = this.el.dataset.id;
+        this.form = this.el.querySelector(".o_mg_subscribe_form");
+        this.membersCountEl = this.el.querySelector(".o_mg_members_count");
+        this.mailGroupId = this.el.dataset.id;
         this.isMember = this.el.dataset.isMember || false;
         const searchParams = (new URL(document.location.href)).searchParams;
         this.token = searchParams.get("token");
         this.forceUnsubscribe = searchParams.has("unsubscribe");
+    }
+
+    _toggleSubscribeButton(isSubscribe) {
+        this.el.querySelector(".o_mg_email_input_group").classList.toggle("d-none", isSubscribe);
+        this.el.querySelector(".o_mg_unsubscribe_btn").classList.toggle("d-none", !isSubscribe);
+    }
+
+    _displayAlert(textContent, classes){
+        const alert = document.createElement("div");
+        alert.setAttribute("class", `o_mg_alert alert ${classes}`);
+        alert.setAttribute("role", "alert");
+        alert.textContent = textContent;
+        this.insert(alert, this.form, "beforebegin");
     }
 
     async onToggleSubscribeClick() {
@@ -43,39 +53,36 @@ export class MailGroup extends Interaction {
 
         const action = (this.isMember || this.forceUnsubscribe) ? "unsubscribe" : "subscribe";
         const response = await this.waitFor(rpc("/group/" + action, {
-            "group_id": this.mailgroupId,
+            "group_id": this.mailGroupId,
             "email": email,
             "token": this.token,
         }));
 
         this.el.querySelector(".o_mg_alert")?.remove();
 
+        if (this.membersCountEl && ["added", "removed"].includes(response)) {
+            const membersCount = parseInt(this.membersCountEl.textContent) || 0;
+            this.membersCountEl.textContent = Math.max(response === "added" ? membersCount + 1 : membersCount - 1, 0);
+        }
+
         if (response === "added") {
             this.isMember = true;
+            this._toggleSubscribeButton(true);
         } else if (response === "removed") {
             this.isMember = false;
+            this._toggleSubscribeButton(false);
         } else if (response === "email_sent") {
-            const divEl = document.createElement("div");
-            divEl.classList.add("o_mg_alert", "alert", "alert-success");
-            divEl.setAttribute("role", "alert");
-            divEl.innerText = _t("An email with instructions has been sent.");
-            this.insert(divEl, this.el.querySelector(".o_mg_subscribe_form"), "beforebegin");
+            this._displayAlert(_t("An email with instructions has been sent."), "alert-success");
         } else if (response === "is_already_member") {
             this.isMember = true;
-            const divEl = document.createElement("div");
-            divEl.classList.add("o_mg_alert", "alert", "alert-warning");
-            divEl.setAttribute("role", "alert");
-            divEl.innerText = _t("This email is already subscribed.");
-            this.insert(divEl, this.el.querySelector(".o_mg_subscribe_form"), "beforebegin");
+            this._toggleSubscribeButton(true);
+            this._displayAlert(_t("This email is already subscribed."), "alert-warning");
         } else if (response === "is_not_member") {
             if (!this.forceUnsubscribe) {
                 this.isMember = false;
+                this._toggleSubscribeButton(false);
             }
-            const divEl = document.createElement("div");
-            divEl.classList.add("o_mg_alert", "alert", "alert-warning");
-            divEl.setAttribute("role", "alert");
-            divEl.innerText = _t("This email is not subscribed.");
-            this.insert(divEl, this.el.querySelector(".o_mg_subscribe_form"), "beforebegin");
+        this._displayAlert(_t("This email is not subscribed."), "alert-warning");
         }
     }
 }
