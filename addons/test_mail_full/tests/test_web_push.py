@@ -332,7 +332,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertIn('t=', post.call_args.kwargs['headers']['Authorization'])
         self.assertIn('k=', post.call_args.kwargs['headers']['Authorization'])
         self.assertEqual('aes128gcm', post.call_args.kwargs['headers']['Content-Encoding'])
-        self.assertEqual('0', post.call_args.kwargs['headers']['TTL'])
+        self.assertEqual('60', post.call_args.kwargs['headers']['TTL'])
         self.assertIn('data', post.call_args.kwargs)
         self.assertIn('timeout', post.call_args.kwargs)
 
