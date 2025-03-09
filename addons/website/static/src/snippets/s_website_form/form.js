@@ -358,9 +358,12 @@ export class Form extends Interaction {
         for (const [key, value] of Object.entries(formValues)) {
             formData.append(key, value);
         }
-
+        let actionUrl = this.el.getAttribute("action");
+        if (this.el.dataset.model_name !== "res.users") {
+            actionUrl += (this.el.dataset.force_action || this.el.dataset.model_name);
+        }
         // Post form and handle result
-        post(this.el.getAttribute("action") + (this.el.dataset.force_action || this.el.dataset.model_name), formData)
+        post(actionUrl, formData)
             .then(async (resultData) => {
                 // Restore send button behavior
                 buttonEl.removeAttribute("disabled");

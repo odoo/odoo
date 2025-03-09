@@ -454,10 +454,13 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             this.selectActionEl.setAttribute('string', 'Action');
             this.selectActionEl.dataset.noPreview = 'true';
             this.models.forEach(el => {
-                const option = document.createElement('we-button');
-                option.textContent = el.website_form_label;
-                option.dataset.selectAction = el.id;
-                this.selectActionEl.append(option);
+                // To remove signup_form action from the list
+                if (el.website_form_key !== "signup_form") {
+                    const option = document.createElement("we-button");
+                    option.textContent = el.website_form_label;
+                    option.dataset.selectAction = el.id;
+                    this.selectActionEl.append(option);
+                }
             });
             return this.selectActionEl;
         }
