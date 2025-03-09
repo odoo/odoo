@@ -19,19 +19,14 @@ class EventQuestion(models.Model):
         ('phone', 'Phone'),
         ('company_name', 'Company'),
     ], default='simple_choice', string="Question Type", required=True)
-    event_type_id = fields.Many2one('event.type', 'Event Type', ondelete='cascade')
-    event_id = fields.Many2one('event.event', 'Event', ondelete='cascade')
+    event_type_ids = fields.Many2many('event.type', string='Event Type')
+    event_ids = fields.Many2many('event.event', string='Event')
     answer_ids = fields.One2many('event.question.answer', 'question_id', "Answers", copy=True)
     sequence = fields.Integer(default=10)
     once_per_order = fields.Boolean('Ask once per order',
                                     help="If True, this question will be asked only once and its value will be propagated to every attendees."
                                          "If not it will be asked for every attendee of a reservation.")
     is_mandatory_answer = fields.Boolean('Mandatory Answer')
-
-    @api.constrains('event_type_id', 'event_id')
-    def _constrains_event(self):
-        if any(question.event_type_id and question.event_id for question in self):
-            raise UserError(_("Question cannot be linked to both an Event and an Event Type."))
 
     def write(self, vals):
         """ We add a check to prevent changing the question_type of a question that already has answers.

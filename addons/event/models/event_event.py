@@ -55,11 +55,13 @@ class EventType(models.Model):
                  })]
 
     def _default_question_ids(self):
-        return [
-            (0, 0, {'title': _('Name'), 'question_type': 'name', 'is_mandatory_answer': True}),
-            (0, 0, {'title': _('Email'), 'question_type': 'email', 'is_mandatory_answer': True}),
-            (0, 0, {'title': _('Phone'), 'question_type': 'phone'}),
-        ]
+        """
+            Get default question_ids from ir.model.data.
+        """
+        Data = self.env['ir.model.data'].sudo()
+        default_question_xmlids = ['event.event_question_name', 'event.event_question_email', 'event.event_question_phone']
+        default_question_ids = [Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in default_question_xmlids]
+        return self.env['event.question'].search([('id', 'in', default_question_ids)])
 
     name = fields.Char('Event Template', required=True, translate=True)
     note = fields.Html(string='Note')
@@ -82,8 +84,8 @@ class EventType(models.Model):
     # ticket reports
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
         help="This information will be printed on your tickets.")
-    question_ids = fields.One2many(
-        'event.question', 'event_type_id', default=_default_question_ids,
+    question_ids = fields.Many2many(
+        'event.question', default=_default_question_ids,
         string='Questions', copy=True)
 
     @api.depends('has_seats_limitation')
@@ -255,13 +257,12 @@ class EventEvent(models.Model):
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
     # questions
-    question_ids = fields.One2many(
-        'event.question', 'event_id', 'Questions', copy=True,
-        compute='_compute_question_ids', readonly=False, store=True)
-    general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
-                                           domain=[('once_per_order', '=', True)])
-    specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
-                                            domain=[('once_per_order', '=', False)])
+    question_ids = fields.Many2many('event.question', string='Questions',
+    compute='_compute_question_ids', readonly=False, store=True)
+    general_question_ids = fields.Many2many('event.question', string='General Questions',
+                                           compute='_compute_general_question_ids')
+    specific_question_ids = fields.Many2many('event.question', string='Specific Questions',
+                                            compute='_compute_specific_question_ids')
 
     def _compute_use_barcode(self):
         use_barcode = self.env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'
@@ -272,6 +273,16 @@ class EventEvent(models.Model):
         """Get the URL to use to redirect to the event, overriden in website for fallback."""
         for event in self:
             event.event_share_url = event.event_url
+
+    @api.depends('question_ids')
+    def _compute_general_question_ids(self):
+        for record in self:
+            record.general_question_ids = record.question_ids.filtered(lambda r: r.once_per_order)
+
+    @api.depends('question_ids')
+    def _compute_specific_question_ids(self):
+        for record in self:
+            record.specific_question_ids = record.question_ids.filtered(lambda r: not r.once_per_order)
 
     @api.depends('event_type_id')
     def _compute_question_ids(self):
@@ -292,7 +303,7 @@ class EventEvent(models.Model):
         else:
             questions_tokeep_ids = []
         for event in self:
-            if not event.event_type_id and not event.question_ids:
+            if not event.id and not event.event_type_id and not event.question_ids:
                 event.question_ids = self._default_question_ids()
                 continue
 
@@ -306,8 +317,9 @@ class EventEvent(models.Model):
 
             # copy questions so changes in the event don't affect the event type
             event.question_ids += event.event_type_id.question_ids.copy({
-                'event_type_id': False,
+                'event_type_ids': False,
             })
+
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
