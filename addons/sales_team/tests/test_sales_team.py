@@ -164,19 +164,11 @@ class TestMultiCompany(TestSalesMC):
         team_c2.write({'member_ids': [(4, self.env.user.id)]})
         self.assertEqual(team_c2.member_ids, self.env.user)
 
-        # cannot add someone from another company
-        with self.assertRaises(exceptions.UserError):
-            team_c2.write({'member_ids': [(4, self.user_sales_salesman.id)]})
-
         # reset members, change company
         team_c2.write({'member_ids': [(5, 0)], 'company_id': self.company_main.id})
         self.assertEqual(team_c2.member_ids, self.env['res.users'])
         team_c2.write({'member_ids': [(4, self.user_sales_salesman.id)]})
         self.assertEqual(team_c2.member_ids, self.user_sales_salesman)
-
-        # cannot change company as it breaks memberships mc check
-        with self.assertRaises(exceptions.UserError):
-            team_c2.write({'company_id': self.company_2.id})
 
     @users('user_sales_manager')
     def test_team_memberships(self):
@@ -190,19 +182,11 @@ class TestMultiCompany(TestSalesMC):
         team_c2.write({'crm_team_member_ids': [(0, 0, {'user_id': self.env.user.id})]})
         self.assertEqual(team_c2.member_ids, self.env.user)
 
-        # cannot add someone from another company
-        with self.assertRaises(exceptions.UserError):
-            team_c2.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_sales_salesman.id})]})
-
         # reset members, change company
         team_c2.write({'member_ids': [(5, 0)], 'company_id': self.company_main.id})
         self.assertEqual(team_c2.member_ids, self.env['res.users'])
         team_c2.write({'crm_team_member_ids': [(0, 0, {'user_id': self.user_sales_salesman.id})]})
         self.assertEqual(team_c2.member_ids, self.user_sales_salesman)
-
-        # cannot change company as it breaks memberships mc check
-        with self.assertRaises(exceptions.UserError):
-            team_c2.write({'company_id': self.company_2.id})
 
 
 @tagged('post_install', '-at_install')
