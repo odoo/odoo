@@ -10,7 +10,7 @@ import sys
 odoo.evented = False
 
 
-def patch_evented():
+def patch_module():
     if odoo.evented or not (len(sys.argv) > 1 and sys.argv[1] == 'gevent'):
         return
     sys.argv.remove('gevent')

@@ -1040,8 +1040,8 @@ def url_join(
     return url_unparse((scheme, netloc, path, query, fragment))
 
 
-def patch_werkzeug():
-    from ..tools.json import scriptsafe  # noqa: PLC0415
+def patch_module():
+    from odoo.tools.json import scriptsafe
     Request.json_module = Response.json_module = scriptsafe
 
     FileStorage.save = lambda self, dst, buffer_size=(1 << 20): copyfileobj(self.stream, dst, buffer_size)
