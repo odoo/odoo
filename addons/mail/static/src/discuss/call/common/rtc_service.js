@@ -1245,28 +1245,53 @@ export class Rtc extends Record {
     }
 
     logSnapshot() {
-        const peers = [];
-        this.p2pService?.peers.forEach((peer) => {
-            peers.push({
-                id: peer.id,
-                state: peer.connection.connectionState,
-                iceState: peer.connection.iceConnectionState,
-            });
-        });
+        if (!this.state.channel) {
+            // a snapshot out of a call would not collect any data
+            return;
+        }
         const server = {};
         if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
             server.info = this.serverInfo;
             server.state = this.sfuClient?.state;
-            server.consumersStats = this.state.channel.rtcSessions.map((session) =>
-                this.network.getSfuConsumerStats(session.id)
-            );
             server.errors = this.sfuClient?.errors.map((error) => error.message);
         }
+        const sessions = this.state.channel.rtcSessions.map((session) => {
+            const sessionInfo = {
+                id: session.id,
+                channelMemberId: session.channel_member_id?.id,
+                state: session.connectionState,
+                audioError: session.audioError,
+                videoError: session.videoError,
+                sfuConsumers: this.network.getSfuConsumerStats(session.id),
+            };
+            if (session.eq(this.selfSession)) {
+                sessionInfo.isSelf = true;
+            }
+            const audioEl = session.audioElement;
+            if (audioEl) {
+                sessionInfo.audio = {
+                    state: audioEl.readyState,
+                    muted: audioEl.muted,
+                    paused: audioEl.paused,
+                    networkState: audioEl.networkState,
+                };
+            }
+            const peer = this.p2pService?.peers.get(session.id);
+            if (peer) {
+                sessionInfo.peer = {
+                    id: peer.id,
+                    state: peer.connection.connectionState,
+                    iceState: peer.connection.iceConnectionState,
+                };
+            }
+            return sessionInfo;
+        });
         this.state.globalLogs[`snapshot-${luxon.DateTime.now().toFormat("yyyy-MM-dd-HH-mm-ss")}`] =
             {
-                peers,
                 server,
+                sessions,
                 connectionType: this.state.connectionType,
+                fallback: this.state.fallbackMode,
             };
     }
 
