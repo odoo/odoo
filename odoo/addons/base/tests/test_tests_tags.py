@@ -212,6 +212,14 @@ class TestSelector(TransactionCase):
 
         tags = TagsSelector('*/some-paths/with-dash/addons/account/test/test_file.py')  # a filepath with dashes
         self.assertEqual({(None, None, None, None, '/some-paths/with-dash/addons/account/test/test_file.py'), }, tags.include)
+        tags = TagsSelector('/some/absolute/path/v.3/module.py')
+        self.assertEqual({('standard', None, None, None, '/some/absolute/path/v.3/module.py'), }, tags.include)  # all in module
+
+        tags = TagsSelector('/some/absolute/path/v.3/module.py')
+        self.assertEqual({('standard', None, None, None, '/some/absolute/path/v.3/module.py'), }, tags.include)  # all in module
+
+        tags = TagsSelector('/module.method')
+        self.assertEqual({('standard', 'module', None, 'method', None), }, tags.include)  # all in module
 
 
 @tagged('nodatabase')
