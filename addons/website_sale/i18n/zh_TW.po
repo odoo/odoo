@@ -2117,7 +2117,7 @@ msgstr "填寫你的地址"
 #: code:addons/website_sale/models/product_template.py:0
 msgid ""
 "Final price may vary based on selection. Tax will be calculated at checkout."
-msgstr ""
+msgstr "最終價格可能會根據選取的項目而有所不同。稅款將會在結賬時計算。"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_foldable
@@ -3128,6 +3128,12 @@ msgstr "付款代碼(token)"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "付款交易"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
+msgid "Payment is already being processed."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4246,6 +4252,12 @@ msgstr "存取權杖(token)無效。"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has been updated. Please refresh the page."
 msgstr "購物車內容已更新。請重新載入頁面。"
 
@@ -4720,7 +4732,7 @@ msgstr "網站"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_absolute_url
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "網站絕對網址"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized

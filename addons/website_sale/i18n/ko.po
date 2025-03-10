@@ -2075,7 +2075,7 @@ msgstr "추가 정보"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Extra Media"
-msgstr ""
+msgstr "추가 미디어"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
@@ -3179,6 +3179,12 @@ msgstr "결제 토큰"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "결제 거래"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
+msgid "Payment is already being processed."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4297,6 +4303,12 @@ msgstr "유효하지 않은 액세스 토큰입니다."
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has been updated. Please refresh the page."
 msgstr "장바구니가 업데이트되었습니다. 페이지를 새로고침 하세요."
 
@@ -4777,7 +4789,7 @@ msgstr "웹사이트"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_absolute_url
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "웹사이트 절대 URL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized
@@ -5124,31 +5136,31 @@ msgstr "다음 범주에서 \""
 #. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 msgid "is_abandoned_cart"
-msgstr ""
+msgstr "is_abandoned_cart"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "list_price asc"
-msgstr ""
+msgstr "list_price asc"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "list_price desc"
-msgstr ""
+msgstr "list_price desc"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
 msgid "model"
-msgstr ""
+msgstr "모델"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "name asc"
-msgstr ""
+msgstr "name asc"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -5159,7 +5171,7 @@ msgstr "새 주소 입력"
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "publish_date desc"
-msgstr ""
+msgstr "publish_date desc"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -5180,4 +5192,4 @@ msgstr "귀하의 주문에 따릅니다."
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "website_sale.checkout"
-msgstr ""
+msgstr "website_sale.checkout"

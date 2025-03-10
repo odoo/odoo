@@ -3,8 +3,8 @@
 # 	* im_livechat
 # 
 # Translators:
-# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-20 10:02+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -204,9 +204,20 @@ msgid "Active"
 msgstr "Đang hoạt động"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Add the following code to the &lt;head&gt; section of your website:"
+msgstr ""
+
+#. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
 msgid "Administrator"
 msgstr "Quản trị viên"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Alternatively, share this URL with your customers or suppliers via email:"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__chatbot_enabled_condition__always
@@ -450,6 +461,11 @@ msgid "Chatbots"
 msgstr "Chatbot"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Choose the live chat channel you want to display on your website."
+msgstr ""
+
+#. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -507,12 +523,6 @@ msgid "Conversations handled"
 msgstr "Cuộc trò chuyện đã được xử lý"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"Copy and paste this code into your website, within the &lt;head&gt; tag:"
-msgstr "Sao chép và dán mã này vào trang web, trong thẻ &lt;head&gt;"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__country_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
@@ -533,11 +543,6 @@ msgstr "Quốc gia của khách truy cập kênh "
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action
 msgid "Create a Chatbot"
 msgstr "Tạo một chatbot"
-
-#. module: im_livechat
-#: model:ir.model,website_form_label:im_livechat.model_res_partner
-msgid "Create a Customer"
-msgstr "Tạo một khách hàng"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
@@ -759,6 +764,16 @@ msgid "Explain your note"
 msgstr "Giải thích về ghi chú của bạn"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "FOR OTHER WEBSITES"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "FOR WEBSITES BUILT WITH ODOO"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script__first_step_warning__first_step_invalid
 msgid "First Step Invalid"
 msgstr "Bước đầu tiên không hợp lệ"
@@ -782,17 +797,6 @@ msgstr "Người theo dõi"
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Người theo dõi (Đối tác)"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid ""
-"For websites built with the Odoo CMS, go to Website &gt; Configuration &gt; "
-"Settings and select the Website Live Chat Channel you want to add to your "
-"website."
-msgstr ""
-"Đối với trang web được dựng bằng Odoo CMS, đi tới Trang web &gt; Cấu hình "
-"&gt; Cài đặt và chọn kênh Trò chuyện Trực tiếp trên trang web bạn muốn thêm "
-"vào trang web."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
@@ -823,6 +827,14 @@ msgid ""
 msgstr ""
 "Đưa ra thứ tự để tìm quy tắc phù hợp. Nếu 2 quy tắc phù hợp với url/quốc gia"
 " đã cho, quy tắc có số thứ tự thấp nhất sẽ được chọn."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+"<strong>Marketing.</strong>"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -890,11 +902,6 @@ msgstr "Giờ trong ngày bắt đầu phiên"
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
 msgid "How may I help you?"
 msgstr "Tôi có thể giúp gì cho bạn?"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "How to use the Website Live Chat widget?"
-msgstr "Cách dùng tiện ích Trò chuyện Trực tiếp trên trang web?"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_noone_available
@@ -1049,9 +1056,14 @@ msgstr "Kpi Giá trị phản hồi Trò chuyện Trực tiếp"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
 #: code:addons/im_livechat/static/src/core/web/channel_member_list_patch.xml:0
 msgid "Lang"
+msgstr "Ngôn ngữ"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/channel_invitation_patch.xml:0
+msgid "Language"
 msgstr "Ngôn ngữ"
 
 #. module: im_livechat
@@ -1081,6 +1093,13 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_expertise__write_date
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid ""
+"Learn how to display a live chat bubble on your website and start chatting "
+"with visitors in a few easy steps."
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -1800,6 +1819,12 @@ msgid "Step Type"
 msgstr "Loại bước"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/chatbot_script.py:0
+msgid "Step of type 'Question' must have answers."
+msgstr ""
+
+#. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/composer_patch.js:0
 #: code:addons/im_livechat/static/src/core/web/composer_patch.xml:0
@@ -1956,6 +1981,11 @@ msgstr "Màu tiêu đề"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Treated sessions"
 msgstr "Phiên được xử lý"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Turn on the <strong>Live Chat</strong> feature."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -2214,12 +2244,6 @@ msgstr "VD: YourWebsite.com"
 #: code:addons/im_livechat/static/src/embed/common/feedback_panel/transcript_sender.xml:0
 msgid "mail@example.com"
 msgstr "mail@example.com"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-msgid "or copy this url and send it by email to your customers or suppliers:"
-msgstr ""
-"hoặc copy url này và gửi nó qua email cho khách hàng hoặc nhà cung cấp:"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form

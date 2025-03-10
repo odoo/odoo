@@ -105,7 +105,7 @@ msgstr "%(payment_method)s의 %(partner)s에 대한 %(session)s 결제"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Deleted line (quantity: %(qty)s)"
-msgstr ""
+msgstr "%(product_name)s: 삭제 내역 (수량: %(qty)s)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -310,6 +310,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">안녕하세요 <t t-out=\"client_name\">Client name</t> 고객님,</t>\n"
+"                        <t t-else=\"\">안녕하세요,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>저희 <t t-out=\"store_name\">Store name</t> 스토어를 이용해 주셔서 감사합니다!</div>\n"
+"                    <div>첨부한  <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or ''\">date</t>  <t t-out=\"format_time(time=object.date_order, tz=tz, time_format='short',                          lang_code=lg)\">time</t> 기준의 구매영수증을 확인해 주세요.</span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>감사합니다.</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Store name</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban
@@ -2021,7 +2040,7 @@ msgstr "승인"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_confirm_action_wizard
 msgid "Confirm Action"
-msgstr ""
+msgstr "활동 확인"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2038,7 +2057,7 @@ msgstr "승인하시겠습니까?"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirmation_wizard
 msgid "Confirmation Wizard"
-msgstr ""
+msgstr "확인 마법사"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2212,7 +2231,7 @@ msgstr "작성"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: code:addons/point_of_sale/wizard/pos_confirmation_wizard.py:0
 msgid "Create Invoice(s)"
-msgstr ""
+msgstr "청구서 만들기"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
@@ -2223,7 +2242,7 @@ msgstr "청구서 발행"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Create Manually"
-msgstr ""
+msgstr "수동으로 만들기"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3061,7 +3080,7 @@ msgstr "은행 업무 일지가 존재하는지 확인합니다. 회사에 계�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Ensure you validate the refund before taking another order."
-msgstr ""
+msgstr "다른 주문 전에 환불을 승인해야 합니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3139,7 +3158,7 @@ msgstr "결제 QR 코드 생성 실패"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fallback_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Fallback Nomenclature"
-msgstr ""
+msgstr "대체 분류법"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3197,12 +3216,12 @@ msgstr "평면도, 팁, 셀프 주문 등"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_flour_product_template
 msgid "Flour"
-msgstr ""
+msgstr "Flour"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_flour_product_template
 msgid "Flour sold by the kilogram."
-msgstr ""
+msgstr "밀가루는 킬로 단위로 판매합니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_follower_ids
@@ -3483,6 +3502,14 @@ msgid ""
 msgstr "고운 통밀가루로 구워 부드러운 식감을 선사하는 고섬유질 식빵."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_template.py:0
+msgid ""
+"Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+"Make sure to close all sessions first to avoid any issues."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
 msgid "Hour"
 msgstr "시간"
@@ -3750,7 +3777,7 @@ msgstr "간격 시간 (분)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Invalid QR Code! Please, Scan again!"
-msgstr ""
+msgstr "잘못된 QR코드입니다! 다시 스캔해 주세요!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3784,7 +3811,7 @@ msgstr "청구서"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__invoice_emails
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__invoice_emails
 msgid "Invoice Emails"
-msgstr ""
+msgstr "청구서 이메일"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
@@ -3929,6 +3956,9 @@ msgid ""
 "\n"
 "Would you like to set %(customer_name)s as the customer for the selected POS order(s)?"
 msgstr ""
+"POS 주문 %(order_ref)s에 해당하는 고객이 없습니다.\n"
+"\n"
+"선택한 POS 주문에 대한 고객으로 %(customer_name)s 고객을 설정할까요?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3974,7 +4004,7 @@ msgstr "전표 항목"
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "Kindly ensure that each order contains a customer."
-msgstr ""
+msgstr "주문별로 고객이 있는지 확인하세요."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
@@ -4194,7 +4224,7 @@ msgstr "품목 메뉴 불러오기"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Load Sample"
-msgstr ""
+msgstr "예시 불러오기"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4237,7 +4267,7 @@ msgstr "LOT명"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Lot/Serial number(s) required for"
-msgstr ""
+msgstr "로트/일련번호 필요:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__pack_lot_ids
@@ -4432,7 +4462,7 @@ msgstr "멀티그레인 빵"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_invoice
 msgid "Multiple order invoice creation"
-msgstr ""
+msgstr "여러 주문 건에 대한 청구서 생성"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -4592,7 +4622,7 @@ msgstr "POS가 선택되지 않았습니다"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "No Product Yet?"
-msgstr ""
+msgstr "아직 제품이 없나요?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4890,7 +4920,7 @@ msgstr "PoS 앱에 대한 관리자 액세스 권한이 있는 사용자만 주�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oops.."
-msgstr ""
+msgstr "이런.."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5204,7 +5234,7 @@ msgstr "POS %s 주문"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_order_count
 msgid "POS Order Count"
-msgstr ""
+msgstr "POS 주문 수"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -5645,7 +5675,7 @@ msgstr "다시 스캔하세요!"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_contact_address
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_contact_address
 msgid "PoS Address"
-msgstr ""
+msgstr "POS 주소"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -5850,7 +5880,7 @@ msgstr "POS 사용자 그룹"
 #. module: point_of_sale
 #: model:mail.template,name:point_of_sale.email_template_pos_receipt
 msgid "Point of Sale: Receipt"
-msgstr ""
+msgstr "POS: 영수증"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
@@ -6571,13 +6601,13 @@ msgstr "영수증 프린터"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Receipt and invoice sent successfully"
-msgstr ""
+msgstr "영수증 및 청구서 전송에 성공했습니다"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Receipt sent successfully"
-msgstr ""
+msgstr "영수증 전송에 성공했습니다"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
@@ -6636,7 +6666,7 @@ msgstr "환불 완료"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Refund in process"
-msgstr ""
+msgstr "환불 처리 중"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7003,7 +7033,7 @@ msgstr "EAN-13 스캔"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
-msgstr ""
+msgstr "바코드를 스캔하여 자동 생성하거나 샘플 데이터를 불러옵니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -7087,7 +7117,7 @@ msgstr "사전 설정 선택"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select an order or scan QR code"
-msgstr ""
+msgstr "주문을 선택하거나 QR 코드를 스캔하세요"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7178,7 +7208,7 @@ msgstr "전송중"
 #. module: point_of_sale
 #: model:mail.template,description:point_of_sale.email_template_pos_receipt
 msgid "Sent to customers with the receipt in attachment"
-msgstr ""
+msgstr "영수증을 첨부하여 고객에게 전송합니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -7958,6 +7988,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"다음의 환불 주문은 통합 청구서에 포함할 수 없습니다. 해당 주문서는 청구된 후 환불이 완료되었습니다. 각 환불 주문 건은 개별적으로 처리해야 합니다.\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -7986,7 +8019,7 @@ msgstr "청구서 전표는 매출 전표 또는 회사 통화와 같은 통화�
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
-msgstr ""
+msgstr "%s xmlid가 포함된 메일 템플릿이 삭제되었습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8094,14 +8127,14 @@ msgstr "선택된 고객이 없거나 고객이 판매 가격표를 설정하지
 msgid ""
 "The product will be available after this hour for online order and self "
 "order."
-msgstr ""
+msgstr "이 시간 이후 해당 품목을 온라인 주문 및 셀프 주문할 수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_until
 msgid ""
 "The product will be available until this hour for online order and self "
 "order."
-msgstr ""
+msgstr "해당 품목을 온라인 주문 및 셀프 주문할 수 있습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
@@ -8774,6 +8807,8 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"다음 주문은 통합 청구서를 생성할 수 없습니다. 해당 주문에 대한 청구서를 발행할 수 없습니다.\n"
+"%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9240,7 +9275,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "You cannot close the POS while there are still draft orders for the day."
-msgstr ""
+msgstr "당일 미결 상태인 주문서가 있는 경우에는 POS를 닫을 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9390,7 +9425,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
 msgid "Your {{ object.config_id.name }} receipt"
-msgstr ""
+msgstr "내 {{ object.config_id.name }} 영수증"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -9419,7 +9454,7 @@ msgstr "이메일로 보내기"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "default_preset_id"
-msgstr ""
+msgstr "default_preset_id"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9598,7 +9633,7 @@ msgstr "미해결 헬프 세션"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "preset_id"
-msgstr ""
+msgstr "preset_id"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
@@ -9615,7 +9650,7 @@ msgstr "돌아가기"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "session_id"
-msgstr ""
+msgstr "session_id"
 
 #. module: point_of_sale
 #. odoo-javascript
