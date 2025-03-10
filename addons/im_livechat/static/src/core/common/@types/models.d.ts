@@ -5,6 +5,10 @@ import { ChatbotScriptStepAnswer as ChatbotScriptStepAnswerClass } from "@im_liv
 import { ChatbotScript as ChatbotScriptClass } from "@im_livechat/core/common/chatbot_script_model";
 
 declare module "models" {
+    export interface Persona {
+        livechat_languages: String[],
+        livechat_expertise: String[],
+    }
     export interface Thread {
         livechat_operator_id: Persona,
     }
