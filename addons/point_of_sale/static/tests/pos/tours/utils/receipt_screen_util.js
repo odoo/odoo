@@ -158,11 +158,16 @@ export function emailIsSuccessful() {
         },
     ];
 }
-export function trackingMethodIsLot() {
+export function trackingMethodIsLot(lot) {
     return [
         {
             content: `tracking method is Lot`,
-            trigger: `li:contains("Lot Number")`,
+            trigger: `li.lot-number:contains("Lot Number ${lot}")`,
+            run: function () {
+                if (document.querySelectorAll("li.lot-number").length !== 1) {
+                    throw new Error(`Expected exactly one 'Lot Number ${lot}' element.`);
+                }
+            },
         },
     ];
 }

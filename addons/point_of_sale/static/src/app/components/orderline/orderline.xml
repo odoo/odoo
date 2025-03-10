@@ -54,7 +54,7 @@
                             <t t-slot="pack-lot-icon" />
                         </div>
                         <div class="col ps-0">
-                            <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot" />
+                            <li class="lot-number" t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot" />
                         </div>
                     </li>
                     <t t-slot="default" />
