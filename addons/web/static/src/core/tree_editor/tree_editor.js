@@ -1,98 +1,31 @@
-import {
-    getResModel,
-    useMakeGetFieldDef,
-    useMakeGetConditionDescription,
-} from "@web/core/tree_editor/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import {
-    condition,
+    areEquivalentTrees,
     cloneTree,
-    formatValue,
-    removeVirtualOperators,
+    condition,
     connector,
     isTree,
+    removeVirtualOperators,
 } from "@web/core/tree_editor/condition_tree";
 import {
     getDefaultValue,
     getValueEditorInfo,
 } from "@web/core/tree_editor/tree_editor_value_editors";
-import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
-import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
+import {
+    getResModel,
+    useMakeGetConditionDescription,
+    useMakeGetFieldDef,
+} from "@web/core/tree_editor/utils";
+import { useService } from "@web/core/utils/hooks";
 import { deepEqual, shallowEqual } from "@web/core/utils/objects";
 
 const TRUE_TREE = condition(1, "=", 1);
 
-function collectDifferences(tree, otherTree) {
-    // some differences shadow the other differences "below":
-    if (tree.type !== otherTree.type) {
-        return [{ type: "other" }];
-    }
-    if (tree.negate !== otherTree.negate) {
-        return [{ type: "other" }];
-    }
-    if (tree.type === "condition") {
-        if (formatValue(tree.path) !== formatValue(otherTree.path)) {
-            return [{ type: "other" }];
-        }
-        if (formatValue(tree.value) !== formatValue(otherTree.value)) {
-            return [{ type: "other" }];
-        }
-        if (formatValue(tree.operator) !== formatValue(otherTree.operator)) {
-            if (tree.operator === "!=" && otherTree.operator === "set") {
-                return [{ type: "replacement", tree, operator: "set" }];
-            } else if (tree.operator === "=" && otherTree.operator === "not_set") {
-                return [{ type: "replacement", tree, operator: "not_set" }];
-            } else {
-                return [{ type: "other" }];
-            }
-        }
-        return [];
-    }
-    if (tree.value !== otherTree.value) {
-        return [{ type: "other" }];
-    }
-    if (tree.type === "complex_condition") {
-        return [];
-    }
-    if (tree.children.length !== otherTree.children.length) {
-        return [{ type: "other" }];
-    }
-    const diffs = [];
-    for (let i = 0; i < tree.children.length; i++) {
-        const child = tree.children[i];
-        const otherChild = otherTree.children[i];
-        const childDiffs = collectDifferences(child, otherChild);
-        if (childDiffs.some((d) => d.type !== "replacement")) {
-            return [{ type: "other" }];
-        }
-        diffs.push(...childDiffs);
-    }
-    return diffs;
-}
-
-function restoreVirtualOperators(tree, otherTree) {
-    const diffs = collectDifferences(tree, otherTree);
-    // note that the array diffs is homogeneous:
-    // we have diffs of the form [], [other], [repl, ..., repl]
-    if (diffs.some((d) => d.type !== "replacement")) {
-        return;
-    }
-    for (const { tree, operator } of diffs) {
-        tree.operator = operator;
-    }
-}
-
 export class TreeEditor extends Component {
     static template = "web.TreeEditor";
-    static components = {
-        Dropdown,
-        DropdownItem,
-        ModelFieldSelector,
-        TreeEditor,
-    };
+    static components = { ModelFieldSelector, TreeEditor };
     static props = {
         tree: Object,
         resModel: String,
@@ -128,6 +61,9 @@ export class TreeEditor extends Component {
     }
 
     async onPropsUpdated(props) {
+        if (this.tree) {
+            this.previousTree = this.tree;
+        }
         this.tree = cloneTree(props.tree);
         if (shallowEqual(this.tree, TRUE_TREE)) {
             this.tree = connector(props.defaultConnector);
@@ -135,9 +71,8 @@ export class TreeEditor extends Component {
             this.tree = connector(props.defaultConnector, [this.tree]);
         }
 
-        if (this.previousTree) {
-            // find "first" difference
-            restoreVirtualOperators(this.tree, this.previousTree);
+        if (this.previousTree && areEquivalentTrees(this.tree, this.previousTree)) {
+            this.tree = this.previousTree;
             this.previousTree = null;
         }
 
@@ -157,21 +92,16 @@ export class TreeEditor extends Component {
         }
     }
 
-    get className() {
-        return `${this.props.readonly ? "o_read_mode" : "o_edit_mode"}`;
-    }
-
     get isDebugMode() {
         return this.props.isDebugMode !== undefined ? this.props.isDebugMode : !!this.env.debug;
     }
 
     notifyChanges() {
-        this.previousTree = cloneTree(this.tree);
         this.props.update(this.tree);
     }
 
-    updateConnector(node, value) {
-        node.value = value;
+    updateConnector(node) {
+        node.value = node.value === "&" ? "|" : "&";
         node.negate = false;
         this.notifyChanges();
     }
@@ -181,37 +111,33 @@ export class TreeEditor extends Component {
         this.notifyChanges();
     }
 
-    createNewLeaf() {
-        return cloneTree(this.defaultCondition);
+    makeCondition(parent) {
+        const lastCondition = parent.children.findLast((c) => c.type === "condition");
+        return cloneTree(lastCondition || this.defaultCondition);
     }
 
-    createNewBranch(value) {
-        return connector(value, [this.createNewLeaf(), this.createNewLeaf()]);
-    }
-
-    insertRootLeaf(parent) {
-        parent.children.push(this.createNewLeaf());
+    addNewCondition(parent) {
+        parent.children.push(this.makeCondition(parent));
         this.notifyChanges();
     }
 
-    insertLeaf(parent, node) {
-        const newNode = node.type !== "connector" ? cloneTree(node) : this.createNewLeaf();
-        const index = parent.children.indexOf(node);
-        parent.children.splice(index + 1, 0, newNode);
-        this.notifyChanges();
-    }
-
-    insertBranch(parent, node) {
+    addNewConnector(parent) {
         const nextConnector = parent.value === "&" ? "|" : "&";
-        const newNode = this.createNewBranch(nextConnector);
-        const index = parent.children.indexOf(node);
-        parent.children.splice(index + 1, 0, newNode);
+        parent.children.push(connector(nextConnector, [this.makeCondition(parent)]));
         this.notifyChanges();
     }
 
-    delete(parent, node) {
+    delete(ancestors, node) {
+        if (ancestors.length === 0) {
+            return;
+        }
+        const parent = ancestors.at(-1);
         const index = parent.children.indexOf(node);
         parent.children.splice(index, 1);
+        ancestors = ancestors.slice(0, ancestors.length - 1);
+        if (parent.children.length === 0) {
+            this.delete(ancestors, parent);
+        }
         this.notifyChanges();
     }
 
@@ -262,10 +188,5 @@ export class TreeEditor extends Component {
     updateLeafValue(node, value) {
         node.value = value;
         this.notifyChanges();
-    }
-
-    highlightNode(target) {
-        const nodeEl = target.closest(".o_tree_editor_node");
-        nodeEl.classList.toggle("o_hovered_button");
     }
 }

@@ -10,39 +10,37 @@ import { Select } from "@web/core/tree_editor/tree_editor_components";
 
 const OPERATOR_DESCRIPTIONS = {
     // valid operators (see TERM_OPERATORS in expression.py)
-    "=": _t("is equal"),
-    "!=": _t("is not equal"),
-    "<=": _t("is lower or equal"),
-    "<": _t("is lower"),
-    ">": _t("is greater"),
-    ">=": _t("is greater or equal"),
+    "=": _t("equal"),
+    "!=": _t("not equal"),
+    "<=": _t("lower or equal"),
+    "<": _t("lower"),
+    ">": _t("greater"),
+    ">=": _t("greater or equal"),
     "=?": "=?",
     "=like": _t("=like"),
     "=ilike": _t("=ilike"),
     like: _t("like"),
     "not like": _t("not like"),
     ilike: _t("contains"),
-    "not ilike": _t("does not contain"),
-    in: _t("is in"),
-    "not in": _t("is not in"),
+    "not ilike": _t("not contain"),
+    in: _t("in"),
+    "not in": _t("not in"),
     child_of: _t("child of"),
     parent_of: _t("parent of"),
 
     // virtual operators (replace = and != in some cases)
-    is: _t("is"),
-    is_not: _t("is not"),
-    set: _t("is set"),
-    not_set: _t("is not set"),
+    set: _t("set"),
+    not_set: _t("not set"),
 
     starts_with: _t("starts with"),
     ends_with: _t("ends with"),
 
     // virtual operator (equivalent to a couple (>=,<=))
-    between: _t("is between"),
-    within: _t("is within"),
+    between: _t("between"),
+    within: _t("within"),
     // equivalent to a couple (<,>)
-    is_not_between: _t("is not between"),
-    is_not_within: _t("is not within"),
+    is_not_between: _t("not between"),
+    is_not_within: _t("not within"),
 
     any: (fieldDefType) => {
         switch (fieldDefType) {

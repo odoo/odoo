@@ -98,18 +98,17 @@ export class Stage extends models.Model {
 }
 
 export const SELECTORS = {
-    node: ".o_tree_editor_node",
-    row: ".o_tree_editor_row",
-    tree: ".o_tree_editor > .o_tree_editor_node",
+    tree: ".o_tree_editor",
     connector: ".o_tree_editor_connector",
+    connectorValue: ".o_tree_editor_connector_value",
+    connectorToggler: ".o_tree_editor_connector .o_tree_editor_connector_value button.o-dropdown",
     condition: ".o_tree_editor_condition",
-    addNewRule: ".o_tree_editor_row > a",
-    buttonAddNewRule: ".o_tree_editor_node_control_panel > button:nth-child(1)",
-    buttonAddBranch: ".o_tree_editor_node_control_panel > button:nth-child(2)",
-    buttonDeleteNode: ".o_tree_editor_node_control_panel > button:nth-child(3)",
-    pathEditor: ".o_tree_editor_condition > .o_tree_editor_editor:nth-child(1)",
-    operatorEditor: ".o_tree_editor_condition > .o_tree_editor_editor:nth-child(2)",
-    valueEditor: ".o_tree_editor_condition > .o_tree_editor_editor:nth-child(3)",
+    newFilter: ".o_tree_editor_connector_buttons a:nth-child(1)",
+    newGroup: ".o_tree_editor_connector_buttons a:nth-child(2)",
+    deleteFilter: "button:has(.fa-trash):visible",
+    pathEditor: ".o_tree_editor_condition > div > .o_tree_editor_editor:nth-child(1)",
+    operatorEditor: ".o_tree_editor_condition > div > .o_tree_editor_editor:nth-child(2)",
+    valueEditor: ".o_tree_editor_condition > div > .o_tree_editor_editor:nth-child(3)",
     editor: ".o_tree_editor_editor",
     clearNotSupported: ".o_input .fa-times",
     tag: ".o_input .o_tag",
@@ -117,12 +116,9 @@ export const SELECTORS = {
     complexCondition: ".o_tree_editor_complex_condition",
     complexConditionInput: ".o_tree_editor_complex_condition input",
 };
+SELECTORS.node = ["connector", "condition", "complexCondition"].map((k) => SELECTORS[k]).join(",");
 
-const CHILD_SELECTOR = ["connector", "condition", "complexCondition"]
-    .map((k) => SELECTORS[k])
-    .join(",");
-
-export function getTreeEditorContent(options = {}) {
+export function getTreeEditorContent() {
     const content = [];
     const nodes = queryAll(SELECTORS.node);
     const mapping = new Map();
@@ -131,17 +127,13 @@ export function getTreeEditorContent(options = {}) {
         const level = parent ? mapping.get(parent) + 1 : 0;
         mapping.set(node, level);
         const nodeValue = { level };
-        const associatedNode = node.querySelector(CHILD_SELECTOR);
-        const className = associatedNode.className;
+        const className = node.className;
         if (className.includes("connector")) {
-            nodeValue.value = getCurrentConnector(0, node);
+            nodeValue.value = getCurrentConnectorValue(node);
         } else if (className.includes("complex_condition")) {
             nodeValue.value = getCurrentComplexCondition(0, node);
         } else {
             nodeValue.value = getCurrentCondition(0, node);
-        }
-        if (options.node) {
-            nodeValue.node = node;
         }
         content.push(nodeValue);
     }
@@ -244,15 +236,11 @@ function getCurrentCondition(index, target) {
 }
 
 /**
- * @param {number} [index=0]
- * @param {Target} [target]
+ * @param {Target} target
  */
-function getCurrentConnector(index, target) {
-    const connectorText = queryAllTexts(
-        `${SELECTORS.connector} .dropdown-toggle, ${SELECTORS.connector} > span:nth-child(2), ${SELECTORS.connector} > span > strong`,
-        { root: target }
-    ).at(index);
-    return connectorText.includes("all") ? "all" : connectorText;
+function getCurrentConnectorValue(target) {
+    const values = queryAllTexts(`${SELECTORS.connectorValue}`, { root: target });
+    return values.at(-1) || "all records matched (no connector value visible)";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -285,6 +273,14 @@ export function isNotSupportedValue(index, target) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @param {number} [index=0]
+ * @param {Target} [target]
+ */
+export async function toggleConnector(index, target) {
+    await contains(queryAt(SELECTORS.connectorToggler, index, target)).click();
+}
 
 /**
  * @param {any} operator
@@ -325,16 +321,16 @@ export async function editValue(value, options, index, target) {
  * @param {number} [index=0]
  * @param {Target} [target]
  */
-export async function clickOnButtonAddNewRule(index, target) {
-    await contains(queryAt(SELECTORS.buttonAddNewRule, index, target)).click();
+export async function clickOnNewFilter(index, target) {
+    await contains(queryAt(SELECTORS.newFilter, index, target)).click();
 }
 
 /**
  * @param {number} [index=0]
  * @param {Target} [target]
  */
-export async function clickOnButtonAddBranch(index, target) {
-    await contains(queryAt(SELECTORS.buttonAddBranch, index, target)).click();
+export async function clickOnNewGroup(index, target) {
+    await contains(queryAt(SELECTORS.newGroup, index, target)).click();
 }
 
 /**
@@ -342,7 +338,7 @@ export async function clickOnButtonAddBranch(index, target) {
  * @param {Target} [target]
  */
 export async function clickOnButtonDeleteNode(index, target) {
-    await contains(queryAt(SELECTORS.buttonDeleteNode, index, target)).click();
+    await contains(queryAt(SELECTORS.deleteFilter, index, target)).click();
 }
 
 /**
@@ -351,10 +347,6 @@ export async function clickOnButtonDeleteNode(index, target) {
  */
 export async function clearNotSupported(index, target) {
     await contains(queryAt(SELECTORS.clearNotSupported, index, target)).click();
-}
-
-export async function addNewRule() {
-    await contains(SELECTORS.addNewRule).click();
 }
 
 export async function toggleArchive() {
@@ -370,6 +362,9 @@ export async function openModelFieldSelectorPopover(index = 0) {
     await contains(`.o_model_field_selector:eq(${index})`).click();
 }
 
+/**
+ * @param {HTMLElement} [root]
+ */
 export function getModelFieldSelectorValues(root) {
     return queryAllTexts("span.o_model_field_selector_chain_part", { root });
 }

@@ -280,6 +280,58 @@ export function isTree(value) {
     );
 }
 
+function _areEquivalentTrees(tree, otherTree) {
+    if (tree.type !== otherTree.type) {
+        return false;
+    }
+    if (tree.negate !== otherTree.negate) {
+        return false;
+    }
+    if (tree.type === "condition") {
+        if (formatValue(tree.path) !== formatValue(otherTree.path)) {
+            return false;
+        }
+        if (formatValue(tree.operator) !== formatValue(otherTree.operator)) {
+            return false;
+        }
+        if (isTree(tree.value)) {
+            if (isTree(otherTree.value)) {
+                return _areEquivalentTrees(tree.value, otherTree.value);
+            }
+            return false;
+        } else if (isTree(otherTree.value)) {
+            return false;
+        }
+        if (formatValue(tree.value) !== formatValue(otherTree.value)) {
+            return false;
+        }
+        return true;
+    }
+    if (tree.value !== otherTree.value) {
+        return false;
+    }
+    if (tree.type === "complex_condition") {
+        return true;
+    }
+    if (tree.children.length !== otherTree.children.length) {
+        return false;
+    }
+    for (let i = 0; i < tree.children.length; i++) {
+        const child = tree.children[i];
+        const otherChild = otherTree.children[i];
+        if (!_areEquivalentTrees(child, otherChild)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export function areEquivalentTrees(tree, otherTree) {
+    const simplifiedTree = applyTransformations(VIRTUAL_OPERATORS_DESTRUCTION, tree);
+    const otherSimplifiedTree = applyTransformations(VIRTUAL_OPERATORS_DESTRUCTION, otherTree);
+    return _areEquivalentTrees(simplifiedTree, otherSimplifiedTree);
+}
+
 /**
  * @param {Value} value
  * @returns  {import("@web/core/py_js/py_parser").AST}
@@ -790,7 +842,8 @@ function allEqual(...values) {
 }
 
 function applyTransformations(transformations, transformed, ...fixedParams) {
-    for (const fn of transformations.reverse()) {
+    for (let i = transformations.length - 1; i >= 0; i--) {
+        const fn = transformations[i];
         transformed = fn(transformed, ...fixedParams);
     }
     return transformed;
@@ -823,8 +876,12 @@ function normalizeConnector(connector) {
     for (const child of connector.children) {
         addChild(newTree, child);
     }
-    if (newTree.children.length === 1 && !newTree.negate) {
-        return newTree.children[0];
+    if (newTree.children.length === 1) {
+        const child = newTree.children[0];
+        if (newTree.negate) {
+            return { ...child, negate: !child.negate };
+        }
+        return child;
     }
     return newTree;
 }
@@ -963,7 +1020,7 @@ function _removeWithinOperator(c) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// is - is_not - set - not_set - starts_with - ends_with
+// set - not_set - starts_with - ends_with
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -971,23 +1028,23 @@ function _removeWithinOperator(c) {
  * @param {Options} [options={}]
  */
 function _createVirtualOperator(c, options = {}) {
-    const { path, operator, value } = c;
+    const { negate, path, operator, value } = c;
     if (typeof operator === "string" && ["=", "!="].includes(operator)) {
         const fieldType = getFieldType(path, options);
         if (fieldType) {
-            if (fieldType === "boolean") {
-                return { ...c, operator: operator === "=" ? "is" : "is_not" };
+            if (fieldType === "boolean" && value === true) {
+                return condition(path, operator === "=" ? "set" : "not_set", value, negate);
             } else if (!["many2one", "date", "datetime"].includes(fieldType) && value === false) {
-                return { ...c, operator: operator === "=" ? "not_set" : "set" };
+                return condition(path, operator === "=" ? "not_set" : "set", value, negate);
             }
         }
     }
     if (typeof value === "string" && operator === "=ilike") {
         if (value.endsWith("%")) {
-            return { ...c, operator: "starts_with", value: value.slice(0, -1) };
+            return condition(path, "starts_with", value.slice(0, -1), negate);
         }
         if (value.startsWith("%")) {
-            return { ...c, operator: "ends_with", value: value.slice(1) };
+            return condition(path, "ends_with", value.slice(1), negate);
         }
     }
 }
@@ -1000,10 +1057,10 @@ function _removeVirtualOperator(c) {
     if (typeof operator !== "string") {
         return;
     }
-    if (["is", "is_not"].includes(operator)) {
-        return condition(path, operator === "is" ? "=" : "!=", value, negate);
-    }
     if (["set", "not_set"].includes(operator)) {
+        if (value === true) {
+            return condition(path, operator === "set" ? "=" : "!=", value, negate);
+        }
         return condition(path, operator === "set" ? "!=" : "=", value, negate);
     }
     if (["starts_with", "ends_with"].includes(operator)) {
@@ -1119,6 +1176,18 @@ function removeComplexConditions(tree) {
 //    expression <-> tree
 ////////////////////////////////////////////////////////////////////////////////
 
+const VIRTUAL_OPERATORS_CREATION = [
+    createVirtualOperators,
+    createWithinOperators,
+    createBetweenOperators,
+];
+
+const VIRTUAL_OPERATORS_DESTRUCTION = [
+    removeBetweenOperators,
+    removeWithinOperators,
+    removeVirtualOperators,
+];
+
 /**
  * @param {string} expression
  * @param {Options} [options={}]
@@ -1127,11 +1196,7 @@ function removeComplexConditions(tree) {
 export function treeFromExpression(expression, options = {}) {
     const ast = parseExpr(expression);
     const tree = _treeFromAST(ast, options);
-    return applyTransformations(
-        [createVirtualOperators, createWithinOperators, createBetweenOperators],
-        tree,
-        options
-    );
+    return applyTransformations(VIRTUAL_OPERATORS_CREATION, tree, options);
 }
 
 /**
@@ -1141,12 +1206,7 @@ export function treeFromExpression(expression, options = {}) {
  */
 export function expressionFromTree(tree, options = {}) {
     const simplifiedTree = applyTransformations(
-        [
-            createComplexConditions,
-            removeBetweenOperators,
-            removeWithinOperators,
-            removeVirtualOperators,
-        ],
+        [createComplexConditions, ...VIRTUAL_OPERATORS_DESTRUCTION],
         tree
     );
     return _expressionFromTree(simplifiedTree, options, true);
@@ -1158,12 +1218,7 @@ export function expressionFromTree(tree, options = {}) {
  */
 export function domainFromTree(tree) {
     const simplifiedTree = applyTransformations(
-        [
-            removeBetweenOperators,
-            removeWithinOperators,
-            removeVirtualOperators,
-            removeComplexConditions,
-        ],
+        [...VIRTUAL_OPERATORS_DESTRUCTION, removeComplexConditions],
         tree
     );
     const domainAST = {
@@ -1182,11 +1237,7 @@ export function treeFromDomain(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options); // a simple tree
-    return applyTransformations(
-        [createVirtualOperators, createWithinOperators, createBetweenOperators],
-        tree,
-        options
-    );
+    return applyTransformations(VIRTUAL_OPERATORS_CREATION, tree, options);
 }
 
 /**
