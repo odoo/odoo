@@ -40,7 +40,14 @@
                         <t t-call="{{ constructor.subTemplates.filter }}"/>
                     </t>
                 </div>
-                <AutoComplete t-if="section.canAddFilter" t-props="autoCompleteProps"/>
+                <AutoComplete t-if="section.canAddFilter" t-props="autoCompleteProps">
+                    <t t-set-slot="option" t-slot-scope="optionScope">
+                        <t t-if="optionScope.option.value and section.avatar.field">
+                            <img class="rounded me-1 o_avatar" t-attf-src="/web/image/{{ section.avatar.model }}/{{ optionScope.option.value }}/{{ section.avatar.field }}"/>
+                        </t>
+                        <t t-esc="optionScope.option.label" />
+                    </t>
+                </AutoComplete>
             </t>
         </div>
     </t>
@@ -91,11 +98,4 @@
         </div>
     </t>
 
-    <t t-name="web.CalendarFilterPanel.autocomplete.options">
-        <img t-if='option.value and option.avatarField'
-            t-attf-src="/web/image/{{option.model}}/{{option.value}}/{{option.avatarField}}"
-            class="rounded me-1 o_avatar"
-        />
-        <t t-esc="option.label" />
-    </t>
 </templates>

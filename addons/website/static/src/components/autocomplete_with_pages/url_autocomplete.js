@@ -37,7 +37,7 @@ export class UrlAutoComplete extends Component {
     get sources() {
         return [
             {
-                optionTemplate: "website.AutoCompleteWithPagesItem",
+                optionSlot: "option",
                 options: async (term) => {
                     if (term[0] === "#") {
                         const anchors = await this.props.loadAnchors(

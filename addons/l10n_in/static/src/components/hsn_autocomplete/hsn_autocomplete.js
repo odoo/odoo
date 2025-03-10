@@ -83,7 +83,7 @@ export class L10nInHsnAutoComplete extends CharField {
                         return [];
                     }
                 },
-                optionTemplate: "hsn_autocomplete.DropdownOption",
+                optionSlot: "option",
                 placeholder: _t("Searching..."),
             },
         ];

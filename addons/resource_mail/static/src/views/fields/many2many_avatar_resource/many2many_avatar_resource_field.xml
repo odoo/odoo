@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="resource_mail.AvatarResourceMany2XAutocomplete" t-inherit="web.AvatarMany2XAutocomplete">
+    <t t-name="resource_mail.Many2ManyAvatarResourceField.option" t-inherit="web.Many2ManyTagsAvatarField.option">
         <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="before">
-            <i t-if="option.resourceType === 'material'" class="o_material_resource fa fa-wrench rounded text-center me-2
-            d-flex align-items-center justify-content-center" t-attf-class="o_colorlist_item_color_{{ option.color }}"/>
+            <i t-if="autoCompleteItemScope.resourceType === 'material'" class="o_material_resource fa fa-wrench rounded text-center me-2
+            d-flex align-items-center justify-content-center" t-attf-class="o_colorlist_item_color_{{ autoCompleteItemScope.color }}"/>
         </xpath>
         <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="attributes">
-            <attribute name="t-if" add="&amp;&amp; option.resourceType !== 'material'" separator=" "/>
+            <attribute name="t-if" add="&amp;&amp; autoCompleteItemScope.resourceType !== 'material'" separator=" "/>
         </xpath>
     </t>
 

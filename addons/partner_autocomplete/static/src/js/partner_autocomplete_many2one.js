@@ -65,7 +65,7 @@ class PartnerAutoCompleteMany2one extends Component {
                         return [];
                     }
                 },
-                optionTemplate: "partner_autocomplete.DropdownOption",
+                optionSlot: "partnerOption",
                 placeholder: _t("Searching Autocomplete..."),
             },
         ];
