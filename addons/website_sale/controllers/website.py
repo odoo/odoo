@@ -67,3 +67,12 @@ class Website(main.Website):
             'symbol': request.website.currency_id.symbol,
             'position': request.website.currency_id.position,
         }
+
+    @route()
+    def change_lang(self, lang, **kwargs):
+        order_sudo = request.website.sale_get_order()
+        request.env.add_to_compute(
+            order_sudo.order_line._fields['name'],
+            order_sudo.order_line.with_context(lang=lang),
+        )
+        return super().change_lang(lang, **kwargs)
