@@ -2026,24 +2026,22 @@ class TestStockFlow(TestStockCommon):
 
         self.env['stock.quant']._update_available_quantity(product, wh.wh_qc_stock_loc_id, 10)
 
-        f = Form(self.env['stock.scrap'], view='stock.stock_scrap_form_view')
+        f = Form(self.env['stock.move'].with_context(default_is_scrap=True, default_company_id=self.env.company.id), view='stock.view_scrap_move_form')
         f.product_id = product
-        scrap = f.save()
-
-        f = Form(scrap, view='stock.stock_scrap_form_view')
+        f.quantity = 1
         f.location_id = wh.wh_qc_stock_loc_id
-        f.scrap_location_id = wh.wh_pack_stock_loc_id
+        f.location_dest_id = wh.wh_pack_stock_loc_id
         scrap = f.save()
 
-        self.assertEqual(scrap.state, 'draft')
-        scrap.action_validate()
+        self.assertEqual(scrap.state, 'assigned')
+        scrap.action_scrap()
 
-        f = Form(scrap, view='stock.stock_scrap_form_view')
-        self.assertEqual(f.state, 'done')
+        self.assertEqual(scrap.state, 'done')
+        f = Form(scrap, view='stock.view_scrap_move_form')
         with self.assertRaises(AssertionError, msg="can't write on readonly field location_id"):
             f.location_id = wh.lot_stock_id
-        with self.assertRaises(AssertionError, msg="can't write on readonly field scrap_location_id"):
-            f.scrap_location_id = wh.wh_input_stock_loc_id
+        with self.assertRaises(AssertionError, msg="can't write on readonly field location_dest_id"):
+            f.location_dest_id = wh.wh_input_stock_loc_id
 
     def test_validate_multiple_pickings_with_same_lot_names(self):
         """ Checks only one lot is created when the same lot name is used in
@@ -2314,15 +2312,16 @@ class TestStockFlow(TestStockCommon):
         })
         self.env['stock.quant']._update_available_quantity(tracked_product, self.stock_location, 1.0)
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
+            'is_scrap': True,
             'product_id': tracked_product.id,
-            'product_uom_id': tracked_product.uom_id.id,
             'location_id': self.stock_location.id,
-            'scrap_qty': 1.0,
+            'location_dest_id': self.scrap_location.id,
+            'quantity': 1.0,
         })
-        scrap.do_scrap()
+        scrap._action_scrap()
 
-        self.assertEqual(scrap.move_ids.state, 'done')
+        self.assertEqual(scrap.state, 'done')
 
     def test_cancel_picking_with_scrapped_products(self):
         """
@@ -2348,19 +2347,21 @@ class TestStockFlow(TestStockCommon):
         picking.action_confirm()
         picking.action_assign()
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
+            'is_scrap': True,
             'picking_id': picking.id,
             'product_id': self.productA.id,
-            'product_uom_id': self.productA.uom_id.id,
-            'scrap_qty': 1.0,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.scrap_location.id,
+            'quantity': 1.0,
         })
-        scrap.do_scrap()
+        scrap._action_scrap()
 
         picking.action_cancel()
 
         self.assertEqual(picking.state, 'cancel')
         self.assertEqual(move.state, 'cancel')
-        self.assertEqual(scrap.move_ids[0].state, 'done')
+        self.assertEqual(scrap.state, 'done')
 
     def test_receive_tracked_product(self):
         self.productA.tracking = 'serial'

@@ -27,7 +27,7 @@ class StockWarehouse(models.Model):
     def _get_picking_type_create_values(self, max_sequence):
         data, next_sequence = super(StockWarehouse, self)._get_picking_type_create_values(max_sequence)
         prod_location = self._get_production_location()
-        scrap_location_id = self.env['stock.location'].search_read([('usage', '=', 'inventory'), ('company_id', 'in', [self.company_id.id, False])], fields=['id'], limit=1)[0].get('id')
+        scrap_location_id = self.company_id.scrap_location_id.id
         data.update({
             'repair_type_id': {
                 'name': _('Repairs'),

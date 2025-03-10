@@ -672,7 +672,7 @@ class TestProcRule(TransactionCase):
         """Verify that the rule's help message correctly displays all relevant
         information when the procurement method is MTO or MTSO.
         """
-        mto_rule = self.env.ref('stock.route_warehouse0_mto').rule_ids[0]
+        mto_rule = self.env.ref('stock.route_warehouse0_mto').with_context(active_test=False).rule_ids[0]
         source_mto = mto_rule.location_src_id.display_name
         self.assertIn(
             f'<br>A need is created in <b>{source_mto}</b> and a rule will be triggered to fulfill it.',

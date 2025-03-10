@@ -81,9 +81,9 @@ class StockMoveLine(models.Model):
     picking_type_use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=True)
     state = fields.Selection(related='move_id.state', store=True)
-    scrap_id = fields.Many2one(related='move_id.scrap_id')
     is_inventory = fields.Boolean(related='move_id.is_inventory')
     is_locked = fields.Boolean(related='move_id.is_locked', readonly=True)
+    is_scrap = fields.Boolean(related='move_id.is_scrap', readonly=True)
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id')
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id')
     reference = fields.Char(related='move_id.reference', readonly=False)
@@ -583,7 +583,7 @@ class StockMoveLine(models.Model):
 
     def _exclude_requiring_lot(self):
         self.ensure_one()
-        return self.move_id.picking_type_id or self.is_inventory or self.lot_id or self.move_id.scrap_id
+        return self.move_id.picking_type_id or self.is_inventory or self.lot_id or self.move_id.is_scrap
 
     def _action_done(self):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
@@ -1006,7 +1006,7 @@ class StockMoveLine(models.Model):
             'state': self.picking_id.state,
             'picking_type_id': self.picking_id.picking_type_id.id,
             'restrict_partner_id': self.picking_id.owner_id.id,
-            'company_id': self.picking_id.company_id.id,
+            'company_id': self.picking_id.company_id.id or self.company_id.id,
             'partner_id': self.picking_id.partner_id.id,
         }
 
@@ -1194,7 +1194,7 @@ class StockMoveLine(models.Model):
             })]
         }
 
-    def action_revert_inventory(self):
+    def action_revert(self):
         move_vals = []
         # remove inventory mode
         self = self.with_context(inventory_mode=False)

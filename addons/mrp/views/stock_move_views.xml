@@ -85,6 +85,21 @@
             </field>
         </record>
 
+        <record id="view_scrap_move_form_inherit_mrp" model="ir.ui.view">
+            <field name="name">scrap.move.scrap.form.inherit.mrp</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_scrap_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='picking_id']" position="after">
+                    <field name="production_id" invisible="not production_id" readonly="1"/>
+                    <field name="raw_material_production_id" invisible="not raw_material_production_id" readonly="1"/>
+                </xpath>
+                <xpath expr="//field[@name='product_id']" position="attributes">
+                    <attribute name="domain">[('id', 'in', context.get('product_ids')), ('type', '=', 'consu'), ('is_kits', '=', False)] if 'product_ids' in context else [('type', '=', 'consu'), ('is_kits', '=', False)]</attribute>
+                </xpath>
+            </field>
+        </record>
+
     <menuitem id="menu_mrp_traceability"
           name="Lots/Serial Numbers"
           parent="menu_mrp_bom"
@@ -95,7 +110,7 @@
     <menuitem id="menu_mrp_scrap"
             name="Scrap"
             parent="menu_mrp_manufacturing"
-            action="stock.action_stock_scrap"
+            action="stock.stock_scrapped_moves_action"
             sequence="25"/>
 
     <menuitem id="menu_procurement_compute_mrp"

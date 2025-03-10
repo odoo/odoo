@@ -2623,6 +2623,7 @@ class TestSinglePicking(TestStockCommon):
             with picking_form.move_ids.new() as new_move:
                 new_move.product_id = self.product
                 new_move.product_uom_qty = 3.0
+            picking_form.save()
             picking_form.location_id = new_location
             picking_form.location_dest_id = new_destination
         picking = picking_form.save()

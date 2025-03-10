@@ -37,17 +37,13 @@ class StockWarnInsufficientQtyScrap(models.TransientModel):
     _inherit = ['stock.warn.insufficient.qty']
     _description = 'Warn Insufficient Scrap Quantity'
 
-    scrap_id = fields.Many2one('stock.scrap', 'Scrap')
+    scrap_move_id = fields.Many2one('stock.move', 'Scrap')
 
     def _get_reference_document_company_id(self):
-        return self.scrap_id.company_id
+        return self.scrap_move_id.company_id
 
     def action_done(self):
-        return self.with_context(clean_context(self.env.context)).scrap_id.do_scrap()
+        return self.with_context(clean_context(self.env.context)).scrap_move_id._action_scrap()
 
     def action_cancel(self):
-        # FIXME in master: we should not have created the scrap in a first place
-        if self.env.context.get('not_unlink_on_discard'):
-            return True
-        else:
-            return self.scrap_id.sudo().unlink()
+        return self.scrap_move_id.sudo().unlink()

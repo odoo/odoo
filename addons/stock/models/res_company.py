@@ -16,6 +16,10 @@ class ResCompany(models.Model):
     # used for resupply routes between warehouses that belong to this company
     internal_transit_location_id = fields.Many2one(
         'stock.location', 'Internal Transit Location', ondelete="restrict", check_company=True)
+    scrap_location_id = fields.Many2one(
+        'stock.location', 'Scrap Location', compute='_compute_scrap_location_id', check_company=True)
+    default_stock_location_id = fields.Many2one(
+        'stock.location', 'Default Stock Location', compute='_compute_default_stock_location_id', check_company=True)
     stock_move_email_validation = fields.Boolean("Email Confirmation picking", default=False)
     stock_mail_confirmation_template_id = fields.Many2one('mail.template', string="Email Template confirmation picking",
         domain="[('model', '=', 'stock.picking')]",
@@ -54,6 +58,18 @@ class ResCompany(models.Model):
         ('one', 'When all products are ready')
     ], default='direct', required=True)
 
+    def _compute_scrap_location_id(self):
+        grouped_scrap_locations = self.env['stock.location']._read_group([('company_id', 'in', self.ids), ('usage', '=', 'inventory')], ['company_id'], ['id:min'])
+        scrap_locations_per_company = {company.id: loc_id for company, loc_id in grouped_scrap_locations}
+        for company in self:
+            company.scrap_location_id = scrap_locations_per_company.get(company.id)
+
+    def _compute_default_stock_location_id(self):
+        grouped_stock_locations = self.env['stock.warehouse']._read_group([('company_id', 'in', self.ids)], ['company_id'], ['lot_stock_id:array_agg'])
+        stock_locations_per_company = {company.id: lot_stock_ids[0] if lot_stock_ids else False for company, lot_stock_ids in grouped_stock_locations}
+        for company in self:
+            company.default_stock_location_id = stock_locations_per_company.get(company.id)
+
     def _create_transit_location(self):
         '''Create a transit location with company_id being the given company_id. This is needed
            in case of resuply routes between warehouses belonging to the same company, because
@@ -89,7 +105,7 @@ class ResCompany(models.Model):
 
     def _create_scrap_location(self):
         for company in self:
-            scrap_location = self.env['stock.location'].create({
+            self.env['stock.location'].create({
                 'name': 'Scrap',
                 'usage': 'inventory',
                 'company_id': company.id,
