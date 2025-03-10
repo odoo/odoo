@@ -87,8 +87,17 @@ class PosSession(models.Model):
 
         return data
 
-    def _prepare_account_bank_statement_line_vals(self, session, sign, amount, reason, extras):
-        vals = super()._prepare_account_bank_statement_line_vals(session, sign, amount, reason, extras)
+    def _prepare_account_bank_statement_line_vals(self, session, sign, amount, reason, partner_id, extras):
+        vals = super()._prepare_account_bank_statement_line_vals(session, sign, amount, reason, partner_id, extras)
         if extras.get('employee_id'):
             vals['employee_id'] = extras['employee_id']
         return vals
+
+    def get_cash_in_out_list(self):
+        cash_in_out_list = super().get_cash_in_out_list()
+        if self.config_id.module_pos_hr:
+            for cash_in_out in cash_in_out_list:
+                cash_move = self.env['account.bank.statement.line'].browse(cash_in_out['id'])
+                if cash_move.employee_id:
+                    cash_in_out['cashier_name'] = cash_move.partner_id.name
+        return cash_in_out_list

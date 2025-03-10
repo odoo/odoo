@@ -72,8 +72,11 @@
                     <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
                     <t t-if="_showDiff">
                         <span><t t-esc="pm.name" /> Count</span>
-                        <Input tModel="[state.payments[pm.id], 'counted']"
-                            isValid.bind="env.utils.isValidFloat" />
+                        <div class="d-flex w-100 gap-2 mt-1">
+                            <Input tModel="[state.payments[pm.id], 'counted']"
+                                isValid.bind="env.utils.isValidFloat" class="'w-100'" />
+                            <button class="icon fa fa-clone btn btn-secondary" t-on-click="() => this.autoFillPMCount(pm.id)" />
+                        </div>
                     </t>
                 </div>
                 <div class="notes-container d-flex flex-column flex-sm-row gap-3 pt-3">
@@ -104,7 +107,7 @@
 
                     <!-- Second line of buttons -->
                     <div t-att-class="{'col-12 col-md-6 p-0': this.ui.isSmall}" class=" d-flex gap-2">
-                        <button class="button btn btn-secondary" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'" t-on-click="() => this.cashMove()">Cash In/Out</button>
+                        <button t-if="pos.showCashMoveButton" class="button btn btn-secondary" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'" t-on-click="() => this.cashMove()">Cash In/Out</button>
                         <button class="button icon btn btn-secondary"
                             t-on-click="downloadSalesReport"
                             t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg ms-auto'"
