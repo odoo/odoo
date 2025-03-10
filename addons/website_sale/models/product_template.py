@@ -445,7 +445,8 @@ class ProductTemplate(models.Model):
             and website.show_line_subtotals_tax_selection == 'tax_included'
             and not all(
                 tax.price_include
-                for tax in product_or_template.combo_ids.combo_item_ids.product_id.taxes_id
+                for tax
+                in product_or_template.combo_ids.sudo().combo_item_ids.product_id.taxes_id
             )
         ):
             combination_info['tax_disclaimer'] = _(
