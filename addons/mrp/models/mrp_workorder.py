@@ -625,11 +625,6 @@ class MrpWorkorder(models.Model):
                     continue
                 raise UserError(_('You cannot start a work order that is already done or cancelled'))
 
-            if wo.product_tracking == 'serial' and wo.qty_producing == 0:
-                wo.qty_producing = 1.0
-            elif wo.qty_producing == 0:
-                wo.qty_producing = wo.qty_remaining
-
             if wo._should_start_timer():
                 self.env['mrp.workcenter.productivity'].create(
                     wo._prepare_timeline_vals(wo.duration, fields.Datetime.now())

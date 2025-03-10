@@ -482,7 +482,6 @@ class TestMrpOrder(TestMrpCommon):
 
         wo = production.workorder_ids[0]
         wo.button_start()
-        self.assertEqual(wo.qty_producing, 5, "Wrong quantity is suggested to produce.")
 
         # Simulate changing the qty_producing in the frontend
         wo.qty_producing = 4
