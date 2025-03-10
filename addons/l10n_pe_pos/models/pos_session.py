@@ -12,9 +12,8 @@ class PosSession(models.Model):
             data += ['l10n_pe.res.city.district', 'l10n_latam.identification.type', 'res.city']
         return data
 
-    def _load_pos_data(self, data):
-        data = super()._load_pos_data(data)
+    def _post_read_pos_data(self, data):
         if self.env.company.country_id.code == "PE":
             data[0]['_default_l10n_latam_identification_type_id'] = self.env.ref('l10n_pe.it_DNI').id
             data[0]['_consumidor_final_anonimo_id'] = self.env.ref('l10n_pe_pos.partner_pe_cf').id
-        return data
+        return super()._post_read_pos_data(data)

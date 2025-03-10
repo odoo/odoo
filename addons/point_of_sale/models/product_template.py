@@ -118,9 +118,12 @@ class ProductTemplate(models.Model):
                 products += config.tip_product_id.product_tmpl_id
 
         fields = self._load_pos_data_fields(config.id)
-        available_products = products.read(fields, load=False)
-        self._process_pos_ui_product_product(available_products, config)
-        return available_products
+        return self.with_context(config_id=config.id)._post_read_pos_data(products.read(fields, load=False))
+
+    def _post_read_pos_data(self, data):
+        config = self.env['pos.config'].browse(self.env.context.get('config_id'))
+        self._process_pos_ui_product_product(data, config)
+        return super()._post_read_pos_data(data)
 
     def _load_product_with_domain(self, domain, load_archived=False):
         context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}

@@ -276,7 +276,7 @@ class PosConfig(models.Model):
         # Classic data loading
         for model in self._load_self_data_models():
             try:
-                response[model] = self.env[model]._load_pos_self_data(response)
+                response[model] = self.env[model]._post_read_pos_self_data(self.env[model]._load_pos_self_data(response))
                 self.env['pos.session']._load_pos_data_relations(model, response)
             except AccessError:
                 response[model] = self.env[model]._load_pos_self_data_fields(self.id)
