@@ -12,11 +12,13 @@ class WebsitePageConfigOptionPlugin extends Plugin {
                 template: "html_builder.TopMenuVisibilityOption",
                 selector:
                     "[data-main-object]:has(input.o_page_option_data[name='header_visible']) #wrapwrap > header",
+                editableOnly: false,
             },
             {
                 template: "html_builder.HideFooterOption",
                 selector:
                     "[data-main-object]:has(input.o_page_option_data[name='footer_visible']) #wrapwrap > footer",
+                editableOnly: false,
             },
         ],
         save_handlers: this.onSave.bind(this),
