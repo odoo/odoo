@@ -16,6 +16,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_subcontracting_account_flow_1(self):
         # pylint: disable=bad-whitespace
         self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.scrap_location = self.env['stock.location'].search([('scrap_location', '=', 'True'), ('company_id', '=', self.env.company.id)], limit=1)
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
@@ -72,7 +73,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
@@ -114,7 +115,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
@@ -146,12 +147,14 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         ])
 
         # Scrap first subcontract MO and ensure that the additional cost is not added.
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].create({
             'product_id': self.finished.id,
             'product_uom_id': self.uom_unit.id,
-            'scrap_qty': 1,
+            'quantity': 1,
             'production_id': mo1.id,
             'location_id': self.stock_location.id,
+            'location_dest_id': self.scrap_location.id,
+            'company_id': self.env.company.id,
         })
         scrap.do_scrap()
 
@@ -247,7 +250,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
@@ -292,7 +295,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = todo_nb
             move.quantity = todo_nb
@@ -373,7 +376,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.env.ref('stock.picking_type_in')
         receipt_form.partner_id = self.subcontractor_partner1
-        with receipt_form.move_ids.new() as move:
+        with receipt_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 10
         receipt = receipt_form.save()
@@ -461,7 +464,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()
@@ -504,7 +507,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form = Form(self.env['stock.picking'])
         picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
         picking_form.partner_id = self.subcontractor_partner1
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.finished
             move.product_uom_qty = 1
         picking_receipt = picking_form.save()

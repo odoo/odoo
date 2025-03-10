@@ -91,7 +91,7 @@ class TestReorderingRule(TransactionCase):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = self.partner
         picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.product_01
             move.product_uom_qty = 10.0
         customer_picking = picking_form.save()
@@ -167,10 +167,10 @@ class TestReorderingRule(TransactionCase):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = self.partner
         picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.product_01
             move.product_uom_qty = 10.0
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.product_01
             move.product_uom_qty = 10.0
         customer_picking = picking_form.save()
@@ -391,13 +391,13 @@ class TestReorderingRule(TransactionCase):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 10.0
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 10.0
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product_buy_mto
             move.product_uom_qty = 10.0
         customer_picking = picking_form.save()
@@ -437,10 +437,10 @@ class TestReorderingRule(TransactionCase):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 10.0
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product_buy_mto
             move.product_uom_qty = 10.0
         customer_picking = picking_form.save()
@@ -491,13 +491,13 @@ class TestReorderingRule(TransactionCase):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 10.0
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 10.0
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product_buy_mto
             move.product_uom_qty = 10.0
         customer_picking = picking_form.save()
@@ -536,10 +536,10 @@ class TestReorderingRule(TransactionCase):
         picking_form = Form(self.env['stock.picking'])
         picking_form.partner_id = partner
         picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product
             move.product_uom_qty = 10.0
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = product_buy_mto
             move.product_uom_qty = 10.0
         customer_picking = picking_form.save()
@@ -887,7 +887,7 @@ class TestReorderingRule(TransactionCase):
         delivery_form = Form(self.env['stock.picking'])
         delivery_form.partner_id = self.partner
         delivery_form.picking_type_id = self.env.ref('stock.picking_type_out')
-        with delivery_form.move_ids.new() as move:
+        with delivery_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.product_01
             move.product_uom_qty = 1
         delivery = delivery_form.save()

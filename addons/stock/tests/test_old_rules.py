@@ -382,7 +382,7 @@ class TestOldRules(TestStockCommon):
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
         receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = warehouse.in_type_id
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.product
             move_line.product_uom_qty = 15
         receipt = receipt_form.save()

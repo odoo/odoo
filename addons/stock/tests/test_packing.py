@@ -364,10 +364,10 @@ class TestPacking(TestPackingCommon):
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.picking_type_in
         # Add 2 lines
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.productA
             move_line.product_uom_qty = 1
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.productB
             move_line.product_uom_qty = 1
         receipt = receipt_form.save()
@@ -488,10 +488,10 @@ class TestPacking(TestPackingCommon):
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.picking_type_in
         # Add 2 lines
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.productA
             move_line.product_uom_qty = 1
-        with receipt_form.move_ids.new() as move_line:
+        with receipt_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.productB
             move_line.product_uom_qty = 1
         receipt = receipt_form.save()
@@ -615,7 +615,7 @@ class TestPacking(TestPackingCommon):
             'picking_type_id': self.picking_type_out.id,
         })
         picking_form = Form(picking)
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 5.0
         picking = picking_form.save()
@@ -654,7 +654,7 @@ class TestPacking(TestPackingCommon):
             'picking_type_id': self.warehouse_1.pick_type_id.id,
         })
         picking_form = Form(picking)
-        with picking_form.move_ids.new() as move_line:
+        with picking_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.productA
             move_line.product_uom_qty = 120
         picking = picking_form.save()
@@ -711,7 +711,7 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
         })
         with Form(picking) as picking_form:
-            with picking_form.move_ids.new() as move:
+            with picking_form.non_scrapped_move_ids.new() as move:
                 move.product_id = self.productA
                 move.product_uom_qty = 75
         picking.action_confirm()
@@ -740,10 +740,10 @@ class TestPacking(TestPackingCommon):
         delivery_form = Form(self.env['stock.picking'])
         picking_type_id = self.picking_type_out
         delivery_form.picking_type_id = picking_type_id
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.productA
             move_line.product_uom_qty = 10
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.productB
             move_line.product_uom_qty = 10
         delivery = delivery_form.save()
@@ -755,10 +755,10 @@ class TestPacking(TestPackingCommon):
         delivery_form = Form(self.env['stock.picking'])
         picking_type_id = self.picking_type_out
         delivery_form.picking_type_id = picking_type_id
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.productA
             move_line.quantity = 10
-        with delivery_form.move_ids.new() as move_line:
+        with delivery_form.non_scrapped_move_ids.new() as move_line:
             move_line.product_id = self.productB
             move_line.quantity = 10
         delivery = delivery_form.save()
@@ -1555,7 +1555,7 @@ class TestPacking(TestPackingCommon):
             'picking_type_id': self.picking_type_in.id,
         })
         picking_form = Form(picking)
-        with picking_form.move_ids.new() as move:
+        with picking_form.non_scrapped_move_ids.new() as move:
             move.product_id = self.productA
             move.product_uom_qty = 5.0
         picking = picking_form.save()

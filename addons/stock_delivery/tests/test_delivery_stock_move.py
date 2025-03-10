@@ -288,7 +288,7 @@ class TestStockMoveInvoice(TestSaleCommon):
         today, yesterday = fields.Datetime.now(), fields.Datetime.now() - datetime.timedelta(days=1)
         self.assertEqual(receipt.scheduled_date, today)
         with Form(receipt) as picking_form:
-            with picking_form.move_ids.edit(0) as move:
+            with picking_form.non_scrapped_move_ids.edit(0) as move:
                 move.date = yesterday
         self.assertEqual(receipt.scheduled_date, yesterday)
         self.assertRecordValues(receipt.move_ids, [
