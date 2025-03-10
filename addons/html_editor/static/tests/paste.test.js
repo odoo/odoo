@@ -2,7 +2,7 @@ import { CLIPBOARD_WHITELISTS } from "@html_editor/core/clipboard_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent as dispatch, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -3879,13 +3879,3 @@ describe("onDrop", () => {
         );
     });
 });
-
-function dataURItoBlob(dataURI) {
-    const binary = atob(dataURI.split(",")[1]);
-    const array = [];
-    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
-    for (let i = 0; i < binary.length; i++) {
-        array.push(binary.charCodeAt(i));
-    }
-    return new Blob([new Uint8Array(array)], { type: mimeString });
-}

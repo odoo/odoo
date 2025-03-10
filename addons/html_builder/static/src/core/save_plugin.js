@@ -14,7 +14,7 @@ export class SavePlugin extends Plugin {
         handleNewRecords: this.handleMutations,
         // Resource definitions:
         before_save_handlers: [
-            // () => {
+            // async () => {
             //     called at the very beginning of the save process
             // }
         ],
@@ -25,7 +25,7 @@ export class SavePlugin extends Plugin {
             // }
         ],
         save_handlers: [
-            // () => {
+            // async () => {
             //     called at the very end of the save process
             // }
         ],
@@ -53,13 +53,45 @@ export class SavePlugin extends Plugin {
         await Promise.all(saveProms.concat(willSaves));
     }
 
+    async saveCoverProperties(el) {
+        const resModel = el.dataset.resModel;
+        const resID = Number(el.dataset.resId);
+
+        if (!resModel || !resID) {
+            throw new Error("There should be a model and id associated to the cover");
+        }
+
+        const coverProps = {
+            "background-image": el.dataset.bgImage,
+            background_color_class: el.dataset.bgColorClass,
+            background_color_style: el.dataset.bgColorStyle,
+            opacity: el.dataset.filterValue,
+            resize_class: el.dataset.coverClass,
+            text_align_class: el.dataset.textAlignClass,
+        };
+
+        return this.services.orm.write(resModel, [resID], {
+            cover_properties: JSON.stringify(coverProps),
+        });
+    }
+
     /**
      * Saves one (dirty) element of the page.
      *
      * @param {HTMLElement} el - the element to save.
      */
     async saveView(el) {
+        const proms = [];
         const viewID = Number(el.dataset["oeId"]);
+
+        if (el.classList.contains("o_record_cover_container")) {
+            proms.push(this.saveCoverProperties(el));
+
+            if (!viewID) {
+                return Promise.all(proms);
+            }
+        }
+
         const context = {
             website_id: this.services.website.currentWebsite.id,
             lang: this.services.website.currentWebsite.metadata.lang,
@@ -68,12 +100,19 @@ export class SavePlugin extends Plugin {
             delay_translations: false,
         };
 
-        return this.services.orm.call(
-            "ir.ui.view",
-            "save",
-            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
-            { context }
+        proms.push(
+            this.services.orm.call(
+                "ir.ui.view",
+                "save",
+                [
+                    viewID,
+                    el.outerHTML,
+                    (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null,
+                ],
+                { context }
+            )
         );
+        return Promise.all(proms);
     }
 
     /**
