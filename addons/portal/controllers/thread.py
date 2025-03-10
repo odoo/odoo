@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request
+from odoo.fields import Domain
 from odoo.addons.mail.controllers import thread
 from odoo.addons.portal.utils import get_portal_partner
 
@@ -24,3 +25,19 @@ class ThreadController(thread.ThreadController):
             if partner and message.author_id == partner:
                 return True
         return super()._can_edit_message(message, hash=hash, pid=pid, token=token, **kwargs)
+
+    def _get_fetch_domain(self, thread, *args, fetch_portal_message=None, **kwargs):
+        """Restricts the fetched messages for portal."""
+        domain = super()._get_fetch_domain(
+            thread, *args, fetch_portal_message=fetch_portal_message, **kwargs
+        )
+        model = request.env[thread._name]
+        if fetch_portal_message:
+            domain = Domain.AND(
+                [
+                    domain,
+                    request.env["mail.message"]._get_search_domain_share(),
+                    model._fields["website_message_ids"].get_comodel_domain(model),
+                ]
+            )
+        return domain

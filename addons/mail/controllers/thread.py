@@ -6,6 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.fields import Domain
 from odoo.tools import frozendict
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
@@ -45,14 +46,28 @@ class ThreadController(http.Controller):
     # main routes
     # ------------------------------------------------------------
 
-    @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="user")
-    def mail_thread_messages(self, thread_model, thread_id, fetch_params=None):
+    def _get_fetch_domain(self, thread, **kwargs):
+        """Defines the fetch domain and restricts the fetched messages by user type. As a security
+        matter, non-internal users can only read the messages with non-internal subtypes. This
+        early check ensures that they won't pass the ACL, even if they are superusers."""
         domain = [
-            ("res_id", "=", int(thread_id)),
-            ("model", "=", thread_model),
             ("message_type", "!=", "user_notification"),
+            ("model", "=", thread._name),
+            ("res_id", "=", thread.id),
         ]
-        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
+        if not request.env.user._is_internal():
+            domain = Domain.AND(
+                [domain, request.env["mail.message"]._get_search_domain_share()]
+            )
+        return domain
+
+    @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="public")
+    def mail_thread_messages(self, thread_model, thread_id, fetch_params=None, **kwargs):
+        thread = self._get_thread_with_access(thread_model, thread_id, **kwargs)
+        if not thread:
+            raise NotFound()
+        domain = self._get_fetch_domain(thread, **kwargs)
+        res = thread.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
         if not request.env.user._is_public():
             messages.set_message_done()

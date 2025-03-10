@@ -30,11 +30,10 @@
                             <t t-set="default_message_id" t-value="last_message_id"/>
                             <t t-set="default_rating_value" t-value="last_rating_value"/>
                             <t t-set="default_attachment_ids" t-value="last_message_attachment_ids"/>
-                            <t t-set="force_submit_url" t-value="'/mail/message/update_content' if last_message_id else False"/>
                             <t t-set="disable_composer" t-value="not channel.can_review"/>
                             <t t-set="_link_btn_classes" t-value="'d-inline-block text-white fw-light shadow-none'"/>
                             <t t-set="icon" t-value="'fa fa-pencil'"/>
-                            <t t-set="_text_classes" t-value="'d-none d-md-inline-block'"/>
+                            <t t-set="_text_classes" t-value="'d-none d-md-inline-block ps-1 fw-bold'"/>
                             <t t-set="hide_rating_avg" t-value="True"/>
                             <t t-set="is_fullscreen" t-value="True"/>
                         </t>
