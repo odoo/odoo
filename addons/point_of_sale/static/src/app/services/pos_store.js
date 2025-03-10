@@ -37,7 +37,7 @@ import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
 
 const { DateTime } = luxon;
@@ -1007,6 +1007,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.getCashier()._role == "manager";
+    }
+    get showCashMoveButton() {
+        return Boolean(this.config.cash_control && this.session._has_cash_move_perm);
     }
     createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find(
@@ -2243,6 +2246,17 @@ export class PosStore extends WithLazyGetterTrap {
         } else {
             return `${pm.name} (${fmtAmount})`;
         }
+    }
+    getDate(date) {
+        const todayTs = DateTime.now().startOf("day").ts;
+        if (date.startOf("day").ts === todayTs) {
+            return _t("Today");
+        } else {
+            return formatDate(date);
+        }
+    }
+    getTime(date) {
+        return date.toFormat("hh:mm");
     }
 }
 

@@ -26,14 +26,24 @@
                 <label for="reason">Reason</label>
             </div>
             <t t-set-slot="footer">
-                <button class="button confirm btn btn-lg lh-lg btn-primary"
-                    t-on-click="confirm"
-                    t-att-disabled="!isValidCashMove()">
-                    Confirm
-                </button>
-                <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">
-                    Discard
-                </button>
+                <div class="w-100 d-flex flex-wrap justify-content-between gap-2">
+                    <!-- First line of buttons -->
+                    <div class="d-flex gap-2">
+                        <button class="button confirm btn btn-lg lh-lg btn-primary"
+                            t-on-click="confirm"
+                            t-att-disabled="!isValidCashMove()">
+                            Confirm
+                        </button>
+                        <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">
+                            Discard
+                        </button>
+                    </div>
+
+                    <!-- Second line of buttons -->
+                    <div class=" d-flex gap-2">
+                        <button class="button btn btn-secondary btn-lg" t-on-click="() => this.openDetails()">Details</button>
+                    </div>
+                </div>
             </t>
         </Dialog>
     </t>
