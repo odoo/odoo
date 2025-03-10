@@ -172,6 +172,6 @@ registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.trackingMethodIsLot(),
+            ReceiptScreen.trackingMethodIsLot("123456789"),
         ].flat(),
 });
