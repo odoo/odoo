@@ -150,6 +150,9 @@ class PosSession(models.Model):
         domain = self._load_pos_data_domain(data)
         fields = self._load_pos_data_fields(self.config_id.id)
         data = self.search_read(domain, fields, load=False, limit=1)
+        return data
+
+    def _post_read_pos_data(self, data):
         server_date = self.env.context.get('pos_last_server_date')
         data[0]['_partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
         data[0]['_server_version'] = exp_version()
@@ -158,18 +161,18 @@ class PosSession(models.Model):
         data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
         data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
-        return data
+        return super()._post_read_pos_data(data)
 
     def load_data(self, models_to_load):
         response = {}
-        response['pos.session'] = self._load_pos_data(response)
+        response['pos.session'] = self._post_read_pos_data(self._load_pos_data(response))
 
         for model in self._load_pos_data_models(self.config_id.id):
             if models_to_load and model not in models_to_load:
                 continue
 
             try:
-                response[model] = self.env[model]._load_pos_data(response)
+                response[model] = self.env[model].with_context(config_id=self.config_id.id)._post_read_pos_data(self.env[model]._load_pos_data(response))
             except AccessError:
                 response[model] = []
 
