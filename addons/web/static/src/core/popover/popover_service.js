@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
  *   animation?: Boolean;
  *   arrow?: Boolean;
  *   closeOnClickAway?: boolean | (target: HTMLElement) => boolean;
+ *   closeOnScrollAway?: boolean;
  *   closeOnEscape?: boolean;
  *   env?: object;
  *   fixedPosition?: boolean;
@@ -44,6 +45,7 @@ export const popoverService = {
                     target,
                     close: () => remove(),
                     closeOnClickAway,
+                    closeOnScrollAway: options.closeOnScrollAway,
                     closeOnEscape: options.closeOnEscape,
                     component,
                     componentProps: markRaw(props),

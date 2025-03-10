@@ -159,7 +159,7 @@ class GoogleFontAutoComplete extends AutoComplete {
     setup() {
         super.setup();
         this.inputRef = useRef("input");
-        this.sourcesListRef = useRef("sourcesList");
+        this.menuRef = useRef("sourcesList");
         useEffect((el) => {
             el.setAttribute("id", "google_font");
         }, () => [this.inputRef.el]);
@@ -174,8 +174,8 @@ class GoogleFontAutoComplete extends AutoComplete {
 
     onInput(ev) {
         super.onInput(ev);
-        if (this.sourcesListRef.el) {
-            this.sourcesListRef.el.scrollTop = 0;
+        if (this.menuRef.el) {
+            this.menuRef.el.scrollTop = 0;
         }
     }
 }
