@@ -41,11 +41,15 @@ export function useBuilderComponent() {
     const oldEnv = useEnv();
     if (comp.props.applyTo) {
         let editingElements = querySelectorAll(oldEnv.getEditingElements(), comp.props.applyTo);
-        useBus(oldEnv.editorBus, "UPDATE_EDITING_ELEMENT", () => {
+        const updateEditingElements = () => {
             editingElements = querySelectorAll(oldEnv.getEditingElements(), comp.props.applyTo);
-        });
+        };
+        oldEnv.editorBus.addEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
         newEnv.getEditingElements = () => editingElements;
         newEnv.getEditingElement = () => editingElements[0];
+        onWillDestroy(() => {
+            oldEnv.editorBus.removeEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
+        });
     }
     const weContext = {};
     for (const key in basicContainerBuilderComponentProps) {
