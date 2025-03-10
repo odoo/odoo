@@ -248,14 +248,21 @@ class HrApplicant(models.Model):
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile")
     def _compute_application_count(self):
         """
-        This method will find all applications that have either the same email,
-        phone number og linkedin profile as the current(self) application(s) excluding
-        applications that are in a talent pool(talents). If self has email,
-        phonenumber or linkedin set this method will include self in the returned count
+        This method will calculate the number of applications that are either
+        directly or indirectly linked to the current application(s)
+        - An application is considered directly linked if it shares the same
+          pool_applicant_id
+        - An application is considered indirectly_linked if it has the same
+          value as the current application(s) in any of the following field:
+          email, phone number or linkedin
+
+        Note: If self has pool_applicant_id, email, phone number or linkedin set
+        this method will include self in the returned count
         """
         all_emails = {a.email_normalized for a in self if a.email_normalized}
         all_phones = {a.partner_phone_sanitized for a in self if a.partner_phone_sanitized}
         all_linkedins = {a.linkedin_profile for a in self if a.linkedin_profile}
+        all_pool_applicants = {a.pool_applicant_id.id for a in self if a.pool_applicant_id}
 
         domain = Domain.FALSE
         if all_emails:
@@ -264,6 +271,8 @@ class HrApplicant(models.Model):
             domain |= Domain("partner_phone_sanitized", "in", list(all_phones))
         if all_linkedins:
             domain |= Domain("linkedin_profile", "in", list(all_linkedins))
+        if all_pool_applicants:
+            domain |= Domain("pool_applicant_id", "in", list(all_pool_applicants))
 
         domain &= Domain("talent_pool_ids", "=", False)
         matching_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
@@ -271,6 +280,7 @@ class HrApplicant(models.Model):
         email_map = defaultdict(set)
         phone_map = defaultdict(set)
         linkedin_map = defaultdict(set)
+        pool_applicant_map = defaultdict(set)
         for app in matching_applicants:
             if app.email_normalized:
                 email_map[app.email_normalized].add(app.id)
@@ -278,6 +288,8 @@ class HrApplicant(models.Model):
                 phone_map[app.partner_phone_sanitized].add(app.id)
             if app.linkedin_profile:
                 linkedin_map[app.linkedin_profile].add(app.id)
+            if app.pool_applicant_id:
+                pool_applicant_map[app.pool_applicant_id].add(app.id)
 
         for applicant in self:
             related_ids = set()
@@ -287,6 +299,8 @@ class HrApplicant(models.Model):
                 related_ids.update(phone_map.get(applicant.partner_phone_sanitized, set()))
             if applicant.linkedin_profile:
                 related_ids.update(linkedin_map.get(applicant.linkedin_profile, set()))
+            if applicant.pool_applicant_id:
+                related_ids.update(pool_applicant_map.get(applicant.pool_applicant_id, set()))
 
             count = len(related_ids)
 
@@ -319,6 +333,8 @@ class HrApplicant(models.Model):
             domain |= Domain("partner_phone_sanitized", "=", self.partner_phone_sanitized)
         if self.linkedin_profile:
             domain |= Domain("linkedin_profile", "=", self.linkedin_profile)
+        if self.pool_applicant_id:
+            domain |= Domain("pool_applicant_id", "=", self.pool_applicant_id)
         if ignore_talent:
             domain &= Domain("talent_pool_ids", "=", False)
         if only_talent:
