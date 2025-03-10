@@ -10,6 +10,7 @@ import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
 import { LivechatChannel } from "./mock_server/mock_models/im_livechat_channel";
 import { LivechatChannelRule } from "./mock_server/mock_models/livechat_channel_rule";
+import { Im_LivechatExpertise } from "./mock_server/mock_models/im_livechat_expertise";
 import { ResGroups } from "./mock_server/mock_models/res_groups";
 import { ResLang } from "./mock_server/mock_models/res_lang";
 import { ResPartner } from "./mock_server/mock_models/res_partner";
@@ -26,6 +27,7 @@ export const livechatModels = {
     DiscussChannelMember,
     LivechatChannel,
     LivechatChannelRule,
+    Im_LivechatExpertise,
     RatingRating,
     ResLang,
     ResPartner,

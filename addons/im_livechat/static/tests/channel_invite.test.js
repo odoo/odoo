@@ -10,9 +10,23 @@ defineLivechatModels();
 test("Can invite a partner to a livechat channel", async () => {
     mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
+    const langIds = pyEnv["res.lang"].create([
+        { code: "en", name: "English" },
+        { code: "fr", name: "French" },
+        { code: "de", name: "German" },
+    ]);
+    const expertiseIds = pyEnv["im_livechat.expertise"].create([
+        { name: "pricing" },
+        { name: "events" },
+    ]);
     pyEnv["res.partner"].write([serverState.partnerId], { user_livechat_username: "Mitch (FR)" });
-    const userId = pyEnv["res.users"].create({ name: "James" });
+    const userId = pyEnv["res.users"].create({
+        name: "James",
+        livechat_lang_ids: langIds,
+        livechat_expertise_ids: expertiseIds,
+    });
     pyEnv["res.partner"].create({
+        lang: "en",
         name: "James",
         user_ids: [userId],
     });
@@ -36,6 +50,9 @@ test("Can invite a partner to a livechat channel", async () => {
     await click("input", {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
     });
+    await contains(
+        ".o-discuss-ChannelInvitation-selectable:contains('James\nEnglish\nFrench\nGerman\npricing\nevents')"
+    );
     await click("button:enabled", { text: "Invite" });
     await contains(".o-mail-NotificationMessage", {
         text: "Mitch (FR) invited James to the channel",
