@@ -724,8 +724,10 @@ export class Rtc extends Record {
                     return;
                 }
                 for (const [id, info] of Object.entries(payload)) {
-                    const session = this.store["discuss.channel.rtc.session"].get(Number(id));
-                    if (!session) {
+                    const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
+                        Number(id)
+                    );
+                    if (!session || !this.state.channel) {
                         return;
                     }
                     if (
@@ -751,8 +753,10 @@ export class Rtc extends Record {
             case "track":
                 {
                     const { sessionId, type, track, active } = payload;
-                    const session = this.store["discuss.channel.rtc.session"].get(sessionId);
-                    if (!session) {
+                    const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
+                        sessionId
+                    );
+                    if (!session || !this.state.channel) {
                         this.log(
                             this.selfSession,
                             `track received for unknown session ${sessionId} (${this.state.connectionType})`
