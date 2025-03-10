@@ -145,8 +145,8 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     hasOverlayOptions(el) {
-        for (const hasOverlayOptions of this.getResource("has_overlay_options")) {
-            if (hasOverlayOptions(el)) {
+        for (const { hasOption, editableOnly } of this.getResource("has_overlay_options")) {
+            if (checkElement(el, { editableOnly }) && hasOption(el)) {
                 return true;
             }
         }

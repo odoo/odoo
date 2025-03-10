@@ -36,7 +36,9 @@ export class RemovePlugin extends Plugin {
     static id = "remove";
     static dependencies = ["history", "builder-options"];
     resources = {
-        get_overlay_buttons: withSequence(4, this.getActiveOverlayButtons.bind(this)),
+        get_overlay_buttons: withSequence(4, {
+            getButtons: this.getActiveOverlayButtons.bind(this),
+        }),
     };
     static shared = ["removeElement"];
 

@@ -5,8 +5,10 @@ import { _t } from "@web/core/l10n/translation";
 export class DragAndDropPlugin extends Plugin {
     static id = "dragAndDrop";
     resources = {
-        has_overlay_options: this.isDraggable.bind(this),
-        get_overlay_buttons: withSequence(1, this.getActiveOverlayButtons.bind(this)),
+        has_overlay_options: { hasOption: (el) => this.isDraggable(el) },
+        get_overlay_buttons: withSequence(1, {
+            getButtons: this.getActiveOverlayButtons.bind(this),
+        }),
     };
 
     setup() {

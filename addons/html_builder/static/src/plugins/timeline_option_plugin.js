@@ -29,8 +29,10 @@ class TimelineOptionPlugin extends Plugin {
             selector: ".s_timeline_row",
             dropNear: ".s_timeline_row",
         },
-        has_overlay_options: (el) => isTimelineCard(el),
-        get_overlay_buttons: withSequence(0, this.getActiveOverlayButtons.bind(this)),
+        has_overlay_options: { hasOption: (el) => isTimelineCard(el) },
+        get_overlay_buttons: withSequence(0, {
+            getButtons: this.getActiveOverlayButtons.bind(this),
+        }),
     };
 
     getActiveOverlayButtons(target) {

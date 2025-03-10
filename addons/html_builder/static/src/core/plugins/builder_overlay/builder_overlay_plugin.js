@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
+import { checkElement } from "../builder_options_plugin";
 import { BuilderOverlay, sizingY, sizingX, sizingGrid } from "./builder_overlay";
 
 function isResizable(el) {
@@ -18,7 +19,7 @@ export class BuilderOverlayPlugin extends Plugin {
         step_added_handlers: this.refreshOverlays.bind(this),
         change_current_options_containers_listeners: this.openBuilderOverlays.bind(this),
         on_mobile_preview_clicked: this.refreshOverlays.bind(this),
-        has_overlay_options: (el) => isResizable(el),
+        has_overlay_options: { hasOption: (el) => isResizable(el) },
     };
 
     setup() {
@@ -87,7 +88,7 @@ export class BuilderOverlayPlugin extends Plugin {
                 iframe: this.iframe,
                 overlayContainer: this.overlayContainer,
                 addStep: this.dependencies.history.addStep,
-                hasOverlayOptions: option.hasOverlayOptions,
+                hasOverlayOptions: checkElement(option.element, {}) && option.hasOverlayOptions,
             });
             this.overlays.push(overlay);
             this.overlayContainer.append(overlay.overlayElement);
