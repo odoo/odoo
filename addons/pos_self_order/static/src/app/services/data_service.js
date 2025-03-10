@@ -46,4 +46,5 @@ patch(PosData.prototype, {
     async missingRecursive(recordMap) {
         return recordMap;
     },
+    async checkAndDeleteMissingOrders(results) {},
 });
