@@ -20,7 +20,7 @@ class TalentPoolAddApplicants(models.TransientModel):
         string="Tags",
     )
 
-    def action_add_applicants_to_pool(self):
+    def _add_applicants_to_pool(self):
         talents = self.env["hr.applicant"]
         for applicant in self.applicant_ids:
             if applicant.talent_pool_ids:
@@ -37,7 +37,7 @@ class TalentPoolAddApplicants(models.TransientModel):
                 )
                 talents += applicant
             else:
-                talent = applicant.copy(
+                talent = applicant.with_context(no_copy_in_partner_name=True).copy(
                     {
                         "job_id": False,
                         "talent_pool_ids": self.talent_pool_ids,
@@ -47,6 +47,10 @@ class TalentPoolAddApplicants(models.TransientModel):
                 talent.write({"pool_applicant_id": talent.id})
                 applicant.write({"pool_applicant_id": talent.id})
                 talents += talent
+        return talents
+
+    def action_add_applicants_to_pool(self):
+        talents = self._add_applicants_to_pool()
         if len(talents) == 1:
             return {
                 "type": "ir.actions.act_window",
