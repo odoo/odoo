@@ -55,7 +55,10 @@ class TagsSelector(object):
         test_class = test.__class__.__name__
         test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility,
         test_method = test._testMethodName
-        test_module_path = test.__module__.removeprefix('odoo.addons').replace('.', '/') + '.py'
+        test_module_path = test.__module__
+        for prefix in ('odoo.addons', 'odoo.upgrade'):
+            test_module_path = test_module_path.removeprefix(prefix)
+        test_module_path = test_module_path.replace('.', '/') + '.py'
 
         def _is_matching(test_filter):
             (tag, module, klass, method, file_path) = test_filter
