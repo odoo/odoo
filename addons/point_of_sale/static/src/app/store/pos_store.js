@@ -959,6 +959,50 @@ export class PosStore extends Reactive {
     sortOrders() {
         this.orders.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
+    /**
+     * This method generates mapping of tax names into corresponding names and amounts,
+     * for a single product according to a fiscal position.
+     * Note: a tax can be removed (mapped to null).
+     * @param {number[]} taxIds - Original tax IDs.
+     * @param {number} priceWithoutTax - Product price without tax.
+     * @param {object} fpos - Fiscal position.
+     * @returns {object} - Mapping ex. {"Tax 15%": { new_name: "Tax 30%", new_amount: 300.00 } }
+     */
+    _getFiscalPositionTaxNameMapping(taxIds, priceWithoutTax, fpos) {
+        if (!fpos) {
+            throw new Error("Fiscal position not passed in the args!")
+        }
+
+        const taxMapping = {};
+        for (const taxId of taxIds) {
+            const tax = this.taxes_by_id[taxId];
+            if (!tax) {
+                continue;
+            }
+            const taxMaps = Object.values(fpos.fiscal_position_taxes_by_id).filter(
+                (fposTax) => fposTax.tax_src_id[0] === tax.id
+            );
+            if (taxMaps.length) {
+                for (const taxMap of taxMaps) {
+                    if (taxMap.tax_dest_id) {
+                        const mappedTax = this.taxes_by_id[taxMap.tax_dest_id[0]];
+                        if (mappedTax) {
+                            const computedTax = this.compute_all([mappedTax],priceWithoutTax,1,this.currency.rounding);
+                            taxMapping[tax.name] = {
+                                new_name: mappedTax.name,
+                                new_amount: computedTax.total_included - computedTax.total_excluded
+                            };
+                        }
+                    } else {
+                        taxMapping[tax.name] = null  // Fiscal position removes this tax
+                    }
+                }
+            }
+        }
+        return taxMapping;
+    }
+
+
     async getProductInfo(product, quantity) {
         const order = this.get_order();
         // check back-end method `get_product_info_pos` to see what it returns
@@ -971,6 +1015,28 @@ export class PosStore extends Reactive {
         ]);
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
+
+        // Update price and taxes according to fiscal postions
+        if (order.fiscal_position) {
+            const taxMapping = this._getFiscalPositionTaxNameMapping(
+                product.taxes_id,
+                priceWithoutTax,
+                order.fiscal_position,
+            );
+            productInfo.all_prices.tax_details = productInfo.all_prices.tax_details
+                .filter(tax => taxMapping[tax.name] !== null)
+                .map(tax => {
+                    if (taxMapping[tax.name]) {
+                        return {
+                            name: taxMapping[tax.name].new_name,
+                            amount: taxMapping[tax.name].new_amount
+                        };
+                    }
+                    return tax;
+            });
+            productInfo.all_prices.price_with_tax = product.get_display_price({iface_tax_included:"total"})
+        }
+
         const margin = priceWithoutTax - product.standard_price;
         const orderPriceWithoutTax = order.get_total_without_tax();
         const orderCost = order.get_total_cost();

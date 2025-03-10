@@ -15,10 +15,10 @@
                             <span class="fs-3"><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
                         </div>
                         <div class="d-flex flex-column justify-content-center text-start text-sm-end w-100 w-sm-25">
-                            <span t-esc="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="global-info-title fs-2 fw-bolder" />
+                            <span t-esc="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="product-info-price-with-tax global-info-title fs-2 fw-bolder" />
                             <span class="fs-3">
                                 <t t-foreach="productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
-                                    <div><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
+                                    <div class="tax-name-amount"><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
                                 </t>
                             </span>
                         </div>
