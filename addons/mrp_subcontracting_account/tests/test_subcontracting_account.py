@@ -14,6 +14,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_subcontracting_account_flow_1(self):
         # pylint: disable=bad-whitespace
         self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.scrap_location = self.env['stock.location'].search([('scrap_location', '=', 'True'), ('company_id', '=', self.env.company.id)], limit=1)
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
@@ -159,12 +160,14 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         ])
 
         # Scrap first subcontract MO and ensure that the additional cost is not added.
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].create({
             'product_id': self.finished.id,
             'product_uom_id': self.uom_unit.id,
-            'scrap_qty': 1,
+            'quantity': 1,
             'production_id': mo1.id,
             'location_id': self.stock_location.id,
+            'location_dest_id': self.scrap_location.id,
+            'company_id': self.env.company.id,
         })
         scrap.do_scrap()
 

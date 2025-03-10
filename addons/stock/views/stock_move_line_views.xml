@@ -110,6 +110,71 @@
         </field>
     </record>
 
+    <record id="view_scrap_move_line_form" model="ir.ui.view">
+        <field name="name">stock.scrap.move.line.form</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <form string="Scrap Products">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id" readonly="state in ('done', 'cancel')" domain="[('id', 'in', context.get('product_ids'))] if 'product_ids' in context else []" options="{'no_create': 'product_ids' in context}" />
+                            <label for="quantity" readonly="state in ('done', 'cancel')"/>
+                            <div class="o_row">
+                                <field name="quantity" string="Quantity" readonly="state in ('done', 'cancel')"/>
+                                <field name="product_uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state in ('done', 'cancel')"/>
+                            </div>
+                            <field name="lot_id" string="Lot/Serial Numbers" invisible="not product_id or tracking == 'none'" readonly="state in ('done', 'cancel')" domain="[('product_id', '=', product_id), ('id', 'in', context.get('lot_ids'))] if context.get('lot_ids') else [('product_id', '=', product_id)]"/>
+                            <field name="should_replenish_scrapped" readonly="state in ('done', 'cancel')"/>
+                            <field name="scrap_reason_tag_ids" widget="many2many_tags" readonly="state in ('done', 'cancel')"/>
+                        </group>
+                        <group>
+                            <field name="location_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_dest_id" string="Scrap Location" domain="[('scrap_location', '=', True)]" options="{'no_create': True}" readonly="state in ('done', 'cancel')" groups="stock.group_stock_multi_locations"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state in ('done', 'cancel')"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')" context="{'is_scrap': True}"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_scrap_move_line_form2" model="ir.ui.view">
+        <field name="name">stock.scrap.move.line.form2</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <form string="Scrap Products">
+                <header>
+                    <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')" context="{'is_scrap': True}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id" readonly="state in ('done', 'cancel')" domain="[('type', '=', 'consu')]" options="{'no_create': True}" />
+                            <label for="quantity" readonly="state in ('done', 'cancel')"/>
+                            <div class="o_row">
+                                <field name="quantity" string="Quantity" readonly="state in ('done', 'cancel')"/>
+                                <field name="product_uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state in ('done', 'cancel')"/>
+                            </div>
+                            <field name="lot_id" string="Lot/Serial Numbers" invisible="not product_id or tracking == 'none'" readonly="state in ('done', 'cancel')" domain="[('product_id', '=', product_id), ('id', 'in', context.get('lot_ids'))] if context.get('lot_ids') else [('product_id', '=', product_id)]"/>
+                            <field name="should_replenish_scrapped" readonly="state in ('done', 'cancel')"/>
+                            <field name="scrap_reason_tag_ids" widget="many2many_tags" readonly="state in ('done', 'cancel')"/>
+                        </group>
+                        <group>
+                            <field name="location_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_dest_id" string="Scrap Location" domain="[('scrap_location', '=', True)]" options="{'no_create': True}" readonly="state in ('done', 'cancel')" groups="stock.group_stock_multi_locations"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state in ('done', 'cancel')"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="view_move_line_mobile_form" model="ir.ui.view">
         <field name="name">stock.move.line.mobile.form</field>
         <field name="model">stock.move.line</field>
