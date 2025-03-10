@@ -87,6 +87,32 @@
             </field>
         </record>
 
+        <record id="view_scrapped_move_list" model="ir.ui.view">
+            <field name="name">stock.move.list.scrapped</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <list string="Scraps" create="0">
+                    <header>
+                        <button string="New" class="btn-primary" name="scrap_move_line_action" display="always" type="object"/>
+                    </header>
+                    <field name="reference"/>
+                    <field name="date"/>
+                    <field name="product_id"/>
+                    <field name="quantity"/>
+                    <field name="product_uom" groups="uom.group_uom"/>
+                    <field name="location_id"/>
+                    <field name="location_dest_id" string="Scrap Location"/>
+                    <field name="company_id" string="Company"/>
+                    <field name="state" widget="badge" decoration-danger="state=='cancel'"
+                           decoration-info="state== 'assigned'"
+                           decoration-muted="state == 'draft'"
+                           decoration-success="state == 'done'"
+                           decoration-warning="state not in ('draft','cancel','done','assigned')"/>
+                </list>
+            </field>
+        </record>
+
+
         <record id="view_move_kandan" model="ir.ui.view">
             <field name="name">stock.move.kanban</field>
             <field name="model">stock.move</field>
@@ -291,6 +317,9 @@
                                 <field name="date" readonly="1" string="Move Date" invisible="state != 'done'"
                                     help="The actual date when the transfer was processed."/>
                                 <field name="date_deadline" force_save="1"/>
+                                <field name="scrapped" readonly="1"/>
+                                <field name="scrap_reason_tag_ids" widget="many2many_tags" invisible="not scrapped"/>
+                                <field name="lot_ids" string="Scrapped Lots" widget="many2many_tags" invisible="not scrapped or has_tracking == 'none'"/>
                             </group>
                         </group>
                         <group name="origin_grp" string="Origin" groups="base.group_no_one" >
@@ -298,7 +327,7 @@
                             <field name="group_id"/>
                             <field name="procure_method" readonly="state != 'draft'" groups="stock.group_adv_location"/>
                         </group>
-                        <group name="linked_group" string="Linked Moves" groups="base.group_no_one" colspan="2">
+                        <group name="linked_group" string="Linked Moves" groups="base.group_no_one" colspan="2" invisible="scrapped">
                             <field name="move_orig_ids" string="Origin Moves" readonly="1">
                                 <list>
                                     <field name="location_id"/>
@@ -324,6 +353,39 @@
             </field>
         </record>
 
+        <record id="view_scrap_move_form" model="ir.ui.view">
+            <field name="name">stock.scrap.move.form</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <form string="Scrap Products">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" />
+                        <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="product_id" readonly="state in ('done', 'cancel')" domain="[('id', 'in', context.get('product_ids'))] if context.get('product_ids') else []" force_save="1"/>
+                                <label for="product_uom_qty" readonly="state in ('done', 'cancel')"/>
+                                <div class="o_row">
+                                    <field name="product_uom_qty" string="Quantity" readonly="state in ('done', 'cancel')" force_save="1"/>
+                                    <field name="product_uom" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state in ('done', 'cancel')"/>
+                                </div>
+                                <!-- <field name="lot_ids" string="Lot/Serial Numbers" widget="many2many_tags" invisible="not product_id or has_tracking == 'none'" readonly="state in ('done', 'cancel')"/> -->
+                                <field name="scrap_reason_tag_ids" widget="many2many_tags" readonly="state in ('done', 'cancel')"/>
+                            </group>
+                            <group>
+                                <field name="location_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')"/>
+                                <field name="location_dest_id" string="Scrap Location" domain="[('scrap_location', '=', True)]" options="{'no_create': True}" readonly="state in ('done', 'cancel')"/>
+                                <field name="company_id" groups="base.group_multi_company" readonly="state in ('done', 'cancel')"/>
+                            </group>
+                            <field name="move_line_ids" invisible="has_tracking == 'none'"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="view_move_search" model="ir.ui.view">
             <field name="name">stock.move.search</field>
             <field name="model">stock.move</field>
@@ -343,6 +405,7 @@
                     <filter string="Incoming" name="incoming" domain="[('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
                     <filter string="Outgoing" name="outgoing" domain="[('location_id.usage', 'in', ('internal', 'transit')), ('location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
                     <filter string="Inventory" name="inventory" domain="[('is_inventory', '=', True)]"/>
+                    <filter string="Scrapped" name="scrapped" domain="[('scrapped', '=', True)]"/>
                     <separator/>
                     <filter string="Date" name="today" date="date" help="Scheduled or processing date"/>
                     <group string="Group By">
@@ -377,6 +440,17 @@
                 to see all the past or future movements for the product.
               </p>
             </field>
+        </record>
+
+        <record id="stock_scrapped_moves_action" model="ir.actions.act_window">
+            <field name="name">Scrapped Moves</field>
+            <field name="res_model">stock.move</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('stock.view_scrapped_move_list')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('stock.view_scrap_move_form')})]"/>
+            <field name="domain">[('scrapped', '=', True)]</field>
+            <field name="context">{'default_scrapped': True}</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_stock_move_tree_all">
@@ -442,5 +516,5 @@
         </record>
 
     <menuitem action="stock_move_action" id="stock_move_menu" name="Moves Analysis" parent="stock.menu_warehouse_report" sequence="230"/>
-
+    <menuitem action="stock_scrapped_moves_action" id="menu_stock_scrap" name="Scrap" parent="stock.menu_stock_adjustments" sequence="99"/>
 </odoo>

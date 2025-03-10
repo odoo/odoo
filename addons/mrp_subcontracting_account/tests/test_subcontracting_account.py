@@ -159,12 +159,14 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         ])
 
         # Scrap first subcontract MO and ensure that the additional cost is not added.
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].create({
             'product_id': self.finished.id,
             'product_uom_id': self.uom_unit.id,
-            'scrap_qty': 1,
+            'quantity': 1,
             'production_id': mo1.id,
             'location_id': self.stock_location.id,
+            'location_dest_id': self.scrap_location.id,
+            'company_id': self.env.company.id,
         })
         scrap.do_scrap()
 

@@ -93,10 +93,10 @@ class StockTraceabilityReport(models.TransientModel):
             res_model = 'stock.move'
             res_id = move_line.move_id.id
             ref = 'Inventory Adjustment'
-        elif move_line.move_id.scrapped and move_line.move_id.scrap_id:
-            res_model = 'stock.scrap'
-            res_id = move_line.move_id.scrap_id.id
-            ref = move_line.move_id.scrap_id.name
+        elif move_line.move_id.scrapped:
+            res_model = 'stock.move'
+            res_id = move_line.move_id.id
+            ref = move_line.move_id.name
         return res_model, res_id, ref
 
     @api.model

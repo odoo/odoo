@@ -248,19 +248,17 @@ class TestWarehouseMrp(common.TestMrpCommon):
         location_id = production_3.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) and production_3.location_src_id.id or production_3.location_dest_id.id,
 
         # Scrap Product Wood without lot to check assert raise ?.
-        scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'production_id': production_3.id})
+        scrap_move_id = self.env['stock.move.line'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'quantity': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'location_dest_id': self.scrap_location.id, 'production_id': production_3.id, 'company_id': self.env.company.id})
         with self.assertRaises(UserError):
-            scrap_id.do_scrap()
+            scrap_move_id.do_scrap()
 
         # Scrap Product Wood with lot.
-        scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'lot_id': lot_product_2.id, 'production_id': production_3.id})
-        scrap_id.do_scrap()
-        scrap_move = scrap_id.move_ids[0]
+        scrap_move_id = self.env['stock.move.line'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'quantity': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'location_dest_id': self.scrap_location.id, 'lot_id': lot_product_2.id, 'production_id': production_3.id, 'company_id': self.env.company.id})
+        scrap_move_id.do_scrap()
 
-        self.assertTrue(scrap_move.raw_material_production_id)
-        self.assertTrue(scrap_move.scrapped)
-        self.assertEqual(scrap_move.location_dest_id, scrap_id.scrap_location_id)
-        self.assertEqual(scrap_move.price_unit, scrap_move.product_id.standard_price)
+        self.assertTrue(scrap_move_id.raw_material_production_id)
+        self.assertTrue(scrap_move_id.scrapped)
+        self.assertEqual(scrap_move_id.price_unit, scrap_move_id.product_id.standard_price)
 
         #Check scrap move is created for this production order.
         #TODO: should check with scrap objects link in between
@@ -650,10 +648,10 @@ class TestKitPicking(common.TestMrpCommon):
         kit.is_storable = storable
         component.is_storable = True
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move.line'].create({
             'product_id': kit.id,
             'product_uom_id': kit.uom_id.id,
-            'scrap_qty': 1,
+            'quantity': 1,
             'bom_id': bom.id,
         })
 
