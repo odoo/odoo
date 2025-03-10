@@ -8,9 +8,6 @@
             t-on-click="props.onClick"
             t-att-data-product-id="props.productId"
             t-attf-aria-labelledby="article_product_{{props.productId}}">
-            <div t-if="props.productInfo" class="product-information-tag position-absolute top-0 end-0 z-2 w-0 h-0 rounded-end-2 text-light text-center" t-on-click.stop="props.onProductInfoClick" t-att-class="{'red-tag' : props.showWarning, 'favorite-product': props.product.is_favorite}">
-                <i class="product-information-tag-logo fa fa-info" role="img" aria-label="Product Information" title="Product Information" />
-            </div>
             <div t-if="props.imageUrl" class="product-img ratio ratio-4x3 rounded-top rounded-3">
                 <img class="w-100 o_object_fit_cover bg-200" t-att-src="props.imageUrl" t-att-alt="props.name" />
             </div>
