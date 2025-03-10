@@ -73,7 +73,10 @@ def MockRequest(
     if website:
         request.website_routing = website.id
     if country_code:
-        request.geoip._city_record = odoo.http.geoip2.models.City({'country': {'iso_code': country_code}})
+        try:
+            request.geoip._city_record = odoo.http.geoip2.models.City(['en'], country={'iso_code': country_code})
+        except TypeError:
+            request.geoip._city_record = odoo.http.geoip2.models.City({'country': {'iso_code': country_code}})
 
     # The following code mocks match() to return a fake rule with a fake
     # 'routing' attribute (routing=True) or to raise a NotFound
