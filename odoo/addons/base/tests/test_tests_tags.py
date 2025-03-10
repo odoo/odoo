@@ -212,6 +212,15 @@ class TestSelector(TransactionCase):
         self.assertEqual({(None, 'module', None, None, None), }, tags.include)  # all in module
         self.assertEqual({('standard', None, None, None, None), }, tags.exclude)  # exept standard ones
 
+        tags = TagsSelector('/some/absolute/path/v.3/module.py')
+        self.assertEqual({('standard', None, None, None, '/some/absolute/path/v.3/module.py'), }, tags.include)  # all in module
+
+        tags = TagsSelector('/some/absolute/path/v.3/module.py')
+        self.assertEqual({('standard', None, None, None, '/some/absolute/path/v.3/module.py'), }, tags.include)  # all in module
+
+        tags = TagsSelector('/module.method')
+        self.assertEqual({('standard', 'module', None, 'method', None), }, tags.include)  # all in module
+
 
 @tagged('nodatabase')
 class TestSelectorSelection(TransactionCase):
