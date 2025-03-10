@@ -71,7 +71,7 @@
                 </div>
                 <div t-if="extended and !props.composer.message" class="d-flex align-items-center mt-2 gap-1 w-100 px-2">
                     <t t-call="mail.Composer.sendButton"/>
-                    <span t-if="!isSendButtonDisabled and !props.composer.message" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
+                    <span t-if="!isSendButtonDisabled and !props.composer.message and !isMobileOS" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
                     <span class="flex-grow-1"/>
                     <t t-call="mail.Composer.extraActions"/>
                 </div>
