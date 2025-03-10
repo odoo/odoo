@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
-from odoo.tools import SQL, Query
+from odoo.tools import SQL, Query, unique
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.exceptions import UserError, ValidationError
 
@@ -16,6 +16,11 @@ class AnalyticMixin(models.AbstractModel):
     analytic_precision = fields.Integer(
         store=False,
         default=lambda self: self.env['decimal.precision'].precision_get("Percentage Analytic"),
+    )
+    distribution_analytic_account_ids = fields.Many2many(
+        comodel_name='account.analytic.account',
+        compute='_compute_distribution_analytic_account_ids',
+        search='_search_distribution_analytic_account_ids',
     )
 
     def init(self):
@@ -34,6 +39,17 @@ class AnalyticMixin(models.AbstractModel):
 
     def _compute_analytic_distribution(self):
         pass
+
+    @api.depends('analytic_distribution')
+    def _compute_distribution_analytic_account_ids(self):
+        all_ids = {int(_id) for rec in self for key in (rec.analytic_distribution or {}) for _id in key.split(',')}
+        existing_accounts_ids = set(self.env['account.analytic.account'].browse(all_ids).exists().ids)
+        for rec in self:
+            ids = list(unique(int(_id) for key in (rec.analytic_distribution or {}) for _id in key.split(',') if int(_id) in existing_accounts_ids))
+            rec.distribution_analytic_account_ids = self.env['account.analytic.account'].browse(ids)
+
+    def _search_distribution_analytic_account_ids(self, operator, value):
+        return [('analytic_distribution', operator, value)]
 
     def _query_analytic_accounts(self, table=False):
         return SQL(
