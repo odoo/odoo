@@ -167,6 +167,9 @@ class OptimizationLevel(enum.IntEnum):
     FOR_SQL = enum.auto()
 
 
+MAX_OPTIMIZE_ITERATIONS = 1000
+
+
 # --------------------------------------------------
 # Domain definition and manipulation
 # --------------------------------------------------
@@ -380,8 +383,12 @@ class Domain:
         if self._opt_level >= level:
             return self
 
-        # apply optimizations
-        domain = self._optimize(model, full)
+        # determine a fixpoint for _optimize()
+        previous, domain, count = None, self, 0
+        while domain != previous:
+            if (count := count + 1) > MAX_OPTIMIZE_ITERATIONS:
+                raise RecursionError("Domain.optimize: too many loops")
+            previous, domain = domain, domain._optimize(model, full)
 
         # set the optimization level if necessary (unlike DomainBool, for instance)
         if domain._opt_level < level:
@@ -414,7 +421,7 @@ class DomainBool(Domain):
         return self
 
     def __eq__(self, other):
-        return isinstance(other, DomainBool) and self.value == other.value
+        return self is other  # because this class has two instances only
 
     def __hash__(self):
         return hash(self.value)
@@ -481,7 +488,7 @@ class DomainNot(Domain):
         return self.child.optimize(model, full=full)._negate(model)
 
     def __eq__(self, other):
-        return isinstance(other, DomainNot) and self.child == other.child
+        return self is other or (isinstance(other, DomainNot) and self.child == other.child)
 
     def __hash__(self):
         return ~hash(self.child)
@@ -540,7 +547,7 @@ class DomainNary(Domain):
             yield from child
 
     def __eq__(self, other):
-        return (
+        return self is other or (
             isinstance(other, DomainNary)
             and self.OPERATOR == other.OPERATOR
             and self.children == other.children
@@ -568,34 +575,19 @@ class DomainNary(Domain):
         return self.apply(child.map_conditions(function) for child in self.children)
 
     def _optimize(self, model: BaseModel, full: bool) -> Domain:
-        """Optimization step.
-
-        Optimize all children with the given model.
-        Run the registered optimizations until a fixed point is found.
-        See :function:`nary_optimization` for details.
-        """
         # optimize children
-        children = (child.optimize(model, full=full) for child in self.children)
-
+        children = self._flatten(child.optimize(model, full=full) for child in self.children)
         level = OptimizationLevel.FOR_SQL if full else OptimizationLevel.BASIC
-        cls = type(self)  # cls used for optimizations and rebuilding
-        while True:
-            children = self._flatten(children)
-            if len(children) == 1:
-                return children[0]
+        size = len(children)
+        if size > 1:
+            # sort children in order to ease their grouping by field and operator
             children.sort(key=_optimize_nary_sort_key)
-            children_previous = children
-            for merge_optimization in _CONDITION_MERGE_OPTIMIZATIONS:
-                # group by field_name and whether to apply the function to the operator
-                # we have already sorted by field name, operator type, operator
-                children = merge_optimization(cls, model, level, children)
-                # persist children to ease debugging
-                if _logger.isEnabledFor(logging.DEBUG):
-                    children = list(children)
-            children = list(children)
-            if len(children) == len(children_previous):
-                # optimized
-                return cls(children)
+            # run optimizations until some merge happens
+            for merge in _CONDITION_MERGE_OPTIMIZATIONS:
+                children = list(merge(type(self), model, level, children))
+                if len(children) < size:
+                    break
+        return self.apply(children)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         return SQL("(%s)", self.OPERATOR_SQL.join(
@@ -732,7 +724,7 @@ class DomainCondition(Domain):
         yield (field_expr, operator, value)
 
     def __eq__(self, other):
-        return (
+        return self is other or (
             isinstance(other, DomainCondition)
             and self.field_expr == other.field_expr
             and self.operator == other.operator
@@ -790,19 +782,19 @@ class DomainCondition(Domain):
         field, property_name = self.__get_field(model)
         if property_name and field.relational:
             sub_domain = DomainCondition(property_name, self.operator, self.value)
-            return DomainCondition(field.name, 'any', sub_domain)._optimize(model, full)
+            return DomainCondition(field.name, 'any', sub_domain)
 
         # optimizations based on operator
         for opt in _CONDITION_OPTIMIZATIONS_BY_OPERATOR[self.operator]:
             domain = opt(self, model)
-            if domain is not self:
-                return domain._optimize(model, full)
+            if domain != self:
+                return domain
 
         # optimizations based on field type
         for opt in _CONDITION_OPTIMIZATIONS_BY_FIELD_TYPE[field.type]:
             domain = opt(self, model)
-            if domain is not self:
-                return domain._optimize(model, full)
+            if domain != self:
+                return domain
 
         if not full:
             return self
@@ -813,7 +805,7 @@ class DomainCondition(Domain):
         if field.inherited:
             parent_fname = field.related.split('.')[0]
             parent_domain = DomainCondition(self.field_expr, self.operator, self.value)
-            return DomainCondition(parent_fname, 'any', parent_domain).optimize(model)._optimize(model, full)
+            return DomainCondition(parent_fname, 'any', parent_domain)
 
         # handle non-stored fields (replace by searchable/stored items)
         if not field.store:
@@ -825,19 +817,19 @@ class DomainCondition(Domain):
                 _logger.error("Non-stored field %s cannot be searched.", field, stack_info=_logger.isEnabledFor(logging.DEBUG))
                 return _TRUE_DOMAIN
             domain = field.determine_domain(model, self.operator, self.value)
-            return Domain(domain).optimize(model)._optimize(model, full)
+            return Domain(domain)
 
         # optimizations based on operator
         for opt in _CONDITION_OPTIMIZATIONS_FOR_SQL_BY_OPERATOR[self.operator]:
-            dom = opt(self, model)
-            if dom is not self:
-                return dom.optimize(model)._optimize(model, full)
+            domain = opt(self, model)
+            if domain != self:
+                return domain
 
         # optimizations based on field type
         for opt in _CONDITION_OPTIMIZATIONS_FOR_SQL_BY_FIELD_TYPE[field.type]:
-            dom = opt(self, model)
-            if dom is not self:
-                return dom.optimize(model)._optimize(model, full)
+            domain = opt(self, model)
+            if domain != self:
+                return domain
 
         # final checks
         if self.operator not in STANDARD_CONDITION_OPERATORS:
@@ -942,11 +934,7 @@ def nary_condition_optimization(*, operators: Collection[str], field_condition: 
                 ):
                     list_conds: list[DomainCondition] = list(conds)  # type: ignore[arg-type]
                     if len(list_conds) > 1:
-                        for cond in optimization(cls, model, list_conds):
-                            if level > OptimizationLevel.BASIC:
-                                yield cond.optimize(model, full=True)
-                            else:
-                                yield cond.optimize(model)
+                        yield from optimization(cls, model, list_conds)
                     else:
                         yield from list_conds
                 else:
@@ -1079,8 +1067,6 @@ def _optimize_in_list(condition, _):
         # TODO show warning, note that condition.field_expr in ('group_ids', 'user_ids') gives a lot of them
         _logger.debug("The domain condition %r should have a list value.", condition)
         value = [value]
-    if value is condition.value:
-        return condition
     return DomainCondition(condition.field_expr, condition.operator, OrderedSet(value))
 
 
@@ -1129,9 +1115,6 @@ def _optimize_any_domain(condition, model):
     # if the domain is True, we keep it as is
     if domain.is_false():
         return Domain(condition.operator == 'not any')
-    # if unchanged, return the condition
-    if domain is value:
-        return condition
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
 
@@ -1148,8 +1131,6 @@ def _optimize_any_domain_for_sql(condition, model):
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
     domain = domain.optimize(comodel, full=True)
-    if domain is condition.value:
-        return condition
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
 
@@ -1238,8 +1219,6 @@ def _optimize_boolean_in(condition, model):
             str2bool(v.lower(), False) if isinstance(v, str) else bool(v)
             for v in value
         }
-    if value is condition.value:
-        return condition
     return DomainCondition(condition.field_expr, operator, value)
 
 
@@ -1290,8 +1269,6 @@ def _optimize_type_date(condition, _):
     if value is False and operator[0] in ('<', '>'):
         # comparison to False results in an empty domain
         return _FALSE_DOMAIN
-    if value == condition.value:
-        return condition
     return DomainCondition(condition.field_expr, operator, value)
 
 
