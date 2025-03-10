@@ -656,6 +656,10 @@ class CustomerPortal(Controller):
                     else:
                         address_values.pop(commercial_field_name, None)
 
+                # Company name shouldn't be updated on a child address, even if it's not in the
+                # fields returned by _commercial_fields.
+                address_values.pop('company_name', None)
+
             # Prevent changing the VAT number on a commercial partner if documents have been issued.
             elif (
                 'vat' in address_values
