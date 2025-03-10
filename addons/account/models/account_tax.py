@@ -294,6 +294,24 @@ class AccountTax(models.Model):
         if self._cr.fetchone():
             raise UserError(_("You can't change the company of your tax since there are some journal items linked to it."))
 
+    @api.constrains('amount_type', 'amount', 'price_include', 'include_base_amount', 'is_base_affected')
+    def _check_unused_tax(self):
+        if not self:
+            return
+
+        self.env['account.move.line'].flush_model(['tax_line_id'])
+        self._cr.execute('''
+            SELECT line.id
+            FROM account_move_line line
+            JOIN account_move move ON line.move_id = move.id
+            JOIN account_tax tax ON tax.id = line.tax_line_id
+            WHERE line.tax_line_id IN %s
+            AND move.company_id = tax.company_id
+            LIMIT 1
+        ''', [tuple(self.ids)])
+        if self._cr.fetchone():
+            raise UserError(_("It is forbidden to modify a tax used in a journal item. Please archive it instead."))
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
