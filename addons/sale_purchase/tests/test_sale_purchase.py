@@ -322,7 +322,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         })
         sale_order.action_confirm()
         pol = sale_order._get_purchase_orders().order_line
-        self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
+        self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
 
     def test_pol_analytic_distribution(self):
         """Confirming SO, analytic account from SO should be set as Analytic Distribution in POL."""

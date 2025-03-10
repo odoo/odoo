@@ -146,7 +146,7 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
         # Check the name of the created sale order line
         new_sale_order = self.env['sale.order'].search([]) - old_sale_order
         new_order_line = new_sale_order.order_line
-        self.assertEqual(new_order_line.name, 'Short (TEST) (M always, M dynamic)\n\nNever attribute size: M never\nNever attribute size custom: Yes never custom: TEST')
+        self.assertEqual(new_order_line.name, 'Short (TEST) (M always, M dynamic)\nNever attribute size: M never\nNever attribute size custom: Yes never custom: TEST')
 
     def test_product_configurator_force_dialog(self):
         """ Test that the product configurator is shown if forced. """

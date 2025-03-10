@@ -71,7 +71,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     trigger: ".o_form_editable",
 },
 {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
     run: "click",
 }, {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
@@ -111,7 +111,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     trigger: ".o_form_editable",
 },
 {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
     run: "click",
 }, {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
@@ -144,7 +144,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     trigger: ".o_form_status_indicator_buttons.invisible", // wait for save to be finished
 },
 {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
     run: "click",
 }, 
 {
