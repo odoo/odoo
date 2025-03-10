@@ -40,7 +40,7 @@ export class CalendarFilterSection extends Component {
                 {
                     placeholder: _t("Loading..."),
                     options: (request) => this.loadSource(request),
-                    optionTemplate: "web.CalendarFilterPanel.autocomplete.options",
+                    optionSlot: "option",
                 },
             ],
             onSelect: (option, params = {}) => {
@@ -108,8 +108,6 @@ export class CalendarFilterSection extends Component {
         const options = records.map((result) => ({
             value: result[0],
             label: result[1],
-            model: resModel,
-            avatarField: this.section.avatar.field,
         }));
 
         if (records.length > 7) {

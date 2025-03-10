@@ -497,21 +497,6 @@ export class Many2XAutocomplete extends Component {
     }
 }
 
-export class AvatarMany2XAutocomplete extends Many2XAutocomplete {
-    mapRecordToOption(result) {
-        return {
-            ...super.mapRecordToOption(result),
-            resModel: this.props.resModel,
-        };
-    }
-    get optionsSource() {
-        return {
-            ...super.optionsSource,
-            optionTemplate: "web.AvatarMany2XAutocomplete",
-        };
-    }
-}
-
 export function useOpenMany2XRecord({
     resModel,
     onRecordSaved,
