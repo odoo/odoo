@@ -982,8 +982,10 @@ export class Rtc extends Record {
             case "track":
                 {
                     const { sessionId, type, track, active } = payload;
-                    const session = this.store["discuss.channel.rtc.session"].get(sessionId);
-                    if (!session) {
+                    const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
+                        sessionId
+                    );
+                    if (!session || !this.channel) {
                         this.log(
                             this.selfSession,
                             `track received for unknown session ${sessionId} (${this.state.connectionType})`
@@ -1075,7 +1077,7 @@ export class Rtc extends Record {
         );
     }
 
-    updateSessionInfo(payload) {
+    async updateSessionInfo(payload) {
         if (!payload) {
             return;
         }
@@ -1083,8 +1085,10 @@ export class Rtc extends Record {
             this._updateRemoteTabs(payload);
         }
         for (const [id, info] of Object.entries(payload)) {
-            const session = this.store["discuss.channel.rtc.session"].get(Number(id));
-            if (!session) {
+            const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
+                Number(id)
+            );
+            if (!session || !this.channel) {
                 return;
             }
             if (

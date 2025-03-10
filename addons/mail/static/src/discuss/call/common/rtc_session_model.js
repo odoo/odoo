@@ -1,13 +1,38 @@
 import { Record } from "@mail/core/common/record";
+import { Deferred } from "@web/core/utils/concurrency";
+
+const SESSION_GETTER_TIMEOUT = 120_000;
 
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
     static id = "id";
     /** @type {Object.<number, import("models").RtcSession>} */
     static records = {};
+    static awaitedRecords = new Map();
     /** @returns {import("models").RtcSession} */
     static get(data) {
         return super.get(data);
+    }
+    /** @returns {Promies<import("models").RtcSession>} */
+    static async getWhenReady(id) {
+        let session = this.get(id);
+        if (!session) {
+            let deferred = this.awaitedRecords.get(id);
+            if (!deferred) {
+                deferred = new Deferred();
+                this.awaitedRecords.set(id, deferred);
+                setTimeout(() => {
+                    deferred.reject?.();
+                    this.awaitedRecords.delete(id);
+                }, SESSION_GETTER_TIMEOUT);
+            }
+            try {
+                session = await deferred;
+            } catch {
+                return;
+            }
+        }
+        return session;
     }
     /**
      * @template T
@@ -21,6 +46,7 @@ export class RtcSession extends Record {
         /** @type {import("models").RtcSession} */
         const session = super._insert(...arguments);
         session.channel?.rtcSessions.add(session);
+        this.awaitedRecords.get(session.id)?.resolve?.(session);
         return session;
     }
 
@@ -171,6 +197,13 @@ export class RtcSession extends Record {
             this.audioElement.volume = value;
         }
         this.localVolume = value;
+    }
+
+    delete() {
+        const def = RtcSession.awaitedRecords.get(this.id);
+        def?.reject?.();
+        RtcSession.awaitedRecords.delete(this.id);
+        return super.delete(...arguments);
     }
 
     async playAudio() {
