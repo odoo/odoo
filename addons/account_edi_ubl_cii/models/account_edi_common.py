@@ -51,7 +51,7 @@ EAS_MAPPING = {
     'CY': {'9928': 'vat'},
     'CZ': {'9929': 'vat'},
     'DE': {'9930': 'vat'},
-    'DK': {'0184': 'company_registry', '0198': 'vat'},
+    'DK': {'0184': 'vat', '0198': 'vat'},
     'EE': {'9931': 'vat'},
     'ES': {'9920': 'vat'},
     'FI': {'0216': None},
