@@ -6,7 +6,14 @@ _logger = logging.getLogger(__name__)
 
 class TagsSelector(object):
     """ Test selector based on tags. """
-    filter_spec_re = re.compile(r'^([+-]?)(\*|\w*)(?:\/([\w\-\/]*(?:.py)?))?(?::(\w*))?(?:\.(\w*))?$')  # [-][tag][/module][:class][.method]
+    filter_spec_re = re.compile(r'''^
+        ([+-]?)
+        (\*|\w*)
+        (\/[\w\/\.-]+.py)?
+        (?:\/(\w+))?
+        (?::(\w*))?
+        (?:\.(\w*))?
+        $''',re.VERBOSE)  # [-][tag][/module][:class][.method]
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
@@ -20,7 +27,7 @@ class TagsSelector(object):
                 _logger.error('Invalid tag %s', filter_spec)
                 continue
 
-            sign, tag, module, klass, method = match.groups()
+            sign, tag, file_path, module, klass, method = match.groups()
             is_include = sign != '-'
 
             if not tag and is_include:
@@ -29,10 +36,6 @@ class TagsSelector(object):
             elif not tag or tag == '*':
                 # '*' indicates all tests (instead of 'standard' tests only)
                 tag = None
-            file_path = None
-            if module and (module.endswith('.py')):
-                file_path = f"/{module}"
-                module = None
             test_filter = (tag, module, klass, method, file_path)
 
             if is_include:
