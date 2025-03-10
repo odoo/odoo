@@ -28,3 +28,10 @@ class PosLoadMixin(models.AbstractModel):
         if last_server_date and domain is not False and limited_loading:
             domain = AND([domain, [('write_date', '>', last_server_date)]])
         return domain
+
+    def _post_read_pos_data(self, data):
+        return data
+
+    def _read_pos_record(self, ids, config_id):
+        fields = self._load_pos_data_fields(self.id)
+        return self.with_context(config_id=config_id)._post_read_pos_data(self.browse(ids).read(fields, load=False))

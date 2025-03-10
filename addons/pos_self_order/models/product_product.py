@@ -24,7 +24,7 @@ class ProductTemplate(models.Model):
 
         # Add custom fields for 'formula' taxes.
         fields = set(self._load_pos_self_data_fields(data['pos.config'][0]['id']))
-        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
+        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_self_data_domain(data))
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
         fields = list(fields.union(product_fields))
 
@@ -49,9 +49,12 @@ class ProductTemplate(models.Model):
 
         data['pos.config'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
-        self._process_pos_self_ui_products(products)
 
         return products
+
+    def _post_read_pos_self_data(self, data):
+        self._process_pos_self_ui_products(data)
+        return super()._post_read_pos_self_data(data)
 
     def _process_pos_self_ui_products(self, products):
         for product in products:

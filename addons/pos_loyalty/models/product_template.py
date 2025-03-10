@@ -18,10 +18,7 @@ class ProductTemplate(models.Model):
         fields = self.env['product.template']._load_pos_data_fields(data['pos.config'][0]['id'])
 
         missing_product_templates = self.env['product.template'].browse(missing_product_tmpl_ids).read(fields=fields, load=False)
-        self._process_pos_ui_product_product(missing_product_templates, config_id)
-
         product_ids_to_hide = reward_products.product_tmpl_id - self.env['product.template'].browse(already_loaded_product_tmpl_ids)
-
         data['pos.session'][0]['_pos_special_products_ids'] += product_ids_to_hide.product_variant_id.ids
         res.extend(missing_product_templates)
 
