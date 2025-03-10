@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { MEDIA_SELECTOR, isProtected } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
@@ -48,20 +49,4 @@ export class MediaWebsitePlugin extends Plugin {
             closestElement(params.node || sel.startContainer, ".o_editable") || this.editable;
         this.dependencies.media.openMediaDialog(params, editableEl);
     }
-}
-
-function shouldEditableMediaBeEditable(mediaEl) {
-    // Some sections of the DOM are contenteditable="false" (for example with
-    // the help of the o_not_editable class) but have inner media that should be
-    // editable (the fact the container is not is to prevent adding text in
-    // between those medias). This case is complex and the solution to support
-    // it is not perfect: we mark those media with a class and check that the
-    // first non editable ancestor is in fact in an editable parent.
-    const parentEl = mediaEl.parentElement;
-    const nonEditableAncestorRootEl = parentEl && parentEl.closest("[contenteditable='false']");
-    return (
-        nonEditableAncestorRootEl &&
-        nonEditableAncestorRootEl.parentElement &&
-        nonEditableAncestorRootEl.parentElement.isContentEditable
-    );
 }

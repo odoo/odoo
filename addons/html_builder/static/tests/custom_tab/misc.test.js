@@ -410,6 +410,7 @@ test("useDomState callback shouldn't be called when the editingElement is remove
     }
     addOption({
         selector: ".s_test",
+        editableOnly: false,
         Component: TestOption,
     });
 
@@ -460,6 +461,43 @@ test("Update editing elements at dom change with multiple levels of applyTo", as
     await contains("[data-action-id='customAction']").click();
     await contains("[data-class-action='my-custom-class']").click();
     expect(":iframe .sub-child-target").toHaveClass("my-custom-class");
+});
+
+test("An option should only appear if its target is inside an editable area, unless specified otherwise", async () => {
+    addOption({
+        selector: ".test-target",
+        template: xml`
+            <BuilderButton classAction="'dummy-class-a'">Option A</BuilderButton>
+        `,
+    });
+    addOption({
+        selector: ".test-target",
+        editableOnly: false,
+        template: xml`
+            <BuilderButton classAction="'dummy-class-b'">Option B</BuilderButton>
+        `,
+    });
+    const { getEditor } = await setupWebsiteBuilder(`<div></div>`);
+    const editor = getEditor();
+    setContent(
+        editor.editable,
+        `<div class="content">
+            <div class="test-target test-not-editable">NOT IN EDITABLE</div>
+        </div>
+        <div class="content o_editable">
+            <div class="test-target test-editable">IN EDITABLE</div>
+        </div>`
+    );
+    editor.shared.history.addStep();
+
+    await contains(":iframe .test-not-editable").click();
+    expect(queryAllTexts(".options-container [data-class-action]")).toEqual(["Option B"]);
+
+    await contains(":iframe .test-editable").click();
+    expect(queryAllTexts(".options-container [data-class-action]")).toEqual([
+        "Option A",
+        "Option B",
+    ]);
 });
 
 describe("isActiveItem", () => {

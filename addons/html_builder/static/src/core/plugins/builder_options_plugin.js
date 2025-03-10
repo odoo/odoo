@@ -3,6 +3,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove/remove_plugin";
 import { isClonable } from "./clone/clone_plugin";
 import { getElementsWithOption } from "@html_builder/utils/utils";
+import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
@@ -62,11 +63,13 @@ export class BuilderOptionsPlugin extends Plugin {
         const mapElementsToOptions = (options) => {
             const map = new Map();
             for (const option of options) {
-                const { selector, exclude } = option;
+                const { selector, exclude, editableOnly } = option;
                 let elements = getClosestElements(this.target, selector);
-                if (exclude) {
-                    elements = elements.filter((el) => !el.matches(exclude));
+                if (!elements.length) {
+                    continue;
                 }
+                elements = elements.filter((el) => checkElement(el, { exclude, editableOnly }));
+
                 for (const element of elements) {
                     if (map.has(element)) {
                         map.get(element).push(option);
@@ -193,4 +196,35 @@ function getClosestElements(element, selector) {
     }
     const parent = element.closest(selector);
     return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
+}
+
+/**
+ * Checks if the given element is valid in order to have an option.
+ *
+ * @param {HTMLElement} el
+ * @param {Boolean} editableOnly when set to false, the element does not need to
+ *     be in an editable area and the checks are therefore lighter.
+ *     (= previous data-no-check/noCheck)
+ * @param {String} exclude
+ * @returns {Boolean}
+ */
+export function checkElement(el, { editableOnly = true, exclude = "" }) {
+    // Unless specified otherwise, the element should be in an editable.
+    if (editableOnly && !el.closest(".o_editable")) {
+        return false;
+    }
+    // Check that the element is not to be excluded.
+    exclude += `${exclude && ", "}.o_snippet_not_selectable`;
+    if (el.matches(exclude)) {
+        return false;
+    }
+    // If an editable is not required, do not check anything else.
+    if (!editableOnly) {
+        return true;
+    }
+    // `o_editable_media` bypasses the `o_not_editable` class.
+    if (el.matches(".o_editable_media")) {
+        return shouldEditableMediaBeEditable(el);
+    }
+    return !el.matches('.o_not_editable:not(.s_social_media) :not([contenteditable="true"])');
 }
