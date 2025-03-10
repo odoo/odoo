@@ -327,7 +327,9 @@ class AccountAnalyticLine(models.Model):
             # Then, he is internal user, and we take the domain for this current user
             return self.env['ir.rule']._compute_domain(self._name)
         return [
+            '|',
             ('message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+            ('partner_id', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
             ('project_id.privacy_visibility', '=', 'portal'),
         ]
 
