@@ -8,11 +8,12 @@ from odoo.tests import tagged, TransactionCase
 
 @tagged('recruitment')
 class TestRecruitment(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-    def setUp(self):
-        self.TEXT = base64.b64encode(bytes("hr_recruitment", 'utf-8'))
-        self.Attachment = self.env['ir.attachment']
-        return super().setUp()
+        cls.TEXT = base64.b64encode(bytes("hr_recruitment", 'utf-8'))
+        cls.Attachment = cls.env['ir.attachment']
 
     def test_infer_applicant_lang_from_context(self):
         # Prerequisites
@@ -175,45 +176,45 @@ class TestRecruitment(TransactionCase):
         A, B, C, D, E, F, G, H = self.env["hr.applicant"].create(
             [
                 {
-                    "partner_name": "Talent",
+                    "partner_name": "Talent A",
                     "email_from": "mainTalentEmail@example.com",
                     "talent_pool_ids": talent_pool.ids,
                 },
                 {
-                    "partner_name": "Applicant 1",
+                    "partner_name": "Applicant 1 B",
                     "email_from": "otherTalentEmail@example.com",
                     "partner_phone": "1234",
                     "linkedin_profile": "linkedin.com/in/applicant",
                     "job_id": job.id,
                 },
                 {
-                    "partner_name": "Applicant 1",
+                    "partner_name": "Applicant 1 C",
                     "email_from": "otherTalentEmail@example.com",
                     "job_id": job.id,
                 },
                 {
-                    "partner_name": "Applicant 1",
+                    "partner_name": "Applicant 1 D",
                     "partner_phone": "1234",
                     "job_id": job.id,
                 },
                 {
-                    "partner_name": "Applicant 1",
+                    "partner_name": "Applicant 1 E",
                     "linkedin_profile": "linkedin.com/in/applicant",
                     "job_id": job.id,
                 },
                 {
-                    "partner_name": "A different applicant",
+                    "partner_name": "A different applicant F",
                     "email_from": "differentEmail@example.com",
                     "partner_phone": "9876",
                     "linkedin_profile": "linkedin.com/in/NotAnApplicant",
                     "job_id": job.id,
                 },
                 {
-                    "partner_name": "Talent With No information",
+                    "partner_name": "Talent With No information G",
                     "talent_pool_ids": talent_pool.ids,
                 },
                 {
-                    "partner_name": "Applicant With No information",
+                    "partner_name": "Applicant With No information H",
                 },
             ]
         )
@@ -247,8 +248,8 @@ class TestRecruitment(TransactionCase):
         out_of_pool_domain = applicant._search_is_applicant_in_pool(operator="=", value=False)
         in_pool_applicants = applicant.search(Domain(in_pool_domain))
         out_of_pool_applicants = applicant.search(Domain(out_of_pool_domain))
-        self.assertCountEqual(in_pool_applicants.ids, [A.id, B.id, C.id, D.id, E.id, G.id, H.id])
-        self.assertCountEqual(out_of_pool_applicants.ids, demo_applicants.ids + [F.id])
+        self.assertCountEqual(in_pool_applicants, A | B | C | D | E | G | H)
+        self.assertCountEqual(out_of_pool_applicants, demo_applicants | F)
 
     def test_application_no_partner_duplicate(self):
         """ Test that when applying, the existing partner
