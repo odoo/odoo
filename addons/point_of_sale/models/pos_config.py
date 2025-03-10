@@ -208,11 +208,11 @@ class PosConfig(models.Model):
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
 
     def notify_synchronisation(self, session_id, login_number, records={}):
+        self.ensure_one()
         static_records = {}
 
         for model, ids in records.items():
-            fields = self.env[model]._load_pos_data_fields(self.id)
-            static_records[model] = self.env[model].browse(ids).read(fields, load=False)
+            static_records[model] = self.env[model]._read_pos_record(ids, self.id)
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
@@ -241,12 +241,12 @@ class PosConfig(models.Model):
     def _load_pos_data(self, data):
         domain = self._load_pos_data_domain(data)
         fields = self._load_pos_data_fields(self.id)
-        config_ids = self.search_read(domain, fields, load=False)
+        return self.search_read(domain, fields, load=False)
 
-        if not config_ids[0]['use_pricelist']:
-            config_ids[0]['pricelist_id'] = False
-
-        return config_ids
+    def _post_read_pos_data(self, data):
+        if not data[0]['use_pricelist']:
+            data[0]['pricelist_id'] = False
+        return super()._post_read_pos_data(data)
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):

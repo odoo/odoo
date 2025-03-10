@@ -14,7 +14,6 @@ class ProductTemplate(models.Model):
             productModel = self.env['product.product'].with_context({**self.env.context, 'display_default_code': False})
             fields = self.env['product.template']._load_pos_data_fields(data['pos.config'][0]['id'])
             product = productModel.search_read([('id', '=', discount_product_id)], fields=fields, load=False)
-            self._process_pos_ui_product_product(product, config_id)
             res.extend(product)
 
         return res
