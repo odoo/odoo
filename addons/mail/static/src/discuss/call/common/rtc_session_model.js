@@ -1,13 +1,39 @@
 import { Record } from "@mail/core/common/record";
+import { Deferred } from "@web/core/utils/concurrency";
 
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
     static id = "id";
     /** @type {Object.<number, import("models").RtcSession>} */
     static records = {};
+    static awaitedRecords = new Map();
     /** @returns {import("models").RtcSession} */
     static get(data) {
         return super.get(data);
+    }
+    /** @returns {Promise<import("models").RtcSession>} */
+    static async getWhenReady(id) {
+        const session = this.get(id);
+        if (!session) {
+            let deferred = this.awaitedRecords.get(id);
+            if (!deferred) {
+                deferred = new Deferred();
+                this.awaitedRecords.set(id, deferred);
+                setTimeout(() => {
+                    deferred.resolve();
+                    this.awaitedRecords.delete(id);
+                }, 120_000);
+            }
+            return deferred;
+        }
+        return session;
+    }
+    /** @returns {import("models").RtcSession} */
+    static new() {
+        const record = super.new(...arguments);
+        this.awaitedRecords.get(record.id)?.resolve(record);
+        this.awaitedRecords.delete(record.id);
+        return record;
     }
     /**
      * @template T
