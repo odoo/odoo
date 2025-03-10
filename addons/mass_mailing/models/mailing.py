@@ -1056,7 +1056,7 @@ class MassMailing(models.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
+                'body': mailing._prepend_preview(mailing.body_html or '', mailing.preview),
                 'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
