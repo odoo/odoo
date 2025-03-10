@@ -14,6 +14,5 @@ declare module "models" {
         livechat_operator_id: Persona;
         livechatWelcomeMessage: Message;
         requested_by_operator: boolean;
-        storeAsActiveLivechats: Store;
     }
 }
