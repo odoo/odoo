@@ -57,7 +57,7 @@ class TagsSelector(object):
         test_method = test._testMethodName
         test_module_path = test.__module__
         for prefix in ('odoo.addons', 'odoo.upgrade'):
-            test_module = test_module.removeprefix(prefix)
+            test_module_path = test_module_path.removeprefix(prefix)
         test_module_path = test_module_path.replace('.', '/') + '.py'
 
         def _is_matching(test_filter):
