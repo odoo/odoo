@@ -21,21 +21,19 @@ class HrEmployee(models.Model):
     def _load_pos_data_fields(self, config_id):
         return ['name', 'user_id', 'work_contact_id']
 
-    def _load_pos_data(self, data):
-        domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
-
-        employees = self.search(domain)
-        manager_ids = employees.filtered(lambda emp: data['pos.config'][0]['group_pos_manager_id'] in emp.user_id.all_group_ids.ids).mapped('id')
+    def _post_read_pos_data(self, data):
+        employee_ids = [employee['id'] for employee in data]
+        employees = self.browse(employee_ids)
+        config_id = self.env['pos.config'].browse(self.env.context['config_id'])
+        manager_ids = employees.filtered(lambda emp: config_id.group_pos_manager_id.id in emp.user_id.all_group_ids.ids).mapped('id')
 
         employees_barcode_pin = employees.get_barcodes_and_pin_hashed()
         bp_per_employee_id = {bp_e['id']: bp_e for bp_e in employees_barcode_pin}
 
-        employees = employees.read(fields, load=False)
-        for employee in employees:
-            if employee['user_id'] and employee['user_id'] in manager_ids or employee['id'] in data['pos.config'][0]['advanced_employee_ids']:
+        for employee in data:
+            if (employee['user_id'] and employee['user_id'] in manager_ids) or employee['id'] in config_id.advanced_employee_ids.ids:
                 role = 'manager'
-            elif employee['id'] in data['pos.config'][0]['minimal_employee_ids']:
+            elif employee['id'] in config_id.minimal_employee_ids.ids:
                 role = 'minimal'
             else:
                 role = 'cashier'
@@ -44,7 +42,7 @@ class HrEmployee(models.Model):
             employee['_barcode'] = bp_per_employee_id[employee['id']]['barcode']
             employee['_pin'] = bp_per_employee_id[employee['id']]['pin']
 
-        return employees
+        return super()._post_read_pos_data(data)
 
     def get_barcodes_and_pin_hashed(self):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
