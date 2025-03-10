@@ -637,6 +637,9 @@ export class ListPlugin extends Plugin {
             if (textAlign && !block.style.getPropertyValue("text-align")) {
                 block.style.setProperty("text-align", textAlign);
             }
+            if (ul.style.getPropertyValue("font-size")) {
+                block.style.setProperty("font-size", ul.style.getPropertyValue("font-size"));
+            }
             cursors.update(callbacksForCursorUpdate.after(ul, block));
             ul.after(block);
         }
