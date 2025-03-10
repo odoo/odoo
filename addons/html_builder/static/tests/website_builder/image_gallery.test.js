@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, dataURItoBlob, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../website_helpers";
 import { animationFrame, click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { MockResponse } from "@web/../lib/hoot/mock/network";
@@ -179,13 +179,3 @@ test("Change gallery restore the container to the cloned equivalent image", asyn
     await contains(".o-snippets-top-actions .fa-repeat").click();
     expectOptionContainerToInclude(queryOne(":iframe .first_img"));
 });
-
-function dataURItoBlob(dataURI) {
-    const binary = atob(dataURI.split(",")[1]);
-    const array = [];
-    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
-    for (let i = 0; i < binary.length; i++) {
-        array.push(binary.charCodeAt(i));
-    }
-    return new Blob([new Uint8Array(array)], { type: mimeString });
-}

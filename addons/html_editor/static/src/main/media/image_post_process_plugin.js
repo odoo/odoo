@@ -23,7 +23,8 @@ export class ImagePostProcessPlugin extends Plugin {
      *
      * @param {HTMLImageElement} img the image to which modifications are applied
      * @param {Object} newDataset an object containing the modifications to apply
-     * @returns {string} dataURL of the image with the applied modifications
+     * @returns {Function} callback that sets dataURL of the image with the
+     * applied modifications to `img` element
      */
     async processImage(img, newDataset = {}) {
         const processContext = {};
