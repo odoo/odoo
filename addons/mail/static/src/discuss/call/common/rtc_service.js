@@ -991,8 +991,10 @@ export class Rtc extends Record {
             case "track":
                 {
                     const { sessionId, type, track, active } = payload;
-                    const session = this.store["discuss.channel.rtc.session"].get(sessionId);
-                    if (!session) {
+                    const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
+                        sessionId
+                    );
+                    if (!session || !this.state.channel) {
                         this.log(
                             this.selfSession,
                             `track received for unknown session ${sessionId} (${this.state.connectionType})`
@@ -1092,27 +1094,31 @@ export class Rtc extends Record {
             this._updateRemoteTabs(payload);
         }
         for (const [id, info] of Object.entries(payload)) {
-            const session = this.store["discuss.channel.rtc.session"].get(Number(id));
-            if (!session) {
-                return;
-            }
-            if (
-                this.channel.activeRtcSession === session &&
-                session.is_screen_sharing_on &&
-                !info.isScreenSharingOn
-            ) {
-                this.channel.activeRtcSession = undefined;
-            }
-            // `isRaisingHand` is turned into the Date `raisingHand`
-            this.setRemoteRaiseHand(session, info.isRaisingHand);
-            delete info.isRaisingHand;
-            assignDefined(session, {
-                is_muted: info.isSelfMuted ?? info.is_muted,
-                is_deaf: info.isDeaf ?? info.is_deaf,
-                isTalking: info.isTalking,
-                is_camera_on: info.isCameraOn ?? info.is_camera_on,
-                is_screen_sharing_on: info.isScreenSharingOn ?? info.is_screen_sharing_on,
-            });
+            (async () => {
+                const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
+                    Number(id)
+                );
+                if (!session || !this.state.channel) {
+                    return;
+                }
+                if (
+                    this.channel.activeRtcSession === session &&
+                    session.is_screen_sharing_on &&
+                    !info.isScreenSharingOn
+                ) {
+                    this.channel.activeRtcSession = undefined;
+                }
+                // `isRaisingHand` is turned into the Date `raisingHand`
+                this.setRemoteRaiseHand(session, info.isRaisingHand);
+                delete info.isRaisingHand;
+                assignDefined(session, {
+                    is_muted: info.isSelfMuted ?? info.is_muted,
+                    is_deaf: info.isDeaf ?? info.is_deaf,
+                    isTalking: info.isTalking,
+                    is_camera_on: info.isCameraOn ?? info.is_camera_on,
+                    is_screen_sharing_on: info.isScreenSharingOn ?? info.is_screen_sharing_on,
+                });
+            })();
         }
     }
 
