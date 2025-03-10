@@ -107,7 +107,7 @@
                         <span t-if="props.composer.message" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
                         <t t-else="">
                             <t t-call="mail.Composer.sendButton"/>
-                            <span t-if="!isSendButtonDisabled" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
+                            <span t-if="!isSendButtonDisabled and !isMobileOS" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
                         </t>
                     </div>
                     <span class="flex-grow-1"/>
