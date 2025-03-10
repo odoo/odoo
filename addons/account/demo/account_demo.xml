@@ -28,13 +28,6 @@
             <value model="res.company" search="[('chart_template', '!=', False)]"/>
         </function>
 
-        <function model="account.chart.template" name="try_loading">
-            <value eval="[]"/>
-            <value>generic_coa</value>
-            <value model="res.company" search="[('partner_id.country_id.code', 'in', ['US', False])]"/>
-            <value name="install_demo" eval="True"/>
-        </function>
-
         <!-- Payment Terms -->
 
         <record id="account_payment_term_advance" model="account.payment.term">
