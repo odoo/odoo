@@ -2,7 +2,7 @@
 
 from collections.abc import Collection
 
-from odoo import SUPERUSER_ID, _, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.osv import expression
@@ -106,7 +106,7 @@ class ResGroups(models.Model):
         classified = self.env['res.config.settings']._get_classified_fields()
         for _name, _groups, implied_group in classified['group']:
             if implied_group.id in self.ids:
-                raise ValidationError(_('You cannot delete a group linked with a settings field.'))
+                raise ValidationError(self.env._('You cannot delete a group linked with a settings field.'))
 
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
@@ -159,13 +159,13 @@ class ResGroups(models.Model):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         for group, vals in zip(self, vals_list):
-            vals['name'] = default.get('name') or _('%s (copy)', group.name)
+            vals['name'] = default.get('name') or self.env._('%s (copy)', group.name)
         return vals_list
 
     def write(self, vals):
         if 'name' in vals:
             if vals['name'].startswith('-'):
-                raise UserError(_('The name of the group can not start with "-"'))
+                raise UserError(self.env._('The name of the group can not start with "-"'))
 
         # invalidate caches before updating groups, since the recomputation of
         # field 'share' depends on method has_group()
@@ -306,4 +306,4 @@ class ResGroups(models.Model):
 
     @api.model
     def _is_feature_enabled(self, group_reference):
-        return self.env['res.users'].sudo().browse(SUPERUSER_ID)._has_group(group_reference)
+        return self.env['res.users'].sudo().browse(api.SUPERUSER_ID)._has_group(group_reference)

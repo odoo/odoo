@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import math
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import ormcache, parse_date, SQL
 
@@ -115,7 +114,7 @@ class ResCurrency(models.Model):
 
         currencies = self.filtered(lambda c: not c.active)
         if self.env['res.company'].search_count([('currency_id', 'in', currencies.ids)], limit=1):
-            raise UserError(_("This currency is set on a company and therefore cannot be deactivated."))
+            raise UserError(self.env._("This currency is set on a company and therefore cannot be deactivated."))
 
     def _get_rates(self, company, date):
         if not self.ids:
@@ -189,13 +188,13 @@ class ResCurrency(models.Model):
         integer_value = int(integral)
         lang = tools.get_lang(self.env)
         if self.is_zero(amount - integer_value):
-            return _(
+            return self.env._(
                 '%(integral_amount)s %(currency_unit)s',
                 integral_amount=_num2words(integer_value, lang=lang.iso_code),
                 currency_unit=self.currency_unit_label,
             )
         else:
-            return _(
+            return self.env._(
                 '%(integral_amount)s %(currency_unit)s and %(fractional_amount)s %(currency_subunit)s',
                 integral_amount=_num2words(integer_value, lang=lang.iso_code),
                 currency_unit=self.currency_unit_label,
@@ -329,8 +328,8 @@ class ResCurrency(models.Model):
         if view_type in ('list', 'form'):
             currency_name = (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name
             fields_maps = [
-                [['company_rate', 'rate'], _('Unit per %s', currency_name)],
-                [['inverse_company_rate', 'inverse_rate'], _('%s per Unit', currency_name)],
+                [['company_rate', 'rate'], self.env._('Unit per %s', currency_name)],
+                [['inverse_company_rate', 'inverse_rate'], self.env._('%s per Unit', currency_name)],
             ]
             for fnames, label in fields_maps:
                 xpath_expression = '//list//field[' + " or ".join(f"@name='{f}'" for f in fnames) + "][1]"
@@ -401,7 +400,7 @@ class ResCurrencyRate(models.Model):
     def _get_latest_rate(self):
         # Make sure 'name' is defined when creating a new rate.
         if not self.name:
-            raise UserError(_("The name for the current rate is empty.\nPlease set it."))
+            raise UserError(self.env._("The name for the current rate is empty.\nPlease set it."))
         return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
             and x.company_id == (self.company_id or self.env.company.root_id)
@@ -459,8 +458,8 @@ class ResCurrencyRate(models.Model):
             if abs(diff) > 0.2:
                 return {
                     'warning': {
-                        'title': _("Warning for %s", self.currency_id.name),
-                        'message': _(
+                        'title': self.env._("Warning for %s", self.currency_id.name),
+                        'message': self.env._(
                             "The new rate is quite far from the previous rate.\n"
                             "Incorrect currency rates may cause critical problems, make sure the rate is correct!"
                         )
@@ -493,8 +492,8 @@ class ResCurrencyRate(models.Model):
                 'company_currency_name': (self.env['res.company'].browse(self._context.get('company_id')) or self.env.company).currency_id.name,
                 'rate_currency_name': self.env['res.currency'].browse(self._context.get('active_id')).name or 'Unit',
             }
-            for name, label in [['company_rate', _('%(rate_currency_name)s per %(company_currency_name)s', **names)],
-                                ['inverse_company_rate', _('%(company_currency_name)s per %(rate_currency_name)s', **names)]]:
+            for name, label in [['company_rate', self.env._('%(rate_currency_name)s per %(company_currency_name)s', **names)],
+                                ['inverse_company_rate', self.env._('%(company_currency_name)s per %(rate_currency_name)s', **names)]]:
 
                 if (node := arch.find(f"./field[@name='{name}']")) is not None:
                     node.set('string', label)

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -47,8 +47,8 @@ class DecimalPrecision(models.Model):
         if self.digits < self._origin.digits:
             return {
                 'warning': {
-                    'title': _("Warning for %s", self.name),
-                    'message': _(
+                    'title': self.env._("Warning for %s", self.name),
+                    'message': self.env._(
                         "The precision has been reduced for %s.\n"
                         "Note that existing data WON'T be updated by this change.\n\n"
                         "As decimal precisions impact the whole system, this may cause critical issues.\n"

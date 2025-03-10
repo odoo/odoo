@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -60,7 +59,7 @@ class BaseModuleUpgrade(models.TransientModel):
             self._cr.execute(query, (mods.ids, 'uninstalled'))
             unmet_packages = [row[0] for row in self._cr.fetchall()]
             if unmet_packages:
-                raise UserError(_('The following modules are not installed or unknown: %s', '\n\n' + '\n'.join(unmet_packages)))
+                raise UserError(self.env._('The following modules are not installed or unknown: %s', '\n\n' + '\n'.join(unmet_packages)))
 
         # terminate transaction before re-creating cursor below
         self._cr.commit()

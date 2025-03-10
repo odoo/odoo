@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from ast import literal_eval
 
@@ -90,7 +90,7 @@ class IrEmbeddedActions(models.Model):
     def _unlink_if_action_deletable(self):
         for record in self:
             if not record.is_deletable:
-                raise UserError(_('You cannot delete a default embedded action'))
+                raise UserError(self.env._('You cannot delete a default embedded action'))
 
     def _get_readable_fields(self):
         """ return the list of fields that are safe to read

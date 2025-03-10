@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from contextlib import closing
 from collections import OrderedDict
 from lxml import etree
@@ -20,7 +19,7 @@ except ImportError:
 
 from rjsmin import jsmin as rjsmin
 
-from odoo import release, _
+from odoo import release
 from odoo.api import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import (func, misc, transpile_javascript,
@@ -467,7 +466,7 @@ class AssetsBundle(object):
                     inherit_mode = template_tree.get('t-inherit-mode', 'primary')
                     if inherit_mode not in ['primary', 'extension']:
                         addon = asset.url.split('/')[1]
-                        return asset.generate_error(_(
+                        return asset.generate_error(self.env._(
                             'Invalid inherit mode. Module "%(module)s" and template name "%(template_name)s"',
                             module=addon,
                             template_name=template_name,
@@ -484,7 +483,7 @@ class AssetsBundle(object):
                         blocks.append(block)
                     block["templates"].append((template_tree, asset.url, inherit_from))
                 else:
-                    return asset.generate_error(_("Template name is missing."))
+                    return asset.generate_error(self.env._("Template name is missing."))
         return blocks
 
 
