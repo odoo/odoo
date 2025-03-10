@@ -153,6 +153,15 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
 
         website = self.env['website'].get_current_website()
         website.send_abandoned_cart_email = True
+        website.write(
+            {
+                "send_abandoned_cart_email_activation_time": (
+                    datetime.utcnow()
+                    - relativedelta(hours=website.cart_abandoned_delay)
+                )
+                - relativedelta(minutes=10)
+            }
+        )
 
         product = self.env['product.product'].create({
             'name': 'The Product'

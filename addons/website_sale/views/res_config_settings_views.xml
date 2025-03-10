@@ -250,21 +250,20 @@
             <setting id="website_marketing_automation" position="after">
                 <setting
                     id="abandoned_carts_setting"
-                    title="Customer needs to be signed in otherwise the mail address is not known.
-    &#10;&#10;- If a potential customer creates one or more abandoned checkouts and then completes a sale before the recovery email gets sent, then the email won't be sent.
-    &#10;&#10;- If user has manually sent a recovery email, the mail will not be sent a second time
-    &#10;&#10;- If a payment processing error occurred when the customer tried to complete their checkout, then the email won't be sent.
-    &#10;&#10;- If your shop does not support shipping to the customer's address, then the email won't be sent.
-    &#10;&#10;- If none of the products in the checkout are available for purchase (empty inventory, for example), then the email won't be sent.
-    &#10;&#10;- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
                     string="Automatically send abandoned checkout emails"
-                    help="Mail only sent to signed in customers with items available for sale in their cart.">
+                    documentation="https://www.odoo.com/documentation/18.0/applications/websites/ecommerce/ecommerce_management/order_handling.html#abandoned-cart"
+                    help="Mail only sent to signed in customers with items available for sale in carts created after the feature activation.">
                     <field name="send_abandoned_cart_email"/>
 
-                    <div invisible="not send_abandoned_cart_email" class="content-group" title="Carts are flagged as abandoned after this delay.">
+                    <div invisible="not send_abandoned_cart_email" class="content-group">
                         <div class="row mt16">
                             <div class="col-12">
-                                <label for="cart_abandoned_delay" string="Send after" class="o_light_label"/>
+                                <label
+                                    for="cart_abandoned_delay"
+                                    string="Send after"
+                                    class="o_light_label"
+                                />
+                                <span> </span>
                                 <field class="col-2" name="cart_abandoned_delay" widget="float_time" /> Hours.
                             </div>
                         </div>

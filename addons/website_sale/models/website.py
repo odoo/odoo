@@ -86,6 +86,11 @@ class Website(models.Model):
     send_abandoned_cart_email = fields.Boolean(
         string="Send email to customers who abandoned their cart.",
     )
+    send_abandoned_cart_email_activation_time = fields.Datetime(
+        string="Time when the 'Send abandoned cart email' feature was activated.",
+        compute='_compute_send_abandoned_cart_email_activation_time',
+        store=True,
+    )
     shop_ppg = fields.Integer(
         string="Number of products in the grid on the shop", default=20,
     )
@@ -174,6 +179,12 @@ class Website(models.Model):
             website.currency_id = (
                 request and request.pricelist.currency_id or website.company_id.currency_id
             )
+
+    @api.depends('send_abandoned_cart_email')
+    def _compute_send_abandoned_cart_email_activation_time(self):
+        for website in self:
+            if website.send_abandoned_cart_email:
+                website.send_abandoned_cart_email_activation_time = fields.Datetime.now()
 
     #=== SELECTION METHODS ===#
 
@@ -536,6 +547,7 @@ class Website(models.Model):
                 ('is_abandoned_cart', '=', True),
                 ('cart_recovery_email_sent', '=', False),
                 ('website_id', '=', website.id),
+                ('date_order', '>=', website.send_abandoned_cart_email_activation_time),
             ])
             if not all_abandoned_carts:
                 continue
