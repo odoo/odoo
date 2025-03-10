@@ -472,7 +472,7 @@ class TestHrEmployee(TestHrCommon):
         domain = Domain([
             ('name', '=', 'Test Employee'),
             ('active', '=', True)
-        ])._optimize(self.env['hr.employee'])
+        ]).optimize(self.env['hr.employee'])
         with self.assertNoLogs('odoo.domains'):
             self.assertEqual(
                 employee.ids,

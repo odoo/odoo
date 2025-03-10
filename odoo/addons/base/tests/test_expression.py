@@ -2625,7 +2625,7 @@ class TestPrettifyDomain(BaseCase):
 
 class TestAnyfy(TransactionCase):
     def _test_combine_anies(self, domain, expected):
-        anyfied_domain = list(Domain(domain)._optimize(self.env['res.partner']))
+        anyfied_domain = list(Domain(domain).optimize(self.env['res.partner']))
         return self.assertEqual(anyfied_domain, expected,
                                 f'\nFor initial domain: {domain}\nBecame: {anyfied_domain}')
 
