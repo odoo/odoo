@@ -53,27 +53,6 @@
                                         <t t-call="website_sale_comparison.specifications_table"/>
                                     </div>
                                 </t>
-                                <t t-if="is_view_active('website_sale.product_tags')">
-                                    <div class="col-lg-6">
-                                        <table class="table">
-                                            <t t-if="product.product_variant_ids.all_product_tag_ids">
-                                                <tr>
-                                                    <th class="text-start" t-att-colspan="2">
-                                                        <span>Tags</span>
-                                                    </th>
-                                                </tr>
-                                                <tr class="d-flex">
-                                                    <td class="w-25 d-flex align-items-center"><span>Tags</span></td>
-                                                    <td class="w-75 text-muted">
-                                                        <t t-call="website_sale.product_tags">
-                                                            <t t-set="all_product_tags" t-value="product.product_variant_ids.all_product_tag_ids"/>
-                                                        </t>
-                                                    </td>
-                                                </tr>
-                                            </t>
-                                        </table>
-                                    </div>
-                                </t>
                             </div>
                         </div>
                     </div>
