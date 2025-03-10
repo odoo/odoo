@@ -219,6 +219,7 @@ export function addOption({
     sequence,
     cleanForSave,
     props,
+    editableOnly,
 }) {
     const pluginId = uniqueId("test-option");
     const Class = makeOptionPlugin({
@@ -231,6 +232,7 @@ export function addOption({
         sequence,
         cleanForSave,
         props,
+        editableOnly,
     });
     registry.category("website-plugins").add(pluginId, Class);
     after(() => {
@@ -247,6 +249,7 @@ function makeOptionPlugin({
     OptionComponent,
     cleanForSave,
     props,
+    editableOnly,
 }) {
     const option = {
         OptionComponent,
@@ -256,6 +259,7 @@ function makeOptionPlugin({
         applyTo,
         cleanForSave,
         props,
+        editableOnly,
     };
 
     const Class = {
