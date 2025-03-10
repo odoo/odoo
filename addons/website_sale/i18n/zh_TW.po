@@ -2157,7 +2157,7 @@ msgstr "填寫你的地址"
 #: code:addons/website_sale/models/product_template.py:0
 msgid ""
 "Final price may vary based on selection. Tax will be calculated at checkout."
-msgstr ""
+msgstr "最終價格可能會根據選取的項目而有所不同。稅款將會在結賬時計算。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id
@@ -3156,6 +3156,12 @@ msgstr "付款交易"
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
+msgid "Payment is already being processed."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Pedal-based opening system"
 msgstr "腳踏開關系統"
@@ -3259,6 +3265,11 @@ msgstr "每單位價格"
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
 msgstr "價目表可用於此電子商務/網站"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Price will be updated after choosing a delivery method"
+msgstr "選擇送貨方式後，價格將會更新"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -4261,6 +4272,12 @@ msgstr "最強的"
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The access token is invalid."
 msgstr "存取權杖(token)無效。"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
