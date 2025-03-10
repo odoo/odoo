@@ -4567,13 +4567,13 @@ class StockMove(TransactionCase):
         })
         picking.action_confirm()
         picking.action_assign()
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'picking_id': picking.id,
             'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
-            'scrap_qty': 5.0,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
         })
-        scrap.do_scrap()
+        scrap._action_done()
 
         # No products are reserved on the move of 10, click on `button_validate`.
         with self.assertRaises(UserError):
@@ -4713,11 +4713,11 @@ class StockMove(TransactionCase):
         storable product.
         """
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
-        scrap_form = Form(self.env['stock.scrap'])
+        scrap_form = Form(self.env['stock.move'])
         scrap_form.product_id = self.product
-        scrap_form.scrap_qty = 1
+        scrap_form.product_uom_qty = 1
         scrap = scrap_form.save()
-        scrap.do_scrap()
+        scrap._action_done()
         self.assertEqual(scrap.state, 'done')
         move = scrap.move_ids[0]
         self.assertEqual(move.state, 'done')
@@ -4729,13 +4729,13 @@ class StockMove(TransactionCase):
         """ Check the created stock move and the impact on quants when we scrap a
         consumable product.
         """
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'product_id': self.product_consu.id,
-            'product_uom_id':self.product_consu.uom_id.id,
-            'scrap_qty': 1,
+            'product_uom': self.product_consu.uom_id.id,
+            'product_uom_qty': 1,
         })
         self.assertEqual(scrap.name, 'New', 'Name should be New in draft state')
-        scrap.do_scrap()
+        scrap._action_done()
         self.assertTrue(scrap.name.startswith('SP/'), 'Sequence should be Changed after do_scrap')
         self.assertEqual(scrap.state, 'done')
         move = scrap.move_ids[0]
@@ -4761,12 +4761,12 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(len(move1.move_line_ids), 1)
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom_id':self.product.uom_id.id,
-            'scrap_qty': 1,
+            'product_uom_id': self.product.uom_id.id,
+            'product_uom_qty': 1,
         })
-        scrap.do_scrap()
+        scrap._action_done()
         self.assertEqual(move1.state, 'confirmed')
         self.assertEqual(len(move1.move_line_ids), 0)
 
@@ -4796,14 +4796,14 @@ class StockMove(TransactionCase):
         move1._action_confirm()
 
         self.assertEqual(move1.state, 'assigned')
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.product.uom_id.id,
-            'scrap_qty': 5,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 5,
             'picking_id': picking.id,
         })
 
-        scrap.action_validate()
+        scrap._action_done()
         self.assertEqual(len(picking.move_ids), 2)
         scrapped_move = picking.move_ids.filtered(lambda m: m.state == 'done')
         self.assertTrue(scrapped_move, 'No scrapped move created.')
@@ -4843,13 +4843,13 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.quantity, 0.33)
 
         # scrap a unit
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.product.uom_id.id,
-            'scrap_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
             'picking_id': picking.id,
         })
-        scrap.action_validate()
+        scrap._action_done()
 
         self.assertEqual(scrap.state, 'done')
         self.assertEqual(move1.quantity, 0.25)
@@ -4857,19 +4857,19 @@ class StockMove(TransactionCase):
     def test_scrap_6(self):
         """ Check that scrap correctly handle UoM. """
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.uom_dozen.id,
-            'scrap_qty': 1,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 1,
         })
-        warning_message = scrap.action_validate()
+        warning_message = scrap._action_done()
         self.assertEqual(warning_message.get('res_model', 'Wrong Model'), 'stock.warn.insufficient.qty.scrap')
         insufficient_qty_wizard = self.env['stock.warn.insufficient.qty.scrap']\
             .with_context(warning_message['context']).create({})
         insufficient_qty_wizard.action_done()
         self.assertEqual(self.env['stock.quant']._gather(self.product, self.stock_location).quantity, -11)
-        self.assertEqual(scrap.scrap_qty, 1)
-        self.assertEqual(scrap.product_uom_id, self.uom_dozen)
+        self.assertEqual(scrap.product_uom_qty, 1)
+        self.assertEqual(scrap.product_uom, self.uom_dozen)
         self.assertEqual(scrap.state, 'done')
 
     def test_scrap_7_sn_warning(self):
@@ -4893,9 +4893,9 @@ class StockMove(TransactionCase):
 
         self.env['stock.quant']._update_available_quantity(self.product_serial, child_loc1, 1, lot_id=lot1)
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'product_id': self.product_serial.id,
-            'product_uom_id': self.uom_unit.id,
+            'product_uom': self.uom_unit.id,
             'location_id': child_loc2.id,
             'lot_id': lot1.id
         })
@@ -4995,10 +4995,10 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.quantity, 9)
 
         # scrap a unit
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.product.uom_id.id,
-            'scrap_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
             'picking_id': picking.id,
         })
         scrap.action_validate()
@@ -5079,9 +5079,9 @@ class StockMove(TransactionCase):
         subloc = self.stock_location.child_ids[0]
         self.env['stock.quant']._update_available_quantity(self.product, subloc, 10)
 
-        with Form(self.env['stock.scrap']) as scrap_form:
+        with Form(self.env['stock.move']) as scrap_form:
             scrap_form.product_id = self.product
-            scrap_form.scrap_qty = 5
+            scrap_form.product_uom_qty = 5
             scrap_form.location_id = self.stock_location
             scrap = scrap_form.save()
 
@@ -6552,9 +6552,9 @@ class StockMove(TransactionCase):
         self.assertEqual(move_2.state, 'assigned')
 
         # Create a scrap order, that will remove some on the available quantity
-        with Form(self.env['stock.scrap']) as scrap_form:
+        with Form(self.env['stock.move']) as scrap_form:
             scrap_form.product_id = self.product
-            scrap_form.scrap_qty = 2
+            scrap_form.product_uom_qty = 2
             scrap_form.location_id = self.stock_location
             scrap = scrap_form.save()
         scrap.action_validate()

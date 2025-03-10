@@ -2025,7 +2025,7 @@ class TestStockFlow(TestStockCommon):
 
         self.env['stock.quant']._update_available_quantity(product, wh.wh_qc_stock_loc_id, 10)
 
-        f = Form(self.env['stock.scrap'], view='stock.stock_scrap_form_view')
+        f = Form(self.env['stock.move'], view='stock.stock_move_form_view')
         f.product_id = product
         scrap = f.save()
 
@@ -2313,7 +2313,7 @@ class TestStockFlow(TestStockCommon):
         })
         self.env['stock.quant']._update_available_quantity(tracked_product, self.stock_location, 1.0)
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['product.scrap'].create({
             'product_id': tracked_product.id,
             'product_uom_id': tracked_product.uom_id.id,
             'location_id': self.stock_location.id,
@@ -2347,19 +2347,19 @@ class TestStockFlow(TestStockCommon):
         picking.action_confirm()
         picking.action_assign()
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
             'picking_id': picking.id,
             'product_id': self.productA.id,
-            'product_uom_id': self.productA.uom_id.id,
-            'scrap_qty': 1.0,
+            'product_uom': self.productA.uom_id.id,
+            'product_uom_qty': 1.0,
         })
-        scrap.do_scrap()
+        scrap.action_scrap()
 
         picking.action_cancel()
 
         self.assertEqual(picking.state, 'cancel')
         self.assertEqual(move.state, 'cancel')
-        self.assertEqual(scrap.move_ids[0].state, 'done')
+        self.assertEqual(scrap.state, 'done')
 
     def test_receive_tracked_product(self):
         self.productA.tracking = 'serial'

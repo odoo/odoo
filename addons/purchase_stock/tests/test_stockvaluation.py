@@ -3716,11 +3716,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
         purchase_order.button_confirm()
         purchase_order.picking_ids.button_validate()
-        with Form(self.env['stock.scrap']) as scrap_form:
-            scrap_form.product_id = product
-            scrap_form.scrap_qty = 10
-            scrap = scrap_form.save()
-        scrap.action_validate()
+        with Form(self.env['stock.move']) as move_form:
+            move_form.product_id = product
+            move_form.product_uom_qty = 10
+            move_form.location_id = self.env.ref('stock.stock_location_suppliers').id
+            scrap_move = move_form.save()
+        scrap_move.action_validate()
         purchase_order.action_create_invoice()
         bill = purchase_order.invoice_ids
         bill.invoice_line_ids.price_unit = 120

@@ -162,6 +162,18 @@
         </field>
     </record>
 
+    <record id="action_scrap_lot" model="ir.actions.server">
+        <field name="name">Scrap</field>
+        <field name="model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+        if records:
+            action = records.button_scrap()
+        </field>
+    </record>
+
     <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
         parent="menu_stock_inventory_control" groups="stock.group_production_lot"
         sequence="101"/>

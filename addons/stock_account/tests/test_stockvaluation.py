@@ -4236,9 +4236,9 @@ class TestStockValuation(TestStockValuationBase):
             })],
         })
         receipt.button_validate()
-        scrap_form = Form(self.env['stock.scrap'].with_context(default_picking_id=receipt.id))
+        scrap_form = Form(self.env['stock.move'].with_context(default_picking_id=receipt.id))
         scrap_form.product_id = product
-        scrap_form.scrap_qty = 2
+        scrap_form.product_uom_qty = 2
         scrap = scrap_form.save()
         scrap.action_validate()
         svls = product.stock_valuation_layer_ids

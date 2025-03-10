@@ -348,3 +348,30 @@ class StockLot(models.Model):
 
             delivery_by_lot[lot.id] = list(delivery_ids)
         return delivery_by_lot
+
+    def button_scrap(self):
+        view = self.env.ref('stock.product_scrap_form_view')
+        products = self.product_id
+        default_scrap_location = self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', '=', self.company_id.id)], limit=1)
+        context = {
+            'product_ids': products.ids,
+            'lot_ids': self.ids,
+            'default_company_id': self.company_id.id or self.env.company.id,
+            'default_location_dest_id': default_scrap_location.id,
+            'default_origin': _('Scrap Lots'),
+        }
+        if len(self) == 1:
+            context.update({
+                'default_product_id': self.product_id.id,
+                'default_lot_id': self.id,
+            })
+        return {
+            'name': _('Scrap Products'),
+            'view_mode': 'form',
+            'res_model': 'product.scrap',
+            'view_id': view.id,
+            'views': [(view.id, 'form')],
+            'type': 'ir.actions.act_window',
+            'context': context,
+            'target': 'new',
+        }

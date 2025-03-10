@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_scrap_form_view" model="ir.ui.view">
+        <field name="name">product.scrap.form</field>
+        <field name="model">product.scrap</field>
+        <field name="arch" type="xml">
+            <form string="Scrap">
+                <group>
+                    <group>
+                        <field name="product_id" options="{'no_create': True}" domain="[('id', 'in', context.get('product_ids', []))]" />
+                        <label for="scrap_qty"/>
+                        <div class="o_row">
+                            <field name="scrap_qty" readonly="tracking == 'serial'" />
+                            <field name="product_uom_id" readonly="tracking == 'serial'" groups="uom.group_uom" widget="many2one_uom"/>
+                        </div>
+                        <field name="lot_id" groups="stock.group_production_lot"
+                                context="{'default_product_id': product_id}"
+                                invisible="not product_id or tracking == 'none'"
+                                domain="[('product_id', '=', product_id)] + ([('id', 'in', context.get('lot_ids', []))] if context.get('lot_ids') else [])"
+                                required="tracking != 'none'"/>
+                        <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                    </group>
+                    <group>
+                        <field name="package_id" groups="stock.group_tracking_lot"/>
+                        <field name="owner_id" groups="stock.group_tracking_owner"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="scrap_location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}" />
+                        <field name="should_replenish"/>
+                    </group>
+                </group>
+                 <footer>
+                    <button name="action_validate" string="Scrap Products" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
