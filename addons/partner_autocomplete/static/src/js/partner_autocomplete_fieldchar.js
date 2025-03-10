@@ -46,7 +46,7 @@ export class PartnerAutoCompleteCharField extends CharField {
                         return [];
                     }
                 },
-                optionTemplate: "partner_autocomplete.DropdownOption",
+                optionSlot: "partnerOption",
                 placeholder: _t('Searching Autocomplete...'),
             },
         ];

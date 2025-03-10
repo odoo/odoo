@@ -66,12 +66,7 @@
                                         t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                                     >
                                         <t t-slot="{{ source.optionSlot }}" option="Object.getPrototypeOf(option)">
-                                            <t t-if="source.optionTemplate">
-                                                <t t-call="{{ source.optionTemplate }}"/>
-                                            </t>
-                                            <t t-else="">
-                                                <t t-esc="option.label"/>
-                                            </t>
+                                            <t t-esc="option.label"/>
                                         </t>
                                     </t>
                                 </li>

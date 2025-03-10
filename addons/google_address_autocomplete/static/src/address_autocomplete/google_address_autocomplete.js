@@ -79,7 +79,7 @@ export class AddressAutoComplete extends CharField {
                         return [];
                     }
                 },
-                optionTemplate: "google_address_autocomplete.CharFieldDropdownOption",
+                optionSlot: "option",
                 placeholder: _t("Searching for addresses..."),
             },
         ];

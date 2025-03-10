@@ -33,7 +33,13 @@
                     onSelect.bind="onSelect"
                     input="inputRef"
                     placeholder="placeholder || ''"
-                />
+                >
+                    <t t-set-slot="partnerOption" t-slot-scope="partnerOptionScope">
+                        <t t-call="partner_autocomplete.DropdownOption">
+                            <t t-set="option" t-value="partnerOptionScope.option"/>
+                        </t>
+                    </t>
+                </PartnerAutoComplete>
             </t>
         </xpath>
     </t>
@@ -47,6 +53,7 @@
                 onSelect.bind="onSelect"
                 input="inputRef"
                 placeholder="placeholder || ''"
+                slots="props.slots"
             />
         </xpath>
     </t>
@@ -74,7 +81,13 @@
     </t>
 
     <t t-name="partner_autocomplete.PartnerAutoCompleteMany2one">
-        <Many2One t-props="m2oProps"/>
+        <Many2One t-props="m2oProps">
+            <t t-set-slot="partnerOption" t-slot-scope="partnerOptionScope">
+                <t t-call="partner_autocomplete.DropdownOption">
+                    <t t-set="option" t-value="partnerOptionScope.option"/>
+                </t>
+            </t>
+        </Many2One>
     </t>
 
 </templates>

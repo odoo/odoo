@@ -22,9 +22,21 @@
                     getDomain.bind="getDomain"
                     isToMany="true"
                     getOptionClassnames.bind="getOptionClassnames"
-                />
+                >
+                    <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                        <t t-call="{{ constructor.optionTemplate }}"/>
+                    </t>
+                </Many2XAutocomplete>
             </div>
         </div>
+    </t>
+
+    <t t-name="web.Many2ManyTagsAvatarField.option">
+        <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+            <img t-if="autoCompleteItemScope.value" class="rounded me-1"
+                t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.value}}/avatar_128"/>
+            <t t-esc="autoCompleteItemScope.label"/>
+        </span>
     </t>
 
     <t t-name="web.KanbanMany2ManyTagsAvatarFieldTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
