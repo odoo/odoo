@@ -71,3 +71,12 @@ class Website(main.Website):
             'symbol': request.website.currency_id.symbol,
             'position': request.website.currency_id.position,
         }
+
+    @route()
+    def change_lang(self, lang, **kwargs):
+        if cart := request.cart:
+            request.env.add_to_compute(
+                cart.order_line._fields['name'],
+                cart.order_line.with_context(lang=lang),
+            )
+        return super().change_lang(lang, **kwargs)
