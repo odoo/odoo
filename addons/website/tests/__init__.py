@@ -23,6 +23,7 @@ from . import test_page
 from . import test_page_manager
 from . import test_performance
 from . import test_qweb
+from . import test_redirect
 from . import test_res_users
 from . import test_snippets
 from . import test_theme
