@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
@@ -8,9 +7,9 @@ import logging
 import psycopg2
 import datetime
 
-from odoo import api, fields, models, Command
-from odoo import _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError, UserError
+from odoo.fields import Command
 from odoo.tools import mute_logger, SQL
 
 _logger = logging.getLogger('odoo.addons.base.partner.merge')
@@ -396,21 +395,21 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             return
 
         if len(partner_ids) > 3:
-            raise UserError(_("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
+            raise UserError(self.env._("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
 
         # check if the list of partners to merge contains child/parent relation
         child_ids = self.env['res.partner']
         for partner_id in partner_ids:
             child_ids |= Partner.search([('id', 'child_of', [partner_id.id])]) - partner_id
         if partner_ids & child_ids:
-            raise UserError(_("You cannot merge a contact with one of his parent."))
+            raise UserError(self.env._("You cannot merge a contact with one of his parent."))
 
         # check if the list of partners to merge are linked to more than one user
         if len(partner_ids.with_context(active_test=False).user_ids) > 1:
-            raise UserError(_("You cannot merge contacts linked to more than one user even if only one is active."))
+            raise UserError(self.env._("You cannot merge contacts linked to more than one user even if only one is active."))
 
         if extra_checks and len(set(partner.email for partner in partner_ids)) > 1:
-            raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
+            raise UserError(self.env._("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
 
         # remove dst_partner from partners to merge
         if dst_partner and dst_partner in partner_ids:
@@ -508,7 +507,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                     groups.append(field_name[len(group_by_prefix):])
 
         if not groups:
-            raise UserError(_("You have to specify a filter for your selection."))
+            raise UserError(self.env._("You have to specify a filter for your selection."))
 
         return groups
 
