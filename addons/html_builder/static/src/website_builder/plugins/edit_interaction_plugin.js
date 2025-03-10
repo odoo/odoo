@@ -5,8 +5,7 @@ export class EditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
 
     resources = {
-        update_interactions: this.startInteractions.bind(this),
-        on_remove_handlers: this.stopInteractions.bind(this),
+        normalize_handlers: this.startInteractions.bind(this),
     };
 
     setup() {
@@ -22,8 +21,6 @@ export class EditInteractionPlugin extends Plugin {
 
     updateEditInteraction({ detail: { websiteEditService } }) {
         this.websiteEditService = websiteEditService;
-        const targetEl = this.document.querySelector("#wrapwrap");
-        this.startInteractions(targetEl);
     }
 
     startInteractions(element) {
@@ -31,13 +28,6 @@ export class EditInteractionPlugin extends Plugin {
             throw new Error("website edit service not loaded");
         }
         this.websiteEditService.update(element, true);
-    }
-
-    stopInteractions(element) {
-        if (!this.websiteEditService) {
-            throw new Error("website edit service not loaded");
-        }
-        this.websiteEditService.stop(element);
     }
 }
 

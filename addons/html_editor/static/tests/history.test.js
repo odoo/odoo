@@ -434,18 +434,24 @@ describe("makePreviewableOperation", () => {
             newElem.setAttribute("id", elemId);
             div.appendChild(newElem);
         });
-        const numberOfSteps = history.steps.length;
+        let numberOfSteps = history.steps.length;
         const numberOfCurrentMutations = history.currentStep.mutations.length;
         previewableAddParagraph.preview("first");
+        // step added by the preview
+        numberOfSteps += 1;
         await animationFrame();
         expect(history.steps.length).toBe(numberOfSteps);
         expect("#first").toHaveCount(1);
         previewableAddParagraph.preview("second");
+        // step added by the revert of the first preview and the second preview
+        numberOfSteps += 2;
         await animationFrame();
         expect(history.steps.length).toBe(numberOfSteps);
         expect("#first").toHaveCount(0);
         expect("#second").toHaveCount(1);
         previewableAddParagraph.revert();
+        // step added by the revert
+        numberOfSteps += 1;
         await animationFrame();
         expect("#first").toHaveCount(0);
         expect("#second").toHaveCount(0);
@@ -463,16 +469,20 @@ describe("makePreviewableOperation", () => {
             newElem.setAttribute("id", elemId);
             div.appendChild(newElem);
         });
-        const numberOfSteps = history.steps.length;
+        let numberOfSteps = history.steps.length;
         previewableAddParagraph.preview("first");
+        // step added by the preview
+        numberOfSteps += 1;
         await animationFrame();
         expect(history.steps.length).toBe(numberOfSteps);
         expect("#first").toHaveCount(1);
         previewableAddParagraph.commit("second");
+        // step added by the revert due to the commit and the commit in itself
+        numberOfSteps += 2;
         await animationFrame();
         expect("#first").toHaveCount(0);
         expect("#second").toHaveCount(1);
-        expect(history.steps.length).toBe(numberOfSteps + 1);
+        expect(history.steps.length).toBe(numberOfSteps);
     });
 });
 

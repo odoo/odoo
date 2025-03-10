@@ -27,23 +27,23 @@ test("edit box-shadow with ShadowOption", async () => {
     ]);
     expect(queryAllValues('[data-action-id="setShadow"] input')).toEqual(["0", "8", "16", "0"]);
     expect(":iframe .test-options-target").toHaveOuterHTML(
-        '<div class="test-options-target shadow o-paragraph" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 16px 0px !important;">b</div>'
+        '<div class="test-options-target o-paragraph shadow" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 16px 0px !important;">b</div>'
     );
 
     await contains('[data-action-param="offsetX"] input').fill(10);
     await contains('[data-action-param="offsetY"] input').fill(2, { clean: true });
     expect(":iframe .test-options-target").toHaveOuterHTML(
-        '<div class="test-options-target shadow o-paragraph" style="box-shadow: rgba(0, 0, 0, 0.15) 10px 82px 16px 0px !important;">b</div>'
+        '<div class="test-options-target o-paragraph shadow" style="box-shadow: rgba(0, 0, 0, 0.15) 10px 82px 16px 0px !important;">b</div>'
     );
 
     await contains('[data-action-param="blur"] input').fill(3);
     expect(":iframe .test-options-target").toHaveOuterHTML(
-        '<div class="test-options-target shadow o-paragraph" style="box-shadow: rgba(0, 0, 0, 0.15) 10px 82px 163px 0px !important;">b</div>'
+        '<div class="test-options-target o-paragraph shadow" style="box-shadow: rgba(0, 0, 0, 0.15) 10px 82px 163px 0px !important;">b</div>'
     );
 
     await contains('[data-action-param="spread"] input').fill(4);
     expect(":iframe .test-options-target").toHaveOuterHTML(
-        '<div class="test-options-target shadow o-paragraph" style="box-shadow: rgba(0, 0, 0, 0.15) 10px 82px 163px 4px !important;">b</div>'
+        '<div class="test-options-target o-paragraph shadow" style="box-shadow: rgba(0, 0, 0, 0.15) 10px 82px 163px 4px !important;">b</div>'
     );
 
     await contains('.options-container button[title="Inset"]').click();
@@ -56,7 +56,7 @@ test("edit box-shadow with ShadowOption", async () => {
     ]);
     expect(queryAllValues('[data-action-id="setShadow"] input')).toEqual(["10", "82", "163", "4"]);
     expect(":iframe .test-options-target").toHaveOuterHTML(
-        '<div class="test-options-target shadow o-paragraph" style="box-shadow: rgba(0, 0, 0, 0.15) 10px 82px 163px 4px inset !important;">b</div>'
+        '<div class="test-options-target o-paragraph shadow" style="box-shadow: rgba(0, 0, 0, 0.15) 10px 82px 163px 4px inset !important;">b</div>'
     );
 
     await contains(".options-container button:contains(None)").click();
