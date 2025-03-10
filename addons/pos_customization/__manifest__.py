@@ -4,7 +4,8 @@
     'category': 'Point of Sale',
     'summary': 'Customizations for Odoo Point of Sale',
     'description': """
-        This module extends the Odoo POS with custom features, starting with a POS-specific description field for products.
+        This module extends the Odoo POS with custom features, starting with a POS-specific description field for products,
+        alternative name for products.
     """,
     'depends': ['point_of_sale'],
     'data': [

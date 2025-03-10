@@ -1,0 +1,16 @@
+import { patch } from "@web/core/utils/patch";
+import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
+
+patch(PosOrderline.prototype, {
+    get_full_product_name() {
+        console.log("PosOrderline get_full_product_name - data:", {
+            alternative_name: this.product_id.alternative_name,
+            full_product_name: this.product_id.full_product_name,
+            product_id_display_name: this.product_id?.display_name,
+        });
+        if (this.product_id.alternative_name) {
+            return this.product_id.alternative_name;
+        }
+        return this.full_product_name || this.product_id?.display_name;
+    },
+});
