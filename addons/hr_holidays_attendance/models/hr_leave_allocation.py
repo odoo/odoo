@@ -1,26 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
 
 
 class HrLeaveAllocation(models.Model):
     _inherit = 'hr.leave.allocation'
-
-    def default_get(self, fields):
-        res = super().default_get(fields)
-        if 'holiday_status_id' in fields and self.env.context.get('deduct_extra_hours'):
-            domain = [('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes')]
-            if self.env.context.get('deduct_extra_hours_employee_request', False):
-                # Prevent loading manager allocated time off type in self request contexts
-                domain = expression.AND([domain, [('employee_requests', '=', 'yes')]])
-            leave_type = self.env['hr.leave.type'].search(domain, limit=1)
-            res['holiday_status_id'] = leave_type.id
-        return res
 
     overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
     overtime_id = fields.Many2one('hr.attendance.overtime', string='Extra Hours', groups='hr_holidays.group_hr_holidays_user')
@@ -38,7 +25,7 @@ class HrLeaveAllocation(models.Model):
             if allocation.overtime_deductible:
                 duration = allocation.number_of_hours_display
                 if duration > allocation.employee_id.sudo().total_overtime:
-                    raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
+                    raise ValidationError(_('This allocation can\'t be allowed, the employee has not enough extra hours available.'))
                 if not allocation.overtime_id:
                     allocation.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
                         'employee_id': allocation.employee_id.id,

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.attendance</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='overtime_settings']" position="inside">
+                <setting
+                    title="Allocated Time Off Type"
+                    string="Allow Time Off Compensation"
+                    help="
+                        Select a time off type to allocate the earned extra hours.
+                    "
+                    company_dependent="1">
+                    <field
+                        name="extra_hours_leave_type_id"
+                        widget="many2one"
+                        placeholder="Extra hours will not be compensated in Time Off"
+                        class="w-100"
+                        options="{'no_quick_create': True, 'no_create': True}"
+                    />
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
