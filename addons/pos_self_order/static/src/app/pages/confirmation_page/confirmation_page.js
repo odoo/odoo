@@ -78,7 +78,6 @@ export class ConfirmationPage extends Component {
 
         this.state.onReload = false;
         this.confirmedOrder.uiState.receiptReady = this.beforePrintOrder();
-        this.printOrder();
     }
 
     canPrintReceipt() {

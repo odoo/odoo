@@ -404,7 +404,7 @@ patch(PosStore.prototype, {
     async setTableFromUi(table, orderUuid = null) {
         try {
             if (!orderUuid && this.getOrder()?.isFilledDirectSale) {
-                await this.transferOrder(this.getOrder().uuid, table);
+                this.transferOrder(this.getOrder().uuid, table);
                 return;
             }
             this.tableSyncing = true;
