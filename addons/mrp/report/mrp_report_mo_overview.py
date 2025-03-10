@@ -291,7 +291,7 @@ class ReportMoOverview(models.AbstractModel):
             })
             total_expected_time += workorder.duration_expected
             total_current_time += wo_duration if is_workorder_started else workorder.duration_expected
-            total_expected_cost += mo_cost
+            total_expected_cost += self.env.company.currency_id.round(mo_cost)
             total_real_cost += real_cost
 
         return {
