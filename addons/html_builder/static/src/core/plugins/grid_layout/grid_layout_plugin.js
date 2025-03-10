@@ -14,7 +14,9 @@ export class GridLayoutPlugin extends Plugin {
     static id = "gridLayout";
     static dependencies = ["history"];
     resources = {
-        get_overlay_buttons: withSequence(0, this.getActiveOverlayButtons.bind(this)),
+        get_overlay_buttons: withSequence(0, {
+            getButtons: this.getActiveOverlayButtons.bind(this),
+        }),
     };
 
     setup() {

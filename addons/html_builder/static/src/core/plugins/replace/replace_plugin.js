@@ -16,7 +16,9 @@ export class ReplacePlugin extends Plugin {
     static id = "replace";
     static dependencies = ["history", "builder-options"];
     resources = {
-        get_overlay_buttons: withSequence(3, this.getActiveOverlayButtons.bind(this)),
+        get_overlay_buttons: withSequence(3, {
+            getButtons: this.getActiveOverlayButtons.bind(this),
+        }),
     };
 
     setup() {
