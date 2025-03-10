@@ -9,10 +9,8 @@ from odoo.http import request
 class HrOrgChartController(http.Controller):
     _managers_level = 5  # FP request
 
-    def _check_employee(self, employee_id, **kw):
-        if not employee_id:  # to check
-            return None
-        employee_id = int(employee_id)
+    def _get_employee(self, employee_id, **kw):
+        employee_id = int(employee_id) if employee_id else False
 
         context = kw.get('context', request.env.context)
         if 'allowed_company_ids' in context:
@@ -22,8 +20,7 @@ class HrOrgChartController(http.Controller):
 
         Employee = request.env['hr.employee.public'].with_context(allowed_company_ids=cids)
         employee = Employee.browse(employee_id)
-        # check and raise
-        return employee if employee.has_access('read') else None
+        return employee if employee.has_access('read') else Employee.browse()
 
     def _prepare_employee_data(self, employee):
         job = employee.sudo().job_id
@@ -45,9 +42,9 @@ class HrOrgChartController(http.Controller):
         return 'hr.employee.public'
 
     @http.route('/hr/get_org_chart', type='jsonrpc', auth='user')
-    def get_org_chart(self, employee_id, **kw):
-
-        employee = self._check_employee(employee_id, **kw)
+    def get_org_chart(self, employee_id, new_parent_id=None, **kw):
+        employee = self._get_employee(employee_id, **kw)
+        new_parent = self._get_employee(new_parent_id, **kw)
         if not employee:  # to check
             return {
                 'managers': [],
@@ -56,9 +53,11 @@ class HrOrgChartController(http.Controller):
 
         # compute employee data for org chart
         ancestors, current = request.env['hr.employee.public'].sudo(), employee.sudo()
-        while current.parent_id and len(ancestors) < self._managers_level+1 and current != current.parent_id:
-            ancestors += current.parent_id
-            current = current.parent_id
+        current_parent = new_parent if new_parent_id is not None else current.parent_id
+        while current_parent and len(ancestors) < self._managers_level + 1 and current != current_parent:
+            ancestors += current_parent
+            current = current_parent
+            current_parent = current.parent_id if current != employee or not new_parent else new_parent
 
         values = dict(
             self=self._prepare_employee_data(employee),
@@ -81,7 +80,7 @@ class HrOrgChartController(http.Controller):
             - 'indirect'
             - 'direct'
         """
-        employee = self._check_employee(employee_id, **kw)
+        employee = self._get_employee(employee_id, **kw)
         if not employee:  # to check
             return {}
 
