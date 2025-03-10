@@ -28,5 +28,5 @@ def literal_eval(expr):
     return orig_literal_eval(expr)
 
 
-def patch_literal_eval():
+def patch_module():
     ast.literal_eval = literal_eval

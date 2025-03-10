@@ -5,7 +5,7 @@ import re
 import babel.core
 
 
-def patch_codecs():
+def patch_module():
     # ---------------------------------------------------------
     # some charset are known by Python under a different name
     # ---------------------------------------------------------
