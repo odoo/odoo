@@ -5,6 +5,7 @@ from . import analytic
 from . import account_move
 from . import account_move_line
 from . import crm_team
+from . import ir_config_parameter
 from . import payment_provider
 from . import payment_transaction
 from . import product_document
