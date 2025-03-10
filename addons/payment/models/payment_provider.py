@@ -370,6 +370,7 @@ class PaymentProvider(models.Model):
                 _("The following fields must be filled: %s", ", ".join(field_names))
             )
 
+    @api.model
     def _toggle_post_processing_cron(self):
         """ Enable the post-processing cron if some providers are enabled; disable it otherwise.
 
