@@ -1,4 +1,5 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -8,6 +9,7 @@ import {
     contains,
     focus,
     insertText,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
@@ -42,12 +44,22 @@ test("new message from operator displays unread counter", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
+    expirableStorage.setItem(
+        "im_livechat.saved_state",
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: channelId }] },
+            persisted: true,
+            livechatUserId: serverState.publicUserId,
+        })
+    );
+    setupChatHub({ opened: [channelId] });
     onRpc(["/mail/action", "/mail/data"], async (request) => {
         const { params } = await request.json();
         if (params.fetch_params.includes("init_messaging")) {
             asyncStep(`${new URL(request.url).pathname} - ${JSON.stringify(params)}`);
         }
     });
+    onRpc("/discuss/channel/messages", () => asyncStep("/discuss/channel/message"));
     const userId = serverState.userId;
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
@@ -59,6 +71,7 @@ test("new message from operator displays unread counter", async () => {
                 "systray_get_activities", // called because mail/core/web is loaded in qunit bundle
                 "init_messaging",
                 ["init_livechat", livechatChannelId],
+                ["discuss.channel", [channelId]],
             ],
             context: {
                 lang: "en",
@@ -67,9 +80,10 @@ test("new message from operator displays unread counter", async () => {
                 allowed_company_ids: [1],
             },
         })}`,
+        "/discuss/channel/message",
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Are you there?", message_type: "comment" },
             thread_id: channelId,
