@@ -455,7 +455,7 @@ class TestDomainOptimize(TransactionCase):
         domain = Domain('id', 'in', range(5)).optimize(model)
         self.assertIsInstance(domain.value, OrderedSet)
         domain = Domain('id', 'in', [9, 99]).optimize(model)
-        self.assertIsInstance(domain.value, list)
+        self.assertIsInstance(domain.value, OrderedSet)
         self.assertIs(domain.optimize(model), domain, "Idempotent")
 
         self.assertEqual(

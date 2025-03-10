@@ -237,7 +237,7 @@ class ResGroups(models.Model):
 
     def _search_all_implied_by_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_by_ids. """
-        assert isinstance(value, (int, list, tuple))
+        assert isinstance(value, (int, Collection))
 
         if isinstance(value, int):
             value = [value]
