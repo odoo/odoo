@@ -16,12 +16,12 @@ from lxml.builder import E
 from markupsafe import Markup
 from contextlib import suppress
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path
 from odoo.service.model import get_public_method
-from odoo.tools import config, lazy_property, frozendict, SQL
+from odoo.tools import _, config, lazy_property, frozendict, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
