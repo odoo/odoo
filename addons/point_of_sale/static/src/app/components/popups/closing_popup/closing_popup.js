@@ -45,6 +45,15 @@ export class ClosePosPopup extends Component {
             this.env.utils.formatCurrency(count, false);
         this.setManualCashInput(count);
     }
+    autoFillPMCount(paymentId) {
+        const pm = this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId);
+        if (pm) {
+            this.state.payments[paymentId].counted = this.env.utils.formatCurrency(
+                pm.amount,
+                false
+            );
+        }
+    }
     get cashMoveData() {
         const { total, moves } = this.props.default_cash_details.moves.reduce(
             (acc, move, i) => {

@@ -113,7 +113,7 @@ export class Navbar extends Component {
         return this.pos.config.customer_display_type !== "none" && !isMobileOS();
     }
     get showCashMoveButton() {
-        return Boolean(this.pos.config.cash_control && this.pos.session._has_cash_move_perm);
+        return this.pos.showCashMoveButton;
     }
     getOrderTabs() {
         return this.pos.getOpenOrders().filter((order) => !order.table_id);

@@ -1,6 +1,7 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as CashMoveList from "@point_of_sale/../tests/pos/tours/utils/cash_move_list_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
@@ -184,5 +185,25 @@ registry.category("web_tour.tours").add("test_reload_page_before_payment_with_cu
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
             ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cash_in_out", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.doCashMove("10", "MOBT in"),
+            Chrome.doCashMove("5", "MOBT out"),
+            Chrome.clickMenuOption("Close Register"),
+            Utils.selectButton("Cash In/Out"),
+            Utils.selectButton("Details"),
+            CashMoveList.checkNumberOfRows(2),
+            CashMoveList.checkCashMoveShown("10"),
+            CashMoveList.checkCashMoveShown("5"),
+            CashMoveList.deleteCashMove("10"),
+            CashMoveList.checkNumberOfRows(1),
+            CashMoveList.checkCashMoveShown("5"),
         ].flat(),
 });

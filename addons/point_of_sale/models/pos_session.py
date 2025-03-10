@@ -76,7 +76,7 @@ class PosSession(models.Model):
     # Total Cash In/Out
     cash_real_transaction = fields.Monetary(string='Transaction', readonly=True)
 
-    order_ids = fields.One2many('pos.order', 'session_id',  string='Orders')
+    order_ids = fields.One2many('pos.order', 'session_id', string='Orders')
     order_count = fields.Integer(compute='_compute_order_count')
     statement_line_ids = fields.One2many('account.bank.statement.line', 'pos_session_id', string='Cash Lines', readonly=True)
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
@@ -712,6 +712,28 @@ class PosSession(models.Model):
             if message:
                 return {'successful': False, 'message': message, 'redirect': False}
 
+    def get_cash_in_out_list(self):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("You don't have the access rights to get the cash in/out list."))
+        cash_in_count = 0
+        cash_out_count = 0
+        cash_in_out_list = []
+        for cash_move in self.sudo().statement_line_ids.sorted('create_date'):
+            if cash_move.amount > 0:
+                cash_in_count += 1
+                name = f'Cash in {cash_in_count}'
+            else:
+                cash_out_count += 1
+                name = f'Cash out {cash_out_count}'
+            cash_in_out_list.append({
+                'name': cash_move.payment_ref or name,
+                'amount': cash_move.amount,
+                'id': cash_move.id,
+                'date': cash_move.create_date,
+                'cashier_name': cash_move.partner_id.name,
+            })
+        return cash_in_out_list
+
     def get_closing_control_data(self):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("You don't have the access rights to get the point of sale closing control data."))
@@ -725,20 +747,7 @@ class PosSession(models.Model):
         non_cash_payment_method_ids = self.payment_method_ids - default_cash_payment_method_id if default_cash_payment_method_id else self.payment_method_ids
         non_cash_payments_grouped_by_method_id = {pm: orders.payment_ids.filtered(lambda p: p.payment_method_id == pm) for pm in non_cash_payment_method_ids}
 
-        cash_in_count = 0
-        cash_out_count = 0
-        cash_in_out_list = []
-        for cash_move in self.sudo().statement_line_ids.sorted('create_date'):
-            if cash_move.amount > 0:
-                cash_in_count += 1
-                name = f'Cash in {cash_in_count}'
-            else:
-                cash_out_count += 1
-                name = f'Cash out {cash_out_count}'
-            cash_in_out_list.append({
-                'name': cash_move.payment_ref if cash_move.payment_ref else name,
-                'amount': cash_move.amount
-            })
+        cash_in_out_list = self.get_cash_in_out_list()
 
         return {
             'orders_details': {
@@ -1768,27 +1777,40 @@ class PosSession(models.Model):
             ))
         return True
 
-    def _prepare_account_bank_statement_line_vals(self, session, sign, amount, reason, extras):
+    def _prepare_account_bank_statement_line_vals(self, session, sign, amount, reason, partner_id, extras):
         return {
             'pos_session_id': session.id,
             'journal_id': session.cash_journal_id.id,
             'amount': sign * amount,
             'date': fields.Date.context_today(self),
             'payment_ref': '-'.join([session.name, extras['translatedType'], reason]),
+            'partner_id': partner_id,
         }
 
-    def try_cash_in_out(self, _type, amount, reason, extras):
+    def try_cash_in_out(self, _type, amount, reason, partner_id, extras):
         sign = 1 if _type == 'in' else -1
         sessions = self.filtered('cash_journal_id')
         if not sessions:
             raise UserError(_("There is no cash payment method for this PoS Session"))
 
         vals_list = [
-            self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, extras)
+            self._prepare_account_bank_statement_line_vals(session, sign, amount, reason, partner_id, extras)
             for session in sessions
         ]
 
         self.env['account.bank.statement.line'].create(vals_list)
+
+    def delete_cash_in_out(self, absl_id, partner_id):
+        if not self.env.user.has_group('account.group_account_basic'):
+            raise AccessError(_("You don't have the access rights to delete a cash in/out."))
+        absl = self.env['account.bank.statement.line'].browse(absl_id)
+        if absl not in self.statement_line_ids:
+            raise AccessError(_("You cannot delete a cash move that is not linked to this session."))
+        cashier_name = absl.partner_id.name
+        amount = absl.amount
+        action = cashier_name + ': ' + str(amount)
+        absl.unlink()
+        self.log_partner_message(partner_id, action, "CASH_IN_OUT_UNLINK")
 
     def _get_attributes_by_ptal_id(self):
         # performance trick: prefetch fields with search_fetch() and fetch()
@@ -1895,9 +1917,11 @@ class PosSession(models.Model):
 
     def log_partner_message(self, partner_id, action, message_type):
         if message_type == 'ACTION_CANCELLED':
-            body = 'Action cancelled ({ACTION})'.format(ACTION=action)
+            body = _('Action cancelled (%s)', action)
         elif message_type == 'CASH_DRAWER_ACTION':
-            body = 'Cash drawer opened ({ACTION})'.format(ACTION=action)
+            body = _('Cash drawer opened (%s)', action)
+        elif message_type == 'CASH_IN_OUT_UNLINK':
+            body = _('Cash move deleted: %s', action)
 
         self.message_post(body=body, author_id=partner_id)
 

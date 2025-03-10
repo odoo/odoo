@@ -30,6 +30,17 @@ export function isCashMoveButtonHidden() {
         },
     ];
 }
+export function doCashMove(amount, reason) {
+    return [
+        ...clickMenuOption("Cash In/Out"),
+        fillTextArea(".cash-reason", reason),
+        {
+            trigger: ".modal .input-amount input",
+            run: "edit " + amount,
+        },
+        Dialog.confirm(),
+    ];
+}
 export function endTour() {
     return {
         content: "Last tour step that avoids error mentioned in commit 443c209",
