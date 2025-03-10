@@ -59,7 +59,7 @@ test("hide/display base on applyTo", async () => {
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
-        `<div class="parent-target"><div class="child-target b my-custom-class o-paragraph">b</div></div>`
+        `<div class="parent-target"><div class="child-target b o-paragraph my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
     expect(".options-container .o_we_color_preview").toHaveCount(1);

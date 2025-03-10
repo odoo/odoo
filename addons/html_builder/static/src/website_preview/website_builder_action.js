@@ -64,10 +64,6 @@ export class WebsiteBuilder extends Component {
         this.setIframeLoaded();
         this.addSystrayItems();
         onWillDestroy(() => {
-            window.parent.document.removeEventListener(
-                "website_edit_loaded",
-                this.updateEditInteraction
-            );
             this.websiteService.useMysterious = false;
             registry.category("systray").remove("website.WebsiteSystrayItem");
         });

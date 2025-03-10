@@ -134,11 +134,11 @@ export class DropZonePlugin extends Plugin {
         }
         const dropZone = position
             ? closest(touching(this.dropZoneElements, position), position) ||
-            closest(this.dropZoneElements, position)
+              closest(this.dropZoneElements, position)
             : closest(this.dropZoneElements, {
-                x: window.innerWidth / 2,
-                y: window.innerHeight / 2,
-            });
+                  x: window.innerWidth / 2,
+                  y: window.innerHeight / 2,
+              });
         if (!dropZone) {
             this.clearDropZone();
             return;
@@ -160,7 +160,6 @@ export class DropZonePlugin extends Plugin {
             this.dispatchTo("on_add_element_handlers", { elementToAdd: elementToAdd });
             scrollToWindow(elementToAdd, { behavior: "smooth", offset: 50 });
             this.dependencies.history.addStep();
-            this.dispatchTo("update_interactions", elementToAdd);
         };
     }
 }

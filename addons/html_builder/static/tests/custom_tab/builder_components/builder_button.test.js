@@ -152,12 +152,12 @@ test("clean another action", async () => {
     await click("[data-class-action='my-custom-class1']");
     expect(":iframe .test-options-target").toHaveAttribute(
         "class",
-        "test-options-target my-custom-class1 o-paragraph"
+        "test-options-target o-paragraph my-custom-class1"
     );
     await click("[data-class-action='my-custom-class2']");
     expect(":iframe .test-options-target").toHaveAttribute(
         "class",
-        "test-options-target my-custom-class2 o-paragraph"
+        "test-options-target o-paragraph my-custom-class2"
     );
 });
 test("clean should provide the next action value", async () => {
@@ -294,8 +294,8 @@ test("apply classAction on multi elements", async () => {
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(`
             <div class="test-options-target">
-                <div class="target-apply my-custom-class o-paragraph">a</div>
-                <div class="target-apply my-custom-class o-paragraph">b</div>
+                <div class="target-apply o-paragraph my-custom-class">a</div>
+                <div class="target-apply o-paragraph my-custom-class">b</div>
             </div>`);
 });
 test("hide/display base on applyTo", async () => {

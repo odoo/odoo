@@ -68,17 +68,17 @@ export class Builder extends Component {
             {
                 Plugins,
                 onChange: ({ isPreviewing }) => {
-                    this.state.canUndo = this.editor.shared.history.canUndo();
-                    this.state.canRedo = this.editor.shared.history.canRedo();
                     if (!isPreviewing) {
+                        this.state.canUndo = this.editor.shared.history.canUndo();
+                        this.state.canRedo = this.editor.shared.history.canRedo();
                         this.updateInvisibleEls();
+                        editorBus.trigger("UPDATE_EDITING_ELEMENT");
+                        editorBus.trigger("DOM_UPDATED");
                     }
-                    editorBus.trigger("UPDATE_EDITING_ELEMENT");
-                    editorBus.trigger("DOM_UPDATED", { isPreviewing });
                 },
                 resources: {
                     on_mobile_preview_clicked: () => {
-                        editorBus.trigger("DOM_UPDATED", { isPreviewing: false });
+                        editorBus.trigger("DOM_UPDATED");
                     },
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
