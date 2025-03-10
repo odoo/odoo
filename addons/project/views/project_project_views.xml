@@ -427,10 +427,12 @@
                             </div>
                         </t>
                         <t t-name="card">
-                            <div class="o_project_kanban_main d-flex align-items-baseline gap-1 ms-1">
-                                <field name="is_favorite" widget="project_is_favorite" nolabel="1"/>
-                                <div class="min-w-0 pb-4 me-2">
+                            <main class="o_project_kanban_main">
+                                <div class="d-flex align-items-baseline gap-1">
+                                    <field name="is_favorite" widget="project_is_favorite" nolabel="1"/>
                                     <span class="text-truncate d-block fs-4 fw-bold" t-att-title="record.display_name.value"><field name="display_name"/></span>
+                                </div>
+                                <div class="o_project_kanban_body min-w-0 pb-4 me-2">
                                     <span name="partner_name" class="text-muted d-flex align-items-baseline" t-if="record.partner_id.value">
                                         <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><field class="text-truncate" name="partner_id"/>
                                     </span>
@@ -457,8 +459,8 @@
                                     </div>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
-                            </div>
-                            <footer class="mt-auto pt-0 ms-1">
+                            </main>
+                            <footer class="mt-auto pt-0">
                                 <div class="d-flex align-items-center">
                                     <div class="o_project_kanban_boxes d-flex align-items-baseline">
                                         <a class="o_project_kanban_box me-1" name="action_view_tasks" type="object">
