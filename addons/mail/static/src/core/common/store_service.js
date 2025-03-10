@@ -82,6 +82,15 @@ export class Store extends BaseStore {
 
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
+    allChannels = Record.many("Thread", {
+        inverse: "storeAsAllChannels",
+        onUpdate() {
+            const busService = this.store.env.services.bus_service;
+            if (!busService.isActive && this.allChannels.some((t) => !t.isTransient)) {
+                busService.start();
+            }
+        },
+    });
     /**
      * Indicates whether the current user is using the application through the
      * public page.
