@@ -390,3 +390,26 @@
         cursor: pointer;
     }
 }
+
+// Container Query
+@mixin container-breakpoint-up($name, $breakpoints) {
+    $min: breakpoint-min($name, $breakpoints);
+    @if $min {
+        @container (min-width: #{$min}) {
+            @content;
+        }
+    } @else {
+        @content;
+    }
+}
+
+@mixin container-breakpoint-down($name, $breakpoints) {
+    $max: breakpoint-max($name, $breakpoints);
+    @if $max {
+        @container (max-width: $max) {
+            @content;
+        }
+    } @else {
+        @content;
+    }
+}

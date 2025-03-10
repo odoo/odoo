@@ -1,6 +1,4 @@
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import {
@@ -25,12 +23,7 @@ import { shallowEqual } from "@web/core/utils/objects";
 const TRUE_TREE = condition(1, "=", 1);
 export class TreeEditor extends Component {
     static template = "web.TreeEditor";
-    static components = {
-        Dropdown,
-        DropdownItem,
-        ModelFieldSelector,
-        TreeEditor,
-    };
+    static components = { ModelFieldSelector, TreeEditor };
     static props = {
         tree: Object,
         resModel: String,
@@ -97,21 +90,16 @@ export class TreeEditor extends Component {
         }
     }
 
-    get className() {
-        return `${this.props.readonly ? "o_read_mode" : "o_edit_mode"}`;
-    }
-
     get isDebugMode() {
         return this.props.isDebugMode !== undefined ? this.props.isDebugMode : !!this.env.debug;
     }
 
     notifyChanges() {
-        this.previousTree = cloneTree(this.tree);
         this.props.update(this.tree);
     }
 
-    updateConnector(node, value) {
-        node.value = value;
+    updateConnector(node) {
+        node.value = node.value === "&" ? "|" : "&";
         node.negate = false;
         this.notifyChanges();
     }
@@ -121,31 +109,19 @@ export class TreeEditor extends Component {
         this.notifyChanges();
     }
 
-    createNewLeaf() {
-        return cloneTree(this.defaultCondition);
+    makeCondition(parent) {
+        const lastCondition = parent.children.findLast((c) => c.type === "condition");
+        return cloneTree(lastCondition || this.defaultCondition);
     }
 
-    createNewBranch(value) {
-        return connector(value, [this.createNewLeaf(), this.createNewLeaf()]);
-    }
-
-    insertRootLeaf(parent) {
-        parent.children.push(this.createNewLeaf());
+    addNewCondition(parent) {
+        parent.children.push(this.makeCondition(parent));
         this.notifyChanges();
     }
 
-    insertLeaf(parent, node) {
-        const newNode = node.type !== "connector" ? cloneTree(node) : this.createNewLeaf();
-        const index = parent.children.indexOf(node);
-        parent.children.splice(index + 1, 0, newNode);
-        this.notifyChanges();
-    }
-
-    insertBranch(parent, node) {
+    addNewConnector(parent) {
         const nextConnector = parent.value === "&" ? "|" : "&";
-        const newNode = this.createNewBranch(nextConnector);
-        const index = parent.children.indexOf(node);
-        parent.children.splice(index + 1, 0, newNode);
+        parent.children.push(connector(nextConnector, [this.makeCondition(parent)]));
         this.notifyChanges();
     }
 
@@ -214,10 +190,5 @@ export class TreeEditor extends Component {
     updateLeafValue(node, value) {
         node.value = value;
         this.notifyChanges();
-    }
-
-    highlightNode(target) {
-        const nodeEl = target.closest(".o_tree_editor_node");
-        nodeEl.classList.toggle("o_hovered_button");
     }
 }
