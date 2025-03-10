@@ -971,7 +971,7 @@ class NumberToWords_BG(Num2Word_Base):
         return ret_minus + ''.join(ret)
 
 
-def patch_num2words():
+def patch_module():
     try:
         import num2words  # noqa: PLC0415
     except ImportError:

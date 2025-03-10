@@ -12,7 +12,7 @@ assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Od
 # required to do as early as possible for evented and timezone
 # ----------------------------------------------------------
 from . import _monkeypatches
-_monkeypatches.patch_all()
+_monkeypatches.patch_init()
 
 # ----------------------------------------------------------
 # Shortcuts
