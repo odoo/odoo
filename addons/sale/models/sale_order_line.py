@@ -346,7 +346,7 @@ class SaleOrderLine(models.Model):
         if not self.product_custom_attribute_value_ids and not self.product_no_variant_attribute_value_ids:
             return ""
 
-        name = "\n"
+        name = ""
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin
