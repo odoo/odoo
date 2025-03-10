@@ -178,7 +178,8 @@ class Domain:
     # because we overwrite __new__ so typechecking for abstractmethod is incorrect.
     # We do this so that we can use the Domain as both a factory for multiple
     # types of domains, while still having `isinstance` working for it.
-    __slots__ = ()
+    __slots__ = '_opt_level'
+    _opt_level: OptimizationLevel
 
     def __new__(cls, *args):
         """Build a domain AST.
@@ -350,39 +351,46 @@ class Domain:
     def validate(self, model: BaseModel) -> None:
         """Validates that the current domain is correct or raises an exception"""
         # just execute the optimization code that goes through all the fields
-        self._optimize_for_sql(model)
+        self.optimize(model, full=True)
 
-    def _optimize(self, model: BaseModel) -> Domain:
+    def optimize(self, model: BaseModel, *, full: bool = False) -> Domain:
         """Perform optimizations of the node given a model.
-
-        The optimizations are essentially model agnostic and transaction
-        independent. This means that they only depend on the model's fields
-        definitions. No model-specific override is used, and the resulting
-        domain may be reused in another transaction without semantic impact.
-        The model's fields are used to validate conditions and apply
-        type-dependent optimizations.
-
-        This optimization level may be useful to simplify a domain that is sent
-        to the client-side, thereby reducing its payload/complexity.
 
         It is a pre-processing step to rewrite the domain into a logically
         equivalent domain that is a more canonical representation of the
         predicate. Multiple conditions can be merged together.
+
+        By default, ``full=False`` applies basic optimizations only. Those are
+        transaction-independent; they only depend on the model's fields
+        definitions. No model-specific override is used, and the resulting
+        domain may be reused in another transaction without semantic impact.
+        The model's fields are used to validate conditions and apply
+        type-dependent optimizations. This optimization level may be useful to
+        simplify a domain that is sent to the client-side, thereby reducing its
+        payload/complexity.
+
+        With ``full=True``, basic and advanced optimizations are applied.
+        Additional optimizations may rely on model specific overrides
+        (search methods of fields, etc.) and the semantic equivalence is only
+        guaranteed at the given point in a transaction. We resolve inherited
+        and non-stored fields (using their search method) to transform the
+        conditions.
         """
+        level = OptimizationLevel.FOR_SQL if full else OptimizationLevel.BASIC
+        if self._opt_level >= level:
+            return self
+
+        # apply optimizations
+        domain = self._optimize(model, full)
+
+        # set the optimization level if necessary (unlike DomainBool, for instance)
+        if domain._opt_level < level:
+            object.__setattr__(domain, '_opt_level', level)
+        return domain
+
+    def _optimize(self, model: BaseModel, full: bool) -> Domain:
+        """Implementation of domain optimizations."""
         return self
-
-    def _optimize_for_sql(self, model: BaseModel) -> Domain:
-        """Perform optimizations required by `_to_sql`.
-
-        Basic optimizations are performed. Then, ...
-
-        Additional optimizations may rely on model specific overrides (search
-        methods of fields, etc.) and the semantic equivalence is only guaranteed
-        at the given point in a transaction.
-        We resolve inherited and non-stored fields (using their search method)
-        to transform the conditions.
-        """
-        return self._optimize(model)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         """Build the SQL to inject into the query.  The domain should be optimized first."""
@@ -395,13 +403,14 @@ class DomainBool(Domain):
     It is NOT considered as a condition and these constants are removed
     from nary domains.
     """
-    __slots__ = ("value",)
+    __slots__ = 'value'
     value: bool
 
     def __new__(cls, value: bool):
         """Create a constant domain."""
         self = object.__new__(cls)
         self.value = value
+        self._opt_level = OptimizationLevel.FOR_SQL
         return self
 
     def __eq__(self, other):
@@ -445,13 +454,14 @@ class DomainNot(Domain):
     """Negation domain, contains a single child"""
     OPERATOR = '!'
 
-    __slots__ = ('child',)
+    __slots__ = 'child'
     child: Domain
 
     def __new__(cls, child: Domain):
         """Create a domain which is the inverse of the child."""
         self = object.__new__(cls)
         self.child = child
+        self._opt_level = OptimizationLevel.NONE
         return self
 
     def __invert__(self):
@@ -467,11 +477,8 @@ class DomainNot(Domain):
     def map_conditions(self, function) -> Domain:
         return ~(self.child.map_conditions(function))
 
-    def _optimize(self, model: BaseModel) -> Domain:
-        return self.child._optimize(model)._negate(model)
-
-    def _optimize_for_sql(self, model: BaseModel) -> Domain:
-        return self.child._optimize_for_sql(model)._negate(model)
+    def _optimize(self, model: BaseModel, full: bool) -> Domain:
+        return self.child.optimize(model, full=full)._negate(model)
 
     def __eq__(self, other):
         return isinstance(other, DomainNot) and self.child == other.child
@@ -490,16 +497,15 @@ class DomainNary(Domain):
     OPERATOR_SQL: SQL = SQL(" ??? ")
     ZERO: DomainBool = _FALSE_DOMAIN  # default for lint checks
 
-    __slots__ = ('children', '_opt_level')  # noqa: RUF023
+    __slots__ = 'children'
     children: list[Domain]
-    _opt_level: OptimizationLevel
 
-    def __new__(cls, children: list[Domain], *, _level: OptimizationLevel = OptimizationLevel.NONE):
+    def __new__(cls, children: list[Domain]):
         """Create the n-ary domain with at least 2 conditions."""
         assert len(children) >= 2
         self = object.__new__(cls)
         self.children = children
-        self._opt_level = _level
+        self._opt_level = OptimizationLevel.NONE
         return self
 
     @classmethod
@@ -552,7 +558,7 @@ class DomainNary(Domain):
         return self.INVERSE([~child for child in self.children])
 
     def _negate(self, model):
-        return self.INVERSE([child._negate(model) for child in self.children], _level=self._opt_level)
+        return self.INVERSE([child._negate(model) for child in self.children])
 
     def iter_conditions(self):
         for child in self.children:
@@ -561,27 +567,17 @@ class DomainNary(Domain):
     def map_conditions(self, function) -> Domain:
         return self.apply(child.map_conditions(function) for child in self.children)
 
-    def _optimize(self, model: BaseModel, *, level: OptimizationLevel = OptimizationLevel.BASIC) -> Domain:
+    def _optimize(self, model: BaseModel, full: bool) -> Domain:
         """Optimization step.
 
         Optimize all children with the given model.
         Run the registered optimizations until a fixed point is found.
         See :function:`nary_optimization` for details.
         """
-        assert isinstance(self, DomainNary)
-        # check if already optimized
-        if self._opt_level >= level:
-            return self
         # optimize children
-        children: Iterable[Domain] | Domain
-        if level > OptimizationLevel.BASIC:
-            # start first with basic optimization
-            dom = self._optimize(model, level=OptimizationLevel.BASIC)
-            if dom is not self:
-                return dom._optimize_for_sql(model)
-            children = (c._optimize_for_sql(model) for c in self.children)
-        else:
-            children = (c._optimize(model) for c in self.children)
+        children = (child.optimize(model, full=full) for child in self.children)
+
+        level = OptimizationLevel.FOR_SQL if full else OptimizationLevel.BASIC
         cls = type(self)  # cls used for optimizations and rebuilding
         while True:
             children = self._flatten(children)
@@ -599,11 +595,7 @@ class DomainNary(Domain):
             children = list(children)
             if len(children) == len(children_previous):
                 # optimized
-                return cls(children, _level=level)
-
-    def _optimize_for_sql(self, model: BaseModel) -> Domain:
-        # code is exactly the same
-        return self._optimize(model, level=OptimizationLevel.FOR_SQL)
+                return cls(children)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
         return SQL("(%s)", self.OPERATOR_SQL.join(
@@ -654,14 +646,13 @@ class DomainCondition(Domain):
     A field (or expression) is compared to a value. The list of supported
     operators are described in CONDITION_OPERATORS.
     """
-    __slots__ = ('field_expr', 'operator', 'value', '_field_instance', '_opt_level')  # noqa: RUF023
+    __slots__ = ('_field_instance', 'field_expr', 'operator', 'value')
     _field_instance: Field | None  # mutable cached property
-    _opt_level: OptimizationLevel  # mutable cached property
     field_expr: str
     operator: str
     value: typing.Any
 
-    def __new__(cls, field_expr: str, operator: str, value, /, *, level=OptimizationLevel.NONE):
+    def __new__(cls, field_expr: str, operator: str, value):
         """Init a new simple condition (internal init)
 
         :param field_expr: Field name or field path
@@ -673,7 +664,7 @@ class DomainCondition(Domain):
         self.operator = operator
         self.value = value
         self._field_instance = None
-        self._opt_level = level
+        self._opt_level = OptimizationLevel.NONE
         return self
 
     def checked(self) -> DomainCondition:
@@ -715,7 +706,7 @@ class DomainCondition(Domain):
         # do it only for simple fields (not expressions)
         # inequalities are handled in _negate()
         if "." not in self.field_expr and (neg_op := _INVERSE_OPERATOR.get(self.operator)):
-            return DomainCondition(self.field_expr, neg_op, self.value, level=self._opt_level)
+            return DomainCondition(self.field_expr, neg_op, self.value)
         return super().__invert__()
 
     def _negate(self, model):
@@ -725,9 +716,9 @@ class DomainCondition(Domain):
             # Inverse and add a self "or field is null"
             # when the field does not have a falsy value.
             # Having a falsy value is handled correctly in the SQL generation.
-            condition = DomainCondition(self.field_expr, neg_op, self.value, level=self._opt_level)
+            condition = DomainCondition(self.field_expr, neg_op, self.value)
             if self._field(model).falsy_value is None:
-                is_null = DomainCondition(self.field_expr, 'in', OrderedSet([False]), level=self._opt_level)
+                is_null = DomainCondition(self.field_expr, 'in', OrderedSet([False]))
                 condition = is_null | condition
             return condition
 
@@ -782,7 +773,7 @@ class DomainCondition(Domain):
         object.__setattr__(self, '_field_instance', field)
         return field, (props[0] if props else '')
 
-    def _optimize(self, model: BaseModel) -> Domain:
+    def _optimize(self, model: BaseModel, full: bool) -> Domain:
         """Optimization step.
 
         Apply some generic optimizations and then dispatch optimizations
@@ -795,79 +786,63 @@ class DomainCondition(Domain):
         - Run optimizations.
         - Check the output.
         """
-        if self._opt_level >= OptimizationLevel.BASIC:
-            return self
-
         # optimize path
         field, property_name = self.__get_field(model)
         if property_name and field.relational:
             sub_domain = DomainCondition(property_name, self.operator, self.value)
-            return DomainCondition(field.name, 'any', sub_domain)._optimize(model)
+            return DomainCondition(field.name, 'any', sub_domain)._optimize(model, full)
 
         # optimizations based on operator
         for opt in _CONDITION_OPTIMIZATIONS_BY_OPERATOR[self.operator]:
-            dom = opt(self, model)
-            if dom is not self:
-                return dom._optimize(model)
+            domain = opt(self, model)
+            if domain is not self:
+                return domain._optimize(model, full)
 
         # optimizations based on field type
         for opt in _CONDITION_OPTIMIZATIONS_BY_FIELD_TYPE[field.type]:
-            dom = opt(self, model)
-            if dom is not self:
-                return dom._optimize(model)
+            domain = opt(self, model)
+            if domain is not self:
+                return domain._optimize(model, full)
 
-        object.__setattr__(self, '_opt_level', OptimizationLevel.BASIC)
-        return self
-
-    def _optimize_for_sql(self, model: BaseModel) -> Domain:
-        if self._opt_level >= OptimizationLevel.FOR_SQL:
+        if not full:
             return self
-        dom = self._optimize(model)
-        if dom is not self:
-            return dom._optimize_for_sql(model)
-        field = self._field(model)
 
         # resolve inherited fields
         # inherits implies both Field.delegate=True and Field.auto_join=True
         # so no additional permissions will be added by the 'any' operator below
         if field.inherited:
-            related_field: Field = field.related_field  # type: ignore
-            assert related_field.model_name, f"No co-model for inherited field {field!r}"
-            parent_model = model.env[related_field.model_name]
-            parent_fname = model._inherits[parent_model._name]
-            parent_domain = self._optimize_for_sql(parent_model)
-            return DomainCondition(parent_fname, 'any', parent_domain, level=OptimizationLevel.FOR_SQL)
+            parent_fname = field.related.split('.')[0]
+            parent_domain = DomainCondition(self.field_expr, self.operator, self.value)
+            return DomainCondition(parent_fname, 'any', parent_domain).optimize(model)._optimize(model, full)
 
         # handle non-stored fields (replace by searchable/stored items)
         if not field.store:
             # check that we have just the field (basic optimization only)
             if field.name != self.field_expr:
-                object.__setattr__(self, '_opt_level', OptimizationLevel.FOR_SQL)
                 return self
             # find the implementation of search and execute it
             if not field.search:
                 _logger.error("Non-stored field %s cannot be searched.", field, stack_info=_logger.isEnabledFor(logging.DEBUG))
                 return _TRUE_DOMAIN
-            computed_domain = field.determine_domain(model, self.operator, self.value)
-            return Domain(computed_domain)._optimize_for_sql(model)
+            domain = field.determine_domain(model, self.operator, self.value)
+            return Domain(domain).optimize(model)._optimize(model, full)
 
         # optimizations based on operator
         for opt in _CONDITION_OPTIMIZATIONS_FOR_SQL_BY_OPERATOR[self.operator]:
             dom = opt(self, model)
             if dom is not self:
-                return dom._optimize_for_sql(model)
+                return dom.optimize(model)._optimize(model, full)
 
         # optimizations based on field type
         for opt in _CONDITION_OPTIMIZATIONS_FOR_SQL_BY_FIELD_TYPE[field.type]:
             dom = opt(self, model)
             if dom is not self:
-                return dom._optimize_for_sql(model)
+                return dom.optimize(model)._optimize(model, full)
 
         # final checks
         if self.operator not in STANDARD_CONDITION_OPERATORS:
             self._raise("Not standard operator left")
 
-        object.__setattr__(self, '_opt_level', OptimizationLevel.FOR_SQL)
         return self
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
@@ -969,9 +944,9 @@ def nary_condition_optimization(*, operators: Collection[str], field_condition: 
                     if len(list_conds) > 1:
                         for cond in optimization(cls, model, list_conds):
                             if level > OptimizationLevel.BASIC:
-                                yield cond._optimize_for_sql(model)
+                                yield cond.optimize(model, full=True)
                             else:
-                                yield cond._optimize(model)
+                                yield cond.optimize(model)
                     else:
                         yield from list_conds
                 else:
@@ -1149,7 +1124,7 @@ def _optimize_any_domain(condition, model):
         comodel = model.env[field.comodel_name]
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
-    domain = domain._optimize(comodel)
+    domain = domain.optimize(comodel)
     # const if the domain is empty, the result is a constant
     # if the domain is True, we keep it as is
     if domain.is_false():
@@ -1172,7 +1147,7 @@ def _optimize_any_domain_for_sql(condition, model):
         comodel = model.env[field.comodel_name]
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
-    domain = domain._optimize_for_sql(comodel)
+    domain = domain.optimize(comodel, full=True)
     if domain is condition.value:
         return condition
     return DomainCondition(condition.field_expr, condition.operator, domain)
