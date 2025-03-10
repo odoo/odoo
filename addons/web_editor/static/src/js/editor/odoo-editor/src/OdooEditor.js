@@ -4218,7 +4218,7 @@ export class OdooEditor extends EventTarget {
     _onKeyDown(ev) {
         delete this._isNavigatingByMouse;
         const selection = this.document.getSelection();
-        if (selection.anchorNode && isProtected(selection.anchorNode)) {
+        if ((!selection?.anchorNode) || (isProtected(selection.anchorNode))) {
             return;
         }
         if (this.document.querySelector(".transfo-container")) {
@@ -4277,13 +4277,13 @@ export class OdooEditor extends EventTarget {
             const sel = this.document.getSelection();
             const closestUnbreakable = closestElement(sel.anchorNode, isUnbreakable);
             const closestTableOrLi = closestElement(sel.anchorNode, 'table, li');
-            const closestUnbreakableOrLi = closestElement(sel.anchorNode, ["li", closestUnbreakable.nodeName].join(","));
+            const closestUnbreakableOrLi = closestElement(sel.anchorNode, ["li", closestUnbreakable?.nodeName].join(","));
             if (closestTableOrLi && closestTableOrLi.nodeName === 'TABLE') {
                 this._onTabulationInTable(ev);
             } else if (
                 !ev.shiftKey &&
                 sel.isCollapsed &&
-                closestUnbreakableOrLi.nodeName !== 'LI'
+                closestUnbreakableOrLi?.nodeName !== 'LI'
             ) {
                 // Indent text (collapsed selection).
                 this.execCommand('insert', parseHTML(this.document, tabHtml));
