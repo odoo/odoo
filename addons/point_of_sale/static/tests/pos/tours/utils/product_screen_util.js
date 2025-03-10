@@ -107,13 +107,7 @@ export function clickDisplayedProduct(
     return step;
 }
 export function clickInfoProduct(name) {
-    return [
-        {
-            content: `click product '${name}'`,
-            trigger: `article.product:contains("${name}") .product-information-tag`,
-            run: "click",
-        },
-    ];
+    return [...clickDisplayedProduct(name), ...inLeftSide(clickControlButton("Info"))];
 }
 export function clickOrderline(productName, quantity = "1") {
     return [

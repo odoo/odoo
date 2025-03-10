@@ -35,9 +35,7 @@
                             color="product.pos_categ_ids?.at(-1)?.color"
                             imageUrl="pos.config.show_product_images and this.getProductImage(product)"
                             onClick.bind="() => this.addProductToOrder(product)"
-                            productInfo="true"
-                            productCartQty="this.state.quantityByProductTmplId[product.id]"
-                            onProductInfoClick.bind="() => this.onProductInfoClick(product)" />
+                            productCartQty="this.state.quantityByProductTmplId[product.id]" />
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">
                         <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>

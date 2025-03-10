@@ -2181,6 +2181,15 @@ export class PosStore extends WithLazyGetterTrap {
         return this.config.proxy_ip;
     }
 
+    getExcludedProductIds() {
+        return [
+            this.config.tip_product_id?.product_tmpl_id?.id,
+            ...this.session._pos_special_products_ids.map(
+                (id) => this.models["product.product"].get(id)?.product_tmpl_id?.id
+            ),
+        ].filter(Boolean);
+    }
+
     get productsToDisplay() {
         const searchWord = this.searchProductWord.trim();
         const allProducts = this.models["product.template"].getAll();
@@ -2208,12 +2217,7 @@ export class PosStore extends WithLazyGetterTrap {
             return [];
         }
 
-        const excludedProductIds = [
-            this.config.tip_product_id?.product_tmpl_id?.id,
-            ...this.session._pos_special_products_ids.map(
-                (id) => this.models["product.product"].get(id)?.product_tmpl_id?.id
-            ),
-        ].filter(Boolean);
+        const excludedProductIds = this.getExcludedProductIds();
 
         list = list
             .filter((product) => !excludedProductIds.includes(product.id) && product.canBeDisplayed)
