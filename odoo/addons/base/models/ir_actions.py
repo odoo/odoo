@@ -1,26 +1,24 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
-from odoo import api, fields, models, tools, _, Command
-from odoo.exceptions import MissingError, ValidationError, AccessError, UserError
-from odoo.fields import Domain
-from odoo.tools import frozendict
+import base64
+import contextlib
+import json
+import logging
+import re
+from collections import defaultdict
+from functools import reduce
+from operator import getitem
+
+import requests
+from pytz import timezone
+
+from odoo import api, fields, models, tools
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
+from odoo.fields import Command, Domain
+from odoo.tools import _, frozendict
+from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
-from odoo.tools.float_utils import float_compare
-from odoo.http import request
-import base64
-from collections import defaultdict
-from functools import partial, reduce
-import logging
-from operator import getitem
-import requests
-import json
-import re
-import contextlib
-
-from pytz import timezone
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -1003,7 +1001,7 @@ class IrActionsServer(models.Model):
             'env': self.env,
             'model': model,
             # Exceptions
-            'UserError': odoo.exceptions.UserError,
+            'UserError': UserError,
             # record
             'record': record,
             'records': records,

@@ -11,7 +11,7 @@ from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
 import odoo
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.modules.registry import Registry
 from odoo.tools import SQL
@@ -132,7 +132,7 @@ class IrCron(models.Model):
         cron_cr = self.env.cr
         job = self._acquire_one_job(cron_cr, self.id, include_not_ready=True)
         if not job:
-            raise UserError(_("Job '%s' already executing", self.name))
+            raise UserError(self.env._("Job '%s' already executing", self.name))
         self._process_job(cron_cr, job)
         return True
 
@@ -521,7 +521,7 @@ class IrCron(models.Model):
                 failure_count = 0
                 first_failure_date = None
                 active = False
-                self._notify_admin(_(
+                self._notify_admin(self.env._(
                     "Cron job %(name)s (%(id)s) has been deactivated after failing %(count)s times. "
                     "More information can be found in the server logs around %(time)s.",
                     name=repr(job['cron_name']),
