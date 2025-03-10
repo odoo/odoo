@@ -4,8 +4,9 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { onEmployeeSubRedirect } from './hooks';
-import { Component, onWillStart, onWillRender, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 class HrOrgChartPopover extends Component {
     static template = "hr_org_chart.hr_orgchart_emp_popover";
@@ -48,25 +49,25 @@ export class HrOrgChart extends Component {
         this.lastParent = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
-        onWillStart(this.handleComponentUpdate.bind(this));
-        onWillRender(this.handleComponentUpdate.bind(this));
+        onWillStart(async () => {
+            this.employee = this.props.record.data;
+            // the widget is either dispayed in the context of a hr.employee form or a res.users form
+            this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.props.record.resId;
+            this.state.parent_id = this.employee.parent_id?.[0] || this.employee.employee_parent_id?.[0];
+            this.original_employee_id = this.state.employee_id;
+        });
+
+        useRecordObserver(async (record) => {
+            this.state.employee_id = this.original_employee_id;
+            const newParentId = record.data.parent_id?.[0] || false;
+            if (this.lastParent !== newParentId) {
+                await this.fetchEmployeeData(this.state.employee_id, newParentId, true);
+            }
+            this.lastParent = newParentId;
+        })
     }
 
-    /**
-     * Called on start and on render
-     */
-    async handleComponentUpdate() {
-        this.employee = this.props.record.data;
-        // the widget is either dispayed in the context of a hr.employee form or a res.users form
-        this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.props.record.resId;
-        const manager = this.employee.parent_id || this.employee.employee_parent_id;
-        const forceReload = this.lastRecord !== this.props.record || this.lastParent != manager;
-        this.lastParent = manager;
-        this.lastRecord = this.props.record;
-        await this.fetchEmployeeData(this.state.employee_id, forceReload);
-    }
-
-    async fetchEmployeeData(employeeId, force = false) {
+    async fetchEmployeeData(employeeId, newParentId = null, force = false) {
         if (!employeeId) {
             this.managers = [];
             this.children = [];
@@ -80,6 +81,7 @@ export class HrOrgChart extends Component {
                 '/hr/get_org_chart',
                 {
                     employee_id: employeeId,
+                    new_parent_id: newParentId,
                     context: user.context,
                 }
             );
