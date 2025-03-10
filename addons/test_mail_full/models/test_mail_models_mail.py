@@ -52,7 +52,7 @@ class MailTestRating(models.Model):
         'portal.mixin',
     ]
     _mailing_enabled = True
-    _order = 'name asc, id asc'
+    _order = 'id asc'
 
     name = fields.Char('Name')
     subject = fields.Char('Subject')

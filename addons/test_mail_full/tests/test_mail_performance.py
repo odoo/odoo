@@ -316,3 +316,126 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)
+
+
+@tagged('rating', 'mail_performance', 'post_install', '-at_install')
+class TestRatingPerformance(FullBaseMailPerformance):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.RECORD_COUNT = 20
+
+        cls.partners = cls.env['res.partner'].sudo().create([
+            {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)}
+            for idx in range(cls.RECORD_COUNT)])
+
+        # create records with 2 ratings to check batch statistics on them
+        responsibles = [cls.user_admin, cls.user_employee, cls.env['res.users']]
+        cls.record_ratings = cls.env['mail.test.rating'].create([{
+            'customer_id': cls.partners[idx].id,
+            'name': f'Test Rating {idx}',
+            'user_id': responsibles[idx % 3].id,
+        } for idx in range(cls.RECORD_COUNT)])
+        rates = [enum % 5 for enum, _rec in enumerate(cls.record_ratings)]
+        # create rating from 1 -> 5 for each record
+        for rate, record in zip(rates, cls.record_ratings, strict=True):
+            record.rating_apply(rate + 1, token=record._rating_get_access_token())
+        # create rating with 4 or 5 (half records)
+        for record in cls.record_ratings[:10]:
+            record.rating_apply(4, token=record._rating_get_access_token())
+        for record in cls.record_ratings[10:]:
+            record.rating_apply(5, token=record._rating_get_access_token())
+
+    def apply_ratings(self, rate):
+        for record in self.record_ratings:
+            access_token = record._rating_get_access_token()
+            record.rating_apply(rate, token=access_token)
+        self.flush_tracking()
+
+    def create_ratings(self, model):
+        self.record_ratings = self.env[model].create([{
+            'customer_id': self.partners[idx].id,
+            'name': 'Test Rating',
+            'user_id': self.user_admin.id,
+        } for idx in range(self.RECORD_COUNT)])
+        self.flush_tracking()
+
+    @users('employee')
+    @warmup
+    def test_rating_api_rating_get_operator(self):
+        user_names = []
+        with self.assertQueryCount(employee=4):  # tmf: 4
+            ratings = self.record_ratings.with_env(self.env)
+            for rating in ratings:
+                user_names.append(rating._rating_get_operator().name)
+        expected_names = ['Mitchell Admin', 'Ernest Employee', False] * 6 + ['Mitchell Admin', 'Ernest Employee']
+        for partner_name, expected_name in zip(user_names, expected_names, strict=True):
+            self.assertEqual(partner_name, expected_name)
+
+    @users('employee')
+    @warmup
+    def test_rating_api_rating_get_partner(self):
+        partner_names = []
+        with self.assertQueryCount(employee=3):  # tmf: 3
+            ratings = self.record_ratings.with_env(self.env)
+            for rating in ratings:
+                partner_names.append(rating._rating_get_partner().name)
+        for partner_name, expected in zip(partner_names, self.partners, strict=True):
+            self.assertEqual(partner_name, expected.name)
+
+    @users('employee')
+    @warmup
+    def test_rating_get_grades_perfs(self):
+        with self.assertQueryCount(employee=1):
+            ratings = self.record_ratings.with_env(self.env)
+            grades = ratings.rating_get_grades()
+        self.assertDictEqual(grades, {'great': 28, 'okay': 4, 'bad': 8})
+
+    @users('employee')
+    @warmup
+    def test_rating_get_stats_perfs(self):
+        with self.assertQueryCount(employee=1):
+            ratings = self.record_ratings.with_env(self.env)
+            stats = ratings.rating_get_stats()
+        self.assertDictEqual(stats, {'avg': 3.75, 'total': 40, 'percent': {1: 10.0, 2: 10.0, 3: 10.0, 4: 35.0, 5: 35.0}})
+
+    @users('employee')
+    @warmup
+    def test_rating_last_value_perfs(self):
+        with self.assertQueryCount(employee=233):  # tmf: 233
+            self.create_ratings('mail.test.rating.thread')
+
+        with self.assertQueryCount(employee=263):  # tmf: 263
+            self.apply_ratings(1)
+
+        with self.assertQueryCount(employee=222):  # tmf: 222
+            self.apply_ratings(5)
+
+    @users('employee')
+    @warmup
+    def test_rating_last_value_perfs_with_rating_mixin(self):
+        with self.assertQueryCount(employee=256):  # tmf: 256
+            self.create_ratings('mail.test.rating')
+
+        with self.assertQueryCount(employee=285):  # tmf: 285
+            self.apply_ratings(1)
+
+        with self.assertQueryCount(employee=264):  # tmf: 264
+            self.apply_ratings(5)
+
+        with self.assertQueryCount(employee=1):
+            self.record_ratings._compute_rating_last_value()
+            vals = (val == 5 for val in self.record_ratings.mapped('rating_last_value'))
+            self.assertTrue(all(vals), "The last rating is kept.")
+
+    @users('employee')
+    @warmup
+    def test_rating_stat_fields(self):
+        expected_texts = ['ok', 'ok', 'ok', 'top', 'top'] * 2 + ['ok', 'ok', 'top', 'top', 'top'] * 2
+        expected_satis = [50.0, 50.0, 50.0, 100.0, 100.0] * 4
+        with self.assertQueryCount(employee=2):
+            ratings = self.record_ratings.with_env(self.env)
+            for rating, text, satisfaction in zip(ratings, expected_texts, expected_satis, strict=True):
+                self.assertEqual(rating.rating_avg_text, text)
+                self.assertEqual(rating.rating_percentage_satisfaction, satisfaction)
