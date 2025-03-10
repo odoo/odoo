@@ -95,7 +95,7 @@
                 </div>
                 <div t-if="extended and !props.composer.message" class="d-flex align-items-center mt-2 gap-2">
                     <t t-call="mail.Composer.sendButton"/>
-                    <span t-if="!isSendButtonDisabled and !props.composer.message" t-out="SEND_KEYBIND_TO_SEND"/>
+                    <span t-if="!isSendButtonDisabled and !props.composer.message and !isMobileOS()" t-out="SEND_KEYBIND_TO_SEND"/>
                 </div>
             </div>
             <div class="o-mail-Composer-footer overflow-auto">

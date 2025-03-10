@@ -122,6 +122,7 @@ export class Composer extends Component {
         });
         this.suggestion = this.store.self.type === "partner" ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
+        this.isMobileOS = isMobileOS;
         this.onDropFile = this.onDropFile.bind(this);
         this.saveContentDebounced = useDebounced(this.saveContent, 5000, {
             execBeforeUnmount: true,
