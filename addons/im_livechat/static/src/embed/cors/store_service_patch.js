@@ -7,6 +7,7 @@ export const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
 patch(Store.prototype, {
     setup() {
         super.setup(...arguments);
+        expirableStorage.onChange(GUEST_TOKEN_STORAGE_KEY, (value) => (this.guest_token = value));
         /** @type {string|null} */
         this.guest_token = Record.attr(null, {
             compute() {

@@ -72,7 +72,6 @@ patch(Thread.prototype, {
             compute() {
                 return this.livechat_active ? this.store : null;
             },
-            eager: true,
         });
         this.requested_by_operator = false;
     },

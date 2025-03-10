@@ -12,14 +12,7 @@ const StorePatch = {
         this.livechat_rule = Record.one("im_livechat.channel.rule");
         /** @type {boolean} */
         this.livechat_available = session.livechatData?.isAvailable;
-        this.activeLivechats = Record.many("Thread", {
-            inverse: "storeAsActiveLivechats",
-            onUpdate() {
-                if (this.activeLivechats.some(({ isTransient }) => !isTransient)) {
-                    this.store.env.services.bus_service.start();
-                }
-            },
-        });
+        this.activeLivechats = Record.many("Thread", { inverse: "storeAsActiveLivechats" });
     },
 };
 patch(Store.prototype, StorePatch);
