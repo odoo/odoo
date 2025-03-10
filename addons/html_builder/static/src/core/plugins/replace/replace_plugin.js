@@ -50,7 +50,6 @@ export class ReplacePlugin extends Plugin {
             this.dependencies.history.addStep();
             this.dependencies["builder-options"].updateContainers(newSnippet);
             // TODO post snippet drop (onBuild,...)
-            this.dispatchTo("update_interactions", newSnippet);
         }
     }
 }

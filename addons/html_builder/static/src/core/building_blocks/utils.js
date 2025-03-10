@@ -192,12 +192,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     }
 
     onMounted(refreshCurrentItem);
-    useBus(env.editorBus, "DOM_UPDATED", (ev) => {
-        if (ev.detail.isPreviewing) {
-            return;
-        }
-        refreshCurrentItem();
-    });
+    useBus(env.editorBus, "DOM_UPDATED", refreshCurrentItem);
     function cleanSelectedItem(...args) {
         if (currentSelectedItem) {
             currentSelectedItem.clean(...args);
