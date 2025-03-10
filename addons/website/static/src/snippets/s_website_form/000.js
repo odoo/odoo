@@ -32,6 +32,16 @@ import wUtils from '@website/js/utils';
          */
         start: function () {
             if (this.editableMode) {
+                // TODO: Improve this. Since the form behavior was handled using
+                // two separate public widgets, and the "data-for" values were
+                // removed (on destroy before saving), we still need to restore
+                // them in edit mode in the case of a simple widget refresh.
+                this.dataForValues = wUtils.getParsedDataFor(this.$target[0].id, this.$target[0].ownerDocument);
+                for (const fieldEl of this._getDataForFields()) {
+                    if (!fieldEl.getAttribute("value")) {
+                        fieldEl.setAttribute("value", this.dataForValues[fieldEl.name]);
+                    }
+                }
                 // We do not initialize the datetime picker in edit mode but want the dates to be formated
                 this.el.querySelectorAll('.s_website_form_input.datetimepicker-input').forEach(el => {
                     const value = el.getAttribute('value');
@@ -46,6 +56,32 @@ import wUtils from '@website/js/utils';
             }
             return this._super(...arguments);
         },
+        /**
+         * @override
+         */
+        destroy() {
+            if (this.editableMode) {
+                // The "data-for" values are always correctly added to the form
+                // on the form widget start. But if we make any change to it in
+                // "edit" mode, we need to be sure it will not be saved with
+                // the new values.
+                for (const fieldEl of this._getDataForFields()) {
+                    fieldEl.removeAttribute("value");
+                }
+            }
+            this._super(...arguments);
+        },
+        /**
+         * @private
+         */
+        _getDataForFields() {
+            if (!this.dataForValues) {
+                return [];
+            }
+            return Object.keys(this.dataForValues)
+                .map(name => this.$target[0].querySelector(`[name="${CSS.escape(name)}"]`))
+                .filter(dataForValuesFieldEl => dataForValuesFieldEl && dataForValuesFieldEl.name !== "email_to");
+        }
     });
 
     publicWidget.registry.s_website_form = publicWidget.Widget.extend({
@@ -256,8 +292,18 @@ import wUtils from '@website/js/utils';
             // All 'hidden if' fields start with d-none
             this.el.querySelectorAll('.s_website_form_field_hidden_if:not(.d-none)').forEach(el => el.classList.add('d-none'));
 
+            // Prevent "data-for" values removal on destroy, they are still used
+            // in edit mode to keep the form linked to its predefined server
+            // values (e.g., the default `job_id` value on the application form
+            // for a given job).
+            const dataForValues = wUtils.getParsedDataFor(this.$target[0].id, document) || {};
+            const initialValuesToReset = new Map(
+                [...this.initialValues.entries()].filter(
+                    ([input]) => !dataForValues[input.name] || input.name === "email_to"
+                )
+            );
             // Reset the initial default values.
-            for (const [fieldEl, initialValue] of this.initialValues.entries()) {
+            for (const [fieldEl, initialValue] of initialValuesToReset.entries()) {
                 if (initialValue) {
                     fieldEl.setAttribute('value', initialValue);
                 } else {

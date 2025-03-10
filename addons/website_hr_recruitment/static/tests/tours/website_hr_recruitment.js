@@ -63,6 +63,7 @@ registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
             window.location.href = '/jobs';
         },
     },
+<<<<<<< 070ea064bd4f354ea931493c9a5cfa01e2b51195
     ...applyForAJob('Internship', {
         name: 'Jack Doe',
         email: 'jack@doe.com',
@@ -96,6 +97,29 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
         // It must be done in this way because the editor does not allow to
         // put a default value on a field with type="hidden".
         this.anchor.value = "FAKE_JOB_ID_DEFAULT_VAL";
+||||||| 6883dcc3e928eb7ea9cc23c6fd014e9388407210
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: 'Verify that the job_id field has kept its default value',
+        trigger: "body",
+        run: () => {
+            if (!document.querySelector('.o_iframe:not(.o_ignore_in_tour)').contentDocument.querySelector('input[name="job_id"][value="FAKE_JOB_ID_DEFAULT_VAL"]')) {
+                console.error('The job_id field has lost its default value');
+            }
+        }
+=======
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: 'Verify that the job_id field has kept its default value',
+        trigger: "body",
+        run: () => {
+            const doc = document.querySelector(".o_iframe:not(.o_ignore_in_tour)").contentDocument;
+            const id = doc.querySelector('[data-oe-model="hr.job"]').dataset.oeId;
+            if (!doc.querySelector(`input[name="job_id"][value="${id}"]`)) {
+                console.error('The job_id field has lost its default value');
+            }
+        }
+>>>>>>> f1c30a1fc6936614fb9d95cc8cec7892063db09f
     },
 }, {
     content: 'Edit the form',
