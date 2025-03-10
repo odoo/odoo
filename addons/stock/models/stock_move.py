@@ -136,7 +136,7 @@ class StockMove(models.Model):
              "The other possibility allows you to directly create a procurement on the source location (and thus ignore "
              "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous, "
              "this second option should be chosen.")
-    scrap_id = fields.Many2one('stock.scrap', 'Scrap operation', readonly=True, check_company=True, index='btree_not_null')
+    is_scrap = fields.Boolean(readonly=True)
     procurement_values = fields.Json(store=False, help="Dummy field to store procurement values to propagate them to later steps")
     reference_ids = fields.Many2many(
         'stock.reference', 'stock_reference_move_rel', 'move_id', 'reference_id', string='References')
@@ -180,7 +180,7 @@ class StockMove(models.Model):
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
     is_date_editable = fields.Boolean("Is Date Editable", compute="_compute_is_date_editable")
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
-    reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
+    reference = fields.Char(compute='_compute_reference', string="Reference", store=True, readonly=False)
     move_lines_count = fields.Integer(compute='_compute_move_lines_count')
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     display_import_lot = fields.Boolean(compute='_compute_display_assign_serial')
@@ -189,13 +189,15 @@ class StockMove(models.Model):
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', index=True)
     forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit', compute_sudo=True)
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
-    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
+    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', domain="[('product_id', '=', product_id)]", string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True, help="Computes when a move should be reserved")
     packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, recursive=True, store=True)
     packaging_uom_qty = fields.Float('Packaging Quantity', help="Quantity in the packaging unit", compute='_compute_packaging_uom_qty', store=True)
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
+    scrap_reason_tag_ids = fields.Many2many('stock.scrap.reason.tag', string='Scrap Reason')
+    should_replenish_scrapped = fields.Boolean('Should Replenish')
 
     _product_location_index = models.Index("(product_id, location_id, location_dest_id, company_id, state)")
 
@@ -209,7 +211,7 @@ class StockMove(models.Model):
         for move in self:
             move.product_uom = move.product_id.uom_id.id
 
-    @api.depends('picking_id.location_id')
+    @api.depends('picking_id.location_id', 'is_scrap')
     def _compute_location_id(self):
         for move in self:
             if move.picked:
@@ -219,9 +221,11 @@ class StockMove(models.Model):
                     location = move.picking_id.location_id
                 elif move.picking_type_id:
                     location = move.picking_type_id.default_location_src_id
+                elif move.is_scrap:
+                    location = move.company_id.default_stock_location_id
             move.location_id = location
 
-    @api.depends('picking_id.location_dest_id')
+    @api.depends('picking_id.location_dest_id', 'is_scrap')
     def _compute_location_dest_id(self):
         customer_loc, __ = self.env['stock.warehouse']._get_partner_locations()
         inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
@@ -231,6 +235,8 @@ class StockMove(models.Model):
                 location_dest = move.picking_id.location_dest_id
             elif move.rule_id.location_dest_from_rule:
                 location_dest = move.rule_id.location_dest_id
+            elif move.is_scrap:
+                location_dest = move.company_id.scrap_location_id
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
             is_move_to_interco_transit = False
@@ -353,12 +359,10 @@ class StockMove(models.Model):
         for move in self:
             move.is_quantity_done_editable = move.product_id
 
-    @api.depends('picking_id.name', 'scrap_id.name', 'location_dest_usage', 'is_inventory', 'inventory_name')
+    @api.depends('picking_id.name', 'is_inventory', 'inventory_name')
     def _compute_reference(self):
         for move in self:
-            if move.scrap_id:
-                move.reference = move.scrap_id.name
-            elif move.is_inventory:
+            if move.is_inventory:
                 if move.inventory_name:
                     move.reference = move.inventory_name
                 else:
@@ -701,7 +705,8 @@ Please change the quantity done or the rounding precision in your settings.""",
         if self.env.context.get('default_picking_id'):
             picking_id = self.env['stock.picking'].browse(self.env.context['default_picking_id'])
             if picking_id.state == 'done':
-                defaults['state'] = 'done'
+                if 'state' not in defaults:
+                    defaults['state'] = 'done'
                 defaults['additional'] = True
             elif picking_id.state not in ['cancel', 'draft', 'done']:
                 defaults['additional'] = True  # to trigger `_autoconfirm_picking`
@@ -742,7 +747,7 @@ Please change the quantity done or the rounding precision in your settings.""",
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if (vals.get('quantity') or vals.get('move_line_ids')) and 'lot_ids' in vals:
+            if vals.get('move_line_ids') and 'lot_ids' in vals:
                 vals.pop('lot_ids')
             picking_id = self.env['stock.picking'].browse(vals.get('picking_id'))
             if picking_id.state == 'done' and vals.get('state') != 'done':
@@ -1351,8 +1356,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         quantity = sum(ml.quantity_product_uom for ml in self.move_line_ids.filtered(lambda ml: not ml.lot_id and ml.lot_name))
         quantity += self.product_id.uom_id._compute_quantity(len(self.lot_ids), self.product_uom)
         self.update({'quantity': quantity})
-
-        base_location = self.picking_id.location_id or self.location_id
+        base_location = self.location_id
         quants = self.env['stock.quant'].sudo().search([
             ('product_id', '=', self.product_id.id),
             ('lot_id', 'in', self.lot_ids.ids),
@@ -2127,7 +2131,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         # We don't want to create back order for scrap moves
         # Replace by a kwarg in master
-        if self.env.context.get('is_scrap'):
+        if all(self.mapped('is_scrap')):
             return moves
 
         if picking and not cancel_backorder:
@@ -2357,9 +2361,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         # If quant is not enough, create a(some) move lines from the move itself
         if self.product_uom.compare(_move_qty(qty), 0.0) > 0:
             if self.product_id.tracking != 'serial':
-                qty = _move_qty(qty)
-                vals = self._prepare_move_line_vals(quantity=0)
-                vals['quantity'] = qty
+                vals = self._prepare_move_line_vals(quantity=qty)
                 res.append((0, 0, vals))
             else:
                 for _i in range(0, int(qty)):
@@ -2535,13 +2537,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         """ Open the form view of the move's reference document, if one exists, otherwise open form view of self
         """
         self.ensure_one()
-        if not self.is_inventory and self.location_dest_usage == 'inventory':
-            return {
-                'res_model': 'stock.scrap',
-                'type': 'ir.actions.act_window',
-                'views': [[False, 'form']],
-                'res_id': self.scrap_id.id,
-            }
         source = self.picking_id
         if source and source.browse().has_access('read'):
             return {
@@ -2644,3 +2639,77 @@ Please change the quantity done or the rounding precision in your settings.""",
         return self.location_dest_id.usage in ('customer', 'supplier') or (
             self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id
         )
+
+    def check_available_qty(self):
+        if not self.product_id.is_storable:
+            return True
+
+        product = self.product_id.with_context(
+            location=self.location_id.id,
+            package_id=self.package_ids.id,
+            strict=True,
+        )
+        if not self.lot_ids:
+            available_qty = product.qty_available
+        else:
+            available_qty = sum(product.with_context(lot_id=lot.id).qty_available for lot in self.lot_ids)
+        scrap_qty = self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
+        return float_compare(available_qty, scrap_qty, precision_rounding=self.product_id.uom_id.rounding) >= 0
+
+    def _action_replenish(self, values=False):
+        self.ensure_one()
+        values = values or {}
+        self.with_context(clean_context(self.env.context)).env['stock.rule'].run([self.env['stock.rule'].Procurement(
+            self.product_id,
+            self.quantity,
+            self.product_uom,
+            self.location_id,
+            self.origin,
+            self.origin,
+            self.company_id,
+            values
+        )])
+
+    def _prepare_scrap_move_vals(self):
+        self.ensure_one()
+        return {
+            'reference': self.env['ir.sequence'].next_by_code('stock.scrap') or self.env._('Scrap of %s', self.product_id.display_name),
+        }
+
+    def _action_scrap(self):
+        self._check_company()
+        self.picked = True
+        self.is_scrap = True
+        self.write(self._prepare_scrap_move_vals())
+        move = self._action_done()
+        for move in self:
+            if move.should_replenish_scrapped:
+                move._action_replenish()
+        return move
+
+    def action_scrap(self):
+        self.ensure_one()
+        if self.product_uom.is_zero(self.quantity):
+            raise UserError(_("You can only enter positive quantities."))
+        if self.has_tracking != 'none' and not self.lot_ids:
+            raise UserError(_("You must select a lot/serial number."))
+        if self.check_available_qty():
+            return self._action_scrap()
+        else:
+            ctx = dict(self.env.context)
+            ctx.update({
+                'default_product_id': self.product_id.id,
+                'default_location_id': self.location_id.id,
+                'default_scrap_move_id': self.id,
+                'default_quantity': self.quantity,
+                'default_product_uom_name': self.product_id.uom_name,
+            })
+            return {
+                'name': self.env._('%(product)s: Insufficient Quantity To Scrap', product=self.product_id.display_name),
+                'view_mode': 'form',
+                'res_model': 'stock.warn.insufficient.qty.scrap',
+                'view_id': self.env.ref('stock.stock_warn_insufficient_qty_scrap_form_view').id,
+                'type': 'ir.actions.act_window',
+                'context': ctx,
+                'target': 'new'
+            }

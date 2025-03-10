@@ -304,7 +304,7 @@ class TestEditableQuant(TransactionCase):
         move_lines = self.env['stock.move.line'].search([('product_id', '=', self.product.id), ('is_inventory', '=', True)])
         self.assertEqual(len(move_lines), 1, "One inventory adjustment move lines should have been created")
         self.assertEqual(self.product.qty_available, 0.4, "Before revert inventory adjustment qty is 0.4")
-        move_lines.action_revert_inventory()
+        move_lines.action_revert()
         self.assertEqual(self.product.qty_available, 0, "After revert inventory adjustment qty is not zero")
 
     def test_multi_revert_inventory_adjustment(self):
@@ -322,5 +322,5 @@ class TestEditableQuant(TransactionCase):
         move_lines = self.env['stock.move.line'].search([('product_id', '=', self.product.id), ('is_inventory', '=', True)])
         self.assertEqual(self.product.qty_available, 150, "Before revert multi inventory adjustment qty is 150")
         self.assertEqual(len(move_lines), 2, "Two inventory adjustment move lines should have been created")
-        move_lines.action_revert_inventory()
+        move_lines.action_revert()
         self.assertEqual(self.product.qty_available, 0, "After revert multi inventory adjustment qty is not zero")

@@ -2631,13 +2631,14 @@ class TestStockValuation(TestStockValuationCommon):
             [('name', '=', 'Scrap'), ('company_id', '=', self.env.company.id)], limit=1
         )
         scrap_location.valuation_account_id = self.account_stock_variation
-        scrap_form = Form(self.env['stock.scrap'].with_context(default_picking_id=receipt.id))
+        scrap_form = Form.from_action(self.env, receipt.action_scrap())
         scrap_form.product_id = product
-        scrap_form.scrap_qty = 2
+        scrap_form.quantity = 2
         scrap = scrap_form.save()
-        scrap.action_validate()
+        scrap.action_scrap()
+        all_moves = self.env['stock.move'].search([('picking_id', '=', receipt.id)])
         self.assertRecordValues(
-            receipt.move_ids,
+            all_moves,
             [
                 {'quantity': 10.0, 'remaining_qty': 8.0, 'value': 150.0, 'remaining_value': 120.0},
                 {'quantity': 2.0, 'remaining_qty': 0.0, 'value': 30.0, 'remaining_value': 0.0},

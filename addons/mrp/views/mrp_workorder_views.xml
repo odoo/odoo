@@ -152,14 +152,6 @@
                 <field name="state" widget="statusbar" statusbar_visible="blocked,ready,progress,done"/>
             </header>
             <sheet>
-                <div class="oe_button_box" name="button_box">
-                    <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="oi-arrows-v" invisible="scrap_count == 0">
-                        <div class="o_field_widget o_stat_info">
-                            <span class="o_stat_value"><field name="scrap_count"/></span>
-                            <span class="o_stat_text">Scraps</span>
-                        </div>
-                    </button>
-                </div>
                 <field name="company_id" invisible="1"/>
                 <field name="product_tracking" invisible="1"/>
                 <field name="product_id" invisible="1"/>

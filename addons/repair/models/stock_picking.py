@@ -129,16 +129,8 @@ class StockPickingType(models.Model):
     @api.depends('code')
     def _compute_default_remove_location_dest_id(self):
         repair_picking_type = self.filtered(lambda pt: pt.code == 'repair_operation')
-        company_ids = repair_picking_type.company_id.ids
-        company_ids.append(False)
-        scrap_locations = self.env['stock.location']._read_group(
-            [('usage', '=', 'inventory'), ('company_id', 'in', company_ids)],
-            ['company_id'],
-            ['id:min'],
-        )
-        scrap_locations = {l[0].id: l[1] for l in scrap_locations}
         for picking_type in repair_picking_type:
-            picking_type.default_remove_location_dest_id = scrap_locations.get(picking_type.company_id.id)
+            picking_type.default_remove_location_dest_id = picking_type.company_id.scrap_location_id.id
 
     @api.depends('code')
     def _compute_default_recycle_location_dest_id(self):

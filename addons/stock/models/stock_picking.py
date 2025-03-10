@@ -599,7 +599,7 @@ class StockPicking(models.Model):
         'stock.location', "Destination Location",
         compute="_compute_location_id", store=True, precompute=True, readonly=False,
         check_company=True, required=True)
-    move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
+    move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", domain=[('is_scrap', '=', False)], copy=True)
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
@@ -808,7 +808,7 @@ class StockPicking(models.Model):
         '''
         picking_moves_state_map = defaultdict(dict)
         picking_move_lines = defaultdict(set)
-        for move in self.env['stock.move'].search([('picking_id', 'in', self.ids)]):
+        for move in self.move_ids:
             picking_id = move.picking_id
             move_state = move.state
             picking_moves_state_map[picking_id.id].update({
@@ -913,7 +913,7 @@ class StockPicking(models.Model):
         result = {
             picking
             for [picking] in self.env['stock.move']._read_group(
-                [('picking_id', 'in', self.ids), ('location_dest_usage', '=', 'inventory')],
+                [('picking_id', 'in', self.ids), ('is_scrap', '=', True)],
                 ['picking_id'],
             )
         }
@@ -1875,21 +1875,33 @@ class StockPicking(models.Model):
 
         return date_category_to_search_domain.get(date_category)
 
-    def button_scrap(self):
+    def action_scrap(self):
         self.ensure_one()
-        view = self.env.ref('stock.stock_scrap_form_view2')
+        view = self.env.ref('stock.view_scrap_move_form')
         products = self.env['product.product']
         for move in self.move_ids:
             if move.state not in ('draft', 'cancel') and move.product_id.type == 'consu':
                 products |= move.product_id
+        default_scrap_location = self.env.company.scrap_location_id
         return {
             'name': _('Scrap Products'),
             'view_mode': 'form',
-            'res_model': 'stock.scrap',
+            'res_model': 'stock.move',
             'view_id': view.id,
             'views': [(view.id, 'form')],
             'type': 'ir.actions.act_window',
-            'context': {'default_picking_id': self.id, 'product_ids': products.ids, 'default_company_id': self.company_id.id},
+            'context': {
+                'from_order': True,
+                'product_ids': products.ids,
+                'lot_ids': self.move_line_ids.lot_id.ids,
+                'default_is_scrap': True,
+                'default_picking_id': self.id,
+                'default_company_id': self.company_id.id,
+                'default_location_id': self.location_dest_id.id if self.state == 'done' else self.location_id.id,
+                'default_location_dest_id': default_scrap_location.id,
+                'default_origin': self.name,
+                'default_state': 'draft',
+            },
             'target': 'new',
         }
 
@@ -1910,10 +1922,14 @@ class StockPicking(models.Model):
 
     def action_see_move_scrap(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
-        scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
-        action['domain'] = [('id', 'in', scraps.ids)]
-        action['context'] = dict(self.env.context, create=False)
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': 'Scraps',
+            'res_model': 'stock.move',
+            'views': [(self.env.ref('stock.view_scrap_move_list').id, 'list'), (self.env.ref('stock.view_scrap_move_form').id, 'form')],
+            'domain': [('picking_id', '=', self.id), ('is_scrap', '=', True)],
+            'context': dict(self.env.context, create=False),
+        }
         return action
 
     def action_see_packages(self):

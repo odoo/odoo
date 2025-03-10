@@ -14,7 +14,7 @@
                        decoration-info="picking_code == 'outgoing'"
                        decoration-success="picking_code == 'incoming'"
                        decoration-warning="is_inventory"
-                       decoration-danger="scrap_id"/>
+                       decoration-danger="is_scrap"/>
                 <field name="product_id"/>
                 <field name="lot_id" optional="show" groups="stock.group_production_lot"/>
                 <field name="package_id" optional="hide" groups="stock.group_tracking_lot"/>
@@ -145,6 +145,8 @@
                 <filter string="Internal" name="internal" domain="[('picking_id.picking_type_id.code', '=', 'internal')]"/>
                 <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code', '=', 'mrp_operation')]" invisible="1"/>
                 <separator/>
+                <filter string="Scrapped" name="scrapped" domain="[('is_scrap', '=', True)]"/>
+                <separator/>
                 <filter name="date" date="date" default_period="month"/>
                 <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date','&gt;=', 'today -30d')]"/>
                 <filter string="Last 3 Months" name="filter_last_3_months" domain="[('date','&gt;=', 'today -3m')]"/>
@@ -211,13 +213,13 @@
         </field>
     </record>
 
-    <record id="action_revert_inventory_adjustment" model="ir.actions.server">
-        <field name="name">Revert Inventory Adjustment</field>
+    <record id="action_revert_move_line" model="ir.actions.server">
+        <field name="name">Revert</field>
         <field name="model_id" ref="stock.model_stock_move_line"/>
         <field name="binding_model_id" ref="stock.model_stock_move_line"/>
         <field name="state">code</field>
         <field name="code">
-            action = records.action_revert_inventory()
+            action = records.action_revert()
         </field>
     </record>
 

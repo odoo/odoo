@@ -1515,20 +1515,24 @@ class TestMrpOrder(TestMrpCommon):
         ub = ub_form.save()
         ub.action_unbuild()
 
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
+            'is_scrap': True,
             'product_id': product.id,
-            'product_uom_id': product.uom_id.id,
-            'lot_id': sn.id,
+            'lot_ids': sn.ids,
+            'quantity': 1,
+            'company_id': self.env.company.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.scrap_location.id,
         })
-        scrap.do_scrap()
+        scrap._action_scrap()
 
         unscrap_picking = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_int.id,
-            'location_id': scrap.scrap_location_id.id,
+            'location_id': scrap.location_dest_id.id,
             'location_dest_id': scrap.location_id.id,
         })
         unscrap_move = self.env['stock.move'].create({
-            'location_id': scrap.scrap_location_id.id,
+            'location_id': scrap.location_dest_id.id,
             'location_dest_id': scrap.location_id.id,
             'product_id': product.id,
             'product_uom': product.uom_id.id,
@@ -2218,19 +2222,20 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
 
         # scrap linked to MO but with wrong SN location
-        scrap = self.env['stock.scrap'].create({
+        scrap = self.env['stock.move'].create({
+            'is_scrap': True,
             'product_id': p_final.id,
-            'product_uom_id': self.uom_unit.id,
             'production_id': mo.id,
             'location_id': self.shelf_1.id,
-            'lot_id': sn2.id
+            'location_dest_id': self.scrap_location.id,
+            'lot_ids': sn2.ids,
+            'company_id': self.env.company.id,
         })
 
         warning = False
-        warning = scrap._onchange_serial_number()
+        warning = scrap._onchange_lot_ids()
         self.assertTrue(warning, 'Use of wrong serial number location not detected')
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
-        self.assertEqual(scrap.location_id, mo.location_dest_id, 'Location was not auto-corrected')
 
     def test_mo_assign_producing_lot(self):
         """ Checks that in an MO tracked by Lot the reservations of the raws are not

@@ -15,7 +15,7 @@ class StockMove(models.Model):
         if self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'):
             production_id = self.env['mrp.production'].browse(self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'))
 
-            if production_id.state not in ('draft', 'cancel'):
+            if production_id.state not in ('draft', 'cancel') and 'state' not in defaults:
                 if production_id.state != 'done':
                     defaults['state'] = 'draft'
                 else:
@@ -101,12 +101,13 @@ class StockMove(models.Model):
     def _compute_location_dest_id(self):
         ids_to_super = set()
         for move in self:
+            if move.is_scrap or (not move.production_id and not move.raw_material_production_id):
+                ids_to_super.add(move.id)
+                continue
             if move.production_id:
                 move.location_dest_id = move.production_id.location_dest_id
             elif move.raw_material_production_id:
                 move.location_dest_id = move.product_id.with_company(move.company_id).property_stock_production.id
-            else:
-                ids_to_super.add(move.id)
         return super(StockMove, self.browse(ids_to_super))._compute_location_dest_id()
 
     @api.depends('bom_line_id')
@@ -369,7 +370,7 @@ class StockMove(models.Model):
         moves_ids_to_unlink = OrderedSet()
         phantom_moves_vals_list = []
         for move in self:
-            if (not move.picking_type_id and not (self.env.context.get('is_scrap') or self.env.context.get('skip_picking_assignation'))) or (move.production_id and move.production_id.product_id == move.product_id):
+            if (not move.picking_type_id and not (move.is_scrap or self.env.context.get('skip_picking_assignation'))) or (move.production_id and move.production_id.product_id == move.product_id):
                 moves_ids_to_return.add(move.id)
                 continue
             bom = self.env['mrp.bom'].sudo()._bom_find(move.product_id, company_id=move.company_id.id, bom_type='phantom')[move.product_id]
@@ -637,4 +638,27 @@ class StockMove(models.Model):
                         or (move.product_uom.compare(move.quantity, move.product_uom_qty) >= 0 or (move.manual_consumption and move.picked))
                         for move in self):
             res = 'assigned'
+        return res
+
+    def _action_replenish(self, values=False):
+        self.ensure_one()
+        values = values or {}
+        group = self.production_id.production_group_id or self.raw_material_production_id.production_group_id
+        if group:
+            values.update({
+                'production_group_id': group.id,
+            })
+        super()._action_replenish(values)
+
+    def _prepare_scrap_move_vals(self):
+        self.ensure_one()
+        res = super()._prepare_scrap_move_vals()
+        res.update({
+            'production_id': False,
+            'raw_material_production_id': False,
+        })
+        if self.product_id in self.production_id.move_finished_ids.product_id:
+            res['production_id'] = self.production_id.id
+        else:
+            res['raw_material_production_id'] = self.production_id.id
         return res

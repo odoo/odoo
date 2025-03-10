@@ -129,8 +129,6 @@ class MrpWorkorder(models.Model):
     # Technical field to store the cost_mode of a workorder in case it is changed on the operation_id later on.
     # This field should only be changed once at MO confirmation and should reflect the cost_mode of the operation_id.
 
-    scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
-    scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     production_date = fields.Datetime('Production Date', compute='_compute_production_date', store=True)
     json_popover = fields.Char('Popover Data JSON', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Show Popover?', compute='_compute_json_popover')
@@ -425,12 +423,6 @@ class MrpWorkorder(models.Model):
                 order.is_user_working = True
             else:
                 order.is_user_working = False
-
-    def _compute_scrap_move_count(self):
-        data = self.env['stock.scrap']._read_group([('workorder_id', 'in', self.ids)], ['workorder_id'], ['__count'])
-        count_data = {workorder.id: count for workorder, count in data}
-        for workorder in self:
-            workorder.scrap_count = count_data.get(workorder.id, 0)
 
     @api.onchange('operation_id')
     def _onchange_operation_id(self):
@@ -761,27 +753,6 @@ class MrpWorkorder(models.Model):
         for production in self.production_id:
             production._plan_workorders(replan=True)
         return True
-
-    def button_scrap(self):
-        self.ensure_one()
-        return {
-            'name': _('Scrap Products'),
-            'view_mode': 'form',
-            'res_model': 'stock.scrap',
-            'views': [(self.env.ref('stock.stock_scrap_form_view2').id, 'form')],
-            'type': 'ir.actions.act_window',
-            'context': {'default_company_id': self.production_id.company_id.id,
-                        'default_workorder_id': self.id,
-                        'default_production_id': self.production_id.id,
-                        'product_ids': (self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.production_id.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids},
-            'target': 'new',
-        }
-
-    def action_see_move_scrap(self):
-        self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
-        action['domain'] = [('workorder_id', '=', self.id)]
-        return action
 
     def action_open_wizard(self):
         self.ensure_one()
