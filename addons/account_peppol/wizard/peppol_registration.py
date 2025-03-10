@@ -101,9 +101,9 @@ class PeppolRegistration(models.TransientModel):
                 peppol_warnings['company_peppol_eas_warning'] = {
                     'message': _("The recommended identification method for Belgium is your Company Registry Number."),
                 }
-            if not wizard.smp_registration:
+            if wizard.peppol_eas and wizard.peppol_endpoint and not wizard.smp_registration:
                 peppol_warnings['company_on_another_smp'] = {
-                    'message': _("Your company is already registered on another Access Point (%s) for receiving invoices."
+                    'message': _("Your company is already registered on another Access Point (%s) for receiving invoices. "
                                  "We will register you on Odoo as a sender only.", wizard.peppol_external_provider)
                 }
             wizard.peppol_warnings = peppol_warnings or False
@@ -121,8 +121,10 @@ class PeppolRegistration(models.TransientModel):
             if wizard.peppol_eas and wizard.peppol_endpoint:
                 edi_identification = f'{wizard.peppol_eas}:{wizard.peppol_endpoint}'
                 peppol_info = wizard.company_id._get_company_info_on_peppol(edi_identification)
-            wizard.smp_registration = not peppol_info['is_on_peppol']  # Register on smp if not on Peppol
-            wizard.peppol_external_provider = peppol_info['external_provider']
+                is_company_on_peppol = peppol_info['is_on_peppol']
+                external_provider = peppol_info['external_provider']
+            wizard.smp_registration = not is_company_on_peppol  # Register on smp if not on Peppol
+            wizard.peppol_external_provider = external_provider
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
