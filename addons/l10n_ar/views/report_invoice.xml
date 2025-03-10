@@ -114,6 +114,9 @@
         <!-- remove default document title -->
         <h2 position="replace"/>
 
+        <!-- remove detail of taxes when currency != from company's currency -->
+        <t t-call="account.document_tax_totals_company_currency_template" position="replace"/>
+
         <!-- NCM column for fiscal bond -->
         <th name="th_description" position="after">
             <th t-if="fiscal_bond" name="th_ncm_code" class="text-start"><span>NCM</span></th>
