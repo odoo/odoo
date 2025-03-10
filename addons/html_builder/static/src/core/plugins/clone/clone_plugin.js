@@ -18,7 +18,9 @@ export class ClonePlugin extends Plugin {
 
     resources = {
         builder_actions: this.getActions(),
-        get_overlay_buttons: withSequence(2, this.getActiveOverlayButtons.bind(this)),
+        get_overlay_buttons: withSequence(2, {
+            getButtons: this.getActiveOverlayButtons.bind(this),
+        }),
     };
 
     setup() {

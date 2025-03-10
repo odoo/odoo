@@ -1,5 +1,6 @@
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
+import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { expect, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
@@ -234,12 +235,12 @@ test("Use the 'clone' overlay buttons", async () => {
     expect(":iframe .col-lg-5").toHaveCount(4);
 });
 
-test("applying overlay button  should wait for actions in progress", async () => {
+test("Applying an overlay button action should wait for the actions in progress", async () => {
     class TestPlugin extends Plugin {
         static id = "test";
         resources = {
-            get_overlay_buttons: this.getOverlayButtons.bind(this),
-            has_overlay_options: () => true,
+            get_overlay_buttons: { getButtons: this.getOverlayButtons.bind(this) },
+            has_overlay_options: { hasOption: () => true },
         };
 
         getOverlayButtons(target) {
@@ -296,4 +297,71 @@ test("applying overlay button  should wait for actions in progress", async () =>
 
     undo(editor);
     expect(editable).toHaveInnerHTML(`<div class="test-options-target o-paragraph">plop</div>`);
+});
+
+test("The overlay buttons should only appear for elements in editable areas, unless specified otherwise", async () => {
+    class PluginA extends Plugin {
+        static id = "a";
+        resources = {
+            get_overlay_buttons: { getButtons: this.getOverlayButtons.bind(this) },
+            has_overlay_options: { hasOption: () => true },
+        };
+
+        getOverlayButtons(target) {
+            return [
+                {
+                    class: "button-a",
+                    title: "Button A",
+                    handler: () => {
+                        target.classList.add("overlay-button-a");
+                    },
+                },
+            ];
+        }
+    }
+    class PluginB extends Plugin {
+        static id = "b";
+        resources = {
+            get_overlay_buttons: {
+                getButtons: this.getOverlayButtons.bind(this),
+                editableOnly: false,
+            },
+            has_overlay_options: { hasOption: () => true, editableOnly: false },
+        };
+
+        getOverlayButtons(target) {
+            return [
+                {
+                    class: "button-b",
+                    title: "Button B",
+                    handler: () => {
+                        target.classList.add("overlay-button-b");
+                    },
+                },
+            ];
+        }
+    }
+    addPlugin(PluginA);
+    addPlugin(PluginB);
+
+    const { getEditor } = await setupWebsiteBuilder(`<div></div>`);
+    const editor = getEditor();
+    setContent(
+        editor.editable,
+        `<div class="content">
+            <div class="test-not-editable">NOT IN EDITABLE</div>
+        </div>
+        <div class="content o_editable">
+            <div class="test-editable">IN EDITABLE</div>
+        </div>`
+    );
+    editor.shared.history.addStep();
+
+    await contains(":iframe .test-not-editable").click();
+    expect(".overlay .button-a").toHaveCount(0);
+    expect(".overlay .button-b").toHaveCount(1);
+
+    await contains(":iframe .test-editable").click();
+    expect(".overlay .button-a").toHaveCount(1);
+    expect(".overlay .button-b").toHaveCount(1);
 });
