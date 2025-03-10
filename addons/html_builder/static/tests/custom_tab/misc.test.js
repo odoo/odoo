@@ -7,7 +7,12 @@ import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defaultBuilderComponents } from "../../src/core/default_builder_components";
 import { OptionsContainer } from "../../src/sidebar/option_container";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import {
+    addActionOption,
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "../website_helpers";
 
 defineWebsiteModels();
 
@@ -425,6 +430,36 @@ test("useDomState callback shouldn't be called when the editingElement is remove
     await animationFrame();
     expect(".options-container .test_option").toHaveCount(1);
     expect.verifySteps(["useDomState 1"]);
+});
+
+test("Update editing elements at dom change with multiple levels of applyTo", async () => {
+    addActionOption({
+        customAction: {
+            apply: ({ editingElement }) => {
+                const createdEl = editingElement.cloneNode(true);
+                const parentEl = editingElement.parentElement;
+                parentEl.appendChild(createdEl);
+            },
+        },
+    });
+    addOption({
+        selector: ".parent-target",
+        template: xml`<BuilderRow label="'Row 1'" applyTo="'.child-target'">
+            <BuilderButton action="'customAction'" />
+            <BuilderButton applyTo="'.sub-child-target'" classAction="'my-custom-class'"/>
+        </BuilderRow>`,
+    });
+
+    await setupWebsiteBuilder(`
+        <div class="parent-target">
+            <div class="child-target">
+                <div class="sub-child-target">b</div>
+            </div>
+        </div>`);
+    await contains(":iframe .parent-target").click();
+    await contains("[data-action-id='customAction']").click();
+    await contains("[data-class-action='my-custom-class']").click();
+    expect(":iframe .sub-child-target").toHaveClass("my-custom-class");
 });
 
 describe("isActiveItem", () => {
