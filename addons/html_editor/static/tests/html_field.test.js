@@ -573,6 +573,60 @@ test("create new record and load it correctly", async () => {
     expect(".odoo-editor-editable").toHaveInnerHTML("<p>2</p>");
 });
 
+test("edit a html field with `o-contenteditable-true` or `o-contenteditable-false` in its content should not reset the editable value when saving", async () => {
+    patchWithCleanup(HtmlField.prototype, {
+        updateValue() {
+            expect.step("update_value");
+            super.updateValue(...arguments);
+        },
+    });
+    patchWithCleanup(Wysiwyg.prototype, {
+        setup() {
+            super.setup();
+            // This should not be called again after the edit (if it is, it
+            // means that the content was reset from the server value, and that
+            // an entirely new editor replaced the previous one).
+            expect.step("setup_wysiwyg");
+        },
+    });
+    const getTxtValue = (innerContent, withContentEditable = false) =>
+        `<div class="o-contenteditable-false"${
+            withContentEditable ? ' contenteditable="false"' : ""
+        }>outside<div class="o-contenteditable-true"${
+            withContentEditable ? ' contenteditable="true"' : ""
+        }><p>${innerContent}</p></div></div>`;
+    Partner._records = [
+        {
+            id: 1,
+            txt: getTxtValue("inside"),
+        },
+    ];
+    onRpc("partner", "web_save", ({ args }) => {
+        expect.step("web_save");
+        // server representation removes `contenteditable` attribute
+        let txt = args[1].txt;
+        txt = txt.replace(` contenteditable="true"`, "");
+        txt = txt.replace(` contenteditable="false"`, "");
+        return [{ id: 1, txt }];
+    });
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    expect.verifySteps(["setup_wysiwyg"]);
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("inside", true));
+    setSelectionInHtmlField();
+    pasteOdooEditorHtml(htmlEditor, "addon");
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("addoninside", true));
+    await clickSave();
+    expect.verifySteps(["update_value", "web_save"]);
+});
+
 test.tags("focus required");
 test("edit html field and blur multiple time should apply 1 onchange", async () => {
     const def = new Deferred();
