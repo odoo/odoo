@@ -25,7 +25,7 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, Command, tools
+from odoo import _, api, exceptions, fields, models, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachableError
 from odoo.exceptions import MissingError, AccessError
@@ -2391,7 +2391,7 @@ class MailThread(models.AbstractModel):
             if not self.env.user._is_internal():
                 attachment_ids = filtered_attachment_ids.ids
 
-            m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
+            m2m_attachment_ids += [(4, att_id) for att_id in attachment_ids]
 
         # Handle attachments parameter, that is a dictionary of attachments
         return_values = {}
@@ -2999,7 +2999,7 @@ class MailThread(models.AbstractModel):
 
         for values in values_list:
             create_values = dict(values)
-            create_values['partner_ids'] = [Command.link(pid) for pid in (create_values.get('partner_ids') or [])]
+            create_values['partner_ids'] = [(4, pid) for pid in (create_values.get('partner_ids') or [])]
             create_values_list.append(create_values)
 
         # remove context, notably for default keys, as this thread method is not
@@ -3433,7 +3433,7 @@ class MailThread(models.AbstractModel):
         if force_send := self.env.context.get('mail_notify_force_send', force_send):
             force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.force.send.limit', 100))
             force_send = len(emails) < force_send_limit
-        if force_send and not self.env['ir.mail_server']._disable_send():
+        if force_send:
             # unless asked specifically, send emails after the transaction to
             # avoid side effects due to emails being sent while the transaction fails
             if send_after_commit:
@@ -3770,7 +3770,7 @@ class MailThread(models.AbstractModel):
         :return: a new dictionary of values suitable for a <mail.mail> create;
         """
         final_mail_values = dict(mail_values)
-        final_mail_values['recipient_ids'] = [Command.link(pid) for pid in recipient_ids]
+        final_mail_values['recipient_ids'] = [(4, pid) for pid in recipient_ids]
         if additional_values:
             final_mail_values.update(additional_values)
         return final_mail_values

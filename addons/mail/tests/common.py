@@ -1063,6 +1063,12 @@ class MailCase(common.TransactionCase, MockEmail):
         # given test, not setup + test
         self.flush_tracking()
 
+    def _mock_smtplib_connection(self):
+        """ Just trying to go through mail stack without using mail gateway mock """
+        smtp = self.mock_smtplib_connection()
+        smtp.__enter__()
+        self.addCleanup(lambda: smtp.__exit__(None, None, None))
+
     @classmethod
     def _reset_mail_context(cls, record):
         return record.with_context(
