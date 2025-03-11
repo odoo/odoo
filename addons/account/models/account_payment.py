@@ -951,6 +951,7 @@ class AccountPayment(models.Model):
             pay.move_id \
                 .with_context(skip_invoice_sync=True) \
                 .write({
+                'date': pay.date,
                 'partner_id': pay.partner_id.id,
                 'currency_id': pay.currency_id.id,
                 'partner_bank_id': pay.partner_bank_id.id,

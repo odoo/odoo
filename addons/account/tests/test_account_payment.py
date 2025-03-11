@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from contextlib import contextmanager
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from unittest.mock import patch
@@ -222,12 +222,14 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         # So, change the payment partner_type beforehand rather than in the form view.
         payment.action_draft()
         payment.partner_type = 'supplier'
+        payment.date = '2024-01-01'
         pay_form = Form(payment)
         pay_form.currency_id = self.other_currency
         payment = pay_form.save()
         self.assertRecordValues(payment, [{
             **expected_payment_values,
             'partner_type': 'supplier',
+            'date': fields.Date.from_string('2024-01-01'),
             'destination_account_id': self.partner_a.property_account_payable_id.id,
             'currency_id': self.other_currency.id,
             'partner_id': self.partner_a.id,
@@ -236,6 +238,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             **expected_move_values,
             'currency_id': self.other_currency.id,
             'partner_id': self.partner_a.id,
+            'date': fields.Date.from_string('2024-01-01'),
         }])
         self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
             {
