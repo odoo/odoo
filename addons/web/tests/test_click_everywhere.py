@@ -54,8 +54,8 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
         # Due to action_pos_preparation_display_kitchen_display, cliking on the "Kitchen Display"
         # menuitem could open the UI display, which will break the crawler tests as there is no
         # way for the tour to be executed, leading to a timeout
-        if 'pos_preparation_display.display' in self.env:
-            self.env['pos_preparation_display.display'].create({
+        if 'pos.prep.display' in self.env:
+            self.env['pos.prep.display'].create({
                 'name': 'Super Smart Kitchen Display',
             })
         # There is a bug when we go the Field Service app (without any demo data) and we
