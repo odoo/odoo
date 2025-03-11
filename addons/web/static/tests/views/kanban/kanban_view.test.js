@@ -15,6 +15,7 @@ import {
     queryAllTexts,
     queryFirst,
     queryOne,
+    queryRect,
     queryText,
     resize,
     scroll,
@@ -25,6 +26,7 @@ import {
     advanceFrame,
     advanceTime,
     animationFrame,
+    disableAnimations,
     mockTouch,
     runAllTimers,
     tick,
@@ -13732,4 +13734,64 @@ test("drag and drop records and quickly open a record", async () => {
     defs[1].resolve();
     await animationFrame();
     expect(".o_form_view").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("groups will be scrolled to on unfold if outside of viewport", async () => {
+    for (let i = 0; i < 12; i++) {
+        Product._records.push({ id: 8 + i, name: `column ${i}` });
+        Partner._records.push({ id: 20 + i, foo: "dumb entry", product_id: 8 + i });
+    }
+    Product._records[2].fold = true;
+    Product._records[8].fold = true;
+    Product._records[9].fold = true;
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+    disableAnimations();
+    expect(".o_content").toHaveProperty("scrollLeft", 0);
+    await contains(".o_column_folded:eq(0)").click();
+    await animationFrame();
+    // Group completely inside the viewport after unfold, no scroll
+    expect(".o_content").toHaveProperty("scrollLeft", 0);
+    await contains(".o_content").scroll({ left: 1500 });
+    await contains(".o_column_folded:eq(0)").click();
+    // Group is followed by a folded group which is outside the viewport
+    // after unfold, scroll to that group
+    expect(".o_content").toHaveProperty("scrollLeft", 1844);
+    let { x, width } = queryRect(".o_column_folded:eq(0)");
+    // TODO JUM: change digits option
+    expect(x + width).toBeCloseTo(window.innerWidth - 1, {
+        digits: 0,
+        message:
+            "the next group (which is folded) should stick to the right of the screen after the scroll",
+    });
+    expect(".o_column_folded:eq(0)").toHaveText("column 7\n(1)");
+    await contains('.o_kanban_group:contains("column 7\n(1)")').click();
+    expect(".o_content").toHaveProperty("scrollLeft", 2154);
+    ({ x, width } = queryRect('.o_kanban_group:contains("column 7\n(1)")'));
+    // TODO JUM: change digits option
+    expect(x + width).toBeCloseTo(window.innerWidth, {
+        digits: 0,
+        message:
+            "this group was not followed by a folded group so it will be the one to stick to the right of the screen after the scroll",
+    });
+    // scroll to the end
+    await contains(".o_content").scroll({ left: 5000 });
+    expect(".o_content").toHaveProperty("scrollLeft", 3604);
+    await contains(".o_kanban_group:last").click();
+    expect(".o_content").toHaveProperty("scrollLeft", 3604, {
+        message: "last group had enough space to remain completely visible after unfold: no scroll",
+    });
 });
