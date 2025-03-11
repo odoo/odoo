@@ -122,7 +122,18 @@ class Home(http.Controller):
                 credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS and value}
                 credential.setdefault('type', 'password')
                 if request.env['res.users']._should_captcha_login(credential):
-                    request.env['ir.http']._verify_request_recaptcha_token('login')
+                    try:
+                        request.env['ir.http']._verify_request_recaptcha_token('login')
+                    except:
+                        # We don't want to tell the user whether the captcha blocked them or not.
+                        # This is to make it harder for bots to brute force users since they won't know
+                        # whether the password is incorrect or whether the captcha is blocking them.
+                        #
+                        # However this may be revised in the future as the captcha can not be implemented
+                        # on RPC login attempts. Therefore this will only protect against most bot attacks
+                        # but not targeted ones.
+                        _logger.info('Captcha failed for user %s IP: %s', credential.get('login', '?'), request.httprequest.remote_addr)
+                        raise odoo.exceptions.AccessDenied()
                 auth_info = request.session.authenticate(request.env, credential)
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(auth_info['uid'], redirect=redirect))
