@@ -622,6 +622,13 @@ class Partner(models.Model):
         extended by inheriting classes. """
         return ['vat', 'company_registry', 'industry_id']
 
+    @api.model
+    def _company_dependent_commercial_fields(self):
+        return [
+            fname for fname in self._commercial_fields()
+            if self._fields[fname].company_dependent
+        ]
+
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
         as if they were related fields """
@@ -629,7 +636,23 @@ class Partner(models.Model):
         if commercial_partner != self:
             sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
+            self._company_dependent_commercial_sync()
             self._commercial_sync_to_children()
+
+    def _company_dependent_commercial_sync(self):
+        company_dependent_commercial_field_ids = [
+            self.env['ir.model.fields']._get(self._name, fname).id
+            for fname in self._company_dependent_commercial_fields()
+        ]
+        if company_dependent_commercial_field_ids:
+            parent_properties = self.env['ir.property'].search([
+                ('fields_id', 'in', company_dependent_commercial_field_ids),
+                ('res_id', '=', f'res.partner,{self.commercial_partner_id.id}'),
+                # value was already assigned for current company
+                ('company_id', '!=', self.env.company.id),
+            ])
+            for prop in parent_properties:
+                prop.copy({'res_id': f'res.partner,{self.id}'})
 
     def _commercial_sync_to_children(self):
         """ Handle sync of commercial fields to descendants """
