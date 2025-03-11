@@ -17,7 +17,7 @@ const BLACKLISTED_MENUS = [
     "event.menu_event_registration_desk", // there's no way to come back from this menu (tablet mode)
     "hr_attendance.menu_action_open_form", // same here (tablet mode)
     "mrp_workorder.menu_mrp_workorder_root", // same here (tablet mode)
-    "pos_preparation_display.menu_point_kitchen_display_root", // conditional menu that may leads to frontend
+    "pos_enterprise.menu_point_kitchen_display_root", // conditional menu that may leads to frontend
 ];
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";

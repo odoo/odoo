@@ -914,7 +914,7 @@ export class PosOrder extends Base {
 
     getCustomerDisplayData() {
         return {
-            lines: this.getSortedOrderlines().map((l) => ({
+            lines: this.lines.map((l) => ({
                 ...l.getDisplayData(),
                 isSelected: l.isSelected(),
                 imageSrc: `/web/image/product.product/${l.product_id.id}/image_128`,
@@ -943,29 +943,6 @@ export class PosOrder extends Base {
             return seqA - seqB;
         }
         return pos_categ_id_A - pos_categ_id_B;
-    }
-
-    // orderlines will be sorted on the basis of pos product category and sequence for group the orderlines in order cart
-    getSortedOrderlines() {
-        if (this.config.orderlines_sequence_in_cart_by_category && this.lines.length) {
-            const linesToSort = [...this.lines];
-            linesToSort.sort(this.sortBySequenceAndCategory);
-            const resultLines = [];
-            linesToSort.forEach((line) => {
-                if (line.combo_line_ids?.length > 0) {
-                    resultLines.push(line);
-                    const sortedChildLines = line.combo_line_ids.sort(
-                        this.sortBySequenceAndCategory
-                    );
-                    resultLines.push(...sortedChildLines);
-                } else if (!line.combo_parent_id) {
-                    resultLines.push(line);
-                }
-            });
-            return resultLines;
-        } else {
-            return this.lines;
-        }
     }
     getName() {
         return this.floatingOrderName || "";
