@@ -30,15 +30,7 @@ export class SearchBarMenu extends Component {
                 default: { optional: true },
             },
         },
-        dropdownState: {
-            type: Object,
-            optional: true,
-            shape: {
-                isOpen: Boolean,
-                open: Function,
-                close: Function,
-            },
-        },
+        dropdownState: { ...Dropdown.props.state },
     };
 
     setup() {
