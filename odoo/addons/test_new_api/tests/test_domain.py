@@ -587,6 +587,14 @@ class TestDomainOptimize(TransactionCase):
     def test_condition_optimize_date(self):
         model = self.env['test_new_api.mixed']
         self.assertEqual(
+            Domain('date', '=', date(2024, 1, 5)).optimize(model),
+            Domain('date', '=', date(2024, 1, 5)),
+        )
+        self.assertEqual(
+            Domain('date', '=', datetime(2024, 1, 5, 12, 0, 0)).optimize(model),
+            Domain('date', '=', date(2024, 1, 5)),
+        )
+        self.assertEqual(
             Domain('date', '=', '2024-01-05').optimize(model),
             Domain('date', '=', date(2024, 1, 5)),
         )
@@ -612,6 +620,10 @@ class TestDomainOptimize(TransactionCase):
 
     def test_condition_optimize_datetime(self):
         model = self.env['test_new_api.mixed']
+        self.assertEqual(
+            Domain('moment', '=', datetime(2024, 1, 5)).optimize(model),
+            Domain('moment', '=', datetime(2024, 1, 5)),
+        )
         self.assertEqual(
             Domain('moment', '=', '2024-01-05').optimize(model),
             Domain('moment', '=', datetime(2024, 1, 5)),
