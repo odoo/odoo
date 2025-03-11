@@ -24,7 +24,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                         'id': picking.sale_id.id,
                         'amount_untaxed': picking.sale_id.amount_untaxed,
                         'currency_id': picking.sale_id.currency_id.read(fields=['id', 'name'])[0],
-                        'partner_id': picking.sale_id.partner_id.read(fields=['id', 'name'])[0],
+                        'partner_id': picking.sale_id.partner_id.read(fields=['id', 'display_name'])[0],
                     }
                 }
             })
