@@ -155,8 +155,8 @@ class AccountInvoiceReport(models.Model):
         set_fields = set(fields)
 
         if 'price_average:avg' in fields:
-            set_fields.add('quantity')
-            set_fields.add('price_subtotal')
+            set_fields.add('quantity:sum')
+            set_fields.add('price_subtotal:sum')
 
         res = super().read_group(domain, list(set_fields), groupby, offset, limit, orderby, lazy)
 
@@ -164,9 +164,9 @@ class AccountInvoiceReport(models.Model):
             for data in res:
                 data['price_average'] = data['price_subtotal'] / data['quantity'] if data['quantity'] else 0
 
-                if 'quantity' not in fields:
+                if 'quantity:sum' not in fields:
                     del data['quantity']
-                if 'price_subtotal' not in fields:
+                if 'price_subtotal:sum' not in fields:
                     del data['price_subtotal']
 
         return res
