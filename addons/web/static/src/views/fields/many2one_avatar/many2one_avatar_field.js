@@ -22,7 +22,9 @@ registry.category("fields").add("many2one_avatar", {
     extractProps(staticInfo, dynamicInfo) {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),
-            canOpen: staticInfo.viewType === "form",
+            canOpen: "no_open" in staticInfo.options
+                ? !staticInfo.options.no_open
+                : staticInfo.viewType === "form",
         };
     },
 });

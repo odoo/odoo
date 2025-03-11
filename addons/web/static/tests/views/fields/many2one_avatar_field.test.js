@@ -277,6 +277,27 @@ test("readonly many2one_avatar in list view should not contain a link", async ()
     expect("[name='user_id'] a").toHaveCount(0);
 });
 
+test("readonly many2one_avatar in form view with no_open set to true", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `<form><field name="user_id" widget="many2one_avatar" readonly="1" options="{'no_open': 1}"/></form>`,
+    });
+
+    expect("[name='user_id'] a").toHaveCount(0);
+});
+
+test("readonly many2one_avatar in list view with no_open set to false", async () => {
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list><field name="user_id" widget="many2one_avatar" options="{'no_open': 0}"/></list>`,
+    });
+
+    expect("[name='user_id'] a").toHaveCount(3);
+});
+
 test.tags("desktop");
 test("cancelling create dialog should clear value in the field", async () => {
     Users._views = {
