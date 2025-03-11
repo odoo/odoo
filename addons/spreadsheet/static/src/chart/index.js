@@ -3,8 +3,10 @@ import { OdooChartCorePlugin } from "./plugins/odoo_chart_core_plugin";
 import { ChartOdooMenuPlugin } from "./plugins/chart_odoo_menu_plugin";
 import { OdooChartUIPlugin } from "./plugins/odoo_chart_ui_plugin";
 import { _t } from "@web/core/l10n/translation";
+import { chartOdooMenuPlugin } from "./odoo_menu/odoo_menu_chartjs_plugin";
 
-const { chartComponentRegistry, chartSubtypeRegistry } = spreadsheet.registries;
+const { chartComponentRegistry, chartSubtypeRegistry, chartJsExtensionRegistry } =
+    spreadsheet.registries;
 const { ChartJsComponent } = spreadsheet.components;
 
 chartComponentRegistry.add("odoo_bar", ChartJsComponent);
@@ -177,6 +179,11 @@ chartSubtypeRegistry.add("odoo_funnel", {
     subtypeDefinition: { cumulative: true },
     category: "misc",
     preview: "o-spreadsheet-ChartPreview.FUNNEL_CHART",
+});
+
+chartJsExtensionRegistry.add("chartOdooMenuPlugin", {
+    register: (Chart) => Chart.register(chartOdooMenuPlugin),
+    unregister: (Chart) => Chart.unregister(chartOdooMenuPlugin),
 });
 
 export { OdooChartCorePlugin, ChartOdooMenuPlugin, OdooChartUIPlugin };
