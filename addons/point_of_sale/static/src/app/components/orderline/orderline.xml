@@ -19,15 +19,15 @@
                         <span class="text-wrap d-inline">
                             <t t-esc="line.orderDisplayProductName.name" />
                             <br/>
-                            <small class="attribute-line fst-italic ms-2" t-if="line.orderDisplayProductName.attributeString">
-                                <t t-esc="line.orderDisplayProductName.attributeString" />
+                            <small class="attribute-line fst-italic" t-if="line.orderDisplayProductName.attributeString">
+                                - <t t-esc="line.orderDisplayProductName.attributeString" />
                             </small>
                         </span>
                     </div>
                     <div t-if="!props.basic_receipt" t-esc="line.getPriceString()" class="product-price price fw-bolder"/>
                     <div t-if="props.showTaxGroup" t-esc="this.taxGroup" class="text-end" style="width: 2rem"/>
                 </div>
-                <ul class="info-list d-flex flex-column mb-0" t-att-class="{'gap-2 mt-1' : line.customer_note || line.note || line.discount || line.packLotLines?.length}">
+                <ul class="info-list d-flex flex-column mb-0" t-att-class="{'gap-1' : line.customer_note || line.note || line.discount || line.packLotLines?.length}">
                     <li t-if="line.discount" class="price-per-unit">
                         <t t-set="discount" t-value="line.getDiscountStr()" />
                         <t t-if="!props.basic_receipt and line.price_unit !== 0 and discount and discount !== '0'">
