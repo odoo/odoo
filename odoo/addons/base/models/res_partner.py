@@ -359,10 +359,10 @@ class Partner(models.Model):
                 name = f"{self.commercial_company_name or self.sudo().parent_id.name}, {name}"
         return name.strip()
 
-    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
+    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name', 'lang')
     def _compute_complete_name(self):
         for partner in self:
-            partner.complete_name = partner.with_context({})._get_complete_name()
+            partner.complete_name = partner.with_context({'lang': partner.lang})._get_complete_name()
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
