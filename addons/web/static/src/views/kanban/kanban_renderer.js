@@ -1,7 +1,10 @@
-import { _t } from "@web/core/l10n/translation";
+import { Component, onPatched, onWillDestroy, useEffect, useRef, useState } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -12,9 +15,6 @@ import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Component, onWillDestroy, useEffect, useRef, useState } from "@odoo/owl";
-import { evaluateExpr } from "@web/core/py_js/py";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
@@ -242,6 +242,34 @@ export class KanbanRenderer extends Component {
             },
             () => []
         );
+
+        // After a group is unfolded through onGroupClick, we want to scroll towards
+        // the next group if it exists and is folded, and to the unfolded group
+        // itself otherwise
+        onPatched(() => {
+            if (this.lastOpenedGroupId) {
+                const groups = this.getGroupsOrRecords();
+                const lastOpenedGroupIndex = groups.findIndex(
+                    (g) => g.group.id === this.lastOpenedGroupId
+                );
+                let groupIdToFocus = this.lastOpenedGroupId;
+                if (
+                    lastOpenedGroupIndex < groups.length - 1 &&
+                    groups[lastOpenedGroupIndex + 1].group.isFolded
+                ) {
+                    groupIdToFocus = groups[lastOpenedGroupIndex + 1].group.id;
+                }
+                const groupEl = this.rootRef.el.querySelector(
+                    `.o_kanban_group[data-id="${groupIdToFocus}"]`
+                );
+                const rect = groupEl.getBoundingClientRect();
+                // Don't scroll if the group to focus is completely inside of the viewport
+                if (rect.x + rect.width > window.innerWidth) {
+                    groupEl.scrollIntoView({ behavior: "smooth", inline: "end" });
+                }
+                delete this.lastOpenedGroupId;
+            }
+        });
     }
 
     // ------------------------------------------------------------------------
@@ -497,6 +525,7 @@ export class KanbanRenderer extends Component {
 
     async onGroupClick(group, ev) {
         if (!this.env.isSmall && group.isFolded) {
+            this.lastOpenedGroupId = group.id;
             await group.toggle();
             this.props.scrollTop();
         }
