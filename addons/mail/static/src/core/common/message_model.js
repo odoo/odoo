@@ -325,7 +325,17 @@ export class Message extends Record {
         );
     }
 
+    get authorName() {
+        if (this.author) {
+            return this.author.name;
+        }
+        return this.email_from;
+    }
+
     get inlineBody() {
+        if (this.notificationType === "call") {
+            return _t("%(caller)s started a call", { caller: this.author.name });
+        }
         if (this.isEmpty) {
             return _t("This message has been removed");
         }
@@ -339,6 +349,8 @@ export class Message extends Record {
         switch (this.notificationType) {
             case "pin":
                 return "fa fa-thumb-tack";
+            case "call":
+                return "fa fa-phone";
         }
         return null;
     }
