@@ -28,11 +28,11 @@ class ResConfigSettings(models.TransientModel):
 
     twitter_api_key = fields.Char(
         related='website_id.twitter_api_key', readonly=False,
-        string='API Key',
+        string='X API Key',
         help='X API key you can get it from https://apps.twitter.com/')
     twitter_api_secret = fields.Char(
         related='website_id.twitter_api_secret', readonly=False,
-        string='API secret',
+        string='X API secret',
         help='X API secret you can get it from https://apps.twitter.com/')
     twitter_screen_name = fields.Char(
         related='website_id.twitter_screen_name', readonly=False,
