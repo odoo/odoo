@@ -89,6 +89,12 @@ export class CoreBuilderActionPlugin extends Plugin {
                     parseInt(getStyleValue(el, param)) || 0,
                 apply: setStyleValue,
             },
+            width: {
+                // using inline style instead of computed because of the
+                // messy %-px convertion and the messy auto keyword).
+                getValue: ({ editingElement: el, param, value }) => el.style.width,
+                apply: setStyleValue,
+            },
         };
         for (const borderWidthPropery of CSS_SHORTHANDS["border-width"]) {
             styleActions[borderWidthPropery] = styleActions["border-width"];

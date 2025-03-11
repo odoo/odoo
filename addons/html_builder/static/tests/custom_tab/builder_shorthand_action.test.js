@@ -209,4 +209,33 @@ describe("styleAction", () => {
         );
         expect(":iframe .test-options-target").toHaveClass("border");
     });
+
+    test("button isApplied is properly computed with percentage width values", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                    <BuilderButtonGroup styleAction="'width'">
+                        <BuilderButton styleActionValue="''">Default</BuilderButton>
+                        <BuilderButton styleActionValue="'50%'">50%</BuilderButton>
+                    </BuilderButtonGroup>
+                `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target x">a</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+
+        expect("[data-style-action-value='']").toHaveClass("active");
+        expect("[data-style-action-value='50%']").not.toHaveClass("active");
+        expect(":iframe .test-options-target").toHaveOuterHTML(
+            `<div class="test-options-target x o-paragraph"> a </div>`
+        );
+
+        await contains("[data-style-action-value='50%']").click();
+
+        expect(":iframe .test-options-target").toHaveOuterHTML(
+            `<div class="test-options-target x o-paragraph" style="width: 50% !important;"> a </div>`
+        );
+        expect("[data-style-action-value='']").not.toHaveClass("active");
+        expect("[data-style-action-value='50%']").toHaveClass("active");
+    });
 });
