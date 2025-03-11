@@ -79,6 +79,13 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
                 ]
             })
 
+    def setUp(self):
+        super().setUp()
+        # patch registry to simulate a ready environment
+        self.patch(self.env.registry, 'ready', True)
+        # we don't use mock_mail_gateway thus want to mock smtp to test the stack
+        self._mock_smtplib_connection()
+
     def execute_event_cron(self, *, freeze_date=None):
         cron = self.event_cron_id.sudo()
         with contextlib.ExitStack() as stack:
@@ -613,7 +620,7 @@ class TestMailSchedule(EventMailCommon):
         # a new scheduler after)
         self.env.invalidate_all()
         # event 19
-        with self.assertQueryCount(36), self.mock_datetime_and_now(reference_now), \
+        with self.assertQueryCount(35), self.mock_datetime_and_now(reference_now), \
              self.mock_mail_gateway():
             _existing = self.env['event.registration'].create([
                 {
@@ -636,7 +643,7 @@ class TestMailSchedule(EventMailCommon):
         ]})
         self.env.invalidate_all()
         # event 50
-        with self.assertQueryCount(68), \
+        with self.assertQueryCount(66), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             _new = self.env['event.registration'].create([

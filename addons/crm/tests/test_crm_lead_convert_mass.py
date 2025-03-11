@@ -15,6 +15,13 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         cls.leads = cls.lead_1 + cls.lead_w_partner + cls.lead_w_email_lost
         cls.assign_users = cls.user_sales_manager + cls.user_sales_leads_convert + cls.user_sales_salesman
 
+    def setUp(self):
+        super().setUp()
+        # patch registry to simulate a ready environment
+        self.patch(self.env.registry, 'ready', True)
+        # we don't use mock_mail_gateway thus want to mock smtp to test the stack
+        self._mock_smtplib_connection()
+
     @users('user_sales_manager')
     def test_assignment_salesmen(self):
         test_leads = self._create_leads_batch(count=50, user_ids=[False])
