@@ -276,7 +276,7 @@ export class MacroMutationObserver {
     constructor(callback) {
         this.callback = callback;
         this.observer = new MutationObserver((mutationList, observer) => {
-            callback();
+            callback(mutationList);
             mutationList.forEach((mutationRecord) =>
                 Array.from(mutationRecord.addedNodes).forEach((node) => {
                     let iframes = [];
