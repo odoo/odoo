@@ -1112,11 +1112,8 @@ registerWebsitePreviewTour("website_form_contains_conditional_visibility", {
     url: "/",
     edition: true,
 }, () => [
+    ...insertSnippet({id: "s_website_form", name: "Form"}),
     {
-        content: "Drop the form snippet",
-        trigger: "#oe_snippets .oe_snippet .oe_snippet_thumbnail[data-snippet=s_website_form]",
-        run: "drag_and_drop :iframe #wrap",
-    }, {
         trigger: ":iframe .s_website_form_field",
     },
     ...addCustomField("one2many", "checkbox", "Products", true),
@@ -1133,7 +1130,7 @@ registerWebsitePreviewTour("website_form_contains_conditional_visibility", {
         content: "Check 'Conditional Visibility Check 1' field is visible.",
         trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("Conditional Visibility Check 1")}:visible)`,
     }, {
-        content: "choose the option 'Option 1' of Products.",
+        content: "Choose the option 'Option 1' of Products.",
         trigger: ":iframe .checkbox:has(label:contains('Option 2')) input[type='checkbox']",
         run: "click",
     }, {

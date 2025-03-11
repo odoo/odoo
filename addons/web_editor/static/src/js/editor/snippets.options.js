@@ -2196,7 +2196,7 @@ const ListUserValueWidget = UserValueWidget.extend({
      */
     start() {
         this.addItemTitle = this.el.dataset.addItemTitle || _t("Add");
-        this.noAddItemButton = this.el.dataset.noAddItemOption;
+        this.noAddItemButton = this.el.dataset.noAddItemButton;
         if (this.el.dataset.availableRecords) {
             this.records = JSON.parse(this.el.dataset.availableRecords);
         } else {

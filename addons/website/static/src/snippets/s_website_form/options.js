@@ -1260,6 +1260,11 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const allowMultipleFiles = params.activeValue > 1;
             this.$target[0].toggleAttribute("multiple", allowMultipleFiles);
         }
+        if (params.attributeName === "visibilityComparator") {
+            // Restore the visibility condition to its default state
+            delete this.$target[0].dataset.visibilityCondition;
+            this.rerender = true;
+        }
     },
 
     //----------------------------------------------------------------------
@@ -1338,24 +1343,32 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 }
                 return (['text', 'email', 'tel', 'url', 'search', 'password', 'number'].includes(dependencyEl.type)
                     || dependencyEl.nodeName === 'TEXTAREA') && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
-            case 'hidden_condition_no_text_opt_1':
-                return dependencyEl && (dependencyEl.type === 'checkbox' || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT');
-            case "hidden_condition_no_text_opt_2":
-                return (
+            case "hidden_condition_no_text_opt":
+            case "hidden_condition_no_text_select_opt":
+            case "hidden_condition_no_text_multi_opt": {
+                const isMultipleChoicesEl =
                     dependencyEl &&
                     (dependencyEl.type === "checkbox" ||
                         dependencyEl.type === "radio" ||
-                        dependencyEl.nodeName === "SELECT") &&
-                    ["selected", "!selected"].includes(this.$target[0].dataset.visibilityComparator)
-                );
-            case "hidden_condition_no_text_multi_opt":
-                return (
-                    dependencyEl &&
-                    (dependencyEl.type === "checkbox" ||
-                        dependencyEl.type === "radio" ||
-                        dependencyEl.nodeName === "SELECT") &&
-                    ["contains", "!contains"].includes(this.$target[0].dataset.visibilityComparator)
-                );
+                        dependencyEl.nodeName === "SELECT");
+                if (widgetName === "hidden_condition_no_text_opt") {
+                    return isMultipleChoicesEl;
+                } else if (widgetName === "hidden_condition_no_text_select_opt") {
+                    return (
+                        isMultipleChoicesEl &&
+                        ["selected", "!selected"].includes(
+                            this.$target[0].dataset.visibilityComparator
+                        )
+                    );
+                } else if (widgetName === "hidden_condition_no_text_multi_opt") {
+                    return (
+                        isMultipleChoicesEl &&
+                        ["contains", "!contains"].includes(
+                            this.$target[0].dataset.visibilityComparator
+                        )
+                    );
+                }
+            }
             case 'hidden_condition_num_opt':
                 return dependencyEl && dependencyEl.type === 'number';
             case 'hidden_condition_text_opt':
@@ -1501,6 +1514,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         }
 
         const comparator = this.$target[0].dataset.visibilityComparator;
+        const isContainsComparator = ["contains", "!contains"].includes(comparator);
         const dependencyEl = this._getDependencyEl();
         if (dependencyEl) {
             const containerEl = dependencyEl.closest(".s_website_form_field");
@@ -1513,7 +1527,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 // Update available visibility options
                 const selectOptEl = fieldType === "record" ?
                     uiFragment.querySelectorAll(`we-select[data-name="hidden_condition_record_opt"]`)[1] :
-                    uiFragment.querySelector(`we-select[data-name="hidden_condition_no_text_opt_2"]`);
+                    uiFragment.querySelector(`we-select[data-name="hidden_condition_no_text_select_opt"]`);
                 const inputContainerEl = this.$target[0];
                 const dependencyEl = this._getDependencyEl();
                 if (dependencyEl.nodeName === 'SELECT') {
@@ -1524,7 +1538,14 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                         selectOptEl.append(button);
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {
-                        inputContainerEl.dataset.visibilityCondition = dependencyEl.querySelector('option').value;
+                        if (isContainsComparator) {
+                            inputContainerEl.dataset.visibilityCondition = JSON.stringify([
+                                dependencyEl.querySelector("option").value,
+                            ]);
+                        } else {
+                            inputContainerEl.dataset.visibilityCondition =
+                                dependencyEl.querySelector("option").value;
+                        }
                     }
                 } else if (fieldType === "record") {
                     const model = containerEl.dataset.model;
@@ -1558,7 +1579,14 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                         selectOptEl.append(button);
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {
-                        inputContainerEl.dataset.visibilityCondition = inputsInDependencyContainer[0].value;
+                        if (isContainsComparator) {
+                            inputContainerEl.dataset.visibilityCondition = JSON.stringify([
+                                inputsInDependencyContainer[0].value,
+                            ]);
+                        } else {
+                            inputContainerEl.dataset.visibilityCondition =
+                                inputsInDependencyContainer[0].value;
+                        }
                     }
                 }
                 if (!inputContainerEl.dataset.visibilityComparator) {
@@ -1730,6 +1758,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const isSelect = dependencyEl.nodeName === "SELECT";
         const isMultipleInputs = ["radio", "checkbox"].includes(dependencyEl.type);
         const visibilityCondition = this.$target[0].dataset.visibilityCondition;
+        const visibilityComparator = this.$target[0].dataset.visibilityComparator;
         let optionEls = [];
         if (isSelect) {
             optionEls = dependencyEl.querySelectorAll("option");
@@ -1738,12 +1767,15 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 .closest(".s_website_form_field")
                 ?.querySelectorAll(".s_website_form_input");
         }
+        const isSelectComparator = ["selected", "!selected"].includes(visibilityComparator);
         return Array.from(optionEls).map((el) => ({
             id: el.value,
             name: el.value,
             display_name: isSelect ? el.textContent : el.labels[0]?.textContent,
             undeletable: true,
-            selected: visibilityCondition?.includes(el.value),
+            selected: isSelectComparator
+                ? visibilityCondition === el.value
+                : JSON.parse(visibilityCondition).includes(el.value),
         }));
     },
     /**
