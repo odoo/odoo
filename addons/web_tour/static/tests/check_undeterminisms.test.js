@@ -118,15 +118,9 @@ test("change text", async () => {
         `error: FAILED: [2/4] Tour tour_to_check_undeterminisms → Step .button1.
 ${mainErrorMessage(".button1")}
 Initial element has changed:
-{
-  "node": "<button class=\\"button1\\">Text has changed :)</button>",
-  "modifiedText": [
-    {
-      "before": "Button 1",
-      "after": "Text has changed :)"
-    }
-  ]
-}`,
+[
+  "button.button1 : Text has changed : Button 1 => Text has changed :)"
+]`,
     ]);
 });
 
@@ -142,21 +136,10 @@ test("change attributes", async () => {
         }
     };
     await waitForMacro();
-    const expectedError = `{
-  "node": "<button class=\\"brol\\" data-value=\\"42\\">Button 1</button>",
-  "modifiedAttributes": [
-    {
-      "attributeName": "class",
-      "before": "button1",
-      "after": "brol"
-    },
-    {
-      "attributeName": "data-value",
-      "before": null,
-      "after": "42"
-    }
-  ]
-}`;
+    const expectedError = `[
+  "button.brol[data-value=\\"42\\"] : Attribute class has changed : button1 => brol",
+  "button.brol[data-value=\\"42\\"] : Attribute data-value has changed : null => 42"
+]`;
     expect.verifySteps([
         "log: [1/4] Tour tour_to_check_undeterminisms → Step .button0",
         "log: [2/4] Tour tour_to_check_undeterminisms → Step .button1",
@@ -179,20 +162,9 @@ test("add child node", async () => {
         }
     };
     await waitForMacro();
-    const expectedError = `{
-  "node": "<div class=\\"container\\"><button class=\\"button0\\">Button 0</button><button class=\\"button1\\">Button 1</button><button class=\\"button2\\">Button 2</button><div class=\\"brol\\">Hello world !</div></div>",
-  "modifiedText": [
-    {
-      "before": "Button 0Button 1Button 2",
-      "after": "Button 0Button 1Button 2Hello world !"
-    }
-  ],
-  "addedNodes": [
-    {
-      "newNode": "<div class=\\"brol\\">Hello world !</div>"
-    }
-  ]
-}`;
+    const expectedError = `[
+  "div.container : The node {div.brol} has been added."
+]`;
     expect.verifySteps([
         "log: [1/4] Tour tour_to_check_undeterminisms → Step .button0",
         "log: [2/4] Tour tour_to_check_undeterminisms → Step .button1",
