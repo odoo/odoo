@@ -27,10 +27,15 @@ import {
     reactive,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
+<<<<<<< saas-17.4
 import { zip } from "@web/core/utils/arrays";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
 import { session } from "@web/session";
+||||||| 09f32d7ce3c253964ed8ad480f45d864b8bd908c
+=======
+import { FetchRecordError } from "@web/model/relational_model/utils";
+>>>>>>> 80b5acfcb7f068199adcb172994a372d7bf16d14
 
 class BlankComponent extends Component {
     static props = ["onMounted", "withControlPanel", "*"];
@@ -857,6 +862,7 @@ export function makeActionManager(env, router = _router) {
                 if (this.isMounted) {
                     // the error occurred on the controller which is
                     // already in the DOM, so simply show the error
+<<<<<<< saas-17.4
                     Promise.reject(error);
                     return;
                 }
@@ -886,6 +892,57 @@ export function makeActionManager(env, router = _router) {
                         // (the error will be shown anyway as the promise
                         // has been rejected)
                         return restore(lastController.jsId);
+||||||| 09f32d7ce3c253964ed8ad480f45d864b8bd908c
+                    Promise.resolve().then(() => {
+                        throw error;
+                    });
+                } else {
+                    reject(error);
+                    if (action.target === "new") {
+                        removeDialogFn?.();
+                    } else {
+                        const lastCt = controllerStack[controllerStack.length - 1];
+                        if (lastCt) {
+                            if (lastCt.jsId !== controller.jsId) {
+                                // the error occurred while rendering a new controller,
+                                // so go back to the last non faulty controller
+                                // (the error will be shown anyway as the promise
+                                // has been rejected)
+                                restore(lastCt.jsId);
+                            }
+                        } else {
+                            env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+                        }
+=======
+                    Promise.resolve().then(() => {
+                        throw error;
+                    });
+                } else {
+                    reject(error);
+                    if (action.target === "new") {
+                        removeDialogFn?.();
+                    } else {
+                        if (controller?.jsId) {
+                            if (error?.cause instanceof FetchRecordError) {
+                                // remove error controller from breadcrumb
+                                controllerStack = controllerStack.filter(
+                                    (c) => c.jsId !== controller.jsId
+                                );
+                            }
+                        }
+                        const lastCt = controllerStack[controllerStack.length - 1];
+                        if (lastCt) {
+                            if (lastCt.jsId !== controller.jsId) {
+                                // the error occurred while rendering a new controller,
+                                // so go back to the last non faulty controller
+                                // (the error will be shown anyway as the promise
+                                // has been rejected)
+                                restore(lastCt.jsId);
+                            }
+                        } else {
+                            env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+                        }
+>>>>>>> 80b5acfcb7f068199adcb172994a372d7bf16d14
                     }
                 } else {
                     env.bus.trigger("ACTION_MANAGER:UPDATE", {});
