@@ -18,7 +18,7 @@
         <xpath expr="//td[@name='usedby_cell']" position="inside">
             <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.sale_id">
                 | <span t-out="_formatMonetary(line.move_out.picking_id.sale_id.amount_untaxed, line.move_out.picking_id.sale_id.currency_id.id)" class="fw-bold"/>
-                | <span t-out="line.move_out.picking_id.sale_id.partner_id.name"/>
+                | <span t-out="line.move_out.picking_id.sale_id.partner_id.display_name"/>
             </span>
         </xpath>
     </t>
