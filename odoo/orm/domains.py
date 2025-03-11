@@ -817,7 +817,8 @@ class DomainCondition(Domain):
             if not field.search:
                 _logger.error("Non-stored field %s cannot be searched.", field, stack_info=_logger.isEnabledFor(logging.DEBUG))
                 return _TRUE_DOMAIN
-            domain = field.determine_domain(model, self.operator, self.value)
+            value = list(self.value) if isinstance(self.value, OrderedSet) else self.value
+            domain = field.determine_domain(model, self.operator, value)
             return Domain(domain)
 
         # optimizations based on operator
