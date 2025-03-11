@@ -198,6 +198,12 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
 
         report = self.env['account.invoice.report'].formatted_read_group(
             [('product_id', '=', product.id)],
+<<<<<<< saas-18.2
+||||||| 6883dcc3e928eb7ea9cc23c6fd014e9388407210
+            ['price_subtotal', 'quantity', 'price_average:avg'],
+=======
+            ['price_subtotal:sum', 'quantity:sum', 'price_average:avg'],
+>>>>>>> f8f2d286715ef94977c83b10dce07c6f7dee9bd1
             [],
             ['price_subtotal:sum', 'quantity:sum', 'price_average:avg'],
         )

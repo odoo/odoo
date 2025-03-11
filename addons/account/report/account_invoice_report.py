@@ -157,6 +157,7 @@ class AccountInvoiceReport(models.Model):
             ''',
         )
 
+<<<<<<< saas-18.2
     def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
         """ This override allows us to correctly calculate the average price of products. """
         if aggregate_spec != 'price_average:avg':
@@ -166,6 +167,55 @@ class AccountInvoiceReport(models.Model):
             f_qty=self._field_to_sql(self._table, 'quantity', query),
             f_price=self._field_to_sql(self._table, 'price_subtotal', query),
         )
+||||||| 6883dcc3e928eb7ea9cc23c6fd014e9388407210
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+        This is a hack to allow us to correctly calculate the average price.
+        """
+        set_fields = set(fields)
+
+        if 'price_average:avg' in fields:
+            set_fields.add('quantity')
+            set_fields.add('price_subtotal')
+
+        res = super().read_group(domain, list(set_fields), groupby, offset, limit, orderby, lazy)
+
+        if 'price_average:avg' in fields:
+            for data in res:
+                data['price_average'] = data['price_subtotal'] / data['quantity'] if data['quantity'] else 0
+
+                if 'quantity' not in fields:
+                    del data['quantity']
+                if 'price_subtotal' not in fields:
+                    del data['price_subtotal']
+
+        return res
+=======
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+        This is a hack to allow us to correctly calculate the average price.
+        """
+        set_fields = set(fields)
+
+        if 'price_average:avg' in fields:
+            set_fields.add('quantity:sum')
+            set_fields.add('price_subtotal:sum')
+
+        res = super().read_group(domain, list(set_fields), groupby, offset, limit, orderby, lazy)
+
+        if 'price_average:avg' in fields:
+            for data in res:
+                data['price_average'] = data['price_subtotal'] / data['quantity'] if data['quantity'] else 0
+
+                if 'quantity:sum' not in fields:
+                    del data['quantity']
+                if 'price_subtotal:sum' not in fields:
+                    del data['price_subtotal']
+
+        return res
+>>>>>>> f8f2d286715ef94977c83b10dce07c6f7dee9bd1
 
 
 class ReportAccountReport_Invoice(models.AbstractModel):
