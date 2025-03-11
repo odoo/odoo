@@ -636,10 +636,6 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
 publicWidget.registry.hoverableDropdown = animations.Animation.extend({
     selector: 'header.o_hoverable_dropdown',
     disabledInEditableMode: false,
-    effects: [{
-        startEvents: 'resize',
-        update: '_dropdownHover',
-    }],
     events: {
         'mouseenter .dropdown': '_onMouseEnter',
         'mouseleave .dropdown': '_onMouseLeave',
@@ -651,7 +647,6 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
     start: function () {
         this.$dropdownMenus = this.$el.find('.dropdown-menu');
         this.$dropdownToggles = this.$el.find('.dropdown-toggle');
-        this._dropdownHover();
         return this._super.apply(this, arguments);
     },
 
@@ -659,19 +654,6 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _dropdownHover: function () {
-        this.$dropdownMenus.attr('data-bs-popper', 'none');
-        if (uiUtils.getSize() >= SIZES.LG) {
-            this.$dropdownMenus.css('margin-top', '0');
-            this.$dropdownMenus.css('top', 'unset');
-        } else {
-            this.$dropdownMenus.css('margin-top', '');
-            this.$dropdownMenus.css('top', '');
-        }
-    },
     /**
      * Hides all opened dropdowns.
      *
