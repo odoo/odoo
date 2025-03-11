@@ -48,10 +48,12 @@ class InteractionService {
     /**
      *
      * @param {Interaction[]} Interactions
+     * @param {HTMLElement} target - The target element where interactions need
+     *                               to be activated.
      */
-    activate(Interactions) {
+    activate(Interactions, target) {
         this.Interactions = Interactions;
-        const startProm = this.env.isReady.then(() => this.startInteractions());
+        const startProm = this.env.isReady.then(() => this.startInteractions(target));
         this.proms.push(startProm);
     }
 
