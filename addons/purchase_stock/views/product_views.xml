@@ -37,12 +37,16 @@
             <field name="id" position="after">
                 <field name="type"/>
             </field>
-            <div name="o_kanban_qty_available" position="after">
+            <div name="o_kanban_qty_available_and_on_hand" position="replace">
                 <div t-if="record.is_storable.raw_value"
-                     name="o_kanban_qty_forecasted">
-                    <span>Forecasted: </span>
-                    <field name="virtual_available"/>
-                    <field name="uom_id" widget="many2one_uom" class="ms-1" groups="uom.group_uom"/>
+                     name="o_kanban_qty_available_and_forecast">
+                    <span class="fw-bold" t-out="record.qty_available.raw_value"/>
+                    <span class="text-muted small"> On Hand</span>
+                    <t t-if="record.qty_available.raw_value != record.virtual_available.raw_value">
+                        <span> / </span>
+                        <span class="fw-bold" t-att-class="record.virtual_available.raw_value &lt; 0 ? 'text-danger' : ''" t-out="record.virtual_available.raw_value"/>
+                        <span class="text-muted small"> Forecasted</span>
+                    </t>
                 </div>
                 <div t-if="record.type.raw_value === 'consu'" name="o_kanban_monthly_demand">
                     <span>Monthly Demand:</span>

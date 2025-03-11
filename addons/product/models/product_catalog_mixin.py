@@ -69,10 +69,20 @@ class ProductCatalogMixin(models.AbstractModel):
                 'quantity': float (optional)
                 'productType': string
                 'price': float
+                'uomDisplayName': string
+                'code': string
                 'readOnly': bool (optional)
             }
         """
-        return {product.id: {'productType': product.type} for product in products}
+        return {
+            product.id: {
+                'productType': product.type,
+                'uomDisplayName': product.uom_id.name,
+                'code': product.code if product.code else '',
+            }
+            for product in products
+        }
+
 
     def _get_product_catalog_order_line_info(self, product_ids, child_field=False, **kwargs):
         """ Returns products information to be shown in the catalog.
@@ -86,6 +96,8 @@ class ProductCatalogMixin(models.AbstractModel):
                 'quantity': float (optional)
                 'productType': string
                 'price': float
+                'uomDisplayName': string
+                'code': String
                 'readOnly': bool (optional)
             }
         """
@@ -93,9 +105,14 @@ class ProductCatalogMixin(models.AbstractModel):
         default_data = self._default_order_line_values(child_field)
 
         for product, record_lines in self._get_product_catalog_record_lines(product_ids, child_field=child_field, **kwargs).items():
+            line_data = record_lines._get_product_catalog_lines_data(
+                parent_record=self, **kwargs
+            )
             order_line_info[product.id] = {
-               **record_lines._get_product_catalog_lines_data(parent_record=self, **kwargs),
+               **line_data,
                'productType': product.type,
+                **({'uomDisplayName': product.uom_id.name} if 'uomDisplayName' not in line_data else {}),
+               'code': product.code if product.code else '',
             }
             product_ids.remove(product.id)
 
@@ -107,6 +124,7 @@ class ProductCatalogMixin(models.AbstractModel):
 
     def _get_action_add_from_catalog_extra_context(self):
         return {
+            'display_uom': self.env.user.has_group('uom.group_uom'),
             'product_catalog_order_id': self.id,
             'product_catalog_order_model': self._name,
         }

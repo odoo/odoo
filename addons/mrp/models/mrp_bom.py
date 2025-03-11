@@ -725,12 +725,15 @@ class MrpBomLine(models.Model):
 
     def action_add_from_catalog(self):
         bom = self.env['mrp.bom'].browse(self.env.context.get('order_id'))
-        return bom.with_context(child_field='bom_line_ids').action_add_from_catalog()
+        res = bom.with_context(child_field='bom_line_ids').action_add_from_catalog()
+        kanban_view_id = self.env.ref('mrp.product_view_kanban_catalog_mrp_bom_only').id
+        res['views'][0] = (kanban_view_id, 'kanban')
+        return res
 
     def _get_product_catalog_lines_data(self, default=False, **kwargs):
         if self and not default:
             self.product_id.ensure_one()
-            return {
+            res = {
                 **self[0].bom_id._get_product_price_and_data(self[0].product_id),
                 'quantity': sum(
                     self.mapped(
@@ -742,6 +745,9 @@ class MrpBomLine(models.Model):
                 ),
                 'readOnly': len(self) > 1,
             }
+            if len(self) == 1:
+                res['uomDisplayName'] = self.product_uom_id.display_name
+            return res
         return {
             'quantity': 0,
         }
@@ -799,12 +805,15 @@ class MrpBomByproduct(models.Model):
 
     def action_add_from_catalog(self):
         bom = self.env['mrp.bom'].browse(self.env.context.get('order_id'))
-        return bom.with_context(child_field='byproduct_ids').action_add_from_catalog()
+        res = bom.with_context(child_field='byproduct_ids').action_add_from_catalog()
+        kanban_view_id = self.env.ref('mrp.product_view_kanban_catalog_mrp_bom_only').id
+        res['views'][0] = (kanban_view_id, 'kanban')
+        return res
 
     def _get_product_catalog_lines_data(self, default=False, **kwargs):
         if self and not default:
             self.product_id.ensure_one()
-            return {
+            res = {
                 **self[0].bom_id._get_product_price_and_data(self[0].product_id),
                 'quantity': sum(
                     self.mapped(
@@ -816,6 +825,9 @@ class MrpBomByproduct(models.Model):
                 ),
                 'readOnly': len(self) > 1
             }
+            if len(self) == 1:
+                res['uomDisplayName'] = self.product_uom_id.display_name
+            return res
         return {
             'quantity': 0,
         }
