@@ -18,7 +18,7 @@
                         <field name="stage_id" widget="statusbar_duration"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
-                            invisible="type == 'lead'" readonly="won_status == 'lost'"/>
+                            invisible="type == 'lead'" readonly="won_status == 'lost' or not active"/>
                     </header>
                     <sheet>
                         <field name="won_status" invisible="1"/>
@@ -175,7 +175,8 @@
                                         title="By saving this change, the customer phone number will also be updated."
                                         invisible="not partner_phone_update"/>
                                 </div>
-                                <field name="lost_reason_id" invisible="won_status != 'lost'"/>
+                                <field name="lost_reason_id" invisible="won_status != 'lost'"
+                                    placeholder="Not specified"/>
                                 <field name="date_conversion" invisible="1"/>
                                 <field name="user_company_ids" invisible="1"/>
                             </group>
@@ -512,6 +513,7 @@
                         </t>
                         <t t-name="card">
                             <widget name="web_ribbon" id="lost_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
+                            <widget name="web_ribbon" id="archived_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or won_status in ['lost', 'won']"/>
                             <field class="fw-bold fs-5" name="name"/>
                             <div>
                                 <t t-if="record.expected_revenue.raw_value">
@@ -610,8 +612,7 @@
                             domain="[('user_id','=', False), ('type', '=', 'lead')]"
                             help="Leads that are not assigned"/>
                     <separator />
-                    <filter string="Lost" name="lost"
-                            domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
+                    <filter string="Lost" name="lost" domain="[('won_status', '=', 'lost'), ('active', '=', False)]"/>
                     <separator/>
                     <filter string="Creation Date" name="filter_creation_date" date="create_date" default_period="month"/>
                     <filter name="filter_date_closed" date="date_closed"/>
@@ -929,8 +930,9 @@
                     <filter string="Closed Date" name="close_date" date="date_closed"/>
                     <separator/>
                     <filter string="Won" name="filter_won_status_won" domain="[('won_status', '=', 'won')]"/>
-                    <filter string="Ongoing" name="filter_won_status_pending" domain="[('won_status', '=', 'pending')]"/>
-                    <filter string="Lost" name="filter_won_status_lost" context="{'active_test': False}" domain="[('won_status', '=', 'lost')]"/>
+                    <!-- For ongoing: include 'active' as this filter is functional and should filter out archived leads -->
+                    <filter string="Ongoing" name="filter_won_status_pending" domain="[('won_status', '=', 'pending'), ('active', '=', True)]"/>
+                    <filter string="Lost" name="filter_won_status_lost" domain="[('won_status', '=', 'lost'), ('active', '=', False)]"/>
                     <separator/>
                     <filter invisible="1" string="Overdue Opportunities" name="overdue_opp" domain="['&amp;', ('date_closed', '=', False), ('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"

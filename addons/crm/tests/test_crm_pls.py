@@ -597,27 +597,63 @@ class TestCrmPls(CrmPlsCommon):
 @tagged('post_install', '-at_install', 'crm_lead_pls')
 class TestCrmPlsSides(CrmPlsCommon):
 
-    def test_won_lost_validity(self):
-        team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
-        stage_new, stage_in_progress, stage_won = self.env['crm.stage'].create([
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.team = cls.env['crm.team'].create([{'name': 'Team Test'}])
+        cls.stage_new, cls.stage_in_progress, cls.stage_won = cls.env['crm.stage'].create([
             {
                 'name': 'New Stage',
                 'sequence': 1,
-                'team_id': team_id,
+                'team_id': cls.team.id,
             }, {
                 'name': 'In Progress Stage',
                 'sequence': 2,
-                'team_id': team_id,
+                'team_id': cls.team.id,
             }, {
                 'is_won': True,
                 'name': 'Won Stage',
                 'sequence': 3,
-                'team_id': team_id,
+                'team_id': cls.team.id,
             },
         ])
+
+    @users('user_sales_manager')
+    def test_stage_update(self):
+        """ Test side effects of changing stages """
+        team_id = self.team.with_user(self.env.user).id
+        stage_new, _stage_in_progress, stage_won = (self.stage_new + self.stage_in_progress + self.stage_won).with_user(self.env.user)
+        leads = self.env['crm.lead'].create([
+            {
+                'name': 'Test Lead 1',
+                'probability': 50,
+                'stage_id': stage_new.id,
+                'team_id': team_id,
+            }, {
+                'name': 'Test Lead 2',
+                'probability': 50,
+                'stage_id': stage_new.id,
+                'team_id': team_id,
+            }
+        ])
+        leads.action_set_lost()
+        for lead in leads:
+            self.assertFalse(lead.active)
+            self.assertFalse(lead.probability)
+        leads[0].active = True
+
+        # putting in won state should reactivate
+        leads.write({'stage_id': stage_won.id})
+        for lead in leads:
+            self.assertTrue(lead.active)
+            self.assertEqual(lead.probability, 100)
+
+    @users('user_sales_manager')
+    def test_won_lost_validity(self):
+        team_id = self.team.with_user(self.env.user).id
+        stage_new, stage_in_progress, stage_won = (self.stage_new + self.stage_in_progress + self.stage_won).with_user(self.env.user)
         lead = self.env['crm.lead'].create([
             {
-                'active': True,
                 'name': 'Test Lead',
                 'probability': 50,
                 'stage_id': stage_new.id,
@@ -658,14 +694,14 @@ class TestCrmPlsSides(CrmPlsCommon):
         self.assertEqual(lead.probability, 0)
         self.assertEqual(lead.won_status, 'lost')
 
-        # Test won validity reaching won stage, currently does not update
+        # Test won validity reaching won stage
         lead.write({'stage_id': stage_won.id})
-        self.assertFalse(lead.active)
+        self.assertTrue(lead.active)
         self.assertEqual(lead.probability, 100)
         self.assertEqual(lead.won_status, 'won')
 
         # Back to lost
-        lead.write({'probability': 0, 'stage_id': stage_new.id})
+        lead.write({'active': False, 'probability': 0, 'stage_id': stage_new.id})
         self.assertEqual(lead.won_status, 'lost')
 
         # Once active again, lead is not lost anymore

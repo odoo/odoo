@@ -64,7 +64,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestLeadConvert, cls).setUpClass()
+        super().setUpClass()
         date = Datetime.from_string('2020-01-20 16:00:00')
         cls.crm_lead_dt_mock.now.return_value = date
 
@@ -78,6 +78,11 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
              'type': 'lead',
              'email_from': test_lead.email_from,
              'probability': 0, 'active': False,
+            },
+            {'name': 'Duplicate lead: same email_from, archived (not lost)',
+             'type': 'lead',
+             'email_from': test_lead.email_from,
+             'probability': 50, 'active': False,
             },
             {'name': 'Duplicate lead: same email_from, proba 0 but not lost',
              'type': 'lead',
@@ -93,30 +98,44 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
              'type': 'opportunity',
              'email_from': test_lead.email_from,
              'probability': 100, 'stage_id': self.stage_team1_2.id,
+            },
+            {'name': 'Duplicate opp: same email_from, archived (not lost)',
+             'type': 'opportunity',
+             'email_from': test_lead.email_from,
+             'probability': 50, 'stage_id': self.stage_team1_2.id,
+             'active': False,
             }
         ])
-        lead_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate lead: same email_from, lost')
-        _opp_proba100 = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, proba 100 but not won')
-        opp_won = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, won')
-        opp_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate: lost opportunity')
+        self.assertEqual(len(dup_leads), 10, 'Be sure below quick access are relevant')
+        opp_lost = dup_leads[3]
+        lead_lost = dup_leads[4]
+        lead_archived = dup_leads[5]
+        opp_won = dup_leads[7]
+        _opp_proba100 = dup_leads[8]
+        opp_archived = dup_leads[9]
 
         test_lead.write({'partner_id': customer.id})
 
-        # not include_lost = remove archived leads as well as 'won' opportunities
+        # not include_lost = remove archived leads/opps, lost leads/opps as well
+        # as 'won' opportunities
         result = test_lead._get_lead_duplicates(
             partner=test_lead.partner_id,
             email=test_lead.email_from,
             include_lost=False
         )
-        self.assertEqual(result, test_lead + dup_leads - (lead_lost + opp_won + opp_lost))
+        self.assertEqual(
+            result,
+            test_lead + dup_leads - (lead_lost + lead_archived + opp_won + opp_archived + opp_lost),
+            'Should not include: lost lead or opp, archived lead / opp (aka: only active lead/opp not won nor lost)'
+        )
 
-        # include_lost = remove archived opp only
+        # include_lost = remove archived lead only (archived opp is ok)
         result = test_lead._get_lead_duplicates(
             partner=test_lead.partner_id,
             email=test_lead.email_from,
-            include_lost=True
+            include_lost=True,
         )
-        self.assertEqual(result, test_lead + dup_leads - (lead_lost))
+        self.assertEqual(result, test_lead + dup_leads - (lead_lost + lead_archived + opp_won))
 
     def test_initial_data(self):
         """ Ensure initial data to avoid spaghetti test update afterwards """
