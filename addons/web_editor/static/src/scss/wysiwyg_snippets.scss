@@ -2964,6 +2964,22 @@ we-select.o_grid we-toggler {
                     }
                 }
             }
+            > [data-snippet][data-preview-interaction-enabled="true"] {
+                > *:first-child {
+                    // Enable pointer events on the snippet when preview
+                    // interaction is enabled to allow mouseenter/mouseleave
+                    // events.
+                    pointer-events: auto;
+                }
+
+                > *:first-child * {
+                    // Disable pointer events for descendants to prevent
+                    // unwanted hover effects.
+                    // Descendants that require interaction can be excluded
+                    // using the :not() selector.
+                    pointer-events: none;
+                }
+            }
             &[data-label]:not([data-label=""])::before {
                 content: attr(data-label);
                 @include o-position-absolute(0, 0);
@@ -2977,7 +2993,7 @@ we-select.o_grid we-toggler {
                 padding: 6px 12px;
                 border-bottom-left-radius: 5px;
             }
-            &::after {
+            &:not(:has([data-preview-interaction-enabled="true"]))::after {
                 content: "";
                 @include o-position-absolute(0, 0, 0, 0);
                 outline: 6px solid transparent;
