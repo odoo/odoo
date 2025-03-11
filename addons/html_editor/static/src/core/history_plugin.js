@@ -168,6 +168,13 @@ export class HistoryPlugin extends Plugin {
             this.enableObserver();
             this.reset(this.config.content);
         },
+        // Resource definitions:
+        normalize_handlers: [
+            // (commonRootOfModifiedEl or editableEl) => {
+            //    clean up DOM before taking into account for next history step
+            //    remaining in edit mode
+            // }
+        ],
     };
 
     setup() {

@@ -18,7 +18,7 @@ export class BuilderActionsPlugin extends Plugin {
         for (const actions of this.getResource("builder_actions")) {
             for (const [actionId, action] of Object.entries(actions)) {
                 if (actionId in this.actions) {
-                    throw new Error(`Duplicate builder action id: ${action.id}`);
+                    throw new Error(`Duplicate builder action id: ${actionId}`);
                 }
                 this.actions[actionId] = { id: actionId, ...action };
             }

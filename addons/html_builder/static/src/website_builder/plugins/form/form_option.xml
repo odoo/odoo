@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.website.s_website_form_form_option">
+    <BuilderRow t-if="!modelCantChange and models"
+            label.translate="Action" preview="false">
+        <BuilderSelect>
+            <t t-foreach="models" t-as="model" t-key="model.name">
+                <BuilderSelectItem t-out="model.website_form_label" action="'selectAction'" actionValue="model.id.toString()"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <FormActionFieldsOption activeForm="domState.activeForm" prepareFormModel="props.prepareFormModel"/>
+    <BuilderRow label.translate="Marked Fields">
+        <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
+            <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_mark_required'" id="'form_required_opt'">Required</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_mark_optional'" id="'form_optional_opt'">Optional</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Mark Text">
+        <BuilderTextInput action="'setMark'" default="''" t-if="isActiveItem('form_required_opt') || isActiveItem('form_optional_opt')"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Labels Width">
+        <BuilderNumberInput
+            styleAction="'width'"
+            unit="'px'" applyTo="'.s_website_form_label'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="On Success">
+        <BuilderSelect preview="false" action="'onSuccess'">
+            <BuilderSelectItem actionValue="'nothing'">Nothing</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'redirect'" id="'show_redirect_opt'">Redirect</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'message'" id="'show_message_opt'">Show Message</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderButton className="'fa fa-fw fa-eye align-self-end toggle-edit-message'" title.translate="Edit Message" id="'message_opt'"
+            t-if="isActiveItem('show_message_opt')" preview="false" action="'toggleEndMessage'"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="URL">
+        <BuilderUrlPicker dataAttributeAction="'successPage'" default="'/contactus-thank-you'" id="'url_opt'" t-if="isActiveItem('show_redirect_opt')"/>
+    </BuilderRow>
+    <BuilderRow t-if="hasRecaptchaKey" label.translate="Show reCaptcha Policy">
+        <BuilderCheckbox action="'formToggleRecaptchaLegal'" preview="false"/>
+    </BuilderRow>
+</t>
+
+<t t-name="html_builder.website.s_website_form_form_action_fields_option">
+    <t t-if="state.formInfo.fields">
+        <t t-foreach="state.formInfo.fields" t-as="field" t-key="field.name">
+            <BuilderRow t-if="field.type === 'many2one'" label="field.string" preview="false">
+                <BuilderSelect actionParam="{ isSelect: true, fieldName: field.name }">
+                    <BuilderSelectItem t-if="!field.required" action="'addActionField'" actionValue="'0'">
+                        None
+                    </BuilderSelectItem>
+                    <BuilderSelectItem t-foreach="field.records" t-as="record" t-key="record.id"
+                        action="'addActionField'" actionValue="record.id.toString()"
+                    >
+                        <t t-out="record.display_name"/>
+                    </BuilderSelectItem>
+                </BuilderSelect>
+                <BuilderButton t-if="field.createAction" className="'fa fa-fw fa-plus'"
+                    title.translate="Create New"
+                    action="'promptSaveRedirect'" actionParam="field.createAction"
+                />
+            </BuilderRow>
+            <!-- TODO className="'o_we_large'" -->
+            <BuilderRow t-if="field.type === 'char'" label="field.string">
+                <BuilderTextInput actionParam="{ fieldName: field.name }" action="'addActionField'" default="''"/>
+            </BuilderRow>
+        </t>
+    </t>
+</t>
+
+</templates>
