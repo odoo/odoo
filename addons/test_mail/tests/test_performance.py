@@ -69,6 +69,12 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
         super(BaseMailPerformance, self).setUp()
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
+        # mock mail gateway to send e-mails
+        self.enterContext(self.mock_smtplib_connection())
+        # self.enterContext(self.mock_smtplib_connection())  # py3.11
+        smtp = self.mock_smtplib_connection()
+        smtp.__enter__()
+        self.addCleanup(lambda: smtp.__exit__(None, None, None))
 
     def _create_test_records(self):
         test_record_full = self.env['mail.test.ticket'].with_context(self._test_context).create({
@@ -1764,8 +1770,6 @@ class TestPerformance(BaseMailPerformance):
             ('attach tuple 3', "attachement tupple content 3", {'cid': 'cid2'}),
         ]
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
-        # enable_logging = self.cr._enable_logging() if self.warm else nullcontext()
-        # with self.assertQueryCount(employee=63), enable_logging:
         with self.assertQueryCount(employee=61):
             record_container.with_context({}).message_post(
                 body=Markup('<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>'),
