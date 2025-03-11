@@ -52,6 +52,7 @@ class PrinterDriver(Driver):
         self._actions.update({
             'cashbox': self.open_cashbox,
             'print_receipt': self.print_receipt,
+            'status': self.print_status,
             '': self._action_default,
         })
 
@@ -188,6 +189,20 @@ class PrinterDriver(Driver):
             self.print_raw(document)
         send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
         _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)
+
+
+    def print_status(self, _data=None):
+        """Prints the status ticket of the IoT Box on the current printer.
+
+        :param _data: dict provided by the action route
+        """
+        if self.device_subtype == "receipt_printer":
+            commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
+            self.print_raw(commands['center'] + (commands['title'] % b'IoT Box Test Receipt') + commands['cut'])
+        elif self.device_type == "label_printer":
+            self.print_raw("^XA^CI28 ^FT35,40 ^A0N,30 ^FDIoT Box Test Label^FS^XZ".encode())
+        else:
+            self.print_raw("IoT Box Test Page".encode())
 
 
 proxy_drivers['printer'] = PrinterDriver
