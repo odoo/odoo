@@ -119,13 +119,13 @@ export class WebsiteBuilder extends Component {
         loadBundle("website.assets_edit_frontend", {
             targetDoc: this.websiteContent.el.contentDocument,
         });
+        loadBundle("html_builder.inside_builder_style", {
+            targetDoc: this.websiteContent.el.contentDocument,
+        });
     }
 
     onIframeLoad(ev) {
         // history.pushState(null, "", ev.target.contentWindow.location.pathname);
-        loadBundle("html_builder.inside_builder_style", {
-            targetDoc: this.websiteContent.el.contentDocument,
-        });
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
         if (this.translation) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
