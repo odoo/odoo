@@ -1418,24 +1418,24 @@ class SaleOrderLine(models.Model):
                 'quantity': float,
                 'price': float,
                 'readOnly': bool,
-                'warning': String
+                'uomDisplayName': String,
             }
         """
         if len(self) == 1:
-            res = {
+            return {
                 'quantity': self.product_uom_qty,
                 'price': self.price_unit,
                 'readOnly': (
                     self.order_id._is_readonly()
                     or bool(self.combo_item_id)
                 ),
+                'uomDisplayName': self.product_uom_id.display_name,
             }
-            return res
         elif self:
             self.product_id.ensure_one()
             order_line = self[0]
             order = order_line.order_id
-            res = {
+            return {
                 'readOnly': True,
                 'price': order.pricelist_id._get_product_price(
                     product=order_line.product_id,
@@ -1451,9 +1451,9 @@ class SaleOrderLine(models.Model):
                             to_unit=line.product_id.uom_id,
                         )
                     )
-                )
+                ),
+                'uomDisplayName': self.product_id.uom_id.display_name,
             }
-            return res
         else:
             return {
                 'quantity': 0,

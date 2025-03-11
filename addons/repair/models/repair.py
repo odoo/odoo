@@ -733,6 +733,9 @@ class RepairOrder(models.Model):
 
         return grouped_lines
 
+    def _is_display_stock_in_catalog(self):
+        return True
+
     def _update_order_line_info(self, product_id, quantity, **kwargs):
         move = self.move_ids.filtered(lambda e: e.product_id.id == product_id)
         if move:

@@ -3109,6 +3109,7 @@ class AccountMoveLine(models.Model):
                     )
                 ),
                 'readOnly': self.move_id._is_readonly() or len(self) > 1,
+                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
             }
         return {
             'quantity': 0,
