@@ -435,28 +435,18 @@ def _setup(model: BaseModel):
 
 
 def _check_inherits(model: BaseModel):
-    for table, field_name in model._inherits.items():
+    for comodel_name, field_name in model._inherits.items():
         field = model._fields.get(field_name)
-        if not field:
-            _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, model._name)
-            field = fields.Many2one(table, string="Automatically created field to link to parent %s" % table, required=True, ondelete="cascade")
-            add_field(model, field_name, field)
-        elif not (field.required and (field.ondelete or "").lower() in ("cascade", "restrict")):
-            _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, model._name)
-            field.required = True
-            field.ondelete = "cascade"
-        field.delegate = True
-
-    # reflect fields with delegate=True in dictionary model._inherits
-    for field in model._fields.values():
-        if field.type == 'many2one' and not field.related and field.delegate:
-            if not field.required:
-                _logger.warning("Field %s with delegate=True must be required.", field)
-                field.required = True
-            if field.ondelete.lower() not in ('cascade', 'restrict'):
-                field.ondelete = 'cascade'
-            model.pool[model._name]._inherits = {**model._inherits, field.comodel_name: field.name}
-            model.pool[field.comodel_name]._inherits_children.add(model._name)
+        if not field or field.type != 'many2one':
+            raise TypeError(
+                f"Missing many2one field definition for _inherits reference {field_name!r} in model {model._name!r}. "
+                f"Add a field like: {field_name} = fields.Many2one({comodel_name!r}, required=True, ondelete='cascade')"
+            )
+        if not (field.delegate and field.required and (field.ondelete or "").lower() in ("cascade", "restrict")):
+            raise TypeError(
+                f"Field definition for _inherits reference {field_name!r} in {model._name!r} "
+                "must be marked as 'delegate', 'required' with ondelete='cascade' or 'restrict'"
+            )
 
 
 def _add_inherited_fields(model: BaseModel):

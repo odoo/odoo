@@ -191,11 +191,16 @@ class Many2one(_Relational[M]):
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
         # determine self.delegate
-        if not self.delegate and name in model_class._inherits.values():
+        if name in model_class._inherits.values():
             self.delegate = True
-        # self.delegate implies self.auto_join
-        if self.delegate:
+            # self.delegate implies self.auto_join
             self.auto_join = True
+        elif self.delegate:
+            comodel_name = self.comodel_name or 'comodel_name'
+            raise TypeError((
+                f"The delegate field {self} must be declared in the model class e.g.\n"
+                f"_inherits = {{{comodel_name!r}: {name!r}}}"
+            ))
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
