@@ -119,6 +119,7 @@ export class Editor {
 
     preparePlugins() {
         const Plugins = sortPlugins(this.config.Plugins || MAIN_PLUGINS);
+        this.config = Object.assign({}, ...Plugins.map((P) => P.defaultConfig), this.config);
         const plugins = new Map();
         for (const P of Plugins) {
             if (P.id === "") {

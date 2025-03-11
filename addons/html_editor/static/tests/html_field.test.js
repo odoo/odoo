@@ -1021,14 +1021,14 @@ test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     ]);
 });
 
-test("MediaDialog does not contain 'Videos' tab in html field when 'disableVideo' = true", async () => {
+test("MediaDialog does not contain 'Videos' tab in html field when 'allowMediaDialogVideo' = false", async () => {
     await mountView({
         type: "form",
         resId: 1,
         resModel: "partner",
         arch: `
             <form>
-            <field name="txt" widget="html" options="{'disableVideo': True}"/>
+            <field name="txt" widget="html" options="{'allowMediaDialogVideo': False}"/>
             </form>`,
     });
 
@@ -1078,7 +1078,7 @@ test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () 
     ]);
 });
 
-test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'disableVideo' = false", async () => {
+test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'allowMediaDialogVideo' = true", async () => {
     class SanitizePartner extends models.Model {
         _name = "sanitize.partner";
 
@@ -1093,7 +1093,7 @@ test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'disableVi
         resModel: "sanitize.partner",
         arch: `
             <form>
-                <field name="txt" widget="html" options="{'disableVideo': False}"/>
+                <field name="txt" widget="html" options="{'allowMediaDialogVideo': True}"/>
             </form>`,
     });
     setSelectionInHtmlField();
@@ -1127,20 +1127,36 @@ test("'Media' command is available by default", async () => {
     expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
 });
 
-test("'Media' command is not available when 'disableImage' = true", async () => {
+test("'Media' command is not available when 'allowImage' = false", async () => {
     await mountView({
         type: "form",
         resId: 1,
         resModel: "partner",
         arch: `
             <form>
-                <field name="txt" widget="html" options="{'disableImage': True}"/>
+                <field name="txt" widget="html" options="{'allowImage': False}"/>
             </form>`,
     });
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/media");
     await animationFrame();
     expect(queryAllTexts(".o-we-command-name")).not.toInclude("Media");
+});
+
+test("'Upload a file' command is not available when 'allowFile' = false", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'allowFile': False}"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/file");
+    await animationFrame();
+    expect(queryAllTexts(".o-we-command-name")).not.toInclude("Upload a file");
 });
 
 test("codeview is not available by default", async () => {
