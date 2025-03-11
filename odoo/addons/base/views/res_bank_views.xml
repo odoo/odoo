@@ -112,9 +112,9 @@
                 <list string="Bank Accounts" multi_edit="1" decoration-muted="(not active)">
                     <field name="sequence" widget="handle"/>
                     <field name="acc_number"/>
+                    <field name="partner_id" optional="hide"/>
                     <field name="bank_name" string="Bank" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="partner_id" optional="hide"/>
                     <field name="allow_out_payment" widget="boolean_toggle" optional="show"/>
                     <field name="active" widget="boolean_toggle" optional="hide"/>
                 </list>
