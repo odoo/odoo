@@ -23,8 +23,7 @@ class Partner(models.Model):
 
     def _compute_meeting(self):
         if self.ids:
-            all_partners = self.with_context(active_test=False).search_read([('id', 'child_of', self.ids)], ["parent_id"])
-            all_partners_parents = {p["id"]: p['parent_id'][0] for p in all_partners if p.get('parent_id')}
+            all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
 
             event_id = self.env['calendar.event']._search([])  # ir.rules will be applied
             subquery_string, subquery_params = event_id.select()
@@ -46,11 +45,11 @@ class Partner(models.Model):
 
             # Add the events linked to the children of the partner
             for meeting_pid in set(meetings):
-                partner_id = meeting_pid
-                while partner_id in all_partners_parents:
-                    partner_id = all_partners_parents[partner_id]
-                    if partner_id in self.ids:
-                        meetings[partner_id] = meetings.get(partner_id, set()) | meetings[meeting_pid]
+                partner = self.browse(meeting_pid)
+                while partner:
+                    partner = partner.parent_id
+                    if partner in self:
+                        meetings[partner.id] = meetings.get(partner.id, set()) | meetings[meeting_pid]
             return {p_id: list(meetings.get(p_id, set())) for p_id in self.ids}
         return {}
 

@@ -10,9 +10,8 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     def _compute_purchase_order_count(self):
-        # retrieve all children partners and prefetch 'parent_id' on them
+        # retrieve all children partners
         all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        all_partners.read(['parent_id'])
 
         purchase_order_groups = self.env['purchase.order']._read_group(
             domain=[('partner_id', 'in', all_partners.ids)],
