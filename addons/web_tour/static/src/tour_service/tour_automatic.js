@@ -56,9 +56,9 @@ export class TourAutomatic {
                     initialDelay: () => (this.previousStepIsJustACheck ? 0 : null),
                     trigger: step.trigger ? () => step.findTrigger() : null,
                     timeout: step.timeout || this.timeout || 10000,
-                    action: async () => {
+                    action: async (trigger) => {
                         if (delayToCheckUndeterminisms > 0) {
-                            await step.checkForUndeterminisms();
+                            await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
                         }
                         this.previousStepIsJustACheck = !step.hasAction;
                         if (this.debugMode) {
