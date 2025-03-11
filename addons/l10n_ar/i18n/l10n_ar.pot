@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-15 19:55+0000\n"
-"PO-Revision-Date: 2024-11-15 19:55+0000\n"
+"POT-Creation-Date: 2025-03-12 13:15+0000\n"
+"PO-Revision-Date: 2025-03-12 13:15+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1559,8 +1559,16 @@ msgid "FORM 1116 RT"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model,name:l10n_ar.model_account_fiscal_position
-msgid "Fiscal Position"
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid "Fiscal Transparency Regime for the Final Consumer (Law 27.743)"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_fondo_comun_de_inversion
+#: model:account.account,name:l10n_ar.4_base_fondo_comun_de_inversion
+#: model:account.account,name:l10n_ar.5_base_fondo_comun_de_inversion
+#: model:account.account.template,name:l10n_ar.base_fondo_comun_de_inversion
+msgid "Fondo común de inversión"
 msgstr ""
 
 #. module: l10n_ar
@@ -2183,6 +2191,18 @@ msgid "Only numbers allowed for \"%s\""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "Other National Ind. Taxes %s"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_otras_percepciones
+msgid "Other Perceptions"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_special_purchase_document_type_ids
 #: model:ir.model.fields,field_description:l10n_ar.field_res_users__l10n_ar_special_purchase_document_type_ids
 msgid "Other Purchase Documents"
@@ -2693,6 +2713,13 @@ msgid "Untaxed"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "Untaxed Amount"
+msgstr ""
+
+#. module: l10n_ar
 #: model:product.template,name:l10n_ar.product_product_no_gravado_product_template
 msgid "Untaxed concepts (VAT NT)"
 msgstr ""
@@ -2721,6 +2748,18 @@ msgstr ""
 #. module: l10n_ar
 #: model:l10n_latam.document.type,name:l10n_ar.dc_a_rg1415
 msgid "VOUCHERS A OF SECTION A, INC. F), G.R. Nº 1415"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "VAT Content %s"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_iva_exento
+msgid "VAT Exempt"
 msgstr ""
 
 #. module: l10n_ar
