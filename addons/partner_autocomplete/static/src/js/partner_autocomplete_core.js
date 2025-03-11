@@ -152,7 +152,7 @@ export function usePartnerAutocomplete() {
     function getCreateData(company) {
         const removeUselessFields = (company) => {
             // Delete attribute to avoid "Field_changed" errors
-            const fields = ['label', 'description', 'domain', 'logo', 'legal_name', 'ignored', 'email', 'bank_ids', 'classList', 'skip_enrich'];
+            const fields = ['label', 'description', 'domain', 'logo', 'legal_name', 'ignored', 'email', 'bank_ids', 'classList', 'skip_enrich', 'mobile'];
             fields.forEach((field) => {
                 delete company[field];
             });

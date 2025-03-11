@@ -154,6 +154,7 @@ QUnit.module('partner_autocomplete', {
                         'id': 1,
                         'display_name': "California (US)",
                     },
+                    "mobile": false,
                 });
             }
             else if (route.startsWith("https://autocomplete.clearbit.com/v1/companies/suggest")) {
