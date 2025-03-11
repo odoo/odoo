@@ -800,7 +800,12 @@ class Website(Home):
     @http.route(['/website/get_seo_data'], type='json', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
-            raise werkzeug.exceptions.Forbidden()
+            # Still ok if user can access the record anyway.
+            try:
+                record = request.env[res_model].browse(res_id)
+                record.check_access('write')
+            except AccessError:
+                raise werkzeug.exceptions.Forbidden()
 
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
         res = {'can_edit_seo': True}
@@ -813,7 +818,8 @@ class Website(Home):
             request.website._check_user_can_modify(record)
         except AccessError:
             res['can_edit_seo'] = False
-        record = record.sudo()
+        if request.env.user.has_group('website.group_website_restricted_editor'):
+            record = record.sudo()
 
         res.update(record.read(fields)[0])
         res['has_social_default_image'] = request.website.has_social_default_image

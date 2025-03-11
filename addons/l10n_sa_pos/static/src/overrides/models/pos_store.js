@@ -6,7 +6,7 @@ patch(PosStore.prototype, {
         const result = super.getReceiptHeaderData(...arguments);
         const company = this.company;
         if (order && company?.country_id?.code === "SA") {
-            result.is_settlement = this.get_order().is_settlement();
+            result.is_settlement = order.is_settlement();
             if (!result.is_settlement) {
                 const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
                 const qr_values = order.compute_sa_qr_code(

@@ -5,7 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# kunqing shi, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: kunqing shi, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,12 +34,12 @@ msgstr "创建人"
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__create_date
 msgid "Created on"
-msgstr "创建日期"
+msgstr "Created on"
 
 #. module: account_update_tax_tags
 #: model:ir.model.fields,help:account_update_tax_tags.field_account_update_tax_tags_wizard__date_from
 msgid "Date from which journal items will be updated."
-msgstr "日记账项目更新的日期。"
+msgstr "Date from which journal items will be updated."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -69,7 +69,7 @@ msgstr "最后更新人"
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__write_date
 msgid "Last Updated on"
-msgstr "上次更新日期"
+msgstr "Last Updated on"
 
 #. module: account_update_tax_tags
 #: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__date_from
@@ -80,7 +80,8 @@ msgstr "开始日期"
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
 msgid ""
 "The date you chose is violating the tax lock date, do this at your own risk."
-msgstr "您选择的日期违反了税收锁定日期，这样做的风险由您自行承担。"
+msgstr ""
+"The date you chose is violating the tax lock date, do this at your own risk."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -90,13 +91,13 @@ msgstr "更新"
 #. module: account_update_tax_tags
 #: model:ir.model,name:account_update_tax_tags.model_account_update_tax_tags_wizard
 msgid "Update Tax Tags Wizard"
-msgstr "更新税收标签向导"
+msgstr "Update Tax Tags Wizard"
 
 #. module: account_update_tax_tags
 #: model:ir.actions.act_window,name:account_update_tax_tags.action_open_wizard
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.res_config_settings_view_form
 msgid "Update tax tags on existing Journal Entries"
-msgstr "更新现有日记账分录上的税务标签"
+msgstr "Update tax tags on existing Journal Entries"
 
 #. module: account_update_tax_tags
 #. odoo-python
@@ -104,7 +105,9 @@ msgstr "更新现有日记账分录上的税务标签"
 msgid ""
 "Update with children taxes that are child of multiple parents is not "
 "supported."
-msgstr "不支持更新具有多个父级的子级税."
+msgstr ""
+"Update with children taxes that are child of multiple parents is not "
+"supported."
 
 #. module: account_update_tax_tags
 #: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
@@ -115,8 +118,8 @@ msgid ""
 "                    The update will change tax tags on your accounting history, starting from and including selected date,\n"
 "                    so that it matches with the current configuration of your taxes.<br/>"
 msgstr ""
-"在现有日记账分录中更新税号是<b>不可撤回的</b>动作，会影响\n"
-"您的报表。<br/>\n"
-"强烈建议事先备份您的数据库。<br/>\n"
-"该更新将从您的会计历史记录上更改税号，从选定的日期开始，\n"
-"使其与当前税收配置匹配。<br/>"
+"Updating tax tags on existing Journal Entries is an <b>irreversible</b> action that will impact\n"
+"                    your reports.<br/>\n"
+"                    It is highly recommended to backup your database beforehand.<br/>\n"
+"                    The update will change tax tags on your accounting history, starting from and including selected date,\n"
+"                    so that it matches with the current configuration of your taxes.<br/>"

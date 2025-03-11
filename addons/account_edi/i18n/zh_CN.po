@@ -4,8 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Chloe Wang, 2024
-# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# kunqing shi, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: kunqing shi, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,31 +24,31 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing error(s)"
-msgstr "%(count)s 电子发票错误"
+msgstr "%(count)s Electronic invoicing error(s)"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing info(s)"
-msgstr "%(count)s 电子发票信息"
+msgstr "%(count)s Electronic invoicing info(s)"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing warning(s)"
-msgstr "%(count)s 电子发票警告"
+msgstr "%(count)s Electronic invoicing warning(s)"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A cancellation of the EDI has been requested."
-msgstr "已申请取消EDI。"
+msgstr "A cancellation of the EDI has been requested."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "A request for cancellation of the EDI has been called off."
-msgstr "已撤销EDI取消申请。"
+msgstr "A request for cancellation of the EDI has been called off."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
@@ -61,7 +60,9 @@ msgstr "科目分录发送"
 msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
-msgstr "确定要取消此发票而不等待 EDI 文件被取消吗？"
+msgstr ""
+"Are you sure you want to cancel this invoice without waiting for the EDI "
+"document to be canceled?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -82,15 +83,15 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
-"根据错误的严重程度，阻止当前文件操作：\n"
-"  * 信息：文件未锁定，所有操作正常进行。\n"
-"  * 警告：存在错误，但不妨碍当前电子发票操作。\n"
-"  * 错误：存在错误，阻止当前电子发票操作。"
+"Blocks the current operation of the document depending on the error severity:\n"
+"  * Info: the document is not blocked and everything is working as it should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing operation."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr "撤销EDI取消"
+msgstr "Call off EDI Cancellation"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -104,7 +105,9 @@ msgstr "已取消"
 msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
-msgstr "无法在该日记账上停用（%s），因为未同步所有文件"
+msgstr ""
+"Cannot deactivate (%s) on this journal because not all documents are "
+"synchronized"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -180,7 +183,7 @@ msgstr "EDI文件"
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
 msgid "Edi Error Count"
-msgstr "EDI错误数量"
+msgstr "Edi Error Count"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
@@ -228,17 +231,17 @@ msgstr "用于account.move的电子文件"
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__edi_format_ids
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
 msgid "Electronic invoicing"
-msgstr "电子发票"
+msgstr "Electronic invoicing"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing processing needed"
-msgstr "需要电子发票处理"
+msgstr "Electronic invoicing processing needed"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr "电子发票状态"
+msgstr "Electronic invoicing state"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
@@ -261,7 +264,7 @@ msgstr "格式名称"
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr "该分录有多少错误EDI？"
+msgstr "How many EDIs are in error for this move?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -338,12 +341,12 @@ msgstr "对日记账分录进行重新排序。"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
-msgstr "报表操作"
+msgstr "Report Action"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr "申请取消EDI"
+msgstr "Request EDI Cancellation"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -377,37 +380,42 @@ msgstr "具有该分录网络服务的所有EDI的汇总状态"
 msgid ""
 "The file generated by edi_format_id when the invoice is posted (and this "
 "document is processed)."
-msgstr "发票过账（且处理该单据）时edi_format_id生成的文件。"
+msgstr ""
+"The file generated by edi_format_id when the invoice is posted (and this "
+"document is processed)."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/wizard/account_resequence.py:0
 msgid ""
 "The following documents have already been sent and cannot be resequenced: %s"
-msgstr "下列文件已经发送，无法重新排序：%s"
+msgstr ""
+"The following documents have already been sent and cannot be resequenced: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "The invoice will soon be sent to"
-msgstr "发票很快会发送至"
+msgstr "The invoice will soon be sent to"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
 "The text of the last error that happened during Electronic Invoice "
 "operation."
-msgstr "电子发票操作期间最后一个错误的文本。"
+msgstr ""
+"The text of the last error that happened during Electronic Invoice "
+"operation."
 
 #. module: account_edi
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
 msgid "This code already exists"
-msgstr "该代码已存在"
+msgstr "This code already exists"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_edi_document.py:0
 msgid "This document is being sent by another process already. "
-msgstr "该文档正由另一进程发送。"
+msgstr "This document is being sent by another process already. "
 
 #. module: account_edi
 #. odoo-python
@@ -415,7 +423,9 @@ msgstr "该文档正由另一进程发送。"
 msgid ""
 "This invoice was canceled while the EDIs %s still had a pending cancellation"
 " request."
-msgstr "此发票已被取消，而 EDI %s 仍有待处理的取消请求。"
+msgstr ""
+"This invoice was canceled while the EDIs %s still had a pending cancellation"
+" request."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
@@ -442,14 +452,18 @@ msgid ""
 "You can't edit the following journal entry %s because an electronic document"
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
-msgstr "无法编辑以下日记账分录%s，因为已发送电子文件。请改为使用“申请取消EDI”按钮。"
+msgstr ""
+"You can't edit the following journal entry %s because an electronic document"
+" has already been sent. Please use the 'Request EDI Cancellation' button "
+"instead."
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/ir_attachment.py:0
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
-msgstr "不能取消链向作为EDI文件向政府发送的附件。"
+msgstr ""
+"You can't unlink an attachment being an EDI document sent to the government."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

@@ -73,3 +73,30 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
             {'duplicated_ref_ids': (invoice_1 + invoice_3).ids},
             {'duplicated_ref_ids': (invoice_1 + invoice_2).ids},
         ])
+
+    def test_in_invoice_single_duplicate_reference_diff_date(self):
+        """ Ensure duplicated ref are computed correctly for different dates"""
+        bill1 = self.invoice.copy({'invoice_date': self.invoice.invoice_date})
+        bill1.ref = 'bill1'
+
+        # Same ref but different year -> Not duplicated
+        bill2 = bill1.copy({'invoice_date': '2020-01-01'})
+        bill2.ref = bill1.ref
+        self.assertFalse(bill1.duplicated_ref_ids)
+        self.assertFalse(bill2.duplicated_ref_ids)
+
+        # Same ref and same year -> Duplicated
+        bill3 = bill1.copy({'invoice_date': f"{bill1.invoice_date.year}-04-11"})
+        bill3.ref = bill1.ref
+        self.assertEqual(bill3.duplicated_ref_ids, bill1)
+
+        # Even after posting
+        bill3.action_post()
+        self.assertEqual(bill3.duplicated_ref_ids, bill1)
+
+        # Same ref and no invoice date -> Duplicated
+        bill4 = self.invoice.copy()
+        bill4.ref = "bill4"
+        bill5 = bill4.copy()
+        bill5.ref = bill4.ref
+        self.assertEqual(bill5.duplicated_ref_ids, bill4)
