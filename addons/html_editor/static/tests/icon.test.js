@@ -165,7 +165,13 @@ test("Can spin an icon", async () => {
 });
 
 test("Can set icon color", async () => {
-    await setupEditor(`<p><span class="fa fa-glass">[]</span></p>`);
+    const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 1,
+        focusNode: el.firstChild,
+        focusOffset: 2,
+    });
     await waitFor(".o-we-toolbar");
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-select-color-foreground");
