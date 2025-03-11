@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2018 Tecnativa - Jairo Llopis
+     Copyright 2021 ITerra - Sergey Shebanin
+     Copyright 2023 Onestein - Anjeel Haria
+     Copyright 2023 Taras Shabaranskyi
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<templates>
+    <!-- Search bar -->
+    <t t-name="web_responsive.AppsMenuSearchBar">
+        <AppsMenuCanonicalSearchBar t-if="searchType==='canonical'" />
+        <AppsMenuOdooSearchBar t-if="searchType==='command_palette'" />
+        <AppsMenuFuseSearchBar t-if="searchType==='fuse'" />
+    </t>
+</templates>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2018 Tecnativa - Jairo Llopis
+     Copyright 2021 ITerra - Sergey Shebanin
+     Copyright 2023 Onestein - Anjeel Haria
+     Copyright 2023 Taras Shabaranskyi
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<templates>
+    <!-- Search bar -->
+    <t t-name="web_responsive.AppsMenuOdooSearchBar">
+        <div class="search-container">
+            <div class="search-input">
+                <i class="fa fa-search search-icon fs-4 my-auto d-none d-sm-flex" />
+                <input
+                    type="search"
+                    t-ref="SearchBarInput"
+                    t-on-input="_onSearchInput"
+                    t-on-click="_onSearchClick"
+                    autocomplete="off"
+                    placeholder="Search menus..."
+                    class="form-control"
+                />
+            </div>
+        </div>
+    </t>
+</templates>

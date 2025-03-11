@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2023 Taras Shabaranskyi
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<templates>
+    <!-- Search bar -->
+    <t
+        t-name="web_responsive.AppsMenuFuseSearchBar"
+        t-inherit="web_responsive.AppsMenuCanonicalSearchBar"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//t[@t-foreach='state.rootItems']" position="attributes">
+            <attribute name="t-as">result</attribute>
+            <attribute name="t-key">result.item.xmlid</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='state.rootItems']/li" position="before">
+            <t t-set="menu" t-value="result.item" />
+        </xpath>
+        <xpath expr="//t[@t-foreach='state.rootItems']/li" position="attributes">
+            <attribute
+                name="t-attf-class"
+            >search-item {{highlighted(result_index)}}</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='state.subItems']" position="attributes">
+            <attribute name="t-as">result</attribute>
+            <attribute name="t-key">result.item.xmlid</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='state.subItems']/li" position="before">
+            <t t-set="menu" t-value="result.item" />
+        </xpath>
+        <xpath expr="//t[@t-foreach='state.subItems']/li" position="attributes">
+            <attribute
+                name="t-attf-class"
+            >search-item {{highlighted(result_index, true)}}</attribute>
+        </xpath>
+    </t>
+</templates>

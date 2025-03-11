@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t
+        t-name="web_responsive.CommandPalette"
+        t-inherit="web.CommandPalette"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//Dialog" position="attributes">
+            <attribute name="contentClass">contentClass</attribute>
+        </xpath>
+        <xpath expr="//div[@t-ref='root']" position="attributes">
+            <attribute name="class">o_command_palette_root</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_command_palette_search')]" position="before">
+            <div class="o_command_palette_exit">
+                <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    t-on-click="props.close"
+                >Exit</button>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,109 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * Copyright 2023 Taras Shabaranskyi
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+:root {
+    .o_grid_apps_menu[data-theme="milk"] {
+        --app-menu-background: url("../../img/home-menu-bg-overlay.svg"),
+            linear-gradient(
+                to bottom,
+                #{$app-menu-background-color},
+                #{desaturate(lighten($app-menu-background-color, 20%), 15)}
+            );
+    }
+
+    .o_grid_apps_menu[data-theme="community"] {
+        --app-menu-background: url("../../img/home-menu-bg-overlay.svg"),
+            linear-gradient(
+                to bottom,
+                #{$o-brand-primary},
+                #{desaturate(lighten($o-brand-primary, 20%), 15)}
+            );
+    }
+}
+
+@mixin full-screen-dropdown {
+    border: none;
+    box-shadow: none;
+    height: 100%;
+    max-height: calc(var(--vh100, 100vh) - #{$o-navbar-height});
+    max-height: calc(100dvh - #{$o-navbar-height});
+    position: fixed;
+    margin: 0;
+    width: 100vw;
+    z-index: 1000;
+    left: 0 !important;
+}
+
+.o_apps_menu_opened .o_main_navbar {
+    .o_menu_brand,
+    .o_menu_sections {
+        display: none !important;
+    }
+}
+
+// hide and save odoo default QUnit tests
+.o_navbar_apps_menu.hide .dropdown-toggle {
+    position: absolute !important;
+    z-index: -100 !important;
+}
+
+// Iconized full screen apps menu
+.o_grid_apps_menu {
+    &__button {
+        background: unset;
+        border: unset;
+        outline: unset;
+        margin-right: 0.25rem;
+        min-height: $o-navbar-height;
+        height: $o-navbar-height;
+        width: $o-navbar-height;
+        color: $o-navbar-brand-color;
+
+        &:hover,
+        &:focus {
+            background: $o-navbar-entry-bg--hover;
+        }
+    }
+
+    .o-app-menu-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        width: 100%;
+        gap: 0.25rem;
+
+        @include media-breakpoint-up(sm) {
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        }
+    }
+}
+
+.app-menu-container {
+    @include full-screen-dropdown();
+    overflow: auto;
+    background-clip: border-box;
+    padding: 1rem 0.5rem;
+    gap: 1rem;
+    background: var(--app-menu-background);
+    background-size: cover;
+    border-radius: 0;
+    // Display apps in a grid
+    align-content: flex-start;
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    // Hide app icons when searching
+    .has-results ~ .o-app-menu-list {
+        display: none;
+    }
+
+    @include media-breakpoint-up(lg) {
+        padding: {
+            left: calc((100vw - 850px) / 2);
+            right: calc((100vw - 850px) / 2);
+        }
+    }
+}

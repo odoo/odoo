@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 Taras Shabaranskyi
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+    <record id="res_users_view_form_apps_menu_preferences" model="ir.ui.view">
+        <field name="name">res.users.apps.menu.preferences.form</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field
+                            name="apps_menu_search_type"
+                            string="Search Type"
+                            help="Apps Menu Search Type"
+                        />
+                    </group>
+                    <group>
+                        <field
+                            name="apps_menu_theme"
+                            string="Theme"
+                            help="Apps Menu Theme"
+                        />
+                    </group>
+                </group>
+                <div class="mt-3">
+                    <h3>Search Type Help</h3>
+                    <table class="table table-bordered w-100 w-lg-50">
+                        <tr>
+                            <th>Canonical</th>
+                            <td>uses a standard algorithm</td>
+                        </tr>
+                        <tr>
+                            <th>Fuse</th>
+                            <td>a new search algorithm is used</td>
+                        </tr>
+                        <tr>
+                            <th>Command Palette</th>
+                            <td>the standard odoo search tool</td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record
+        id="res_users_view_form_apps_menu_preferences_action"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Apps Menu Preferences</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field
+            name="view_ids"
+            eval="[
+               Command.clear(),
+               Command.create({'view_mode': 'form', 'view_id': ref('web_responsive.res_users_view_form_apps_menu_preferences')})
+               ]"
+        />
+    </record>
+
+    <record id="view_users_form_web_responsive" model="ir.ui.view">
+        <field name="name">res.users.form.web.responsive</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <data>
+                <field name="action_id" position="after">
+                    <field name="is_redirect_home" invisible="action_id" />
+                </field>
+            </data>
+        </field>
+    </record>
+</odoo>

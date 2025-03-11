@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    Copyright 2018 Alexandre Díaz
+    Copyright 2018 Tecnativa - Jairo Llopis
+    Copyright 2021 ITerra - Sergey Shebanin
+    Copyright 2023 Onestein - Anjeel Haria
+    Copyright 2023 Taras Shabaranskyi
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<templates id="form_view">
+    <!-- Template for buttons that display only the icon in xs -->
+    <t t-name="web_responsive.icon_button_create">
+        <i t-attf-class="fa fa-plus" title="New" />
+        <span class="d-none d-sm-inline ms-1">New</span>
+    </t>
+    <t t-name="web_responsive.icon_button_save">
+        <i t-attf-class="fa fa-check" title="Save" />
+        <span class="d-none d-sm-inline ms-1">Save</span>
+    </t>
+    <t t-name="web_responsive.icon_button_discard">
+        <i t-attf-class="fa fa-undo" title="Discard" />
+        <span class="d-none d-sm-inline ms-1">Discard</span>
+    </t>
+    <t
+        t-name="web_responsive.FormView.Buttons"
+        t-inherit="web.FormView.Buttons"
+        t-inherit-mode="extension"
+    >
+        <!-- Change "Discard" button hotkey to "D" -->
+        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="attributes">
+            <attribute name="data-hotkey">d</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-primary o_form_button_save"
+                data-hotkey="s"
+                t-on-click.stop="() => this.saveButtonClicked({closable: true})"
+            >
+                <t t-call="web_responsive.icon_button_save" />
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-secondary o_form_button_cancel"
+                data-hotkey="j"
+                t-on-click.stop="discard"
+            >
+                <t t-call="web_responsive.icon_button_discard" />
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('o_form_button_create')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-secondary o_form_button_create"
+                data-hotkey="c"
+                t-on-click.stop="create"
+            >
+                <t t-call="web_responsive.icon_button_create" />
+            </button>
+        </xpath>
+    </t>
+
+    <t
+        t-name="web_responsive.SettingsFormView.Buttons"
+        t-inherit="web.SettingsFormView.Buttons"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-primary o_form_button_save"
+                data-hotkey="s"
+                t-on-click.stop="() => this.saveButtonClicked({closable: true})"
+            >
+                <t t-call="web_responsive.icon_button_save" />
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-secondary o_form_button_cancel"
+                data-hotkey="j"
+                t-on-click.stop="discard"
+            >
+                <t t-call="web_responsive.icon_button_discard" />
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('o_form_button_create')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-secondary o_form_button_create"
+                data-hotkey="c"
+                t-on-click.stop="create"
+            >
+                <t t-call="web_responsive.icon_button_create" />
+            </button>
+        </xpath>
+    </t>
+
+    <t
+        t-name="web_responsive.FormView"
+        t-inherit="web.FormView"
+        t-inherit-mode="extension"
+    >
+        <xpath
+            expr="//button[hasclass('o_form_button_create')][hasclass('btn-outline-primary')]"
+            position="replace"
+        >
+            <button
+                type="button"
+                class="btn btn-outline-primary o_form_button_create"
+                data-hotkey="c"
+                t-on-click.stop="create"
+            >
+                <t t-call="web_responsive.icon_button_create" />
+            </button>
+        </xpath>
+        <xpath
+            expr="//button[hasclass('o_form_button_create')][hasclass('btn-secondary')]"
+            position="replace"
+        >
+            <button
+                type="button"
+                class="btn btn-secondary o_form_button_create"
+                data-hotkey="c"
+                t-on-click.stop="create"
+            >
+                <t t-call="web_responsive.icon_button_create" />
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="web_responsive.FormStatusIndicator" t-inherit="web.FormStatusIndicator">
+        <!-- Change "Discard" button hotkey to "D" -->
+        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="attributes">
+            <attribute name="data-hotkey">d</attribute>
+        </xpath>
+    </t>
+    <t
+        t-name="web_responsive.KanbanView"
+        t-inherit="web.KanbanView"
+        t-inherit-mode="extension"
+    >
+        <!-- Add responsive icons to buttons -->
+        <xpath expr="//button[hasclass('o-kanban-button-new')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-primary o-kanban-button-new"
+                accesskey="c"
+                t-on-click="() => this.createRecord()"
+                data-bounce-button=""
+            >
+                <t t-call="web_responsive.icon_button_create" />
+            </button>
+        </xpath>
+    </t>
+    <t
+        t-name="web_responsive.ListView"
+        t-inherit="web.ListView"
+        t-inherit-mode="extension"
+    >
+        <!-- Add responsive icons to buttons -->
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-primary o_list_button_add"
+                data-hotkey="c"
+                t-on-click="onClickCreate"
+                data-bounce-button=""
+            >
+                <t t-call="web_responsive.icon_button_create" />
+            </button>
+        </xpath>
+    </t>
+    <t
+        t-name="web_responsive.ListView.Buttons"
+        t-inherit="web.ListView.Buttons"
+        t-inherit-mode="extension"
+    >
+        <!-- Add responsive icons to buttons -->
+        <xpath expr="//button[hasclass('o_list_button_save')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-primary o_list_button_save"
+                data-hotkey="s"
+                t-on-click.stop="onClickSave"
+            >
+                <t t-call="web_responsive.icon_button_save" />
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('o_list_button_discard')]" position="replace">
+            <button
+                type="button"
+                class="btn btn-secondary o_list_button_discard"
+                data-hotkey="d"
+                t-on-click.stop="onClickDiscard"
+                t-on-mousedown="onMouseDownDiscard"
+            >
+                <t t-call="web_responsive.icon_button_discard" />
+            </button>
+        </xpath>
+    </t>
+</templates>

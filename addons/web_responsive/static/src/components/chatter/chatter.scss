@@ -1,0 +1,42 @@
+/* Copyright 2023 Taras Shabaranskyi
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+.o-mail-Composer {
+    grid-template-areas:
+        "sidebar-header core-header"
+        "core-main core-main"
+        "sidebar-footer core-footer";
+
+    .o-mail-Composer-sidebarMain {
+        display: none;
+    }
+
+    @include media-breakpoint-up(sm) {
+        grid-template-areas:
+            "sidebar-header core-header"
+            "sidebar-main core-main"
+            "sidebar-footer core-footer";
+
+        .o-mail-Composer-sidebarMain {
+            display: block;
+        }
+
+        .o-mail-SuggestedRecipient {
+            margin-left: 42px;
+        }
+    }
+}
+
+.o-mail-Form-chatter {
+    .o-mail-SuggestedRecipient,
+    .o-mail-Chatter-recipientList {
+        margin-left: 0;
+    }
+
+    @include media-breakpoint-up(sm) {
+        .o-mail-SuggestedRecipient,
+        .o-mail-Chatter-recipientList {
+            margin-left: 42px;
+        }
+    }
+}

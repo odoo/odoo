@@ -1,0 +1,61 @@
+<odoo>
+    <record id="claims_model_action" model="ir.actions.act_window">
+        <field name="name">Claims</field>
+        <field name="res_model">claims</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="claims_view_tree" model="ir.ui.view">
+        <field name="name">claims_tree</field>
+        <field name="model">claims</field>
+        <field name="arch" type="xml">
+            <tree string="Claims">
+                <field name="name" />
+                <field name="date" />
+                <field name="employee_id" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="claims_view_form" model="ir.ui.view">
+        <field name="name">claims_form</field>
+        <field name="model">claims</field>
+        <field name="arch" type="xml">
+            <form string="Claims">
+                <sheet>
+                    <header>
+                        <widget name="attach_document" string="Attach Receipt"
+                            action="attach_document" />
+                    </header>
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" placeholder="e.g. Lunch with Customer" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="amount" widget='monetary'
+                                options="{'currency_field': 'currency_id'}" />
+                        </group>
+                        <group>
+                            <field name="date" />
+                        </group>
+                        <group>
+                            <field name="employee_id" widget="many2one_avatar_employee" />
+                        </group>
+                        <group>
+                            <field name="state" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

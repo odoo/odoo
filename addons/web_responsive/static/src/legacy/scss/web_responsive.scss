@@ -1,0 +1,209 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * Copyright 2023 Onestein - Anjeel Haria
+ * Copyright 2023 Taras Shabaranskyi
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+$chatter_zone_width: 35% !important;
+
+// Allow sticky header
+.o_action_manager {
+    .o_form_view {
+        overflow: unset;
+
+        .o_form_view_container {
+            overflow: auto;
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .ui-menu-item-wrapper {
+        display: inline-flex !important;
+        align-items: center;
+        height: 35px;
+    }
+    .o_calendar_widget {
+        .fc-timeGridDay-view {
+            .fc-day-header {
+                vertical-align: middle;
+            }
+        }
+    }
+    .o_kanban_view .o_cp_pager .btn-group {
+        top: -1px;
+    }
+    .o_kanban_renderer {
+        width: 100%;
+    }
+}
+
+// Normal views
+.o_content,
+.modal-content {
+    max-width: 100%;
+
+    // Form views
+    .o_form_editable {
+        .o_cell .o_form_label:not(.o_status):not(.o_calendar_invitation) {
+            min-height: 23px;
+            @include media-breakpoint-up(md) {
+                margin-bottom: 10px;
+            }
+        }
+
+        .o_horizontal_separator {
+            font-size: 14px;
+        }
+
+        // Some UX improvements for form in edit mode
+        @include media-breakpoint-down(sm) {
+            &.o_form_editable .o_field_widget {
+                &:not(.o_stat_info):not(.o_readonly_modifier):not(.oe_form_field_html):not(.o_field_image) {
+                    min-height: 35px;
+                }
+
+                .o_x2m_control_panel {
+                    margin-bottom: 10px !important;
+                }
+
+                &.o_field_float_percentage,
+                &.o_field_monetary,
+                &.o_field_many2many_selection,
+                .o_field_many2one_selection {
+                    align-items: center;
+                }
+
+                .o_field_many2one_selection .o_input_dropdown,
+                &.o_datepicker,
+                &.o_partner_autocomplete_info {
+                    input {
+                        min-height: 35px;
+                    }
+                }
+
+                .o_external_button {
+                    margin-left: 5px;
+                }
+
+                .o_dropdown_button,
+                .o_datepicker_button {
+                    top: 50%;
+                    right: 6px;
+                    bottom: auto;
+                    transform: translateY(-50%);
+                }
+            }
+        }
+
+        @include media-breakpoint-down(sm) {
+            min-width: auto;
+
+            // Avoid overflow on modals
+            .o_form_sheet {
+                min-width: auto;
+            }
+
+            // Render website inputs properly in phones
+            .o_group .o_field_widget.o_text_overflow {
+                // Overrides another !important
+                width: auto !important;
+            }
+        }
+    }
+
+    //No content message improvements on mobile
+    @include media-breakpoint-down(md) {
+        .o_view_nocontent {
+            top: 53px;
+        }
+        .o_nocontent_help {
+            box-shadow: none;
+        }
+        .o_sample_data_disabled {
+            display: none;
+        }
+    }
+}
+
+.o-mail-Form-chatter {
+    &.o-isInFormSheetBg:not(.o-aside) {
+        background-color: $white;
+
+        &:not(.o-aside) {
+            width: auto;
+            border-top: 1px solid $border-color;
+        }
+    }
+
+    &.o-aside {
+        flex: 0 0 $chatter_zone_width;
+        max-width: initial;
+        min-width: initial;
+        overflow: auto;
+    }
+}
+
+body:not(.o_statusbar_buttons) {
+    .oe-toolbar {
+        z-index: 0 !important;
+    }
+}
+
+.o_inner_group > .mb-sm-0 {
+    margin-bottom: 0 !important;
+}
+
+.o_searchview_autocomplete {
+    z-index: 999;
+}
+
+// Color clue to tell the difference between a note and a public message
+// HACK: has() pseudo class is broadly supported in desktop, even FF will deploy
+// full support soon (now it's available behind a config flag)
+// https://caniuse.com/css-has
+.o-mail-Chatter-top:has(.o-mail-Chatter-sendMessage.active) {
+    .o-mail-Composer {
+        background-color: lighten($o-brand-primary, 35%);
+        padding-top: 0.25rem !important;
+    }
+
+    @include media-breakpoint-up(sm) {
+        .o-mail-Composer {
+            padding-top: 0.5rem !important;
+        }
+    }
+}
+
+@include media-breakpoint-up(md) {
+    .app_settings_block > h2,
+    .app_settings_block > div > h2 {
+        @include o-position-sticky(0);
+        z-index: 10;
+    }
+}
+
+.o_list_table {
+    .o_handle_cell,
+    .o_list_record_remove {
+        vertical-align: middle;
+    }
+}
+
+.o_action_manager {
+    .dropdown-menu {
+        max-height: 70vh;
+        max-height: 70dvh;
+    }
+
+    .o_searchview_input {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .o_control_panel_main {
+        .btn {
+            white-space: nowrap;
+        }
+    }
+}

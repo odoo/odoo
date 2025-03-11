@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2018 Tecnativa - Jairo Llopis
+     Copyright 2021 ITerra - Sergey Shebanin
+     Copyright 2023 Onestein - Anjeel Haria
+     Copyright 2023 Taras Shabaranskyi
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<templates>
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension">
+        <xpath expr="//Dropdown" position="attributes">
+            <attribute name="class">'o_navbar_apps_menu hide'</attribute>
+            <attribute name="skipTogglerTabbing">true</attribute>
+            <attribute name="hotkey" remove="'h'" add="'shift+h'" separator=" " />
+        </xpath>
+        <xpath expr="//Dropdown" position="after">
+            <AppsMenu>
+                <t t-set-slot="search_bar">
+                    <AppsMenuSearchBar />
+                </t>
+                <AppMenuItem
+                    t-foreach="apps"
+                    t-as="app"
+                    t-key="app.id"
+                    app="app"
+                    currentApp="currentApp"
+                    href="getMenuItemHref(app)"
+                    onClick="onNavBarDropdownItemSelection.bind(this)"
+                />
+            </AppsMenu>
+        </xpath>
+    </t>
+
+    <!-- Apps menu -->
+    <t t-name="web_responsive.AppsMenu">
+        <div class="o_grid_apps_menu" t-att-data-theme="theme">
+            <button
+                class="o_grid_apps_menu__button"
+                title="Home Menu"
+                data-hotkey="h"
+                t-on-click.stop="onMenuClick"
+            >
+                <i class="oi oi-apps fs-4" />
+            </button>
+            <div t-if="state.open" class="app-menu-container">
+                <t t-slot="search_bar" />
+                <div class="o-app-menu-list">
+                    <t t-slot="default" />
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

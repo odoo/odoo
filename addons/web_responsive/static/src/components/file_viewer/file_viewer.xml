@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2019 Tecnativa - Alexandre Díaz
+     Copyright 2021 Sergey Shebanin
+     Copyright 2023 Taras Shabaranskyi
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<template>
+    <t
+        t-name="web_responsive.FileViewer"
+        t-inherit="web.FileViewer"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="div[hasclass('justify-content-center')]" position="attributes">
+            <attribute name="class" add="o-FileViewerContainer" separator=" " />
+            <attribute name="t-att-class">rootClass</attribute>
+            <attribute name="t-ref">root</attribute>
+        </xpath>
+        <xpath expr="//iframe[@t-ref='iframeViewerPdf']" position="attributes">
+            <attribute name="class" add="o-FileViewer-viewPdf" separator=" " />
+        </xpath>
+        <xpath expr="//div[@t-on-click.stop='close']" position="before">
+            <t t-if="state.allowMinimize">
+                <div
+                    t-if="!state.maximized"
+                    t-on-click="setMaximized.bind(this, true)"
+                    class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer"
+                    role="button"
+                    name="maximize"
+                    title="Maximize"
+                    aria-label="Maximize"
+                >
+                    <i class="fa fa-fw fa-window-maximize" role="img" />
+                </div>
+                <div
+                    t-if="state.maximized"
+                    class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer"
+                    t-on-click="setMaximized.bind(this, false)"
+                    role="button"
+                    name="minimize"
+                    title="Minimize"
+                    aria-label="Minimize"
+                >
+                    <i class="fa fa-fw fa-window-minimize" role="img" />
+                </div>
+            </t>
+        </xpath>
+    </t>
+</template>

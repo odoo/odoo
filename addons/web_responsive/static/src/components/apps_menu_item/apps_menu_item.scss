@@ -1,0 +1,73 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * Copyright 2023 Taras Shabaranskyi
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+:root {
+    .o_grid_apps_menu[data-theme="milk"] {
+        --app-menu-text-color: #{$app-menu-text-color};
+        --app-menu-text-shadow: 1px 1px 1px #{rgba($white, 0.4)};
+        --app-menu-hover-background: #{rgba(white, 0.4)};
+    }
+
+    .o_grid_apps_menu[data-theme="community"] {
+        --app-menu-text-color: white;
+        --app-menu-text-shadow: 1px 1px 1px #{rgba(black, 0.4)};
+        --app-menu-hover-background: #{rgba(white, 0.2)};
+    }
+}
+
+.o-app-menu-item {
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    gap: 0.25rem;
+    transition: ease box-shadow, transform, 0.3s;
+    background: unset;
+    outline: unset;
+    border: unset;
+    padding: 0.75rem 0.5rem;
+    justify-content: flex-start;
+    align-items: center;
+    white-space: normal;
+    user-select: none;
+    height: -moz-available;
+    height: max-content;
+
+    &__name {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 1em;
+        text-shadow: var(--app-menu-text-shadow);
+        color: var(--app-menu-text-color);
+        text-align: center;
+    }
+
+    &__icon {
+        height: auto;
+        max-width: 64px;
+        width: 64px;
+        aspect-ratio: 1;
+        padding: 10px;
+        background-color: white;
+        box-shadow: $app-menu-box-shadow;
+    }
+
+    &__active {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        text-shadow: 0 0 2px rgba(250, 250, 250, 0.6);
+        color: $app-menu-text-color;
+    }
+
+    &:focus,
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px -8px transparentize($app-menu-text-color, 0.6);
+        background-color: var(--app-menu-hover-background) !important;
+        backdrop-filter: blur(2px);
+    }
+}

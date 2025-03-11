@@ -1,0 +1,112 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * Copyright 2023 Taras Shabaranskyi
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+:root {
+    .o_grid_apps_menu[data-theme="milk"] {
+        --apps-menu-scrollbar-background: #{$o-brand-odoo};
+        --apps-menu-empty-search-color: $app-menu-text-color;
+    }
+
+    .o_grid_apps_menu[data-theme="community"] {
+        --apps-menu-scrollbar-background: white;
+        --apps-menu-empty-search-color: white;
+    }
+}
+
+.o_grid_apps_menu .search-container {
+    // Allow to scroll only on results, keeping static search box above
+    .search-list {
+        display: flex;
+        flex-direction: column;
+        gap: calc(0.25rem + 1px);
+        overflow: auto;
+        padding: 0.25rem 0;
+        margin: 0.25rem 0;
+        max-height: calc(100vh - #{$o-navbar-height} - 5.25rem);
+        max-height: calc(100dvh - #{$o-navbar-height} - 5.25rem);
+        max-width: calc(100vw - 1rem);
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        &::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--apps-menu-scrollbar-background);
+            border-radius: 6px;
+        }
+
+        @include media-breakpoint-down(md) {
+            &::-webkit-scrollbar {
+                width: 4px;
+            }
+        }
+    }
+
+    .search-item-divider {
+        margin: 0 4px;
+
+        hr {
+            margin: 0.5rem 0;
+            background-color: $o-brand-odoo;
+        }
+    }
+
+    .search-item {
+        display: block;
+        align-items: center;
+        background-position: left;
+        background-repeat: no-repeat;
+        background-size: contain;
+        white-space: normal;
+        font-weight: 100;
+        background-color: white;
+        box-shadow: $app-menu-box-shadow;
+        margin: 0 4px;
+        border-radius: 4px;
+
+        &__link {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        &__name {
+            color: $app-menu-text-color;
+            text-shadow: 0 0 $app-menu-text-color;
+        }
+
+        &__image {
+            max-height: 40px;
+            max-width: 40px;
+            width: 40px;
+            object-fit: contain;
+            padding: 4px;
+        }
+
+        &.highlight,
+        &:hover {
+            background-color: $app-menu-item-highlight;
+            box-shadow: $app-menu-box-shadow-highlight;
+            font-weight: 300;
+        }
+
+        b {
+            font-weight: 700;
+        }
+    }
+
+    .empty-search-item {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        padding: 0.25rem 0.5rem;
+        color: var(--apps-menu-empty-search-color);
+    }
+}

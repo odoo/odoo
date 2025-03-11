@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2023 Taras Shabaranskyi
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<templates>
+
+    <t
+        t-name="web_responsive.StatusBarButtons"
+        t-inherit="web.StatusBarButtons"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//Dropdown" position="attributes">
+            <attribute name="hotkey">'shift+a'</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='toggler']" position="replace">
+            <t t-set-slot="toggler">
+                <i class="fa fa-sliders me-1 me-sm-2" />
+                <span class="d-none d-sm-inline">Action</span>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
