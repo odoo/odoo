@@ -198,7 +198,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
 
         report = self.env['account.invoice.report'].read_group(
             [('product_id', '=', product.id)],
-            ['price_subtotal', 'quantity', 'price_average:avg'],
+            ['price_subtotal:sum', 'quantity:sum', 'price_average:avg'],
             [],
         )
         self.assertEqual(report[0]['quantity'], 35)
