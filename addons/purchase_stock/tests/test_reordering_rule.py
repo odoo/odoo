@@ -31,7 +31,6 @@ class TestReorderingRule(TransactionCase):
         product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
             seller.partner_id = cls.partner
-            seller.product_uom_id = cls.env.ref('uom.product_uom_unit')
         product_form.route_ids.add(cls.env.ref('purchase_stock.route_warehouse0_buy'))
         cls.product_01 = product_form.save()
 
