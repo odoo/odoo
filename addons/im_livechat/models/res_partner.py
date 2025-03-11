@@ -13,25 +13,6 @@ class ResPartner(models.Model):
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
 
-    def _get_search_for_channel_invite_term_domain(self, channel_id, search_term):
-        domain = super()._get_search_for_channel_invite_term_domain(channel_id, search_term)
-        if (channel_id and
-            self.env["discuss.channel"].search([
-                ("id", "=", int(channel_id)), ("channel_type", "=", "livechat")
-            ])):
-            languages = self.env["res.lang"].search([("name", "ilike", search_term)])
-            domain |= Domain(
-                "user_ids.res_users_settings_ids",
-                "in",
-                # sudo: res.users.settings - operators can access other operators settings
-                self.env["res.users.settings"].sudo()._search(
-                    Domain("user_id.partner_id.lang", "in", languages.mapped("code")) |
-                    Domain("livechat_lang_ids", "in", languages.ids) |
-                    Domain("livechat_expertise_ids.name", "ilike", search_term)
-                ),
-            )
-        return domain
-
     def _search_for_channel_invite_to_store(self, store: Store, channel):
         super()._search_for_channel_invite_to_store(store, channel)
         if channel.channel_type != "livechat" or not self:
