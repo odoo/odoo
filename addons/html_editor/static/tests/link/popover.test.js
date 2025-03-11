@@ -37,11 +37,13 @@ describe("should open a popover", () => {
         expect(".o-we-linkpopover").toHaveCount(0);
     });
     test("link popover should have input field for href when the link doesn't have href", async () => {
-        await setupEditor("<p>this is a <a>li[]nk</a></p>");
-        await waitFor(".o-we-linkpopover");
+        const { el } = await setupEditor("<p>this is a <a>li[]nk</a></p>");
+        await contains(".o-we-linkpopover .o_we_edit_link").click();
         expect(".o-we-linkpopover").toHaveCount(1);
         expect(".o_we_label_link").toHaveValue("link");
         expect(".o_we_href_input_link").toHaveValue("");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe('<p>this is a <a href="">li[]nk</a></p>');
     });
     test("link popover should have buttons for link operation when the link has href", async () => {
         await setupEditor('<p>this is a <a href="test.com">li[]nk</a></p>');
@@ -53,6 +55,7 @@ describe("should open a popover", () => {
     });
     test("link popover should not repositioned when clicking in the input field", async () => {
         await setupEditor("<p>this is a <a>li[]nk</a></p>");
+        await contains(".o-we-linkpopover .o_we_edit_link").click();
         await waitFor(".o_we_href_input_link");
         const style = queryOne(".o-we-linkpopover").parentElement.style.cssText;
         queryOne(".o_we_href_input_link").focus();
@@ -120,7 +123,7 @@ describe("popover should switch UI depending on editing state", () => {
     });
     test("after clicking on apply button, the popover should be with the non editing mode, e.g. with three buttons", async () => {
         await setupEditor("<p>this is a <a>li[]nk</a></p>");
-        await waitFor(".o-we-linkpopover");
+        await contains(".o-we-linkpopover .o_we_edit_link").click();
         await click(".o_we_href_input_link");
         await click(".o_we_apply_link");
         await waitFor(".o_we_edit_link");
@@ -135,6 +138,7 @@ describe("popover should edit,copy,remove the link", () => {
     test("after apply url on a link without href, the link element should be updated", async () => {
         const { el } = await setupEditor("<p>this is a <a>li[]nk</a></p>");
 
+        await contains(".o-we-linkpopover .o_we_edit_link").click();
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.com/");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.com/">li[]nk</a></p>'
@@ -206,6 +210,7 @@ describe("Incorrect URL should be corrected", () => {
     test("when a link's URL is an email, the link's URL should start with mailto:", async () => {
         const { el } = await setupEditor("<p>this is a <a>li[]nk</a></p>");
 
+        await contains(".o-we-linkpopover .o_we_edit_link").click();
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("test@test.com");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="mailto:test@test.com">li[]nk</a></p>'
@@ -214,6 +219,7 @@ describe("Incorrect URL should be corrected", () => {
     test("when a link's URL is an phonenumber, the link's URL should start with tel:", async () => {
         const { el } = await setupEditor("<p>this is a <a>li[]nk</a></p>");
 
+        await contains(".o-we-linkpopover .o_we_edit_link").click();
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("+1234567890");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="tel:+1234567890">li[]nk</a></p>'
@@ -508,6 +514,25 @@ describe("Link creation", () => {
                 `<p>[<a href="https://www.test.com">Hello</a> my friend]</p>`
             );
         });
+        test("should display the metadata popover when a link element is selected", async () => {
+            await setupEditor(
+                `<p><a href="https://www.test.com">test</a> [link]</p>`
+            );
+            await waitFor(".o-we-toolbar");
+            await click(".o-we-toolbar .fa-link");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
+            expect(".o-we-linkpopover input.o_we_href_input_link").toHaveCount(1);
+            const aNode = document.querySelector("a");
+            setSelection({
+                anchorNode: aNode,
+                anchorOffset: 1,
+                focusNode: aNode,
+                focusOffset: 1,
+            });
+            await animationFrame();
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
+            expect(".o_we_url_link").toHaveCount(1);
+        });
     });
 });
 
@@ -649,6 +674,7 @@ describe("shortcut", () => {
     test("Press enter to apply when create a link", async () => {
         const { el } = await setupEditor(`<p><a>li[]nk</a></p>`);
 
+        await contains(".o-we-linkpopover .o_we_edit_link").click();
         await contains(".o-we-linkpopover input.o_we_href_input_link").fill("test.com");
         await press("Enter");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
