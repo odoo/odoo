@@ -102,15 +102,6 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     },
     /**
      * @override
-     */
-    _getRpcParameters: function () {
-        const productTemplateId = $("#product_details").find(".product_template_id");
-        return Object.assign(this._super.apply(this, arguments), {
-            productTemplateId: productTemplateId && productTemplateId.length ? productTemplateId[0].value : undefined,
-        });
-    },
-    /**
-     * @override
      * @private
      */
     _getMainPageUrl() {
