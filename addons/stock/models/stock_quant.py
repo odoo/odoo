@@ -1136,11 +1136,11 @@ class StockQuant(models.Model):
         reserved_move_lines = self.env['stock.move.line']._read_group(
             [
                 ('state', 'in', ['assigned', 'partially_available', 'waiting', 'confirmed']),
-                ('quantity', '!=', 0),
+                ('quantity_product_uom', '!=', 0),
                 ('product_id.is_storable', '=', True),
             ],
             ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
-            ['quantity:sum'],
+            ['quantity_product_uom:sum'],
         )
         reserved_move_lines = {
             (product, location, lot, package, owner): reserved_quantity
