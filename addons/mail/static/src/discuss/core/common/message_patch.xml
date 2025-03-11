@@ -11,7 +11,7 @@
             </div>
         </xpath>
         <xpath expr="//AttachmentList" position="after">
-            <div t-if="props.message.isBodyEmpty and message.attachment_ids.length > 0" class="o-mail-Message-seenContainer position-absolute bg-white ratio-1x1 rounded-circle p-1">
+            <div t-if="props.message.isBodyEmpty and message.attachment_ids.length > 0" class="o-mail-Message-seenContainer position-absolute ratio-1x1 rounded-circle p-1">
                 <MessageSeenIndicator
                     t-if="showSeenIndicator"
                     message="props.message"
