@@ -18,7 +18,7 @@ export const many2OneAvatarField = {
     component: Many2OneAvatarField,
     extractProps(fieldInfo) {
         const props = many2OneField.extractProps(...arguments);
-        props.canOpen = fieldInfo.viewType === "form";
+        props.canOpen = fieldInfo.viewType === "form" && props.canOpen;
         return props;
     },
 };
