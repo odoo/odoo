@@ -1,22 +1,49 @@
-import { _t } from "@web/core/l10n/translation";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { formatPercentage } from "@web/views/fields/formatters";
-import { PivotHeader } from "@web/views/pivot/pivot_header";
-
 import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
+import { CheckBox } from "@web/core/checkbox/checkbox";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
+import { registry } from "@web/core/registry";
+import { sortBy } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
+import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
+import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
+import { getIntervalOptions } from "@web/search/utils/dates";
+import { GROUPABLE_TYPES } from "@web/search/utils/misc";
+import { formatPercentage } from "@web/views/fields/formatters";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
 const formatters = registry.category("formatters");
 
+class PivotDropdown extends Dropdown {
+    /**
+     * @override
+     */
+    get position() {
+        return this.props.state.position || "bottom-start";
+    }
+    /**
+     * @override
+     */
+    get target() {
+        return this.props.state.target;
+    }
+}
+
 export class PivotRenderer extends Component {
     static template = "web.PivotRenderer";
-    static components = { Dropdown, DropdownItem, CheckBox, PivotHeader, ReportViewMeasures };
+    static components = {
+        CheckBox,
+        CustomGroupByItem,
+        Dropdown,
+        DropdownItem,
+        PivotDropdown,
+        PropertiesGroupByItem,
+        ReportViewMeasures,
+    };
     static props = ["model", "buttonTemplate"];
 
     setup() {
@@ -25,6 +52,23 @@ export class PivotRenderer extends Component {
         this.table = this.model.getTable();
         this.l10n = localization;
         this.tableRef = useRef("table");
+
+        this.dropdown = {
+            state: new DropdownState({
+                onClose: () => {
+                    delete this.dropdown.cellInfo;
+                    delete this.dropdown.state.target;
+                    delete this.dropdown.state.position;
+                },
+            }),
+        };
+        const fields = [];
+        for (const [fieldName, field] of Object.entries(this.env.searchModel.searchViewFields)) {
+            if (this.validateField(fieldName, field)) {
+                fields.push(Object.assign({ name: fieldName }, field));
+            }
+        }
+        this.fields = sortBy(fields, "string");
 
         onWillUpdateProps(this.onWillUpdateProps);
     }
@@ -62,18 +106,51 @@ export class PivotRenderer extends Component {
         return formatPercentage(cell.value, this.model.metaData.fields[cell.measure]);
     }
 
-    getHeaderProps({ cell, isXAxis = false, isInHead = false }) {
-        const type = isXAxis ? "col" : "row";
-        return {
-            cell,
-            isXAxis,
-            isInHead,
-            customGroupBys: this.model.metaData.customGroupBys,
-            onItemSelected: (payload) => this.onGroupBySelected(type, payload),
-            onAddCustomGroupBy: (fieldName) =>
-                this.onAddCustomGroupBy(type, cell.groupId, fieldName),
-            onClick: () => this.onHeaderClick(cell, type),
-        };
+    /**
+     * @returns {Object[]}
+     */
+    get groupByItems() {
+        let items = this.env.searchModel.getSearchItems(
+            (searchItem) =>
+                ["groupBy", "dateGroupBy"].includes(searchItem.type) && !searchItem.custom
+        );
+        if (items.length === 0) {
+            items = this.fields;
+        }
+
+        // Add custom groupbys
+        let groupNumber = 1 + Math.max(0, ...items.map(({ groupNumber: n }) => n || 0));
+        for (const [fieldName, customGroupBy] of this.model.metaData.customGroupBys.entries()) {
+            items.push({ ...customGroupBy, name: fieldName, groupNumber: groupNumber++ });
+        }
+
+        return items.map((item) => ({
+            ...item,
+            id: item.id || item.name,
+            fieldName: item.fieldName || item.name,
+            description: item.description || item.string,
+            options:
+                item.options || ["date", "datetime"].includes(item.type)
+                    ? getIntervalOptions()
+                    : undefined,
+        }));
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get hideCustomGroupBy() {
+        return this.env.searchModel.hideCustomGroupBy || false;
+    }
+
+    /**
+     * @param {string} fieldName
+     * @param {Object} field
+     * @returns {boolean}
+     */
+    validateField(fieldName, field) {
+        const { groupable, type } = field;
+        return groupable && fieldName !== "id" && GROUPABLE_TYPES.includes(type);
     }
 
     //----------------------------------------------------------------------
@@ -83,31 +160,45 @@ export class PivotRenderer extends Component {
     /**
      * Handle the adding of a custom groupby (inside the view, not the searchview).
      *
-     * @param {"col"|"row"} type
-     * @param {Array[]} groupId
      * @param {string} fieldName
      */
-    onAddCustomGroupBy(type, groupId, fieldName) {
-        this.model.addGroupBy({ groupId, fieldName, custom: true, type });
+    onAddCustomGroupBy(fieldName) {
+        this.model.addGroupBy({ ...this.dropdown.cellInfo, fieldName, custom: true });
+        this.dropdown.state.close();
     }
 
     /**
      * Handle the selection of a groupby dropdown item.
      *
-     * @param {"col"|"row"} type
-     * @param {Object} payload
+     * @param {Object} param0
+     * @param {number} param0.itemId
+     * @param {number} [param0.optionId]
      */
-    onGroupBySelected(type, payload) {
-        this.model.addGroupBy({ ...payload, type });
+    onGroupBySelected({ itemId, optionId }) {
+        const { fieldName } = this.groupByItems.find(({ id }) => id === itemId);
+        this.model.addGroupBy({ ...this.dropdown.cellInfo, fieldName, interval: optionId });
     }
     /**
      * Handle a click on a header cell.
      *
+     * @param {PointerEvent} ev
      * @param {Object} cell
-     * @param {string} type col or row
+     * @param {boolean} isXAxis
      */
-    onHeaderClick(cell, type) {
-        if (cell.isLeaf && cell.isFolded) {
+    onHeaderClick(ev, cell, isXAxis) {
+        const type = isXAxis ? "col" : "row";
+        if (cell.isLeaf && !cell.isFolded) {
+            if (this.dropdown.state.isOpen) {
+                this.dropdown.state.close();
+            } else {
+                this.dropdown.cellInfo = { type, groupId: cell.groupId };
+                Object.assign(this.dropdown.state, {
+                    target: ev.target.closest(".o_pivot_header_cell_closed"),
+                    position: isXAxis ? "bottom-start" : "bottom-end",
+                    isOpen: true,
+                });
+            }
+        } else if (cell.isLeaf && cell.isFolded) {
             this.model.expandGroup(cell.groupId, type);
         } else if (!cell.isLeaf) {
             this.model.closeGroup(cell.groupId, type);
@@ -154,10 +245,6 @@ export class PivotRenderer extends Component {
             .querySelectorAll(".o_cell_hover")
             .forEach((elt) => elt.classList.remove("o_cell_hover"));
     }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
 
     /**
      * Exports the current pivot table data in a xls file. For this, we have to

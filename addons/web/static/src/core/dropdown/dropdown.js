@@ -140,12 +140,11 @@ export class Dropdown extends Component {
             () => []
         );
 
+        const getPosition = () => this.position;
         this.popover = usePopover(DropdownPopover, {
             animation: false,
             arrow: false,
-            closeOnClickAway: (target) => {
-                return this.popoverCloseOnClickAway(target, activeEl);
-            },
+            closeOnClickAway: (target) => this.popoverCloseOnClickAway(target, activeEl),
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
             env: this.__owl__.childEnv,
             holdOnHover: this.props.holdOnHover,
@@ -157,7 +156,9 @@ export class Dropdown extends Component {
                 this.props.menuClass
             ),
             popoverRole: "menu",
-            position: this.position,
+            get position() {
+                return getPosition();
+            },
             ref: this.menuRef,
             setActiveElement: false,
         });

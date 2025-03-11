@@ -788,6 +788,44 @@ test("pivot renders group dropdown same as search groupby dropdown if group bys 
     ]);
 });
 
+test("headers group dropdown should close on selection", async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot>
+                <field name="product_id" type="row"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+    });
+    // 1. with first-level dropdown groupby
+    // open a header group dropdown
+    await contains("tbody tr .o_pivot_header_cell_closed").click();
+    expect(".o-dropdown--menu").toHaveCount(1);
+    // select an item
+    await contains(".o-dropdown-item").click();
+    expect(".o-dropdown--menu").toHaveCount(0);
+
+    // 2. with sub dropdown groupby
+    // open a header group dropdown
+    await contains("tbody tr .o_pivot_header_cell_closed").click();
+    expect(".o-dropdown--menu").toHaveCount(1);
+    // open a subdropdown
+    await contains(".o-dropdown--menu .dropdown-toggle").click();
+    expect(".o-dropdown--menu").toHaveCount(2);
+    // select an item
+    const subDropdownMenu = getDropdownMenu(".o-dropdown--menu .dropdown-toggle");
+    await contains(queryFirst(".o-dropdown-item", { root: subDropdownMenu })).click();
+    expect(".o-dropdown--menu").toHaveCount(0);
+
+    // 3. with custom groupby
+    // open a header group dropdown
+    await contains("tbody tr .o_pivot_header_cell_closed").click();
+    expect(".o-dropdown--menu").toHaveCount(1);
+    await contains(`.o_add_custom_group_menu`).select("date");
+    expect(".o-dropdown--menu").toHaveCount(0);
+});
+
 test("pivot group dropdown sync with search groupby dropdown", async () => {
     await mountView({
         type: "pivot",
