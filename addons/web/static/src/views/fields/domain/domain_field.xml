@@ -5,7 +5,7 @@
         <div t-att-class="{ o_inline_mode: !props.editInDialog }">
             <t t-set="resModel" t-value="getResModel()"/>
             <t t-if="resModel">
-                <t t-if="props.isFoldable and state.folded and state.isValid">
+                <t t-if="props.isFoldable and state.folded and state.isValid !== false">
                     <div class="d-flex align-items-center" t-on-click="() => state.folded = false">
                         <i data-tooltip="Modify filter" class="fa fa-lg fa-caret-right pe-2"/>
                         <div class="d-print-contents">
