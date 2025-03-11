@@ -753,7 +753,7 @@ class CrmLead(models.Model):
             if stage_updated and vals.get('stage_id'):
                 stage = self.env['crm.stage'].browse(vals['stage_id'])
                 if stage.is_won:
-                    vals.update({'probability': 100, 'automated_probability': 100})
+                    vals.update({'active': True, 'probability': 100, 'automated_probability': 100})
                     stage_is_won = True
         # user change; update date_open if at least one lead does not
         # have the same user
@@ -1799,9 +1799,11 @@ class CrmLead(models.Model):
 
         domain = ['|'] * (len(domain) - 1) + domain
         if include_lost:
-            domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
+            # include lost means archived opportunities are allowed, if lost
+            domain += [('won_status', '!=', 'won'), '|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
-            domain += [('active', '=', True), ('won_status', '!=', 'won')]
+            # always filter out archived, those are not actionable anymore
+            domain += [('won_status', '=', 'pending'), ('active', '=', True)]
 
         return self.with_context(active_test=False).search(domain)
 

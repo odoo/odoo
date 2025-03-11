@@ -69,7 +69,6 @@ class ResPartner(models.Model):
             ['partner_assigned_id', 'partner_id'], ['__count']
         )
         current_pids = set(self._ids)
-
         for assign_partner, partner, count in opportunity_data:
             # this variable is used to keep the track of the partner
             seen_partners = set()
@@ -82,3 +81,4 @@ class ResPartner(models.Model):
                     seen_partners.add(partner)
                 assign_partner = assign_partner.parent_id
                 partner = partner.parent_id
+
