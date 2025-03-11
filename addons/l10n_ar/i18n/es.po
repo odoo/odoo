@@ -656,6 +656,11 @@ msgid "Fiscal Position"
 msgstr "Posición fiscal"
 
 #. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid "Fiscal Transparency Regime for the Final Consumer (Law 27.743)"
+msgstr "Régimen de Transparencia Fiscal al Consumidor (Ley 27.743)"
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_formatted_vat
 #: model:ir.model.fields,field_description:l10n_ar.field_res_users__l10n_ar_formatted_vat
 msgid "Formatted VAT"
@@ -922,6 +927,11 @@ msgid "Name must be unique!"
 msgstr "El nombre debe ser único!"
 
 #. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_national_taxes
+msgid "National Taxes"
+msgstr "Impuestos Nacionales"
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_natural_vat
 msgid "Natural Person VAT"
 msgstr "IVA Persona Física"
@@ -986,6 +996,12 @@ msgstr "Factura en Linea"
 #, python-format
 msgid "Only numbers allowed for \"%s\""
 msgstr "Sólo números son permitidos para \"%s\""
+
+#. module: l10n_ar
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "Other National Ind. Taxes %s"
+msgstr "Otros Impuestos Nacionales Ind. %s"
 
 #. module: l10n_ar
 #: model:account.tax.group,name:l10n_ar.tax_group_otras_percepciones
@@ -1268,6 +1284,12 @@ msgstr "No Gravado"
 
 #. module: l10n_ar
 #: model:product.product,name:l10n_ar.product_product_no_gravado
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "Untaxed Amount"
+msgstr "Base imponible"
+
+#. module: l10n_ar
 #: model:product.template,name:l10n_ar.product_product_no_gravado_product_template
 msgid "Untaxed concepts (VAT NT)"
 msgstr "Conceptos No gravados"
@@ -1323,6 +1345,12 @@ msgstr "IVA 5%"
 #: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_vat_afip_code
 msgid "VAT AFIP Code"
 msgstr "Código AFIP de IVA"
+
+#. module: l10n_ar
+#: code:addons/l10n_ar/models/account_move.py:0
+#, python-format
+msgid "VAT Content %s"
+msgstr "IVA Contenido %s"
 
 #. module: l10n_ar
 #: model:account.tax.group,name:l10n_ar.tax_group_iva_exento

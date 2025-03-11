@@ -262,6 +262,27 @@
             </p>
         </div>
 
+        <div id="qrcode" position="after">
+            <!-- RG 5614/2024: Show ARCA VAT and Other National Internal Taxes -->
+            <div class="col-sm-8 col-md-8" t-if="tax_totals.get('detail_ar_tax')">
+                <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
+                    <th class="border-black" style="border-bottom: 1px solid" colspan="2">
+                           Fiscal Transparency Regime for the Final Consumer (Law 27.743)
+                    </th>
+                    <t t-foreach="tax_totals['detail_ar_tax']" t-as="detail">
+                        <tr>
+                            <td class="text-end"><strong t-esc="detail['name']"/></td>
+                            <td class="text-end">
+                                <span
+                                    t-att-class="oe_subtotal_footer_separator"
+                                    t-esc="detail['formatted_amount']"
+                                />
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+        </div>
     </template>
 
     <!-- FIXME: Temp fix to allow fetching invoice_documemt in Studio Reports with localisation -->

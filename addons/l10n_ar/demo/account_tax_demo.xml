@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="national_taxes" model="account.tax">
+        <field name='name'>National Taxes</field>
+        <field name="description">National Taxes</field>
+        <field name='amount'>4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="country_id" ref="base.ar"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
+        <field name="tax_group_id" ref="l10n_ar.tax_group_national_taxes"/>
+    </record>
+
+    <record id="internal_taxes" model="account.tax">
+        <field name='name'>Internal Taxes</field>
+        <field name='description'>Internal Taxes</field>
+        <field name='amount'>3</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="country_id" ref="base.ar"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
+        <field name="tax_group_id" ref="l10n_ar.tax_impuestos_internos"/>
+    </record>
+
+    <record id="other_taxes" model="account.tax">
+        <field name='name'>Other Taxes</field>
+        <field name='description'>Other Taxes</field>
+        <field name='amount'>100</field>
+        <field name="amount_type">fixed</field>
+        <field name="type_tax_use">sale</field>
+        <field name="country_id" ref="base.ar"/>
+        <field name="company_id" ref="l10n_ar.company_ri"/>
+        <field name="tax_group_id" ref="l10n_ar.tax_group_otros_impuestos"/>
+    </record>
+
+</odoo>

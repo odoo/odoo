@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
+from odoo.tools.misc import formatLang
 from dateutil.relativedelta import relativedelta
 import logging
 _logger = logging.getLogger(__name__)
@@ -333,22 +334,56 @@ class AccountMove(models.Model):
 
     def _l10n_ar_get_invoice_totals_for_report(self):
         self.ensure_one()
-        tax_ids_filter = tax_line_id_filter = None
         include_vat = self._l10n_ar_include_vat()
 
         if include_vat:
-            tax_ids_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
-            tax_line_id_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
-
-        tax_lines_data = self._prepare_tax_lines_data_for_totals_from_invoice(
-            tax_ids_filter=tax_ids_filter, tax_line_id_filter=tax_line_id_filter)
-
-        if include_vat:
+            tax_ids_filter = tax_line_id_filter = None
+            tax_group_obj = self.env['account.tax.group']
+            nat_internal_other_taxes = tax_group_obj.search([('l10n_ar_tribute_afip_code', 'in', ['01', '04'])]).ids
+            vat_taxes = tax_group_obj.search([('l10n_ar_vat_afip_code', '!=', False)]).ids
+            tax_ids_filter = (lambda aml, tax: bool(tax.id in vat_taxes + nat_internal_other_taxes))
+            tax_line_id_filter = (lambda aml, tax: bool(tax.id in vat_taxes + nat_internal_other_taxes))
+            tax_lines_data = self._prepare_tax_lines_data_for_totals_from_invoice(
+                tax_ids_filter=tax_ids_filter, tax_line_id_filter=tax_line_id_filter)
             amount_untaxed = self.currency_id.round(
                 self.amount_total - sum([x['tax_amount'] for x in tax_lines_data if 'tax_amount' in x]))
         else:
+            tax_lines_data = self._prepare_tax_lines_data_for_totals_from_invoice()
             amount_untaxed = self.amount_untaxed
-        return self._get_tax_totals(self.partner_id, tax_lines_data, self.amount_total, amount_untaxed, self.currency_id)
+
+        tax_totals = self._get_tax_totals(self.partner_id, tax_lines_data, self.amount_total, amount_untaxed, self.currency_id)
+
+        # RG 5614/2024: Show ARCA VAT and Other National Internal Taxes
+        if self.l10n_latam_document_type_id.code in ['6', '7', '8']:
+
+            # Prepare the subtotals to show in the report
+            detail_info = {
+                'vat_taxes': {"name": _("VAT Content %s", self.currency_id.symbol), "tax_amount": 0.0},
+                'other_taxes': {"name": _("Other National Ind. Taxes %s", self.currency_id.symbol), "tax_amount": 0.0},
+            }
+
+            original_tax_total = self._get_tax_totals(
+                self.partner_id, self._prepare_tax_lines_data_for_totals_from_invoice(), self.amount_total,
+                self.amount_untaxed, self.currency_id)
+
+            for item in original_tax_total['groups_by_subtotal'][_('Untaxed Amount')]:
+                if item.get('tax_group_id') in nat_internal_other_taxes:
+                    detail_info['other_taxes']["tax_amount"] += item['tax_group_amount']
+                elif item.get('tax_group_id') in vat_taxes:
+                    detail_info['vat_taxes']["tax_amount"] += item['tax_group_amount']
+
+            # Clean up 0.0 values, we dont want it to print them in the report
+            for item in list(detail_info.keys()):
+                if detail_info[item]["tax_amount"] <= 0.0:
+                    detail_info.pop(item)
+
+            # Format the amounts to show in the report
+            for _item, values in detail_info.items():
+                values.update({"formatted_amount": formatLang(self.env, values["tax_amount"])})
+
+            tax_totals.update({"detail_ar_tax": list(detail_info.values())})
+
+        return tax_totals
 
     def _l10n_ar_include_vat(self):
         self.ensure_one()
