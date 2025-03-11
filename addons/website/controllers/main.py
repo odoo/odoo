@@ -825,6 +825,10 @@ class Website(Home):
         if request.env.user.has_group('website.group_website_restricted_editor'):
             record = record.sudo()
 
+        if any(field not in record._fields for field in fields):
+            res['can_edit_seo'] = False
+            return res
+
         res.update(record.read(fields)[0])
         res['has_social_default_image'] = request.website.has_social_default_image
 
