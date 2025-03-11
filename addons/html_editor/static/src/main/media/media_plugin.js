@@ -11,6 +11,7 @@ import { rpc } from "@web/core/network/rpc";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 
@@ -61,6 +62,7 @@ export class MediaPlugin extends Plugin {
         /** Handlers */
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalizeMedia.bind(this),
+        selectionchange_handlers: this.selectAroundIcon.bind(this),
 
         unsplittable_node_predicates: isIconElement, // avoid merge
         clipboard_content_processors: this.clean.bind(this),
@@ -341,6 +343,15 @@ export class MediaPlugin extends Plugin {
             delete el.dataset.bgSrc;
         } else {
             el.setAttribute("src", newAttachmentSrc);
+        }
+    }
+
+    /**
+     * @param {import("@html_editor/core/selection_plugin").SelectionData} param0
+     */
+    selectAroundIcon({ editableSelection: { anchorNode, isCollapsed } }) {
+        if (isCollapsed && closestElement(anchorNode, isIconElement)) {
+            this.dependencies.selection.selectAroundNonEditable();
         }
     }
 }

@@ -22,6 +22,8 @@ import {
     normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
+    normalizeNotEditableNode,
+    normalizeSelfClosingElement,
 } from "../utils/selection";
 import { isElement } from "../utils/dom_info";
 import { closestScrollableY } from "@web/core/utils/scrolling";
@@ -178,6 +180,7 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['setCursorEnd'] } setCursorEnd
  * @property { SelectionPlugin['setCursorStart'] } setCursorStart
  * @property { SelectionPlugin['setSelection'] } setSelection
+ * @property { SelectionPlugin['selectAroundNonEditable'] } selectAroundNonEditable
  */
 
 export class SelectionPlugin extends Plugin {
@@ -202,6 +205,7 @@ export class SelectionPlugin extends Plugin {
         "focusEditable",
         // "collapseIfZWS",
         "isSelectionInEditable",
+        "selectAroundNonEditable",
     ];
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
@@ -313,16 +317,8 @@ export class SelectionPlugin extends Plugin {
                 // inside a protected zone.
                 return this.activeSelection;
             }
-            [anchorNode, anchorOffset] = normalizeCursorPosition(
-                anchorNode,
-                anchorOffset,
-                direction ? "left" : "right"
-            );
-            [focusNode, focusOffset] = normalizeCursorPosition(
-                focusNode,
-                focusOffset,
-                direction ? "right" : "left"
-            );
+            [anchorNode, anchorOffset] = normalizeSelfClosingElement(anchorNode, anchorOffset);
+            [focusNode, focusOffset] = normalizeSelfClosingElement(focusNode, focusOffset);
             const [startContainer, startOffset, endContainer, endOffset] =
                 direction === DIRECTIONS.RIGHT
                     ? [anchorNode, anchorOffset, focusNode, focusOffset]
@@ -913,5 +909,28 @@ export class SelectionPlugin extends Plugin {
         if (selection) {
             selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
         }
+    }
+
+    /**
+     * @returns {EditorSelection}
+     */
+    selectAroundNonEditable() {
+        // Get up-to-date selection
+        const { editableSelection } = this.getSelectionData();
+        // Avoid setting the selection if it's not inside an uneditable element
+        const isInUneditable = (node) => !!closestElement(node, (elem) => !elem.isContentEditable);
+        let { startContainer: start, endContainer: end } = editableSelection;
+        if (!(isInUneditable(start) || (end !== start && isInUneditable(end)))) {
+            return editableSelection;
+        }
+        // Normalize both sides
+        let { startOffset, endOffset, direction } = editableSelection;
+        [start, startOffset] = normalizeNotEditableNode(start, startOffset, "left");
+        [end, endOffset] = normalizeNotEditableNode(end, endOffset, "right");
+        // Set the new selection
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = direction
+            ? [start, startOffset, end, endOffset]
+            : [end, endOffset, start, startOffset];
+        return this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
     }
 }
