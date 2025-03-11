@@ -1998,3 +1998,33 @@ test("Many2ManyTagsField placeholder should be empty on mobile", async () => {
     });
     expect("#timmy_0").not.toHaveAttribute("placeholder");
 });
+
+test.tags("desktop");
+test("Many2ManyTagsField: press backspace multiple times to remove tag", async () => {
+    Partner._records[0].timmy = [12, 14];
+    Partner._fields.timmy.onChange = () => {};
+
+    const def = new Deferred();
+    onRpc("onchange", ({ args }) => {
+        expect.step(`onchange ${JSON.stringify(args[1].timmy)}`);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_many2many_tags .badge").toHaveCount(2);
+
+    await contains(".o_field_many2many_tags .badge:eq(1)").click();
+    press("BackSpace");
+    press("BackSpace");
+    def.resolve();
+    await animationFrame();
+    expect(".o_field_many2many_tags .badge").toHaveCount(1);
+    expect.verifySteps(["onchange [[3,14]]"]);
+});
