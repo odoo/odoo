@@ -29,6 +29,9 @@
     'assets': {
         'web.assets_backend': [
             'html_builder/static/src/website_preview/**/*',
+            'website/static/src/xml/website_form_editor.xml',
+            # TODO Remove the module's form js - this is for testing.
+            'website/static/src/js/send_mail_form.js',
         ],
         # this bundle is lazy loaded when the editor is ready
         'html_builder.assets': [
