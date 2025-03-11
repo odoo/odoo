@@ -63,12 +63,20 @@
         <field name="name">Otros Impuestos</field>
         <field name="sequence">20</field>
         <field name="l10n_ar_tribute_afip_code">99</field>
+        <field name="country_id" ref="base.ar"/>
     </record>
 
     <record model="account.tax.group" id="tax_impuestos_internos">
         <field name="name">Internal Taxes</field>
         <field name="sequence">15</field>
         <field name="l10n_ar_tribute_afip_code">04</field>
+        <field name="country_id" ref="base.ar"/>
+    </record>
+
+    <record model="account.tax.group" id="tax_group_national_taxes">
+        <field name="name">National Taxes</field>
+        <field name="sequence">30</field>
+        <field name="l10n_ar_tribute_afip_code">01</field>
         <field name="country_id" ref="base.ar"/>
     </record>
 
