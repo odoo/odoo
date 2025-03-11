@@ -1283,7 +1283,7 @@ test("Many2ManyTagsField: conditional create/delete actions on desktop", async (
     await runAllTimers();
 
     expect(queryAllTexts(`.o-autocomplete.dropdown li.o_m2o_dropdown_option`)).toEqual([
-        "Create \"Something that does not exist\"",
+        'Create "Something that does not exist"',
         "Search More...",
         "Create and edit...",
     ]);
@@ -2027,7 +2027,7 @@ test("search typeahead", async () => {
     await runAllTimers();
     expect.verifySteps([]);
     expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
-        "Create \"g\"",
+        'Create "g"',
         "Search More...",
         "Create and edit...",
         "Start typing 3 characters",
@@ -2037,7 +2037,7 @@ test("search typeahead", async () => {
     await runAllTimers();
     expect.verifySteps([]);
     expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
-        "Create \"go\"",
+        'Create "go"',
         "Search More...",
         "Create and edit...",
         "Start typing 3 characters",
@@ -2048,8 +2048,38 @@ test("search typeahead", async () => {
     expect.verifySteps(["web_name_search"]);
     expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
         "gold",
-        "Create \"gol\"",
+        'Create "gol"',
         "Search More...",
         "Create and edit...",
     ]);
+});
+
+test.tags("desktop");
+test("Many2ManyTagsField: press backspace multiple times to remove tag", async () => {
+    Partner._records[0].timmy = [12, 14];
+    Partner._fields.timmy.onChange = () => {};
+
+    const def = new Deferred();
+    onRpc("onchange", ({ args }) => {
+        expect.step(`onchange ${JSON.stringify(args[1].timmy)}`);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_many2many_tags .badge").toHaveCount(2);
+
+    await contains(".o_field_many2many_tags .badge:eq(1)").click();
+    press("BackSpace");
+    press("BackSpace");
+    def.resolve();
+    await animationFrame();
+    expect(".o_field_many2many_tags .badge").toHaveCount(1);
+    expect.verifySteps(["onchange [[3,14]]"]);
 });
