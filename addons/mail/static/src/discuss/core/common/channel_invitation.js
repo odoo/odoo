@@ -6,9 +6,10 @@ import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useSequential } from "@mail/utils/common/hooks";
+import { SearchInput } from "@mail/discuss/core/common/search_input";
 
 export class ChannelInvitation extends Component {
-    static components = { ImStatus, ActionPanel };
+    static components = { ImStatus, ActionPanel, SearchInput };
     static defaultProps = { hasSizeConstraints: false };
     static props = [
         "autofocus?",
