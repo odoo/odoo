@@ -48,7 +48,7 @@ registry.category("services").add("website_edit", {
     dependencies: ["public.interactions"],
     start(env, { ["public.interactions"]: publicInteractions }) {
         let editableInteractions = null;
-        let editMode = false;
+        let previewInteractions = null;
 
         return {
             isEditingTranslations() {
@@ -57,22 +57,29 @@ registry.category("services").add("website_edit", {
             update(target, mode) {
                 // editMode = true;
                 // const currentEditMode = this.website_edit.mode === "edit";
-                const shouldActivateEditInteractions = editMode !== mode;
                 // interactions are already started. we only restart them if the
                 // public root is not just starting.
 
                 publicInteractions.stopInteractions(target);
-                if (shouldActivateEditInteractions) {
+                if (mode === "edit") {
                     if (!editableInteractions) {
                         const builders = registry.category("public.interactions.edit").getAll();
                         editableInteractions = buildEditableInteractions(builders);
                     }
-                    editMode = true;
                     publicInteractions.editMode = true;
                     publicInteractions.activate(editableInteractions);
+                } else if (mode === "preview") {
+                    if (!previewInteractions) {
+                        const builders = registry.category("public.interactions.preview").getAll();
+                        previewInteractions = buildEditableInteractions(builders);
+                    }
+                    publicInteractions.activate(previewInteractions, target);
                 } else {
                     publicInteractions.startInteractions(target);
                 }
+            },
+            stopInteractions(target) {
+                publicInteractions.stopInteractions(target);
             },
         };
     },
@@ -88,7 +95,8 @@ PublicRoot.include({
      */
     _restartInteractions(targetEl, options) {
         const websiteEdit = this.bindService("website_edit");
-        websiteEdit.update(targetEl, options?.editableMode || false);
+        const mode = options?.editableMode ? "edit" : false;
+        websiteEdit.update(targetEl, mode);
     },
 });
 
