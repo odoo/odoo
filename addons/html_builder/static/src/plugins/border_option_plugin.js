@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { card_parent_handlers } from "./card_option/card_option_plugin";
+import { card_parent_handlers } from "./card_option/card_width_option_plugin";
 
 class BorderOptionPlugin extends Plugin {
     static id = "borderOption";
