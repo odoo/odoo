@@ -467,6 +467,12 @@ class MrpBom(models.Model):
     # CATALOG
     # -------------------------------------------------------------------------
 
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'product_catalog_currency_id': self.env.company.currency_id.id,
+        }
+
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)
         new_default_data = self[child_field]._get_product_catalog_lines_data(default=True)
@@ -741,6 +747,7 @@ class MrpBomLine(models.Model):
                     )
                 ),
                 'readOnly': len(self) > 1,
+                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
             }
         return {
             'quantity': 0,
@@ -814,7 +821,8 @@ class MrpBomByproduct(models.Model):
                         )
                     )
                 ),
-                'readOnly': len(self) > 1
+                'readOnly': len(self) > 1,
+                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
             }
         return {
             'quantity': 0,

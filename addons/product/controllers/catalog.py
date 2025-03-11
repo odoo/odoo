@@ -20,6 +20,8 @@ class ProductCatalogController(Controller):
                     'productId': int
                     'quantity': float (optional)
                     'price': float
+                    'uomDisplayName': string
+                    'code': string (optional)
                     'readOnly': bool (optional)
                 }
             }

@@ -646,22 +646,23 @@ action = {
                         <div class="o_product_catalog_cancel_global_click">
                             <a role="menuitem" type="open" class="dropdown-item border-top-0">Edit</a>
                         </div>
+                        <div class="container p-0">
+                            <field name="is_favorite" widget="boolean_favorite" class="col-12 pe-0"/>
+                        </div>
                     </t>
                     <t t-name="card" class="p-0">
                     <!-- TODO : not getting border when select record -->
                         <div class="d-flex flex-grow-1 m-2">
-                            <div class="p-2 pt-1 d-flex flex-column m-0"
+                            <div class="ps-2 d-flex flex-column m-0"
                                     t-attf-id="product-{{record.id.raw_value}}">
                                 <div class="d-flex">
+                                    <field name="name" class="fw-bold fs-4 text-reset mb-1 me-2"/>
                                     <field class="mt-1 me-1"
                                         name="is_favorite"
                                         widget="boolean_favorite"
+                                        invisible="not is_favorite"
                                         nolabel="1"
                                         readonly="1"/>
-                                    <field name="name" class="fw-bolder fs-4 text-reset mb-1"/>
-                                </div>
-                                <div t-if="record.default_code.value">
-                                    [<field name="default_code"/>]
                                 </div>
                                 <!-- Used by @web/product/js/product_catalog/order_line to
                                         show the price using a t-portal. -->
@@ -671,7 +672,8 @@ action = {
                                         widget="many2many_tags"
                                         domain="[('id', 'in', parent.ids)]"
                                         groups="product.group_product_variant"
-                                        options="{'color_field': 'color'}"/>
+                                        options="{'color_field': 'color'}"
+                                        invisible="not product_template_attribute_value_ids"/>
                             </div>
                             <field name="image_128" widget="image" alt="Product" invisible="not image_128" class="ms-auto" options="{'size': [55, 55]}"/>
                         </div>
