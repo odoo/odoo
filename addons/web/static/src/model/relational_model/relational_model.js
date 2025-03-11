@@ -148,8 +148,10 @@ export class RelationalModel extends Model {
     // -------------------------------------------------------------------------
 
     exportState() {
+        const config = { ...toRaw(this.config) };
+        delete config.currentGroups;
         return {
-            config: toRaw(this.config),
+            config,
             specialDataCaches: this.specialDataCaches,
         };
     }
