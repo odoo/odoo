@@ -23,7 +23,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 msgid "Absolute Quantity"
-msgstr ""
+msgstr "Quantité absolue"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -86,6 +86,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference UoM for "
 "this unit"
 msgstr ""
+"Quelle est la différence de taille entre cette unité et l'unité de mesure de"
+" référence pour cette unité"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
@@ -110,7 +112,7 @@ msgstr "Gérer plusieurs unités de mesure"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
 msgid "Pack of 6"
-msgstr ""
+msgstr "Pack de 6"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__parent_path
@@ -131,18 +133,18 @@ msgstr "Quantité"
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_uom_id
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Reference Unit"
-msgstr ""
+msgstr "Unité de référence"
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "Reference unit of measure is missing."
-msgstr ""
+msgstr "L'unité de mesure de référence est manquante."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__related_uom_ids
 msgid "Related UoMs"
-msgstr ""
+msgstr "Unités de mesure liées"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -164,6 +166,10 @@ msgid ""
 "As units of measure impact the whole system, this may cause critical issues.\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Certains champs critiques ont été modifiés sur %s.\n"
+"Veuillez noter que les données existantes NE SERONT PAS mises à jour par ce changement.\n"
+"Étant donné que les unités de mesure impactent l'ensemble du système, cela peut causer des problèmes critiques.\n"
+"Par conséquent, modifier les unités de mesure principales dans une base de données en fonctionnement n'est pas recommandé."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -183,7 +189,7 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_ton
 msgid "Ton"
-msgstr ""
+msgstr "Ton"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -289,7 +295,7 @@ msgstr "mi"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_milliliter
 msgid "ml"
-msgstr ""
+msgstr "ml"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter

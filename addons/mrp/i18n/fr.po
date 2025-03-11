@@ -773,7 +773,7 @@ msgstr "Autorisé"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Unité de mesure autorisée"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -850,6 +850,10 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Étant donné que d'autres unités de mesure (par exemple : %(problem_uom)s) "
+"que %(uom)s ont déjà été utilisées pour ce produit, le changement d'unité de"
+" mesure ne peut pas être effectué. Si vous souhaitez le modifier, veuillez "
+"archiver le produit et en créer un nouveau."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1967,6 +1971,12 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+"Nombre de pièces par défaut (dans l'unité du produit) pouvant être "
+"fabriquées en parallèle (en même temps) sur ce poste de travail. Par exemple"
+" : la capacité est de 5 et vous devez produire 10 unités, alors le temps de "
+"fonctionnement indiqué sur la nomenclature sera multiplié par deux. "
+"Cependant, notez que le temps avant et après la production ne sera compté "
+"qu'une seule fois."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -2890,17 +2900,17 @@ msgstr "Motif de blocage"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is paused"
-msgstr ""
+msgstr "En pause"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is running"
-msgstr ""
+msgstr "En cours"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is stopped"
-msgstr ""
+msgstr "Arrêté"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_user_working
@@ -4555,7 +4565,7 @@ msgstr "Modèle de produit"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Product Unit"
-msgstr ""
+msgstr "Unité produit"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4753,7 +4763,7 @@ msgstr "Quantité en production"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_ready
 msgid "Quantity Ready"
-msgstr ""
+msgstr "Quantité prête"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -5685,7 +5695,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "The quantity produced must be positive."
-msgstr ""
+msgstr "La quantité produite doit être positive."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
@@ -6448,6 +6458,12 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"Quand un approvisionnement a une route 'fabriquer' avec un type d'opération "
+"défini, le système essayera de créer un ordre de fabrication pour ce produit"
+" en utilisant une nomenclature qui a le même type d'opération. Si ce n'est "
+"pas le cas, le type d'opération n'est pas pris en compte dans la recherche "
+"de la nomenclature. Cela permet de définir des règles de stock qui génèrent "
+"des ordres de fabrication avec différentes nomenclatures."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
@@ -6850,6 +6866,8 @@ msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
 msgstr ""
+"Vous ne pouvez pas modifier la quantité produite d'un ordre de travail "
+"\"terminé\" ou \"annulé\"."
 
 #. module: mrp
 #. odoo-python
@@ -6907,6 +6925,8 @@ msgstr "Vous ne pouvez déplacer un ordre de fabrication terminé ou annulé."
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot produce more than 1 unit of a serial product at a time."
 msgstr ""
+"Vous ne pouvez pas produire plus d'une unité d'un produit sérialisé à la "
+"fois."
 
 #. module: mrp
 #. odoo-python

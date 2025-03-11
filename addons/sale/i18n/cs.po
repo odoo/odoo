@@ -5,6 +5,8 @@
 # Translators:
 # Wil Odoo, 2025
 # Stanislav Kurinec, 2025
+# Radim Bílý, 2025
+# Vojtěch Olšan, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Stanislav Kurinec, 2025\n"
+"Last-Translator: Vojtěch Olšan, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -935,7 +937,7 @@ msgstr "<strong class=\"mr16\">Mezisoučet</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration</strong>"
-msgstr ""
+msgstr "<strong>Expirace</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -945,7 +947,7 @@ msgstr "<strong>Poznámka k daňové pozici:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson</strong>"
-msgstr ""
+msgstr "<strong>Obchodník</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1153,7 +1155,7 @@ msgstr "Přidat sekci"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add note"
-msgstr ""
+msgstr "Přidat poznámku"
 
 #. module: sale
 #. odoo-javascript
@@ -1165,7 +1167,7 @@ msgstr "Přidat jeden"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.js:0
 msgid "Add optional products"
-msgstr ""
+msgstr "Přidat dodatečné produkty"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1175,7 +1177,7 @@ msgstr "Přidat produkt"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add section"
-msgstr ""
+msgstr "Přidat sekci"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1303,7 +1305,7 @@ msgstr "Jste si jisti, že chcete zrušit"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected item?"
-msgstr ""
+msgstr "Jste si jisti, že chcete zrušit vybranou položku?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1585,12 +1587,12 @@ msgstr "Zavřít"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
 msgid "Combo Choices"
-msgstr ""
+msgstr "Produktové sety"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
 msgid "Combo Item"
-msgstr ""
+msgstr "Položka kombinace"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -2002,6 +2004,9 @@ msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
+"Výchozí doba, během které je nabídka platná a může být odsouhlasena "
+"zákazníkem. Výchozí hodnotu je možné upravit přímo pro konkrétní nabídku či "
+"šablonu nabídky."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
@@ -2654,7 +2659,7 @@ msgstr "Pokud změníte ceník, budou ovlivněny pouze nově přidané řádky."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr ""
+msgstr "Ihned"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3046,11 +3051,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, Coupons, Loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Správa propagačních akcí, kupónů, věrnostních karet, dárkových karet a "
+"elektronické peněženky"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "Spravujte prodejní a týmové cíle a provize"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -3868,7 +3875,7 @@ msgstr "Produkty"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Promotions, Loyalty & Gift Card"
-msgstr ""
+msgstr "Slevy, věrnostní programy a dárkové poukazy"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -4115,6 +4122,9 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
+"Vyžadujte provedení platby předtím, než je nabídka potvrzena, ať už plné či "
+"částečné. Výchozí hodnota může být měněna pro jednotlivé nabídky či šablony "
+"nabídek."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4122,6 +4132,9 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
+"Vyžadujte po zákaznících online podpis pro validaci jejich objednávek. "
+"Výchozí nastavení může být upraveno pro jednotlivé nabídky či šablony "
+"nabídek."
 
 #. module: sale
 #. odoo-python
@@ -4493,7 +4506,7 @@ msgstr "Vyberte produkt nebo za chodu vytvořte nový."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
 msgid "Selected Combo Items"
-msgstr ""
+msgstr "Vybrané položky produktové kombinace"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn

@@ -729,7 +729,7 @@ msgstr "Autoriser l'édition des bons de commande"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Unité de mesure autorisée"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -797,6 +797,10 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Étant donné que d'autres unités de mesure (par exemple : %(problem_uom)s) "
+"que %(uom)s ont déjà été utilisées pour ce produit, le changement d'unité de"
+" mesure ne peut pas être effectué. Si vous souhaitez le modifier, veuillez "
+"archiver le produit et en créer un nouveau."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -1950,7 +1954,7 @@ msgstr "Aucun message"
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No Products for the selected Vendor."
-msgstr ""
+msgstr "Aucun produit pour le fournisseur sélectionné."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3266,6 +3270,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_res_users__property_purchase_currency_id
 msgid "This currency will be used for purchases from the current partner"
 msgstr ""
+"Cette devise sera utilisée pour les achats auprès du partenaire actuel."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
@@ -3414,6 +3419,7 @@ msgstr "Vrai si le mail de rappel est confirmé par le fournisseur."
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
 msgstr ""
+"Essayez de supprimer le filtre principal pour élargir votre recherche."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons

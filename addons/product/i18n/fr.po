@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2025
-# Manon Rondou, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -270,7 +270,7 @@ msgstr "<span class=\"o_stat_text\"> Produits</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
 msgid "<span class=\"o_stat_text\">Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Codes-barres</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -522,6 +522,8 @@ msgstr "Ajouter aux produits"
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Additional packagings for this product which can be used for sales"
 msgstr ""
+"Emballages supplémentaires pour ce produit pouvant être utilisés pour les "
+"ventes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -835,6 +837,8 @@ msgid ""
 "Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name."
 msgstr ""
+"La modification de l'unité de mesure de votre produit appliquera une conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
+"Tous les enregistrements existants (commandes clients, commandes fournisseurs, etc.) contenant ce produit seront mis à jour avec le nouveau nom de l'unité."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
@@ -1905,7 +1909,7 @@ msgstr "Inventaire"
 #: model:ir.model.fields,field_description:product.field_product_product__is_dynamically_created
 #: model:ir.model.fields,field_description:product.field_product_template__is_dynamically_created
 msgid "Is Dynamically Created"
-msgstr ""
+msgstr "Créé dynamiquement"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_is_follower
@@ -2036,7 +2040,7 @@ msgstr "Lignes"
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "Lien entre les produits et leurs unités de mesure"
 
 #. module: product
 #: model:product.template,name:product.product_product_local_delivery_product_template
@@ -2400,12 +2404,12 @@ msgstr "Colis de type A"
 #: model:ir.model.fields,field_description:product.field_uom_uom__packaging_barcodes_count
 #: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
 msgid "Packaging Barcodes"
-msgstr ""
+msgstr "Codes-barres d'emballage"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Packaging Barcodes (PDF)"
-msgstr ""
+msgstr "Codes-barres d'emballage (PDF)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_ids
@@ -3445,6 +3449,10 @@ msgid ""
 " a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
+"Quantité à acheter auprès de ce fournisseur pour bénéficier du prix "
+"unitaire. Si une unité fournisseur est définie, la quantité doit être "
+"spécifiée dans cette unité, sinon elle doit être indiquée dans l'unité par "
+"défaut du produit."
 
 #. module: product
 #. odoo-python
@@ -3598,7 +3606,7 @@ msgstr "Unité"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_uom_ids
 msgid "Unit Barcode"
-msgstr ""
+msgstr "Code-barres de l'unité"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_uom_name
@@ -3632,7 +3640,7 @@ msgstr "Unités de mesure"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure & Packagings"
-msgstr ""
+msgstr "Unités de mesure et emballages"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -3700,7 +3708,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid "Used for sales to the current partner"
-msgstr ""
+msgstr "Utilisé pour les ventes au partenaire actuel"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3959,7 +3967,7 @@ msgstr "Intitulé de l'unité de mesure de poids "
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "What to expect ?"
-msgstr ""
+msgstr "À quoi s'attendre ?"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3

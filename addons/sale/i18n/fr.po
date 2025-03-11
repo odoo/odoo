@@ -1267,7 +1267,7 @@ msgstr "Ajouter plusieurs variantes à une commande à partir d'une grille"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Unité de mesure autorisée"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1421,6 +1421,10 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Étant donné que d'autres unités de mesure (par exemple : %(problem_uom)s) "
+"que %(uom)s ont déjà été utilisées pour ce produit, le changement d'unité de"
+" mesure ne peut pas être effectué. Si vous souhaitez le modifier, veuillez "
+"archiver le produit et en créer un nouveau."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1901,6 +1905,8 @@ msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
 msgstr ""
+"Créer une seule facture pour toutes les commandes liées à un même client, "
+"une même adresse de facturation et une même adresse de livraison."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -4560,7 +4566,7 @@ msgstr "Ventes : Paiement effectué"
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
 msgid "Sales: Send Proforma"
-msgstr ""
+msgstr "Ventes : Envoyer proforma"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -5588,6 +5594,7 @@ msgstr "Opportunité de vente incitative"
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send proforma to prospects"
 msgstr ""
+"Utilisé par les commerciaux lorsqu'ils envoient un proforma aux prospects."
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -5944,6 +5951,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -5951,6 +5960,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

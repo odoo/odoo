@@ -1757,7 +1757,7 @@ msgid ""
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
 "Valitse verokanta tilauksen yhteydessä asiakastyypin mukaan (verovapaa, "
-"paikan päällä tai take away jne.)."
+"paikan päällä tai take away, jne.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2493,7 +2493,7 @@ msgstr "Oletusarvoinen saatavien tili (kassa)"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr "Oletusarvoinen verokanta"
+msgstr "Oletusverokanta"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3439,6 +3439,8 @@ msgid ""
 "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
 "Make sure to close all sessions first to avoid any issues."
 msgstr ""
+"Hetkinen! Tuotteiden arkistointi aktiivisen Kassajärjestelmäistunnon aikana on kuin vetäisin maton jalkojen alta.\n"
+"Varmista ensin, että kaikki istunnot on suljettu ongelmien välttämiseksi."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
@@ -7693,7 +7695,7 @@ msgstr "Vero sis."
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Verotuksen kartoittaminen verotuksessa"
+msgstr "Verokannan kartoittaminen verotuksessa"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -7882,7 +7884,7 @@ msgid ""
 "is loaded by adding it in the pos configuration."
 msgstr ""
 "Alkuperäisessä tilauksessa käytettyä verokantaa ei ole ladattu. Varmista, "
-"että se on ladattu lisäämällä se kassan määrityksiin."
+"että se on ladattu lisäämällä se kassajärjestelmän konfiguraatioon."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -8896,7 +8898,7 @@ msgstr "Käytä viivakoodeja tuotteiden, asiakaskorttien jne. skannaamiseen."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
-msgstr "Käytä verokantaa saadaksesi eri veroja tilauksesta"
+msgstr "Käytä verokantaa saadaksesi eri veroja tilauskohtaisesti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__order_seq_id
@@ -9660,3 +9662,5 @@ msgid ""
 "This journal is associated with payment method %s that is being used by "
 "order %s in the active pos session %s"
 msgstr ""
+"Tämä kirjauskansio on liitetty maksutapaan %s, jota käytetään tilauksessa %s"
+" aktiivisessa Kassajärjestelmän istunnossa %s"
