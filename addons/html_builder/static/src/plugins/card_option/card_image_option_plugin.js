@@ -31,6 +31,7 @@ class CardImageOptionPlugin extends Plugin {
             withSequence(30, {
                 OptionComponent: CardImageOption,
                 selector: ".s_card",
+                exclude: ".s_carousel_cards_card",
             }),
         ],
         builder_actions: {
