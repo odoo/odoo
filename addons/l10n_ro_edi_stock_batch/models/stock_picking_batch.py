@@ -306,7 +306,7 @@ class StockPickingBatch(models.Model):
 
         data = {
             'partner_id': self.picking_ids[0].partner_id,
-            'transport_partner_id': self.picking_ids[0].carrier_id.l10n_ro_edi_stock_partner_id,
+            'carrier_id': self.picking_ids[0].carrier_id,
             'company_id': self.company_id,
             'scheduled_date': self.scheduled_date,
             'name': self.name,
