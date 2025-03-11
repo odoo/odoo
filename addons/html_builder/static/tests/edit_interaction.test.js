@@ -67,13 +67,13 @@ test("ensure order of operations when hovering an option", async () => {
         template: xml`<BuilderButton action="'customAction'"/>`,
     });
     patchWithCleanup(EditInteractionPlugin.prototype, {
-        startInteractions() {
-            expect.step("startInteractions");
+        restartInteractions() {
+            expect.step("restartInteractions");
         },
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
-    expect.verifySteps(["startInteractions"]);
+    expect.verifySteps(["restartInteractions"]);
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").hover();
-    expect.verifySteps(["load", "apply", "startInteractions"]);
+    expect.verifySteps(["load", "apply", "restartInteractions"]);
 });
