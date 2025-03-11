@@ -288,19 +288,6 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     });
 }
 
-function getReloadTarget(el) {
-    if (el.closest("header")) {
-        return "header";
-    }
-    if (el.closest("main")) {
-        return "main";
-    }
-    if (el.closest("footer")) {
-        return "footer";
-    }
-    return null;
-}
-
 export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
     const { operation, isApplied, getActions, priority, clean, onReady } =
         useClickableBuilderComponent();
@@ -575,12 +562,8 @@ function useOperationWithReload(callApply, reload) {
     return async (...args) => {
         const { editingElement } = args[0][0];
         await Promise.all([callApply(...args), env.editor.shared.savePlugin.save()]);
-        let target = getReloadTarget(editingElement);
+        const target = env.editor.shared["builder-options"].getReloadSelector(editingElement);
         const url = reload.getReloadUrl?.();
-        const selector = reload.getReloadSelector?.();
-        if (selector && editingElement.closest(selector)) {
-            target = selector;
-        }
         env.editor.config.reloadEditor({ target, url });
     };
 }

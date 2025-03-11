@@ -9,15 +9,14 @@ class ProductAttributeOptionPlugin extends Plugin {
             template: "website_sale.ProductAttributeOption",
             selector: "#product_detail .o_wsale_product_attribute",
             editableOnly: false,
+            reloadTarget: true,
         },
         builder_actions: this.getActions(),
     };
     getActions() {
         return {
             productAttributeDisplay: {
-                reload: {
-                    getReloadSelector: () => "#product_detail .o_wsale_product_attribute",
-                },
+                reload: {},
                 isApplied: ({ editingElement: el, value }) =>
                     value === this.getProductAttributeDisplay(el),
                 getValue: ({ editingElement: el }) => this.getProductAttributeDisplay(el),

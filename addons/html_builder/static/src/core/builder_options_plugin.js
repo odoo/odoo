@@ -23,6 +23,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getPageContainers",
         "getRemoveDisabledReason",
         "getCloneDisabledReason",
+        "getReloadSelector",
     ];
     resources = {
         step_added_handlers: () => this.updateContainers(),
@@ -53,7 +54,7 @@ export class BuilderOptionsPlugin extends Plugin {
         this.builderHeaderMiddleButtons = this.getResource("builder_header_middle_buttons").map(
             (headerMiddleButton) => ({ ...headerMiddleButton, id: uniqueId() })
         );
-        this.builderContatinerTitle = this.getResource("container_title").map((containerTitle) => ({
+        this.builderContainerTitle = this.getResource("container_title").map((containerTitle) => ({
             ...containerTitle,
             id: uniqueId(),
         }));
@@ -76,6 +77,26 @@ export class BuilderOptionsPlugin extends Plugin {
 
     onClick(ev) {
         this.updateContainers(ev.target);
+    }
+
+    getReloadSelector(editingElement) {
+        for (const container of [...this.lastContainers].reverse()) {
+            for (const option of container.options) {
+                if (option.reloadTarget) {
+                    return option.selector;
+                }
+            }
+        }
+        if (editingElement.closest("header")) {
+            return "header";
+        }
+        if (editingElement.closest("main")) {
+            return "main";
+        }
+        if (editingElement.closest("footer")) {
+            return "footer";
+        }
+        return null;
     }
 
     updateContainers(target) {
@@ -158,7 +179,7 @@ export class BuilderOptionsPlugin extends Plugin {
         };
         const elementToOptions = mapElementsToOptions(this.builderOptions);
         const elementToHeaderMiddleButtons = mapElementsToOptions(this.builderHeaderMiddleButtons);
-        const elementToContatinerTitle = mapElementsToOptions(this.builderContatinerTitle);
+        const elementToContainerTitle = mapElementsToOptions(this.builderContainerTitle);
 
         // Find the closest element with no options that should still have the
         // overlay buttons.
@@ -179,8 +200,8 @@ export class BuilderOptionsPlugin extends Plugin {
                 element,
                 options,
                 headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
-                containerTitle: elementToContatinerTitle.get(element)
-                    ? elementToContatinerTitle.get(element)[0]
+                containerTitle: elementToContainerTitle.get(element)
+                    ? elementToContainerTitle.get(element)[0]
                     : {},
                 hasOverlayOptions: this.hasOverlayOptions(element),
                 isRemovable: isRemovable(element),
