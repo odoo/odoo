@@ -1632,8 +1632,25 @@ class BaseModel(metaclass=MetaModel):
         query.groupby = SQL("GROUPING SETS (%s)", SQL(", ").join(grouping_set_sqls))
 
         query.having = self._read_group_having(having, query)
-        # _read_group_orderby may possibly extend query.groupby for orderby
-        query.order = self._read_group_orderby(order, groupby_terms, query)
+        query.order, extra_groupby_by_term = self._read_group_orderby(order, groupby_terms, query)
+
+        if extra_groupby_by_term:  # Recreate the grouping set because extra order
+            grouping_set_sqls = [
+                SQL(
+                    "(%s)",
+                    SQL(", ").join(itertools.chain(
+                        (groupby_terms[groupby_spec] for groupby_spec in grouping_set),
+                        (
+                            extra_groupby
+                            for groupby_spec in grouping_set
+                            for extra_groupby in extra_groupby_by_term[groupby_spec]
+                            if groupby_spec in extra_groupby_by_term
+                        ),
+                    )),
+                )
+                for grouping_set in grouping_sets
+            ]
+            query.groupby = SQL("GROUPING SETS (%s)", SQL(", ").join(grouping_set_sqls))
 
         select_terms: list[SQL] = [
             self._read_group_select(spec, query) for spec in aggregates
@@ -1734,8 +1751,19 @@ class BaseModel(metaclass=MetaModel):
         if groupby_terms:
             query.groupby = SQL(", ").join(groupby_terms.values())
             query.having = self._read_group_having(having, query)
-            # _read_group_orderby may possibly extend query.groupby for orderby
-            query.order = self._read_group_orderby(order, groupby_terms, query)
+
+            query.order, extra_groupby_by_term = self._read_group_orderby(order, groupby_terms, query)
+            if extra_groupby_by_term:
+                query.groupby = SQL(
+                    "%s, %s",
+                    query.groupby,
+                    SQL(", ").join([
+                        extra_group
+                        for extra_groups in extra_groupby_by_term.values()
+                        for extra_group in extra_groups
+                    ]),
+                )
+
 
         select_terms: list[SQL] = [
             self._read_group_select(spec, query)
@@ -1910,7 +1938,7 @@ class BaseModel(metaclass=MetaModel):
         return stack[0]
 
     def _read_group_orderby(self, order: str, groupby_terms: dict[str, SQL],
-                            query: Query) -> SQL:
+                            query: Query) -> tuple[SQL, dict[str, list[SQL]]]:
         """ Return (<SQL expression>, <SQL expression>)
         corresponding to the given order and groupby terms.
 
@@ -1924,8 +1952,9 @@ class BaseModel(metaclass=MetaModel):
             order = ','.join(groupby_terms)
             traverse_many2one = False
 
+        extra_groupby_by_field = {}
         if not order:
-            return SQL()
+            return SQL(), extra_groupby_by_field
 
         orderby_terms = []
 
@@ -1956,6 +1985,10 @@ class BaseModel(metaclass=MetaModel):
             ):
                 if sql_order := self._order_to_sql(f'{term} {direction} {nulls}', query):
                     orderby_terms.append(sql_order)
+                    if query.extra_groupby:
+                        extra_groupby_by_field[term] = list(query.extra_groupby)
+                        query.extra_groupby.clear()
+
             elif granularity == 'day_of_week':
                 """
                 Day offset relative to the first day of week in the user lang
@@ -1981,7 +2014,7 @@ class BaseModel(metaclass=MetaModel):
                 sql_expr = groupby_terms[term]
                 orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
 
-        return SQL(", ").join(orderby_terms)
+        return SQL(", ").join(orderby_terms), extra_groupby_by_field
 
     @api.model
     def _read_group_empty_value(self, spec):
@@ -5070,7 +5103,7 @@ class BaseModel(metaclass=MetaModel):
 
             if coorder == 'id':
                 if query.groupby:
-                    query.groupby = SQL('%s, %s', query.groupby, sql_field)
+                    query.extra_groupby.append(SQL('%s, %s', query.groupby, sql_field))
                 return SQL("%s %s %s", sql_field, direction, nulls)
 
             # instead of ordering by the field's raw value, use the comodel's
@@ -5100,9 +5133,8 @@ class BaseModel(metaclass=MetaModel):
         if field.type == 'boolean':
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
 
-        # TODO: doesn't work for grouping set, it should be only applied on grouping set using it
         if query.groupby:
-            query.groupby = SQL('%s, %s', query.groupby, sql_field)
+            query.extra_groupby.append(SQL('%s, %s', query.groupby, sql_field))
 
         return SQL("%s %s %s", sql_field, direction, nulls)
 

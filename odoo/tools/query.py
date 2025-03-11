@@ -69,6 +69,7 @@ class Query:
 
         # groupby, having, order, limit, offset
         self.groupby: SQL | None = None
+        self.extra_groupby: list[SQL] = []
         self.having: SQL | None = None
         self._order: SQL | None = None
         self.limit: int | None = None
@@ -180,6 +181,7 @@ class Query:
     def select(self, *args: str | SQL) -> SQL:
         """ Return the SELECT query as an ``SQL`` object. """
         sql_args = map(SQL, args) if args else [SQL.identifier(self.table, 'id')]
+        assert not self.extra_groupby, "extra_groupby should be applied"
         return SQL(
             "%s%s%s%s%s%s%s%s",
             SQL("SELECT %s", SQL(", ").join(sql_args)),
