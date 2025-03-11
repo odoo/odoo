@@ -1,5 +1,6 @@
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
+import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/core/common/record";
 import { useMessageEdition, useVisible } from "@mail/utils/common/hooks";
 
@@ -41,7 +42,7 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {
-    static components = { Message, Transition, DateSection };
+    static components = { Message, NotificationMessage, Transition, DateSection };
     static props = [
         "showDates?",
         "isInChatWindow?",

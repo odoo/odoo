@@ -328,9 +328,12 @@ class DiscussChannelMember(models.Model):
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
-        if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type != "channel":
-            self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
-            self._rtc_invite_members()
+        if len(self.channel_id.rtc_session_ids) == 1:
+            body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
+            message = self.channel_id.message_post(body=body, message_type="notification")
+            self.channel_id.last_call_message_id = message
+            if self.channel_id.channel_type != "channel":
+                self._rtc_invite_members()
 
     def _join_sfu(self, ice_servers=None, force=False):
         if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD and not force:
@@ -395,6 +398,13 @@ class DiscussChannelMember(models.Model):
             self.rtc_session_ids.unlink()
         else:
             self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
+        if not self.channel_id.rtc_session_ids and self.channel_id.last_call_message_id:
+            # deducing information about the end of call through write_date
+            self.channel_id._message_update_content(
+                self.channel_id.last_call_message_id,
+                self.channel_id.last_call_message_id.body,
+                strict=False
+            )
 
     def _rtc_sync_sessions(self, check_rtc_session_ids=None):
         """Synchronize the RTC sessions for self channel member.

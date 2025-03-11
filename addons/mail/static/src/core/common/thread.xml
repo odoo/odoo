@@ -22,7 +22,9 @@
                     <div t-if="msg.threadAsFirstUnread?.eq(props.thread)" class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder z-1 px-2">
                         <hr class="flex-grow-1 border-danger opacity-100"/><span class="ps-2 pe-1 bg-danger o-text-white rounded text-uppercase">New</span>
                     </div>
+                    <NotificationMessage t-if="msg.isNotification" message="msg" thread="props.thread" registerMessageRef="registerMessageRef" />
                     <Message
+                        t-else=""
                         asCard="props.thread.model === 'mail.box'"
                         className="getMessageClassName(msg)"
                         isInChatWindow="props.isInChatWindow"
