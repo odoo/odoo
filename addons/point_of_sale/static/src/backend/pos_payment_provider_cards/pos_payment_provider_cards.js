@@ -85,6 +85,7 @@ const providers = [
     ["viva_wallet", "pos_viva_wallet", "Viva Wallet"],
     ["worldline", "pos_iot", "Worldline"],
     ["tyro", "pos_tyro", "Tyro"],
+    ["pine_labs", "pos_pine_labs", "Pine Labs"],
 ];
 
 export const PosPaymentProviderCardsParams = {
