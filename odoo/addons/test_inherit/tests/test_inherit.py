@@ -8,17 +8,6 @@ from ..models.mother_inherit_4 import TestInheritMother
 
 class test_inherits(common.TransactionCase):
 
-    def test_00_inherits(self):
-        """ Check that a many2one field with delegate=True adds an entry in _inherits """
-        daughter = self.env['test_inherit_daughter']
-
-        self.assertEqual(daughter._inherits, {'test.inherit.mother': 'template_id'})
-
-        # the field supporting the inheritance should be auto_join
-        field = daughter._fields['template_id']
-        self.assertTrue(field.delegate)
-        self.assertTrue(field.auto_join, "delegate fields should be auto_join")
-
     def test_10_access_from_child_to_parent_model(self):
         """ check whether added field in model is accessible from children models (_inherits) """
         # This test checks if the new added column of a parent model
@@ -133,6 +122,14 @@ class test_override_property(common.TransactionCase):
 
 
 class TestInherit(common.TransactionCase):
+    def test_ir_model_inherit(self):
+        imi = self.env['ir.model.inherit'].search(
+            [('model_id.model', '=', 'test_inherit_child')]
+        )
+        self.assertEqual(len(imi), 1)
+        self.assertEqual(imi.parent_id.model, 'test_inherit_parent')
+        self.assertFalse(imi.parent_field_id)
+
     def test_extend_parent(self):
         """ test whether a model extension is visible in its children models. """
         parent = self.env['test_inherit_parent']

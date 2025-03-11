@@ -72,6 +72,8 @@ class IrCron(models.Model):
     _description = 'Scheduled Actions'
     _allow_sudo_commands = False
 
+    _inherits = {'ir.actions.server': 'ir_actions_server_id'}
+
     ir_actions_server_id = fields.Many2one(
         'ir.actions.server', 'Server action',
         delegate=True, ondelete='restrict', required=True)
