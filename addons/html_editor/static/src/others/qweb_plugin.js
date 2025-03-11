@@ -3,6 +3,7 @@ import { closestElement, selectElements } from "@html_editor/utils/dom_traversal
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
 import { isElement } from "@html_editor/utils/dom_info";
+import { withSequence } from "@html_editor/utils/resource";
 
 const isUnsplittableQWebElement = (node) =>
     isElement(node) &&
@@ -31,13 +32,13 @@ const dataAttributesSelector = QWEB_DATA_ATTRIBUTES.map((attr) => `[${attr}]`).j
 export const isUnremovableQWebElement = (node) =>
     node.getAttribute?.("t-set") || node.getAttribute?.("t-call");
 
-
 export class QWebPlugin extends Plugin {
     static id = "qweb";
     static dependencies = ["overlay", "protectedNode", "selection"];
     resources = {
         /** Handlers */
-        selectionchange_handlers: this.onSelectionChange.bind(this),
+        selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
+        clean_handlers: this.clearDataAttributes.bind(this),
         clean_for_save_handlers: ({ root }) => {
             this.clearDataAttributes(root);
             for (const element of root.querySelectorAll(PROTECTED_QWEB_SELECTOR)) {
