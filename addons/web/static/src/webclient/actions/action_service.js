@@ -26,6 +26,7 @@ import {
     reactive,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
+import { FetchRecordError } from "@web/model/relational_model/utils";
 
 class BlankComponent extends Component {
     static props = ["onMounted", "withControlPanel", "*"];
@@ -692,6 +693,14 @@ function makeActionManager(env) {
                     if (action.target === "new") {
                         removeDialogFn?.();
                     } else {
+                        if (controller?.jsId) {
+                            if (error?.cause instanceof FetchRecordError) {
+                                // remove error controller from breadcrumb
+                                controllerStack = controllerStack.filter(
+                                    (c) => c.jsId !== controller.jsId
+                                );
+                            }
+                        }
                         const lastCt = controllerStack[controllerStack.length - 1];
                         if (lastCt) {
                             if (lastCt.jsId !== controller.jsId) {
