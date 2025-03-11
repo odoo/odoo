@@ -15361,6 +15361,33 @@ test(`open groups are kept when leaving and coming back`, async () => {
     expect(`.o_data_row`).toHaveCount(3);
 });
 
+test("empty groups are removed when leaving and coming back", async () => {
+    Foo._views = {
+        list: `<list><field name="foo"/></list>`,
+        search: "<search/>",
+        form: `<form><field name="bar"/></form>`,
+    };
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partners",
+        res_model: "foo",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "form"],
+        ],
+        context: {
+            group_by: ["bar"],
+        },
+    });
+    expect(".o_group_header").toHaveCount(2);
+    await contains(".o_group_header").click();
+    await contains(".o_data_cell").click();
+    await contains("[name='bar'] input").click();
+    await contains(".breadcrumb-item a, .o_back_button").click();
+    expect(".o_group_header").toHaveCount(1);
+});
+
 test(`open groups are kept when leaving and coming back (grouped by date)`, async () => {
     Foo._fields.date = fields.Date({ default: "2022-10-10" });
     Foo._views = {
