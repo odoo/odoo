@@ -33,6 +33,7 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
         constraints.update({
             'bis3_de_supplier_telephone_required': self._check_required_fields(vals['supplier'], ['phone', 'mobile']),
             'bis3_de_supplier_electronic_mail_required': self._check_required_fields(vals['supplier'], 'email'),
+            'bis3_de_buyer_reference_required': self._check_required_fields(vals['customer'], 'ref'),
         })
 
         return constraints
