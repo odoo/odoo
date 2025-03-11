@@ -536,15 +536,7 @@ class SaleOrderLine(models.Model):
                 line.price_unit = 0.0
                 line.technical_price_unit = 0.0
             else:
-                line = line.with_company(line.company_id)
-                price = line._get_display_price()
-                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
-                    price,
-                    product_taxes=line.product_id.taxes_id.filtered(
-                        lambda tax: tax.company_id == line.env.company
-                    ),
-                    fiscal_position=line.order_id.fiscal_position_id,
-                )
+                line.price_unit = line._get_display_price()
                 line.technical_price_unit = line.price_unit
 
     def _get_order_date(self):

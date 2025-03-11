@@ -261,7 +261,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             line.product_uom_qty = 1.0
         sale_order = order_form.save()
 
-        self.assertRecordValues(sale_order.order_line, [{'price_subtotal': 9.09, 'price_total': 10.45}])
+        self.assertRecordValues(sale_order.order_line, [{'price_subtotal': 10.0, 'price_total': 11.5}])
 
         # Now trying to add the delivery line using the delivery wizard, the results should be the same as before
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context(default_order_id=sale_order.id,
@@ -274,7 +274,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             ('is_delivery', '=', True),
         ])
 
-        self.assertRecordValues(line, [{'price_subtotal': 9.09, 'price_total': 10.45}])
+        self.assertRecordValues(line, [{'price_subtotal': 10.0, 'price_total': 11.5}])
 
     def test_estimated_weight(self):
         """

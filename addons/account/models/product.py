@@ -228,40 +228,11 @@ class ProductProduct(models.Model):
         if product_uom and product.uom_id != product_uom:
             product_price_unit = product.uom_id._compute_price(product_price_unit, product_uom)
 
-        # Apply fiscal position.
-        if product_taxes and fiscal_position:
-            product_price_unit = self._get_tax_included_unit_price_from_price(
-                product_price_unit,
-                product_taxes,
-                fiscal_position=fiscal_position,
-            )
-
         # Apply currency rate.
         if currency != product_currency:
             product_price_unit = product_currency._convert(product_price_unit, currency, company, document_date, round=False)
 
         return product_price_unit
-
-    def _get_tax_included_unit_price_from_price(
-        self, product_price_unit, product_taxes,
-        fiscal_position=None,
-        product_taxes_after_fp=None,
-    ):
-        if not product_taxes:
-            return product_price_unit
-
-        if product_taxes_after_fp is None:
-            if not fiscal_position:
-                return product_price_unit
-
-            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
-
-        return product_taxes._adapt_price_unit_to_another_taxes(
-            price_unit=product_price_unit,
-            product=self,
-            original_taxes=product_taxes,
-            new_taxes=product_taxes_after_fp,
-        )
 
     @api.depends('lst_price', 'product_tmpl_id', 'taxes_id')
     @api.depends_context('company')

@@ -569,11 +569,6 @@ class ProductTemplate(models.Model):
         website=None,
     ):
         website = website or self.env['website'].get_current_website()
-        price = self.env['product.product']._get_tax_included_unit_price_from_price(
-            price,
-            product_taxes,
-            product_taxes_after_fp=taxes,
-        )
         show_tax = website.show_line_subtotals_tax_selection
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
 

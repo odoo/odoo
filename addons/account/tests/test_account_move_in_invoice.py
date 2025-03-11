@@ -216,7 +216,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_in_invoice_line_onchange_product_2_with_fiscal_pos(self):
         ''' Test mapping a price-included tax (10%) with a price-excluded tax (20%) on a price_unit of 110.0.
-        The price_unit should be 100.0 after applying the fiscal position.
+        The price_unit and price_subtotal should still be 110.0 after applying the fiscal position.
         '''
         tax_price_include = self.env['account.tax'].create({
             'name': '10% incl',
@@ -227,10 +227,10 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'include_base_amount': True,
         })
         tax_price_exclude = self.env['account.tax'].create({
-            'name': '15% excl',
+            'name': '20% excl',
             'type_tax_use': 'purchase',
             'amount_type': 'percent',
-            'amount': 15,
+            'amount': 20,
         })
 
         fiscal_position = self.env['account.fiscal.position'].create({
@@ -262,14 +262,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertInvoiceValues(invoice, [
             {
                 'product_id': product.id,
-                'price_unit': 200.0,
-                'price_subtotal': 200.0,
-                'price_total': 230.0,
+                'price_unit': 220.0,
+                'price_subtotal': 220.0,
+                'price_total': 264.0,
                 'tax_ids': tax_price_exclude.ids,
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 200.0,
-                'debit': 100.0,
+                'amount_currency': 220.0,
+                'debit': 110.0,
                 'credit': 0.0,
             },
             {
@@ -280,8 +280,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': tax_price_exclude.id,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 30.0,
-                'debit': 15.0,
+                'amount_currency': 44.0,
+                'debit': 22.0,
                 'credit': 0.0,
             },
             {
@@ -292,16 +292,16 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': -230.0,
+                'amount_currency': -264.0,
                 'debit': 0.0,
-                'credit': 115.0,
+                'credit': 132.0,
             },
         ], {
             'currency_id': self.other_currency.id,
             'fiscal_position_id': fiscal_position.id,
-            'amount_untaxed': 200.0,
-            'amount_tax': 30.0,
-            'amount_total': 230.0,
+            'amount_untaxed': 220.0,
+            'amount_tax': 44.0,
+            'amount_total': 264.0,
         })
 
         uom_dozen = self.env.ref('uom.product_uom_dozen')
@@ -313,14 +313,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 'product_id': product.id,
                 'product_uom_id': uom_dozen.id,
-                'price_unit': 2400.0,
-                'price_subtotal': 2400.0,
-                'price_total': 2760.0,
+                'price_unit': 2640.0,
+                'price_subtotal': 2640.0,
+                'price_total': 3168.0,
                 'tax_ids': tax_price_exclude.ids,
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 2400.0,
-                'debit': 1200.0,
+                'amount_currency': 2640.0,
+                'debit': 1320.0,
                 'credit': 0.0,
             },
             {
@@ -332,8 +332,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': tax_price_exclude.id,
                 'currency_id': self.other_currency.id,
-                'amount_currency': 360.0,
-                'debit': 180.0,
+                'amount_currency': 528.0,
+                'debit': 264.0,
                 'credit': 0.0,
             },
             {
@@ -345,21 +345,21 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': False,
                 'currency_id': self.other_currency.id,
-                'amount_currency': -2760.0,
+                'amount_currency': -3168.0,
                 'debit': 0.0,
-                'credit': 1380.0,
+                'credit': 1584.0,
             },
         ], {
             'currency_id': self.other_currency.id,
             'fiscal_position_id': fiscal_position.id,
-            'amount_untaxed': 2400.0,
-            'amount_tax': 360.0,
-            'amount_total': 2760.0,
+            'amount_untaxed': 2640.0,
+            'amount_tax': 528.0,
+            'amount_total': 3168.0,
         })
 
     def test_in_invoice_line_onchange_product_2_with_fiscal_pos_2(self):
-        ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 110.0.
-        The price_unit should be 120.0 after applying the fiscal position.
+        ''' Test mapping a price-included tax (10%) with another price-included tax (20%) on a price_unit of 120.0.
+        The price_unit should still be 120.00 while price_subtotal should be 100.00 after applying the fiscal position.
         '''
         tax_price_include_1 = self.env['account.tax'].create({
             'name': '10% incl',
@@ -391,7 +391,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'standard_price': 110.0,
+            'standard_price': 120.0,
             'supplier_taxes_id': [(6, 0, tax_price_include_1.ids)],
         })
 
