@@ -49,6 +49,7 @@ test("many2one in list view", async () => {
     expect(".o_data_cell div[name='employee_id']:eq(0)").toHaveText("Mario");
     expect(".o_data_cell div[name='employee_id']:eq(1)").toHaveText("Luigi");
     expect(".o_data_cell div[name='employee_id']:eq(2)").toHaveText("Mario");
+    expect("div[name='employee_id'] a").toHaveCount(0);
 
     // click on first employee avatar
     await contains(".o_data_cell .o_m2o_avatar > img:eq(0)").click();
