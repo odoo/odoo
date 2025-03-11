@@ -70,7 +70,7 @@ class DropdownNestingState {
  * close itself when the active element is the same as the current
  * dropdown to separate dropdowns in different dialogs.
  *
- * @param {import("@web/core/dropdown/dropdown").DropdownState} state
+ * @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} state
  * @returns
  */
 export function useDropdownNesting(state) {
