@@ -724,6 +724,36 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertEqual(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
         self.assertEqual(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
 
+    def test_company_dependent_commercial_sync(self):
+        ResPartner = self.env['res.partner']
+
+        company_1, company_2 = self.env['res.company'].create([
+            {'name': 'company_1'},
+            {'name': 'company_2'},
+        ])
+
+        test_partner_company = ResPartner.create({
+            'name': 'This company',
+            'barcode': 'Main Company',
+            'is_company': True,
+        })
+        test_partner_company.with_company(company_1).barcode = 'Company 1'
+        test_partner_company.with_company(company_2).barcode = 'Company 2'
+
+        commercial_fields = ResPartner._commercial_fields()
+        with patch.object(
+            ResPartner.__class__,
+            '_commercial_fields',
+            lambda self: commercial_fields + ['barcode'],
+        ), patch.object(ResPartner.__class__, '_validate_fields'):  # skip _check_barcode_unicity
+            child_address = ResPartner.create({
+                'name': 'Contact',
+                'parent_id': test_partner_company.id,
+            })
+            self.assertEqual(child_address.barcode, 'Main Company')
+            self.assertEqual(child_address.with_company(company_1).barcode, 'Company 1')
+            self.assertEqual(child_address.with_company(company_2).barcode, 'Company 2')
+
     def test_company_change_propagation(self):
         """ Check propagation of company_id across children """
         User = self.env['res.users']
