@@ -219,6 +219,7 @@ export class ColorPlugin extends Plugin {
      * @param {boolean} [previewMode=false] true - apply color in preview mode
      */
     _applyColor(color, mode, previewMode = false) {
+        this.dependencies.selection.selectAroundNonEditable();
         if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
             return;
         }
