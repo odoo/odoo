@@ -23,6 +23,10 @@ export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
     static shared = ["savePendingImages"];
+    static defaultConfig = {
+        allowImage: true,
+        allowMediaDialogVideo: true,
+    };
     resources = {
         user_commands: [
             {
@@ -50,9 +54,7 @@ export class MediaPlugin extends Plugin {
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
         powerbox_items: [
-            ...(this.config.disableImage
-                ? []
-                : [{ categoryId: "media", commandId: "insertMedia" }]),
+            ...(this.config.allowImage ? [{ categoryId: "media", commandId: "insertMedia" }] : []),
         ],
         power_buttons: withSequence(1, { commandId: "insertMedia" }),
 
@@ -155,8 +157,8 @@ export class MediaPlugin extends Plugin {
                 this.onSaveMediaDialog(element, { node: params.node });
             },
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-            noVideos: !!this.config.disableVideo,
-            noImages: !!this.config.disableImage,
+            noVideos: !this.config.allowMediaDialogVideo,
+            noImages: !this.config.allowImage,
             extraTabs: this.getResource("media_dialog_extra_tabs"),
             ...this.config.mediaModalParams,
             ...params,

@@ -19,7 +19,7 @@ export class YoutubePlugin extends Plugin {
     handlePasteUrl(text, url) {
         // to know if this logic should be executed or not. Do we still want an
         // option of do we want to add a plugin whenever we want the feature?
-        const youtubeUrl = !this.config.disableVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+        const youtubeUrl = this.config.allowMediaDialogVideo && YOUTUBE_URL_GET_VIDEO_ID.exec(url);
         if (youtubeUrl) {
             const restoreSavepoint = this.dependencies.history.makeSavePoint();
             // Open powerbox with commands to embed media or paste as link.
