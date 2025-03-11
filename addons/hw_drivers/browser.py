@@ -29,16 +29,14 @@ class BrowserState(Enum):
 
 
 class Browser:
-    """Methods to interact with a browser"""
+    url = ""
 
-    def __init__(self, url, _x_screen, env):
-        """
-        :param url: URL to open in the browser
+    def __init__(self, _x_screen, env):
+        """Methods to interact with a browser
+
         :param _x_screen: X screen number
         :param env: Environment variables (e.g. os.environ.copy())
-        :param kiosk: Whether the browser should be in kiosk mode
         """
-        self.url = url
         # helpers.get_version returns a string formatted as: <L|W><version> (L: Linux, W: Windows)
         self.browser = 'chromium-browser' if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION else 'firefox'
         self.browser_process_name = 'chromium' if self.browser == 'chromium-browser' else self.browser
@@ -53,7 +51,6 @@ class Browser:
         """
         self.env = env
         self.env['DISPLAY'] = f':0.{self._x_screen}'
-        self.env['XAUTHORITY'] = '/run/lightdm/pi/xauthority'
         for key in ['HOME', 'XDG_RUNTIME_DIR', 'XDG_CACHE_HOME']:
             self.env[key] = '/tmp/' + self._x_screen
 

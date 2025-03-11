@@ -50,11 +50,11 @@ class Manager(Thread):
                 'type': iot_device.device_type,
                 'manufacturer': iot_device.device_manufacturer,
                 'connection': iot_device.device_connection,
-                'subtype': iot_device.device_subtype if iot_device.device_type == 'printer' else '',
+                'subtype': iot_device.device_subtype if iot_device.device_type in ['printer', 'display'] else '',
             }
         devices_list_to_send = {
             key: value for key, value in devices_list.items() if key != 'distant_display'
-        }  # Don't send distant_display to the db
+        }  # Don't send distant_display
         try:
             response = requests.post(
                 server_url + "/iot/setup",

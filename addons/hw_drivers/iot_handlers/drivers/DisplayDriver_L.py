@@ -15,13 +15,13 @@ from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.tools.helpers import Orientation
-from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
 
 
 class DisplayDriver(Driver):
     connection_type = 'display'
+    touch_input = None
 
     def __init__(self, identifier, device):
         super(DisplayDriver, self).__init__(identifier, device)
@@ -30,22 +30,23 @@ class DisplayDriver(Driver):
         self.device_name = device['name']
         self.owner = False
         self.customer_display_data = {}
+        if self.device_identifier == 'distant_display':
+            return
+
         self.url, self.orientation = helpers.load_browser_state()
-        if self.device_identifier != 'distant_display':
-            self._x_screen = device.get('x_screen', '0')
-            self.browser = Browser(
-                self.url or 'http://localhost:8069/status/',
-                self._x_screen,
-                os.environ.copy(),
+        self.browser = Browser(device.get('x_screen', '0'), os.environ.copy())
+        self.update_url(self.get_url_from_db())
+        if not self.touch_input:
+            self.touch_input, self.device_subtype = next(
+                ((d, 'touchscreen') for d in iot_devices.values() if d.device_type == 'touchscreen'),
+                (None, None)
             )
-            self.update_url(self.get_url_from_db())
+        self.set_orientation(self.orientation)
 
         self._actions.update({
             'update_url': self._action_update_url,
             'display_refresh': self._action_display_refresh,
         })
-
-        self.set_orientation(self.orientation)
 
     @classmethod
     def supported(cls, device):
@@ -106,8 +107,15 @@ class DisplayDriver(Driver):
         if type(orientation) is not Orientation:
             raise TypeError("orientation must be of type Orientation")
         subprocess.run(['xrandr', '-o', orientation.value], check=True)
-        subprocess.run([file_path('hw_drivers/tools/sync_touchscreen.sh'), str(int(self._x_screen) + 1)], check=False)
         helpers.save_browser_state(orientation=orientation)
+
+        if not self.touch_input:
+            return
+
+        device_ids = subprocess.run(["xinput", "list"], capture_output=True, text=True, check=True).stdout.splitlines()
+        device_ids = [line.split("id=")[1][:2].strip() for line in device_ids if self.touch_input.name in line]
+        for device_id in device_ids:
+            subprocess.run(["xinput", "map-to-output", device_id, self.device_identifier], check=False)
 
 
 class DisplayController(http.Controller):

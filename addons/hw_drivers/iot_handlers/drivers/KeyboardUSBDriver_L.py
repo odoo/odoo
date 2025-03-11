@@ -7,7 +7,6 @@ import json
 import logging
 from lxml import etree
 import os
-from pathlib import Path
 from queue import Queue, Empty
 import re
 import requests
@@ -44,7 +43,6 @@ class KeyboardUSBDriver(Driver):
 
     def __init__(self, identifier, device):
         if not hasattr(KeyboardUSBDriver, 'display'):
-            os.environ['XAUTHORITY'] = "/run/lightdm/pi/xauthority"
             KeyboardUSBDriver.display = xlib.XOpenDisplay(bytes(":0.0", "utf-8"))
 
         super(KeyboardUSBDriver, self).__init__(identifier, device)
@@ -75,7 +73,7 @@ class KeyboardUSBDriver(Driver):
             if (device.idVendor == evdev_device.info.vendor) and (device.idProduct == evdev_device.info.product):
                 self.input_devices.append(evdev_device)
 
-        self._set_device_type('scanner') if self._is_scanner() else self._set_device_type()
+        self._set_device_type()
 
     @classmethod
     def supported(cls, device):
@@ -274,7 +272,7 @@ class KeyboardUSBDriver(Driver):
             data = {}
         data[self.device_identifier] = is_scanner
         helpers.write_file('odoo-keyboard-is-scanner.conf', json.dumps(data))
-        self._set_device_type('scanner') if is_scanner.get('is_scanner') else self._set_device_type()
+        self._set_device_type(is_scanner.get('is_scanner'))
 
     def _update_layout(self, data):
         layout = {
@@ -284,13 +282,13 @@ class KeyboardUSBDriver(Driver):
         self._change_keyboard_layout(layout)
         self.save_layout(layout)
 
-    def _set_device_type(self, device_type='keyboard'):
-        """Modify the device type between 'keyboard' and 'scanner'
+    def _set_device_type(self, force_is_scanner=False):
+        """Modify the device type between 'keyboard', 'scanner' and 'touchscreen'
 
-        Args:
-            type (string): Type wanted to switch
+        :param force_is_scanner: force the device type to be a scanner
         """
-        if device_type == 'scanner':
+
+        if self._is_scanner() or force_is_scanner:
             self.device_type = 'scanner'
             self.key_input = self._barcode_scanner_input
             self._barcodes = Queue()
@@ -299,7 +297,22 @@ class KeyboardUSBDriver(Driver):
                 device.grab()
             self.read_barcode_lock = Lock()
         else:
-            self.device_type = 'keyboard'
+            # Check if the keyboard is a touchscreen
+            udev_output = subprocess.run(
+                ["udevadm", "info", "--export-db"], capture_output=True, text=True, check=True
+            ).stdout.split("\n\n")
+
+            # If the device is a touchscreen, we set the device type to 'touchscreen', and rename the device
+            self.device_type, self.device_name = next(
+                (('touchscreen', line.split('"')[1]) for block in udev_output if "ID_INPUT_TOUCHSCREEN=1" in block
+                for line in block.splitlines() if line.startswith("E: NAME=")),
+                ('keyboard', self.device_name)
+            )
+            if self.device_type == 'touchscreen':
+                display = next((device for device in iot_devices.values() if device.device_type == 'display'), None)
+                if display:
+                    display.device_subtype = self.device_type
+                    display.touch_input = self
             self.key_input = self._keyboard_input
         self.load_layout()
 

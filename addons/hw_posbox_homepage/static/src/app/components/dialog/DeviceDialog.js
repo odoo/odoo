@@ -11,6 +11,7 @@ export const DEVICE_ICONS = {
     display: "fa-desktop",
     fiscal_data_module: "fa-dollar",
     keyboard: "fa-keyboard-o",
+    touchscreen: "fa-keyboard-o",
     payment: "fa-credit-card",
     printer: "fa-print",
     scale: "fa-balance-scale",
