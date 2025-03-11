@@ -14,6 +14,7 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import SQL, float_is_zero, format_amount, format_date, is_html_empty
 from odoo.tools.mail import html_keep_url
+from odoo.tools.misc import str2bool
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -103,6 +104,12 @@ class SaleOrder(models.Model):
         string="Payment Ref.",
         help="The payment communication of this sale order.",
         copy=False)
+    pending_email_template_id = fields.Many2one(
+        string="Pending Email Template",
+        comodel_name='mail.template',
+        ondelete='set null',
+        readonly=True,
+    )  # The template of the pending email that must be sent asynchronously.
 
     require_signature = fields.Boolean(
         string="Online signature",
@@ -1208,12 +1215,16 @@ class SaleOrder(models.Model):
         for order in self:
             order._send_order_notification_mail(mail_template)
 
-    def _send_order_notification_mail(self, mail_template):
-        """ Send a mail to the customer
+    def _send_order_notification_mail(self, mail_template, allow_deferred_sending=True):
+        """ Send a mail to the customer.
+
+        If the `sale.async_emails` ICP is set and `allow_deferred_sending` is true, order status
+        emails are sent asynchronously through a cron.
 
         Note: self.ensure_one()
 
         :param mail.template mail_template: the template used to generate the mail
+        :param bool allow_deferred_sending: Whether the email can be sent asynchronously.
         :return: None
         """
         self.ensure_one()
@@ -1225,11 +1236,38 @@ class SaleOrder(models.Model):
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
 
-        self.with_context(force_send=True).message_post_with_source(
-            mail_template,
-            email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
-            subtype_xmlid='mail.mt_comment',
-        )
+        async_send = str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+        cron = self.env.ref('sale.send_pending_emails_cron', raise_if_not_found=False)
+        cron_enabled = cron and cron.active
+        if async_send and cron_enabled and allow_deferred_sending:
+            # Schedule the email to be sent asynchronously.
+            self.pending_email_template_id = mail_template
+            cron._trigger()
+        else:  # Async emails are disabled, either by the user or we are in the cron job.
+            # Send the email synchronously.
+            self.with_context(force_send=True).message_post_with_source(
+                mail_template,
+                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                subtype_xmlid='mail.mt_comment',
+            )
+
+    @api.model
+    def _cron_send_pending_emails(self):
+        """ Find and send pending order status emails asynchronously.
+
+        :return: None
+        """
+        pending_email_orders = self.search([('pending_email_template_id', '!=', False)])
+        self.env['ir.cron']._commit_progress(remaining=len(pending_email_orders))
+        for order in pending_email_orders:
+            order = order[0]  # Avoid pre-fetching after each cache invalidation due to committing.
+            order._send_order_notification_mail(
+                order.pending_email_template_id, allow_deferred_sending=False
+            )  # Resume the email sending.
+            order.pending_email_template_id = None
+            remaining_time = self.env['ir.cron']._commit_progress(processed=1)
+            if not remaining_time:
+                break
 
     def action_lock(self):
         self.locked = True
