@@ -272,6 +272,29 @@
             <attribute name="t-call">l10n_ar.document_tax_totals</attribute>
         </t>
 
+        <div id="qrcode" position="after">
+            <!-- RG 5614/2024: Show ARCA VAT and Other National Internal Taxes -->
+            <t t-set="l10n_ar_custom_tax_summary" t-value="o._l10n_ar_get_invoice_custom_tax_summary_for_report()"/>
+            <div class="l10n_ar_tax_details" t-if="l10n_ar_custom_tax_summary">
+                <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
+                    <th class="border-black" style="border-bottom: 1px solid" colspan="2">
+                           Fiscal Transparency Regime for the Final Consumer (Law 27.743)
+                    </th>
+                    <t t-foreach="l10n_ar_custom_tax_summary" t-as="detail">
+                        <tr>
+                            <td class="text-end"><strong t-esc="detail['name']"/></td>
+                            <td class="text-end">
+                                <span
+                                    class="oe_subtotal_footer_separator"
+                                    t-out="detail['formatted_tax_amount_currency']"
+                                />
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+        </div>
+
     </template>
 
     <template id="document_tax_totals" inherit_id="account.document_tax_totals" primary="True">
