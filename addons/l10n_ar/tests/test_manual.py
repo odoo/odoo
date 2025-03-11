@@ -187,3 +187,44 @@ class TestManual(common.TestAr):
             len_line_price_unit_digits = len(line_price_unit_decimal_part)
             if len_l10n_ar_price_unit_digits == len_line_price_unit_digits == decimal_price_digits_setting:
                 self.assertEqual(l10n_ar_price_unit_decimal_part, line_price_unit_decimal_part)
+
+    def test_16_invoice_b_tax_breakdown_1(self):
+        """ Display Both VAT and Other Taxes """
+        invoice1 = self._create_invoice_from_dict({
+            'ref': 'test_invoice_20:  Final Consumer Invoice B with multiple vat/perceptions/internal/other/national taxes',
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.service_iva_21, 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
+                 'tax_ids': [(6, 0, [self.tax_21.id, self.tax_perc_iibb.id])]},
+                {'product_id': self.service_iva_27, 'price_unit': 2250.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_27.id, self.tax_national.id])]},
+                {'product_id': self.product_iva_105_perc, 'price_unit': 1740.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_10_5.id, self.tax_internal.id])]},
+                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_0.id, self.tax_other.id])]},
+            ],
+        })
+        res1 = invoice1._l10n_ar_get_invoice_totals_for_report()
+        self.assertEqual(res1.get('detail_ar_tax'), [
+            {'formatted_amount_tax': '868.51', 'name': 'VAT Content $', 'tax_amount': 868.51},
+            {'formatted_amount_tax': '142.20', 'name': 'Other National Ind. Taxes $', 'tax_amount': 142.20}])
+
+    def test_17_invoice_b_tax_breakdown_2(self):
+        """ Display only Other Taxes (VAT taxes are 0) """
+        invoice2 = self._create_invoice_from_dict({
+            'ref': 'test_invoice_21:  inal Consumer Invoice B with 0 tax and internal tax',
+            "move_type": 'out_invoice',
+            "partner_id": self.partner_cf,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0, 'quantity': 1,
+                    'tax_ids': [(6, 0, [self.tax_no_gravado.id, self.tax_internal.id])]},
+            ],
+        })
+        res2 = invoice2._l10n_ar_get_invoice_totals_for_report()
+        self.assertEqual(res2.get('detail_ar_tax'), [
+            {'formatted_amount_tax': '300.00', 'name': 'Other National Ind. Taxes $', 'tax_amount': 300.00}])
