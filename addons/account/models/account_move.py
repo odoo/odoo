@@ -200,7 +200,6 @@ class AccountMove(models.Model):
         'move_id',
         string='Journal Items',
         copy=True,
-        domain=[('display_type', 'not in', ('line_section', 'line_note'))],
     )
 
     # === Payment fields === #

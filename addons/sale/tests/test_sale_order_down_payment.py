@@ -154,6 +154,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [income_acc_2.id,            self.tax_10.ids,                 -200,         220          ],
             [self.revenue_account.id,    self.tax_10.ids,                 -200,         220          ],
             [self.revenue_account.id,    self.env['account.tax'],         -200,         200          ],
+            # downpayment section
+            [False,                      [],                              0,            0            ],
             # deduction downpayment lines
             [self.revenue_account.id,    (self.tax_15 + self.tax_10).ids, 100,          -125         ],
             [income_acc_2.id,            self.tax_10.ids,                 100,          -110         ],
@@ -667,6 +669,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         expected = [
             # keys
             ['account_id',               'tax_ids',    'balance', 'price_total'],
+            # line section
+            [False,                      [],           0.0,       0.0          ],
             # down payment
             [self.revenue_account.id,    tax_21_a.ids, 82.64,     100.0        ],
             [self.revenue_account.id,    tax_21_b.ids, 82.64,     100.0        ],
@@ -693,6 +697,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             # base lines
             [self.revenue_account.id,    tax_21_a.ids, -1000.0,   1210.0       ],
             [self.revenue_account.id,    tax_21_b.ids, -1000.0,   1210.0       ],
+            # line section
+            [False,                      [],           0.0,       0.0          ],
             # down payment
             [self.revenue_account.id,    tax_21_a.ids, 82.64,     -100.0       ],
             [self.revenue_account.id,    tax_21_b.ids, 82.64,     -100.0       ],
@@ -767,6 +773,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         expected = [
             # keys
             ['account_id',               'tax_ids',    'balance', 'price_total'],
+            # line section
+            [False,                      [],           0.0,       0.0          ],
             # down payment
             [self.revenue_account.id,    tax_24_a.ids, 80.65,     100.0        ],
             [self.revenue_account.id,    tax_24_b.ids, 80.65,     100.0        ],
@@ -793,6 +801,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             # base lines
             [self.revenue_account.id,    tax_24_a.ids, -1000.0,   1240.0       ],
             [self.revenue_account.id,    tax_24_b.ids, -1000.0,   1240.0       ],
+            # line section
+            [False,                      [],            0.0,      0.0          ],
             # down payment
             [self.revenue_account.id,    tax_24_a.ids,  80.65,    -100.0       ],
             [self.revenue_account.id,    tax_24_b.ids,  80.65,    -100.0       ],
@@ -902,6 +912,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,   tax_25_a.ids,  -968.0,    1210.0       ],
             [self.revenue_account.id,   tax_25_b.ids,  -968.0,    1210.0       ],
             [self.revenue_account.id,   tax_25_c.ids,  -968.0,    1210.0       ],
+            # line section
+            [False,                     [],            0.0,       0.0          ],
             # down payment
             [self.revenue_account.id,    tax_21_a.ids, 82.64,    -100.0       ],
             [self.revenue_account.id,    tax_21_b.ids, 82.64,    -100.0       ],
@@ -1025,6 +1037,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             ['account_id',              'tax_ids',          'balance',          'price_total'],
             # base lines
             [self.revenue_account.id,   self.tax_15.ids,    -100.0,             115.0],
+            # line section
+            [False,                     [],                 0.0,                0.0],
             # down payment
             [self.revenue_account.id,   self.tax_15.ids,    43.48,              -50.0],
             # taxes
