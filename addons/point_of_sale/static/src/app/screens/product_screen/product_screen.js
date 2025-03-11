@@ -379,7 +379,7 @@ export class ProductScreen extends Component {
             }
         }
 
-        return this.searchWord !== ""
+        return this.searchWord === ""
             ? filteredList
             : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
     }

@@ -719,6 +719,7 @@ class PosConfig(models.Model):
     def _get_available_product_domain(self):
         domain = [
             *self.env['product.product']._check_company_domain(self.company_id),
+            ('active', '=', True),
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ]
