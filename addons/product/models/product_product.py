@@ -104,7 +104,7 @@ class ProductProduct(models.Model):
     # There could be no variant for a combination if using dynamic attributes.
     _combination_unique = models.UniqueIndex("(product_tmpl_id, combination_indices) WHERE active IS TRUE")
 
-    is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite', readonly=True, store=True)
+    is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite', readonly=False, store=True)
     _is_favorite_index = models.Index("(is_favorite) WHERE is_favorite IS TRUE")
 
     @api.depends('image_variant_1920', 'image_variant_1024')

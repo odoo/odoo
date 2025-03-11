@@ -269,15 +269,23 @@
             <field name="arch" type="xml">
                 <field name="id" position="after">
                     <field name="is_storable"/>
+                    <field name="qty_available"/>
+                    <field name="free_qty"/>
                 </field>
-                <div name="o_kanban_price" position="after">
-                    <div t-if="record.is_storable.raw_value"
-                         name="o_kanban_qty_available">
-                        <span>On Hand: </span>
-                        <field name="qty_available"/>
-                        <field name="uom_id" widget="many2one_uom" class="ms-1" groups="uom.group_uom"/>
+                <field name="product_template_attribute_value_ids" position="after">
+                    <div t-if="record.is_storable.raw_value" invisible="not context.get('display_stock')"
+                         name="o_kanban_qty_available_and_on_hand">
+                        <t name="qty_free" t-if="record.free_qty.raw_value != record.qty_available.raw_value">
+                            <span class="fw-bold" t-out="record.free_qty.raw_value"/>
+                            <span class="text-muted small"> Available</span>
+                            <span> / </span>
+                        </t>
+                        <t name="qty_available">
+                            <span class="fw-bold" t-out="record.qty_available.raw_value"/>
+                            <span class="text-muted small"> On Hand</span>
+                        </t>
                     </div>
-                </div>
+                </field>
                 <a role="menuitem" type="open" position="after">
                     <a role="menuitem" type="object" name="action_product_forecast_report" class="dropdown-item border-top-0">View Availability</a>
                 </a>

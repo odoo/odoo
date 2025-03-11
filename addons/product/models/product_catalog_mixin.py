@@ -69,10 +69,19 @@ class ProductCatalogMixin(models.AbstractModel):
                 'quantity': float (optional)
                 'productType': string
                 'price': float
+                'uomDisplayName': string
+                'code': string (optional)
                 'readOnly': bool (optional)
             }
         """
-        return {product.id: {'productType': product.type} for product in products}
+        return {
+            product.id: {
+                'productType': product.type,
+                'uomDisplayName': product.uom_id.display_name,
+                'code': product.code if product.code else '',
+            }
+            for product in products
+        }
 
     def _get_product_catalog_order_line_info(self, product_ids, child_field=False, **kwargs):
         """ Returns products information to be shown in the catalog.
@@ -86,6 +95,8 @@ class ProductCatalogMixin(models.AbstractModel):
                 'quantity': float (optional)
                 'productType': string
                 'price': float
+                'uomDisplayName': string
+                'code': string (optional)
                 'readOnly': bool (optional)
             }
         """
@@ -96,7 +107,10 @@ class ProductCatalogMixin(models.AbstractModel):
             order_line_info[product.id] = {
                **record_lines._get_product_catalog_lines_data(parent_record=self, **kwargs),
                'productType': product.type,
+               'code': product.code if product.code else '',
             }
+            if not order_line_info[product.id]['uomDisplayName']:
+                order_line_info[product.id]['uomDisplayName'] = product.uom_id.display_name
             product_ids.remove(product.id)
 
         products = self.env['product.product'].browse(product_ids)
@@ -107,6 +121,7 @@ class ProductCatalogMixin(models.AbstractModel):
 
     def _get_action_add_from_catalog_extra_context(self):
         return {
+            'display_uom': self.env.user.has_group('uom.group_uom'),
             'product_catalog_order_id': self.id,
             'product_catalog_order_model': self._name,
         }

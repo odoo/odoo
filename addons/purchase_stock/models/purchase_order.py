@@ -388,3 +388,6 @@ class PurchaseOrder(models.Model):
         """When auto sending reminder mails, don't send for purchase order with
         validated receipts."""
         return super()._get_orders_to_remind().filtered(lambda p: not p.effective_date)
+
+    def _is_display_stock_in_catalog(self):
+        return True
