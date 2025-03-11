@@ -17,9 +17,9 @@ test("should insert a banner with focus inside followed by a paragraph", async (
     await press("enter");
     expect(unformat(getContent(el))).toBe(
         unformat(
-            `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                    <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3 o_editable" contenteditable="true">
+            `<p><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p>Test[]</p>
                     </div>
                 </div><p><br></p>`
@@ -52,9 +52,9 @@ test("press 'ctrl+a' inside a banner should select all the banner content", asyn
     await press(["ctrl", "a"]);
     expect(unformat(getContent(el))).toBe(
         unformat(
-            `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                    <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3 o_editable" contenteditable="true">
+            `<p><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p>[Test</p><p>Test1</p><p>Test2]<br></p>
                     </div>
                 </div><p><br></p>`
@@ -77,9 +77,9 @@ test("remove all content should preserve the first paragraph tag inside the bann
     await press(["ctrl", "a"]);
     expect(unformat(getContent(el))).toBe(
         unformat(
-            `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                    <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3 o_editable" contenteditable="true">
+            `<p><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p>[Test</p><p>Test1</p><p>Test2]<br></p>
                     </div>
                 </div><p><br></p>`
@@ -89,9 +89,9 @@ test("remove all content should preserve the first paragraph tag inside the bann
     await press("Backspace");
     expect(unformat(getContent(el))).toBe(
         unformat(
-            `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                    <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3 o_editable" contenteditable="true"><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></div>
+            `<p><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true"><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></div>
                 </div><p><br></p>`
         )
     );
@@ -104,9 +104,9 @@ test("Inserting a banner at the top of the editable also inserts a paragraph abo
     expect(unformat(getContent(el))).toBe(
         unformat(
             `<p><br></p>
-            <div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3 o_editable" contenteditable="true">
+            <div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                     <p>test[]</p>
                 </div>
             </div>
@@ -117,9 +117,9 @@ test("Inserting a banner at the top of the editable also inserts a paragraph abo
 
 test("Everything gets selected with ctrl+a, including a contenteditable=false as first element", async () => {
     const { el } = await setupEditor(
-        `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3 o_editable" contenteditable="true">
+        `<div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                <div class="w-100 px-3" contenteditable="true">
                     <p><br></p>
                 </div>
             </div><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
@@ -127,9 +127,9 @@ test("Everything gets selected with ctrl+a, including a contenteditable=false as
     await press(["ctrl", "a"]);
     await animationFrame();
     expect(getContent(el)).toBe(
-        `[<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3 o_editable" contenteditable="true">
+        `[<div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                <div class="w-100 px-3" contenteditable="true">
                     <p><br></p>
                 </div>
             </div><p placeholder='Type "/" for commands' class="o-we-hint">]<br></p>`
@@ -149,9 +149,9 @@ test("Everything gets selected with ctrl+a, including a banner", async () => {
     await insertText(editor, "Test2");
     await press(["ctrl", "a"]);
     expect(getContent(el)).toBe(
-        `<p>[<br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3 o_editable" contenteditable="true">
+        `<p>[<br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                     <p>test</p>
                 </div>
             </div><p>Test1</p><p>Test2]<br></p>`,
@@ -165,11 +165,11 @@ test("Everything gets selected with ctrl+a, including a banner", async () => {
 
 test("Everything gets selected with ctrl+a, including a contenteditable=false as first two elements", async () => {
     const { el } = await setupEditor(
-        '<div contenteditable="false">a</div><div contenteditable="false">b</div><p>cd[]</p>'
+        '<div data-oe-role="status" contenteditable="false" role="status">a</div><div data-oe-role="status" contenteditable="false" role="status">b</div><p>cd[]</p>'
     );
     await press(["ctrl", "a"]);
     expect(getContent(el)).toBe(
-        '[<div contenteditable="false">a</div><div contenteditable="false">b</div><p>cd]</p>'
+        '[<div data-oe-role="status" contenteditable="false" role="status">a</div><div data-oe-role="status" contenteditable="false" role="status">b</div><p>cd]</p>'
     );
 
     await press("Backspace");
@@ -202,9 +202,9 @@ test("add banner inside empty list", async () => {
     await animationFrame();
     expect(unformat(getContent(el))).toBe(
         unformat(
-            `<ul><li><br><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                    <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3 o_editable" contenteditable="true">
+            `<ul><li><br><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
                     </div>
                 </div><br></li></ul>`
@@ -219,9 +219,9 @@ test("add banner inside non-empty list", async () => {
     await animationFrame();
     expect(unformat(getContent(el))).toBe(
         unformat(
-            `<ul><li><br><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                    <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                    <div class="w-100 px-3 o_editable" contenteditable="true">
+            `<ul><li><br><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                         <p>Test[]</p>
                     </div>
                 </div><br></li></ul>`
@@ -237,11 +237,11 @@ test("should move heading element inside the banner, with paragraph element afte
 
     await press("enter");
     expect(getContent(el)).toBe(
-        `<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
-                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
-                <div class="w-100 px-3 o_editable" contenteditable="true">
+        `<p><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
                     <h1>Test[]</h1>
                 </div>
-            </div><div class="o-paragraph"><br></div>`
+            </div><p><br></p>`
     );
 });
