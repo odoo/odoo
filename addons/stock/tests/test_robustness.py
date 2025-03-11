@@ -339,3 +339,32 @@ class TestRobustness(TransactionCase):
         self.assertEqual(quant.reserved_quantity, 2)
         self.env['stock.quant']._clean_reservations()
         self.assertEqual(quant.reserved_quantity, 0)
+
+    def test_clean_quants_synch_with_different_uom(self):
+        """ Ensure the _clean_reservaion method align the quants on stock.move.line when using different UoM """
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        product_reservation_too_high = self.env['product.product'].create({
+            'name': 'Product Reservation',
+            'is_storable': True,
+            'uom_id': uom_kg.id,
+        })
+        # update available quantity to 1 kg
+        self.env['stock.quant']._update_available_quantity(product_reservation_too_high, self.stock_location, 1)
+        quant = self.env['stock.quant']._gather(product_reservation_too_high, self.stock_location)
+        # reserve 0.1 kg with a move
+        move = self.env['stock.move'].create({
+            'name': 'test_clean_quants_synch',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product_reservation_too_high.id,
+            'product_uom_qty': 100,
+            'product_uom': self.env.ref('uom.product_uom_gram').id,
+        })
+        move._action_confirm()
+        move._action_assign()
+        # update reserved quantity to 0.2 kg
+        self.env['stock.quant']._update_reserved_quantity(product_reservation_too_high, self.stock_location, 0.2)
+        self.assertEqual(quant.reserved_quantity, 0.3)
+        self.env['stock.quant']._clean_reservations()
+        # the reserved quantity should be cleaned to the quantity reserved by the move
+        self.assertEqual(quant.reserved_quantity, 0.1)
