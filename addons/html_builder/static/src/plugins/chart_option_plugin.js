@@ -4,7 +4,6 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { isCSSColor } from "@web/core/utils/colors";
 
-const CHART_SELECTOR = ".s_chart";
 class ChartOptionPlugin extends Plugin {
     static id = "chartOptionPlugin";
     static dependencies = ["history"];
@@ -12,7 +11,7 @@ class ChartOptionPlugin extends Plugin {
         builder_options: [
             {
                 OptionComponent: ChartOption,
-                selector: CHART_SELECTOR,
+                selector: ".s_chart",
                 props: {
                     isPieChart: this.isPieChart,
                     getColor: (color) => this.getColor(color),
@@ -20,36 +19,14 @@ class ChartOptionPlugin extends Plugin {
             },
         ],
         builder_actions: this.getActions(),
-        normalize_handlers: this.onNormalize.bind(this),
     };
-
-    // TODO LOCO: update after merging generalized restart interactions
-    onNormalize(root) {
-        if (root.matches(CHART_SELECTOR)) {
-            this.reloadGraph(root);
-            return;
-        }
-        for (const chartEl of root.querySelectorAll(CHART_SELECTOR)) {
-            this.reloadGraph(chartEl);
-        }
-    }
-
-    reloadGraph(editingElement) {
-        this.dispatchTo("update_interactions", editingElement);
-    }
 
     updateDOMData(editingElement, data) {
         editingElement.dataset.data = JSON.stringify(data);
-        if (this.dependencies.history.getIsPreviewing()) {
-            this.reloadGraph(editingElement);
-        }
     }
 
     getActions() {
         return {
-            reloadGraph: {
-                apply: ({ editingElement }) => this.reloadGraph(editingElement),
-            },
             setChartType: {
                 isApplied: ({ editingElement, value }) => editingElement.dataset.type === value,
                 apply: ({ editingElement, value }) => {

@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="html_builder.ChartOption">
-    <BuilderContext action="'reloadGraph'">
-        <BuilderRow label.translate="Type">
-            <BuilderSelect action="'setChartType'">
-                <BuilderSelectItem actionValue="'bar'" id="'bar_chart_opt'">Bar Vertical</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'horizontalBar'" id="'horizontal_bar_chart_opt'">Bar Horizontal</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'line'" id="'line_chart_opt'">Line</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'pie'">Pie</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'doughnut'">Doughnut</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'radar'">Radar</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-        <BuilderRow t-if="domState.data.datasets.length > 1" label.translate="Stacked">
-            <BuilderCheckbox t-if="isActiveItem('bar_chart_opt') or isActiveItem('horizontal_bar_chart_opt') or isActiveItem('line_chart_opt')"
-                dataAttributeAction="'stacked'"
-                dataAttributeActionValue="'true'"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Legend">
-            <BuilderSelect dataAttributeAction="'legendPosition'">
-                <BuilderSelectItem dataAttributeActionValue="'none'">None</BuilderSelectItem>
-                <BuilderSelectItem dataAttributeActionValue="'top'">Top</BuilderSelectItem>
-                <BuilderSelectItem dataAttributeActionValue="'left'">Left</BuilderSelectItem>
-                <BuilderSelectItem dataAttributeActionValue="'bottom'">Bottom</BuilderSelectItem>
-                <BuilderSelectItem dataAttributeActionValue="'right'">Right</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-        <BuilderRow label.translate="Tooltip">
-            <BuilderCheckbox dataAttributeAction="'tooltipDisplay'" dataAttributeActionValue="'true'"/>
-        </BuilderRow>
-    </BuilderContext>
+    <BuilderRow label.translate="Type">
+        <BuilderSelect action="'setChartType'">
+            <BuilderSelectItem actionValue="'bar'" id="'bar_chart_opt'">Bar Vertical</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'horizontalBar'" id="'horizontal_bar_chart_opt'">Bar Horizontal</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'line'" id="'line_chart_opt'">Line</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'pie'">Pie</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'doughnut'">Doughnut</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'radar'">Radar</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow t-if="domState.data.datasets.length > 1" label.translate="Stacked">
+        <BuilderCheckbox t-if="isActiveItem('bar_chart_opt') or isActiveItem('horizontal_bar_chart_opt') or isActiveItem('line_chart_opt')"
+            dataAttributeAction="'stacked'"
+            dataAttributeActionValue="'true'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Legend">
+        <BuilderSelect dataAttributeAction="'legendPosition'">
+            <BuilderSelectItem dataAttributeActionValue="'none'">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'top'">Top</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'left'">Left</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'bottom'">Bottom</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'right'">Right</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Tooltip">
+        <BuilderCheckbox dataAttributeAction="'tooltipDisplay'" dataAttributeActionValue="'true'"/>
+    </BuilderRow>
 
     <table class="o_builder_matrix ms-3"
             t-on-mouseover="onTableMouseover"
