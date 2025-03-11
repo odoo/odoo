@@ -5,7 +5,8 @@ export class EditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
 
     resources = {
-        normalize_handlers: this.startInteractions.bind(this),
+        normalize_handlers: this.restartInteractions.bind(this),
+        option_visibility_updated: this.restartInteractions.bind(this),
     };
 
     setup() {
@@ -23,7 +24,7 @@ export class EditInteractionPlugin extends Plugin {
         this.websiteEditService = websiteEditService;
     }
 
-    startInteractions(element) {
+    restartInteractions(element) {
         if (!this.websiteEditService) {
             throw new Error("website edit service not loaded");
         }

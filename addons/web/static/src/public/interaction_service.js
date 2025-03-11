@@ -158,7 +158,11 @@ class InteractionService {
     stopInteractions(el = this.el) {
         const interactions = [];
         for (const interaction of this.interactions.slice().reverse()) {
-            if (el === interaction.el || el.contains(interaction.el)) {
+            if (
+                el === interaction.el ||
+                el.contains(interaction.el) ||
+                interaction.el.closest("[data-invisible='1']")
+            ) {
                 interaction.destroy();
                 this.activeInteractions.delete(interaction.el, interaction.interaction.constructor);
             } else {
