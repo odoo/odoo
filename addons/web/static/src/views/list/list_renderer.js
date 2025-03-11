@@ -1063,6 +1063,7 @@ export class ListRenderer extends Component {
         const children = [...row.children];
         const index = children.indexOf(cell);
         let futureCell;
+        let targetIndex;
         switch (direction) {
             case "up": {
                 let futureRow = row.previousElementSibling;
@@ -1074,9 +1075,16 @@ export class ListRenderer extends Component {
                     );
                     const nextIsGroup = futureRow.classList.contains("o_group_header");
                     const rowTypeSwitched = cellIsInGroupRow !== nextIsGroup;
+                    const isGroupToGroup = cellIsInGroupRow && nextIsGroup;
+                    if (rowTypeSwitched || isGroupToGroup) {
+                        targetIndex = this.lastKnownIndex || 1;
+                    } else {
+                        this.lastKnownIndex = index;
+                    }
+
                     let defaultIndex = 0;
                     if (cellIsInGroupRow) {
-                        defaultIndex = this.hasSelectors ? 1 : 0;
+                        defaultIndex = this.hasSelectors ? targetIndex : 0;
                     }
                     futureCell =
                         addCell ||
@@ -1093,9 +1101,16 @@ export class ListRenderer extends Component {
                     );
                     const nextIsGroup = futureRow.classList.contains("o_group_header");
                     const rowTypeSwitched = cellIsInGroupRow !== nextIsGroup;
+                    const isGroupToGroup = cellIsInGroupRow && nextIsGroup;
+                    if (rowTypeSwitched || isGroupToGroup) {
+                        targetIndex = this.lastKnownIndex || 1;
+                    } else {
+                        this.lastKnownIndex = index;
+                    }
+
                     let defaultIndex = 0;
                     if (cellIsInGroupRow) {
-                        defaultIndex = this.hasSelectors ? 1 : 0;
+                        defaultIndex = this.hasSelectors ? targetIndex : 0;
                     }
                     futureCell =
                         addCell ||
@@ -1105,10 +1120,16 @@ export class ListRenderer extends Component {
             }
             case "left": {
                 futureCell = children[index - 1];
+                if (futureCell) {
+                    this.lastKnownIndex = index - 1;
+                }
                 break;
             }
             case "right": {
                 futureCell = children[index + 1];
+                if (futureCell) {
+                    this.lastKnownIndex = index + 1;
+                }
                 break;
             }
         }
