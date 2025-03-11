@@ -1153,8 +1153,11 @@ class Picking(models.Model):
         return super(Picking, self).unlink()
 
     def do_print_picking(self):
+        picking_operations_report = self.env.ref('stock.action_report_picking',raise_if_not_found=False)
+        if not picking_operations_report:
+            raise UserError(_("The Picking Operations report has been deleted so you cannot print at this time unless the report is restored."))
         self.write({'printed': True})
-        return self.env.ref('stock.action_report_picking').report_action(self)
+        return picking_operations_report.report_action(self)
 
     def should_print_delivery_address(self):
         self.ensure_one()
