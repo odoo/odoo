@@ -636,7 +636,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     continue
                 expected_value = expected_values[key]
                 currency = monetary_fields.get(key)
-                if currency.is_zero(current_value - expected_value):
+                if current_value is not None and currency.is_zero(current_value - expected_value):
                     current_values[key] = expected_value
 
         currency = self.env['res.currency'].browse(tax_totals['currency_id'])
