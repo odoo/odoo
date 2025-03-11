@@ -35,6 +35,24 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...selectElementInWeSelectWidget('product_variant_picker_opt', 'Product Yes Variant 2 (Pink)'),
         ...clickOnSave(),
         clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
+        // Since 18.2, even if a specific variant is selected, the product configuration modal is displayed
+        // The variant set on the modal used the default variants attributes (so will not correspond to the selected variant)
+        // TODO: fix this misbahvior by setting the variant attributes based on the chosen variant 
+        // https://github.com/odoo/odoo/pull/201217#issuecomment-2721871718
+        {
+            content: "Check if the red variant is selected",
+            trigger: ":iframe .modal li:contains(Red) input:checked",
+        },
+        {
+            content: "Click the pink variant",
+            trigger: ":iframe .modal li:contains(Pink) input",
+            run: "click",
+        },
+        {
+            content: "Check if the pink variant is selected",
+            trigger: ":iframe .modal li:contains(Pink) input:checked",
+        },
+        clickOnElement('continue shopping', ':iframe .modal button:contains(Continue Shopping)',),
 
         // Basic product with no variants and action=buy now
         ...editAddToCartSnippet(),
