@@ -18,8 +18,11 @@ class NotificationDialog extends Component {
 
 export class NotificationSettings extends Component {
     static components = { ActionPanel, Dropdown, DropdownItem };
-    static props = ["hasSizeConstraints?", "thread", "close?", "className?"];
+    static props = ["hasSizeConstraints?", "thread", "close?", "className?", "showMuteOptions?"];
     static template = "discuss.NotificationSettings";
+    static defaultProps = {
+        showMuteOptions: true,
+    };
 
     setup() {
         this.store = useService("mail.store");
