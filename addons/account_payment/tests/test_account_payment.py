@@ -288,7 +288,7 @@ class TestAccountPayment(AccountPaymentCommon):
             expected_values={
                 'payment_amount': 90.0,
                 'payment_amount_total': 100.0,
-                'invoice_payment_state': 'in_payment',
+                'invoice_payment_state': invoice_eligible._get_invoice_in_payment_state(),
                 'invoice_amount_paid': 90.0,
                 'payment_line_ids': [
                     {'credit': 0.0, 'debit': 90.0, 'account_type': 'asset_current'},
@@ -317,7 +317,7 @@ class TestAccountPayment(AccountPaymentCommon):
             expected_values={
                 'payment_amount': 100.0,
                 'payment_amount_total': 100.0,
-                'invoice_payment_state': 'in_payment',
+                'invoice_payment_state': invoice_ineligible._get_invoice_in_payment_state(),
                 'invoice_amount_paid': 100.0,
                 'payment_line_ids': [
                     {'credit': 0.0, 'debit': 100.0, 'account_type': 'asset_current'},
@@ -354,7 +354,7 @@ class TestAccountPayment(AccountPaymentCommon):
             expected_values={
                 'payment_amount': 103.5,
                 'payment_amount_total': 115.0,
-                'invoice_payment_state': 'in_payment',
+                'invoice_payment_state': invoice_eligible_with_tax._get_invoice_in_payment_state(),
                 'invoice_amount_paid': 103.5,
                 'payment_line_ids': [
                     {'credit': 0.0, 'debit': 103.5, 'account_type': 'asset_current'},
@@ -398,7 +398,7 @@ class TestAccountPayment(AccountPaymentCommon):
             expected_values={
                 'payment_amount': 113.5,
                 'payment_amount_total': 113.5,
-                'invoice_payment_state': 'in_payment',
+                'invoice_payment_state': invoice_ineligible_with_mixed_and_tax._get_invoice_in_payment_state(),
                 'invoice_amount_paid': 113.5,
                 'payment_line_ids': [
                     {'credit': 0.0, 'debit': 113.5, 'account_type': 'asset_current'},
@@ -441,7 +441,7 @@ class TestAccountPayment(AccountPaymentCommon):
             expected_values={
                 'payment_amount': 105.0,
                 'payment_amount_total': 115.0,
-                'invoice_payment_state': 'in_payment',
+                'invoice_payment_state': invoice_eligible_with_excluded_and_tax._get_invoice_in_payment_state(),
                 'invoice_amount_paid': 105.0,
                 'payment_line_ids': [
                     {'credit': 0.0, 'debit': 105.0, 'account_type': 'asset_current'},
@@ -478,7 +478,7 @@ class TestAccountPayment(AccountPaymentCommon):
             expected_values={
                 'payment_amount': 90,
                 'payment_amount_total': 100,
-                'invoice_payment_state': 'in_payment',
+                'invoice_payment_state': invoice_eligible_with_foreign_currency._get_invoice_in_payment_state(),
                 'invoice_amount_paid': 90,
                 'payment_line_ids': [
                     {'credit': 0.0, 'debit': 45.0, 'account_type': 'asset_current'},
