@@ -263,10 +263,10 @@ export class HtmlField extends Component {
 
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];
         if (
-            !("disableVideo" in config) &&
+            !("allowMediaDialogVideo" in config) &&
             (sanitize_tags || (sanitize_tags === undefined && sanitize))
         ) {
-            config.disableVideo = true; // Tag-sanitized fields remove videos.
+            config.allowMediaDialogVideo = false; // Tag-sanitized fields remove videos.
         }
         if (this.props.codeview) {
             config.resources = {
@@ -325,14 +325,18 @@ export const htmlField = {
         if (options.height) {
             editorConfig.height = `${options.height}px`;
         }
-        if ("disableImage" in options) {
-            editorConfig.disableImage = Boolean(options.disableImage);
+        if ("allowImage" in options) {
+            editorConfig.allowImage = Boolean(options.allowImage);
         }
-        if ("disableVideo" in options) {
-            editorConfig.disableVideo = Boolean(options.disableVideo);
+        if ("allowMediaDialogVideo" in options) {
+            editorConfig.allowMediaDialogVideo = Boolean(options.allowMediaDialogVideo);
         }
-        if ("disableFile" in options) {
-            editorConfig.disableFile = Boolean(options.disableFile);
+        if ("allowFile" in options) {
+            editorConfig.allowFile = Boolean(options.allowFile);
+        }
+        if ("allowAttachmentCreation" in options) {
+            editorConfig.allowImage = Boolean(options.allowAttachmentCreation);
+            editorConfig.allowFile = Boolean(options.allowAttachmentCreation);
         }
         if ("baseContainer" in options) {
             editorConfig.baseContainer = options.baseContainer;
