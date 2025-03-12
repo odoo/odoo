@@ -829,3 +829,6 @@ export function isRedundantElement(node) {
 
     return true;
 }
+
+// Selector for QWeb-specific attributes
+export const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
