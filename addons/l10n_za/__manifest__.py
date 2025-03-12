@@ -9,7 +9,8 @@
 This is the latest basic South African localisation necessary to run Odoo in ZA:
 ================================================================================
     - a generic chart of accounts
-    - SARS VAT Ready Structure""",
+    - SARS VAT Ready Structure
+    - correct title on Tax Invoice""",
     'author': 'Paradigm Digital (https://www.paradigmdigital.co.za)',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'depends': [
@@ -20,6 +21,7 @@ This is the latest basic South African localisation necessary to run Odoo in ZA:
     'data': [
         'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
+        'views/report_invoice.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
