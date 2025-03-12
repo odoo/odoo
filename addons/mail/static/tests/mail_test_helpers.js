@@ -1,4 +1,4 @@
-import { busModels } from "@bus/../tests/bus_test_helpers";
+import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
 import { after, before, expect, getFixture, registerDebugInfo } from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
@@ -56,8 +56,8 @@ import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_mess
 import { MailFollowers } from "./mock_server/mock_models/mail_followers";
 import { MailGuest } from "./mock_server/mock_models/mail_guest";
 import { MailLinkPreview } from "./mock_server/mock_models/mail_link_preview";
-import { MailMessageLinkPreview } from "./mock_server/mock_models/mail_message_link_preview";
 import { MailMessage } from "./mock_server/mock_models/mail_message";
+import { MailMessageLinkPreview } from "./mock_server/mock_models/mail_message_link_preview";
 import { MailMessageReaction } from "./mock_server/mock_models/mail_message_reaction";
 import { MailMessageSubtype } from "./mock_server/mock_models/mail_message_subtype";
 import { MailNotification } from "./mock_server/mock_models/mail_notification";
@@ -80,6 +80,15 @@ registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 
 mailGlobal.isInTest = true;
 useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // so that RPCs after tests do not throw error
+
+addBusMessageHandler("mail.record/insert", (_env, _id, payload) => {
+    const recordsByModelName = Object.entries(payload);
+    for (const [modelName, records] of recordsByModelName) {
+        for (const record of Array.isArray(records) ? records : [records]) {
+            registerDebugInfo(`insert > "${modelName}"`, record);
+        }
+    }
+});
 
 //-----------------------------------------------------------------------------
 // Exports

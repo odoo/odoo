@@ -104,7 +104,7 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
     });
     Object.assign(currentEnv, partialEnv, createDebugContext(currentEnv)); // This is needed if the views are in debug mode
 
-    registerDebugInfo(currentEnv);
+    registerDebugInfo("env", currentEnv);
 
     startRouter();
     await startServices(currentEnv);
