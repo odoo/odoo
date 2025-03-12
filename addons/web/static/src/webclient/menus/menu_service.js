@@ -25,18 +25,22 @@ export const menuService = {
 
         if (storedMenus && storedMenusVersion === odoo.info.server_version) {
             fetchMenus().then((res) => {
-                const fetchedMenus = JSON.stringify(res);
-                if (fetchedMenus !== storedMenus) {
-                    browser.localStorage.setItem("webclient_menus", fetchedMenus);
-                    menusData = res;
-                    env.bus.trigger("MENUS:APP-CHANGED");
+                if (res) {
+                    const fetchedMenus = JSON.stringify(res);
+                    if (fetchedMenus !== storedMenus) {
+                        browser.localStorage.setItem("webclient_menus", fetchedMenus);
+                        menusData = res;
+                        env.bus.trigger("MENUS:APP-CHANGED");
+                    }
                 }
             });
             menusData = JSON.parse(storedMenus);
         } else {
             menusData = await fetchMenus();
-            browser.localStorage.setItem("webclient_menus_version", odoo.info.server_version);
-            browser.localStorage.setItem("webclient_menus", JSON.stringify(menusData));
+            if (menusData) {
+                browser.localStorage.setItem("webclient_menus_version", odoo.info.server_version);
+                browser.localStorage.setItem("webclient_menus", JSON.stringify(menusData));
+            }
         }
 
         function _getMenu(menuId) {
