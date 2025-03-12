@@ -1004,7 +1004,7 @@ class DiscussChannel(models.Model):
             "member_count",
             "name",
             Store.One("parent_channel_id"),
-            Store.Many("rtc_session_ids", mode="ADD", extra=True, rename="rtcSessions"),
+            Store.Many("rtc_session_ids", mode="ADD", extra=True, rename="rtcSessions", sudo=True),
             "uuid",
         ]
         if for_current_user:
