@@ -758,6 +758,26 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
 });
 
 test.tags("desktop");
+test("toolbar should close on open link popover", async () => {
+    await setupEditor("<p>[a]</p>");
+    expect(".o-we-toolbar").toHaveCount(1);
+    await click(".o-we-toolbar .fa-link");
+    await waitForNone(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("toolbar should close on edit link from preview", async () => {
+    await setupEditor(`<p><a href="#">[a]</a></p>`);
+    expect(".o-we-toolbar").toHaveCount(1);
+    await click(".o-we-toolbar .fa-link");
+    await waitFor(".o-we-linkpopover");
+    await click(".o_we_edit_link");
+    await waitForNone(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
+test.tags("desktop");
 test("close the toolbar if the selection contains any nodes (traverseNode = [], ignore zws)", async () => {
     const { el } = await setupEditor(`<p>ab${strong("\u200B", "first")}cd</p>`);
     expect(".o-we-toolbar").toHaveCount(0);
