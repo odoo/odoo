@@ -7,4 +7,13 @@
         gap: map-get($spacers, 2);
         align-items: baseline;
     }
+
+    select:has(option[value="empty"]:checked),
+    select:has(option[value=""]:checked) {
+        color: $input-placeholder-color;
+    }
+
+    select option {
+        color: $o-gray-700;
+    }
 }

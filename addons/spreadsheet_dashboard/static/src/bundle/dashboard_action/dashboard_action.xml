@@ -5,15 +5,17 @@
             <t t-set-slot="layout-actions" t-if="!state.activeDashboard?.isSample">
                 <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
                 <div class="d-flex flex-wrap">
-                    <FilterValue
-                        t-if="status === Status.Loaded"
-                        filter="filter"
-                        model="state.activeDashboard.model"
+                    <div t-if="status === Status.Loaded"
+                        class="o_filter_value_container"
                         t-as="filter"
                         t-foreach="filters"
-                        t-key="filter.id"
-                        showTitle="true"
-                    />
+                        t-key="filter.id">
+                        <FilterValue
+                            filter="filter"
+                            model="state.activeDashboard.model"
+                            showTitle="true"
+                        />
+                    </div>
                 </div>
             </t>
             <t t-set-slot="control-panel-navigation-additional" t-if="!state.activeDashboard?.isSample">
