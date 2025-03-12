@@ -33,7 +33,7 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
 )}_im_livechat.odoo_version`;
 
 const OPERATOR_STORAGE_KEY = "im_livechat_previous_operator";
-const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
+export const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
 const SAVED_STATE_STORAGE_KEY = "im_livechat.saved_state";
 const LIVECHAT_UUID_COOKIE = "im_livechat_uuid";
 
