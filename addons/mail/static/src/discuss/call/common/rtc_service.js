@@ -39,6 +39,7 @@ function subscribe(target, event, f) {
 
 const SW_MESSAGE_TYPE = {
     UNEXPECTED_CALL_TERMINATION: "UNEXPECTED_CALL_TERMINATION",
+    POST_RTC_LOGS: "POST_RTC_LOGS",
 };
 export const CONNECTION_TYPES = { P2P: "p2p", SERVER: "server" };
 const SCREEN_CONFIG = {
@@ -334,7 +335,6 @@ export class Rtc extends Record {
             connectionType: undefined,
             hasPendingRequest: false,
             channel: undefined,
-            globalLogs: { odooInfo: odoo.info },
             logs: new Map(), // deprecated
             sendCamera: false,
             sendScreen: false,
@@ -527,7 +527,6 @@ export class Rtc extends Record {
      */
     async leaveCall(channel = this.state.channel) {
         this.state.hasPendingRequest = true;
-        this.logSnapshot();
         await this.rpcLeaveCall(channel);
         this.endCall(channel);
         this.state.hasPendingRequest = false;
@@ -541,6 +540,8 @@ export class Rtc extends Record {
         channel.rtcInvitingSession = undefined;
         channel.activeRtcSession = undefined;
         if (channel.eq(this.state.channel)) {
+            this.state.logs.end = new Date().toISOString();
+            this.dumpLogs();
             this.pttExtService.unsubscribe();
             this.network?.disconnect();
             this.clear();
@@ -919,9 +920,16 @@ export class Rtc extends Record {
             toRaw(session)._raw,
             param2
         );
-        let sessionEntry = this.state.logs[session.id];
+        if (!this.state.logs) {
+            return;
+        }
+        let sessionEntry = this.state.logs.entriesBySessionId[session.id];
         if (!sessionEntry) {
-            this.state.logs[session.id] = sessionEntry = { step: "", state: "", logs: [] };
+            this.state.logs.entriesBySessionId[session.id] = sessionEntry = {
+                step: "",
+                state: "",
+                logs: [],
+            };
         }
         if (step) {
             sessionEntry.step = step;
@@ -930,7 +938,7 @@ export class Rtc extends Record {
             sessionEntry.state = state;
         }
         sessionEntry.logs.push({
-            event: `${luxon.DateTime.now().toFormat("HH:mm:ss")}: ${entry}`,
+            event: `${new Date().toISOString()}: ${entry}`,
             error: error && {
                 name: error.name,
                 message: error.message,
@@ -1238,17 +1246,41 @@ export class Rtc extends Record {
     }
 
     newLogs() {
-        const date = luxon.DateTime.now().toFormat("yyyy-MM-dd-HH:mm:ss");
-        const id = `c:${this.state.channel.id}-s:${this.localSession.id}-d:${date}`;
-        this.state.logs = this.state.globalLogs[id] = {};
-        this.state.logs["hasTurn"] = hasTurn(this.iceServers);
+        this.state.logs = {
+            channelId: this.state.channel.id,
+            selfSessionId: this.localSession.id,
+            start: new Date().toISOString(),
+            hasTurn: hasTurn(this.iceServers),
+            entriesBySessionId: {},
+        };
     }
 
-    logSnapshot() {
-        if (!this.state.channel) {
-            // a snapshot out of a call would not collect any data
-            return;
+    /**
+     * @param {Object} [param0={}]
+     * @param  {boolean} [param0.download=false] true if we want to download the logs
+     */
+    dumpLogs({ download = false } = {}) {
+        const logs = [];
+        if (this.state.logs) {
+            logs.push({
+                type: "timeline",
+                entry: this.state.logs.start,
+                value: toRaw(this.state.logs),
+            });
         }
+        if (this.state.channel) {
+            logs.push(this.buildSnapshot());
+        }
+        if (logs.length || download) {
+            browser.navigator.serviceWorker?.controller?.postMessage({
+                name: SW_MESSAGE_TYPE.POST_RTC_LOGS,
+                logs,
+                download,
+            });
+        }
+    }
+
+    buildSnapshot() {
         const server = {};
         if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
             server.info = this.serverInfo;
@@ -1286,13 +1318,27 @@ export class Rtc extends Record {
             }
             return sessionInfo;
         });
-        this.state.globalLogs[`snapshot-${luxon.DateTime.now().toFormat("yyyy-MM-dd-HH-mm-ss")}`] =
-            {
+        return {
+            type: "snapshot",
+            entry: new Date().toISOString(),
+            value: {
                 server,
                 sessions,
                 connectionType: this.state.connectionType,
                 fallback: this.state.fallbackMode,
-            };
+            },
+        };
+    }
+
+    logSnapshot() {
+        if (!this.state.channel) {
+            // a snapshot out of a call would not collect any data
+            return;
+        }
+        browser.navigator.serviceWorker?.controller?.postMessage({
+            name: SW_MESSAGE_TYPE.POST_RTC_LOGS,
+            logs: [this.buildSnapshot()],
+        });
     }
 
     async rpcLeaveCall(channel) {
