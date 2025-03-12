@@ -51,10 +51,8 @@ class TestLoyalty(TransactionCase):
 
     def test_discount_product_unlink(self):
         # Test that we can not unlink discount line product id
-        with mute_logger('odoo.sql_db'):
-            with self.assertRaises(IntegrityError):
-                with self.cr.savepoint():
-                    self.program.reward_ids.discount_line_product_id.unlink()
+        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
+            self.program.reward_ids.discount_line_product_id.unlink()
 
     def test_loyalty_mail(self):
         # Test basic loyalty_mail functionalities
@@ -243,9 +241,10 @@ class TestLoyalty(TransactionCase):
             }
         ])
 
-        self.env['base.partner.merge.automatic.wizard']._merge(
-            [partner_1.id, partner_2.id, dest_partner.id], dest_partner
-        )
+        with self.patched_savepoints():
+            self.env['base.partner.merge.automatic.wizard']._merge(
+                [partner_1.id, partner_2.id, dest_partner.id], dest_partner
+            )
 
         dest_partner_loyalty_cards = self.env['loyalty.card'].search([
             ('partner_id', '=', dest_partner.id),

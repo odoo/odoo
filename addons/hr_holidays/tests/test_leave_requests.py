@@ -1122,7 +1122,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             raise RuntimeError()
 
         for leave_validation_type in types:
-            with self.assertRaises(RuntimeError), self.env.cr.savepoint():
+            with self.assertRaises(RuntimeError):
                 run_validation_flow(leave_validation_type)
 
     @freeze_time('2019-11-01')
