@@ -737,7 +737,10 @@ export class Composer extends Component {
         } else {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: composer.message,
-                onConfirm: () => this.message.remove(),
+                onConfirm: () => {
+                    this.message.remove();
+                    this.props.onDiscardCallback?.();
+                },
                 prompt: _t("Are you sure you want to delete this message?"),
             });
         }
