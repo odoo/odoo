@@ -154,6 +154,7 @@
             'website_sale/static/src/js/tours/website_sale_shop.js',
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/scss/kanban_record.scss',
+            'website_sale/static/src/js/client_actions/**/*',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
