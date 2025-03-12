@@ -1,8 +1,33 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.point_of_sale.tests.test_generic_localization import TestGenericLocalization
+from odoo.tests import tagged
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
-from odoo.tests.common import tagged
+
+
+@tagged('post_install', '-at_install', 'post_install_l10n')
+class TestGenericSA(TestGenericLocalization):
+    @classmethod
+    @AccountTestInvoicingCommon.setup_country('sa')
+    def setUpClass(cls):
+        super().setUpClass()
+        if cls.env['ir.module.module']._get('l10n_sa_edi').state == 'installed':
+            cls.skipTest(cls, "l10n_sa_edi should not be installed")
+        cls.main_pos_config.company_id.name = 'Generic SA'
+        cls.company.write({
+            'email': 'info@company.saexample.com',
+            'phone': '+966 51 234 5678',
+            'street2': 'Testomania',
+            'vat': '311111111111113',
+            'state_id': cls.env['res.country.state'].create({
+                'name': 'Riyadh',
+                'code': 'RYA',
+                'country_id': cls.company.country_id.id
+            }),
+            'street': 'Al Amir Mohammed Bin Abdul Aziz Street',
+            'city': 'المدينة المنورة',
+            'zip': '42317',
+        })
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
