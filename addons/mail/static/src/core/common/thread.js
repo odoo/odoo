@@ -86,7 +86,7 @@ export class Thread extends Component {
         });
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
-        /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageHighlight>|null} */
+        /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageScrolling>|null} */
         this.messageHighlight = this.env.messageHighlight
             ? useState(this.env.messageHighlight)
             : null;
@@ -498,7 +498,7 @@ export class Thread extends Component {
     }
 
     async jumpToPresent({ immediate = false } = {}) {
-        this.messageHighlight?.clearHighlight();
+        this.messageHighlight?.clear();
         if (!immediate || this.props.thread.loadNewer) {
             await this.props.thread.loadAround();
             this.props.thread.loadNewer = false;
