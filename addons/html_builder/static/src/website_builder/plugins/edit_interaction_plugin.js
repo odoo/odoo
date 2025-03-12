@@ -7,6 +7,7 @@ export class EditInteractionPlugin extends Plugin {
     resources = {
         normalize_handlers: this.restartInteractions.bind(this),
         option_visibility_updated: this.restartInteractions.bind(this),
+        content_manually_updated_handlers: this.restartInteractions.bind(this),
     };
 
     setup() {
