@@ -172,7 +172,7 @@
                         <page string="Advanced Options" name="advanced_options">
                             <group>
                                 <group>
-                                    <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="description"/>
                                     <field name="tax_group_id" attrs="{'invisible': [('amount_type', '=', 'group')], 'required': [('amount_type', '!=', 'group')]}"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
