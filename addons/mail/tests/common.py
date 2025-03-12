@@ -1855,6 +1855,20 @@ class MailCommon(common.TransactionCase, MailCase):
             **attach_values,
         } for x in range(count)]
 
+    def _filter_channels_fields(self, /, *channels_data):
+        """ Remove store channel data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        for data in channels_data:
+            if "im_livechat.channel" not in self.env:
+                data.pop("anonymous_country", None)
+                data.pop("livechatChannel", None)
+                data.pop("operator", None)
+            if "whatsapp.message" not in self.env:
+                data.pop("whatsapp_channel_valid_until", None)
+                data.pop("whatsapp_partner_id", None)
+        return list(channels_data)
+
     def _filter_messages_fields(self, /, *messages_data):
         """ Remove store message data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
@@ -1878,10 +1892,6 @@ class MailCommon(common.TransactionCase, MailCase):
         Not written in a modular way to avoid complex override for a simple test tool.
         """
         for data in threads_data:
-            if "im_livechat.channel" not in self.env:
-                data.pop("anonymous_country", None)
-                data.pop("livechatChannel", None)
-                data.pop("operator", None)
             if (
                 "rating.mixin" not in self.env.registry
                 or data["model"] not in self.env.registry
@@ -1891,7 +1901,4 @@ class MailCommon(common.TransactionCase, MailCase):
             ):
                 data.pop("rating_avg", None)
                 data.pop("rating_count", None)
-            if "whatsapp.message" not in self.env:
-                data.pop("whatsapp_channel_valid_until", None)
-                data.pop("whatsapp_partner_id", None)
         return list(threads_data)

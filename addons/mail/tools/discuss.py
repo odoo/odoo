@@ -344,6 +344,8 @@ class Store:
                 return {"id": self.records.id, "type": "guest"}
             if self.records._name == "res.partner":
                 return {"id": self.records.id, "type": "partner"}
+            if self.records._name == "website.visitor":
+                return {"id": self.records.id, "type": "visitor"}
             return self.records.id
 
     class Many(Relation):
