@@ -45,7 +45,6 @@ from . import res_company
 from . import res_groups_privilege
 from . import res_groups
 from . import res_users
-from . import res_users_view
 from . import res_users_settings
 from . import res_users_deletion
 from . import res_device
