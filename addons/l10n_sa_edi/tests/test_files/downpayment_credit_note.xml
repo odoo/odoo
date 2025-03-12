@@ -1,17 +1,22 @@
 <Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
   <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
   <cbc:ProfileID>reporting:1.0</cbc:ProfileID>
-  <cbc:ID>INV/2022/00002</cbc:ID>
-  <cbc:UUID>f60b0627-777e-4374-b8a3-ea071d9220cc</cbc:UUID>
+  <cbc:ID>RINV/2022/00001</cbc:ID>
+  <cbc:UUID>ea8e1ab4-6b4e-4cb2-8efc-f8e229622774</cbc:UUID>
   <cbc:IssueDate>2022-09-05</cbc:IssueDate>
   <cbc:IssueTime>08:20:02</cbc:IssueTime>
-  <cbc:InvoiceTypeCode name="0100100">388</cbc:InvoiceTypeCode>
+  <cbc:InvoiceTypeCode name="0100100">381</cbc:InvoiceTypeCode>
   <cbc:DocumentCurrencyCode>SAR</cbc:DocumentCurrencyCode>
   <cbc:TaxCurrencyCode>SAR</cbc:TaxCurrencyCode>
   <cbc:BuyerReference>Azure Interior</cbc:BuyerReference>
   <cac:OrderReference>
-    <cbc:ID>INV/2022/00002</cbc:ID>
+    <cbc:ID>Reversal of: INV/2022/00001, please reverse :c</cbc:ID>
   </cac:OrderReference>
+  <cac:BillingReference>
+    <cac:InvoiceDocumentReference>
+      <cbc:ID>INV/2022/00001</cbc:ID>
+    </cac:InvoiceDocumentReference>
+  </cac:BillingReference>
   <cac:AdditionalDocumentReference>
     <cbc:ID>PIH</cbc:ID>
     <cac:Attachment>
@@ -84,7 +89,7 @@
         </cac:RegistrationAddress>
       </cac:PartyLegalEntity>
       <cac:Contact>
-        <cbc:ID>316</cbc:ID>
+        <cbc:ID>346</cbc:ID>
         <cbc:Name>SA Company Test</cbc:Name>
         <cbc:Telephone>+966512345678</cbc:Telephone>
         <cbc:ElectronicMail>info@company.saexample.com</cbc:ElectronicMail>
@@ -131,7 +136,7 @@
         </cac:RegistrationAddress>
       </cac:PartyLegalEntity>
       <cac:Contact>
-        <cbc:ID>320</cbc:ID>
+        <cbc:ID>350</cbc:ID>
         <cbc:Name>Chichi Lboukla</cbc:Name>
         <cbc:Telephone>+18709310505</cbc:Telephone>
         <cbc:ElectronicMail>azure.Interior24@example.com</cbc:ElectronicMail>
@@ -144,14 +149,14 @@
   <cac:PaymentMeans>
     <cbc:PaymentMeansCode listID="UN/ECE 4461">1</cbc:PaymentMeansCode>
     <cbc:PaymentDueDate>2022-09-22</cbc:PaymentDueDate>
-    <cbc:InstructionID>INV/2022/00001</cbc:InstructionID>
-    <cbc:PaymentID>INV/2022/00001</cbc:PaymentID>
+    <cbc:InstructionNote>Reversal of: INV/2022/00001, please reverse :c</cbc:InstructionNote>
+    <cbc:PaymentID>RINV/2022/00001</cbc:PaymentID>
   </cac:PaymentMeans>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="SAR">150.00</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="SAR">15.00</cbc:TaxAmount>
     <cac:TaxSubtotal>
-      <cbc:TaxableAmount currencyID="SAR">1000.00</cbc:TaxableAmount>
-      <cbc:TaxAmount currencyID="SAR">150.00</cbc:TaxAmount>
+      <cbc:TaxableAmount currencyID="SAR">100.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="SAR">15.00</cbc:TaxAmount>
       <cbc:Percent>15.0</cbc:Percent>
       <cac:TaxCategory>
         <cbc:ID>S</cbc:ID>
@@ -163,70 +168,26 @@
     </cac:TaxSubtotal>
   </cac:TaxTotal>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="SAR">150.00</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="SAR">15.00</cbc:TaxAmount>
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
-    <cbc:LineExtensionAmount currencyID="SAR">1000.00</cbc:LineExtensionAmount>
-    <cbc:TaxExclusiveAmount currencyID="SAR">1000.00</cbc:TaxExclusiveAmount>
-    <cbc:TaxInclusiveAmount currencyID="SAR">1150.00</cbc:TaxInclusiveAmount>
+    <cbc:LineExtensionAmount currencyID="SAR">100.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="SAR">100.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="SAR">115.00</cbc:TaxInclusiveAmount>
     <cbc:AllowanceTotalAmount currencyID="SAR">0.00</cbc:AllowanceTotalAmount>
-    <cbc:PrepaidAmount currencyID="SAR">115.00</cbc:PrepaidAmount>
-    <cbc:PayableAmount currencyID="SAR">1035.00</cbc:PayableAmount>
+    <cbc:PrepaidAmount currencyID="SAR">0.00</cbc:PrepaidAmount>
+    <cbc:PayableAmount currencyID="SAR">115.00</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>
     <cbc:ID>1</cbc:ID>
     <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="SAR">1000.00</cbc:LineExtensionAmount>
+    <cbc:LineExtensionAmount currencyID="SAR">100.00</cbc:LineExtensionAmount>
     <cac:TaxTotal>
-      <cbc:TaxAmount currencyID="SAR">150.00</cbc:TaxAmount>
-      <cbc:RoundingAmount currencyID="SAR">1150.00</cbc:RoundingAmount>
+      <cbc:TaxAmount currencyID="SAR">15.00</cbc:TaxAmount>
+      <cbc:RoundingAmount currencyID="SAR">115.00</cbc:RoundingAmount>
     </cac:TaxTotal>
     <cac:Item>
-      <cbc:Description>[P0001] Product A</cbc:Description>
-      <cbc:Name>Product A</cbc:Name>
-      <cac:SellersItemIdentification>
-        <cbc:ID>P0001</cbc:ID>
-      </cac:SellersItemIdentification>
-      <cac:ClassifiedTaxCategory>
-        <cbc:ID>S</cbc:ID>
-        <cbc:Percent>15.0</cbc:Percent>
-        <cac:TaxScheme>
-          <cbc:ID>VAT</cbc:ID>
-        </cac:TaxScheme>
-      </cac:ClassifiedTaxCategory>
-    </cac:Item>
-    <cac:Price>
-      <cbc:PriceAmount currencyID="SAR">1000.0</cbc:PriceAmount>
-    </cac:Price>
-  </cac:InvoiceLine>
-  <cac:InvoiceLine>
-    <cbc:ID>2</cbc:ID>
-    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="SAR">0.00</cbc:LineExtensionAmount>
-    <cac:DocumentReference>
-      <cbc:ID>INV/2022/00001</cbc:ID>
-      <cbc:IssueDate>2022-09-05</cbc:IssueDate>
-      <cbc:IssueTime>08:20:02</cbc:IssueTime>
-      <cbc:DocumentTypeCode>386</cbc:DocumentTypeCode>
-    </cac:DocumentReference>
-    <cac:TaxTotal>
-      <cbc:TaxAmount currencyID="SAR">0.00</cbc:TaxAmount>
-      <cbc:RoundingAmount currencyID="SAR">0.00</cbc:RoundingAmount>
-      <cac:TaxSubtotal>
-        <cbc:TaxableAmount currencyID="SAR">100.00</cbc:TaxableAmount>
-        <cbc:TaxAmount currencyID="SAR">15.00</cbc:TaxAmount>
-        <cbc:Percent>15.0</cbc:Percent>
-        <cac:TaxCategory>
-          <cbc:ID>S</cbc:ID>
-          <cbc:Percent>15.0</cbc:Percent>
-          <cac:TaxScheme>
-            <cbc:ID>VAT</cbc:ID>
-          </cac:TaxScheme>
-        </cac:TaxCategory>
-      </cac:TaxSubtotal>
-    </cac:TaxTotal>
-    <cac:Item>
-      <cbc:Description>Down Payment: 09 2022 (Draft)</cbc:Description>
+      <cbc:Description>Down Payment</cbc:Description>
       <cbc:Name>Down payment</cbc:Name>
       <cac:ClassifiedTaxCategory>
         <cbc:ID>S</cbc:ID>
@@ -237,7 +198,7 @@
       </cac:ClassifiedTaxCategory>
     </cac:Item>
     <cac:Price>
-      <cbc:PriceAmount currencyID="SAR">0</cbc:PriceAmount>
+      <cbc:PriceAmount currencyID="SAR">100.0</cbc:PriceAmount>
     </cac:Price>
   </cac:InvoiceLine>
 </Invoice>
