@@ -38,7 +38,7 @@ import { makeExpect } from "./expect";
 import { HootFixtureElement, makeFixtureManager } from "./fixture";
 import { LOG_LEVELS, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
-import { Tag, getTagSimilarities } from "./tag";
+import { Tag, getTags, getTagSimilarities } from "./tag";
 import { Test, testError } from "./test";
 import { EXCLUDE_PREFIX, createUrlFromId, setParams } from "./url";
 
@@ -894,6 +894,7 @@ export class Runner {
                         // before suite code
                         this.suiteStack.push(suite);
 
+                        suite.before();
                         await this._callbacks.call("before-suite", suite, handleError);
                         await suite.callbacks.call("before-suite", suite, handleError);
                     }
@@ -944,6 +945,7 @@ export class Runner {
             // Before test
             this.state.currentTest = test;
             this.expectHooks.before(test);
+            test.before();
             for (const callbackRegistry of [...callbackChain].reverse()) {
                 await callbackRegistry.call("before-test", test, handleError);
             }
@@ -1178,12 +1180,13 @@ export class Runner {
          * @example
          *  test.tags`mobile,ui`("my mobile test", () => { ... });
          */
-        const addTags = (...tags) => {
-            if (tags[0]?.raw) {
-                tags = String.raw(...tags).split(/\s*,\s*/g);
+        const addTags = (...rawTags) => {
+            if (rawTags[0]?.raw) {
+                rawTags = String.raw(...rawTags).split(/\s*,\s*/g);
             }
 
-            currentConfig.tags.push(...tags.flatMap(ensureArray));
+            const tagNames = rawTags.flatMap(ensureArray);
+            currentConfig.tags.push(...getTags(tagNames));
 
             return taggedFn;
         };
@@ -1216,6 +1219,7 @@ export class Runner {
             return fn.call(this, jobConfig, ...args);
         };
 
+        /** @type {{ tags: Tag[], [key: string]: any }} */
         let currentConfig = { tags: [] };
         $defineProperties(taggedFn, {
             config: { get: configure },
@@ -1244,7 +1248,7 @@ export class Runner {
         let shouldSkip = false;
         let [ignoreSkip] = this._getExplicitIncludeStatus(job);
         for (const tag of job.tags) {
-            this.tags.set(tag.name, tag);
+            this.tags.set(tag.id, tag);
             switch (tag.name) {
                 case Tag.DEBUG:
                     if (typeof this.debug !== "boolean" && this.debug !== job) {
@@ -1321,11 +1325,11 @@ export class Runner {
         };
 
         /**
-         * @param  {...string} tags
+         * @param  {...string} tagNames
          */
-        const addTagsToCurrent = (...tags) => {
+        const addTagsToCurrent = (...tagNames) => {
             const current = getCurrent();
-            current.configure({ tags });
+            current.configure({ tags: getTags(tagNames) });
             this._applyTagModifiers(current);
 
             return currentConfigurators;

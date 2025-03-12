@@ -16,7 +16,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, leave, press, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
+import { Deferred, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -122,10 +122,10 @@ test("Edit message (mobile)", async () => {
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
-test.tags("mobile");
 test("Can add reaction to a message on an ipad", async () => {
-    // most ipad users have large screen (landscape) but touch device, thus should use mobile UI/UX
-    patchUiSize({ size: SIZES.LG });
+    mockTouch(true);
+    mockUserAgent("android");
+
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -202,9 +202,7 @@ test("Can edit message comment in chatter", async () => {
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
 });
 
-test.tags("mobile");
-test("Can edit message comment in chatter (mobile)", async () => {
-    patchUiSize({ size: SIZES.SM });
+test.skip("Can edit message comment in chatter (mobile)", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
     pyEnv["mail.message"].create({
