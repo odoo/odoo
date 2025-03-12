@@ -41,6 +41,7 @@ import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
 import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
 import { unformat } from "./_helpers/format";
+import { expandToolbar } from "./_helpers/toolbar";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -1188,7 +1189,7 @@ test("codeview is available when option is active and in debug mode", async () =
     });
     const node = queryOne(".odoo-editor-editable p");
     setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o-we-toolbar button[name='codeview']").toHaveCount(1);
 });
 
@@ -1210,7 +1211,7 @@ test("enable/disable codeview with editor toolbar", async () => {
     // Switch to code view
     const node = queryOne(".odoo-editor-editable p");
     setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await contains(".o-we-toolbar button[name='codeview']").click();
     expect("[name='txt'] .odoo-editor-editable").toHaveClass("d-none");
     expect("[name='txt'] textarea").toHaveValue("<p>first</p>");
@@ -1245,7 +1246,7 @@ test("edit and enable/disable codeview with editor toolbar", async () => {
     // Switch to code view
     const node = queryOne(".odoo-editor-editable p");
     setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await contains(".o-we-toolbar button[name='codeview']").click();
     expect("[name='txt'] textarea").toHaveValue("<p>Hello first</p>");
 

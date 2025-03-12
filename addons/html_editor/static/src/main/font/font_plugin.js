@@ -164,15 +164,13 @@ export class FontPlugin extends Plugin {
             withSequence(10, {
                 id: "font",
             }),
-            withSequence(28, {
-                id: "font-size",
-            }),
         ],
         toolbar_items: [
-            {
+            withSequence(10, {
                 id: "font",
                 groupId: "font",
-                title: _t("Font style"),
+                namespaces: ["compact", "expanded"],
+                description: _t("Select font style"),
                 Component: FontSelector,
                 props: {
                     getItems: () => fontItems,
@@ -185,11 +183,12 @@ export class FontPlugin extends Plugin {
                         this.updateFontSelectorParams();
                     },
                 },
-            },
-            {
+            }),
+            withSequence(20, {
                 id: "font-size",
-                groupId: "font-size",
-                title: _t("Font size"),
+                groupId: "font",
+                namespaces: ["compact", "expanded"],
+                description: _t("Select font size"),
                 Component: FontSizeSelector,
                 props: {
                     getItems: () => this.fontSizeItems,
@@ -209,9 +208,9 @@ export class FontPlugin extends Plugin {
                         this.updateFontSizeSelectorParams();
                     },
                 },
-            },
+            }),
         ],
-        powerbox_categories: withSequence(30, { id: "format", name: _t("Format") }),
+        powerbox_categories: withSequence(5, { id: "format", name: _t("Format") }),
         powerbox_items: [
             {
                 categoryId: "format",
@@ -230,11 +229,11 @@ export class FontPlugin extends Plugin {
                 commandId: "setTagParagraph",
             },
             {
-                categoryId: "structure",
+                categoryId: "format",
                 commandId: "setTagQuote",
             },
             {
-                categoryId: "structure",
+                categoryId: "format",
                 commandId: "setTagPre",
             },
         ],

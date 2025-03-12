@@ -146,11 +146,12 @@ export class LinkPlugin extends Plugin {
                 title: _t("Link"),
                 description: _t("Add a link"),
                 icon: "fa-link",
-                run: ({ link, type} = {}) => this.openLinkTools(link, type),
+                run: ({ link, type } = {}) => this.openLinkTools(link, type),
             },
             {
                 id: "removeLinkFromSelection",
                 title: _t("Remove Link"),
+                description: _t("Remove Link"),
                 icon: "fa-unlink",
                 isAvailable: isSelectionHasLink,
                 run: this.removeLinkFromSelection.bind(this),
@@ -158,8 +159,8 @@ export class LinkPlugin extends Plugin {
         ],
 
         toolbar_groups: [
-            withSequence(40, { id: "link" }),
-            withSequence(30, { id: "image_link", namespace: "image" }),
+            withSequence(40, { id: "link", namespaces: ["compact", "expanded"] }),
+            withSequence(30, { id: "image_link", namespaces: ["image"] }),
         ],
         toolbar_items: [
             {
@@ -203,7 +204,12 @@ export class LinkPlugin extends Plugin {
             },
         ],
 
-        power_buttons: { commandId: "openLinkTools" },
+        power_buttons: withSequence(10, {
+            commandId: "openLinkTools",
+            commandParams: { type: "primary" },
+            description: _t("Add a button"),
+            icon: "fa-square",
+        }),
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),

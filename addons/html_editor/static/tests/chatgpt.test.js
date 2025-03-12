@@ -12,6 +12,7 @@ import { DEFAULT_ALTERNATIVES_MODES } from "@html_editor/main/chatgpt/chatgpt_al
 import { ChatGPTPlugin } from "@html_editor/main/chatgpt/chatgpt_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { execCommand } from "./_helpers/userCommands";
+import { expandToolbar } from "./_helpers/toolbar";
 
 const PROMPT_DIALOG_TITLE = "Generate Text with AI";
 const ALTERNATIVES_DIALOG_TITLE = "AI Copywriter";
@@ -71,6 +72,7 @@ test("ChatGPT dialog opens in translate mode when clicked on translate button in
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
 
+    await expandToolbar();
     // Expect the toolbar to not have translate dropdown.
     expect(".o-we-toolbar [name='translate'].o-dropdown").toHaveCount(0);
 
@@ -100,6 +102,7 @@ test("ChatGPT dialog opens in translate mode when clicked on translate dropdown 
     });
 
     // Expect the toolbar to have translate dropdown.
+    await expandToolbar();
     expect(".o-we-toolbar [name='translate'].o-dropdown").toHaveCount(1);
 
     // Select Translate button in the toolbar.
@@ -215,6 +218,7 @@ test("insert the response from ChatGPT translate dialog", async () => {
     onRpc("/html_editor/generate_text", () => `Bonjour`);
 
     // Select Translate button in the toolbar.
+    await expandToolbar();
     await translateButtonFromToolbar();
     await waitFor(".dropdown-menu");
     await translateDropdownFromToolbar();
@@ -263,20 +267,15 @@ test("ChatGPT prompt dialog properly formats an unordered list", async () => {
     );
 });
 
-test("ChatGPT toolbar button should have icon and 'AI' text", async () => {
+test("ChatGPT toolbar button should have 'AI' text", async () => {
     await setupEditor("<p>[abc]</p>");
     await waitFor(".o-we-toolbar");
-
-    // Icon should be present.
-    expect(".o-we-toolbar .btn[name='chatgpt'] span.fa-magic").toHaveCount(1);
-
-    // Text should be present.
     expect(".o-we-toolbar .btn[name='chatgpt']").toHaveText("AI");
 });
 
 test("Translate button should be positioned before ChatGPT button in toolbar", async () => {
     await setupEditor("<p>[abc]</p>");
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
 
     const buttons = queryAll(".o-we-toolbar .btn-group[name='ai'] .btn");
     expect(buttons).toHaveCount(2);
@@ -297,7 +296,7 @@ test("Translate dropdown should have the default language at top", async () => {
     await setupEditor("<p>[test]</p>", {
         config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
     });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
 
     // Select Translate button in the toolbar.
     await translateButtonFromToolbar();
