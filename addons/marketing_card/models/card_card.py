@@ -8,7 +8,12 @@ class CardCard(models.Model):
     _name = 'card.card'
     _description = 'Marketing Card'
 
+    @api.model
+    def _lang_get(self):
+        return self.env['res.lang'].get_installed()
+
     active = fields.Boolean('Active', default=True)
+    lang = fields.Selection(selection=_lang_get, required=True)
     campaign_id = fields.Many2one('card.campaign', required=True, ondelete="cascade")
     res_model = fields.Selection(related='campaign_id.res_model')
     res_id = fields.Many2oneReference('Record ID', model_field='res_model', required=True)
@@ -20,7 +25,7 @@ class CardCard(models.Model):
     ])
 
     _campaign_record_unique = models.Constraint(
-        'unique(campaign_id, res_id)',
+        'unique(campaign_id, lang, res_id)',
         'Each record should be unique for a campaign',
     )
 
