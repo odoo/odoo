@@ -671,6 +671,8 @@ class ResPartner(models.Model):
     @api.depends_context('company')
     def _compute_invoice_edi_format(self):
         for partner in self:
+            if not partner.commercial_partner_id:
+                partner._compute_commercial_partner()
             if partner.commercial_partner_id.invoice_edi_format_store == 'none':
                 partner.invoice_edi_format = False
             else:
