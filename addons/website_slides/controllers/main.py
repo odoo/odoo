@@ -730,8 +730,8 @@ class WebsiteSlides(WebsiteProfile):
 
     def _slide_channel_prepare_review_values(self, channel):
         values = {
-            'rating_avg': channel.rating_avg,
-            'rating_count': channel.rating_count,
+            'rating_avg': channel.sudo().rating_avg,
+            'rating_count': channel.sudo().rating_count,
         }
 
         if not request.env.user._is_public():

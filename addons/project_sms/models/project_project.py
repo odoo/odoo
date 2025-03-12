@@ -8,9 +8,9 @@ class ProjectProject(models.Model):
     _inherit = "project.project"
 
     def _send_sms(self):
-        for project in self:
+        for project in self.sudo():
             if project.partner_id and project.stage_id and project.stage_id.sms_template_id:
-                project._message_sms_with_template(
+                project.with_env(self.env)._message_sms_with_template(
                     template=project.stage_id.sms_template_id,
                     partner_ids=project.partner_id.ids,
                 )
