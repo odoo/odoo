@@ -690,21 +690,21 @@ if records:
     <record id="hr_applicant_filter_recruiter" model="ir.filters">
         <field name="name">By Recruiter</field>
         <field name="model_id">hr.applicant</field>
-        <field name="user_id" eval="False"/>
+        <field name="user_ids" eval="False"/>
         <field name="action_id" ref="hr_applicant_action_analysis"/>
         <field name="context">{'group_by': ['create_date:month', 'user_id']}</field>
     </record>
     <record id="hr_applicant_filter_job" model="ir.filters">
         <field name="name">By Job</field>
         <field name="model_id">hr.applicant</field>
-        <field name="user_id" eval="False"/>
+        <field name="user_ids" eval="False"/>
         <field name="action_id" ref="hr_applicant_action_analysis"/>
         <field name="context">{'group_by': ['create_date:month', 'job_id']}</field>
     </record>
     <record id="hr_applicant_filter_department" model="ir.filters">
         <field name="name">By Department</field>
         <field name="model_id">hr.applicant</field>
-        <field name="user_id" eval="False"/>
+        <field name="user_ids" eval="False"/>
         <field name="action_id" ref="hr_applicant_action_analysis"/>
         <field name="context">{'group_by': ['create_date:month', 'department_id']}</field>
     </record>

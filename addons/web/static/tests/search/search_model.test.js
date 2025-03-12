@@ -233,7 +233,7 @@ test("parsing date filter with start_month, end_month, start_year, end_year attr
     const model = await createSearchModel({
         searchViewArch: `
             <search>
-                <filter 
+                <filter
                     name="date_filter"
                     string="Date"
                     date="date_field"
@@ -702,7 +702,7 @@ test("process favorite filters", async () => {
     const model = await createSearchModel({
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "Sorted filter",
                 id: 5,
                 context: `{"group_by":["foo","bar"]}`,
@@ -733,7 +733,7 @@ test("process favorite filters", async () => {
             removable: true,
             serverSideId: 5,
             type: "favorite",
-            userId: 2,
+            userIds: [2],
         },
     ]);
 });

@@ -84,27 +84,20 @@
         </record>
 
         <record id="ir_filters_employee_rule" model="ir.rule">
-            <field name="name">ir.filters.owner</field>
+            <field name="name">ir.filter: owner or global</field>
             <field name="model_id" ref="model_ir_filters"/>
-            <field name="domain_force">[('user_id','in',[False,user.id])]</field>
+            <field name="domain_force">[('user_ids','in',[False,user.id])]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="ir_filters_delete_own_rule" model="ir.rule">
-            <field name="name">ir.filters.own.rule.delete</field>
-            <field name="model_id" ref="model_ir_filters"/>
-            <field name="domain_force">[('user_id', '=', user.id)]</field>
-            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
-            <field name="perm_read" eval="False"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 
         <record id="ir_filters_portal_public_rule" model="ir.rule">
             <field name="name">ir.filter: portal/public</field>
             <field name="model_id" ref="model_ir_filters"/>
-            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="domain_force">[('user_ids', 'in', user.ids)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
         </record>
 

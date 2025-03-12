@@ -239,7 +239,12 @@ export async function editFavoriteName(name) {
 
 export async function saveFavorite() {
     await ensureSearchBarMenu();
-    await contains(`.o_favorite_menu .o_add_favorite + .o_accordion_values button`).click();
+    await contains(`.o_favorite_menu .o_save_favorite`).click();
+}
+
+export async function saveAndEditFavorite() {
+    await ensureSearchBarMenu();
+    await contains(`.o_favorite_menu .o_edit_favorite`).click();
 }
 
 //-----------------------------------------------------------------------------
