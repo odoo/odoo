@@ -18,13 +18,30 @@ class Project(models.Model):
             self.expenses_count = 0
             return
         query = self.env['hr.expense']._search([])
+<<<<<<< 17.0:addons/project_hr_expense/models/project_project.py
         query.add_where(
             SQL(
                 "%s && %s",
                 [str(account_id) for account_id in self.analytic_account_id.ids],
                 self.env['hr.expense']._query_analytic_accounts(),
             )
+||||||| 34947c01623a9fc753197bd55d6121d9c6fa682f:addons/project_hr_expense/models/project.py
+        query.add_where('hr_expense.analytic_distribution ?| %s', [[str(account_id) for account_id in self.analytic_account_id.ids]])
+
+        query.order = None
+        query_string, query_param = query.select(
+            'jsonb_object_keys(analytic_distribution) as account_id',
+            'COUNT(DISTINCT(id)) as expense_count',
+=======
+        query.add_where('hr_expense.analytic_distribution ?| %s', [[str(account_id) for account_id in self.analytic_account_id.ids]])
+
+        query.order = None
+        query_string, query_param = query.select(
+            'jsonb_object_keys(hr_expense.analytic_distribution) as account_id',
+            'COUNT(DISTINCT(id)) as expense_count',
+>>>>>>> 314e6596e966660bb9b5573a589ed13941e9c837:addons/project_hr_expense/models/project.py
         )
+<<<<<<< 17.0:addons/project_hr_expense/models/project_project.py
 
         query_string, query_param = query.select(
             r"""DISTINCT id, (regexp_matches(jsonb_object_keys(hr_expense.analytic_distribution), '\d+', 'g'))[1]::int as account_id"""
@@ -34,6 +51,11 @@ class Project(models.Model):
             ({query_string}) distribution
             GROUP BY account_id
         """
+||||||| 34947c01623a9fc753197bd55d6121d9c6fa682f:addons/project_hr_expense/models/project.py
+        query_string = f'{query_string} GROUP BY jsonb_object_keys(analytic_distribution)'
+=======
+        query_string = f'{query_string} GROUP BY jsonb_object_keys(hr_expense.analytic_distribution)'
+>>>>>>> 314e6596e966660bb9b5573a589ed13941e9c837:addons/project_hr_expense/models/project.py
         self._cr.execute(query_string, query_param)
         data = {res['account_id']: res['count'] for res in self._cr.dictfetchall()}
         for project in self:
