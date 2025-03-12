@@ -304,6 +304,30 @@ describe("Range collapsed", () => {
                 `),
             });
         });
+
+        test("should keep alignement when removing list (1)", async () => {
+            await testEditor({
+                contentBefore: `<div><ul style="display: flex; flex-direction: column;"><li style="align-self: center">a[]</li></ul></div>`,
+                stepFunction: toggleUnorderedList,
+                contentAfter: `<div><p style="text-align: center;">a[]</p></div>`,
+            });
+        });
+
+        test("should keep alignement when removing list (2)", async () => {
+            await testEditor({
+                contentBefore: `<div><ul style="display: flex; flex-direction: column;"><li style="align-self: flex-start">a[]</li></ul></div>`,
+                stepFunction: toggleUnorderedList,
+                contentAfter: `<div><p style="text-align: left;">a[]</p></div>`,
+            });
+        });
+
+        test("should keep alignement when removing list (3)", async () => {
+            await testEditor({
+                contentBefore: `<div><ul style="display: flex; flex-direction: column;"><li style="align-self: flex-end">a[]</li></ul></div>`,
+                stepFunction: toggleUnorderedList,
+                contentAfter: `<div><p style="text-align: right;">a[]</p></div>`,
+            });
+        });
     });
     describe("Transform", () => {
         test("should turn an empty ordered list into an unordered list", async () => {
@@ -458,6 +482,30 @@ describe("Range not collapsed", () => {
                 stepFunction: toggleUnorderedList,
                 contentAfter:
                     '<ul><li style="text-align: center;">[abc</li><li style="text-align: center;">def]</li></ul>',
+            });
+        });
+
+        test("should keep alignement when inserting a list (1)", async () => {
+            await testEditor({
+                contentBefore: `<div><p style="text-align: center;">a[]</p></div>`,
+                stepFunction: toggleUnorderedList,
+                contentAfter: `<div><ul style="text-align: center; display: flex; flex-direction: column;"><li style="align-self: center;">a[]</li></ul></div>`,
+            });
+        });
+
+        test("should keep alignement when inserting a list (2)", async () => {
+            await testEditor({
+                contentBefore: `<div><p style="text-align: left;">a[]</p></div>`,
+                stepFunction: toggleUnorderedList,
+                contentAfter: `<div><ul style="text-align: left; display: flex; flex-direction: column;"><li style="align-self: flex-start;">a[]</li></ul></div>`,
+            });
+        });
+
+        test("should keep alignement when inserting a list (3)", async () => {
+            await testEditor({
+                contentBefore: `<div><p style="text-align: right;">a[]</p></div>`,
+                stepFunction: toggleUnorderedList,
+                contentAfter: `<div><ul style="text-align: right; display: flex; flex-direction: column;"><li style="align-self: flex-end;">a[]</li></ul></div>`,
             });
         });
     });

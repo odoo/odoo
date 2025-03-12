@@ -9,6 +9,7 @@ import {
     setSelection,
 } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
+import { press } from "@odoo/hoot-dom";
 
 test("hints are removed when editor is destroyed", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
@@ -152,4 +153,55 @@ test("hint for blockquote should have the same padding as its text content", asy
     expect(hintStyle.content).toBe("none");
     const paddingText = getComputedStyle(blockquote).padding;
     expect(paddingHint).toBe(paddingText);
+});
+
+test("list with direction should have min-width to properly show the hint (right)", async () => {
+    const { el } = await setupEditor(
+        `<ul style="text-align: right; display: flex; flex-direction: column;"><li style="align-self: flex-end;">a[]</li></ul>`
+    );
+    await press("Backspace");
+    const li = document.createElement("li");
+    li.innerText = "List";
+    el.firstChild.appendChild(li);
+    const liMinWidth = getComputedStyle(li).width;
+    el.firstChild.removeChild(li);
+    expect(el.innerHTML).toBe(
+        `<ul style="text-align: right; display: flex; flex-direction: column;"><li style="align-self: flex-end; min-width: ${liMinWidth};" o-we-hint-text="List" class="o-we-hint"><br></li></ul>`
+    );
+});
+
+test("list with direction should have min-width to properly show the hint (center)", async () => {
+    const { el } = await setupEditor(
+        `<ul style="text-align: center; display: flex; flex-direction: column;"><li style="align-self: center;">a[]</li></ul>`
+    );
+    await press("Backspace");
+    const li = document.createElement("li");
+    li.innerText = "List";
+    el.firstChild.appendChild(li);
+    const liMinWidth = getComputedStyle(li).width;
+    el.firstChild.removeChild(li);
+    expect(el.innerHTML).toBe(
+        `<ul style="text-align: center; display: flex; flex-direction: column;"><li style="align-self: center; min-width: ${liMinWidth};" o-we-hint-text="List" class="o-we-hint"><br></li></ul>`
+    );
+});
+
+test("list with direction should have min-width to properly show the hint (left default)", async () => {
+    const { el } = await setupEditor(`<ul><li>a[]</li></ul>`);
+    await press("Backspace");
+    expect(el.innerHTML).toBe(`<ul><li o-we-hint-text="List" class="o-we-hint"><br></li></ul>`);
+});
+
+test("list with direction should have min-width to properly show the hint (left aligned)", async () => {
+    const { el } = await setupEditor(
+        `<ul style="text-align: left; display: flex; flex-direction: column;"><li style="align-self: flex-start;">a[]</li></ul>`
+    );
+    await press("Backspace");
+    const li = document.createElement("li");
+    li.innerText = "List";
+    el.firstChild.appendChild(li);
+    const liMinWidth = getComputedStyle(li).width;
+    el.firstChild.removeChild(li);
+    expect(el.innerHTML).toBe(
+        `<ul style="text-align: left; display: flex; flex-direction: column;"><li style="align-self: flex-start; min-width: ${liMinWidth};" o-we-hint-text="List" class="o-we-hint"><br></li></ul>`
+    );
 });

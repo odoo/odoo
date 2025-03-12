@@ -94,6 +94,16 @@ describe("left", () => {
                 '<div style="text-align: center;"><p style="text-align: left;">a[]b</p></div>',
         });
     });
+
+    test("should properly align list to left", async () => {
+        await testEditor({
+            contentBefore:
+                '<ol style="display: flex; flex-direction: column;"><li style="align-self: center;">a[]</li></ol>',
+            stepFunction: alignLeft,
+            contentAfter:
+                '<ol style="display: flex; flex-direction: column;"><li style="align-self: flex-start;">a[]</li></ol>',
+        });
+    });
 });
 
 describe("center", () => {
@@ -178,6 +188,16 @@ describe("center", () => {
                 '<div style="text-align: left;"><p style="text-align: center;">a[]b</p></div>',
         });
     });
+
+    test("should properly center list", async () => {
+        await testEditor({
+            contentBefore:
+                '<ol style="display: flex; flex-direction: column;"><li style="align-self: flex-start;">a[]</li></ol>',
+            stepFunction: alignCenter,
+            contentAfter:
+                '<ol style="display: flex; flex-direction: column;"><li style="align-self: center;">a[]</li></ol>',
+        });
+    });
 });
 
 describe("right", () => {
@@ -259,6 +279,16 @@ describe("right", () => {
             stepFunction: () => press(["ctrl", "shift", "r"]),
             contentAfter:
                 '<div style="text-align: left;"><p style="text-align: right;">a[]b</p></div>',
+        });
+    });
+
+    test("should properly align list to the right", async () => {
+        await testEditor({
+            contentBefore:
+                '<ol style="display: flex; flex-direction: column;"><li style="align-self: flex-start;">a[]</li></ol>',
+            stepFunction: alignRight,
+            contentAfter:
+                '<ol style="display: flex; flex-direction: column;"><li style="align-self: flex-end;">a[]</li></ol>',
         });
     });
 });

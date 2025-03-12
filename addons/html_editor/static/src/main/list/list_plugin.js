@@ -132,7 +132,12 @@ export class ListPlugin extends Plugin {
         /** Handlers */
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
-        make_hint_handlers: this.handleListPlaceholderPosition.bind(this),
+        make_hint_handlers: [
+            this.handleListPlaceholderPosition.bind(this),
+            this.handleListMinWidth.bind(this),
+        ],
+        reset_hint_handlers: this.handleListMinWidth.bind(this),
+        align_handlers: this.handleListItemAlignement.bind(this),
         step_added_handlers: this.updateToolbarButtons.bind(this),
 
         /** Overrides */
@@ -345,6 +350,7 @@ export class ListPlugin extends Plugin {
                 list.setAttribute("dir", element.getAttribute("dir"));
             }
         }
+        this.handleListAlignement(list, element.style.getPropertyValue("text-align"));
         cursors.restore();
         return list;
     }
@@ -360,6 +366,7 @@ export class ListPlugin extends Plugin {
             childNodes(baseContainer),
         ]);
         this.dependencies.dom.copyAttributes(baseContainer, list);
+        this.handleListAlignement(list, baseContainer.style.getPropertyValue("text-align"));
         baseContainer.remove();
         cursors.remapNode(baseContainer, list.firstChild).restore();
         return list;
@@ -368,6 +375,7 @@ export class ListPlugin extends Plugin {
     blockContentsToList(block, mode) {
         const cursors = this.dependencies.selection.preserveSelection();
         const list = insertListAfter(this.document, block.lastChild, mode, [[...block.childNodes]]);
+        this.handleListAlignement(list, block.style.getPropertyValue("text-align"));
         cursors.remapNode(block, list.firstChild).restore();
         return list;
     }
@@ -661,7 +669,14 @@ export class ListPlugin extends Plugin {
         }
         // Preserve style properties
         const dir = li.getAttribute("dir") || ul.getAttribute("dir");
-        const textAlign = ul.style.getPropertyValue("text-align");
+        const DIRECTION = {
+            start: dir === "rtl" ? "right" : "left",
+            end: dir === "rtl" ? "left" : "right",
+            center: "center",
+        };
+        const textAlign =
+            DIRECTION[li.style.getPropertyValue("align-self").replace("flex-", "")] ||
+            ul.style.getPropertyValue("text-align");
         const liColorStyle = getTextColorOrClass(li);
         const liFontSizeStyle = getFontSizeOrClass(li);
         const wrapChildren = (parent, tag) => {
@@ -1041,6 +1056,55 @@ export class ListPlugin extends Plugin {
         }
         block.style.listStylePosition = "";
         cursors.restore();
+    }
+
+    handleListAlignement(list, mode) {
+        list.childNodes.forEach((li) => {
+            this.handleListItemAlignement(li, mode);
+        });
+    }
+
+    handleListItemAlignement(block, mode) {
+        if (block.nodeName === "LI") {
+            if (mode) {
+                block.parentElement.style.display = "flex";
+                block.parentElement.style.flexDirection = "column";
+                const isLtr = getComputedStyle(block).direction === "ltr";
+                const FLEX_ALIGNMENT = {
+                    left: isLtr ? "flex-start" : "flex-end",
+                    right: isLtr ? "flex-end" : "flex-start",
+                    center: "center",
+                };
+                block.style.alignSelf = FLEX_ALIGNMENT[mode];
+            } else {
+                block.parentElement.style.display = "";
+                block.parentElement.style.flexDirection = "";
+                block.style.alignSelf = "";
+            }
+            return true;
+        }
+        return false;
+    }
+
+    handleListMinWidth(el, text) {
+        if (
+            el.tagName === "LI" &&
+            !el.style.minWidth &&
+            el.parentElement?.style?.display === "flex"
+        ) {
+            // we adjust the min width of `li` to properly show the placeholder
+            // when we change direction of list using flexbox
+            let placeholderWidth = "0px";
+            if (text) {
+                const textNode = document.createTextNode(text);
+                el.appendChild(textNode);
+                placeholderWidth = getComputedStyle(el).width;
+                el.removeChild(textNode);
+            }
+            if (el.style.minWidth !== placeholderWidth) {
+                el.style.minWidth = placeholderWidth;
+            }
+        }
     }
 
     handleListPlaceholderPosition(el) {

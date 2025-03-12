@@ -2,10 +2,18 @@ li p {
     margin-bottom: 0px;
 }
 
+*[contenteditable="true"] {
+    ul, ol {
+        li {
+            max-width: fit-content;
+            text-align: start;
+        }
+    }
+}
+
 // Checklist
 ul.o_checklist {
     > li {
-        list-style: none;
         position: relative;
         margin-left: 20px;
 

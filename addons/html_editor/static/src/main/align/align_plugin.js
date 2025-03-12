@@ -4,6 +4,7 @@ import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { AlignSelector } from "./align_selector";
 import { reactive } from "@odoo/owl";
+import { isListItem } from "../list/utils";
 
 const alignmentItems = [
     { mode: "left" },
@@ -78,13 +79,23 @@ export class AlignPlugin extends Plugin {
     }
 
     getTextAlignment(block) {
-        const { direction, textAlign } = getComputedStyle(block);
-        if (textAlign === "start") {
+        const getAlignement = (block) => {
+            const { textAlign, alignSelf } = getComputedStyle(block);
+            if (
+                block.nodeName === "LI" &&
+                ["flex-start", "flex-end", "center"].includes(alignSelf)
+            ) {
+                return alignSelf.replace("flex-", "");
+            }
+            return textAlign;
+        };
+        const { direction } = getComputedStyle(block);
+        if (getAlignement(block) === "start") {
             return direction === "rtl" ? "right" : "left";
-        } else if (textAlign === "end") {
+        } else if (getAlignement(block) === "end") {
             return direction === "rtl" ? "left" : "right";
         }
-        return textAlign;
+        return getAlignement(block);
     }
 
     setAlignment(mode = "") {
@@ -98,7 +109,11 @@ export class AlignPlugin extends Plugin {
                 if (!visitedBlocks.has(block)) {
                     const currentTextAlign = this.getTextAlignment(block);
                     if (currentTextAlign !== mode && block.isContentEditable) {
-                        block.style.textAlign = mode;
+                        if (isListItem(block)) {
+                            this.dispatchTo("align_handlers", block, mode);
+                        } else {
+                            block.style.textAlign = mode;
+                        }
                         isAlignmentUpdated = true;
                     }
                     visitedBlocks.add(block);

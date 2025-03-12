@@ -91,12 +91,13 @@ export class HintPlugin extends Plugin {
     }
 
     makeHint(el, text) {
-        this.dispatchTo("make_hint_handlers", el);
+        this.dispatchTo("make_hint_handlers", el, text);
         el.setAttribute("o-we-hint-text", text);
         el.classList.add("o-we-hint");
     }
 
     removeHint(el) {
+        this.dispatchTo("reset_hint_handlers", el);
         el.removeAttribute("o-we-hint-text");
         removeClass(el, "o-we-hint");
         this.getResource("system_style_properties").forEach((n) => el.style.removeProperty(n));
