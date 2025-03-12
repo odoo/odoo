@@ -36,6 +36,7 @@
               Manage efficiently your vehicle Odometers with Odoo.
             </p>
         </field>
+        <field name="domain">[('vehicle_id.active', '=', True)]</field>
         <field name="context">{'search_default_groupby_date': 1, 'search_default_groupby_category': 1}</field>
     </record>
 
