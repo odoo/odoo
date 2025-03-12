@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    insertText,
     onRpcBefore,
     openDiscuss,
     patchUiSize,
@@ -10,9 +11,10 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 
-describe.current.tags("desktop");
+describe.current.tags("mobile");
 defineMailModels();
 
 test("auto-select 'Inbox' when discuss had channel as active thread", async () => {
@@ -63,4 +65,16 @@ test("can leave channel in mobile", async () => {
     await contains(".o-mail-ChatWindow-command", { text: "General" });
     await click(".o-mail-ChatWindow-command", { text: "General" });
     await contains(".o-dropdown-item", { text: "Leave" });
+});
+
+test("enter key should create a newline in composer", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Test\n");
+    await press("Enter");
+    await insertText(".o-mail-Composer-input", "Other");
+    await click(".fa-paper-plane-o");
+    await contains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
 });
