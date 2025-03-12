@@ -219,6 +219,14 @@ class PosOrder(models.Model):
         for line_values in line_values_list:
             line = line_values['record']
             invoice_lines_values = self._get_invoice_lines_values(line_values, line)
+            if line.product_id.type == 'combo':
+                quantity = int(invoice_lines_values['quantity']) if invoice_lines_values['quantity'] == int(invoice_lines_values['quantity']) else invoice_lines_values['quantity']
+                invoice_lines.append(Command.create({
+                    'display_type': 'line_section',
+                    'name': f'{line.product_id.name} x {quantity}',
+                }))
+                continue
+
             invoice_lines.append((0, None, invoice_lines_values))
             is_percentage = self.pricelist_id and any(
                 self.pricelist_id.item_ids.filtered(
