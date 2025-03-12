@@ -199,7 +199,7 @@
             <attribute name="t-options">{'format': 'YYYY-MM-dd'}</attribute>
         </div>
         <t t-out="payment_vals['date']" position="attributes">
-            <attribute name="t-options">{'format': 'YYYY-MM-dd'}</attribute>
+            <attribute name="t-options">{'widget': 'date', 'format': 'YYYY-MM-dd'}</attribute>
         </t>
         <!-- End Dates in Saudi Format -->
     </template>
@@ -211,7 +211,7 @@
         <span name="untaxed_amount_ar" position="replace">
             <span name="untaxed_amount_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">المبلغ الخاضع للضريبة
                 <br/>
-                (غير شامل ضريبة القيمة المضافة) 
+                (غير شامل ضريبة القيمة المضافة)
             </span>
         </span>
         <span name="untaxed_amount_en" position="replace">
@@ -248,7 +248,7 @@
         <span name="untaxed_amount_ar" position="replace">
             <span name="untaxed_amount_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">المبلغ الخاضع للضريبة
                 <br/>
-                (غير شامل ضريبة القيمة المضافة) 
+                (غير شامل ضريبة القيمة المضافة)
             </span>
         </span>
         <span name="untaxed_amount_en" position="replace">
