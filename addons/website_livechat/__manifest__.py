@@ -23,8 +23,12 @@ Allow website visitors to chat with the collaborators. This module also brings a
     ],
     'demo': [
         'data/website_livechat_chatbot_demo.xml',
+        'demo/im_livechat_session_11.xml',
     ],
     'assets': {
+        "mail.assets_public": [
+            "website_livechat/static/src/**/common/**/*",
+        ],
         'website.assets_wysiwyg': [
             'website_livechat/static/src/scss/**/*',
         ],
@@ -35,6 +39,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/patch/assets_frontend/website.scss',
         ],
         'web.assets_backend': [
+            "website_livechat/static/src/**/common/**/*",
             'website_livechat/static/src/**/*',
             ('remove', 'website_livechat/static/src/scss/**/*'),
         ],
