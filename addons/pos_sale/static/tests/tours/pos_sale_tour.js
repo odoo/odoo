@@ -376,3 +376,25 @@ registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosSettleOrderWithLot", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.selectNthOrder(1),
+            {
+                content: `Choose to settle the order`,
+                trigger: `.modal:not(.o_inactive_modal) .selection-item:contains('Settle the order')`,
+                in_modal: false,
+                run: "click",
+            },
+            {
+                content: `Choose to auto link the lot number to the order line`,
+                trigger: `.modal-content:contains('Do you want to load the SN/Lots linked to the Sales Order?') button:contains('Ok')`,
+                run: "click",
+            },
+            PosSale.selectedOrderLineHas("Product A", ["1001", "1002"]),
+        ].flat(),
+});

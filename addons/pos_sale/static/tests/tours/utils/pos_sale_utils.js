@@ -4,7 +4,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 
-function selectNthOrder(n) {
+export function selectNthOrder(n) {
     return [
         ProductScreen.clickControlButton("Quotation/Order"),
         {
@@ -51,5 +51,22 @@ export function checkOrdersListEmpty() {
             content: "Check that the orders list is empty",
             trigger: "p:contains(No record found)",
         },
+    ];
+}
+
+export function selectedOrderLineHas(productName, lots) {
+    const getSerialStep = (index, serialNumber) => {
+        return {
+            content: `check lot${index} is linked`,
+            trigger: `.info-list li:contains(${serialNumber})`,
+        }
+    }
+    const lotSteps = lots.reduce(
+        (acc, serial, i) => acc.concat(getSerialStep(i, serial)),
+        []
+    );
+    return [
+        ...ProductScreen.selectedOrderlineHas(productName),
+        ...lotSteps
     ];
 }
