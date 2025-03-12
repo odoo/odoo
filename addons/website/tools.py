@@ -55,6 +55,7 @@ def MockRequest(
         session=DotDict(
             odoo.http.get_default_session(),
             context={'lang': ''},
+            force_website_id=website and website.id,
         ),
         geoip=odoo.http.GeoIP('127.0.0.1'),
         db=env.registry.db_name,
