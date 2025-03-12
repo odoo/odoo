@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 import unittest
+import contextlib
 from io import BytesIO
 from itertools import chain
 
@@ -491,8 +492,9 @@ class ThreadedServer(CommonServer):
                         thread.start_time = None
         while True:
             conn = odoo.sql_db.db_connect('postgres')
-            with conn.cursor() as cr:
+            with contextlib.closing(conn.cursor()) as cr:
                 _run_cron(cr)
+                cr._cnx.close()
             _logger.info('cron%d max age (%ss) reached, releasing connection.', number, config['limit_time_worker_cron'])
 
     def cron_spawn(self):
@@ -1256,6 +1258,7 @@ class WorkerCron(Worker):
 
     def stop(self):
         super().stop()
+        self.dbcursor._cnx.close()
         self.dbcursor.close()
 
 #----------------------------------------------------------
