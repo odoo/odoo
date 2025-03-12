@@ -59,7 +59,10 @@
                                 <t t-if="record.country_id.raw_value">
                                     <span class="fw-bold">Country: </span><field string="Country" name="country_id"/>
                                 </t>
-                                <field name="livechat_operator_id" widget="many2one_avatar_user" class="ms-auto me-1"/>
+                                <field t-if="record.livechat_operator_user_id.raw_value" name="livechat_operator_user_id" widget="many2one_avatar_user" class="ms-auto me-1"/>
+                                <div t-else="" class="o-mail-Avatar o_avatar d-flex ms-auto me-1">
+                                    <img class="rounded" t-attf-src="/mail/static/src/img/odoobot.png" alt="OdooBot Avatar"/>
+                                </div>
                             </footer>
                         </t>
                     </templates>

@@ -22,6 +22,10 @@ class DiscussChannel(models.Model):
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor or operator leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator', index='btree_not_null')
+    livechat_operator_user_id = fields.Many2one(
+        "res.users", string="Operator User",
+        compute="_compute_livechat_operator_user_id"
+    )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
@@ -39,6 +43,14 @@ class DiscussChannel(models.Model):
             start = record.message_ids[-1].date if record.message_ids else record.create_date
             end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
+
+    @api.depends("livechat_operator_id.user_ids")
+    def _compute_livechat_operator_user_id(self):
+        for record in self:
+            users = record.livechat_operator_id.with_context(active_test=False).user_ids
+            internal_users = users - users.filtered("share")
+            main_user = internal_users[:1] or users[:1]
+            record.livechat_operator_user_id = main_user
 
     def _sync_field_names(self):
         return super()._sync_field_names() + ["livechat_operator_id"]
