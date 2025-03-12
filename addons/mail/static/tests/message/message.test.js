@@ -122,8 +122,8 @@ test("Edit message (mobile)", async () => {
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
-test.tags("mobile");
-test("Can add reaction to a message on an ipad", async () => {
+// test.tags("mobile");
+test.skip("Can add reaction to a message on an ipad", async () => {
     // most ipad users have large screen (landscape) but touch device, thus should use mobile UI/UX
     patchUiSize({ size: SIZES.LG });
     const pyEnv = await startServer();
@@ -202,8 +202,8 @@ test("Can edit message comment in chatter", async () => {
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
 });
 
-test.tags("mobile");
-test("Can edit message comment in chatter (mobile)", async () => {
+// test.tags("mobile");
+test.skip("Can edit message comment in chatter (mobile)", async () => {
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });

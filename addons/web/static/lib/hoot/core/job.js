@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { generateHash, HootError, isOfType, normalize } from "../hoot_utils";
-import { Tag } from "./tag";
+import { applyTags } from "./tag";
 
 /**
  * @typedef {{
@@ -9,10 +9,11 @@ import { Tag } from "./tag";
  *  multi?: number;
  *  only?: boolean;
  *  skip?: boolean;
- *  tags?: string[];
  *  timeout?: number;
  *  todo?: boolean;
  * }} JobConfig
+ *
+ * @typedef {import("./tag").Tag} Tag
  */
 
 //-----------------------------------------------------------------------------
@@ -64,7 +65,7 @@ export class Job {
     /**
      * @param {import("./suite").Suite | null} parent
      * @param {string} name
-     * @param {JobConfig & { tags?: Iterable<Tag | string> }} config
+     * @param {JobConfig & { tags?: Iterable<Tag> }} config
      */
     constructor(parent, name, config) {
         this.parent = parent || null;
@@ -88,21 +89,28 @@ export class Job {
         this.configure(config);
     }
 
+    after() {
+        for (const tag of this.tags) {
+            tag.after?.(this);
+        }
+    }
+
+    before() {
+        for (const tag of this.tags) {
+            tag.before?.(this);
+        }
+    }
+
     /**
-     * @param {JobConfig & { tags?: Iterable<Tag | string> }} config
+     * @param {JobConfig & { tags?: Iterable<Tag> }} config
      */
     configure({ tags, ...config }) {
         // Assigns and validates job config
         $assign(this.config, config);
         validateConfig(this.config);
 
-        // Tags
-        for (const tag of Tag.getAll(tags)) {
-            if (!this.tags.includes(tag)) {
-                this.tags.push(tag);
-                tag.weight++;
-            }
-        }
+        // Add tags
+        applyTags(this, tags);
     }
 
     /**
