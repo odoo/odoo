@@ -1,5 +1,9 @@
 from PIL import Image, ImageColor, ImageOps
-from PIL.Image import Resampling
+try:
+    from PIL.Image import Resampling
+except ImportError:
+    Resampling = Image  # Odoo specific change
+
 from xml.etree.ElementTree import ElementTree, Element, SubElement
 
 
