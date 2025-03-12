@@ -722,9 +722,10 @@ export function verifyOrderlineSequence(products) {
     }));
 }
 
-export function checkExtraPrice(amount) {
+export function checkProductExtraPrice(productName, extraAmount) {
     return {
-        trigger: `.price-tag.py-1:contains(${amount})`,
+        content: `'${productName}' should have '${extraAmount}' extra price`,
+        trigger: `article.product:has(.product-name:contains("${productName}")):has(.price-extra:contains("${extraAmount}"))`,
     };
 }
 
