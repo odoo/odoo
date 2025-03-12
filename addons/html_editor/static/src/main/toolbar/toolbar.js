@@ -1,4 +1,5 @@
 import { Component, useState, validate } from "@odoo/owl";
+import { omit, pick } from "@web/core/utils/objects";
 
 export class Toolbar extends Component {
     static template = "html_editor.Toolbar";
@@ -15,7 +16,6 @@ export class Toolbar extends Component {
                         type: Object,
                         shape: {
                             id: String,
-                            namespace: { type: String, optional: true },
                             buttons: {
                                 type: Array,
                                 element: {
@@ -24,9 +24,10 @@ export class Toolbar extends Component {
                                         const base = {
                                             id: String,
                                             groupId: String,
-                                            title: { type: [String, Function] },
+                                            description: { type: [String, Function] },
                                             isAvailable: { type: Function, optional: true },
                                             isDisabled: { type: Function, optional: true },
+                                            namespaces: { type: Array, element: String },
                                         };
                                         if (button.Component) {
                                             validate(button, {
@@ -72,15 +73,19 @@ export class Toolbar extends Component {
     }
 
     getFilteredButtonGroups() {
-        if (this.state.namespace) {
-            const filteredGroups = this.props.toolbar.buttonGroups.filter(
-                (group) => group.namespace === this.state.namespace
-            );
-            if (filteredGroups.length > 0) {
-                return filteredGroups;
-            }
-        }
-        return this.props.toolbar.buttonGroups.filter((group) => group.namespace === undefined);
+        let buttonGroups = this.props.toolbar.buttonGroups;
+        // Filter by namespace
+        buttonGroups = buttonGroups.map((group) => ({
+            ...group,
+            buttons: group.buttons.filter((b) => b.namespaces.includes(this.state.namespace)),
+        }));
+        // Filter out buttons that are not available
+        buttonGroups = buttonGroups.map((group) => ({
+            ...group,
+            buttons: group.buttons.filter((button) => this.state.buttonsAvailableState[button.id]),
+        }));
+        // Filter out groups left empty
+        return buttonGroups.filter((group) => group.buttons.length > 0);
     }
 
     onButtonClick(button) {
@@ -93,3 +98,20 @@ export const toolbarButtonProps = {
     title: [String, Function],
     getSelection: Function,
 };
+
+/** @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand */
+/** @typedef {import("./toolbar_plugin").ToolbarCommandItem} ToolbarCommandItem */
+/** @typedef {import("./toolbar_plugin").ToolbarCommandButton} ToolbarCommandButton */
+
+/**
+ * @param {UserCommand} userCommand
+ * @param {ToolbarCommandItem} toolbarItem
+ * @returns {ToolbarCommandButton}
+ */
+export function composeToolbarButton(userCommand, toolbarItem) {
+    return {
+        ...pick(userCommand, "description", "icon", "isAvailable"),
+        ...omit(toolbarItem, "commandId", "commandParams"),
+        run: () => userCommand.run(toolbarItem.commandParams),
+    };
+}

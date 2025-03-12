@@ -11,8 +11,9 @@ import { omit, pick } from "@web/core/utils/objects";
  * @typedef {Object} PowerButton
  * @property {string} commandId
  * @property {Object} [commandParams]
- * @property {string} [title] Can be inferred from the user command
+ * @property {string} [description] Can be inferred from the user command
  * @property {string} [icon] Can be inferred from the user command
+ * @property {string} [text] Mandatory if `icon` is not provided
  * @property {string} [isAvailable] Can be inferred from the user command
  */
 /**
@@ -25,7 +26,7 @@ import { omit, pick } from "@web/core/utils/objects";
  *          {
  *              id: myCommand,
  *              run: myCommandFunction,
- *              title: _t("My Command"),
+ *              description: _t("Apply my command"),
  *              icon: "fa-bug",
  *          },
  *      ],
@@ -33,7 +34,7 @@ import { omit, pick } from "@web/core/utils/objects";
  *          {
  *              commandId: "myCommand",
  *              commandParams: { myParam: "myValue" },
- *              title: _t("My Power Button"), // overrides the user command's `title`
+ *              description: _t("Do powerfull stuff"), // overrides the user command's `description`
  *              // `icon` is derived from the user command
  *          }
  *      ],
@@ -66,15 +67,25 @@ export class PowerButtonsPlugin extends Plugin {
         const composePowerButton = (/**@type {PowerButton} */ item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
             return {
-                ...pick(command, "title", "icon", "isAvailable"),
+                ...pick(command, "description", "icon", "isAvailable"),
                 ...omit(item, "commandId", "commandParams"),
                 run: () => command.run(item.commandParams),
             };
         };
-        const renderButton = ({ title, icon, run }) => {
+        const renderButton = ({ description, icon, text, run }) => {
             const btn = this.document.createElement("button");
-            btn.className = `power_button btn px-2 py-1 cursor-pointer fa ${icon}`;
-            btn.title = title;
+            let className = "power_button btn px-2 py-1 cursor-pointer";
+            if (icon) {
+                className += ` fa ${icon}`;
+            } else {
+                const span = this.document.createElement("span");
+                span.textContent = text;
+                span.className = "d-flex align-items-center";
+                span.style.height = "1em";
+                btn.append(span);
+            }
+            btn.className = className;
+            btn.title = description;
             this.addDomListener(btn, "click", () => this.applyCommand(run));
             return btn;
         };

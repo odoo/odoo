@@ -31,6 +31,7 @@ import {
 } from "./_helpers/selection";
 import { strong } from "./_helpers/tags";
 import { insertText } from "./_helpers/user_actions";
+import { expandToolbar } from "./_helpers/toolbar";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -109,7 +110,7 @@ test("toolbar buttons react to selection change", async () => {
 
     // set selection to open toolbar
     setContent(el, "<p>[test] some text</p>");
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
 
     // check that bold button is not active
     expect(".btn[name='bold']").not.toHaveClass("active");
@@ -156,7 +157,10 @@ test("toolbar buttons react to selection change (2)", async () => {
 test("toolbar list buttons react to selection change", async () => {
     const { el } = await setupEditor("<ul><li>[abc]</li></ul>");
 
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    click(".btn[name='list_selector'].dropdown-toggle");
+    await waitFor(".btn[name='list_selector'].dropdown-toggle.show");
+
     expect(".btn[name='bulleted_list']").toHaveClass("active");
     expect(".btn[name='numbered_list']").not.toHaveClass("active");
     expect(".btn[name='checklist']").not.toHaveClass("active");
@@ -239,12 +243,12 @@ test("toolbar works: can select font", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
     setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [title='Font style']").toHaveText("Paragraph");
+    expect(".o-we-toolbar .btn[name='font']").toHaveText("Paragraph");
 
     await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
     await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
     expect(getContent(el)).toBe("<h2>[test]</h2>");
-    expect(".o-we-toolbar [title='Font style']").toHaveText("Header 2");
+    expect(".o-we-toolbar .btn[name='font']").toHaveText("Header 2");
 });
 
 test("toolbar works: show the right font name", async () => {
@@ -268,27 +272,27 @@ test("toolbar works: show the right font name", async () => {
         }
         await contains(selector).click();
         await animationFrame();
-        expect(".o-we-toolbar [title='Font style']").toHaveText(name);
+        expect(".o-we-toolbar .btn[name='font']").toHaveText(name);
     }
 });
 
 test("toolbar works: show the right font name after undo", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [title='Font style']").toHaveText("Paragraph");
+    expect(".o-we-toolbar .btn[name='font']").toHaveText("Paragraph");
 
     await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
     await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
     expect(getContent(el)).toBe("<h2>[test]</h2>");
-    expect(".o-we-toolbar [title='Font style']").toHaveText("Header 2");
+    expect(".o-we-toolbar .btn[name='font']").toHaveText("Header 2");
     await press(["ctrl", "z"]);
     await animationFrame();
     expect(getContent(el)).toBe("<p>[test]</p>");
-    expect(".o-we-toolbar [title='Font style']").toHaveText("Paragraph");
+    expect(".o-we-toolbar .btn[name='font']").toHaveText("Paragraph");
     await press(["ctrl", "y"]);
     await animationFrame();
     expect(getContent(el)).toBe("<h2>[test]</h2>");
-    expect(".o-we-toolbar [title='Font style']").toHaveText("Header 2");
+    expect(".o-we-toolbar .btn[name='font']").toHaveText("Header 2");
 });
 
 test("toolbar works: can select font size", async () => {
@@ -306,11 +310,11 @@ test("toolbar works: can select font size", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
     setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     expect(inputEl).toHaveValue(getFontSizeFromVar("body-font-size").toString());
 
-    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
     const sizes = new Set(
         fontSizeItems.map((item) => getFontSizeFromVar(item.variableName).toString())
     );
@@ -319,7 +323,7 @@ test("toolbar works: can select font size", async () => {
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
     expect(getContent(el)).toBe(`<p><span class="h1-fs">[test]</span></p>`);
     expect(inputEl).toHaveValue(h1Size);
-    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
     const oSmallSize = getFontSizeFromVar("small-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${oSmallSize}')`).click();
     expect(getContent(el)).toBe(`<p><span class="o_small-fs">[test]</span></p>`);
@@ -328,38 +332,34 @@ test("toolbar works: can select font size", async () => {
 
 test("toolbar works: show the correct text alignment", async () => {
     const { el } = await setupEditor("<p>[test</p><p><br>]</p>");
-    await waitFor(".o-we-toolbar");
-    expect("button[title='Text align']").toHaveCount(1);
-    expect("button[title='Text align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
-    await click("button[title='Text align']");
-    await contains(".o_align_selector_menu .dropdown-item .fa-align-right").click();
+    await expandToolbar();
+    expect("button[name='text_align']").toHaveCount(1);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
+    await click("button[name='text_align']");
+    await contains(".o-we-toolbar-dropdown .btn.fa-align-right").click();
     expect(getContent(el)).toBe(
         `<p style="text-align: right;">[test</p><p style="text-align: right;"><br>]</p>`
     );
-    expect("button[title='Text align'] span").toHaveInnerHTML(`<i class="fa fa-align-right"> </i>`);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-right"> </i>`);
 });
 
 test("toolbar works: show the correct text alignment after undo/redo", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
-    await waitFor(".o-we-toolbar");
-    expect("button[title='Text align']").toHaveCount(1);
-    expect("button[title='Text align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
-    await click("button[title='Text align']");
-    await contains(".o_align_selector_menu .dropdown-item .fa-align-center").click();
+    await expandToolbar();
+    expect("button[name='text_align']").toHaveCount(1);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
+    await click("button[name='text_align']");
+    await contains(".o-we-toolbar-dropdown .btn.fa-align-center").click();
     expect(getContent(el)).toBe(`<p style="text-align: center;">[test]</p>`);
-    expect("button[title='Text align'] span").toHaveInnerHTML(
-        `<i class="fa fa-align-center"> </i>`
-    );
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-center"> </i>`);
     await press(["ctrl", "z"]);
     await animationFrame();
     expect(getContent(el)).toBe(`<p>[test]</p>`);
-    expect("button[title='Text align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-left"> </i>`);
     await press(["ctrl", "y"]);
     await animationFrame();
     expect(getContent(el)).toBe(`<p style="text-align: center;">[test]</p>`);
-    expect("button[title='Text align'] span").toHaveInnerHTML(
-        `<i class="fa fa-align-center"> </i>`
-    );
+    expect("button[name='text_align'] span").toHaveInnerHTML(`<i class="fa fa-align-center"> </i>`);
 });
 
 test.tags("desktop");
@@ -378,9 +378,9 @@ test("toolbar works: display correct font size on select all", async () => {
         return Math.round(pxValue);
     };
     await waitFor(".o-we-toolbar");
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
-    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    await contains(".o-we-toolbar [name='font_size_selector'].dropdown-toggle").click();
     await animationFrame();
     const h1Size = getFontSizeFromVar("h1-font-size").toString();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('${h1Size}')`).click();
@@ -396,7 +396,7 @@ test("toolbar works: displays correct font size on input", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     expect(iframeEl).toHaveCount(1);
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(inputEl).click();
@@ -419,7 +419,7 @@ test("toolbar works: font size dropdown closes on Enter and Tab key press", asyn
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     expect(iframeEl).toHaveCount(1);
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(inputEl).click();
@@ -440,7 +440,7 @@ test("toolbar works: ArrowUp/Down moves focus to font size dropdown", async () =
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
 
-    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     expect(iframeEl).toHaveCount(1);
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(inputEl).click();
@@ -595,13 +595,13 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                 },
             ],
             user_commands: { id: "test_cmd", run: () => null },
-            toolbar_groups: withSequence(24, { id: "test_group", namespace: "aNamespace" }),
+            toolbar_groups: withSequence(24, { id: "test_group", namespaces: ["aNamespace"] }),
             toolbar_items: [
                 {
                     id: "test_btn",
                     groupId: "test_group",
                     commandId: "test_cmd",
-                    title: "Test Button",
+                    description: "Test Button",
                     icon: "fa-square",
                 },
             ],
@@ -622,13 +622,13 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
         static id = "TestPlugin";
         resources = {
             user_commands: { id: "test_cmd", run: () => null },
-            toolbar_groups: withSequence(24, { id: "test_group", namespace: "image" }),
+            toolbar_groups: withSequence(24, { id: "test_group", namespaces: ["image"] }),
             toolbar_items: [
                 {
                     id: "test_btn",
                     groupId: "test_group",
                     commandId: "test_cmd",
-                    title: "Test Button",
+                    description: "Test Button",
                     icon: "fa-square",
                     isActive: () => expect.step("image format evaluated"),
                 },
@@ -653,6 +653,42 @@ test("toolbar does not evaluate isActive when namespace does not match", async (
     expect.verifySteps(["image format evaluated"]);
 });
 
+test("toolbar opens in 'compact' namespace by default", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
+    await expandToolbar();
+    expect(".o-we-toolbar").toHaveAttribute("data-namespace", "expanded");
+});
+
+test("toolbar items without namespace default to 'expanded'", async () => {
+    class TestPlugin extends Plugin {
+        static id = "TestPlugin";
+        resources = {
+            user_commands: { id: "test_cmd", run: () => null },
+            toolbar_groups: { id: "test_group" },
+            toolbar_items: [
+                {
+                    id: "test_btn",
+                    groupId: "test_group",
+                    commandId: "test_cmd",
+                    description: "Test Button",
+                    icon: "fa-square",
+                },
+            ],
+        };
+    }
+    await setupEditor("<p>[test]</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+    });
+    await waitFor(".o-we-toolbar");
+    // Test button in not present in compact toolbar
+    expect(".o-we-toolbar .btn[name='test_btn']").toHaveCount(0);
+    await expandToolbar();
+    // Test button is present in expanded toolbar by default
+    expect(".o-we-toolbar .btn[name='test_btn']").toHaveCount(1);
+});
+
 test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
@@ -664,7 +700,7 @@ test("plugins can create buttons with text in toolbar", async () => {
                     id: "test_btn",
                     groupId: "test_group",
                     commandId: "test_cmd",
-                    title: "Test Button",
+                    description: "Test Button",
                     text: "Text button",
                 },
             ],
@@ -673,7 +709,7 @@ test("plugins can create buttons with text in toolbar", async () => {
     await setupEditor(`<div> <p class="foo">[Foo]</p> </div>`, {
         config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
     });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect("button[name='test_btn']").toHaveText("Text button");
 });
 
@@ -723,15 +759,17 @@ test("toolbar buttons should have title attribute with translated text", async (
     // Retrieve toolbar buttons descriptions in English
     const { editor, plugins } = await setupEditor("");
     // map function to get the title string value
-    const itemTitleString = (item) =>
-        item.title instanceof Function ? item.title().toString() : item.title.toString();
+    const itemDescriptionString = (item) =>
+        item.description instanceof Function
+            ? item.description().toString()
+            : item.description.toString();
 
     // item.label could be a LazyTranslatedString so we ensure it is a string with toString()
-    const titles = plugins.get("toolbar").getButtons().map(itemTitleString);
+    const descriptions = plugins.get("toolbar").getButtons().map(itemDescriptionString);
     editor.destroy();
 
     // Patch translations to return "Translated" for these terms
-    patchTranslations(Object.fromEntries(titles.map((title) => [title, "Translated"])));
+    patchTranslations(Object.fromEntries(descriptions.map((title) => [title, "Translated"])));
 
     // Instantiate a new editor.
     const { plugins: postPatchPlugins } = await setupEditor("<p>[abc]</p>");
@@ -742,7 +780,7 @@ test("toolbar buttons should have title attribute with translated text", async (
         .getButtons()
         .forEach((item) => {
             // item.label could be a LazyTranslatedString so we ensure it is a string with toString()
-            expect(itemTitleString(item)).toBe("Translated");
+            expect(itemDescriptionString(item)).toBe("Translated");
         });
 
     await waitFor(".o-we-toolbar");

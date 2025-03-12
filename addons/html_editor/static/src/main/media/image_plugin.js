@@ -40,37 +40,37 @@ export class ImagePlugin extends Plugin {
         user_commands: [
             {
                 id: "deleteImage",
-                title: _t("Remove (DELETE)"),
+                description: _t("Remove (DELETE) image"),
                 icon: "fa-trash text-danger",
                 run: this.deleteImage.bind(this),
             },
             {
                 id: "previewImage",
-                title: _t("Preview image"),
+                description: _t("Preview image"),
                 icon: "fa-search-plus",
                 run: this.previewImage.bind(this),
             },
             {
                 id: "setImageShapeRounded",
-                title: _t("Shape: Rounded"),
+                description: _t("Set shape: Rounded"),
                 icon: "fa-square",
                 run: () => this.setImageShape("rounded", { excludeClasses: ["rounded-circle"] }),
             },
             {
                 id: "setImageShapeCircle",
-                title: _t("Shape: Circle"),
+                description: _t("Set shape: Circle"),
                 icon: "fa-circle-o",
                 run: () => this.setImageShape("rounded-circle", { excludeClasses: ["rounded"] }),
             },
             {
                 id: "setImageShapeShadow",
-                title: _t("Shape: Shadow"),
+                description: _t("Set shape: Shadow"),
                 icon: "fa-sun-o",
                 run: () => this.setImageShape("shadow"),
             },
             {
                 id: "setImageShapeThumbnail",
-                title: _t("Shape: Thumbnail"),
+                description: _t("Set shape: Thumbnail"),
                 icon: "fa-picture-o",
                 run: () => this.setImageShape("img-thumbnail"),
             },
@@ -87,13 +87,13 @@ export class ImagePlugin extends Plugin {
             },
         ],
         toolbar_groups: [
-            withSequence(23, { id: "image_preview", namespace: "image" }),
-            withSequence(24, { id: "image_description", namespace: "image" }),
-            withSequence(25, { id: "image_shape", namespace: "image" }),
-            withSequence(26, { id: "image_padding", namespace: "image" }),
-            withSequence(26, { id: "image_size", namespace: "image" }),
-            withSequence(26, { id: "image_modifiers", namespace: "image" }),
-            withSequence(32, { id: "image_delete", namespace: "image" }),
+            withSequence(23, { id: "image_preview", namespaces: ["image"] }),
+            withSequence(24, { id: "image_description", namespaces: ["image"] }),
+            withSequence(25, { id: "image_shape", namespaces: ["image"] }),
+            withSequence(26, { id: "image_padding", namespaces: ["image"] }),
+            withSequence(26, { id: "image_size", namespaces: ["image"] }),
+            withSequence(26, { id: "image_modifiers", namespaces: ["image"] }),
+            withSequence(32, { id: "image_delete", namespaces: ["image"] }),
         ],
         toolbar_items: [
             {
@@ -103,7 +103,7 @@ export class ImagePlugin extends Plugin {
             },
             {
                 id: "image_description",
-                title: _t("Edit media description"),
+                description: _t("Edit media description"),
                 groupId: "image_description",
                 Component: ImageDescription,
                 props: {
@@ -139,7 +139,7 @@ export class ImagePlugin extends Plugin {
             {
                 id: "image_padding",
                 groupId: "image_padding",
-                title: _t("Image padding"),
+                description: _t("Set image padding"),
                 Component: ImageToolbarDropdown,
                 props: {
                     name: "image_padding",
@@ -153,7 +153,7 @@ export class ImagePlugin extends Plugin {
             {
                 id: "image_size",
                 groupId: "image_size",
-                title: _t("Image size"),
+                description: _t("Resize image"),
                 Component: ImageToolbarDropdown,
                 props: {
                     name: "image_size",
@@ -168,7 +168,7 @@ export class ImagePlugin extends Plugin {
             {
                 id: "image_transform",
                 groupId: "image_modifiers",
-                title: _t("Transform the picture (click twice to reset transformation)"),
+                description: _t("Transform the picture (click twice to reset transformation)"),
                 Component: ImageTransformButton,
                 props: this.getImageTransformProps(),
             },

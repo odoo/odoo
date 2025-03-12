@@ -14,7 +14,6 @@ import {
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
-import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { isColorGradient, isCSSColor, rgbToHex } from "@web/core/utils/colors";
@@ -36,21 +35,18 @@ export class ColorPlugin extends Plugin {
                 run: this.applyColor.bind(this),
             },
         ],
-        toolbar_groups: withSequence(25, {
-            id: "color",
-        }),
         toolbar_items: [
             {
                 id: "forecolor",
-                groupId: "color",
-                title: _t("Font Color"),
+                groupId: "decoration",
+                description: _t("Apply Font Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("foreground"),
             },
             {
                 id: "backcolor",
-                groupId: "color",
-                title: _t("Background Color"),
+                groupId: "decoration",
+                description: _t("Apply Background Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("background"),
             },

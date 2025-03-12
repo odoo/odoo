@@ -27,7 +27,7 @@ export class MediaPlugin extends Plugin {
         user_commands: [
             {
                 id: "replaceImage",
-                title: _t("Replace media"),
+                description: _t("Replace media"),
                 icon: "fa-exchange",
                 run: this.replaceImage.bind(this),
             },
@@ -40,10 +40,7 @@ export class MediaPlugin extends Plugin {
                 run: this.openMediaDialog.bind(this),
             },
         ],
-        toolbar_groups: withSequence(31, {
-            id: "replace_image",
-            namespace: "image",
-        }),
+        toolbar_groups: withSequence(31, { id: "replace_image", namespaces: ["image"] }),
         toolbar_items: [
             {
                 id: "replace_image",

@@ -86,13 +86,6 @@ describe("buttons", () => {
         );
     });
 
-    test("should open table selector using power buttons", async () => {
-        await setupEditor("<p>[]<br></p>");
-        click(".o_we_power_buttons .power_button.fa-table");
-        await animationFrame();
-        expect(".o-we-tablepicker").toBeVisible();
-    });
-
     test("should open image selector using power buttons", async () => {
         onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
             return [
@@ -112,9 +105,9 @@ describe("buttons", () => {
         expect(".o_select_media_dialog").toBeVisible();
     });
 
-    test("should open link popover using power buttons", async () => {
+    test("should open link popover in 'button primary' mode using power buttons", async () => {
         await setupEditor("<p>[]<br></p>");
-        click(".o_we_power_buttons .power_button.fa-link");
+        click(".o_we_power_buttons .power_button.fa-square");
         await animationFrame();
         expect(".o-we-linkpopover").toHaveCount(1);
     });
@@ -124,6 +117,13 @@ describe("buttons", () => {
         click(".o_we_power_buttons .power_button.fa-ellipsis-v");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
+    });
+
+    test("should open chatgpt dialog using power buttons", async () => {
+        await setupEditor("<p>[]<br></p>");
+        click(".o_we_power_buttons .power_button:contains('AI')");
+        await animationFrame();
+        expect(".modal .modal-header:contains('Generate Text with AI')").toHaveCount(1);
     });
 });
 
