@@ -906,6 +906,7 @@ export class Runner {
                             await suite.callbacks.call("after-suite", suite, handleError);
                             await this._callbacks.call("after-suite", suite, handleError);
                         });
+                        suite.after();
 
                         logger.logSuite(suite);
 
@@ -997,6 +998,7 @@ export class Runner {
                     await callbackRegistry.call("after-test", test, handleError);
                 }
             });
+            test.after();
 
             restoreConsole();
 
