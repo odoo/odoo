@@ -79,6 +79,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
                 'dest_address_id': origin_po.dest_address_id.id,
                 'origin': origin_po.origin,
                 'currency_id': partner.property_purchase_currency_id.id or self.env.company.currency_id.id,
+                'payment_term_id': partner.property_supplier_payment_term_id.id,
             }
             if self.copy_products and origin_po:
                 val['order_line'] = [Command.create(self._get_alternative_line_value(line, product_tmpl_ids_with_description)) for line in origin_po.order_line]
