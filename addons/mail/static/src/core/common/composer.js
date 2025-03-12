@@ -494,6 +494,9 @@ export class Composer extends Component {
                     ev.preventDefault();
                     return;
                 }
+                if (this.isMobileOS) {
+                    return;
+                }
                 const shouldPost = this.env.inChatter ? ev.ctrlKey : !ev.shiftKey;
                 if (!shouldPost) {
                     return;
