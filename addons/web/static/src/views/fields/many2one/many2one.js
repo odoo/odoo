@@ -61,7 +61,7 @@ export function computeM2OProps(fieldProps) {
         relation: fieldProps.record.fields[fieldProps.name].relation,
         searchThreshold: fieldProps.searchThreshold,
         string: fieldProps.string || fieldProps.record.fields[fieldProps.name].string || "",
-        update: (value) => fieldProps.record.update({ [fieldProps.name]: value }),
+        update: (value, options = {}) => fieldProps.record.update({ [fieldProps.name]: value }, options),
         value: toRaw(fieldProps.record.data[fieldProps.name]),
     };
 }
@@ -355,6 +355,10 @@ export class KanbanMany2One extends Component {
             canQuickCreate: false,
             placeholder: this.props.placeholder || _t("Search user..."),
             readonly: false,
+            update: async (value) => {
+                await this.props.update(value, { save: true });
+                this.assignPopover.close();
+            },
         });
     }
 }
