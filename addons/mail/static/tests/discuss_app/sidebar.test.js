@@ -1258,3 +1258,24 @@ test("Sidebar compact is crosstab synced", async () => {
     await contains(".o-mail-DiscussSidebar.o-compact", { target: env1 });
     await contains(".o-mail-DiscussSidebar.o-compact", { target: env2 });
 });
+
+test("Redirect to the thread containing the starred message and highlight the message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        model: "discuss.channel",
+        res_id: channelId,
+        body: "<p>Hello there!!!</p>",
+    });
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await click(".o-mail-Message [title='Mark as Todo']");
+    await click("button", { text: "Starred", contains: [".badge", { count: 1 }] });
+    await click(".o-mail-Message-header a", { text: "#General" });
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
+    await contains(".o-mail-Message.o-highlighted", { text: "Hello there!!!" });
+});
