@@ -812,4 +812,12 @@ describe("Toolbar", () => {
             `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
         );
     });
+
+    test("should disable remove format button when formatting is inside a contenteditable false element", async () => {
+        await setupEditor('a[bc<div contenteditable="false"><p><strong>def</strong>gh]i</p></div>');
+
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
 });

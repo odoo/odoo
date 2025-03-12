@@ -18,11 +18,11 @@ test("should change the font size of a few characters", async () => {
     });
 });
 
-test("should change the font size the qweb tag", async () => {
+test("should not change the font size the qweb tag when its contenteditable false element", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: setFontSize("36px"),
-        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="font-size: 36px;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false">Test</p>]</div>`,
     });
 });
 
