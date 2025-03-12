@@ -170,23 +170,24 @@ export class EmojiPicker extends Component {
         );
         useEffect(
             (el) => {
-                const gridEl = this.gridRef?.el;
+                const gridEl = this.gridRef.el;
                 const activeEl = gridEl?.querySelector(".o-Emoji.o-active");
-                if (
-                    gridEl &&
-                    activeEl &&
-                    this.keyboardNavigated &&
-                    !isElementVisible(activeEl, gridEl)
-                ) {
+                if (!gridEl) {
+                    return;
+                }
+                if (activeEl && this.keyboardNavigated && !isElementVisible(activeEl, gridEl)) {
                     activeEl.scrollIntoView({ block: "center", behavior: "instant" });
                     this.keyboardNavigated = false;
                 }
                 this.state.hoveredEmoji = this.activeEmoji;
             },
-            () => [this.state.activeEmojiIndex, this.gridRef?.el]
+            () => [this.state.activeEmojiIndex, this.gridRef.el]
         );
         useEffect(
             () => {
+                if (!this.gridRef.el) {
+                    return;
+                }
                 if (this.searchTerm) {
                     this.gridRef.el.scrollTop = 0;
                     this.state.categoryId = null;
@@ -212,6 +213,9 @@ export class EmojiPicker extends Component {
     }
 
     adaptNavbar() {
+        if (!this.navbarRef.el) {
+            return;
+        }
         const computedStyle = getComputedStyle(this.navbarRef.el);
         const availableWidth =
             this.navbarRef.el.getBoundingClientRect().width -
@@ -415,7 +419,7 @@ export class EmojiPicker extends Component {
             case "Enter":
                 ev.preventDefault();
                 this.gridRef.el
-                    .querySelector(
+                    ?.querySelector(
                         `.o-EmojiPicker-content .o-Emoji[data-index="${this.state.activeEmojiIndex}"]`
                     )
                     ?.click();
