@@ -287,11 +287,6 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             data['account.fiscal.position']['test_later_fiscal_position_template'] = {
                 'name': "Later Fiscal Position",
             }
-            data['account.category'] = {
-                'test_account_category_1_template': {
-                    'name': "Later Category",
-                }
-            }
             return data
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
@@ -299,7 +294,6 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
         tax_1, tax_2, tax_3, tax_4, tax_5 = self.env['account.tax'].search([('company_id', '=', self.company.id)])
         old_fp, later_fp = self.env['account.fiscal.position'].search([])
-        category_1 = self.env['account.chart.template'].ref('test_account_category_1_template')
         self.assertRecordValues(tax_1 | tax_2 | tax_3 | tax_4 | tax_5, [
             {'name': 'Tax 1', 'fiscal_position_ids': False},
             {'name': 'Tax 2', 'fiscal_position_ids': old_fp.id},
