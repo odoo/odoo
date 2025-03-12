@@ -190,10 +190,10 @@ class PosOrder(models.Model):
     @api.model
     def _get_invoice_lines_values(self, line_values, pos_line, move_type):
         # correct quantity sign based on move type and if line is refund.
-        is_refund = line_values.get('is_refund', False)
+        is_refund_order = pos_line.order_id.amount_total < 0.0
         qty_sign = -1 if (
-            (move_type == 'out_invoice' and is_refund)
-            or (move_type == 'out_refund' and not is_refund)
+            (move_type == 'out_invoice' and is_refund_order)
+            or (move_type == 'out_refund' and not is_refund_order)
         ) else 1
 
         return {
