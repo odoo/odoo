@@ -844,7 +844,7 @@ class SaleOrder(models.Model):
             reward = reward_key[0]
             program = reward.program_id
             points = self._get_real_points_for_coupon(coupon)
-            if coupon not in all_coupons or points < reward.required_points or program not in domain_matching_programs:
+            if coupon.id not in all_coupons.ids or points < reward.required_points or program not in domain_matching_programs:
                 # Reward is not applicable anymore, the reward lines will simply be removed at the end of this function
                 continue
             try:
