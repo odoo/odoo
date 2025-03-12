@@ -6,6 +6,7 @@ import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useSequential } from "@mail/utils/common/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 
 export class ChannelInvitation extends Component {
     static components = { ImStatus, ActionPanel };
@@ -35,6 +36,7 @@ export class ChannelInvitation extends Component {
             searchResultCount: 0,
             searchStr: "",
         });
+        this.debouncedFetchPartnersToInvite = useDebounced(this.fetchPartnersToInvite.bind(this), 250);
         onWillStart(() => {
             if (this.store.self.type === "partner") {
                 this.fetchPartnersToInvite();
@@ -126,7 +128,7 @@ export class ChannelInvitation extends Component {
 
     onInput() {
         this.searchStr = this.inputRef.el.value;
-        this.fetchPartnersToInvite();
+        this.debouncedFetchPartnersToInvite();
     }
 
     onClickSelectablePartner(partner) {
