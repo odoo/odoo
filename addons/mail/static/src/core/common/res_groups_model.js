@@ -3,6 +3,7 @@ import { Record } from "@mail/core/common/record";
 export class ResGroups extends Record {
     static _name = "res.groups";
     static id = "id";
+    privilege_id = Record.one("res.groups.privilege");
     personas = Record.many("Persona");
 }
 
