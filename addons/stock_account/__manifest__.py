@@ -20,7 +20,7 @@ Dashboard / Reports for Warehouse Management includes:
 * Stock Inventory Value at given date (support dates in the past)
     """,
     'depends': ['stock', 'account'],
-    'category': 'Hidden',
+    'category': 'Supply Chain/Inventory',
     'sequence': 16,
     'demo': [
         'data/stock_account_demo.xml',

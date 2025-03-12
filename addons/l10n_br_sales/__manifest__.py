@@ -4,7 +4,7 @@
     'name': 'Brazil - Sale',
     'version': '1.0',
     'description': 'Sale modifications for Brazil',
-    'category': 'Localization',
+    'category': 'Sales/Sales',
     'depends': [
         'l10n_br',
         'sale',

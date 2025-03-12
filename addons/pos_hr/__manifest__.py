@@ -3,7 +3,7 @@
 
 {
     'name': "POS - HR",
-    'category': "Hidden",
+    'category': "Sales/Point of Sale",
     'summary': 'Link module between Point of Sale and HR',
 
     'description': """

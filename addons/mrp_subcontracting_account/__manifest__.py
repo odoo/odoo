@@ -4,7 +4,7 @@
 {
     'name': 'Subcontracting Management with Stock Valuation',
     'version': '0.1',
-    'category': 'Hidden',
+    'category': 'Supply Chain/Manufacturing',
     'description': """
 This bridge module allows to manage subcontracting with valuation.
     """,
