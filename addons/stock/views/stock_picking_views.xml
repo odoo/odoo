@@ -360,6 +360,7 @@
                     <filter name="reception" invisible="1" string="Receipts" domain="[('picking_type_code', '=', 'incoming')]"/>
                     <filter name="delivery" invisible="1" string="Deliveries" domain="[('picking_type_code', '=', 'outgoing')]"/>
                     <filter name="internal" invisible="1" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
+                    <separator/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
                     <filter name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
                     <filter name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
