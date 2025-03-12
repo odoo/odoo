@@ -11,6 +11,7 @@ class ResGroups(models.Model):
     _description = "Access Groups"
     _rec_name = 'full_name'
     _allow_sudo_commands = False
+    _order = 'privilege_id, sequence, name, id'
 
     name = fields.Char(required=True, translate=True)
     user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
@@ -31,6 +32,12 @@ class ResGroups(models.Model):
     api_key_duration = fields.Float(string='API Keys maximum duration days',
         help="Determines the maximum duration of an api key created by a user belonging to this group.")
 
+    sequence = fields.Integer(string='Sequence')
+    privilege_id = fields.Many2one('res.groups.privilege', string='Privilege', index=True)
+    view_group_hierarchy = fields.Json(string='Technical field for default group setting', compute='_compute_view_group_hierarchy')
+
+    _name_uniq = models.Constraint("UNIQUE (privilege_id, name)",
+        'The name of the group must be unique within a group privilege!')
     _check_api_key_duration = models.Constraint(
         'CHECK(api_key_duration >= 0)',
         'The api key duration cannot be a negative value.',
@@ -295,6 +302,28 @@ class ResGroups(models.Model):
         """
         groups = self.all_implied_ids.filtered(lambda g: implied_group in g.implied_ids)
         groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+
+    def _compute_view_group_hierarchy(self):
+        self.view_group_hierarchy = self._get_view_group_hierarchy()
+
+    @api.model
+    @tools.ormcache(cache='groups')
+    def _get_view_group_hierarchy(self):
+        return [
+            {
+                'id': section.id,
+                'name': section.name,
+                'categories': [
+                    {
+                        'id': privilege.id,
+                        'name': privilege.name,
+                        'description': privilege.description,
+                        'groups': [[group.id, group.name]
+                                   for group in privilege.group_ids.sorted(lambda g: (len(g.all_implied_ids & privilege.group_ids), g.sequence, g.id))]
+                    } for privilege in section.privilege_ids.sorted(lambda p: p.sequence) if privilege.group_ids
+                ]
+            } for section in self.env['ir.module.category'].search([('parent_id', '=', False), ('privilege_ids.group_ids', '!=', False)], order="sequence")
+        ]
 
     @api.model
     @tools.ormcache(cache='groups')
