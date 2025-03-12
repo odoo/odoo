@@ -84,7 +84,7 @@ class Animal extends models.Model {
             is_default: true,
             name: "My favorite",
             sort: "[]",
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
         },
     ];
 }
@@ -533,7 +533,7 @@ test("rendering with given arch, fields, searchViewId, searchViewArch, searchVie
                     is_default: true,
                     name: "My favorite",
                     sort: "[]",
-                    user_id: [2, "Mitchell Admin"],
+                    user_ids: [2],
                 },
             ]);
         },
@@ -575,7 +575,7 @@ test("rendering with given arch, fields, searchViewId, searchViewArch, searchVie
             is_default: false,
             name: "My favorite",
             sort: "[]",
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
         },
     ];
     patchWithCleanup(ToyController.prototype, {

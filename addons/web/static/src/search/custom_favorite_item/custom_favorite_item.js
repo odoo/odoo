@@ -14,39 +14,30 @@ export class CustomFavoriteItem extends Component {
     static props = {};
 
     setup() {
+        this.actionService = useService("action");
         this.notificationService = useService("notification");
         this.descriptionRef = useRef("description");
         this.state = useState({
             description: this.env.config.getDisplayName(),
             isDefault: false,
-            isShared: false,
         });
     }
 
     /**
      * @param {Event} ev
      */
-    saveFavorite(ev) {
+    async saveFavorite(ev, isShared = false) {
         if (!this.state.description) {
             this.notificationService.add(_t("A name for your favorite filter is required."), {
                 type: "danger",
             });
             ev.stopPropagation();
-            return this.descriptionRef.el.focus();
+            this.descriptionRef.el.focus();
+            return false;
         }
-        const favorites = this.env.searchModel.getSearchItems(
-            (s) => s.type === "favorite" && s.description === this.state.description
-        );
-        if (favorites.length) {
-            this.notificationService.add(_t("A filter with same name already exists."), {
-                type: "danger",
-            });
-            ev.stopPropagation();
-            return this.descriptionRef.el.focus();
-        }
-        const { description, isDefault, isShared } = this.state;
+        const { description, isDefault } = this.state;
         const embeddedActionId = this.env.config.currentEmbeddedActionId || false;
-        this.env.searchModel.createNewFavorite({
+        const serverSideId = await this.env.searchModel.createNewFavorite({
             description,
             isDefault,
             isShared,
@@ -56,28 +47,27 @@ export class CustomFavoriteItem extends Component {
         Object.assign(this.state, {
             description: this.env.config.getDisplayName(),
             isDefault: false,
-            isShared: false,
         });
+        return serverSideId;
     }
 
     /**
-     * @param {boolean} checked
+     * @param {Event} ev
      */
-    onDefaultCheckboxChange(checked) {
-        this.state.isDefault = checked;
-        if (checked) {
-            this.state.isShared = false;
+    async editFavorite(ev) {
+        const serverSideId = await this.saveFavorite(ev);
+        if (!serverSideId) {
+            return;
         }
-    }
-
-    /**
-     * @param {boolean} checked
-     */
-    onShareCheckboxChange(checked) {
-        this.state.isShared = checked;
-        if (checked) {
-            this.state.isDefault = false;
-        }
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: "ir.filters",
+            views: [[false, "form"]],
+            context: {
+                form_view_ref: "base.ir_filters_view_edit_form",
+            },
+            res_id: serverSideId,
+        });
     }
 
     /**

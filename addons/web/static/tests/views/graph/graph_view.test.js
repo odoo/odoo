@@ -1317,7 +1317,7 @@ test("save params succeeds", async () => {
     ];
 
     let serverId = 1;
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContexts.shift());
         return [serverId++];
     });
@@ -2548,7 +2548,7 @@ test("graph_groupbys should be also used after first load", async () => {
         groupBy: ["date:quarter"],
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "Favorite",
                 id: 1,
                 context: JSON.stringify({
@@ -2714,7 +2714,7 @@ test("missing property field definition is fetched", async function () {
         arch: `<graph/>`,
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My Filter",
                 id: 5,
                 context: `{"group_by": ['properties.my_char']}`,
@@ -2775,7 +2775,7 @@ test("missing deleted property field definition is created", async function () {
         arch: `<graph/>`,
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My Filter",
                 id: 5,
                 context: `{"group_by": ['properties.my_char']}`,

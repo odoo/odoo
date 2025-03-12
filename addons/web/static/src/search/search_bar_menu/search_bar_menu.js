@@ -126,13 +126,13 @@ export class SearchBarMenu extends Component {
 
     get favorites() {
         return this.env.searchModel.getSearchItems(
-            (searchItem) => searchItem.type === "favorite" && searchItem.userId !== false
+            (searchItem) => searchItem.type === "favorite" && searchItem.userIds.length === 1
         );
     }
 
     get sharedFavorites() {
         const sharedFavorites = this.env.searchModel.getSearchItems(
-            (searchItem) => searchItem.type === "favorite" && searchItem.userId === false
+            (searchItem) => searchItem.type === "favorite" && searchItem.userIds.length !== 1
         );
         if (sharedFavorites.length <= 4 || this.state.sharedFavoritesExpanded) {
             this.state.sharedFavoritesExpanded = true;

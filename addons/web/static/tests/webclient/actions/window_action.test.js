@@ -415,6 +415,7 @@ test("orderedBy in context is not propagated when executing another action", asy
             sort: "[]",
             is_default: true,
             name: "My filter",
+            user_ids: [],
         },
     ];
 
@@ -1679,7 +1680,7 @@ test("save current search", async () => {
         },
     });
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].domain).toBe(`[("m2o", "=", 1)]`);
         expect(args[0].context).toEqual({
             group_by: [],
@@ -1725,6 +1726,7 @@ test("list with default_order and favorite filter with no orderedBy", async () =
             sort: "[]",
             domain: '[("m2o", "=", 1)]',
             is_default: false,
+            user_ids: [],
         },
     ];
     await mountWithCleanup(WebClient);
@@ -1779,6 +1781,7 @@ test("action with default favorite and context.active_id", async () => {
             sort: "[]",
             domain: '[("bar", "=", 1)]',
             is_default: true,
+            user_ids: [],
         },
     ];
     onRpc("web_search_read", ({ kwargs }) => {

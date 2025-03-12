@@ -79,7 +79,7 @@ test("edit an active favorite", async () => {
             is_default: true,
             name: "My favorite",
             sort: "[]",
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
         },
     ];
     mockService("action", {
@@ -130,7 +130,7 @@ test("default favorite is not activated if activateFavorite is set to false", as
                 is_default: true,
                 name: "My favorite",
                 sort: "[]",
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
             },
         ],
         activateFavorite: false,
@@ -156,7 +156,7 @@ test(`toggle favorite correctly clears filter, groupbys and field "options"`, as
                 is_default: false,
                 name: "My favorite",
                 sort: "[]",
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
             },
         ],
         searchViewArch: `
@@ -209,7 +209,7 @@ test("edit a favorite with a groupby", async () => {
             is_default: true,
             name: "My favorite",
             sort: "[]",
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
         },
     ];
 
@@ -248,6 +248,7 @@ test("shared favorites are partially shown if there is more than 4", async () =>
             is_default: false,
             name: "My favorite" + i,
             sort: "[]",
+            user_ids: [],
         });
     }
     await mountWithSearch(SearchBarMenu, {
