@@ -109,6 +109,7 @@ export class PosStore extends Reactive {
         // validation (order paid then sent to the backend).
         this.validated_orders_name_server_id_map = {};
         this.numpadMode = "quantity";
+        this.qty_by_prices = false;
         this.mobile_pane = "right";
         this.ticket_screen_mobile_pane = "left";
         this.productListView = window.localStorage.getItem("productListView") || "grid";
@@ -701,6 +702,15 @@ export class PosStore extends Reactive {
         currentOrder.is_tipped = true;
         currentOrder.tip_amount = tip;
         return line;
+    }
+
+    checkProductCategory() {
+        const orderline = this.get_order().get_selected_orderline();
+        if (!orderline) {
+            return false;
+        }
+        const categoryId = orderline.product_id.uom_id.category_id.id;
+        return [2, 6].includes(categoryId);
     }
 
     selectOrderLine(order, line) {

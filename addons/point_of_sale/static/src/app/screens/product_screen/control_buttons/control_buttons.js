@@ -134,6 +134,11 @@ export class ControlButtons extends Component {
             ? "btn btn-secondary btn-lg py-5"
             : "btn btn-light btn-lg lh-lg";
     }
+
+    toggleQtyByPrices() {
+        this.pos.qty_by_prices = !this.pos.qty_by_prices;
+        this.pos.numberBuffer.reset();
+    }
 }
 
 export class ControlButtonsPopup extends Component {

@@ -39,6 +39,12 @@
                 <button class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.onDeleteOrder(this.pos.get_order())">
                     <i class="fa fa-trash me-1" role="img" /> Cancel Order 
                 </button>
+                <button t-if="this.pos.config.qty_set_by_prices"
+                        t-on-click="this.toggleQtyByPrices"
+                        t-att-disabled="!this.pos.checkProductCategory()"
+                        t-attf-class="btn btn-secondary btn-lg py-5 {{ this.pos.qty_by_prices ? 'highlight text-action' : '' }}">
+                    <i class="fa fa-money me-1"/> Quantity by Prices
+                </button>
             </div>
         </t>
     </t>
