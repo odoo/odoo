@@ -114,7 +114,7 @@
 
 <t t-name="mail.Composer.sendButton">
     <button class="o-mail-Composer-send btn"
-        t-att-class="{'btn-primary': extended, 'p-1 rounded-pill': !extended, 'btn-link': !extended, 'border-start-0 me-2': env.inDiscussApp}"
+        t-att-class="{'btn-primary': extended or (ui.isSmall and !isSendButtonDisabled), 'p-1 rounded-pill': !extended, 'btn-link': !extended and !(ui.isSmall and !isSendButtonDisabled), 'border-start-0 me-2': env.inDiscussApp}"
         t-on-click="sendMessage"
         t-att-disabled="isSendButtonDisabled"
         t-att-aria-label="SEND_TEXT"
