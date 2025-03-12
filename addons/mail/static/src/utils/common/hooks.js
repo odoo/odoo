@@ -261,16 +261,16 @@ export function useVisible(refName, cb, { ready = true } = {}) {
 }
 
 /**
- * @typedef {Object} MessageHighlight
- * @property {function} clearHighlight
+ * @typedef {Object} MessageScrolling
+ * @property {function} clear
  * @property {function} highlightMessage
  * @property {number|null} highlightedMessageId
- * @returns {MessageHighlight}
+ * @returns {MessageScrolling}
  */
-export function useMessageHighlight(duration = 2000) {
+export function useMessageScrolling(duration = 2000) {
     let timeout;
     const state = useState({
-        clearHighlight() {
+        clear() {
             if (this.highlightedMessageId) {
                 browser.clearTimeout(timeout);
                 timeout = null;
@@ -292,7 +292,7 @@ export function useMessageHighlight(duration = 2000) {
                 await thread.loadAround(message.id);
             }
             const lastHighlightedMessageId = state.highlightedMessageId;
-            this.clearHighlight();
+            this.clear();
             if (lastHighlightedMessageId === message.id) {
                 // Give some time for the state to update.
                 await new Promise(setTimeout);
@@ -305,7 +305,7 @@ export function useMessageHighlight(duration = 2000) {
             }
             state.highlightedMessageId = message.id;
             state.initiated = false;
-            timeout = browser.setTimeout(() => this.clearHighlight(), duration);
+            timeout = browser.setTimeout(() => this.clear(), duration);
         },
         initiated: false,
         /**
