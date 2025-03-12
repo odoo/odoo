@@ -68,14 +68,14 @@ class StatusPage extends Component {
                         </p>
                     </div>
                     <!-- If the IoT Box is in access point and not connected to internet yet -->
-                    <div t-elif="state.data.is_access_point_up and state.data.qr_code_url and state.data.qr_code_url"> 
-                        <p>1. Connect to the IoT Box network</p>
+                    <div t-elif="state.data.is_access_point_up and state.data.qr_code_wifi and state.data.qr_code_url"> 
+                        <p>Scan this QR code with your smartphone to connect to the IoT box's <b>Wi-Fi hotspot</b>:</p>
                         <div class="qr-code">
                             <img t-att-src="state.data.qr_code_wifi" alt="QR Code Access Point"/>
                         </div>
                         <br/>
                         <br/>
-                        <p>2. Configure Wi-Fi connection</p>
+                        <p>Once you are connected to the Wi-Fi hotspot, you can scan this QR code to access the IoT box <b>Wi-Fi configuration page</b>:</p>
                         <div class="qr-code">
                             <img t-att-src="state.data.qr_code_url" alt="QR Code Wifi Config"/>
                         </div>
