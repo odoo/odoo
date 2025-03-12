@@ -15468,4 +15468,72 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["get_views", "get_views"]);
         }
     );
+    QUnit.test(
+        "executing new action, closes dialog, and avoid reload previous view",
+        async function (assert) {
+            const mockRPC = async function (route, args) {
+                assert.step(args.method || route);
+                if (route === "/web/action/load" && args.action_id === "someaction") {
+                    return Promise.resolve({
+                        res_id: 1,
+                        type: "ir.actions.act_window",
+                        target: "new",
+                        res_model: "partner",
+                        view_mode: "form",
+                        views: [[false, "form"]],
+                    });
+                }
+            };
+            serverData.views = {
+                "partner,false,form": `
+                    <form>
+                        <sheet>
+                            <div name="button_box" class="oe_button_box test">
+                                <button class="oe_stat_button" type="action" name="someaction">
+                                    Test
+                                </button>
+                            </div>
+                        </sheet>
+                    </form>`,
+                "partner,false,kanban": `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="foo" />
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+                "partner,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, {
+                res_id: 1,
+                type: "ir.actions.act_window",
+                target: "current",
+                res_model: "partner",
+                view_mode: "form",
+                views: [[false, "form"]],
+            });
+            assert.containsOnce(target, ".o_form_view");
+            assert.verifySteps(["/web/webclient/load_menus", "get_views", "web_read"]);
+
+            await click(target.querySelector(".oe_stat_button"));
+            await nextTick();
+            assert.containsOnce(target, ".o_dialog .o_form_view");
+
+            await doAction(webClient, 1);
+            assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
+            assert.verifySteps([
+                "/web/action/load",
+                "get_views",
+                "/web/action/load",
+                //"web_read", We shouldn't be doing a web_read for the view that we are leaving.
+                "get_views",
+                "web_search_read",
+            ]);
+        }
+    );
 });

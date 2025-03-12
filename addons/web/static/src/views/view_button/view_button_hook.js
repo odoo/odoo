@@ -80,8 +80,12 @@ export function useViewButtons(model, ref, options = {}) {
                     resIds,
                     context: params.context || {}, //LPE FIXME new Context(payload.env.context).eval();
                     buttonContext,
-                    onClose: async () => {
-                        if (!closeDialog && status(comp) !== "destroyed") {
+                    onClose: async (onCloseInfo) => {
+                        if (
+                            !closeDialog &&
+                            status(comp) !== "destroyed" &&
+                            !onCloseInfo?.noReload
+                        ) {
                             const reload = options.reload || (() => model.load());
                             await reload();
                         }
