@@ -12,6 +12,7 @@ import {
     models,
     mountView,
     patchWithCleanup,
+    stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 
@@ -370,8 +371,6 @@ test("widget many2one_avatar in kanban view (load more dialog)", async () => {
 });
 
 test("widget many2one_avatar in kanban view", async () => {
-    expect.assertions(5);
-
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -386,6 +385,8 @@ test("widget many2one_avatar in kanban view", async () => {
                 </templates>
             </kanban>`,
     });
+    stepAllNetworkCalls();
+
     expect(
         ".o_kanban_record:nth-child(1) .o_field_many2one_avatar .o_m2o_avatar > img"
     ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
@@ -397,8 +398,10 @@ test("widget many2one_avatar in kanban view", async () => {
         ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign"
     ).click();
     expect(".o-overlay-container input").toBeFocused();
+    expect.verifySteps(["web_name_search"]);
     // select first input
     await contains(".o-overlay-container .o-autocomplete--dropdown-item").click();
+    expect.verifySteps(["web_save"]);
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
     ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
