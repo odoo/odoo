@@ -381,6 +381,7 @@ class Export(http.Controller):
         elif parent_field:
             parent_field['string'] = request.env._('External ID')
             fields['id'] = parent_field
+            fields['id']['type'] = parent_field['field_type']
 
         exportable_fields = {}
         for field_name, field in fields.items():
