@@ -4,15 +4,17 @@
         <ControlPanel display="controlPanelDisplay">
             <t t-set-slot="control-panel-top-right">
                 <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
-                <FilterValue
-                    t-if="status === Status.Loaded"
-                    filter="filter"
-                    model="state.activeDashboard.model"
-                    t-as="filter"
+                <div t-if="status === Status.Loaded"
+                    class="o_filter_value_container"
                     t-foreach="filters"
                     t-key="filter.id"
-                    showTitle="true"
-                />
+                    t-as="filter">
+                    <FilterValue
+                        filter="filter"
+                        model="state.activeDashboard.model"
+                        showTitle="true"
+                    />
+                </div>
             </t>
         </ControlPanel>
         <t t-set="dashboard" t-value="state.activeDashboard"/>

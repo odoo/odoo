@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <div t-name="spreadsheet_edition.DateFilterValue" class="date_filter_values" owl="1">
-        <select t-if="!isYear()" class="o_input" t-on-change="onPeriodChanged">
+        <select t-if="!isYear()" class="o_input text-truncate" t-on-change="onPeriodChanged">
             <option value="empty">Select period...</option>
             <t t-set="type" t-value="props.type"/>
             <t t-foreach="dateOptions(type)" t-as="periodOption" t-key="periodOption.id">
