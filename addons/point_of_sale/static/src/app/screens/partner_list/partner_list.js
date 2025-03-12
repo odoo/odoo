@@ -199,4 +199,16 @@ export class PartnerList extends Component {
             this.state.loading = false;
         }
     }
+<<<<<<< master
+||||||| 7150e2d4013e225ff18f3b4f5dff0f6c62c64105
+
+    getPhoneSearchTerms() {
+        return ["phone", "mobile"];
+    }
+=======
+
+    getPhoneSearchTerms() {
+        return ["phone"];
+    }
+>>>>>>> 8fc91d45e8239b147b0b9b5541ee81dce4efd191
 }
