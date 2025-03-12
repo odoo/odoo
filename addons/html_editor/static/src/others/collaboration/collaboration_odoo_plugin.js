@@ -739,10 +739,15 @@ export class CollaborationOdooPlugin extends Plugin {
         if (!applied) {
             return;
         }
-        this.dependencies.selection.setSelection({
-            anchorNode: this._getNodeFromIndexPath(anchorNodeIndexPath),
-            anchorOffset,
-        });
+        const anchorNode = this._getNodeFromIndexPath(anchorNodeIndexPath);
+        if (
+            this.dependencies.selection.isSelectionInEditable({ anchorNode, focusNode: anchorNode })
+        ) {
+            this.dependencies.selection.setSelection({
+                anchorNode,
+                anchorOffset,
+            });
+        }
         this.historySyncFinished = true;
         // In case there are steps received in the meantime, process them.
         if (this.historyStepsBuffer.length) {
