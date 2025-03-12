@@ -218,6 +218,15 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="l10n_be_leave_type_small_unemployment_birth" model="hr.leave.type">
+        <field name="name">Brief Holiday (Birth)</field>
+        <field name="requires_allocation">yes</field>
+        <field name="employee_requests">yes</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="company_id" eval="False"/>
+    </record>
+
 <!-- CH: Switzerland -->
 
     <record id="l10n_ch_swissdec_unpaid_lt" model="hr.leave.type">
