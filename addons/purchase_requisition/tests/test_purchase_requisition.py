@@ -779,3 +779,39 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(alt_po.currency_id, res_partner_2.property_purchase_currency_id,
             "The alternative PO currency should match with vendor 2 purchase currency (EUR)."
         )
+
+    def test_payment_terms_for_alternative_rfq(self):
+        """
+            Ensure that the payment terms of the vendor are correctly set
+            when creating an alternative RFQ.
+        """
+        # Create two different payment terms.
+        pay_terms_immediate = self.env.ref("account.account_payment_term_immediate")
+        pay_terms_end_month = self.env.ref("account.account_payment_term_end_following_month")
+
+        # Create/Write two vendors with different payment terms.
+        self.res_partner_1.write({'property_supplier_payment_term_id': pay_terms_immediate.id})
+        vendor_b = self.env["res.partner"].create({
+            "name": "Supplier B",
+            'property_supplier_payment_term_id': pay_terms_end_month.id
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.res_partner_1
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_13
+            line.product_qty = 1
+        orig_po = po_form.save()
+
+        # Check that payment terms is correctly set on the original RFQ.
+        self.assertEqual(orig_po.payment_term_id, orig_po.partner_id.property_supplier_payment_term_id)
+
+        # Create an alternative RFQ with Vendor B.
+        alt_po_wizard_form = Form.from_action(self.env, orig_po.action_create_alternative())
+        alt_po_wizard_form.partner_ids = vendor_b
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()['res_id']
+        alt_po = orig_po.alternative_po_ids - orig_po
+
+        # Check that payment terms is correctly set on the alternative RFQ.
+        self.assertEqual(alt_po.payment_term_id, alt_po.partner_id.property_supplier_payment_term_id)
