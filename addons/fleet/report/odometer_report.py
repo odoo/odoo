@@ -21,106 +21,135 @@ class OdometerReport(models.Model):
 
     def init(self):
         query = """
-            -- Step 1: Define the date range for each vehicle's odometer readings
-            WITH vehicle_odometer_date_range AS (
+            -- Step 1: Get the acquisition date for each vehicle
+            WITH vehicle_odometer AS (
+                SELECT vehicle.id AS vehicle_id, odometer.value, CAST(odometer.date AS TIMESTAMP), CAST(vehicle.acquisition_date AS TIMESTAMP)
+                FROM fleet_vehicle_odometer odometer
+                LEFT JOIN fleet_vehicle vehicle ON vehicle.id=odometer.vehicle_id
+            ),
+            -- Step 2: Select only one odometer record (with max value) per date per vehicle
+            vehicle_odometer_single_date AS (
+                SELECT DISTINCT ON (vehicle_id, date) t.vehicle_id, t.date, t.value, t.acquisition_date
+                FROM vehicle_odometer t
+                JOIN (
+                    SELECT vehicle_id, date, MAX(value) AS max_value
+                    FROM vehicle_odometer
+                    GROUP BY vehicle_id, date
+                ) t_max_val
+                ON t.vehicle_id = t_max_val.vehicle_id AND t.date = t_max_val.date AND t.value = t_max_val.max_value
+            ),
+            -- Step 3: Create a fake odometer reading at 0km if the acquisition date is set and lower than every other reading
+            vehicle_odometer_acquisition_date AS (
+                SELECT vehicle_id, date, value, acquisition_date FROM vehicle_odometer_single_date
+                UNION ALL
+                (
+                    SELECT vehicle_id, acquisition_date AS date, 0 AS value, acquisition_date
+                    FROM vehicle_odometer_single_date
+                    GROUP BY vehicle_id, acquisition_date
+                    HAVING acquisition_date < MIN(date)
+                )
+            ),
+            -- Step 4: Compute the previous and next date and value for each odometer reading
+            vehicle_odometer_prev_and_next AS (
+                SELECT vehicle_id, date, value, acquisition_date,
+                    LAG(date) OVER (PARTITION BY vehicle_id ORDER BY date) AS prev_date,
+                    LAG(value) OVER (PARTITION BY vehicle_id ORDER BY date) AS prev_val,
+                    LEAD(date) OVER (PARTITION BY vehicle_id ORDER BY date) AS next_date,
+                    LEAD(value) OVER (PARTITION BY vehicle_id ORDER BY date) AS next_val
+                FROM vehicle_odometer_acquisition_date
+            ),
+            -- Step 5: Define the date range for each vehicle's odometer readings
+            vehicle_odometer_date_range AS (
                 SELECT
                     vehicle_id,
-                    CAST(DATE_TRUNC('month', MIN(date)) AS TIMESTAMP) AS start_date,
+                    COALESCE(
+                        CAST(DATE_TRUNC('month', MIN(acquisition_date)) AS TIMESTAMP),
+                        CAST(DATE_TRUNC('month', MIN(date)) AS TIMESTAMP)) AS start_date,
                     CAST(DATE_TRUNC('month', MAX(date)) AS TIMESTAMP) AS end_date
-                FROM fleet_vehicle_odometer
+                FROM vehicle_odometer_prev_and_next
                 GROUP BY vehicle_id
             ),
-            -- Step 2: Generate a complete list of months for each vehicle within the date range.
+            -- Step 6: Generate a complete list of months for each vehicle within the date range (empty value, prev* and next*)
             vehicle_odometer_date_range_min_date AS (
                 SELECT
                     date_range.vehicle_id,
-                    CAST(
-                        COALESCE(odometer.date, generated_months.date) AS TIMESTAMP
-                    ) AS date,
+                    CAST(COALESCE(odometer.date, generated_months.date) AS TIMESTAMP) AS date,
                     COALESCE(odometer.value, 0) AS value, -- Odometer value set to 0 if no reading exists
                     CAST(
                         FIRST_VALUE(COALESCE(odometer.date, generated_months.date)) OVER (
                             PARTITION BY date_range.vehicle_id
                             ORDER BY generated_months.date
                         ) AS TIMESTAMP
-                    ) AS min_date
-                FROM vehicle_odometer_date_range DATE_RANGE
+                    ) AS min_date,
+                    odometer.prev_date,
+                    odometer.prev_val,
+                    odometer.next_date,
+                    odometer.next_val
+                FROM vehicle_odometer_date_range date_range
                 CROSS JOIN LATERAL GENERATE_SERIES(
                     date_range.start_date,
                     date_range.end_date,
                     '1 month'::INTERVAL
                 ) generated_months (date)
-                LEFT JOIN fleet_vehicle_odometer odometer
+                LEFT JOIN vehicle_odometer_prev_and_next odometer
                     ON date_range.vehicle_id = odometer.vehicle_id
                     AND generated_months.date = DATE_TRUNC('month', odometer.date)
             ),
-            -- Step 3: Compute each odometer's previous record (strict last and last not null)
-            vehicle_monthly_odometer AS (
-                SELECT
-                    vehicle_id,
-                    date,
-                    min_date,
-                    value,
+            -- Step 7: Compute the previous/next dates for every newly added readings
+            vehicle_odometer_prev_next_date AS (
+                SELECT odometer.vehicle_id, odometer.date,
+                MAX(COALESCE(odometer.prev_date, odo_prev_next.prev_date)) AS prev_date,
+                MIN(COALESCE(odometer.next_date, odo_prev_next.next_date)) AS next_date
+                FROM vehicle_odometer_date_range_min_date odometer
+                LEFT JOIN vehicle_odometer_prev_and_next odo_prev_next
+                    ON odometer.vehicle_id = odo_prev_next.vehicle_id
+                    AND (odo_prev_next.prev_date IS NULL OR odo_prev_next.prev_date < odometer.date)
+                    AND (odo_prev_next.next_date IS NULL OR odo_prev_next.next_date > odometer.date)
+                GROUP BY odometer.vehicle_id, odometer.date
+            ),
+            -- Step 8: Compute the previous/next values for every newly added readings
+            vehicle_odometer_prev_next_complete AS (
+                SELECT DISTINCT
+                    odo_dates.vehicle_id,
+                    odo_dates.date,
+                    odometer.min_date,
+                    odometer.value,
+                    odo_dates.prev_date,
+                    odometer_prev.value AS prev_value,
+                    odo_dates.next_date,
+                    odometer_next.value AS next_value
+                FROM vehicle_odometer_prev_next_date odo_dates
+                LEFT JOIN vehicle_odometer_date_range_min_date odometer ON odo_dates.vehicle_id = odometer.vehicle_id AND odo_dates.date = odometer.date
+                LEFT JOIN vehicle_odometer_date_range_min_date odometer_prev ON odo_dates.vehicle_id = odometer_prev.vehicle_id AND odo_dates.prev_date = odometer_prev.date
+                LEFT JOIN vehicle_odometer_date_range_min_date odometer_next ON odo_dates.vehicle_id = odometer_next.vehicle_id AND odo_dates.next_date = odometer_next.date
+            ),
+            -- Step 9: Compute the strict previous date for each odometer reading
+            vehicle_odometer_strict_prev AS (
+                SELECT vehicle_id, date, min_date, value, prev_date, prev_value, next_date, next_value,
                     LAG(date) OVER (
                         PARTITION BY vehicle_id
                         ORDER BY date
-                    ) AS previous_date,
-                    MAX(
-                        CASE
-                            WHEN value > 0 OR (value = 0 AND date = min_date) THEN date
-                        END
-                    ) OVER (
-                        PARTITION BY vehicle_id
-                        ORDER BY date rows BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
-                    ) AS last_valid_odometer
-                FROM vehicle_odometer_date_range_min_date
+                    ) AS strict_previous_date
+                FROM vehicle_odometer_prev_next_complete
             ),
-            -- Step 4: Fill in gaps (interpolate) in odometer readings using previous and next known values
+            -- Step 9: Fill in gaps (interpolate) in odometer readings using previous and next known values
             vehicle_odometer_filled_gaps AS (
-                SELECT
-                    current_odometer.vehicle_id,
-                    current_odometer.date,
-                    current_odometer.value,
-                    prev_odometer.date AS prev_date,
-                    prev_odometer.value AS prev_value,
-                    next_odometer.date AS next_date,
-                    next_odometer.value AS next_value,
+                SELECT vehicle_id, date, value,
                     CASE
-                        WHEN current_odometer.value = 0 AND prev_odometer.value IS NOT NULL AND next_odometer.value IS NOT NULL
-                            THEN (next_odometer.value - prev_odometer.value) * (
-                                EXTRACT(DAY FROM (current_odometer.date - current_odometer.previous_date)) /
-                                EXTRACT(DAY FROM (next_odometer.date - current_odometer.last_valid_odometer))
+                        WHEN value = 0 AND prev_value IS NOT NULL AND next_value IS NOT NULL
+                            THEN (next_value - prev_value) * (
+                                EXTRACT(DAY FROM (date - strict_previous_date)) /
+                                NULLIF(EXTRACT(DAY FROM (next_date - prev_date)), 0)
                             )
-                        WHEN prev_odometer.value IS NULL THEN current_odometer.value
-                        ELSE (current_odometer.value - prev_odometer.value) * (
-                            EXTRACT(DAY FROM (current_odometer.date - current_odometer.previous_date)) /
-                            EXTRACT(DAY FROM (current_odometer.date - current_odometer.last_valid_odometer))
+                        WHEN prev_value IS NULL THEN value
+                        ELSE (value - prev_value) * (
+                            EXTRACT(DAY FROM (date - strict_previous_date)) /
+                            NULLIF(EXTRACT(DAY FROM (date - prev_date)), 0)
                         )
                     END AS raw_mileage_delta
-                FROM vehicle_monthly_odometer current_odometer
-                LEFT JOIN LATERAL (
-                    SELECT DISTINCT ON (odometer.vehicle_id)
-                        odometer.date,
-                        odometer.value,
-                        last_valid_odometer
-                    FROM vehicle_monthly_odometer odometer
-                    WHERE odometer.vehicle_id = current_odometer.vehicle_id
-                        AND odometer.date < current_odometer.date
-                        AND (odometer.value <> 0 OR (odometer.value = 0 AND current_odometer.min_date = current_odometer.previous_date))
-                    ORDER BY odometer.vehicle_id, odometer.date DESC
-                ) AS prev_odometer ON true
-                LEFT JOIN LATERAL (
-                    SELECT DISTINCT ON (odometer.vehicle_id)
-                        odometer.date,
-                        odometer.value
-                    FROM vehicle_monthly_odometer odometer
-                    WHERE odometer.vehicle_id = current_odometer.vehicle_id
-                        AND odometer.date > current_odometer.date
-                        AND odometer.value <> 0
-                    ORDER BY odometer.vehicle_id, odometer.date ASC
-                ) AS next_odometer ON true
+                FROM vehicle_odometer_strict_prev
             ),
-            -- Step 5: Sum the interpolated mileage delta values to have an odometer per month
+            -- Step 10: Sum the interpolated mileage delta values to have an odometer per month
             vehicle_odometer_interpolated AS (
                 SELECT
                     vehicle_id,
@@ -132,7 +161,7 @@ class OdometerReport(models.Model):
                     END AS value
                 FROM vehicle_odometer_filled_gaps
             ),
-            -- Step 6: Calculate the days span between every odometer's reading date
+            -- Step 11: Calculate the days span between every odometer's reading date
             vehicle_odometer_days_diff AS (
                 SELECT
                     vehicle_id,
@@ -143,7 +172,7 @@ class OdometerReport(models.Model):
                     EXTRACT(DAY FROM date::TIMESTAMP - LAG(date) OVER (PARTITION BY vehicle_id ORDER BY date)::TIMESTAMP) AS days_span
                 FROM vehicle_odometer_interpolated
             ),
-            -- Step 7: Compute weighted mileage for each month
+            -- Step 12: Compute weighted mileage for each month
             vehicle_weighted_mileage AS (
                 SELECT
                     vehicle_id,
@@ -166,7 +195,7 @@ class OdometerReport(models.Model):
                     END AS prev_month_mileage
                 FROM vehicle_odometer_days_diff
             ),
-            -- Step 8: Aggregate final results
+            -- Step 13: Aggregate final results
             final_results AS (
                 SELECT
                     vehicle_id,
@@ -183,11 +212,11 @@ class OdometerReport(models.Model):
                     GROUP BY vehicle_id, date
                 ) t
             ),
-            -- Step 9: Handle the first recorded month with zero odometer
+            -- Step 14: Handle the first recorded month with zero odometer
             min_month AS (
                 SELECT vehicle_id, MIN(recorded_date) AS min_month_minus_one FROM final_results GROUP BY vehicle_id
             )
-            -- Step 10: Generate final result set with a row number
+            -- Step 15: Generate final result set with a row number
             SELECT row_number() OVER () AS id, * FROM (
                 SELECT vehicle_id, min_month_minus_one AS recorded_date, 0 AS odometer_value, 0 AS mileage_delta FROM min_month
                 UNION ALL
