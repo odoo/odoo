@@ -65,6 +65,8 @@ export class MediaPlugin extends Plugin {
         normalize_handlers: this.normalizeMedia.bind(this),
 
         unsplittable_node_predicates: isIconElement, // avoid merge
+
+        selectors_for_feff_providers: () => ICON_SELECTOR,
     };
 
     get recordInfo() {
