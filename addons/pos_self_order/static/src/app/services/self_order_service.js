@@ -383,6 +383,7 @@ export class SelfOrder extends Reactive {
         ); // Stripe, Adyen, Online
 
         let order = this.currentOrder;
+        const orderHasChanges = Object.keys(order.changes).length > 0;
 
         // Stand number page will recall this function after the stand number is set
         if (
@@ -406,7 +407,7 @@ export class SelfOrder extends Reactive {
         if (paymentMethods.length === 0) {
             let screenMode = "pay";
 
-            if (Object.keys(order.changes).length > 0) {
+            if (orderHasChanges) {
                 screenMode = payAfter === "meal" ? "order" : "pay";
             }
 
@@ -416,7 +417,7 @@ export class SelfOrder extends Reactive {
             // and we redirect him to the confirmation page, the next time he validate his order
             // if the order is already saved on the server, we redirect him to the payment page
             // In each mode, we redirect the customer to the payment page directly
-            if (payAfter === "meal" && Object.keys(order.changes).length > 0) {
+            if (payAfter === "meal" && orderHasChanges) {
                 await this.sendDraftOrderToServer();
                 this.confirmationPage("order", device, order.access_token);
             } else {
