@@ -23,8 +23,10 @@
                     t-out="this.productQty"
                     class="product-cart-qty position-absolute bottom-0 end-0 fw-bolder mb-0 px-1 text-muted" />
             </div>
-            <div class="w-100 d-flex justify-content-between align-items-center px-2">
-                <span t-if="props.price" class="price-tag py-1 text-end" t-esc="props.price" />
+            <div t-if="props.comboExtraPrice" class="d-flex px-2 pb-1">
+                <span class="price-extra px-2 py-0 rounded-pill text-bg-info">
+                    + <t t-esc="props.comboExtraPrice"/>
+                </span>
             </div>
         </article>
     </t>
