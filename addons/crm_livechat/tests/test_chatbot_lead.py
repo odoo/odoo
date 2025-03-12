@@ -95,6 +95,80 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertEqual(created_lead.team_id, self.sale_team_with_lead)
         self.assertEqual(created_lead.type, 'lead')
 
+    def test_chatbot_create_lead_company(self):
+        self.user_portal.write({"company_ids": self.company_2, "company_id": self.company_2})
+        team = self.sale_team_with_lead
+        partner = self.user_portal.partner_id
+        self.step_create_lead.crm_team_id = team
+        self.authenticate(self.user_portal.login, self.user_portal.login)
+
+        def play_script_and_get_created_lead():
+            self.env["crm.lead"].search([]).unlink()
+            self._play_session_with_lead()
+            return self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
+
+        # lead has company of partner and no team if no company matching
+        partner.company_id = self.company_2
+        team.company_id = self.company_3
+        lead = play_script_and_get_created_lead()
+        self.assertEqual(lead.company_id, self.company_2)
+        self.assertFalse(lead.team_id)
+        # lead has common company of partner and team if both are matching
+        partner.company_id = self.company_2
+        team.company_id = self.company_2
+        self.assertEqual(play_script_and_get_created_lead().company_id, self.company_2)
+        # lead has team company if partner has no company
+        partner.company_id = False
+        team.company_id = self.company_2
+        self.assertEqual(play_script_and_get_created_lead().company_id, self.company_2)
+        # lead has partner company if team has no company
+        partner.company_id = self.company_2
+        team.company_id = False
+        self.assertEqual(play_script_and_get_created_lead().company_id, self.company_2)
+        # lead has no company if no company on partner and team
+        partner.company_id = False
+        team.company_id = False
+        self.assertFalse(play_script_and_get_created_lead().company_id)
+
+    def test_chatbot_create_lead_and_forward_company(self):
+        self.step_create_lead.sudo().step_type = "create_lead_and_forward"
+        self.user_portal.write({"company_ids": self.company_2.ids, "company_id": self.company_2.id})
+        self.user_employee.write({"company_ids": self.company_3.ids, "company_id": self.company_3.id})
+        self.user_employee.partner_id.company_id = self.company_3
+        teams = self.sale_team_with_lead + self.sale_team
+        partner = self.user_portal.partner_id
+        self.authenticate(self.user_portal.login, self.user_portal.login)
+
+        def play_script_and_get_created_lead():
+            self.env["crm.lead"].search([]).unlink()
+            self._play_session_with_lead()
+            return self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
+
+        # lead has company of partner and no team if no company matching
+        partner.company_id = self.company_2
+        teams.company_id = self.company_3
+        lead = play_script_and_get_created_lead()
+        self.assertEqual(lead.company_id, self.company_2)
+        self.assertFalse(lead.team_id)
+        # lead has common company of partner and team if both are matching
+        self.user_employee.write({"company_ids": self.company_2.ids, "company_id": self.company_2.id})
+        self.user_employee.partner_id.company_id = self.company_2
+        partner.company_id = self.company_2
+        teams.company_id = self.company_2
+        self.assertEqual(play_script_and_get_created_lead().company_id, self.company_2)
+        # lead has team company if partner has no company
+        partner.company_id = False
+        teams.company_id = self.company_2
+        self.assertEqual(play_script_and_get_created_lead().company_id, self.company_2)
+        # lead has partner company if team has no company
+        partner.company_id = self.company_2
+        teams.company_id = False
+        self.assertEqual(play_script_and_get_created_lead().company_id, self.company_2)
+        # lead has no company if no company on partner and team
+        partner.company_id = False
+        teams.company_id = False
+        self.assertFalse(play_script_and_get_created_lead().company_id)
+
     def _play_session_with_lead(self):
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
             'anonymous_name': 'Test Visitor',
