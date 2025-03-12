@@ -812,4 +812,71 @@ describe("Toolbar", () => {
             `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
         );
     });
+    test("should disable remove format button when formatting is inside a contenteditable false element", async () => {
+        await setupEditor('<div contenteditable="false"><p>a[bc<strong>def</strong>gh]i</p></div>');
+
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
+    test("should remove formatting from t-out even if it is inside a contenteditable false element", async () => {
+        const { el } = await setupEditor(
+            '<div contenteditable="false"><t t-out="">[abc]</t></div>'
+        );
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='bold']").toHaveCount(1);
+        await click(".btn[name='bold']");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '[<div contenteditable="false"><t t-out="" style="font-weight: bolder;">abc</t></div>]'
+        );
+
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled");
+        await click(".btn[name='remove_format']");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
+    test("should remove formatting from t-field even if it is inside a contenteditable false element", async () => {
+        const { el } = await setupEditor(
+            '<div contenteditable="false"><t t-field="">[abc]</t></div>'
+        );
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='bold']").toHaveCount(1);
+        await click(".btn[name='bold']");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '[<div contenteditable="false"><t t-field="" style="font-weight: bolder;">abc</t></div>]'
+        );
+
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled");
+        await click(".btn[name='remove_format']");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
+    test("should remove formatting from t-esc even if it is inside a contenteditable false element", async () => {
+        const { el } = await setupEditor(
+            '<div contenteditable="false"><t t-esc="">[abc]</t></div>'
+        );
+        await waitFor(".o-we-toolbar");
+        expect(".btn[name='bold']").toHaveCount(1);
+        await click(".btn[name='bold']");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '[<div contenteditable="false"><t t-esc="" style="font-weight: bolder;">abc</t></div>]'
+        );
+
+        expect(".btn[name='remove_format']").toHaveCount(1);
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled");
+        await click(".btn[name='remove_format']");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
 });
