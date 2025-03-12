@@ -16,7 +16,8 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
             run: "press Enter",
         },
         {
-            trigger: ".o-livechat-root:shadow .o-mail-Message-content:contains('Hello!')",
+            trigger:
+                ".o-livechat-root:shadow .o-mail-Thread:not([data-transient]) .o-mail-Message-content:contains('Hello!')",
         },
         {
             trigger: "a:contains(Sign in)",
@@ -62,7 +63,8 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
             run: "press Enter",
         },
         {
-            trigger: ".o-livechat-root:shadow .o-mail-Message-content:contains('Hello!')",
+            trigger:
+                ".o-livechat-root:shadow .o-mail-Thread:not([data-transient]) .o-mail-Message-content:contains('Hello!')",
             run: "click",
         },
         {
