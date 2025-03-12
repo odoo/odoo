@@ -1,4 +1,7 @@
 const RSTRIP_REGEXP = /(?=\n[ \t]*$)/;
+let translationContext = null;
+const contextByTextNode = new Map();
+
 /**
  * The child nodes of operation represent new content to create before target or
  * or other elements to move before target from the target tree (tree from which target is part of).
@@ -17,15 +20,9 @@ function addBefore(target, operation) {
     if (previousSibling?.nodeType === Node.TEXT_NODE) {
         const [text1, text2] = previousSibling.data.split(RSTRIP_REGEXP);
         previousSibling.data = text1.trimEnd();
-        if (nodes[0].nodeType === Node.TEXT_NODE) {
-            mergeTextNodes(previousSibling, nodes[0]);
-        }
         if (text2 && nodes.some((n) => n.nodeType !== Node.TEXT_NODE)) {
             const textNode = document.createTextNode(text2);
             target.before(textNode);
-            if (textNode.previousSibling.nodeType === Node.TEXT_NODE) {
-                mergeTextNodes(textNode.previousSibling, textNode);
-            }
         }
     }
 }
@@ -58,7 +55,7 @@ function getXpath(operation) {
             const templateName = parent.getAttribute("t-name") || parent.getAttribute("t-inherit");
             console.warn(
                 `Error-prone use of @class in template "${templateName}" (or one of its inheritors).` +
-                " Use the hasclass(*classes) function to filter elements by their classes"
+                    " Use the hasclass(*classes) function to filter elements by their classes"
             );
         }
     }
@@ -87,9 +84,12 @@ function getNode(element, operation) {
         const result = doc.evaluate(xpath, root, null, XPathResult.FIRST_ORDERED_NODE_TYPE);
         return result.singleNodeValue;
     }
+    const attributes = Array.from(operation.attributes).filter(
+        (attr) => !attr.name.startsWith("t-translation-context")
+    );
     for (const elem of root.querySelectorAll(operation.tagName)) {
         if (
-            [...operation.attributes].every(
+            attributes.every(
                 ({ name, value }) => name === "position" || elem.getAttribute(name) === value
             )
         ) {
@@ -125,23 +125,15 @@ function getNodes(element, operation) {
     for (const childNode of operation.childNodes) {
         if (childNode.tagName === "xpath" && childNode.getAttribute?.("position") === "move") {
             const node = getElement(element, childNode);
+            setTranslationContext(node);
             removeNode(node);
             nodes.push(node);
         } else {
+            setTranslationContext(childNode);
             nodes.push(childNode);
         }
     }
     return nodes;
-}
-
-/**
- * @param {Text} first
- * @param {Text} second
- * @param {boolean} [trimEnd=true]
- */
-function mergeTextNodes(first, second, trimEnd = true) {
-    first.data = (trimEnd ? first.data.trimEnd() : first.data) + second.data;
-    second.remove();
 }
 
 function splitAndTrim(str, separator) {
@@ -178,6 +170,7 @@ function modifyAttributes(target, operation) {
 
         if (value) {
             target.setAttribute(attributeName, value);
+            target.setAttribute(`t-translation-context-${attributeName}`, translationContext);
         } else {
             target.removeAttribute(attributeName);
         }
@@ -192,12 +185,12 @@ function modifyAttributes(target, operation) {
 function removeNode(node) {
     const { nextSibling, previousSibling } = node;
     node.remove();
-    if (nextSibling?.nodeType === Node.TEXT_NODE && previousSibling?.nodeType === Node.TEXT_NODE) {
-        mergeTextNodes(
-            previousSibling,
-            nextSibling,
-            previousSibling.parentElement.firstChild === previousSibling
-        );
+    if (
+        nextSibling?.nodeType === Node.TEXT_NODE &&
+        previousSibling?.nodeType === Node.TEXT_NODE &&
+        previousSibling.parentElement.firstChild === previousSibling
+    ) {
+        previousSibling.data = previousSibling.data.trimEnd();
     }
 }
 
@@ -228,6 +221,7 @@ function replace(root, target, operation) {
                 let comment = null;
                 for (const child of operation.childNodes) {
                     if (child.nodeType === Node.ELEMENT_NODE) {
+                        setTranslationContext(child);
                         operationContent = child;
                         break;
                     }
@@ -249,12 +243,31 @@ function replace(root, target, operation) {
             while (target.firstChild) {
                 target.removeChild(target.lastChild);
             }
-            target.append(...operation.childNodes);
+            for (const node of operation.childNodes) {
+                setTranslationContext(node);
+                target.append(node);
+            }
             break;
         default:
             throw new Error(`Invalid mode attribute: '${mode}'`);
     }
     return root;
+}
+
+function setTranslationContext(node) {
+    switch (node.nodeType) {
+        case Node.TEXT_NODE:
+            if (node.nodeValue.trim() != "") {
+                contextByTextNode.set(node, translationContext);
+            }
+            break;
+        case Node.ELEMENT_NODE:
+            node.setAttribute("t-translation-context", translationContext);
+            break;
+        case Node.COMMENT_NODE:
+        default:
+            break;
+    }
 }
 
 /**
@@ -264,6 +277,7 @@ function replace(root, target, operation) {
  * @returns {Element} root modified (in place) by the operations
  */
 export function applyInheritance(root, operations, url = "") {
+    translationContext = url.split("/")[1] ?? ""; // use addon name as context
     for (const operation of operations.children) {
         const target = getElement(root, operation);
         const position = operation.getAttribute("position") || "inside";
@@ -314,5 +328,16 @@ export function applyInheritance(root, operations, url = "") {
                 throw new Error(`Invalid position attribute: '${position}'`);
         }
     }
+    translationContext = null;
     return root;
+}
+
+export function applyContextToTextNode() {
+    for (const [textNode, context] of contextByTextNode) {
+        const wrapper = document.createElement("t");
+        wrapper.setAttribute("t-translation-context", context);
+        textNode.before(wrapper);
+        wrapper.appendChild(textNode);
+    }
+    contextByTextNode.clear();
 }
