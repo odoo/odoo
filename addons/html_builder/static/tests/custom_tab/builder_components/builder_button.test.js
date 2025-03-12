@@ -124,6 +124,26 @@ test("should toggle when not in a BuilderButtonGroup", async () => {
     await contains("[data-class-action='c1']").click();
     expect(":iframe .test-options-target").not.toHaveClass("test-options-target c1");
 });
+test("should call apply when the button is active and none of its actions have a clean method", async () => {
+    addActionOption({
+        customAction: {
+            apply() {
+                expect.step(`customAction apply`);
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'customAction'" preview="false"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-action-id='customAction']").click();
+    expect.verifySteps(["customAction apply"]);
+    await contains("[data-action-id='customAction']").click();
+    expect.verifySteps(["customAction apply"]);
+});
+
 test("should not toggle when in a BuilderButtonGroup", async () => {
     addOption({
         selector: ".test-options-target",
