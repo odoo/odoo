@@ -422,3 +422,13 @@ registry.category("web_tour.tours").add("POSSalePaymentScreenInvoiceOrder", {
             ReceiptScreen.receiptIsThere(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settle_order_with_lot", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            PosSale.selectedOrderLinesHasLots("Product A", ["1001", "1002"]),
+        ].flat(),
+});
