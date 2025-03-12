@@ -8,6 +8,9 @@ from odoo.osv import expression
 from odoo.tools import lazy, ormcache
 from odoo.tools.translate import LazyTranslate, _
 
+from odoo.addons.website_sale import const
+
+
 _lt = LazyTranslate(__name__)
 
 CART_SESSION_CACHE_KEY = 'sale_order_id'
@@ -202,6 +205,78 @@ class Website(models.Model):
         ]
 
     #=== BUSINESS METHODS ===#
+
+    @api.model
+    def get_configurator_shop_page_styles(self):
+        """Format and return the ids and images of each shop page style for website onboarding.
+
+        :return: The shop page style information.
+        :rtype: list[dict]
+        """
+        return [
+            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            for option, config in const.SHOP_PAGE_STYLE_MAPPING.items()
+        ]
+
+    @api.model
+    def get_configurator_product_page_styles(self):
+        """Format and return ids and images of each product page style for website onboarding.
+
+        :return: The product page style information.
+        :rtype: list[dict]
+        """
+        return [
+            {'option': option, 'img_src': config['img_src'], 'title': config['title']}
+            for option, config in const.PRODUCT_PAGE_STYLE_MAPPING.items()
+        ]
+
+    @api.model
+    def configurator_apply(
+        self, *, shop_page_style_option=None, product_page_style_option=None, **kwargs
+    ):
+        """Override of `website` to apply eCommerce page style configurations.
+
+        :param str shop_page_style_option: The key of the selected shop page style option. See
+                                           `const.SHOP_PAGE_STYLE_MAPPING`.
+        :param str product_page_style_option: The key of the selected product page style option. See
+                                              `const.PRODUCT_PAGE_STYLE_MAPPING`.
+        """
+        res = super().configurator_apply(**kwargs)
+
+        website = self.get_current_website()
+        website_settings = {}
+        views_to_disable = []
+        views_to_enable = []
+        IrUiView = self.env['ir.ui.view'].with_context(active_test=False, website_id=website.id)
+
+        def get_views(xmlids_):
+            domain = expression.AND([[('key', 'in', xmlids_)], website.website_domain()])
+            return IrUiView.search(domain).filter_duplicate()
+
+        def parse_style_config(style_config_):
+            website_settings.update(style_config_['website_fields'])
+            views_to_disable.extend(style_config_['views']['disable'])
+            views_to_enable.extend(style_config_['views']['enable'])
+
+        # Extract shop page settings.
+        if shop_page_style_option:
+            style_config = const.SHOP_PAGE_STYLE_MAPPING[shop_page_style_option]
+            parse_style_config(style_config)
+
+        # Extract product page settings.
+        if product_page_style_option:
+            style_config = const.PRODUCT_PAGE_STYLE_MAPPING[product_page_style_option]
+            parse_style_config(style_config)
+
+        # Apply eCommerce page style configurations.
+        if website_settings:
+            website.write(website_settings)
+        if views_to_disable:
+            get_views(views_to_disable).active = False
+        if views_to_enable:
+            get_views(views_to_enable).active = True
+
+        return res
 
     # This method is cached, must not return records! See also #8795
     @ormcache(

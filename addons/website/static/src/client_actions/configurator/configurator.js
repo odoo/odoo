@@ -419,20 +419,9 @@ export class ApplyConfiguratorScreen extends Component {
                     this.state.selectedPalette.color5,
                 ];
             }
-
-            const data = {
-                'selected_features': selectedFeatures,
-                'industry_id': this.state.selectedIndustry.id,
-                'industry_name': this.state.selectedIndustry.label.toLowerCase(),
-                'selected_palette': selectedPalette,
-                'theme_name': themeName,
-                'website_purpose': WEBSITE_PURPOSES[
-                    this.state.selectedPurpose || this.state.formerSelectedPurpose
-                ].name,
-                'website_type': WEBSITE_TYPES[this.state.selectedType].name,
-                'logo_attachment_id': this.state.logoAttachmentId,
-            };
-            const resp = await attemptConfiguratorApply(data);
+            const resp = await attemptConfiguratorApply(this.getConfigurationData(
+                selectedFeatures, selectedPalette, themeName,
+            ));
 
             this.props.clearStorage();
 
@@ -443,16 +432,42 @@ export class ApplyConfiguratorScreen extends Component {
             redirect(`/odoo/action-website.website_preview?website_id=${encodeURIComponent(resp.website_id)}`);
         }
     }
+
+    getConfigurationData(selectedFeatures, selectedPalette, themeName) {
+        return {
+            'selected_features': selectedFeatures,
+            'industry_id': this.state.selectedIndustry.id,
+            'industry_name': this.state.selectedIndustry.label.toLowerCase(),
+            'selected_palette': selectedPalette,
+            'theme_name': themeName,
+            'website_purpose': WEBSITE_PURPOSES[
+                this.state.selectedPurpose || this.state.formerSelectedPurpose
+            ].name,
+            'website_type': WEBSITE_TYPES[this.state.selectedType].name,
+            'logo_attachment_id': this.state.logoAttachmentId,
+        };
+    }
 }
 
-export class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
+export class FeaturesSelectionScreen extends Component {
     static components = {SkipButton};
     static template = 'website.Configurator.FeatureSelection';
+    static props = {
+        navigate: Function,
+        skip: Function,
+    };
     setup() {
         super.setup();
-
-        this.orm = useService("orm");
         this.state = useStore();
+    }
+
+    /**
+     * Return the theme selection screen as the next step, unless overridden.
+     *
+     * @return {int} Next step route.
+     */
+    static nextStep() {
+        return ROUTES.themeSelectionScreen;
     }
 
     async buildWebsite() {
@@ -460,14 +475,8 @@ export class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
         if (!industryId) {
             return this.props.navigate(ROUTES.descriptionScreen);
         }
-        const themes = await getRecommendedThemes(this.orm, this.state);
 
-        if (!themes.length) {
-            await this.applyConfigurator('theme_default');
-        } else {
-            this.state.updateRecommendedThemes(themes);
-            this.props.navigate(ROUTES.themeSelectionScreen);
-        }
+        this.props.navigate(FeaturesSelectionScreen.nextStep());
     }
 }
 
@@ -489,6 +498,14 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         for (let i = 0; i < this.maxNbrDisplayExtraThemes; i++) {
             this.extraThemeSVGPreviews.push(useRef(`ExtraThemePreview${i}`));
         }
+        onWillStart(async () => {
+            const themes = await getRecommendedThemes(this.orm, this.state);
+            if (!themes.length) {
+                await this.applyConfigurator('theme_default');
+            } else {
+                this.state.updateRecommendedThemes(themes);
+            }
+        });
 
         onMounted(() => {
             this.blockUiDuringImageLoading(this.state.themes, this.themeSVGPreviews);
@@ -698,7 +715,7 @@ export class Store {
     }
 }
 
-function useStore() {
+export function useStore() {
     const env = useEnv();
     return useState(env.store);
 }
@@ -769,6 +786,30 @@ export class Configurator extends Component {
 
     updateBrowserUrl() {
         history.pushState({ skipRouteChange: true, configuratorStep: this.state.currentStep }, '', this.pathname);
+    }
+
+    get currentComponent() {
+        if (this.state.currentStep === ROUTES.descriptionScreen) {
+            return DescriptionScreen;
+        } else if (this.state.currentStep === ROUTES.paletteSelectionScreen) {
+            return PaletteSelectionScreen;
+        } else if (this.state.currentStep === ROUTES.featuresSelectionScreen) {
+            return FeaturesSelectionScreen;
+        } else if (this.state.currentStep === ROUTES.themeSelectionScreen) {
+            return ThemeSelectionScreen;
+        }
+        return WelcomeScreen;
+    }
+
+    get componentProps() {
+        const props = {
+            skip: this.skipConfigurator.bind(this),
+            navigate: this.navigate.bind(this),
+        };
+        if (this.state.currentStep === ROUTES.themeSelectionScreen) {
+            props.clearStorage = this.clearStorage.bind(this);
+        }
+        return props;
     }
 
     navigate(step, reload = false) {
