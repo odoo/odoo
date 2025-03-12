@@ -233,3 +233,20 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             ],
         ):
             channel.execute_command_help()
+
+    def test_livechat_manager_can_invite_anyone(self):
+        channel = self.env["discuss.channel"].create(
+            {
+                "channel_type": "livechat",
+                "livechat_operator_id": self.operators[2].partner_id.id,
+                "name": "test",
+            }
+        )
+        other_member = channel.with_user(self.operators[0]).add_members(
+            partner_ids=self.operators[1].partner_id.ids
+        )
+        self.assertEqual(other_member.partner_id, self.operators[1].partner_id)
+        self_member = channel.with_user(self.operators[0]).add_members(
+            partner_ids=self.operators[0].partner_id.ids
+        )
+        self.assertEqual(self_member.partner_id, self.operators[0].partner_id)
