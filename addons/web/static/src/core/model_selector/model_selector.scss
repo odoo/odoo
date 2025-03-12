@@ -7,4 +7,22 @@
             width: inherit;
         }
     }
+
+    .o_dropdown_button {
+        float: right;
+        margin-top: -20px;
+    }
+
+    .o_dropdown_button:after {
+        content: "";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        vertical-align: middle;
+        -moz-transform: scale(0.9999);
+        border-bottom: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 4px solid var(--o-caret-color, currentColor);
+    }
 }

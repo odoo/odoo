@@ -12,6 +12,7 @@ export class ModelSelector extends Component {
         onModelSelected: Function,
         id: { type: String, optional: true },
         value: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
         // list of models technical name, if not set
         // we will fetch all models we have access to
         models: { type: Array, optional: true },
@@ -42,6 +43,11 @@ export class ModelSelector extends Component {
     get sources() {
         return [this.optionsSource];
     }
+
+    get placeholder() {
+        return this.props.placeholder || _t("Type a model here...");
+    }
+
     get optionsSource() {
         return {
             placeholder: _t("Loading..."),
