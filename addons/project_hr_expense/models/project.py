@@ -21,10 +21,10 @@ class Project(models.Model):
 
         query.order = None
         query_string, query_param = query.select(
-            'jsonb_object_keys(analytic_distribution) as account_id',
+            'jsonb_object_keys(hr_expense.analytic_distribution) as account_id',
             'COUNT(DISTINCT(id)) as expense_count',
         )
-        query_string = f'{query_string} GROUP BY jsonb_object_keys(analytic_distribution)'
+        query_string = f'{query_string} GROUP BY jsonb_object_keys(hr_expense.analytic_distribution)'
         self._cr.execute(query_string, query_param)
         data = {int(record.get('account_id')): record.get('expense_count') for record in self._cr.dictfetchall()}
         for project in self:
