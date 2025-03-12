@@ -2062,6 +2062,7 @@ test(`enabling archive in list when groupby m2m field`, async () => {
     });
 });
 
+test.tags("desktop");
 test(`enabling archive in list when groupby m2m field and multi selecting the same record`, async () => {
     onRpc("has_group", () => false);
     onRpc("action_archive", ({ args }) => {
@@ -2139,6 +2140,7 @@ test(`enabling duplicate in list when groupby m2m field`, async () => {
     });
 });
 
+test.tags("desktop");
 test(`enabling duplicate in list when groupby m2m field and multi selecting the same record`, async () => {
     onRpc("has_group", () => false);
     onRpc("copy", ({ args }) => {
@@ -2216,6 +2218,7 @@ test(`enabling delete in list when groupby m2m field`, async () => {
     });
 });
 
+test.tags("desktop");
 test(`enabling delete in list when groupby m2m field and multi selecting the same record`, async () => {
     onRpc("has_group", () => false);
     onRpc("unlink", ({ args }) => {
@@ -2301,6 +2304,7 @@ test(`enabling unarchive in list when groupby m2m field`, async () => {
     });
 });
 
+test.tags("desktop");
 test(`enabling unarchive in list when groupby m2m field and multi selecting the same record`, async () => {
     onRpc("has_group", () => false);
     onRpc("action_unarchive", ({ args }) => {
@@ -13695,6 +13699,7 @@ test(`list view with optional fields and async rendering`, async () => {
     expect(`.o-dropdown--menu input:checked`).toHaveCount(1);
 });
 
+test.tags("desktop");
 test(`change the viewType of the current action`, async () => {
     defineActions([
         {
