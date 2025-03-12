@@ -77,6 +77,18 @@ registry.category("web_tour.tours").add('configurator_flow', {
         content: "Click on build my website",
         trigger: 'button.btn-primary',
         run: "click",
+    },
+        // Online catalog screen
+    {
+        content: "Choose a shop page style",
+        trigger: '.theme_preview',
+        run: "click",
+    },
+        // Product page Screen
+    {
+        content: "Choose a product page style",
+        trigger: '.theme_preview',
+        run: "click",
     }, {
         content: "Loader should be shown",
         trigger: '.o_website_loader_container',
