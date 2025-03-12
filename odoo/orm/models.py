@@ -7400,5 +7400,5 @@ def get_columns_from_sql_diagnostics(cr, diagnostics, *, check_registry=False) -
         WHERE conname = %s
             AND t.relname = %s
     """, diagnostics.constraint_name, diagnostics.table_name))
-    [columns] = cr.fetchone() or ([])
-    return columns
+    columns = cr.fetchone()
+    return columns[0] if columns else []
