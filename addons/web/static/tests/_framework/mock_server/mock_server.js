@@ -1328,7 +1328,7 @@ export async function makeMockServer() {
     // Add other ambiant params
     mockServer.configure(getCurrentParams());
 
-    registerDebugInfo(mockServer);
+    registerDebugInfo("mock server", mockServer);
 
     return mockServer.start();
 }
