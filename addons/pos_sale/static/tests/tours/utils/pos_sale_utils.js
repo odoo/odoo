@@ -4,7 +4,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 
-function selectNthOrder(n) {
+export function selectNthOrder(n) {
     return [
         ProductScreen.clickControlButton("Quotation/Order"),
         {
@@ -16,8 +16,9 @@ function selectNthOrder(n) {
     ];
 }
 
-export function settleNthOrder(n) {
-    return [
+export function settleNthOrder(n, options = {}) {
+    const { loadSN } = options;
+    const step = [
         ...selectNthOrder(n),
         {
             content: `Choose to settle the order`,
@@ -25,10 +26,18 @@ export function settleNthOrder(n) {
             in_modal: false,
             run: "click",
         },
-        {
-            trigger: "body:not(:has(.modal))",
-        },
     ];
+    if (loadSN) {
+        step.push({
+            content: `Choose to auto link the lot number to the order line`,
+            trigger: `.modal-content:contains('Do you want to load the SN/Lots linked to the Sales Order?') button:contains('Ok')`,
+            run: "click",
+        });
+    }
+    step.push({
+        trigger: "body:not(:has(.modal))",
+    });
+    return step;
 }
 
 export function downPaymentFirstOrder(amount) {
@@ -52,4 +61,15 @@ export function checkOrdersListEmpty() {
             trigger: "p:contains(No record found)",
         },
     ];
+}
+
+export function selectedOrderLinesHasLots(productName, lots) {
+    const getSerialStep = (index, serialNumber) => {
+        return {
+            content: `check lot${index} is linked`,
+            trigger: `.info-list li:contains(${serialNumber})`,
+        };
+    };
+    const lotSteps = lots.reduce((acc, serial, i) => acc.concat(getSerialStep(i, serial)), []);
+    return [...ProductScreen.selectedOrderlineHas(productName), ...lotSteps];
 }

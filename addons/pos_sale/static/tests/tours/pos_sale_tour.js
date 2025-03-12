@@ -376,3 +376,14 @@ registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settle_order_with_lot", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            PosSale.selectedOrderLinesHasLots("Product A", ["1001", "1002"]),
+        ].flat(),
+});
