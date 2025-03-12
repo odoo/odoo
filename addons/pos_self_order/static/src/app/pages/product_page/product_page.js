@@ -86,7 +86,7 @@ export class ProductPage extends Component {
     }
 
     isEveryValueSelected() {
-        return Object.values(this.state.selectedValues).find((value) => !value) == false;
+        return Object.values(this.state.selectedValues).every((value) => value);
     }
 
     isArchivedCombination() {
