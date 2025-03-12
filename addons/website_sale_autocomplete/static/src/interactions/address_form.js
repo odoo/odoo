@@ -12,9 +12,14 @@ export class AddressForm extends Interaction {
         ".js_autocomplete_result": { "t-on-click.withTarget": this.onClickAutocompleteResult },
     };
 
-    assetLibs = [
-        "website_sale_autocomplete.assets_widget_xml",
-    ];
+    // assetLibs = [
+    //     "website_sale_autocomplete.assets_widget_xml",
+    // ];
+    xmlTemplates = {
+        "/website_sale_autocomplete/static/src/xml/autocomplete.xml": [
+            "website_sale_autocomplete.AutocompleteDropDown",
+        ],
+    };
 
     setup() {
         this.streetAndNumberInput = this.el.querySelector("input[name='street']");

@@ -24,9 +24,9 @@ export class RatingPopupComposer extends Interaction {
         "/portal_rating/static/src/xml/portal_chatter.xml": [
             "portal.Composer",
         ],
-        "/portal_rating/static/src/xml/portal_tools.xml": [
-            "portal_rating.rating_stars_static",
-        ],
+        // "/portal_rating/static/src/xml/portal_tools.xml": [
+        //     "portal_rating.rating_stars_static",
+        // ], template being used in component mail.Message
         "/portal_rating/static/src/xml/portal_rating_composer.xml": [
             "portal_rating.PopupComposer",
         ]

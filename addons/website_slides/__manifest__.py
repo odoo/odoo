@@ -108,7 +108,7 @@ Featuring
             'website_slides/static/src/xml/website_slides_sidebar.xml', # interaction and widget
             'website_slides/static/src/xml/website_slides_fullscreen.xml',
             'website_slides/static/src/xml/slide_course_join.xml',
-            "website_slides/static/src/xml/slide_course_prerequisite.xml",
+            # "website_slides/static/src/xml/slide_course_prerequisite.xml",
         ],
         'website.assets_editor': [
             'website_slides/static/src/js/systray_items/*.js',
