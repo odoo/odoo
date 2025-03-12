@@ -147,6 +147,10 @@ devtools() {
 source ~/.bashrc
 source /home/pi/.bashrc
 
+# Change default hostname from 'raspberrypi' to 'iotbox'
+echo iotbox | tee /etc/hostname
+sed -i 's/\braspberrypi/iotbox/g' /etc/hosts
+
 apt-get update
 
 # At the first start it is necessary to configure a password
