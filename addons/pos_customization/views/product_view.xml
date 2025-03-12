@@ -12,11 +12,14 @@
             </xpath>
             <!-- pos_description below public_descripiton in UI  -->
             <xpath expr="//group[@name='public_description']" position="inside">
-                <group string="POS Description" name="pos_description_group">
-                    <field name="pos_description" nolabel="1" placeholder="Enter POS-specific description here"/>
-                </group>
                 <group name="alternative_name" string="Alternative Name">
                     <field name="alternative_name" nolabel="1" placeholder="Enter alternative name here"/>
+                </group>
+               <group string="POS Alternative Products" name="pos_alternative_products_group">
+                    <field name="pos_alternative_product_ids" widget="many2many_tags"
+                       domain="[('id', '!=', id), ('available_in_pos', '=', True)]"
+                       invisible="not available_in_pos"
+                       placeholder="Select POS alternative products here"/>
                 </group>
             </xpath>
         </field>

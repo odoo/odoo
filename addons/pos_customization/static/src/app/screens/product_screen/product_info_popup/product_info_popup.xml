@@ -4,8 +4,33 @@
         <xpath expr="//div[@class='section-inventory mt-3 mb-4 pb-4 border-bottom text-start']" position="after">
             <div t-if="props.product.available_in_pos" class="section-pos-description mt-3 mb-4 pb-4 border-bottom text-start">
                 <h3 class="section-title">POS Description</h3>
-                <div class="section-pos-description-body">
-                    <span t-out="props.product.pos_description || 'N/A'" />
+                <div class="section-pos-description-body" role="document">
+                    <span t-out="this.public_desc || 'N/A'" />
+                </div>
+            </div>
+        </xpath>
+        <!-- Add POS Alternative Products section below Financials and above footer -->
+        <xpath expr="//div[@class='financials-order d-grid gap-2 mt-3']" position="after">
+            <div t-if="props.product.available_in_pos and props.product.pos_alternative_product_ids.length > 0" class="section-pos-alternatives mt-3 mb-4 pb-4 border-bottom text-start">
+                <h3 class="section-title">Alternative Products</h3>
+                <div class="product-list pos.productListViewMode d-flex d-flex-wrap overflow-x-auto gap-1 px-2 pt-0 pb-2">
+                        <t t-foreach="props.product.pos_alternative_product_ids.filter(p => p.available_in_pos)" t-as="altProduct" t-key="altProduct.id">
+                            <t t-debug="" />
+                            <t t-set="product_id" value="props.product" />
+                            <div class="col-4 w-auto" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
+                                <ProductCard
+                                    productId="altProduct.id"
+                                    product="altProduct"
+                                    class="pos.productViewMode"
+                                    name="altProduct.alternative_name || altProduct.display_name"
+                                    price="this.env.utils.formatCurrency(altProduct.lst_price)"
+                                    productInfo="true"
+                                    imageUrl="this.getProductImage(altProduct)"
+                                    onClick.bind="() => this.addProductToOrder(altProduct)"
+                                    onProductInfoClick.bind="() => this.onProductInfoClick(altProduct)"
+                                />
+                            </div>
+                        </t>
                 </div>
             </div>
         </xpath>
