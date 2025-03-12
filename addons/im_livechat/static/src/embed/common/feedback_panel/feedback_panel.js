@@ -28,6 +28,7 @@ export class FeedbackPanel extends Component {
     setup() {
         this.session = session;
         this.livechatService = useService("im_livechat.livechat");
+        this.store = useService("mail.store");
         this.state = useState({
             step: this.STEP.RATING,
             rating: null,

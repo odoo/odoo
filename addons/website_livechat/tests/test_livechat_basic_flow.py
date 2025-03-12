@@ -150,6 +150,24 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
     def test_user_known_after_reload(self):
         self.start_tour('/', 'website_livechat_user_known_after_reload')
 
+    def test_no_new_session_with_hide_button_rule(self):
+        self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
+            [
+                {
+                    "channel_id": self.livechat_channel.id,
+                    "regex_url": "/livechat_url",
+                    "sequence": 1,
+                },
+                {
+                    "channel_id": self.livechat_channel.id,
+                    "action": "hide_button",
+                    "regex_url": "/",
+                    "sequence": 2,
+                },
+            ]
+        )
+        self.start_tour("/livechat_url", "website_livechat_no_session_with_hide_rule")
+
 
 @tests.tagged('post_install', '-at_install')
 class TestLivechatBasicFlowHttpCaseMobile(HttpCaseWithUserDemo, TestLivechatCommon):
