@@ -1,0 +1,23 @@
+<templates id="template">
+    <div t-name="mass_mailing_egg.ThemeSelector">
+        <div class="todo-eggmail-templates-container">
+            <div t-foreach="templates" t-as="template" t-key="template_index">
+                <div>
+                    <i class="fa fa-star text-warning"/>
+                    <span t-out="template.subject"/>
+                    <div>
+                        <i class="todo-eggmail-remove-favorite fa fa-trash" title="Remove from Templates"/>
+                        <img t-if="template.userId" t-attf-src="/web/image/res.users/#{template.userId}/avatar_128" t-att-title="template.userName"/>
+                    </div>
+                </div>
+            </div>
+            <div class="todo-eggmail-themes-container">
+                <a t-foreach="themes" t-as="theme" t-key="theme_index" role="menuitem" href="#">
+                    <div class="o_thumb small" t-attf-style="background-image: url(#{theme.img}_small.png)"/>
+                    <div class="o_thumb large" t-attf-style="background-image: url(#{theme.img}_large.png)"/>
+                    <span t-out="theme.title"/>
+                </a>
+            </div>
+        </div>
+    </div>
+</templates>

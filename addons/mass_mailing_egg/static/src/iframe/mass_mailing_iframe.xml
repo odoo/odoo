@@ -1,0 +1,21 @@
+<templates>
+    <t t-name="mass_mailing_egg.MassMailingIframe">
+        <div>
+            <iframe t-key="iframeKey" t-ref="iframeRef" t-on-blur="onBlur" t-on-load="onIframeLoad"/>
+        </div>
+        <div t-att-class="{ 'o_builder_sidebar_open': props.showSidebar }"
+            class="o-mass_mailing_egg-builder_sidebar border-start border-dark">
+            <LazyComponent  t-if="props.showSidebar" Component="'mass_mailing_egg.Builder'"
+                props="() => this.getBuilderProps()" bundle="'mass_mailing_egg.assets_builder'"/>
+        </div>
+    </t>
+    <t t-name="mass_mailing_egg.IframeHead">
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    </t>
+    <t t-name="mass_mailing_egg.IframeBody">
+        <!-- TODO EGGMAIL: remove wrapwrap if interactions are not needed -->
+        <div id="wrapwrap" class="note-editable"/>
+    </t>
+</templates>

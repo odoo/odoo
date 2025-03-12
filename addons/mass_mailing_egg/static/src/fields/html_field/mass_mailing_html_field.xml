@@ -1,0 +1,13 @@
+<templates>
+    <t t-name="mass_mailing_egg.HtmlField">
+        <div>
+            <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
+            <t t-if="massMailingState.showThemeSelector">
+                <ThemeSelector/>
+            </t>
+            <t t-else="">
+                <MassMailingIframe config="getConfig()" showSidebar="massMailingState.showSidebar" readonly="props.readonly"/>
+            </t>
+        </div>
+    </t>
+</templates>

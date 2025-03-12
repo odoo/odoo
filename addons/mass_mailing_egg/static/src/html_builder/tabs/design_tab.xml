@@ -1,0 +1,21 @@
+<templates xml:space="preserve">
+
+<t t-name="html_builder.DesignTab">
+    <div class="o_design_tab h-100">
+        <div t-ref="content" class="d-flex flex-column h-100">
+            <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                <!-- TODO EGGMAIL (check theme_tab todo) Define a more basic kind of options container -->
+                <OptionsContainer
+                    snippetModel="optionsContainer.snippetModel"
+                    editingElement="optionsContainer.element"
+                    options="optionsContainer.options"
+                    headerMiddleButtons="optionsContainer.headerMiddleButtons"
+                    isRemovable="optionsContainer.isRemovable"
+                    isClonable="optionsContainer.isClonable"
+                    containerTopButtons="optionsContainer.optionsContainerTopButtons"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>
