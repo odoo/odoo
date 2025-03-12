@@ -327,7 +327,7 @@ export class ListPlugin extends Plugin {
             // possible.
             const callingNode = element.firstChild;
             const group = getAdjacents(callingNode, (n) => !isBlock(n));
-            list = insertListAfter(this.document, callingNode, mode, [group]);
+            list = insertListAfter(this.document, callingNode, mode, group);
         } else {
             const parent = element.parentNode;
             const childIndex = childNodeIndex(element);
@@ -356,9 +356,7 @@ export class ListPlugin extends Plugin {
      */
     baseContainerToList(baseContainer, mode) {
         const cursors = this.dependencies.selection.preserveSelection();
-        const list = insertListAfter(this.document, baseContainer, mode, [
-            childNodes(baseContainer),
-        ]);
+        const list = insertListAfter(this.document, baseContainer, mode, childNodes(baseContainer));
         this.dependencies.dom.copyAttributes(baseContainer, list);
         baseContainer.remove();
         cursors.remapNode(baseContainer, list.firstChild).restore();
@@ -367,7 +365,7 @@ export class ListPlugin extends Plugin {
 
     blockContentsToList(block, mode) {
         const cursors = this.dependencies.selection.preserveSelection();
-        const list = insertListAfter(this.document, block.lastChild, mode, [[...block.childNodes]]);
+        const list = insertListAfter(this.document, block.lastChild, mode, [...block.childNodes]);
         cursors.remapNode(block, list.firstChild).restore();
         return list;
     }

@@ -864,3 +864,36 @@ describe("Toolbar", () => {
         expect(getContent(el)).toBe(`<p style="">[test</p><p style=""><br>]</p>`);
     });
 });
+
+describe("list", () => {
+    test("should be able to remove text-align format from unordered list", async () => {
+        await testEditor({
+            contentBefore: '<ul><li style="text-align: right;">[ab]</li></ul>',
+            stepFunction: (editor) => execCommand(editor, "removeFormat"),
+            contentAfter: "<ul><li>[ab]</li></ul>",
+        });
+    });
+    test("should be able to remove text-align format from ordered list", async () => {
+        await testEditor({
+            contentBefore: '<ol><li style="text-align: right;">[ab]</li></ol>',
+            stepFunction: (editor) => execCommand(editor, "removeFormat"),
+            contentAfter: "<ol><li>[ab]</li></ol>",
+        });
+    });
+    test("should be able to remove text-align format from multiple selected unordered list items", async () => {
+        await testEditor({
+            contentBefore:
+                '<ul><li style="text-align: right;">[ab</li><li style="text-align: center;">cd]</li></ul>',
+            stepFunction: (editor) => execCommand(editor, "removeFormat"),
+            contentAfter: "<ul><li>[ab</li><li>cd]</li></ul>",
+        });
+    });
+    test("should be able to remove text-align format from multiple selected ordered list items", async () => {
+        await testEditor({
+            contentBefore:
+                '<ol><li style="text-align: right;">[ab</li><li style="text-align: center;">cd]</li></ol>',
+            stepFunction: (editor) => execCommand(editor, "removeFormat"),
+            contentAfter: "<ol><li>[ab</li><li>cd]</li></ol>",
+        });
+    });
+});

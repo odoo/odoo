@@ -1,4 +1,5 @@
 import { getFontSizeOrClass } from "@html_editor/utils/formatting";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 export function createList(document, mode) {
     const node = document.createElement(mode === "OL" ? "OL" : "UL");
@@ -8,36 +9,38 @@ export function createList(document, mode) {
     return node;
 }
 
-// @todo @phoenix Change this API (and implementation), as all use cases seem to
-// create a list with a single LI
 export function insertListAfter(document, afterNode, mode, content = []) {
     const list = createList(document, mode);
     afterNode.after(list);
-    list.append(
-        ...content.map((c) => {
-            const li = document.createElement("LI");
-            let fontSizeStyle;
-            if (c.length === 1 && c[0].tagName === "FONT" && c[0].style.color) {
-                li.style.color = c[0].style.color;
-                li.append(...c[0].childNodes);
-            } else if (
-                c.length === 1 &&
-                c[0].tagName === "SPAN" &&
-                (fontSizeStyle = getFontSizeOrClass(c[0]))
-            ) {
-                if (fontSizeStyle.type === "font-size") {
-                    li.style.fontSize = fontSizeStyle.value;
-                } else if (fontSizeStyle.type === "class") {
-                    li.classList.add(fontSizeStyle.value);
-                }
-                li.style.listStylePosition = "inside";
-                li.append(...c[0].childNodes);
-            } else {
-                li.append(...[].concat(c));
-            }
-            return li;
-        })
-    );
+    const li = document.createElement("LI");
+    let fontSizeStyle;
+    if (content.length === 1 && content[0].tagName === "FONT" && content[0].style.color) {
+        li.style.color = content[0].style.color;
+        li.append(...content[0].childNodes);
+    } else if (
+        content.length === 1 &&
+        content[0].tagName === "SPAN" &&
+        (fontSizeStyle = getFontSizeOrClass(content[0]))
+    ) {
+        if (fontSizeStyle.type === "font-size") {
+            li.style.fontSize = fontSizeStyle.value;
+        } else if (fontSizeStyle.type === "class") {
+            li.classList.add(fontSizeStyle.value);
+        }
+        li.style.listStylePosition = "inside";
+        li.append(...content[0].childNodes);
+    } else {
+        li.append(...content);
+    }
+    if (afterNode.matches?.(baseContainerGlobalSelector)) {
+        const textAlign = afterNode.style.getPropertyValue("text-align");
+        if (textAlign) {
+            // Copy text-align style from base container to li.
+            li.style.setProperty("text-align", textAlign);
+            afterNode.style.removeProperty("text-align");
+        }
+    }
+    list.append(li);
     return list;
 }
 
