@@ -1098,7 +1098,7 @@ export function makeActionManager(env, router = _router) {
             controller.props.globalState = controller.action.globalState;
         }
 
-        const closingProm = _executeCloseAction();
+        const closingProm = _executeCloseAction({ onCloseInfo: { noReload: true } });
 
         if (options.clearBreadcrumbs && !options.noEmptyTransition) {
             const def = new Deferred();
