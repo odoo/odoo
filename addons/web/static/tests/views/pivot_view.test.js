@@ -1357,7 +1357,7 @@ test("correctly save measures and groupbys to favorite", async () => {
     expect.assertions(3);
 
     let expectedContext;
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -1423,7 +1423,7 @@ test("correctly remove pivot_ keys from the context", async () => {
 
     let expectedContext;
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -1569,7 +1569,7 @@ test("Add a group by on the CP when a favorite already exists", async () => {
             is_default: true,
             name: "My favorite",
             sort: "[]",
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
         },
     ];
 
@@ -1605,7 +1605,7 @@ test("Adding a Favorite at anytime should modify the row/column groupby", async 
     Partner._views["search,false"] = `<search/>`;
     Partner._filters = [
         {
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
             name: "My favorite",
             id: 5,
             context: `{"pivot_row_groupby":["product_id"], "pivot_column_groupby": ["bar"]}`,
@@ -1741,7 +1741,7 @@ test("Reload, group by columns, reload", async () => {
 
     let expectedContext;
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -1871,7 +1871,7 @@ test("Empty results keep groupbys", async () => {
         pivot_row_groupby: [],
     };
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -2252,7 +2252,7 @@ test("Row and column groupbys plus a domain", async () => {
         pivot_row_groupby: ["product_id"],
     };
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContext);
         return true;
     });
@@ -3264,7 +3264,7 @@ test("pivot_row_groupby should be also used after first load", async () => {
         },
     ];
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual(expectedContexts.shift());
         return [ids.shift()];
     });
@@ -3326,7 +3326,7 @@ test("pivot_row_groupby should be also used after first load (2)", async () => {
         arch: `<pivot/>`,
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "Favorite",
                 id: 1,
                 context: `
@@ -3365,7 +3365,7 @@ test("specific pivot keys in action context must have less importance than in fa
         },
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My favorite",
                 id: 1,
                 context: `{
@@ -3380,7 +3380,7 @@ test("specific pivot keys in action context must have less importance than in fa
                 action_id: false,
             },
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My favorite 2",
                 id: 2,
                 context: `{
@@ -3429,7 +3429,7 @@ test("favorite pivot_measures should be used even if found also in global contex
         groupable: false,
     });
 
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].context).toEqual({
             group_by: [],
             pivot_column_groupby: [],
@@ -3692,7 +3692,7 @@ test("missing property field definition is fetched", async function () {
         arch: `<pivot/>`,
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My Filter",
                 id: 5,
                 context: `{"group_by": ['properties.my_char']}`,
@@ -3734,7 +3734,7 @@ test("missing deleted property field definition is created", async function (ass
         arch: `<pivot/>`,
         irFilters: [
             {
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
                 name: "My Filter",
                 id: 5,
                 context: `{"group_by": ['properties.my_char']}`,

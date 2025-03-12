@@ -2867,7 +2867,7 @@ test(`change a record field in readonly should change same record in other group
 });
 
 test(`ordered target, sort attribute in context`, async () => {
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         const favorite = args[0];
         expect.step(favorite.sort);
         return [7];
@@ -2901,7 +2901,7 @@ test(`Loading a filter with a sort attribute`, async () => {
             is_default: true,
             name: "My favorite",
             sort: '["date asc", "foo desc"]',
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
         },
         {
             context: "{}",
@@ -2910,7 +2910,7 @@ test(`Loading a filter with a sort attribute`, async () => {
             is_default: false,
             name: "My second favorite",
             sort: '["date desc", "foo asc"]',
-            user_id: [2, "Mitchell Admin"],
+            user_ids: [2],
         },
     ];
 
@@ -12338,7 +12338,7 @@ test(`grouped list with groups_limit attribute, then ungroup`, async () => {
                 is_default: true,
                 name: "GroupBy IntField",
                 sort: "[]",
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
             },
         ],
     });
@@ -16916,7 +16916,7 @@ test(`reload properties definitions when domain change`, async () => {
                 id: 7,
                 name: "only one",
                 sort: "[]",
-                user_id: [2, "Mitchell Admin"],
+                user_ids: [2],
             },
         ],
     });

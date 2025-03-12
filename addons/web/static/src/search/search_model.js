@@ -502,7 +502,8 @@ export class SearchModel extends EventBus {
             type: "favorite",
             id: this.nextId,
             groupId: this.nextGroupId,
-            groupNumber: preFavorite.userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP,
+            groupNumber:
+                preFavorite.userIds.length === 1 ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP,
             removable: true,
             serverSideId,
         };
@@ -512,10 +513,11 @@ export class SearchModel extends EventBus {
         this.nextId++;
         this.blockNotification = false;
         this._notify();
+        return serverSideId;
     }
 
     async _createIrFilters(irFilter) {
-        const serverSideIds = await this.orm.call("ir.filters", "create_or_replace", [irFilter]);
+        const serverSideIds = await this.orm.call("ir.filters", "create_filter", [irFilter]);
         this.env.bus.trigger("CLEAR-CACHES");
         return serverSideIds[0];
     }
@@ -1890,7 +1892,7 @@ export class SearchModel extends EventBus {
         const domain = this._getDomain({ raw: true, withGlobal: false }).toString();
         const groupBys = this._getGroupBy();
         const orderBy = localOrderBy || this._getOrderBy();
-        const userId = isShared ? false : user.userId;
+        const userIds = isShared ? [] : [user.userId];
 
         const preFavorite = {
             description,
@@ -1899,7 +1901,7 @@ export class SearchModel extends EventBus {
             context,
             groupBys,
             orderBy,
-            userId,
+            userIds,
         };
         const irFilter = {
             name: description,
@@ -1910,7 +1912,7 @@ export class SearchModel extends EventBus {
             embedded_parent_res_id: this.globalContext.active_id || false,
             is_default: isDefault,
             sort: JSON.stringify(orderBy.map((o) => `${o.name}${o.asc === false ? " desc" : ""}`)),
-            user_id: userId,
+            user_ids: userIds,
             context: { group_by: groupBys, ...context },
         };
 
@@ -2061,11 +2063,8 @@ export class SearchModel extends EventBus {
      * @param {Object} irFilter
      */
     _irFilterToFavorite(irFilter) {
-        let userId = false;
-        if (Array.isArray(irFilter.user_id)) {
-            userId = irFilter.user_id[0];
-        }
-        const groupNumber = userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP;
+        const userIds = irFilter.user_ids;
+        const groupNumber = userIds.length === 1 ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP;
         const context = evaluateExpr(irFilter.context, user.context);
         let groupBys = [];
         if (context.group_by) {
@@ -2110,7 +2109,7 @@ export class SearchModel extends EventBus {
             removable: true,
             serverSideId: irFilter.id,
             type: "favorite",
-            userId,
+            userIds,
         };
         if (irFilter.is_default) {
             favorite.isDefault = irFilter.is_default;

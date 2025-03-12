@@ -233,15 +233,13 @@ test("can click on a embedded action and execute the corresponding action (with 
 
 test("can click on a embedded action and execute the corresponding action (with python_method)", async () => {
     await mountWithCleanup(WebClient);
-    onRpc("do_python_method", () => {
-        return {
-            id: 4,
-            name: "Favorite Ponies from python action",
-            res_model: "pony",
-            type: "ir.actions.act_window",
-            views: [[false, "kanban"]],
-        };
-    });
+    onRpc("do_python_method", () => ({
+        id: 4,
+        name: "Favorite Ponies from python action",
+        res_model: "pony",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+    }));
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
@@ -262,15 +260,13 @@ test("can click on a embedded action and execute the corresponding action (with 
 
 test("breadcrumbs are updated when clicking on embeddeds", async () => {
     await mountWithCleanup(WebClient);
-    onRpc("do_python_method", () => {
-        return {
-            id: 4,
-            name: "Favorite Ponies from python action",
-            res_model: "pony",
-            type: "ir.actions.act_window",
-            views: [[false, "kanban"]],
-        };
-    });
+    onRpc("do_python_method", () => ({
+        id: 4,
+        name: "Favorite Ponies from python action",
+        res_model: "pony",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+    }));
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
@@ -310,10 +306,10 @@ test("a view coming from a embedded can be saved in the embedded actions", async
         expect(values).not.toInclude("python_method");
         return [4, values.name]; // Fake new embedded action id
     });
-    onRpc("create_or_replace", ({ args }) => {
+    onRpc("create_filter", ({ args }) => {
         expect(args[0].domain).toBe(`[["name", "=", "Applejack"]]`);
         expect(args[0].embedded_action_id).toBe(4);
-        expect(args[0].user_id).toBe(false);
+        expect(args[0].user_ids).toEqual([]);
         return [5]; // Fake new filter id
     });
     await mountWithCleanup(WebClient);
@@ -355,11 +351,11 @@ test("a view coming from a embedded with python_method can be saved in the embed
             expect(values.python_method).toBe("do_python_method");
             expect(values).not.toInclude("action_id");
             return [4, values.name]; // Fake new embedded action id
-        } else if (method === "create_or_replace") {
+        } else if (method === "create_filter") {
             values = args[0][0];
             expect(args[0].domain).toBe(`[["name", "=", "Applejack"]]`);
             expect(args[0].embedded_action_id).toBe(4);
-            expect(args[0].user_id).toBe(false);
+            expect(args[0].user_ids).toEqual([]);
             return 5; // Fake new filter id
         } else if (method === "do_python_method") {
             return {
