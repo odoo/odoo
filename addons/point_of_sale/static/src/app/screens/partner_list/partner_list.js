@@ -201,6 +201,6 @@ export class PartnerList extends Component {
     }
 
     getPhoneSearchTerms() {
-        return ["phone", "mobile"];
+        return ["phone"];
     }
 }
