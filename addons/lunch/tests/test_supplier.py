@@ -29,7 +29,7 @@ class TestSupplier(TestsCommon):
     def test_send_email_cron(self):
         self.supplier_kothai.cron_id.ensure_one()
         self.assertEqual(self.supplier_kothai.cron_id.nextcall.time(), time(15, 0))
-        self.assertEqual(self.supplier_kothai.cron_id.code, f"""\
+        self.assertEqual(self.supplier_kothai.cron_id.sudo().code, f"""\
 # This cron is dynamically controlled by Lunch Supplier.
 # Do NOT modify this cron, modify the related record instead.
 env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
@@ -173,7 +173,7 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
         self.assertTrue(cron_ny.active)
         self.assertEqual(cron_ny.name, "Lunch: send automatic email to Kothai")
         self.assertEqual(
-            [line for line in cron_ny.code.splitlines() if not line.lstrip().startswith("#")],
+            [line for line in cron_ny.sudo().code.splitlines() if not line.lstrip().startswith("#")],
             ["env['lunch.supplier'].browse([%i])._send_auto_email()" % self.supplier_kothai.id])
         self.assertEqual(cron_ny.nextcall, datetime(2021, 1, 29, 15, 0))  # New-york is UTC-5
 

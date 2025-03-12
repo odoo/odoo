@@ -85,8 +85,8 @@ class ResPartnerBank(models.Model):
 
             params = {
                 "do": "create-invoice",
-                "apikey": self.l10n_id_qris_api_key,
-                "mID": self.l10n_id_qris_mid,
+                "apikey": self.sudo().l10n_id_qris_api_key,
+                "mID": self.sudo().l10n_id_qris_mid,
                 "cliTrxNumber": structured_communication,
                 "cliTrxAmount": int(amount)
             }

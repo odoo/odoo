@@ -1193,7 +1193,7 @@ class MailMessage(models.Model):
                 (not msg.body or tools.is_html_empty(msg.body)) and
                 (not msg.subtype_id or not msg.subtype_id.description) and
                 not msg.attachment_ids and
-                not msg.tracking_value_ids
+                not (msg._has_field_access(msg._fields['tracking_value_ids'], 'read') and msg.tracking_value_ids)
         )
 
     @api.model
