@@ -105,8 +105,7 @@ class TestDisableSnippetsAssets(TransactionCase):
 
 HOMEPAGE_UP_TO_DATE = """
 <t name="Homepage" t-name="website.homepage1">
-  <t t-call="website.layout">
-    <t t-set="pageName" t-value="'homepage'"/>
+  <t t-call="website.layout" pageName.f="homepage">
     <div id="wrap" class="oe_structure oe_empty">
       <section class="s_website_form pt16 pb16 o_colored_level" data-vcss="001" data-snippet="s_website_form" data-name="Form">
         <div class="container">
@@ -128,8 +127,7 @@ HOMEPAGE_UP_TO_DATE = """
 
 HOMEPAGE_OUTDATED = """
 <t name="Homepage" t-name="website.homepage1">
-  <t t-call="website.layout">
-    <t t-set="pageName" t-value="'homepage'"/>
+  <t t-call="website.layout" pageName.f="homepage">
     <div id="wrap" class="oe_structure oe_empty">
       <form action="/website_form/" method="post" class="s_website_form container-fluid mt32 o_fake_not_editable" enctype="multipart/form-data" data-name="Form Builder" data-model_name="mail.mail" data-success_page="/contactus-thank-you" data-snippet="s_website_form">
         <div class="container">

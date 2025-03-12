@@ -28,9 +28,8 @@
         </section>
     </template>
     <template id="s_dynamic_snippet" name="Dynamic Snippet">
-        <t t-call="website.s_dynamic_snippet_template">
-            <t t-set="snippet_name" t-value="'s_dynamic_snippet'"/>
-        </t>
+        <t t-call="website.s_dynamic_snippet_template"
+            snippet_name.f="s_dynamic_snippet"/>
     </template>
     <template id="website.s_dynamic_snippet_options_template">
         <div t-attf-data-js="#{snippet_name}" t-attf-data-selector="#{snippet_selector}" data-no-preview="true">
@@ -54,10 +53,9 @@
     </template>
     <template id="s_dynamic_snippet_options" inherit_id="website.snippet_options">
         <xpath expr="." position="inside">
-            <t t-call="website.s_dynamic_snippet_options_template">
-                <t t-set="snippet_name" t-value="'dynamic_snippet'"/>
-                <t t-set="snippet_selector" t-value="'.s_dynamic_snippet'"/>
-            </t>
+            <t t-call="website.s_dynamic_snippet_options_template"
+                snippet_name.f="dynamic_snippet"
+                snippet_selector.f=".s_dynamic_snippet"/>
         </xpath>
     </template>
 

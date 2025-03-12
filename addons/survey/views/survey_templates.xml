@@ -55,11 +55,11 @@
                     </t>
                 </div>
                 <div class="o_survey_brand_message float-end rounded me-3 border">
-                    <div class="px-2 py-2 d-inline-block" t-call="web.brand_promotion_message">
-                        <t t-set="_message"></t>
-                        <t t-set="_utm_medium" t-valuef="survey"/>
+                    <div class="px-2 py-2 d-inline-block">
+                        <t t-call="web.brand_promotion_message" _message.f="" _utm_medium.f="survey"/>
                     </div>
-                    <div t-if="not no_survey_navigation" class="o_survey_navigation_wrapper d-inline-block d-print-none" t-call="survey.survey_navigation">
+                    <div t-if="not no_survey_navigation" class="o_survey_navigation_wrapper d-inline-block d-print-none">
+                        <t t-call="survey.survey_navigation"/>
                     </div>
                 </div>
             </div>
