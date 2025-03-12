@@ -46,7 +46,7 @@ export class BoothRegistration extends Interaction {
     //     // "website_event_booth.assets_widget_xml",
     // ];
 
-    setup() {
+    start() {
         this.inError = false;
         this.boothCache = {};
         this.isFirstRender = true;

@@ -13,9 +13,14 @@ export class WebsiteForumSpam extends Interaction {
         "#spamSearch": { "t-on-input": this.debounced(this.onSpamSearchInput, 200) },
     };
 
-    assetLibs = [
-        "website_forum.assets_widget_xml",
-    ];
+    // assetLibs = [
+    //     "website_forum.assets_widget_xml",
+    // ];
+    xmlTemplates = {
+        "/website_forum/static/src/xml/public_templates.xml": [
+            "website.social_modal",
+        ],
+    };
 
     setup() {
         this.spamIDs = JSON.parse(
