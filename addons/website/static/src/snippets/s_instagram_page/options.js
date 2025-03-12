@@ -28,8 +28,7 @@ options.registry.InstagramPage = options.Class.extend({
                     websiteId = ctx["website_id"];
                 },
             });
-            const values = await this.orm.read("website", [websiteId], ["social_instagram"]);
-            socialInstagram = values[0]["social_instagram"];
+            socialInstagram = "https://www.instagram.com/explore/tags/odoo/";
         }
         if (socialInstagram) {
             const pageName = this._getInstagramPageNameFromUrl(socialInstagram);

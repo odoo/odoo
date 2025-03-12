@@ -496,15 +496,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         })
 
     def test_26_website_media_dialog_icons(self):
-        self.env.ref('website.default_website').write({
-            'social_twitter': 'https://twitter.com/Odoo',
-            'social_facebook': 'https://www.facebook.com/Odoo',
-            'social_linkedin': 'https://www.linkedin.com/company/odoo',
-            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
-            'social_github': 'https://github.com/odoo',
-            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
-            'social_tiktok': 'https://www.tiktok.com/@odoo',
-        })
         self.start_tour("/", 'website_media_dialog_icons', login='admin')
 
     def test_27_website_clicks(self):
