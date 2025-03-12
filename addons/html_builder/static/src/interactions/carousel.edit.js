@@ -1,0 +1,68 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
+export class CarouselEdit extends Interaction {
+    static selector =
+        "section:not(.s_carousel_intro_wrapper, .s_carousel_cards_wrapper) > .carousel";
+    // Prevent enabling the carousel overlay when clicking on the carousel
+    // controls (indeed we want it to change the carousel slide then enable
+    // the slide overlay) + See "CarouselItem" option.
+    dynamicContent = {
+        ".carousel-control-prev, .carousel-control-next, .carousel-indicators": {
+            "t-on-click": this.throttled(this.onControlClick),
+            "t-on-keydown": this.onControlKeyDown,
+            "t-att-class": () => ({ o_we_no_overlay: true }),
+        },
+    };
+    /**
+     * Slides the carousel when clicking on the carousel controls. This handler
+     * allows to put the sliding in the mutex, to avoid race conditions.
+     *
+     * @param {Event} ev
+     */
+    async onControlClick(ev) {
+        // Compute to which slide the carousel will slide.
+        const controlEl = ev.currentTarget;
+        let direction;
+        if (controlEl.classList.contains("carousel-control-prev")) {
+            direction = "prev";
+        } else if (controlEl.classList.contains("carousel-control-next")) {
+            direction = "next";
+        } else {
+            const indicatorEl = ev.target;
+            if (
+                !indicatorEl.matches(".carousel-indicators > *") ||
+                indicatorEl.classList.contains("active")
+            ) {
+                return;
+            }
+            direction = [...controlEl.children].indexOf(indicatorEl);
+        }
+
+        // Slide the carousel
+        const editingCarousel = this.el;
+        const applySpec = { editingElement: editingCarousel, direction: direction };
+
+        if (this.services["website_edit"].applyAction) {
+            this.services["website_edit"].applyAction("slideCarousel", applySpec);
+        }
+    }
+
+    /**
+     * Since carousel controls are disabled in edit mode because slides are
+     * handled manually, we disable the left and right keydown events to prevent
+     * sliding this way.
+     *
+     * @param {Event} ev
+     */
+    onControlKeyDown(ev) {
+        if (["ArrowLeft", "ArrowRight"].includes(ev.code)) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
+    }
+}
+
+registry.category("public.interactions.edit").add("html_builder.carousel_edit", {
+    Interaction: CarouselEdit,
+});

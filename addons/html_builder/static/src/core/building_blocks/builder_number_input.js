@@ -26,10 +26,12 @@ export class BuilderNumberInput extends Component {
         min: { type: Number, optional: true },
         max: { type: Number, optional: true },
         composable: { type: Boolean, optional: true },
+        applyapplyWithUnit: { type: Boolean, optional: true },
     };
     static components = { BuilderComponent, BuilderTextInputBase };
     static defaultProps = {
         composable: false,
+        applyWithUnit: true,
     };
 
     setup() {
@@ -121,6 +123,7 @@ export class BuilderNumberInput extends Component {
             }
             const unit = this.props.unit;
             const saveUnit = this.props.saveUnit;
+            const applyWithUnit = this.props.applyWithUnit;
             if (unit && saveUnit) {
                 // Convert value from unit to saveUnit
                 value = convertNumericToUnit(
@@ -130,7 +133,7 @@ export class BuilderNumberInput extends Component {
                     getHtmlStyle(this.env.getEditingElement().ownerDocument)
                 );
             }
-            if (unit) {
+            if (unit && applyWithUnit) {
                 if (saveUnit || saveUnit === "") {
                     value = value + saveUnit;
                 } else {
