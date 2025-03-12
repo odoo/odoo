@@ -41,5 +41,8 @@ class MailMessage(models.Model):
         super()._to_store(store, [f for f in fields if f != "record_rating"], **kwargs)
         if "record_rating" in fields:
             for records in self._records_by_model_name().values():
-                if issubclass(self.pool[records._name], self.pool["rating.mixin"]):
+                if (
+                    issubclass(self.pool[records._name], self.pool["rating.mixin"])
+                    and records._has_field_access(records._fields["rating_avg"], 'read')
+                ):
                     store.add(records, ["rating_avg", "rating_count"], as_thread=True)

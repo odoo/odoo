@@ -37,7 +37,7 @@ class HrLeaveAllocation(models.Model):
         for allocation in res:
             if allocation.overtime_deductible:
                 duration = allocation.number_of_hours_display
-                if duration > allocation.employee_id.total_overtime:
+                if duration > allocation.employee_id.sudo().total_overtime:
                     raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
                 if not allocation.overtime_id:
                     allocation.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({

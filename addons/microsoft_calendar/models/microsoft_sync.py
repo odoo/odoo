@@ -369,8 +369,8 @@ class MicrosoftCalendarSync(models.AbstractModel):
         'self' won't exist when this method will be really called due to @after_commit decorator.
         """
         microsoft_service = self._get_microsoft_service()
-        sender_user = self._get_event_user_m(user_id)
-        with microsoft_calendar_token(sender_user.sudo()) as token:
+        sender_user = self._get_event_user_m(user_id).sudo()
+        with microsoft_calendar_token(sender_user) as token:
             if token and not sender_user.microsoft_synchronization_stopped:
                 microsoft_service.delete(event_id, token=token, timeout=timeout)
 

@@ -36,7 +36,7 @@ class TestTracking(MailCommon):
             self.flush_tracking()
 
         self.assertEqual(len(self.record.message_ids), 1)
-        self.assertEqual(len(self.record.message_ids.tracking_value_ids), 1)
+        self.assertEqual(len(self.record.message_ids.sudo().tracking_value_ids), 1)
 
         self.assertEqual(self.record.message_ids.author_id, self.partner_admin)
 
@@ -116,7 +116,7 @@ class TestTracking(MailCommon):
                 'changedField': field_dname,
                 'fieldName': field_name,
                 'fieldType': field_type,
-                'id': message_1.tracking_value_ids.id,
+                'id': message_1.sudo().tracking_value_ids.id,
                 'newValue': {
                     'currencyId': False,
                     'value': new_user.display_name,
@@ -462,7 +462,7 @@ class TestTrackingInternals(MailCommon):
 
         # no tracked field, no tracking at create
         last_message = test_record.message_ids[0]
-        self.assertFalse(last_message.tracking_value_ids)
+        self.assertFalse(last_message.sudo().tracking_value_ids)
 
         # update m2m
         test_record.write({
@@ -556,7 +556,7 @@ class TestTrackingInternals(MailCommon):
         compute_record = self.env['mail.test.track.compute'].create({})
         self.flush_tracking()
         self.assertEqual(len(compute_record.message_ids), 1)
-        self.assertEqual(len(compute_record.message_ids[0].tracking_value_ids), 0)
+        self.assertEqual(len(compute_record.message_ids[0].sudo().tracking_value_ids), 0)
 
         # assign partner_id: one tracking message for the modified field and all
         # the stored and non-stored computed fields on the record
@@ -568,7 +568,7 @@ class TestTrackingInternals(MailCommon):
         compute_record.partner_id = partner_su
         self.flush_tracking()
         self.assertEqual(len(compute_record.message_ids), 2)
-        self.assertEqual(len(compute_record.message_ids[0].tracking_value_ids), 4)
+        self.assertEqual(len(compute_record.message_ids[0].sudo().tracking_value_ids), 4)
         self.assertEqual(compute_record.message_ids.author_id, self.partner_employee)
         self.assertTracking(compute_record.message_ids[0], [
             ('partner_id', 'many2one', False, partner_su),
@@ -581,7 +581,7 @@ class TestTrackingInternals(MailCommon):
         partner_su.write({'name': 'Fool'})
         self.flush_tracking()
         self.assertEqual(len(compute_record.message_ids), 3)
-        self.assertEqual(len(compute_record.message_ids[0].tracking_value_ids), 1)
+        self.assertEqual(len(compute_record.message_ids[0].sudo().tracking_value_ids), 1)
         self.assertTracking(compute_record.message_ids[0], [
             ('partner_name', 'char', 'Foo', 'Fool'),
         ])
@@ -598,7 +598,7 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(compute_record.partner_phone, '0987654321')
         self.flush_tracking()
         self.assertEqual(len(compute_record.message_ids), 4)
-        self.assertEqual(len(compute_record.message_ids[0].tracking_value_ids), 2)
+        self.assertEqual(len(compute_record.message_ids[0].sudo().tracking_value_ids), 2)
         self.assertTracking(compute_record.message_ids[0], [
             ('partner_name', 'char', 'Fool', 'Bar'),
             ('partner_email', 'char', 'foo@example.com', 'bar@example.com'),
@@ -765,7 +765,7 @@ class TestTrackingInternals(MailCommon):
         })
         self.flush_tracking()
         self.assertEqual(len(main_track.message_ids), 1)
-        self.assertFalse(main_track.message_ids.tracking_value_ids)
+        self.assertFalse(main_track.message_ids.sudo().tracking_value_ids)
 
         sub_track = self.env['mail.test.track.groups'].create({
             'name': 'Groups',

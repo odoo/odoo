@@ -44,6 +44,8 @@ class _Relational(Field[M], typing.Generic[M]):
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
 
+        records._check_field_access(self, 'read')
+
         # multi-record case
         if self.compute and self.store:
             self.recompute(records)
