@@ -351,6 +351,22 @@ describe("Range not collapsed", () => {
                     '<ol><li style="text-align: center;">[abc</li><li style="text-align: center;">def]</li></ol>',
             });
         });
+        test("should apply text-align right when creating ordered list", async () => {
+            await testEditor({
+                contentBefore: '<p style="text-align: right;">[ab]</p>',
+                stepFunction: toggleOrderedList,
+                contentAfter: '<ol><li style="text-align: right;">[ab]</li></ol>',
+            });
+        });
+        test("should apply text-align format when creating ordered list from multiple selected blocks", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p style="text-align: right;">[ab</p><p style="text-align: center;">cd]</p>',
+                stepFunction: toggleOrderedList,
+                contentAfter:
+                    '<ol><li style="text-align: right;">[ab</li><li style="text-align: center;">cd]</li></ol>',
+            });
+        });
     });
     describe("Remove", () => {
         test("should turn a list into a paragraph", async () => {
