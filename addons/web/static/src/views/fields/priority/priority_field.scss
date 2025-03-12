@@ -19,10 +19,14 @@
 
             &.fa-star-o {
                 color: $o-main-color-muted;
+                opacity: 0.1;
             }
             &.fa-star {
                 color: $o-main-favorite-color;
             }
+        }
+        &:hover .fa-star-o {
+            opacity: 1;
         }
     }
 }
