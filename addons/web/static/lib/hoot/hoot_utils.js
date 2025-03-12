@@ -920,7 +920,6 @@ export function isOfType(value, type) {
  *
  * @param {string} a
  * @param {string} b
- * @param {{ normalize?: boolean }} [options]
  * @returns {number}
  * @example
  *  levenshtein("abc", "àbc"); // => 0
@@ -929,16 +928,12 @@ export function isOfType(value, type) {
  * @example
  *  levenshtein("abc", "adc"); // => 1
  */
-export function levenshtein(a, b, options) {
+export function levenshtein(a, b) {
     if (!a.length) {
         return b.length;
     }
     if (!b.length) {
         return a.length;
-    }
-    if (options?.normalize) {
-        a = normalize(a);
-        b = normalize(b);
     }
     const dp = $from({ length: b.length + 1 }, (_, i) => i);
     for (let i = 1; i <= a.length; i++) {
