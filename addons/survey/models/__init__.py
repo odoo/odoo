@@ -7,4 +7,5 @@ from . import survey_question
 from . import survey_user_input
 from . import badge
 from . import challenge
+from . import ir_http
 from . import res_partner
