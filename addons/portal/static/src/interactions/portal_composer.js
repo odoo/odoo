@@ -33,6 +33,7 @@ export class PortalComposer extends Interaction {
     xmlTemplates = {
         "/portal/static/src/xml/portal_chatter.xml": [
             "portal.Chatter.Attachments",
+            "portal.Composer",
         ],
     };
 

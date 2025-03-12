@@ -6,9 +6,14 @@ import { renderToElement } from "@web/core/utils/render";
 export class CoursePrerequisite extends Interaction {
     static selector = ".o_wslides_js_prerequisite_course";
 
-    assetLibs = [
-        "website_slides.assets_widget_xml",
-    ];
+    // assetLibs = [
+    //     "website_slides.assets_widget_xml",
+    // ];
+    xmlTemplates = {
+        "/website_slides/static/src/xml/slide_course_prerequisite.xml": [
+            "slide.course.prerequisite",
+        ],
+    };
 
     start() {
         const bsPopover = window.Popover.getOrCreateInstance(this.el, {

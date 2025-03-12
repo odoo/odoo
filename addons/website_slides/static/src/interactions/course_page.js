@@ -15,9 +15,14 @@ export class CoursePage extends Interaction {
         },
     };
 
-    assetLibs = [
-        "website_slides.assets_widget_xml",
-    ];
+    // assetLibs = [
+    //     "website_slides.assets_widget_xml",
+    // ];
+    xmlTemplates = {
+        "/website_slides/static/src/xml/website_slides_sidebar.xml": [
+            "website.slides.sidebar.done.button",
+        ],
+    };
 
     /**
      * @param {Integer} nextCategoryId
