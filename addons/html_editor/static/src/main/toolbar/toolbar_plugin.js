@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isZWS } from "@html_editor/utils/dom_info";
+import { isContentEditable, isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
 import { isTextNode } from "@web/views/view_compiler";
 import { Toolbar } from "./toolbar";
@@ -307,10 +307,19 @@ export class ToolbarPlugin extends Plugin {
             return true;
         }
         const isCollapsed = selectionData.editableSelection.isCollapsed;
+        const { anchorNode, focusNode } = selectionData.editableSelection;
         if (isCollapsed) {
-            return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
+            return !!closestElement(anchorNode, "td.o_selected_td");
         }
-        return this.getFilterTraverseNodes().length;
+        const traversedNodes = this.getFilterTraverseNodes();
+        return traversedNodes.filter(
+            (node) =>
+                (node.nodeType === Node.ELEMENT_NODE &&
+                    node.matches("[t-field], [t-out], [t-esc]") &&
+                    isContentEditable(anchorNode) &&
+                    isContentEditable(focusNode)) ||
+                isContentEditable(node)
+        ).length;
     }
 
     shouldPreventClosing(selectionData) {
