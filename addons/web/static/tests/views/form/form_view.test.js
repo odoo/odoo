@@ -12593,3 +12593,72 @@ test(`open x2many with non inline form view, delayed get_views, form destroyed`,
     // everything should have gone smoothly, nothing should have happened as the view is destroyed
     expect.verifySteps(["get_views", "get_views"]);
 });
+
+test.tags("desktop");
+test("executing new action, closes dialog, and avoid reload previous view", async () => {
+    onRpc(({ method }) => expect.step(method));
+    defineActions([
+        {
+            id: 1,
+            xml_id: "someaction",
+            res_id: 1,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            target: "new",
+            views: [[false, "form"]],
+        },
+    ]);
+    Partner._views = {
+        form: `
+            <form>
+                <sheet>
+                    <div name="button_box" class="oe_button_box test">
+                        <button class="oe_stat_button" type="action" name="someaction">
+                            Test
+                        </button>
+                    </div>
+                </sheet>
+            </form>`,
+        kanban: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo" />
+                    </t>
+                </templates>
+            </kanban>`,
+        search: `<search/>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_id: 1,
+        type: "ir.actions.act_window",
+        target: "current",
+        res_model: "partner",
+        view_mode: "form",
+        views: [[false, "form"]],
+    });
+
+    expect(`.o_form_view`).toHaveCount(1);
+    expect.verifySteps(["get_views", "web_read"]);
+
+    await contains(`.oe_stat_button`).click();
+    await animationFrame();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+
+    await getService("action").doAction({
+        type: "ir.actions.act_window",
+        res_model: "partner",
+        view_mode: "kanban",
+        views: [[false, "kanban"]],
+    });
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect.verifySteps([
+        "get_views",
+        //"web_read", We shouldn't be doing a web_read for the view that we are leaving.
+        "get_views",
+        "web_search_read",
+        "has_group",
+    ]);
+});
