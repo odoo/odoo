@@ -55,6 +55,9 @@ class EventMail(models.Model):
     mail_registration_ids = fields.One2many(
         'event.mail.registration', 'scheduler_id',
         help='Communication related to event registrations')
+    mail_slot_ids = fields.One2many(
+        'event.mail.slot', 'scheduler_id',
+        help='Slot-based communication')
     mail_done = fields.Boolean("Sent", copy=False, readonly=True)
     mail_state = fields.Selection(
         [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent'), ('error', 'Error')],
@@ -104,6 +107,9 @@ class EventMail(models.Model):
         for scheduler in self._filter_template_ref():
             if scheduler.interval_type == 'after_sub':
                 scheduler._execute_attendee_based()
+            elif scheduler.event_id.is_multi_slots:
+                # determine which slots to do
+                scheduler._execute_slot_based()
             else:
                 # before or after event -> one shot communication, once done skip
                 if scheduler.mail_done:
@@ -114,11 +120,17 @@ class EventMail(models.Model):
             scheduler.error_datetime = False
         return True
 
-    def _execute_event_based(self):
+    def _execute_event_based(self, mail_slot=False):
         """ Main scheduler method when running in event-based mode aka
         'after_event' or 'before_event' (and their negative counterparts).
         This is a global communication done once i.e. we do not track each
-        registration individually. """
+        registration individually.
+
+        :param mail_slot: optional slot-specific event communication, when
+          event uses slots. In that case, it works like the classic event
+          communication (iterative, ...) but information is specific to each
+          slot (last registration, scheduled datetime, ...)
+        """
         auto_commit = not modules.module.current_test
         batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
@@ -126,19 +138,22 @@ class EventMail(models.Model):
         cron_limit = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.render.cron.limit')
         ) or 1000  # be sure to not have 0, as otherwise we will loop
+        scheduler_record = mail_slot or self
 
         # fetch registrations to contact
         registration_domain = [
             ('event_id', '=', self.event_id.id),
             ('state', 'not in', ["draft", "cancel"]),
         ]
-        if self.last_registration_id:
+        if mail_slot:
+            registration_domain += [('slot_id', '=', mail_slot.event_slot_id.id)]
+        if scheduler_record.last_registration_id:
             registration_domain += [('id', '>', self.last_registration_id.id)]
         registrations = self.env["event.registration"].search(registration_domain, limit=(cron_limit + 1), order="id ASC")
 
         # no registrations -> done
         if not registrations:
-            self.mail_done = True
+            scheduler_record.mail_done = True
             return
 
         # there are more than planned for the cron -> reschedule
@@ -148,9 +163,9 @@ class EventMail(models.Model):
 
         for registrations_chunk in tools.split_every(batch_size, registrations.ids, self.env["event.registration"].browse):
             self._execute_event_based_for_registrations(registrations_chunk)
-            self.last_registration_id = registrations_chunk[-1]
+            scheduler_record.last_registration_id = registrations_chunk[-1]
 
-            self._refresh_mail_count_done()
+            self._refresh_mail_count_done(mail_slot=mail_slot)
             if auto_commit:
                 self.env.cr.commit()
                 # invalidate cache, no need to keep previous content in memory
@@ -166,6 +181,29 @@ class EventMail(models.Model):
         if self.notification_type == "mail":
             self._send_mail(registrations)
         return True
+
+    def _execute_slot_based(self):
+        """ Main scheduler method when running in slot-based mode aka
+        'after_event' or 'before_event' (and their negative counterparts) on
+        events with slots. This is a global communication done once i.e. we do
+        not track each registration individually. """
+        # create slot-specific schedulers if not existing
+        missing_slots = self.event_id.slot_ids - self.mail_slot_ids.event_slot_id
+        if missing_slots:
+            self.write({'mail_slot_ids': [
+                (0, 0, {'event_slot_id': slot.id})
+                for slot in missing_slots
+            ]})
+
+        # filter slots to contact
+        now = fields.Datetime.now()
+        for mail_slot in self.mail_slot_ids:
+            # before or after event -> one shot communication, once done skip
+            if mail_slot.mail_done:
+                continue
+            # do not send emails if the mailing was scheduled before the event but the event is over
+            if mail_slot.scheduled_date <= now and (self.interval_type not in ('before_event', 'after_event_start') or self.event_id.date_end > now):
+                self._execute_event_based(mail_slot=mail_slot)
 
     def _execute_attendee_based(self):
         """ Main scheduler method when running in attendee-based mode aka
@@ -254,7 +292,7 @@ class EventMail(models.Model):
                 } for registration in registrations])
         return new
 
-    def _refresh_mail_count_done(self):
+    def _refresh_mail_count_done(self, mail_slot=False):
         for scheduler in self:
             if scheduler.interval_type == "after_sub":
                 total_sent = self.env["event.mail.registration"].search_count([
@@ -262,6 +300,17 @@ class EventMail(models.Model):
                     ("mail_sent", "=", True),
                 ])
                 self.mail_count_done = total_sent
+            elif mail_slot and mail_slot.last_registration_id:
+                total_sent = self.env["event.registration"].search_count([
+                    ("id", "<=", mail_slot.last_registration_id.id),
+                    ("event_id", "=", self.event_id.id),
+                    ("slot_id", "=", mail_slot.event_slot_id.id),
+                    ("state", "not in", ["draft", "cancel"]),
+                ])
+                mail_slot.mail_count_done = total_sent
+                mail_slot.mail_done = total_sent >= mail_slot.event_slot_id.seats_taken
+                self.mail_count_done = sum(self.mail_slot_ids.mapped('mail_count_done'))
+                self.mail_done = total_sent >= self.event_id.seats_taken
             elif scheduler.last_registration_id:
                 total_sent = self.env["event.registration"].search_count([
                     ("id", "<=", self.last_registration_id.id),
