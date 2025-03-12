@@ -354,22 +354,75 @@ describe("Around links", () => {
 });
 
 describe("Around icons", () => {
-    test("should move past the icon (ArrowRight)", async () => {
+    test("should correctly move cursor over icons (ArrowRight)", async () => {
         await testEditor({
             contentBefore: `<p>abc[]<span class="fa fa-music"></span>def</p>`,
-            contentBeforeEdit: `<p>abc[]<span class="fa fa-music" contenteditable="false">\u200b</span>def</p>`,
+            contentBeforeEdit: `<p>abc[]\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeffdef</p>`,
             stepFunction: keyPress("ArrowRight"),
-            contentAfterEdit: `<p>abc<span class="fa fa-music" contenteditable="false">\u200b</span>[]def</p>`,
+            contentAfterEdit: `<p>abc\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>[]\ufeffdef</p>`,
             contentAfter: `<p>abc<span class="fa fa-music"></span>[]def</p>`,
         });
+        await testEditor({
+            contentBefore: `<p><span class="fa fa-music"></span>[]<span class="fa fa-music"></span></p><p><br></p>`,
+            contentBeforeEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
+            stepFunction: keyPress("ArrowRight"),
+            contentAfterEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>[]\ufeff</p><p><br></p>`,
+            contentAfter: `<p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]</p><p><br></p>`,
+        });
+        await testEditor({
+            contentBefore: `<p><span class="fa fa-music"></span>[]<br><span class="fa fa-music"></span></p><p><br></p>`,
+            contentBeforeEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff[]<br>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
+            stepFunction: keyPress("ArrowRight"),
+            contentAfterEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
+            contentAfter: `<p><span class="fa fa-music"></span><br>[]<span class="fa fa-music"></span></p><p><br></p>`,
+        });
     });
-    test("should move past the icon (ArrowLeft)", async () => {
+    test("should correctly move cursor over icons (ArrowLeft)", async () => {
         await testEditor({
             contentBefore: `<p>abc<span class="fa fa-music"></span>[]def</p>`,
-            contentBeforeEdit: `<p>abc<span class="fa fa-music" contenteditable="false">\u200b</span>[]def</p>`,
+            contentBeforeEdit: `<p>abc\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff[]def</p>`,
             stepFunction: keyPress("ArrowLeft"),
-            contentAfterEdit: `<p>abc[]<span class="fa fa-music" contenteditable="false">\u200b</span>def</p>`,
+            contentAfterEdit: `<p>abc\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeffdef</p>`,
             contentAfter: `<p>abc[]<span class="fa fa-music"></span>def</p>`,
+        });
+        await testEditor({
+            contentBefore: `<p><span class="fa fa-music"></span><br><span class="fa fa-music"></span>[]</p>`,
+            contentBeforeEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff[]</p>`,
+            stepFunction: keyPress("ArrowLeft"),
+            contentAfterEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p>`,
+            contentAfter: `<p><span class="fa fa-music"></span><br>[]<span class="fa fa-music"></span></p>`,
+        });
+    });
+    test("should correctly move cursor over icons (ArrowUp)", async () => {
+        await testEditor({
+            contentBefore: `<p><br></p><p><span class="fa fa-music"></span></p><p>[]<br></p>`,
+            contentBeforeEdit: `<p><br></p><p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            stepFunction: keyPress("ArrowUp"),
+            contentAfterEdit: `<p><br></p><p>[]\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
+            contentAfter: `<p><br></p><p>[]<span class="fa fa-music"></span></p><p><br></p>`,
+        });
+        await testEditor({
+            contentBefore: `<p><br></p><p><span class="fa fa-music"></span><br>[]<span class="fa fa-music"></span></p>`,
+            contentBeforeEdit: `<p><br></p><p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p>`,
+            stepFunction: keyPress("ArrowDown"),
+            contentAfterEdit: `<p><br></p><p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff[]</p>`,
+            contentAfter: `<p><br></p><p><span class="fa fa-music"></span><br><span class="fa fa-music"></span>[]</p>`,
+        });
+    });
+    test("should correctly move cursor over icons (ArrowDown)", async () => {
+        await testEditor({
+            contentBefore: `<p>[]<br></p><p><span class="fa fa-music"></span></p><p><br></p>`,
+            contentBeforeEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p><p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
+            stepFunction: keyPress("ArrowDown"),
+            contentAfterEdit: `<p><br></p><p>[]\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
+            contentAfter: `<p><br></p><p>[]<span class="fa fa-music"></span></p><p><br></p>`,
+        });
+        await testEditor({
+            contentBefore: `<p>[]<span class="fa fa-music"></span><br><span class="fa fa-music"></span></p><p><br></p>`,
+            contentBeforeEdit: `<p>\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
+            stepFunction: keyPress("ArrowDown"),
+            contentAfterEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>[]\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
+            contentAfter: `<p><span class="fa fa-music"></span><br>[]<span class="fa fa-music"></span></p><p><br></p>`,
         });
     });
 });
