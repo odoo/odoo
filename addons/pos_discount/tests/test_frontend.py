@@ -6,6 +6,12 @@ from odoo import Command
 
 @tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
+    def setUp(self):
+        super().setUp()
+        self.partner_a.name = "AAAAAA"
+        self.main_pos_config.module_pos_discount = True
+        self.main_pos_config.discount_product_id = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False)
+
     def test_global_discount_tax_group_included(self):
         tax_10 = self.env['account.tax'].create({
             'name': "tax_10",
@@ -34,8 +40,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
 
-        self.main_pos_config.module_pos_discount = True
-        self.main_pos_config.discount_product_id = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False)
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_global_discount_tax_group', login="pos_user")
 
@@ -67,7 +71,30 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
 
-        self.main_pos_config.module_pos_discount = True
-        self.main_pos_config.discount_product_id = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False)
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_global_discount_tax_group_2', login="pos_user")
+
+    def test_invoice_order_with_global_discount(self):
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'lst_price': 100,
+            'taxes_id': [],
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_invoice_order_with_global_discount', login="pos_user")
+
+        current_session = self.main_pos_config.current_session_id
+        discount_product = self.main_pos_config.discount_product_id
+        order = current_session.order_ids[0]
+        discount_line = order.account_move.line_ids.filtered(lambda l: l.product_id.id == discount_product.id)
+        self.assertRecordValues(discount_line, [{
+            'quantity': 1.00,
+            'price_unit': -10.00,
+        }])
+        self.assertRecordValues(order.account_move, [{
+            'amount_untaxed': 90.0,
+            'amount_tax': 0.0,
+            'amount_total': 90.0,
+        }])
