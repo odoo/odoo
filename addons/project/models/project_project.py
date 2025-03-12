@@ -169,6 +169,7 @@ class Project(models.Model):
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
         tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_expand_full')
+    duration_tracking = fields.Json(groups="project.group_project_stages")
 
     update_ids = fields.One2many('project.update', 'project_id', export_string_translation=False)
     last_update_id = fields.Many2one('project.update', string='Last Update', copy=False, export_string_translation=False)
