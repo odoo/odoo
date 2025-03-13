@@ -721,6 +721,8 @@ class ProductProduct(models.Model):
                 continue
             if seller.date_end and seller.date_end < date:
                 continue
+            if params and params.get('force_uom') and seller.product_uom_id != uom_id and seller.product_uom_id != self.uom_id:
+                continue
             if partner_id and seller.partner_id not in [partner_id, partner_id.parent_id]:
                 continue
             if quantity is not None and float_compare(quantity_uom_seller, seller.min_qty, precision_digits=precision) == -1:
