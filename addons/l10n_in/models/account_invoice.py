@@ -109,13 +109,18 @@ class AccountMove(models.Model):
                     )
             return False
 
+        FiscalPosition = self.env['account.fiscal.position']
         for state_id, moves in self.grouped(_get_fiscal_state).items():
             if state_id:
                 virtual_partner = self.env['res.partner'].new({
                     'state_id': state_id.id,
                     'country_id': state_id.country_id.id,
                 })
-                moves.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(virtual_partner)
+                # Group moves by company to avoid multi-company conflicts
+                for company_id, company_moves in moves.grouped('company_id').items():
+                    company_moves.fiscal_position_id = FiscalPosition.with_company(
+                        company_id
+                    )._get_fiscal_position(virtual_partner)
             else:
                 super(AccountMove, moves)._compute_fiscal_position_id()
 
