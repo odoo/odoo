@@ -98,7 +98,7 @@ describe("Inlines and blocks in list item", () => {
                 <ul>
                     <li>
                         <h1>abc</h1>
-                        <p>abc[<i>def</i></p>]
+                        <p>abc[<i>def</i>]</p>
                     </li>
                 </ul>
             `),
