@@ -8,11 +8,12 @@ from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
 from odoo.tools.misc import limited_field_access_token, mute_logger
 from odoo.addons.bus.models.bus import json_dump
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 
 
 @tagged("post_install", "-at_install")
-class ChatbotCase(chatbot_common.ChatbotCase):
+class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
     def test_chatbot_duplicate(self):
         """ In this test we make sure that 'triggering_answer_ids' are correctly duplicated and
