@@ -524,7 +524,11 @@ class AccountMoveSend(models.AbstractModel):
 
         self._generate_dynamic_reports(moves_data)
 
-        for move, move_data in [(move, move_data) for move, move_data in moves_data.items() if move.partner_id.email]:
+        for move, move_data in [
+            (move, move_data)
+            for move, move_data in moves_data.items()
+            if move.partner_id.email or move_data.get('mail_partner_ids')
+        ]:
             mail_template = move_data['mail_template']
             mail_lang = move_data['mail_lang']
             mail_params = self._get_mail_params(move, move_data)
