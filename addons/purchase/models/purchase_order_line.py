@@ -544,10 +544,12 @@ class PurchaseOrderLine(models.Model):
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
-
-        price_unit = ((seller.product_uom_id or seller.product_tmpl_id.uom_id)._compute_price(seller.price, product_uom) if product_uom else seller.price) if seller else product_id.standard_price
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(
+        if seller:
+            price_unit = ((seller.product_uom_id or seller.product_tmpl_id.uom_id)._compute_price(seller.price, product_uom) if product_uom else seller.price)
+            price_unit = self.env['account.tax']._fix_tax_included_price_company(
             price_unit, product_taxes, taxes, company_id)
+        else:
+            price_unit = 0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id._convert(
                 price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())
