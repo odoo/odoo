@@ -65,6 +65,7 @@ const {
         entries: $entries,
         getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
         getPrototypeOf: $getPrototypeOf,
+        keys: $keys,
         hasOwn: $hasOwn,
     },
     ontouchcancel,
@@ -412,7 +413,7 @@ export function getViewPortWidth() {
 export function mockMatchMedia(values) {
     $assign(mockMediaValues, values);
 
-    callMediaQueryChanges(Object.keys(values));
+    callMediaQueryChanges($keys(values));
 }
 
 /**

@@ -136,7 +136,7 @@ const getConstructor = (value) => {
             class {
                 static name = className;
                 constructor(...values) {
-                    Object.assign(this, ...values);
+                    $assign(this, ...values);
                 }
             }
         );
