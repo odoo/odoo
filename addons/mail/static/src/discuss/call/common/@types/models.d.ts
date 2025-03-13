@@ -24,6 +24,7 @@ declare module "models" {
     }
     export interface Thread {
         activeRtcSession: RtcSession;
+        cancelRtcInvitationTimeout: number|undefined;
         hadSelfSession: boolean;
         lastSessionIds: Set<number>;
         rtcInvitingSession: RtcSession;

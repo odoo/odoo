@@ -1,6 +1,10 @@
 declare module "models" {
+    export interface Message {
+        disableChatbotAnswers: boolean;
+    }
     export interface Store {
         activeLivechats: Thread[];
+        guest_token: null;
         livechat_available: boolean;
         livechat_rule: LivechatChannelRule;
     }
@@ -13,6 +17,8 @@ declare module "models" {
         livechat_active: boolean;
         livechat_operator_id: Persona;
         livechatWelcomeMessage: Message;
+        readyToSwapDeferred: Deferred;
         requested_by_operator: boolean;
+        storeAsActiveLivechats: Store;
     }
 }
