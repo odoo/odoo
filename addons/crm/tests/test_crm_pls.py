@@ -281,9 +281,9 @@ class TestCrmPls(CrmPlsCommon):
         self.assertEqual(lead_9_phone_state_freq.lost_count, 1.1)
         self.assertEqual(lead_9_email_state_freq.lost_count, 0.0)  # frequency does not exist
 
-        # B. Test Live Increment
         leads[4].action_set_lost()
         leads[9].action_set_won()
+        Lead._process_pls_pending_updates()
 
         # re-get frequencies that did not exists before
         lead_9_country_freq = LeadScoringFrequency.search([('team_id', '=', leads[9].team_id.id), ('variable', '=', 'country_id'), ('value', '=', leads[9].country_id.id)])
@@ -321,6 +321,8 @@ class TestCrmPls(CrmPlsCommon):
 
         # Restore -> Should decrease lost
         leads[4].action_unarchive()
+        Lead._process_pls_pending_updates()
+
         self.assertEqual(leads[4].won_status, 'pending')
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
@@ -346,6 +348,8 @@ class TestCrmPls(CrmPlsCommon):
 
         # set to won stage -> Should increase won
         leads[4].stage_id = won_stage_id
+        Lead._process_pls_pending_updates()
+
         self.assertEqual(leads[4].won_status, 'won')
         self.assertEqual(lead_4_stage_0_freq.won_count, 2.1)  # + 1
         self.assertEqual(lead_4_stage_won_freq.won_count, 2.1)  # + 1
@@ -361,6 +365,8 @@ class TestCrmPls(CrmPlsCommon):
         # Archive in won stage -> Should NOT decrease won NOR increase lost
         # as lost = archived + 0% and WON = won_stage (+ 100%)
         leads[4].action_archive()
+        Lead._process_pls_pending_updates()
+
         self.assertEqual(leads[4].won_status, 'won')
         self.assertEqual(lead_4_stage_0_freq.won_count, 2.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 2.1)  # unchanged
@@ -375,6 +381,8 @@ class TestCrmPls(CrmPlsCommon):
 
         # Move to original stage -> lead is not won anymore but not lost as probability != 0
         leads[4].stage_id = stage_ids[0]
+        Lead._process_pls_pending_updates()
+
         self.assertEqual(leads[4].won_status, 'pending')
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # -1
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # -1
@@ -389,6 +397,8 @@ class TestCrmPls(CrmPlsCommon):
 
         # force proba to 0% -> as already archived, will be lost (lost = archived AND 0%)
         leads[4].probability = 0
+        Lead._process_pls_pending_updates()
+
         self.assertEqual(leads[4].won_status, 'lost')
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
@@ -403,6 +413,8 @@ class TestCrmPls(CrmPlsCommon):
 
         # Restore -> Should decrease lost - at the end, frequencies should be like first frequencyes tests (except for 0.0 -> 0.1)
         leads[4].action_unarchive()
+        Lead._process_pls_pending_updates()
+
         self.assertEqual(leads[4].won_status, 'pending')
         self.assertEqual(lead_4_stage_0_freq.won_count, 1.1)  # unchanged
         self.assertEqual(lead_4_stage_won_freq.won_count, 1.1)  # unchanged
@@ -481,6 +493,7 @@ class TestCrmPls(CrmPlsCommon):
         leads_with_tags[136:150].action_set_won()   # 30% won on tag 1 and 2
         # tag 1 : won = 19+14  /  lost = 30+35
         # tag 2 : won = 9+14  /  lost = 40+35
+        Lead._process_pls_pending_updates()
 
         tag_1_freq = LeadScoringFrequency.search([('variable', '=', 'tag_id'), ('value', '=', tag_ids[0])])
         tag_2_freq = LeadScoringFrequency.search([('variable', '=', 'tag_id'), ('value', '=', tag_ids[1])])
@@ -565,7 +578,9 @@ class TestCrmPls(CrmPlsCommon):
 
     def test_predictive_lead_scoring_always_won(self):
         """ The computation may lead scores close to 100% (or 0%), we check that pending
-        leads are always in the ]0-100[ range."""
+        leads are always in the ]0-100[ range. Note that having a probability of 100% is
+        not enough to be considered won as stage must now be won too. Still, the value is
+        still capped in order to clarify that the lead is not won yet. This could be changed."""
         Lead = self.env['crm.lead']
         LeadScoringFrequency = self.env['crm.lead.scoring.frequency']
         country_id = self.env['res.country'].search([], limit=1).id
@@ -811,6 +826,8 @@ class TestCrmPlsSides(CrmPlsCommon):
         lead.write({'probability': 90})
         self.assertEqual(lead.won_status, 'pending')
         lead.action_set_won()
+        self.env['crm.lead']._process_pls_pending_updates()
+
         self.assertEqual(lead.probability, 100)
         self.assertTrue(lead.stage_id.is_won)
         self.assertEqual(lead.won_status, 'won')
@@ -826,6 +843,8 @@ class TestCrmPlsSides(CrmPlsCommon):
 
         # Restore the lead in a non won stage. won_count = lost_count = 0.1 in frequency table. P = 50%
         lead.write({'stage_id': stage_in_progress.id, 'active': True})
+        self.env['crm.lead']._process_pls_pending_updates()
+
         self.assertFalse(lead.probability == 100)
         self.assertEqual(lead.won_status, 'pending')
 
