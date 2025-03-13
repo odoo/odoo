@@ -8,10 +8,6 @@
             <form string="Pack App">
                 <sheet>
                     <header>
-<!--                        <button name="scan_pc_container"-->
-<!--                                type="object"-->
-<!--                                string="Pack Products"-->
-<!--                                class="btn-primary"/>-->
                         <button name="scan_pc_container_code_pack"
                                 type="object"
                                 string="Pack Products"
@@ -28,7 +24,7 @@
                             <field name="name"/>
                         </group>
                         <group>
-                            <field name="automation_bulk_manual"/>
+<!--                            <field name="automation_bulk_manual"/>-->
                             <field name="site_code_id" invisible="1"/>
                         </group>
                     </group>
@@ -48,10 +44,12 @@
                                     <field name="product_id"
                                            force_save="1"
                                            create="false" required="not display_type"/>
+                                    <field name="picking_id"/>
+                                    <field name="sale_order_id"/>
                                     <field name="name"/>
                                     <field name="sku_code"/>
                                     <field name="quantity"/>
-                                    <field name="available_quantity" column_invisible="1"/>
+                                    <field name="available_quantity" column_invisible="0"/>
                                     <field name="remaining_quantity" column_invisible="1"/>
                                     <field name="display_type" column_invisible="1"/>
                                     <field name="display_type_line_section" column_invisible="True"/>
@@ -66,22 +64,23 @@
     </record>
 
 <!--        Tree View of Crate Barcode Configuration-->
-<!--    <record id="view_custom_pack_app" model="ir.ui.view">-->
-<!--        <field name="name">custom.pack.app.tree</field>-->
-<!--        <field name="model">custom.pack.app</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <tree string="">-->
-<!--                <field name="name"/>-->
+    <record id="view_custom_pack_app_tree" model="ir.ui.view">
+            <field name="name">custom.pack.app.tree</field>
+            <field name="model">custom.pack.app</field>
+            <field name="arch" type="xml">
+                <tree string="Pack App">
+                    <field name="name"/>
 <!--                <field name="automation_bulk_manual"/>-->
-<!--            </tree>-->
-<!--        </field>-->
-<!--    </record>-->
+                <field name="pack_app_line_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
 
     <!--    Action for Crate barcode configuration model-->
     <record id="action_custom_pack_app" model="ir.actions.act_window">
         <field name="name">PACK APP</field>
         <field name="res_model">custom.pack.app</field>
         <field name="view_mode">tree,form</field>
-        <!--        <field name="view_id" ref="view_crate_barcode_configuration_tree"/>-->
+                <field name="view_id" ref="view_custom_pack_app_tree"/>
     </record>
 </odoo>
