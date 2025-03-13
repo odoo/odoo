@@ -108,10 +108,10 @@ class HrEmployee(models.Model):
     emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char("Contact Phone", groups="hr.group_hr_user", tracking=True)
 
-    gender = fields.Selection([
+    legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user")
+    sex = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
-        ('other', 'Other')
     ], groups="hr.group_hr_user", tracking=True)
     place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
     country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
@@ -308,6 +308,12 @@ class HrEmployee(models.Model):
             or self.env.user.has_group("hr.group_hr_user")
             or field.name not in ('activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error')
         )
+
+    @api.depends('name')
+    def _compute_legal_name(self):
+        for employee in self:
+            if not employee.legal_name:
+                employee.legal_name = employee.name
 
     @api.depends_context('uid')
     @api.depends('version_ids')

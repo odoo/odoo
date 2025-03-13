@@ -64,6 +64,7 @@
                                 invisible="not active or not id" context="{'sort_by_responsible': True}"/>
                         <field name="selected_version_id" widget="statusbar_employee" options="{'clickable': '1'}"/>
                         <button name="%(hr_employee_version_wizard_action)d" icon="fa-plus" string="New Version" type="action"/>
+                        <button name="%(hr_employee_version_wizard_action)d" icon="fa-plus" string="New Contract" type="action"/>
                     </header>
                     <sheet>
                         <div class="row justify-content-between position-relative w-100 m-0 mb-2">
@@ -135,7 +136,8 @@
                                         <field name="mobile_phone" widget="phone"/>
                                     </group>
                                     <group string="Birth Information">
-                                        <field name="gender"/>
+                                        <field name="legal_name"/>
+                                        <field name="sex"/>
                                         <label for="birthday"/>
                                         <div class="o_row" name="div_km_home_work">
                                             <field name="birthday" class="o_hr_narrow_field"/>
@@ -238,6 +240,11 @@
                                         </group>
 
                                     </div>
+                                </div>
+                            </page>
+                            <page name="contract" string="Contract">
+                                <div class="alert alert-info" role="alert" invisible="contract_ids">
+                                    This employee doesn't have any contract, create one first.
                                 </div>
                             </page>
                         </notebook>
