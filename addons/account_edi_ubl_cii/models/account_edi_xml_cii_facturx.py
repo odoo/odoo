@@ -245,7 +245,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             'vat': self._find_value(f".//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID[string-length(text()) > 5]", tree),
             'name': self._find_value(f".//ram:{role}/ram:Name", tree),
             'phone': self._find_value(f".//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber", tree),
-            'email': self._find_value(f".//ram:{role}//ram:URIID[@schemeID='SMTP']", tree),
+            'email': self._find_value(f".//ram:{role}//ram:EmailURIUniversalCommunication/ram:URIID", tree),
             'country_code': self._find_value(f'.//ram:{role}/ram:PostalTradeAddress//ram:CountryID', tree),
         }
 
