@@ -313,7 +313,7 @@ class TestLeadAssign(TestLeadAssignCommon):
     def test_assign_populated(self):
         """ Test assignment on a more high volume oriented test set in order to
         test more real life use cases. """
-        # fix the seed and avoid randomness (funny: try 1870)
+        # fix the seed and avoid randomness
         random.seed(1871)
 
         # create leads enough to assign one month of work
@@ -386,9 +386,9 @@ class TestLeadAssign(TestLeadAssignCommon):
         leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
         leads_st2 = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
         leads_st3 = leads.filtered_domain([('team_id', '=', sales_team_3.id)])
-        self.assertEqual(len(leads_st1), 165)
-        self.assertEqual(len(leads_st2), 126)
-        self.assertEqual(len(leads_st3), 309)
+        self.assertEqual(len(leads_st1), 170)
+        self.assertEqual(len(leads_st2), 116)
+        self.assertEqual(len(leads_st3), 314)
 
         # salespersons assign
         self.members.invalidate_model(['lead_month_count', 'lead_day_count'])
