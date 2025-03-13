@@ -1012,7 +1012,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order_sudo = request.cart
         if redirection := self._check_cart(order_sudo):
-            return redirection
+            return json.dumps({'redirectUrl': redirection.location})
 
         # Retrieve the partner whose address to update, if any, and its address type.
         partner_sudo, address_type = self._prepare_address_update(
