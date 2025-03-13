@@ -102,10 +102,6 @@ class DeliveryCarrier(models.Model):
     def _get_packages_from_order(self, order, default_package_type):
         packages = []
 
-        total_cost = 0
-        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
-            total_cost += self._product_price_to_company_currency(line.product_qty, line.product_id, order.company_id)
-
         total_weight = order._get_estimated_weight() + default_package_type.base_weight
         order_weight = self.env.context.get('order_weight', False)
         total_weight = order_weight or total_weight
@@ -116,28 +112,72 @@ class DeliveryCarrier(models.Model):
         # more in the max weight than in the total weight, so that it only
         # creates ONE package with everything.
         max_weight = default_package_type.max_weight or total_weight + 1
-        total_full_packages = int(total_weight / max_weight)
-        last_package_weight = total_weight % max_weight
-
-        package_weights = [max_weight] * total_full_packages + ([last_package_weight] if last_package_weight else [])
-        partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
         order_commodities = self._get_commodities_from_order(order)
 
         # Split the commodities value uniformly as well
-        for commodity in order_commodities:
-            commodity.monetary_value /= len(package_weights)
-            commodity.qty = max(1, commodity.qty // len(package_weights))
+        package_infos = self._fill_packages(order, max_weight, total_weight, order_commodities)
 
-        for weight in package_weights:
+        for package_info in package_infos:
             packages.append(DeliveryPackage(
-                order_commodities,
-                weight,
+                package_info['products'],
+                package_info['weight'],
                 default_package_type,
-                total_cost=partial_cost,
+                total_cost=package_info['cost'],
                 currency=order.company_id.currency_id,
                 order=order,
             ))
         return packages
+
+    def _fill_packages(self, order, max_weight, total_weight, commodities):
+        # Find total weight and how many packages it will take to fit.
+        total_full_packages = int(total_weight / max_weight)
+        last_package_weight = total_weight % max_weight
+
+        package_weights = [max_weight] * total_full_packages + ([last_package_weight] if last_package_weight else [])
+        commodities = sorted(commodities, key=lambda comm: comm.product_id.weight, reverse=True)
+        remaining_commodities = {commodity.product_id: commodity.qty for commodity in commodities}
+
+        packages_filled = []
+
+        for weight in package_weights:
+            remaining_weight = weight
+            package = {
+                'products': [],
+                'weight': weight,
+                'cost': 0,
+            }
+            # Try to fill the package with products from the remaining commodities
+            for commodity in commodities:
+                product_id = commodity.product_id
+                product_weight = product_id.weight
+
+                # Skip the product if there is no quantity left to place in packages
+                if remaining_commodities[product_id] > 0:
+                    max_qty_fit = float_round(remaining_weight / product_weight, precision_digits=0, rounding_method="HALF-DOWN")
+
+                    if max_qty_fit > 0:
+                        # Determine how many units of this product we can add
+                        qty_to_add = min(remaining_commodities[product_id], max_qty_fit)
+                        package['products'].append(DeliveryCommodity(
+                            product_id,
+                            amount=qty_to_add,
+                            monetary_value=commodity.monetary_value,
+                            country_of_origin=commodity.country_of_origin,
+                        ))
+                        # Update the remaining weight and the remaining quantity of the product
+                        remaining_weight -= qty_to_add * product_weight
+                        remaining_commodities[product_id] -= qty_to_add
+
+                        package['cost'] += self._product_price_to_company_currency(
+                            qty_to_add, product_id, order.company_id
+                        )
+
+                # If the package is full, stop checking for more products
+                if remaining_weight <= 0:
+                    break
+            # Add the filled package to the result
+            packages_filled.append(package)
+        return packages_filled
 
     def _get_packages_from_picking(self, picking, default_package_type):
         packages = []
