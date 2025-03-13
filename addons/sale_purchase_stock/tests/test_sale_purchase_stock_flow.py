@@ -372,3 +372,51 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.mto_product, sale_order.picking_ids.move_ids.location_id, 1)
         sale_order.picking_ids.action_assign()
         self.assertEqual(sale_order.picking_ids.move_ids.quantity, 1)
+
+    def test_purchase_order_uom(self):
+        fuzzy_drink = self.env['product.product'].create({
+            'name': 'Fuzzy Drink',
+            'is_storable': True,
+            'route_ids': [Command.set((self.mto_route + self.buy_route).ids)],
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'seller_ids': [Command.create({
+                'partner_id': self.vendor.id,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                'price': 1,
+            }),
+            Command.create({
+                'partner_id': self.vendor.id,
+                'product_uom_id': self.env.ref('uom.product_uom_pack_6').id,
+                'min_qty': 2,
+                'price': 5,
+            })],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'name': fuzzy_drink.name,
+                'product_id': fuzzy_drink.id,
+                'product_uom_qty': 10,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            })],
+        })
+        so.action_confirm()
+        po = so._get_purchase_orders()
+        self.assertEqual(po.order_line.product_uom_id, self.env.ref('uom.product_uom_unit'))
+        self.assertEqual(po.order_line.product_qty, 10)
+        self.assertEqual(po.order_line.price_unit, 1)
+        po.button_cancel()
+
+        so = so.copy({
+            'order_line': [Command.create({
+                'name': fuzzy_drink.name,
+                'product_id': fuzzy_drink.id,
+                'product_uom_qty': 15,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            })]
+        })
+        so.action_confirm()
+        po = so._get_purchase_orders()
+        self.assertEqual(po.order_line.product_uom_id, self.env.ref('uom.product_uom_pack_6'))
+        self.assertEqual(po.order_line.product_qty, 2.5)
+        self.assertEqual(po.order_line.price_unit, 5)

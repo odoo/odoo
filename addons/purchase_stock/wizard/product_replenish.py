@@ -42,7 +42,6 @@ class ProductReplenish(models.TransientModel):
     def _prepare_run_values(self):
         res = super()._prepare_run_values()
         if self.supplier_id:
-            res['supplierinfo_id'] = self.supplier_id
             res['group_id'].partner_id = self.supplier_id.partner_id
         return res
 

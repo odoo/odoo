@@ -58,4 +58,20 @@ class PurchaseTestCommon(TestStockCommon):
             'login': "pu",
             'email': "purchaseuser@yourcompany.com",
             'group_ids': [Command.set([cls.env.ref('purchase.group_purchase_user').id])],
+            })
+
+        cls.fuzzy_drink = cls.env['product.product'].create({
+            'name': 'Fuzzy Drink',
+            'is_storable': True,
+            'route_ids': [Command.set([cls.route_buy.id, cls.route_mto.id])],
+            'seller_ids': [Command.create({
+                'partner_id': cls.partner_1.id,
+                'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                'price': 1.0,
+            }), Command.create({
+                'partner_id': cls.partner_1.id,
+                'product_uom_id': cls.env.ref('uom.product_uom_pack_6').id,
+                'price': 5.0,
+                'min_qty': 2,
+            })]
         })

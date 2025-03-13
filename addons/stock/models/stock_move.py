@@ -142,6 +142,7 @@ class StockMove(models.Model):
         'Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
     scrap_id = fields.Many2one('stock.scrap', 'Scrap operation', readonly=True, check_company=True, index='btree_not_null')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id, index=True)
+    procurement_values = fields.Json(store=False, help="Dummy field to store procurement values to propagate them to later steps")
     rule_id = fields.Many2one(
         'stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move',
         check_company=True)
@@ -1671,6 +1672,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'priority': self.priority,
             'orderpoint_id': self.orderpoint_id,
             'packaging_uom_id': self.packaging_uom_id,
+            'procurement_values': self.procurement_values,
         }
 
     def _get_mto_procurement_date(self):
