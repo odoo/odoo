@@ -30,7 +30,7 @@ E-invoice implementation
     ],
     'assets': {
         'web.assets_frontend': [
-            'l10n_it_edi/static/src/js/address.js',
+            'l10n_it_edi/static/src/interactions/**/*',
         ],
         'web.assets_tests': [
             'l10n_it_edi/static/tests/tours/*.js',
