@@ -6,6 +6,7 @@ import json
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.tools import format_amount
 
 
 class LoyaltyReward(models.Model):
@@ -64,6 +65,7 @@ class LoyaltyReward(models.Model):
         selection=[
             ('product', "Free Product"),
             ('discount', "Discount"),
+            ('fixed', "Fixed Price"),
         ],
         required=True,
         default='discount',
@@ -96,7 +98,7 @@ class LoyaltyReward(models.Model):
     all_discount_product_ids = fields.Many2many(
         comodel_name='product.product', compute='_compute_all_discount_product_ids'
     )
-    reward_product_domain = fields.Char(compute='_compute_reward_product_domain', store=False)
+    reward_product_domain = fields.Char(compute='_compute_reward_product_domain')
     discount_max_amount = fields.Monetary(
         string="Max Discount",
         help="This is the max amount this reward may discount, leave to 0 for no limit.",
@@ -128,10 +130,15 @@ class LoyaltyReward(models.Model):
         comodel_name='uom.uom', compute='_compute_reward_product_uom_id'
     )
 
+    # Fixed amount rewards
+    fixed_amount_per_unit = fields.Monetary(string="Fixed Amount Per Unit")
+
     repeater = fields.Integer(string="Repeater", default=2)
     required_points = fields.Float(string="Points needed", default=1)
     point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
-    clear_wallet = fields.Boolean(default=False)
+    clear_wallet = fields.Boolean(
+        compute='_compute_clear_wallet', precompute=True, store="True", readonly=False
+    )
 
     _repeater_positive = models.Constraint(
         'CHECK (repeater > 0)',
@@ -149,11 +156,21 @@ class LoyaltyReward(models.Model):
         "CHECK (reward_type != 'discount' OR discount > 0)",
         "The discount must be strictly positive.",
     )
+    _fixed_amount_clear_wallet = models.Constraint(
+        "CHECK (reward_type != 'fixed' OR clear_wallet)",
+        "A fixed amount reward must clear the wallet.",
+    )
 
     @api.depends('reward_product_id.product_tmpl_id.uom_id', 'reward_product_tag_id')
     def _compute_reward_product_uom_id(self):
         for reward in self:
             reward.reward_product_uom_id = reward.reward_product_ids.product_tmpl_id.uom_id[:1]
+
+    @api.depends('reward_type')
+    def _compute_clear_wallet(self):
+        for reward in self:
+            # Fixed rewards are incompatible with other rewards.
+            reward.clear_wallet = reward.reward_type == 'fixed'
 
     def _find_all_category_children(self, category_id, child_ids):
         if len(category_id.child_id) > 0:
@@ -238,33 +255,35 @@ class LoyaltyReward(models.Model):
         for reward in self:
             reward_string = ""
             if reward.program_type == 'gift_card':
-                reward_string = _("Gift Card")
+                reward_string = self.env._("Gift Card")
             elif reward.program_type == 'ewallet':
-                reward_string = _("eWallet")
+                reward_string = self.env._("eWallet")
             elif reward.reward_type == 'product':
                 products = reward.reward_product_ids
                 if len(products) == 0:
-                    reward_string = _("Free Product")
+                    reward_string = self.env._("Free Product")
                 elif len(products) == 1:
-                    reward_string = _("Free Product - %s", reward.reward_product_id.with_context(display_default_code=False).display_name)
+                    reward_string = self.env._(
+                        "Free Product - %s",
+                        products.with_context(display_default_code=False).display_name,
+                    )
                 else:
-                    reward_string = _("Free Product - [%s]", ', '.join(products.with_context(display_default_code=False).mapped('display_name')))
+                    reward_string = self.env._("Free Product - [%s]", ', '.join(
+                        products.with_context(display_default_code=False).mapped('display_name')
+                    ))
             elif reward.reward_type == 'discount':
-                format_string = "%(amount)g %(symbol)s"
-                if reward.currency_id.position == 'before':
-                    format_string = "%(symbol)s %(amount)g"
-                formatted_amount = format_string % {'amount': reward.discount, 'symbol': reward.currency_id.symbol}
+                formatted_amount = format_amount(self.env, reward.discount, reward.currency_id)
                 if reward.discount_mode == 'percent':
-                    reward_string = _("%g%% on ", reward.discount)
+                    reward_string = self.env._("%g%% on ", reward.discount)
                 elif reward.discount_mode == 'per_point':
-                    reward_string = _("%s per point on ", formatted_amount)
+                    reward_string = self.env._("%s per point on ", formatted_amount)
                 elif reward.discount_mode == 'per_order':
-                    reward_string = _("%s on ", formatted_amount)
+                    reward_string = self.env._("%s on ", formatted_amount)
                 if reward.discount_applicability == 'order':
-                    reward_string += _("your order")
+                    reward_string += self.env._("your order")
                 elif reward.discount_applicability == 'cheapest':
-                    reward_string = _(
-                        "Buy %(number_of_product)s, get %(reward_string) on the cheapest",
+                    reward_string = self.env._(
+                        "Buy %(number_of_product)s, get %(reward_string)s on the cheapest",
                         number_of_product=reward.repeater,
                         reward_string=reward_string,
                     )
@@ -273,13 +292,18 @@ class LoyaltyReward(models.Model):
                     if len(product_available) == 1:
                         reward_string += product_available.with_context(display_default_code=False).display_name
                     else:
-                        reward_string += _("specific products")
+                        reward_string += self.env._("specific products")
                 if reward.discount_max_amount:
-                    format_string = "%(amount)g %(symbol)s"
-                    if reward.currency_id.position == 'before':
-                        format_string = "%(symbol)s %(amount)g"
-                    formatted_amount = format_string % {'amount': reward.discount_max_amount, 'symbol': reward.currency_id.symbol}
-                    reward_string += _(" (Max %s)", formatted_amount)
+                    formatted_amount = format_amount(self.env, reward.discount_max_amount, reward.currency_id)
+                    reward_string += self.env._(" (Max %s)", formatted_amount)
+            elif reward.reward_type == 'fixed':
+                total_amount = reward.fixed_amount_per_unit*reward.required_points
+                formatted_amount = format_amount(self.env, total_amount, reward.currency_id)
+                reward_string = self.env._(
+                    "%(number_of_product)s for %(amount)s",
+                    number_of_product=reward.required_points,
+                    amount=formatted_amount,
+                )
             reward.description = reward_string
 
     @api.depends('reward_type', 'discount_applicability', 'discount_mode')
