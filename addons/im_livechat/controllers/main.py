@@ -27,15 +27,19 @@ class LivechatController(http.Controller):
             raise request.not_found()
         return self.assets_embed(ext, **kwargs)
 
+    def _is_cors_request(self):
+        headers = request.httprequest.headers
+        origin_url = urlsplit(headers.get("referer"))
+        return (
+            origin_url.netloc != headers.get("host")
+            or origin_url.scheme != request.httprequest.scheme
+        )
+
     @http.route('/im_livechat/assets_embed.<any(css, js):ext>', type='http', auth='public', cors='*')
     def assets_embed(self, ext, **kwargs):
         # If the request comes from a different origin, we must provide the CORS
         # assets to enable the redirection of routes to the CORS controller.
-        headers = request.httprequest.headers
-        origin_url = urlsplit(headers.get('referer'))
-        bundle = 'im_livechat.assets_embed_external'
-        if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
-            bundle = 'im_livechat.assets_embed_cors'
+        bundle = "im_livechat.assets_embed_cors" if self._is_cors_request() else "im_livechat.assets_embed_external"
         asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
         if ext not in ('css', 'js'):
             raise request.not_found()
