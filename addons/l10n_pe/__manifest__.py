@@ -31,7 +31,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'l10n_pe/static/src/js/address.js',
+            'l10n_pe/static/src/interactions/**/*',
         ],
     },
     'demo': [
