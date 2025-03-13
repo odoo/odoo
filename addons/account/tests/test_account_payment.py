@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from contextlib import contextmanager
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from unittest.mock import patch
@@ -222,12 +222,14 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         # So, change the payment partner_type beforehand rather than in the form view.
         payment.action_draft()
         payment.partner_type = 'supplier'
+        payment.date = '2024-01-01'
         pay_form = Form(payment)
         pay_form.currency_id = self.other_currency
         payment = pay_form.save()
         self.assertRecordValues(payment, [{
             **expected_payment_values,
             'partner_type': 'supplier',
+            'date': fields.Date.from_string('2024-01-01'),
             'destination_account_id': self.partner_a.property_account_payable_id.id,
             'currency_id': self.other_currency.id,
             'partner_id': self.partner_a.id,
@@ -236,6 +238,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             **expected_move_values,
             'currency_id': self.other_currency.id,
             'partner_id': self.partner_a.id,
+            'date': fields.Date.from_string('2024-01-01'),
         }])
         self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
             {
@@ -738,3 +741,24 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         self.assertEqual(payment.payment_method_line_id.journal_id, payment.journal_id)
         self.assertEqual(payment.journal_id, journal_bank)
+
+    def test_empty_string_payment_method(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice.action_post()
+
+        journal = self.company_data['default_journal_bank']
+        payment_method_line = journal.inbound_payment_method_line_ids.filtered(lambda pm: pm.code == "manual")
+        payment_method_line.write({
+            'name': False,
+            'payment_account_id': self.payment_debit_account_id.id,
+        })
+
+        self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_method_line_id': payment_method_line.id})\
+            ._create_payments()
+        self.assertEqual(invoice.state, "posted")
