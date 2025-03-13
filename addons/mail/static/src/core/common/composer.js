@@ -18,6 +18,7 @@ import {
     Component,
     markup,
     onMounted,
+    onWillUnmount,
     useChildSubEnv,
     useEffect,
     useRef,
@@ -195,6 +196,9 @@ export class Composer extends Component {
             if (!this.props.composer.text) {
                 this.restoreContent();
             }
+        });
+        onWillUnmount(() => {
+            this.props.composer.isFocused = false;
         });
     }
 
