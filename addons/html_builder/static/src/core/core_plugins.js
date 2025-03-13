@@ -6,6 +6,7 @@ import { CachedModelPlugin } from "./plugins/cached_model_plugin";
 import { ClonePlugin } from "./plugins/clone/clone_plugin";
 import { CoreBuilderActionPlugin } from "./plugins/core_builder_action_plugin";
 import { CustomizeTabPlugin } from "./plugins/customize_tab_plugin";
+import { DisableSnippetsPlugin } from "./plugins/disable_snippets_plugin";
 import { DragAndDropPlugin } from "./plugins/drag_and_drop/drag_and_drop_plugin";
 import { DropZonePlugin } from "./plugins/drop_zone_plugin";
 import { DropZoneSelectorPlugin } from "./plugins/dropzone_selector_plugin";
@@ -36,6 +37,7 @@ export const CORE_PLUGINS = [
     SaveSnippetPlugin,
     AnchorPlugin,
     DropZonePlugin,
+    DisableSnippetsPlugin,
     MediaWebsitePlugin,
     SetupEditorPlugin,
     SavePlugin,

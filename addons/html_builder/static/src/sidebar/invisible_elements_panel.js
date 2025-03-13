@@ -94,5 +94,6 @@ export class InvisibleElementsPanel extends Component {
             this.toggleElementVisibility(invisibleEntry.parents);
         }
         toggleVisibility(invisibleEntry.snippetEl);
+        this.env.editor.shared.disableSnippets.disableUndroppableSnippets();
     }
 }
