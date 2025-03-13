@@ -2000,7 +2000,6 @@ describe("Selection not collapsed", () => {
             });
         });
 
-        // @todo @phoenix: review this spec. It should not merge, like the test above.
         test("should extend the range to fully include contenteditable=false that are partially selected at the start of the range", async () => {
             await testEditor({
                 contentBefore: unformat(`
@@ -2013,7 +2012,7 @@ describe("Selection not collapsed", () => {
                     deleteBackward(editor);
                 },
                 contentAfter: unformat(`
-                        <p>before[]after</p>`),
+                        <p>before</p><p>[]after</p>`),
             });
         });
 
