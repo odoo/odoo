@@ -5,31 +5,37 @@
         <xpath expr="//div[hasclass('pos-receipt')]//div[hasclass('before-footer')]" position="inside">
             <t t-foreach="order.getLoyaltyPoints() or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                 <!-- Show only if portal_visible. -->
+                <div class="text-center">--------------------------------</div>
                 <div t-if="_loyaltyStat.program.portal_visible and (_loyaltyStat.points.won || _loyaltyStat.points.spent)" class='loyalty'>
-                    <span class="pos-receipt-center-align">
-                        <div>--------------------------------</div>
-                    </span>
                     <t t-if='_loyaltyStat.points.won'>
-                        <div><t t-esc="_loyaltyStat.points.name"/> Won: <span t-esc='_loyaltyStat.points.won' class="pos-receipt-right-align"/></div>
+                        <div>
+                            <spna><t t-out="_loyaltyStat.points.name"/> Won </spna>
+                            <span t-out='_loyaltyStat.points.won' class="pos-receipt-right-align"/>
+                        </div>
                     </t>
                     <t t-if='_loyaltyStat.points.spent'>
-                        <div><t t-esc="_loyaltyStat.points.name"/> Spent: <span t-esc='_loyaltyStat.points.spent' class="pos-receipt-right-align"/></div>
+                        <div>
+                            <span><t t-esc="_loyaltyStat.points.name"/> Spent </span>
+                            <span t-esc='_loyaltyStat.points.spent' class="pos-receipt-right-align"/>
+                        </div>
                     </t>
                     <!-- Don't use points.total, it's wrong in this context (after the order synced). -->
                     <!-- Show balance as it's updated during _postPushOrderResolve. -->
                     <t t-if='_loyaltyStat.points.balance'>
-                        <div>Balance <t t-esc="_loyaltyStat.points.name"/>: <span t-esc='_loyaltyStat.points.balance' class="pos-receipt-right-align"/></div>
+                        <div>
+                            <span>Balance <t t-esc="_loyaltyStat.points.name"/> </span>
+                            <span t-esc='_loyaltyStat.points.balance' class="pos-receipt-right-align"/>
+                        </div>
                     </t>
                 </div>
             </t>
             <t t-if="order.partner_id">
                 <br/>
-                <div>Customer <span t-esc='order.partner_id.name' class='pos-receipt-right-align'/></div>
+                <div class="loyalty-customer"><span class="fw-bolder">Customer </span><span t-esc='order.partner_id.name' class='pos-receipt-right-align'/></div>
             </t>
             <t t-if="order.new_coupon_info and order.new_coupon_info.length !== 0">
+                <div class="text-center">--------------------------------</div>
                 <div class="pos-coupon-rewards">
-                    <div>------------------------</div>
-                    <br/>
                     <div>
                         Coupon Codes
                     </div>
