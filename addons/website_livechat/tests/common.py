@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
 
 from odoo import fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.mail.tests.common import MailCommon
 
 
-class TestLivechatCommon(TransactionCaseWithUserDemo):
+class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
     def setUp(self):
         super().setUp()
         self.env.company.email = "test@test.example.com"

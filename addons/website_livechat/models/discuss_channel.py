@@ -2,7 +2,6 @@
 
 from odoo import fields, models, _
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import AccessError
 
 
 class DiscussChannel(models.Model):
@@ -25,48 +24,45 @@ class DiscussChannel(models.Model):
         if self.livechat_active and not self.message_ids:
             self.sudo().unlink()
 
-    def _to_store_defaults(self, for_current_user=True):
-        return super()._to_store_defaults(for_current_user=for_current_user) + ["add_visitor"]
+    def _field_store_repr(self, field_name):
+        if field_name == "visitor":
+            return [
+                Store.Attr(
+                    "visitor",
+                    lambda channel: Store.One(
+                        channel.livechat_visitor_id,
+                        [
+                            "country",
+                            "history",
+                            "is_connected",
+                            "lang_name",
+                            "name",
+                            "partner_id",
+                            "website_name",
+                        ],
+                    ),
+                    predicate=lambda channel: channel.livechat_visitor_id
+                    and self.livechat_visitor_id.has_access("read"),
+                ),
+            ]
+        if field_name == "requested_by_operator":
+            return [
+                Store.Attr(
+                    "requested_by_operator",
+                    lambda channel: channel.create_uid in channel.livechat_operator_id.user_ids,
+                    predicate=lambda channel: channel.livechat_visitor_id,
+                ),
+            ]
+        return super()._field_store_repr(field_name)
 
-    def _to_store(self, store: Store, fields):
-        """
-        Override to add visitor information on the mail channel infos.
-        This will be used to display a banner with visitor informations
-        at the top of the livechat channel discussion view in discuss module.
-        """
-        super()._to_store(store, [field for field in fields if field != "add_visitor"])
-        if "add_visitor" not in fields:
-            return
-        for channel in self.filtered('livechat_visitor_id'):
-            channel_info = {
-                "requested_by_operator": channel.create_uid in channel.livechat_operator_id.user_ids
-            }
-            visitor = channel.livechat_visitor_id
-            try:
-                country = visitor.partner_id.country_id or visitor.country_id
-                channel_info['visitor'] = {
-                    'name': visitor.partner_id.name or visitor.partner_id.display_name or visitor.display_name or _("Visitor #%(id)d.", id=visitor.id),
-                    "country": Store.One(country, "code"),
-                    'id': visitor.id,
-                    'is_connected': visitor.is_connected,
-                    'history': self.sudo()._get_visitor_history(visitor),
-                    'website_name': visitor.website_id.name,
-                    'lang_name': visitor.lang_id.name,
-                    'partner_id': visitor.partner_id.id,
-                    'type': "visitor",
-                }
-            except AccessError:
-                pass
-            store.add(channel, channel_info)
+    def _to_store_defaults(self, for_current_user=True):
+        return super()._to_store_defaults(for_current_user=for_current_user) + [
+            "requested_by_operator",
+            "visitor",
+        ]
 
     def _get_visitor_history(self, visitor):
-        """
-        Prepare history string to render it in the visitor info div on discuss livechat channel view.
-        :param visitor: website.visitor of the channel
-        :return: arrow separated string containing navigation history information
-        """
-        recent_history = self.env['website.track'].search([('page_id', '!=', False), ('visitor_id', '=', visitor.id)], limit=3)
-        return ' → '.join(visit.page_id.name + ' (' + visit.visit_datetime.strftime('%H:%M') + ')' for visit in reversed(recent_history))
+        return visitor._get_visitor_history()
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         if not cancel:
