@@ -400,5 +400,15 @@ describe("Range not collapsed", () => {
                 contentAfter: "<p>ab</p><ol><li>cd</li></ol><p>ef[gh]ij</p>",
             });
         });
+
+        test("should turn an ordered list into paragraphs with text alignment", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ol><li style="text-align: center;">[abc</li><li style="text-align: right;">def]</li></ol>',
+                stepFunction: toggleOrderedList,
+                contentAfter:
+                    '<p style="text-align: center;">[abc</p><p style="text-align: right;">def]</p>',
+            });
+        });
     });
 });
