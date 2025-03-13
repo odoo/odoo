@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import common
 from odoo.tests import Form, tagged
+from odoo.tools.float_utils import float_split_str
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
@@ -172,3 +173,17 @@ class TestManual(common.TestAr):
 
         # If we create an invoice it will not use manual numbering
         self.assertFalse(bill.l10n_latam_manual_document_number)
+
+    def test_17_corner_cases(self):
+        """ RI partner with VAT exempt and 21. Test price unit digits """
+        self._post(self.demo_invoices['test_invoice_4'])
+        decimal_price_digits_setting = self.env.ref('product.decimal_price').digits
+        invoice_line_ids = self.demo_invoices['test_invoice_4'].invoice_line_ids
+        for line in invoice_line_ids:
+            l10n_ar_line_prices = line._l10n_ar_prices_and_taxes()
+            _unitary_part, l10n_ar_price_unit_decimal_part = float_split_str(l10n_ar_line_prices['price_unit'], decimal_price_digits_setting)
+            len_l10n_ar_price_unit_digits = len(l10n_ar_price_unit_decimal_part)
+            _unitary_part, line_price_unit_decimal_part = float_split_str(line.price_unit, decimal_price_digits_setting)
+            len_line_price_unit_digits = len(line_price_unit_decimal_part)
+            if len_l10n_ar_price_unit_digits == len_line_price_unit_digits == decimal_price_digits_setting:
+                self.assertEqual(l10n_ar_price_unit_decimal_part, line_price_unit_decimal_part)

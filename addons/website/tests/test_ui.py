@@ -10,6 +10,7 @@ import odoo.tests
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.web_editor.controllers.main import Web_Editor
+from odoo.fields import Command
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -65,6 +66,49 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiHtmlEditor(HttpCaseWithUserDemo):
+
+    def test_html_editor_language(self):
+        Lang = self.env['res.lang']
+        Page = self.env['website.page']
+
+        default_website = self.env.ref('website.default_website')
+        parseltongue = Lang.create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        Lang._activate_lang(parseltongue.code)
+        default_website.write({
+            'language_ids': [
+                Command.link(parseltongue.id),
+            ],
+            'default_lang_id': parseltongue.id,
+        })
+
+        page = Page.create({
+            'name': 'Test page',
+            'type': 'qweb',
+            'arch': '''
+                <t t-call="website.layout">
+                    <div>rumbler</div>
+                </t>
+            ''',
+            'key': 'test.generic_view',
+            'website_id': default_website.id,
+            'is_published': True,
+            'url': '/test_page',
+        })
+
+        page.view_id.update_field_translations('arch_db', {
+            parseltongue.code: {
+                'rumbler': 'rommelpot',
+            }
+        })
+        self.env.ref('base.user_admin').lang = parseltongue.code
+        self.start_tour(self.env['website'].get_client_action_url('/test_page'), 'html_editor_language', login='admin')
+        self.assertIn("rumbler", page.view_id.with_context(lang='en_US').arch)
+        self.assertIn("rommelpot", page.view_id.with_context(lang='pa_GB').arch)
 
     def test_html_editor_multiple_templates(self):
         Website = self.env['website']

@@ -91,7 +91,6 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         }
         const modalEl = new DOMParser().parseFromString(modal, "text/html").body.firstChild;
         const form = modalEl.querySelector("form#attendee_registration");
-        this._addTurnstile(form);
         const _onClick = () => {
             buttonEl.disabled = false;
             modalEl.querySelector(".js_goto_event").removeEventListener("click", _onClick);
@@ -106,6 +105,11 @@ var EventRegistrationForm = publicWidget.Widget.extend({
             tokenInput.setAttribute("type", "hidden");
             tokenInput.setAttribute("value", recaptchaToken.token);
             ev.currentTarget.appendChild(tokenInput);
+        });
+        // the turnstile container needs to be already appended to the dom before rendering
+        // see modal.js for events
+        modalEl.addEventListener("shown.bs.modal", () => {
+            this._addTurnstile(form);
         });
         const formModal = Modal.getOrCreateInstance(modalEl, {
             backdrop: "static",

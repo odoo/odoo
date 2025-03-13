@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_pine_labs" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.pos.pine.labs</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <field name="pine_labs_merchant" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
+                <field name="pine_labs_store" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
+                <field name="pine_labs_client" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
+                <field name="pine_labs_security_token" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'" password="True"/>
+                <field name="pine_labs_allowed_payment_mode" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
+                <field name="pine_labs_test_mode" invisible="use_payment_terminal != 'pine_labs'" required="use_payment_terminal == 'pine_labs'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
