@@ -410,6 +410,10 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
 
+        if self.line_ids.purchase_line_id.order_id:
+            # Bill is already associated with a purchase order
+            return
+
         method, matched_po_lines, matched_inv_lines = self._match_purchase_orders(
             po_references, partner_id, amount_total, from_ocr, timeout
         )
