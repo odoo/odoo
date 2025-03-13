@@ -83,6 +83,7 @@ class Im_LivechatChannel(models.Model):
         "user_ids.channel_ids.livechat_active",
         "user_ids.channel_ids.livechat_channel_id",
         "user_ids.channel_ids.livechat_operator_id",
+        "user_ids.channel_member_ids",
         "user_ids.im_status",
         "user_ids.is_in_call",
         "user_ids.partner_id",

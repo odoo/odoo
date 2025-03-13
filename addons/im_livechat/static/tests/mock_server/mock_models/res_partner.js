@@ -1,6 +1,6 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 
-import { getKwArgs, serverState } from "@web/../tests/web_test_helpers";
+import { getKwArgs, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
 
 export class ResPartner extends mailModels.ResPartner {
     /**
@@ -56,6 +56,7 @@ export class ResPartner extends mailModels.ResPartner {
                 }
             }
             store.add(this.browse(partner.id), data);
+            store.add(this.browse(partner.id), makeKwArgs({ extra_fields: ["is_in_call"] }));
         }
     }
     /**

@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="discuss.ChannelInvitation.main" t-inherit-mode="extension">
+        <xpath expr="//*[@name='selectablePartnerDetail']//*" position="inside">
+            <span t-if="props.thread?.channel_type === 'livechat' and selectablePartner.is_in_call" class="flex-shrink-0 opacity-75 smaller mx-2">
+                <i class="fa fa-volume-up o-discuss-inCallIconColor me-1"/>
+                <span class="o-discuss-ChannelInvitation-inCallTextColor">in a call</span>
+            </span>
+        </xpath>
         <xpath expr="//*[@name='selectablePartnerDetail']" position="replace">
             <t t-if="props.thread?.channel_type !== 'livechat' or !selectablePartner.lang_name">$0</t>
-            <div t-else="" class="d-flex flex-column flex-grow-1">
+            <div t-else="" class="d-flex flex-column flex-grow-1 overflow-hidden">
                 <t>$0</t>
                 <div class="d-flex flex-wrap align-items-center gap-1 ms-2">
                     <span class="d-flex text-start fs-6 gap-1">

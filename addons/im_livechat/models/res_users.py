@@ -21,7 +21,6 @@ class ResUsers(models.Model):
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
     has_access_livechat = fields.Boolean(compute='_compute_has_access_livechat', string='Has access to Livechat', store=False, readonly=True)
-    is_in_call = fields.Boolean("Is in call", compute="_compute_is_in_call")
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -74,14 +73,6 @@ class ResUsers(models.Model):
     def _compute_has_access_livechat(self):
         for user in self.sudo():
             user.has_access_livechat = user.has_group('im_livechat.im_livechat_group_user')
-
-    @api.depends("partner_id.channel_member_ids.rtc_session_ids")
-    def _compute_is_in_call(self):
-        rtc_sessions = self.env["discuss.channel.rtc.session"].search(
-            [("partner_id", "in", self.partner_id.ids)]
-        )
-        for user in self:
-            user.is_in_call = user.partner_id in rtc_sessions.partner_id
 
     def _init_store_data(self, store: Store):
         super()._init_store_data(store)

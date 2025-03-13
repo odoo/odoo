@@ -44,6 +44,9 @@ class ResPartner(models.Model):
                     "livechat_expertise": partner.user_ids.sudo().livechat_expertise_ids.mapped("name"),
                     "livechat_languages": languages[1:],
                 },
+                # sudo - res.partner: checking if operator is in call for live
+                # chat invitation is acceptable.
+                extra_fields=[Store.Attr("is_in_call", sudo=True)]
             )
 
     @api.depends('user_ids.livechat_username')
