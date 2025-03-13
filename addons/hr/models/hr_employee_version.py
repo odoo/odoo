@@ -1,13 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from random import choice
-from pytz import timezone, UTC, utc
-from datetime import timedelta, datetime
+from datetime import datetime
 from string import digits
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import format_time
 from odoo.addons.base.models.res_partner import _tz_get
 
 class HrEmployeeVersion(models.Model):
@@ -21,53 +18,9 @@ class HrEmployeeVersion(models.Model):
 
     # Employee Permanent Fields
     employee_id = fields.Many2one('hr.employee')
-    user_id = fields.Many2one(related='employee_id.user_id', store=True, readonly=False)
+    user_id = fields.Many2one(related='employee_id.user_id')
     company_id = fields.Many2one(related='employee_id.company_id')
     work_contact_id = fields.Many2one(related='employee_id.work_contact_id')
-    employee_active = fields.Boolean(related='employee_id.active')
-    hr_presence_state = fields.Selection(related='employee_id.hr_presence_state')
-    child_ids = fields.One2many(related='employee_id.child_ids')
-    selected_history_id = fields.Many2one(related='employee_id.selected_version_id', store=True, readonly=False,
-                                          domain="[('employee_id', '=', employee_id)]")
-
-    avatar_128 = fields.Image(related='employee_id.avatar_128', readonly=False)
-    image_1920 = fields.Image(related='employee_id.image_1920', readonly=False)
-    hr_icon_display = fields.Selection(related='employee_id.hr_icon_display', readonly=False)
-    show_hr_icon_display = fields.Boolean(related='employee_id.show_hr_icon_display', readonly=False)
-
-    # Global Information
-    employee_name = fields.Char(related='employee_id.name', readonly=False)
-    category_ids = fields.Many2many(related='employee_id.category_ids', readonly=False)
-
-    private_phone = fields.Char(related='employee_id.private_phone', readonly=False)
-    private_email = fields.Char(related='employee_id.private_email', readonly=False)
-    bank_account_id = fields.Many2one(related='employee_id.bank_account_id', readonly=False)
-
-    work_phone = fields.Char(related='employee_id.work_phone', readonly=False)
-    mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False)
-    work_email = fields.Char(related='employee_id.work_email', readonly=False)
-
-    emergency_contact = fields.Char(related='employee_id.emergency_contact', readonly=False)
-    emergency_phone = fields.Char(related='employee_id.emergency_phone', readonly=False)
-
-    sex = fields.Selection(related='employee_id.sex', readonly=False)
-    place_of_birth = fields.Char(related='employee_id.place_of_birth', readonly=False)
-    country_of_birth = fields.Many2one(related='employee_id.country_of_birth', readonly=False)
-    birthday = fields.Date(related='employee_id.birthday', readonly=False)
-    birthday_public_display = fields.Boolean(related='employee_id.birthday_public_display', readonly=False)
-    birthday_public_display_string = fields.Char(related='employee_id.birthday_public_display_string', readonly=False)
-
-    visa_no = fields.Char(related='employee_id.visa_no', readonly=False)
-    visa_expire = fields.Date(related='employee_id.visa_expire', readonly=False)
-
-    permit_no = fields.Char(related='employee_id.permit_no', readonly=False)
-    work_permit_expiration_date = fields.Date(related='employee_id.work_permit_expiration_date', readonly=False)
-    work_permit_name = fields.Char(related='employee_id.work_permit_name', readonly=False)
-    work_permit_scheduled_activity = fields.Boolean(related='employee_id.work_permit_scheduled_activity', readonly=False)
-    has_work_permit = fields.Binary(related='employee_id.has_work_permit', readonly=False)
-
-    barcode = fields.Char(related='employee_id.barcode', readonly=False)
-    pin = fields.Char(related='employee_id.pin', readonly=False)
 
     # Personal Information
     country_id = fields.Many2one('res.country', 'Nationality (Country)', groups="hr.group_hr_user")
@@ -190,27 +143,6 @@ class HrEmployeeVersion(models.Model):
         for employee in self:
             address = employee.company_id.partner_id.address_get(['default'])
             employee.address_id = address['default'] if address else False
-
-    def action_create_user(self):
-        self.ensure_one()
-        if self.user_id:
-            raise ValidationError(_("This employee already has an user."))
-        return {
-            'name': _('Create User'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'res.users',
-            'view_mode': 'form',
-            'view_id': self.env.ref('hr.view_users_simple_form').id,
-            'target': 'new',
-            'context': dict(self._context, **{
-                'default_create_employee_id': self.employee_id.id,
-                'default_name': self.employee_name,
-                'default_phone': self.work_phone,
-                'default_mobile': self.mobile_phone,
-                'default_login': self.work_email,
-                'default_partner_id': self.work_contact_id.id,
-            })
-        }
 
     def generate_random_barcode(self):
         for history in self:
