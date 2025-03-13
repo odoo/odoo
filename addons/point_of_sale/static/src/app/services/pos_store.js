@@ -1676,6 +1676,24 @@ export class PosStore extends WithLazyGetterTrap {
             : "";
     }
 
+    getOrderData(order, reprint) {
+        return {
+            reprint: reprint,
+            pos_reference: order.getName(),
+            config_name: order.config_id.name,
+            time: DateTime.now().toFormat("HH:mm"),
+            tracking_number: order.tracking_number,
+            preset_name: order.preset_id?.name || "",
+            employee_name: order.employee_id?.name || order.user_id?.name,
+            internal_note: order.internal_note,
+            general_customer_note: order.general_customer_note,
+            changes: {
+                title: "",
+                data: [],
+            },
+        };
+    }
+
     generateOrderChange(order, orderChange, categories, reprint = false) {
         const isPartOfCombo = (line) =>
             line.isCombo || this.models["product.product"].get(line.product_id).type == "combo";
@@ -1692,22 +1710,7 @@ export class PosStore extends WithLazyGetterTrap {
         });
         orderChange.new = [...comboChanges, ...normalChanges];
 
-        const orderData = {
-            reprint: reprint,
-            pos_reference: order.getName(),
-            config_name: order.config_id.name,
-            time: DateTime.now().toFormat("HH:mm"),
-            tracking_number: order.tracking_number,
-            preset_name: order.preset_id?.name || "",
-            preset_time: order.presetDateTime,
-            employee_name: order.employee_id?.name || order.user_id?.name,
-            internal_note: this.getStrNotes(order.internal_note),
-            general_customer_note: order.general_customer_note,
-            changes: {
-                title: "",
-                data: [],
-            },
-        };
+        const orderData = this.getOrderData(order, reprint);
 
         const changes = this.filterChangeByCategories(categories, orderChange);
         for (const changeItem of [...changes.new, ...changes.cancelled, ...changes.noteUpdate]) {
