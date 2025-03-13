@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 
 export class EditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
+    static dependencies = ["history"];
 
     resources = {
         normalize_handlers: this.restartInteractions.bind(this),
@@ -18,7 +19,15 @@ export class EditInteractionPlugin extends Plugin {
             this.updateEditInteraction.bind(this),
             { once: true }
         );
-        window.parent.document.dispatchEvent(new CustomEvent("edit_interaction_plugin_loaded"));
+        const event = new CustomEvent("edit_interaction_plugin_loaded");
+        event.historyCallbacks = {
+            disableObserver: this.dependencies.history.disableObserver,
+            enableObserver: this.dependencies.history.enableObserver,
+        };
+        window.parent.document.dispatchEvent(event);
+    }
+    destroy() {
+        this.websiteEditService?.uninstallPatches?.();
     }
 
     destroy() {
@@ -27,6 +36,7 @@ export class EditInteractionPlugin extends Plugin {
 
     updateEditInteraction({ detail: { websiteEditService } }) {
         this.websiteEditService = websiteEditService;
+        this.websiteEditService.installPatches();
     }
 
     restartInteractions(element) {
