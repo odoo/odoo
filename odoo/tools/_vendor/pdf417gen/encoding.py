@@ -1,9 +1,9 @@
 import math
 
-from pdf417gen.codes import map_code_word
-from pdf417gen.compaction import compact
-from pdf417gen.error_correction import compute_error_correction_code_words
-from pdf417gen.util import chunks, to_bytes
+from .codes import map_code_word
+from .compaction import compact
+from .error_correction import compute_error_correction_code_words
+from .util import chunks, to_bytes
 
 START_CHARACTER = 0x1fea8
 STOP_CHARACTER = 0x3fa29

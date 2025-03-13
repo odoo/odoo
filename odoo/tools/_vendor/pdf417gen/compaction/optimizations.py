@@ -1,7 +1,7 @@
 from itertools import chain, groupby
-from pdf417gen.compaction.numeric import compact_numbers
-from pdf417gen.compaction.text import compact_text
-from pdf417gen.util import iterate_prev_next
+from .numeric import compact_numbers
+from .text import compact_text
+from ..util import iterate_prev_next
 
 
 def replace_short_numeric_chunks(chunks):
@@ -11,7 +11,7 @@ def replace_short_numeric_chunks(chunks):
     length, it is recommended to use Numeric Compaction mode when there are
     more than 13 consecutive digits. Otherwise, use Text Compaction mode.
     """
-    from pdf417gen.compaction import Chunk
+    from odoo.tools._vendor.pdf417gen.compaction import Chunk
 
     for prev, chunk, next in iterate_prev_next(chunks):
         is_short_numeric_chunk = (
@@ -31,7 +31,7 @@ def replace_short_numeric_chunks(chunks):
 
 
 def merge_chunks_with_same_compact_fn(chunks):
-    from pdf417gen.compaction import Chunk
+    from odoo.tools._vendor.pdf417gen.compaction import Chunk
 
     for compact_fn, group in groupby(chunks, key=lambda x: x[1]):
         data = chain.from_iterable(chunk.data for chunk in group)

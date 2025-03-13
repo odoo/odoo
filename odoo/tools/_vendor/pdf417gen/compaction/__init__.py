@@ -1,11 +1,11 @@
 from collections import namedtuple
 from itertools import chain, groupby
 
-from pdf417gen.compaction import optimizations
-from pdf417gen.compaction.byte import compact_bytes
-from pdf417gen.compaction.numeric import compact_numbers
-from pdf417gen.compaction.text import compact_text
-from pdf417gen.data import CHARACTERS_LOOKUP
+from . import optimizations
+from .byte import compact_bytes
+from .numeric import compact_numbers
+from .text import compact_text
+from ..data import CHARACTERS_LOOKUP
 
 
 # Codes for switching between compacting modes

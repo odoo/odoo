@@ -5,8 +5,8 @@ Can encode: ASCII 9, 10, 13 and 32-126
 Rate compaction: 2 bytes per code word
 """
 
-from pdf417gen.data import CHARACTERS_LOOKUP, SWITCH_CODES, Submode
-from pdf417gen.util import chunks
+from ..data import CHARACTERS_LOOKUP, SWITCH_CODES, Submode
+from ..util import chunks
 
 
 def _exists_in_submode(char, submode):

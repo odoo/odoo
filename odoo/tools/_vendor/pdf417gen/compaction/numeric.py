@@ -6,7 +6,7 @@ Rate compaction: 2.9 bytes per code word
 """
 
 from itertools import chain
-from pdf417gen.util import to_base, chunks
+from ..util import to_base, chunks
 
 
 def _compact_chunk(chunk):
