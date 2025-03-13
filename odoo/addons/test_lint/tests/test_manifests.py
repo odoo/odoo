@@ -3,6 +3,7 @@
 import logging
 from ast import literal_eval
 from os.path import join as opj
+import re
 
 from odoo.modules import get_modules
 from odoo.modules.module import _DEFAULT_MANIFEST, module_manifest, get_module_path
@@ -58,6 +59,27 @@ class ManifestLinter(BaseCase):
             _logger.warning(
                 "Module %r specific to one single country %r should contain `l10n` in their name.",
                 module, manifest_data['countries'][0])
+        
+        # Modules with a countries key in the manifest will only be auto-installed
+        # in case a company with a matching country exists.
+        # See https://github.com/odoo/odoo/pull/144586
+        countries = manifest_data.get("countries")
+        depends = manifest_data.get("depends", [])
+        auto_install = manifest_data.get("auto_install")
+
+        has_l10n_dependency = any(re.match(r"^l10n_[a-z]{2}$", dep) for dep in depends)
+        is_auto_install_bool = isinstance(auto_install, bool) and auto_install
+        is_auto_install_list = isinstance(auto_install, list) and any(
+            re.match(r"^l10n_[a-z]{2}$", item) for item in auto_install
+        )
+
+        if countries and has_l10n_dependency and (is_auto_install_bool or is_auto_install_list):
+            _logger.warning(
+                """
+                Module %r is auto installed as a dependency of an 'l10n_..' module. Please remove the 'countries' from its manifest.
+                Else the module would only be auto-installed in case a company of that country exists.
+                """
+            )
 
         for key in manifest_data:
             value = manifest_data[key]
