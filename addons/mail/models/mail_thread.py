@@ -1976,7 +1976,8 @@ class MailThread(models.AbstractModel):
                 # keep cid and name list synced with attachement_values_list length to match ids latter
                 cid_list.append(cid)
                 name_list.append(name)
-            new_attachments = self.env['ir.attachment'].sudo().create(attachement_values_list)
+            AttachmentSudo = self.env['ir.attachment'].sudo().with_context(clean_context(self._context))
+            new_attachments = AttachmentSudo.create(attachement_values_list)
             cid_mapping = {}
             name_mapping = {}
             for counter, new_attachment in enumerate(new_attachments):
