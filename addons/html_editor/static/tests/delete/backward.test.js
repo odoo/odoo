@@ -2012,7 +2012,7 @@ describe("Selection not collapsed", () => {
                     deleteBackward(editor);
                 },
                 contentAfter: unformat(`
-                        <p>before[]after</p>`),
+                        <p>before</p><p>[]after</p>`),
             });
         });
 
