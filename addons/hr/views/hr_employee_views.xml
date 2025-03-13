@@ -296,6 +296,7 @@
                     <field name="birthday" optional="hide"/>
                     <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" widget="many2one_avatar_employee" optional="hide"/>
+                    <field name="user_id" string="Related User" widget="many2one_avatar_user" optional="hide"/>
                     <field name="active" column_invisible="True"/>
                     <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="country_id" optional="hide"/>
@@ -481,6 +482,28 @@
             <field name="view_mode">form,list</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
+        </record>
+
+        <record id="action_hr_employee_create_users_confirmation" model="ir.actions.server">
+            <field name="name">Create User</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="binding_model_id" ref="model_hr_employee" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_create_users_confirmation()
+            </field>
+        </record>
+
+        <record id="action_hr_employee_create_users" model="ir.actions.server">
+            <field name="name">Create User</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">
+employees = env['hr.employee'].browse(env.context.get('selected_ids', []))
+if employees:
+    action = employees.action_create_users()
+            </field>
         </record>
     </data>
 </odoo>
