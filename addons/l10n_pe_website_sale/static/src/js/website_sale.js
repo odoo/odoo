@@ -13,10 +13,116 @@ websiteSaleAddress.include({
     ),
 
     start: function () {
+<<<<<<< ce6be20933c916b6e236d607cfef8251a20feec4
         this._super.apply(this, arguments);
 
         this.elementCountry = this.addressForm.country_id;
         this.isPeruvianCompany = this.countryCode === 'PE';
+||||||| 20bb44130d6ce1924b235fe3aee8ec7ffad01cbd
+        this.elementCities = document.querySelector("select[name='city_id']");
+        this.elementDistricts = document.querySelector("select[name='l10n_pe_district']");
+        this.cityBlock = document.querySelector(".div_city");
+        this.autoFormat = document.querySelector(".checkout_autoformat");
+        this.elementState = document.querySelector("select[name='state_id']");
+        this.elemenCountry = document.querySelector("select[name='country_id']");
+        this.isPeruvianCompany = this.elemenCountry?.dataset.company_country_code === 'PE';
+        return this._super.apply(this, arguments);
+    },
+    _changeOption: function (selectCheck, rpcRoute, place, selectElement) {
+        if (!selectCheck) {
+            return;
+        }
+        return this.rpc(rpcRoute, {
+        }).then((data) => {
+            if (this.isPeruvianCompany) {
+                if (data[place]?.length) {
+                    selectElement.innerHTML = "";
+                    data[place].forEach((item) => {
+                        let opt = document.createElement("option");
+                        opt.textContent = item[1];
+                        opt.value = item[0];
+                        opt.setAttribute("data-code", item[2]);
+                        selectElement.appendChild(opt);
+                    });
+                    selectElement.parentElement.style.display = "block";
+                } else {
+                    selectElement.value = "";
+                    selectElement.parentElement.style.display = "none";
+                }
+            }
+        });
+    },
+    _onChangeState: function (ev) {
+        return this._super.apply(this, arguments).then(() => {
+            let selectedCountry = this.elemenCountry.options[this.elemenCountry.selectedIndex].getAttribute("code");
+            if (this.isPeruvianCompany && selectedCountry === "PE") {
+                if (this.elementState.value === "" && this.elemenCountry.value !== '') {
+                    this.elementState.options[1].selected = true;
+                }
+                const state = this.elementState.value;
+                const rpcRoute = `/shop/state_infos/${state}`;
+                return this.autoFormat.length
+                    ? this._changeOption(state, rpcRoute, "cities", this.elementCities).then(() => this._onChangeCity())
+                    : undefined;
+            }
+        });
+    },
+    _onChangeCity: function () {
+=======
+        this.elementCities = document.querySelector("select[name='city_id']");
+        this.elementDistricts = document.querySelector("select[name='l10n_pe_district']");
+        this.cityBlock = document.querySelector(".div_city");
+        this.autoFormat = document.querySelector(".checkout_autoformat");
+        this.elementState = document.querySelector("select[name='state_id']");
+        this.elemenCountry = document.querySelector("select[name='country_id']");
+        this.isPeruvianCompany = this.elemenCountry?.dataset.company_country_code === 'PE';
+        return this._super.apply(this, arguments);
+    },
+    _changeOption: function (selectCheck, rpcRoute, place, selectElement) {
+        if (!selectCheck) {
+            return;
+        }
+        return this.rpc(rpcRoute, {
+        }).then((data) => {
+            if (this.isPeruvianCompany) {
+                if (data[place]?.length) {
+                    let previousValue = selectElement.value;
+                    selectElement.innerHTML = "";
+                    data[place].forEach((item) => {
+                        let opt = document.createElement("option");
+                        opt.textContent = item[1];
+                        opt.value = item[0];
+                        opt.setAttribute("data-code", item[2]);
+                        selectElement.appendChild(opt);
+                    });
+                if ([...selectElement.options].some(opt => opt.value === previousValue)) {
+                    selectElement.value = previousValue;
+                }
+                    selectElement.parentElement.style.display = "block";
+                } else {
+                    selectElement.value = "";
+                    selectElement.parentElement.style.display = "none";
+                }
+            }
+        });
+    },
+    _onChangeState: function (ev) {
+        return this._super.apply(this, arguments).then(() => {
+            let selectedCountry = this.elemenCountry.options[this.elemenCountry.selectedIndex].getAttribute("code");
+            if (this.isPeruvianCompany && selectedCountry === "PE") {
+                if (this.elementState.value === "" && this.elemenCountry.value !== '') {
+                    this.elementState.options[1].selected = true;
+                }
+                const state = this.elementState.value;
+                const rpcRoute = `/shop/state_infos/${state}`;
+                return this.autoFormat.length
+                    ? this._changeOption(state, rpcRoute, "cities", this.elementCities).then(() => this._onChangeCity())
+                    : undefined;
+            }
+        });
+    },
+    _onChangeCity: function () {
+>>>>>>> e061ae07d1a89091865059bfecc03b007d99f113
         if (this.isPeruvianCompany) {
             this.elementState = this.addressForm.state_id;
             this.elementCities = this.addressForm.city_id;
