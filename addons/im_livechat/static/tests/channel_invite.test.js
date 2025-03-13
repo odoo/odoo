@@ -145,3 +145,40 @@ test("Partners invited most frequently by the current user come first", async ()
     await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "John" });
     await contains(":nth-child(2 of .o-discuss-ChannelInvitation-selectable)", { text: "Albert" });
 });
+
+test("shows operators are in call", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #1" });
+    const [bobPartnerId] = pyEnv["res.partner"].create([
+        { name: "bob", user_ids: [Command.create({ name: "bob" })] },
+        { name: "john", user_ids: [Command.create({ name: "john" })] },
+    ]);
+    const bobChannelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [Command.create({ partner_id: bobPartnerId })],
+    });
+    const [bobMemberId] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", bobPartnerId],
+        ["channel_id", "=", bobChannelId],
+    ]);
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_id: bobChannelId,
+        channel_member_id: bobMemberId,
+    });
+    pyEnv["res.partner"]._compute_is_in_call();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation-selectable:contains('bob\nin a call')");
+    await contains(".o-discuss-ChannelInvitation-selectable:contains('john')");
+    await contains(".o-discuss-ChannelInvitation-selectable:contains('john\nin a call')", {
+        count: 0,
+    });
+});
