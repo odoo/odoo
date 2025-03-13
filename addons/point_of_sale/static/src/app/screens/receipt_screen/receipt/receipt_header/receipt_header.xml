@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ReceiptHeader">
-        <img t-attf-src="/web/image?model=res.company&amp;id={{order.company.id}}&amp;field=logo" alt="Logo" class="pos-receipt-logo"/>
+        <img t-if="receiptLogoSrc" t-att-src="receiptLogoSrc" alt="Logo" class="pos-receipt-logo"/>
         <div class="text-center pt-3" style="font-size: 75%;">
             <span>
                 <t t-if="order.config._IS_VAT"> VAT </t>
@@ -12,7 +12,7 @@
         </div>
         <div class="d-flex flex-column align-items-center">
             <div class="pos-receipt-contact">
-                <div t-if="order.config.receipt_header" style="white-space:pre-line" t-esc="order.config.receipt_header" />
+                <div t-if="order.config.receipt_header" style="white-space:pre-line" class="pos-receipt-header pt-2" t-out="headerMarkup" />
                 <div t-if="order?.getCashierName() and (!order.preset_id or order.preset_id.identification === 'name')" class="cashier">
                     <div>Served by: <t t-esc="order.getCashierName()" /></div>
                 </div>

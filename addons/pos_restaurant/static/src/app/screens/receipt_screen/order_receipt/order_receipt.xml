@@ -3,7 +3,7 @@
 
     <t t-name="pos_restaurant.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <xpath expr="//ReceiptHeader" position="after">
-            <div t-if="!order.finalized" class="fs-2 mb-1">Pro forma receipt</div>
+            <div t-if="!order.finalized" class="fs-2 mb-1 text-center">Pro forma receipt</div>
         </xpath>
         <xpath expr="//div[hasclass('before-footer')]" position="after">
             <t t-if="order.config.set_tip_after_payment">

@@ -37,22 +37,22 @@ registry.category("web_tour.tours").add("test_l10n_in_hsn_summary_pos", {
             {
                 isActive: ["desktop"], // not rendered on mobile
                 trigger:
-                    '.receipt-screen .l10n_in_hsn_summary_table tr:nth-child(3) td:nth-child(3):contains("57.50")',
+                    '.receipt-screen .l10n_in_hsn_summary_table tbody tr:nth-child(1) td:nth-child(3):contains("57.50")',
             },
             {
                 isActive: ["desktop"], // not rendered on mobile
                 trigger:
-                    '.receipt-screen .l10n_in_hsn_summary_table tr:nth-child(3) td:nth-child(4):contains("57.50")',
+                    '.receipt-screen .l10n_in_hsn_summary_table tbody tr:nth-child(1) td:nth-child(4):contains("57.50")',
             },
             {
                 isActive: ["desktop"], // not rendered on mobile
                 trigger:
-                    '.receipt-screen .l10n_in_hsn_summary_table tr:nth-child(4) td:nth-child(3):contains("207.00")',
+                    '.receipt-screen .l10n_in_hsn_summary_table tbody tr:nth-child(2) td:nth-child(3):contains("207.00")',
             },
             {
                 isActive: ["desktop"], // not rendered on mobile
                 trigger:
-                    '.receipt-screen .l10n_in_hsn_summary_table tr:nth-child(4) td:nth-child(4):contains("207.00")',
+                    '.receipt-screen .l10n_in_hsn_summary_table tbody tr:nth-child(2) td:nth-child(4):contains("207.00")',
             },
         ].flat(),
 });
