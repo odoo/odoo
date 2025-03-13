@@ -586,6 +586,24 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
+<<<<<<< saas-17.4
+||||||| 352ae034832c07fa2c07608d89c7ce24dcafd2c1
+        if (
+                'state' in vals
+                and vals['state'] != 'submitted'
+                and not self.user_has_groups('hr_expense.group_hr_expense_manager')
+                and any(state == 'draft' for state in self.mapped('state'))
+        ):
+            raise UserError(_("You don't have the rights to bypass the validation process of this expense."))
+=======
+        if (
+                'state' in vals
+                and vals['state'] not in ('draft', 'submitted')
+                and not self.user_has_groups('hr_expense.group_hr_expense_manager')
+                and any(state == 'draft' for state in self.mapped('state'))
+        ):
+            raise UserError(_("You don't have the rights to bypass the validation process of this expense."))
+>>>>>>> 26a5cce7ac9c4fa519cb8a70248d4e6ff49a24e9
         expense_to_previous_sheet = {}
         if 'sheet_id' in vals:
             # Check access rights on the sheet
