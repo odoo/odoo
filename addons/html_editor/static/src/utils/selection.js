@@ -173,9 +173,12 @@ function updateCursorBeforeMove(destParent, destIndex, node, cursor) {
     } else if (cursor.node === node.parentNode) {
         const childIndex = childNodeIndex(node);
         // Update cursor at origin
-        if (cursor.offset === childIndex) {
-            // Keep pointing to the moved node
+        if (cursor.offset === childIndex && cursor.offset === 0) {
+            // Keep cursor before the moved node if it's the first child before the move
             [cursor.node, cursor.offset] = [destParent, destIndex];
+        } else if (cursor.offset === childIndex + 1 && cursor.offset === nodeSize(cursor.node)) {
+            // Keep cursor after the moved node if it's the last child before the move
+            [cursor.node, cursor.offset] = [destParent, destIndex + 1];
         } else if (cursor.offset > childIndex) {
             cursor.offset -= 1;
         }
