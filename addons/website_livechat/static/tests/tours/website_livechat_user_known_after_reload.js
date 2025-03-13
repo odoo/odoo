@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add("website_livechat_user_known_after_reloa
         },
         {
             trigger:
-                ".o-livechat-root:shadow .o-mail-Message:contains('Hello, I need help!').o-selfAuthored ",
+                ".o-livechat-root:shadow .o-mail-Thread:not([data-transient]) .o-mail-Message:contains('Hello, I need help!').o-selfAuthored ",
             run() {
                 window.location.reload();
             },
