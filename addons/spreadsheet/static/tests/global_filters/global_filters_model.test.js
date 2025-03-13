@@ -30,6 +30,8 @@ import {
     setCellContent,
     setCellFormat,
     setGlobalFilterValue,
+    undo,
+    redo,
 } from "@spreadsheet/../tests/helpers/commands";
 import {
     assertDateDomainEqual,
@@ -2643,4 +2645,47 @@ test("Check boolean filter domain", async () => {
     expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
         `[("active", "in", [True, False])]`
     );
+});
+
+test("Undo/Redo of global filter update", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const filter = {
+        id: "43",
+        type: "date",
+        label: "This Year",
+        rangeType: "fixedPeriod",
+        defaultValue: "this_year",
+        defaultsToCurrentPeriod: true,
+    };
+    await addGlobalFilter(model, filter, {
+        pivot: { [pivotId]: { chain: "date", type: "date", offset: 0 } },
+    });
+    expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual({
+        chain: "date",
+        type: "date",
+        offset: 0,
+    });
+    model.dispatch("EDIT_GLOBAL_FILTER", {
+        filter,
+        pivot: {
+            [pivotId]: { chain: "date", type: "date", offset: -1 },
+        },
+    });
+    expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual({
+        chain: "date",
+        type: "date",
+        offset: -1,
+    });
+    undo(model);
+    expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual({
+        chain: "date",
+        type: "date",
+        offset: 0,
+    });
+    redo(model);
+    expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual({
+        chain: "date",
+        type: "date",
+        offset: -1,
+    });
 });
