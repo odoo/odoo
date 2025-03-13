@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -61,11 +61,39 @@ msgstr ""
 "更改該員工的合同會改變其已休假期間的工作安排。更改工作時間表會改變這些假期的持續時間，從而使該員工不再擁有所需的假期分配。請在更改合同前審查這些假期和/或分配。"
 
 #. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_leave.py:0
+msgid ""
+"Contract %(contract)s from %(start_date)s to %(end_date)s, status: "
+"%(status)s"
+msgstr ""
+
+#. module: hr_holidays_contract
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_leave__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: hr_holidays_contract
 #: model:ir.model,name:hr_holidays_contract.model_hr_contract
 msgid "Employee Contract"
 msgstr "員工契約"
 
 #. module: hr_holidays_contract
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_leave__id
+msgid "ID"
+msgstr "識別碼"
+
+#. module: hr_holidays_contract
 #: model:ir.model,name:hr_holidays_contract.model_hr_leave
 msgid "Time Off"
 msgstr "休假"
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_leave.py:0
+msgid "undefined"
+msgstr ""

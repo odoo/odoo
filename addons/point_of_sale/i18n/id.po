@@ -3,16 +3,16 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Wil Odoo, 2025
 # Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:01+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Abe Manyo, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +107,7 @@ msgstr "%(payment_method)s pembayaran POS %(partner)s di %(session)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(product_name)s: Deleted line (quantity: %(qty)s)"
-msgstr ""
+msgstr "%(product_name)s: Baris dihapus (kuantitas: %(qty)s)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -146,12 +146,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "%s orders imported"
 msgstr "%s order diimpor."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
-msgid "%s product(s) found for \"%s\"."
-msgstr "%s produk ditemukan untuk \"%s\"."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -316,6 +310,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Halo <t t-out=\"client_name\">Nama klien</t>,</t>\n"
+"                        <t t-else=\"\">Halo,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Terima kasih sudah membeli dari <t t-out=\"store_name\">Nama toko</t>!</div>\n"
+"                    <div>Terlampir, Anda akan menemukan resi untuk pembelian <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or ''\">tanggal</t> <t t-out=\"format_time(time=object.date_order, tz=tz, time_format='short',                          lang_code=lg)\">waktu</t>.</span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Dengan salam hormat,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Nama toko</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban
@@ -448,7 +461,7 @@ msgstr "<strong>Total</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "<sup title=\"Only works for online and self order\">?</sup>"
-msgstr ""
+msgstr "<sup title=\"Hanya bekerja untuk pesanan online dan mandiri\">?</sup>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1044,12 +1057,6 @@ msgstr "Hitungan Lampiran"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__attendance_ids
 msgid "Attendances"
 msgstr "Absensi"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
-msgid "Attribute selection"
-msgstr "Pemilihan atribut"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_menu_products_attribute_action
@@ -2071,7 +2078,7 @@ msgstr "Konfirmasi"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_confirm_action_wizard
 msgid "Confirm Action"
-msgstr ""
+msgstr "Konfirmasi Action"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2088,7 +2095,7 @@ msgstr "Konfirmasi?"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirmation_wizard
 msgid "Confirmation Wizard"
-msgstr ""
+msgstr "Wizard Konfirmasi"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2121,6 +2128,12 @@ msgstr "Menghubungkan ke Proxy"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/customer_display/utils.js:0
+msgid "Connecting to the IoT Box"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Connection Lost"
 msgstr "Koneksi Hilang"
@@ -2130,6 +2143,18 @@ msgstr "Koneksi Hilang"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Connection error"
 msgstr "Koneksi eror"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/customer_display/utils.js:0
+msgid "Connection failed"
+msgstr "ubungan gagalH"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/customer_display/utils.js:0
+msgid "Connection successful"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2265,7 +2290,7 @@ msgstr "Buat"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #: code:addons/point_of_sale/wizard/pos_confirmation_wizard.py:0
 msgid "Create Invoice(s)"
-msgstr ""
+msgstr "Buat Faktur"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
@@ -2287,7 +2312,7 @@ msgstr "Buat Produk"
 #. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Buat Pelanggan"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -2466,8 +2491,6 @@ msgstr "Faktur Pelanggan"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
-#: code:addons/point_of_sale/static/src/app/components/orderline/orderline.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
@@ -2878,6 +2901,7 @@ msgstr "Dismiss"
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_decimal_precision__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__display_name
@@ -3128,7 +3152,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Ensure you validate the refund before taking another order."
-msgstr ""
+msgstr "Pastikan Anda memvalidasi refund sebelum mengambil pesanan lain."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3206,7 +3230,7 @@ msgstr "Gagal untuk membuat Kode QR Pembayaran "
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fallback_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Fallback Nomenclature"
-msgstr ""
+msgstr "Fallback Nomenclature"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3265,12 +3289,12 @@ msgstr "Denah lantai, tips, pesan sendiri, dsb."
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_flour_product_template
 msgid "Flour"
-msgstr ""
+msgstr "Tepung"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_flour_product_template
 msgid "Flour sold by the kilogram."
-msgstr ""
+msgstr "Tepung dijual dalam hitungan kilogram."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_follower_ids
@@ -3472,6 +3496,11 @@ msgid "Group items in the cart according to their category"
 msgstr "Kelompokkan barang di keranjang sesuai kategori mereka"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP routing"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "HTTPS connection to IoT Box failed"
@@ -3560,6 +3589,8 @@ msgid ""
 "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
 "Make sure to close all sessions first to avoid any issues."
 msgstr ""
+"Tunggu! Mengarsip produk selagi sesi POS aktif itu seperti menarik piring selagi tengah makan.\n"
+"Pastikan sudah mentutup semua sesi terlebih dahulu untuk menghindari masalah apa pun."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
@@ -3590,6 +3621,7 @@ msgstr "Bagaimana cara mengelola harga termasuk pajak"
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__id
 #: model:ir.model.fields,field_description:point_of_sale.field_decimal_precision__id
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__id
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__id
@@ -3833,7 +3865,7 @@ msgstr "Selang waktu (dalam menit)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Invalid QR Code! Please, Scan again!"
-msgstr ""
+msgstr "Kode QR tidak valid! Mohonscan lagi!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3867,7 +3899,7 @@ msgstr "Faktur"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__invoice_emails
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__invoice_emails
 msgid "Invoice Emails"
-msgstr ""
+msgstr "Faktur Email"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
@@ -4017,6 +4049,9 @@ msgid ""
 "\n"
 "Would you like to set %(customer_name)s as the customer for the selected POS order(s)?"
 msgstr ""
+"Sepertinya pesanan POS %(order_ref)s tidak memiliki pelanggan.\n"
+"\n"
+"Apakah Anda ingin menetapkan %(customer_name)s sebagai pelanggan untuk pesanan POS terpilih?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4062,7 +4097,7 @@ msgstr "Item Jurnal"
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "Kindly ensure that each order contains a customer."
-msgstr ""
+msgstr "Mohon pastikan setiap pesanan memiliki pelanggan."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
@@ -4284,7 +4319,7 @@ msgstr "Muat Menu Produk"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Load Sample"
-msgstr ""
+msgstr "Muat Sampel"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4314,7 +4349,6 @@ msgstr "Urutan Nomor Login Sesi %s"
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/saver_screen/saver_screen.xml:0
 msgid "Logo"
 msgstr "Logo"
 
@@ -4528,7 +4562,7 @@ msgstr "Multigrain Bread"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_invoice
 msgid "Multiple order invoice creation"
-msgstr ""
+msgstr "Pembuatan faktur dengan lebih dari satu pesanan"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -4566,6 +4600,12 @@ msgstr "CATATAN UPDATE"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "Name"
 msgstr "Nama"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+msgid "Navigate to your PoS Customer Display on the other computer"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4692,7 +4732,7 @@ msgstr "Tidak ada POS yang dipilih"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "No Product Yet?"
-msgstr ""
+msgstr "Belum Ada Produk?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4768,12 +4808,6 @@ msgid "No more customer found for \"%s\"."
 msgstr "Tidak menemukan pelanggan lagi untuk \"%s\"."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
-msgid "No more product found for \"%s\"."
-msgstr "Tidak menemukan produk lagi untuk \"%s\"."
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
@@ -4787,6 +4821,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "No orders found"
 msgstr "Tidak menemukan order"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+msgid "No other products found for \"%s\"."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5005,7 +5045,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Oops.."
-msgstr ""
+msgstr "Oops.."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5321,7 +5361,7 @@ msgstr "Order POS %s"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__pos_order_count
 msgid "POS Order Count"
-msgstr ""
+msgstr "Jumlah Pesanan POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -5772,12 +5812,18 @@ msgstr "Tolong Scan lagi!"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_contact_address
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_contact_address
 msgid "PoS Address"
-msgstr ""
+msgstr "Alamat POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "PoS Config"
 msgstr "Konfigurasi PoS"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+msgid "PoS Customer Display opened in a new window"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5977,7 +6023,7 @@ msgstr "Grup Pengguna Point of Sale"
 #. module: point_of_sale
 #: model:mail.template,name:point_of_sale.email_template_pos_receipt
 msgid "Point of Sale: Receipt"
-msgstr ""
+msgstr "POS: Resi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
@@ -6701,13 +6747,13 @@ msgstr "Printer Resi"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Receipt and invoice sent successfully"
-msgstr ""
+msgstr "Resi dan faktur sukses dikiri"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Receipt sent successfully"
-msgstr ""
+msgstr "Resi sukses dikirim"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
@@ -7136,7 +7182,7 @@ msgstr "Pindai EAN-13"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
-msgstr ""
+msgstr "Scan barcode untuk membuat secara otomatis, atau memuat sampel data."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -7220,7 +7266,7 @@ msgstr "Pilih preset"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select an order or scan QR code"
-msgstr ""
+msgstr "Pilih pesanan atau scan kode QR"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7311,7 +7357,7 @@ msgstr "Mengiri"
 #. module: point_of_sale
 #: model:mail.template,description:point_of_sale.email_template_pos_receipt
 msgid "Sent to customers with the receipt in attachment"
-msgstr ""
+msgstr "DIkirim ke pelanggan dengan resi terlampir"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -7973,12 +8019,6 @@ msgstr "Terima kasih."
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/controllers/main.py:0
-msgid "The %s must be filled in your details."
-msgstr "%s harus diisi di detail Anda."
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "The Availability After must be set between 00:00 and 24:00"
 msgstr "Ketersediaan Setelah harus ditetapkan antara 00:00 dan 24:00"
@@ -8094,6 +8134,12 @@ msgstr ""
 "Lanjutkan tanpa memeriksa validitas nomor seri/lot?"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/controllers/main.py:0
+msgid "The field %s must be filled."
+msgstr "Field %s harus diisi."
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid ""
@@ -8111,6 +8157,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Refund pesanan berikut tidak dapat merupakan bagian faktur terkonsolidasi karena mereka melakukan refund untuk pesanan yang difaktur. Setiap refund pesanan harus ditangani secara terpisah.\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -8145,7 +8194,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
-msgstr ""
+msgstr "Templat email dengan xmlid %s telah dihapus."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8267,13 +8316,14 @@ msgid ""
 "The product will be available after this hour for online order and self "
 "order."
 msgstr ""
+"Produk akan tersedia setelah jam ini untuk pesanan online dan mandiri."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_until
 msgid ""
 "The product will be available until this hour for online order and self "
 "order."
-msgstr ""
+msgstr "Produk akan tersedia sampai jam ini untuk pesanan online dan mandiri."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
@@ -8571,7 +8621,7 @@ msgstr "Kolom ini ada untuk mengoper id dari grup pengguna pos ke klien pos."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "This invoice has been created from the point of sale session:%s"
-msgstr ""
+msgstr "Faktur ini telah dibuat dari sesi POS:%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -8586,18 +8636,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/account_journal.py:0
 msgid ""
-"This journal is associated with a payment method. You cannot archive it"
+"This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
-"Jurnal ini terkait dengan metode pembayaran. Anda tidak dapat mengarsipnya"
+"Jurnal ini terhubung dengan metode pembayaran. Anda tidak dapat memodifikasi"
+" tipenya"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/account_journal.py:0
 msgid ""
-"This journal is associated with a payment method. You cannot modify its type"
+"This journal is associated with payment method %(payment_method)s that is "
+"being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
-"Jurnal ini terhubung dengan metode pembayaran. Anda tidak dapat memodifikasi"
-" tipenya"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8991,6 +9041,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Tidak dapat membuat faktur terkonsolidasi karena pesanan berikut tidak dapat difaktur.\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9183,7 +9236,6 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "VAT:"
 msgstr "PPN:"
 
@@ -9366,7 +9418,6 @@ msgstr "Wholemeal loaf"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/orderline/orderline.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "With a"
 msgstr "Dengan"
@@ -9494,6 +9545,8 @@ msgstr ""
 msgid ""
 "You cannot close the POS while there are still draft orders for the day."
 msgstr ""
+"Anda tidak dapat menutup POS selagi masih terdapat draft pesanan untuk hari "
+"itu."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9666,7 +9719,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
 msgid "Your {{ object.config_id.name }} receipt"
-msgstr ""
+msgstr "Resi {{ object.config_id.name }} Anda"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -9695,14 +9748,19 @@ msgstr "dengan Email"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "default_preset_id"
-msgstr ""
+msgstr "default_preset_id"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
+msgid "discount"
+msgstr "diskon"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/orderline/orderline.xml:0
-#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
-msgid "discount"
-msgstr "diskon"
+msgid "discount off on"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9874,7 +9932,7 @@ msgstr "outstanding rescue session"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "preset_id"
-msgstr ""
+msgstr "preset_id"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
@@ -9886,12 +9944,6 @@ msgstr "qx9h1"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "return"
 msgstr "retur"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "session_id"
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

@@ -3,13 +3,14 @@
 # 	* website_membership
 # 
 # Translators:
+# Marianna Ciofani, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -55,6 +56,20 @@ msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL MEMBERS"
 msgstr "RILASCIA QUI I BLOCCHI PER RENDERLI DISPONIBILI PER TUTTI I MEMBRI"
 
 #. module: website_membership
+#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:website_membership.field_website__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.snippet_options
+msgid ""
+"Ensure you add your Google API Key in your settings to enable the feature"
+msgstr ""
+"Assicurati di aggiungere la chiave API Google nelle impostazioni per "
+"abilitare la funzionalità"
+
+#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Find a business partner"
 msgstr "Cerca un partner aziendale"
@@ -64,6 +79,12 @@ msgstr "Cerca un partner aziendale"
 #: code:addons/website_membership/controllers/main.py:0
 msgid "Free Members"
 msgstr "Iscritti gratuiti"
+
+#. module: website_membership
+#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:website_membership.field_website__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country

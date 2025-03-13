@@ -3,13 +3,14 @@
 # 	* project_timesheet_holidays
 # 
 # Translators:
+# Tony Ng, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -30,15 +31,6 @@ msgid "Analytic Lines"
 msgstr "分析資料行"
 
 #. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
-msgid ""
-"Both the internal project and task are required to generate a timesheet for "
-"the time off %s. If you don't want a timesheet, you should leave the "
-"internal project and task empty."
-msgstr "內部專案和任務都需要為 %s休假生成工時表。如果您不需要工時表，則應將內部專案和任務留空。"
-
-#. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
 msgid "Companies"
 msgstr "公司"
@@ -49,26 +41,36 @@ msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: project_timesheet_holidays
+#: model:ir.model,website_form_label:project_timesheet_holidays.model_project_task
+msgid "Create a Task"
+msgstr "建立待辦任務"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
 msgid "Employee"
 msgstr "員工"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
-msgid "Generate Timesheets"
-msgstr "產生工時表"
-
-#. module: project_timesheet_holidays
-#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
-msgid "Generate timesheets when validating time off requests of this type"
-msgstr "驗證此類型休假請求時，同時產生工時表"
-
-#. module: project_timesheet_holidays
-#: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
-msgid ""
-"If checked, when validating a time off, timesheet will be generated in the "
-"Vacation Project of the company."
-msgstr "如果選中，在驗證休假時，將在公司的休假專案中生成時程表。"
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__id
+msgid "ID"
+msgstr "識別碼"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -88,7 +90,6 @@ msgid "Operation not supported"
 msgstr "不支援該操作"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Project"
 msgstr "專案"
@@ -101,7 +102,6 @@ msgstr "資源休假詳細資訊"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_project_task
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__task_id
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
 msgstr "任務"
@@ -144,19 +144,30 @@ msgid "Time Off Task"
 msgstr "休假任務"
 
 #. module: project_timesheet_holidays
-#: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
-msgid "Time Off Type"
-msgstr "休假類型"
-
-#. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
 msgstr "休假類型數目"
 
 #. module: project_timesheet_holidays
-#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
-msgid "Timesheets"
-msgstr "工時表"
+#: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"在新任務標題中，使用這些關鍵字進行設定：\n"
+"\n"
+"        30h：向任務分配 30 小時\n"
+"        #標籤名稱：對任務設定標籤\n"
+"        @用戶名稱：將任務指派給用戶\n"
+"        !：將任務設為高優先級別\n"
+"\n"
+"        記得使用正確格式和順序，例如：改進配置畫面 5h #特色功能 #v16 @志明 !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -175,6 +186,12 @@ msgstr "不可為連結至休假類型的任務建立工時表。請使用「休
 #. module: project_timesheet_holidays
 #. odoo-python
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "You cannot delete timesheets that are linked to global time off."
+msgstr "你不可刪除已連結至全域休假的工時表。"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
@@ -187,3 +204,9 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr "不可修改連結至休假請求的工時表。請改為使用「休假」應用程式，修改你的休假請求。"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
+msgid "allow_timesheets"
+msgstr ""

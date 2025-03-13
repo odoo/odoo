@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -29,11 +29,11 @@ msgstr ""
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
 "Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter.\n"
-"                    <br>Best Regards,<br><br>\n"
+"                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
 msgstr ""
@@ -77,6 +77,15 @@ msgid "Create a Time Off"
 msgstr ""
 
 #. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
+msgid "Display Name"
+msgstr "Nom mostrat"
+
+#. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
@@ -117,6 +126,15 @@ msgstr "Hr Presència Última data de còmput"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
 msgstr "Hr presència de la Vizualització de l'estat"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_presence.field_ir_websocket__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
+msgid "ID"
+msgstr "ID"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -209,6 +227,12 @@ msgstr ""
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
 msgstr "Absència inesperada"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Unplanned Absence"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log

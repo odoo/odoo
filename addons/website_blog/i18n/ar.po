@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -44,11 +44,6 @@ msgstr "' ترويسة الصفحة."
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
 msgstr "'. يتم عرض النتائج لـ '"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
-msgid "-- All dates"
-msgstr "-- كافة التواريخ "
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -369,6 +364,11 @@ msgid "All blogs"
 msgstr "كافة المدونات"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "All dates"
+msgstr "كافة التواريخ "
+
+#. module: website_blog
 #. odoo-python
 #: code:addons/website_blog/models/website_snippet_filter.py:0
 msgid "Alone in the ocean"
@@ -381,7 +381,7 @@ msgstr "على هذا المنوال، ما مدى صعوبة التركيب و�
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/js/website_blog.js:0
+#: code:addons/website_blog/static/src/interactions/website_blog.js:0
 msgid "Amazing blog article: %(title)s! Check it live: %(url)s"
 msgstr "مقالة مدونة مذهلة: %(title)s! ألقِ نظرة عليها مباشرةً: %(url)s "
 
@@ -867,6 +867,8 @@ msgstr "دكستر"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
 
@@ -965,6 +967,11 @@ msgid "Followers (Partners)"
 msgstr "المتابعين (الشركاء) "
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__footer_visible
+msgid "Footer Visible"
+msgstr "التذييل مرئي "
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_4
 msgid ""
 "For many of us who are city dwellers, we don’t really notice that sky up "
@@ -1039,6 +1046,11 @@ msgid "Has Message"
 msgstr "يحتوي على رسالة "
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__header_visible
+msgid "Header Visible"
+msgstr "الترويسة مرئية "
+
+#. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
 msgid "Here are some of the key facts you should bear in mind:"
 msgstr "فيما يلي بعض الحقائق الأساسية التي يجب أن تضعها في اعتبارك:"
@@ -1086,6 +1098,8 @@ msgstr "كيفية اختيار الفندق المناسب"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_website__id
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
 msgstr "المُعرف"
 
@@ -1789,16 +1803,6 @@ msgid "Select this menu item to create a new blog post."
 msgstr "اختر هذا العنصر من القائمة لإنشاء منشور مدونة جديد. "
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
-msgid "Select to Comment"
-msgstr "التحديد لكتابة تعليق "
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
-msgid "Select to Tweet"
-msgstr "التحديد لكتابة تغريدة "
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__seo_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__seo_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__seo_name
@@ -1809,6 +1813,11 @@ msgstr "اسم محسنات محرك البحث "
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Separate every keyword with a comma"
 msgstr "افصل بين كل كلمة مفتاحية بفاصلة "
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__sequence
+msgid "Sequence"
+msgstr "تسلسل "
 
 #. module: website_blog
 #. odoo-javascript
@@ -2144,9 +2153,14 @@ msgstr ""
 "Maui تستحق رؤية جمال هذه البيئة الطبيعية."
 
 #. module: website_blog
+#: model:ir.model.fields,help:website_blog.field_blog_post__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_url
-msgid "The full URL to access the document through the website."
-msgstr "رابطURL الكامل للوصول إلى المستند من خلال الموقع الإلكتروني. "
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -2445,6 +2459,11 @@ msgstr "اكتب هنا أو قم بسحب الكتل الإنشائية "
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_id
 msgid "Website"
 msgstr "الموقع الإلكتروني"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.actions.act_url,name:website_blog.action_open_website

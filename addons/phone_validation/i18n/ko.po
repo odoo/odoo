@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Daye Jeong, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +30,7 @@ msgstr "%(error)s 번호를 수정하고 다시 시도해 주세요."
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_needaction
 msgid "Action Needed"
 msgstr "조치 필요"
 
@@ -56,6 +59,7 @@ msgstr "이 전화번호의 차단을 해제하시겠습니까?"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_attachment_count
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_attachment_count
 msgid "Attachment Count"
 msgstr "첨부 파일 수"
 
@@ -75,17 +79,14 @@ msgid "Blacklist Date"
 msgstr "블랙리스트 날짜"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
-msgid "Blacklisted Phone Is Mobile"
-msgstr "블랙리스트 연락처가 휴대폰입니다"
-
-#. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
 msgid "Blacklisted Phone Numbers"
 msgstr "블랙리스트에 등록된 전화번호"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__phone_blacklisted
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
 msgstr "블랙리스트 연락처가 전화번호입니다"
 
@@ -109,6 +110,11 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: phone_validation
+#: model:ir.model,website_form_label:phone_validation.model_res_partner
+msgid "Create a Customer"
+msgstr "고객 만들기"
+
+#. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__create_uid
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__create_uid
 msgid "Created by"
@@ -126,13 +132,18 @@ msgid "Discard"
 msgstr "취소"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__display_name
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__display_name
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__display_name
 msgid "Display Name"
 msgstr "표시명"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized
+#: model:ir.model.fields,help:phone_validation.field_res_partner__phone_sanitized
+#: model:ir.model.fields,help:phone_validation.field_res_users__phone_sanitized
 msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
@@ -141,41 +152,51 @@ msgstr "삭제된 전화 번호를 저장하는 데 사용되는 필드입니다
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_follower_ids
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_follower_ids
 msgid "Followers"
 msgstr "팔로워"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_partner_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_partner_ids
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "팔로워 (협력사)"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__has_message
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__has_message
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__has_message
 msgid "Has Message"
 msgstr "메시지가 있습니다"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__id
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__id
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction
+#: model:ir.model.fields,help:phone_validation.field_res_partner__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
+#: model:ir.model.fields,help:phone_validation.field_res_partner__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+#: model:ir.model.fields,help:phone_validation.field_res_partner__phone_sanitized_blacklisted
+#: model:ir.model.fields,help:phone_validation.field_res_users__phone_sanitized_blacklisted
 msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
@@ -208,17 +229,9 @@ msgid "Impossible number %s: too many digits."
 msgstr "잘못된 숫자 %s: 입력된 숫자가 너무 많습니다."
 
 #. module: phone_validation
-#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
-msgid ""
-"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
-"distinguish which number is blacklisted             when there is both a "
-"mobile and phone field in a model."
-msgstr ""
-"해당 핸드폰 번호가 블랙리스트에 오른 번호인지 여부를 나타냅니다. 모델에 핸드폰과 유선전화 필드 양쪽이 있는 경우 블랙리스트에 올라 있는"
-" 번호를 구분하는데 사용합니다."
-
-#. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
+#: model:ir.model.fields,help:phone_validation.field_res_partner__phone_blacklisted
+#: model:ir.model.fields,help:phone_validation.field_res_users__phone_blacklisted
 msgid ""
 "Indicates if a blacklisted sanitized phone number is a phone number. Helps "
 "distinguish which number is blacklisted             when there is both a "
@@ -242,6 +255,7 @@ msgstr "%s 모델에 대한 첫번째 전화번호 필드가 잘못되었습니�
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_is_follower
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_is_follower
 msgid "Is Follower"
 msgstr "팔로워임"
 
@@ -260,12 +274,14 @@ msgstr "최근 갱신 일자"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_has_error
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_has_error
 msgid "Message Delivery error"
 msgstr "메시지 전송 오류"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_ids
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_ids
 msgid "Messages"
 msgstr "메시지"
 
@@ -283,24 +299,28 @@ msgstr "전화번호가 이미 존재합니다."
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction_counter
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction_counter
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_needaction_counter
 msgid "Number of Actions"
 msgstr "작업 수"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error_counter
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_has_error_counter
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_has_error_counter
 msgid "Number of errors"
 msgstr "오류 횟수"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction_counter
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction_counter
+#: model:ir.model.fields,help:phone_validation.field_res_partner__message_needaction_counter
 msgid "Number of messages requiring action"
 msgstr "조치가 필요한 메시지 수"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error_counter
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error_counter
+#: model:ir.model.fields,help:phone_validation.field_res_partner__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "전송 오류가 발생한 메시지 수입니다."
 
@@ -329,27 +349,26 @@ msgstr "전화번호 블랙리스트 혼합"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__phone_sanitized_blacklisted
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
 msgstr "전화번호 블랙리스트"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_mobile_search
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__number
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__phone
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__phone_mobile_search
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_mobile_search
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Phone Number"
 msgstr "전화번호"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_mobile_search
-msgid "Phone/Mobile"
-msgstr "전화번호/휴대전화"
-
-#. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
-msgid ""
-"Please enter at least 3 characters when searching a Phone/Mobile number."
-msgstr "전화나 휴대폰 번호 검색 시 3자 이상 입력하세요."
+msgid "Please enter at least 3 characters when searching a Phone number."
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
@@ -365,6 +384,8 @@ msgstr "블랙리스트에서 휴대폰 번호 삭제"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__phone_sanitized
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_sanitized
 msgid "Sanitized Number"
 msgstr "제거된 번호"
 
@@ -389,6 +410,14 @@ msgstr "차단 해제 사유: %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "사용자"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+msgid ""
+"You do not have the access right to unblacklist phone numbers. Please "
+"contact your administrator."
+msgstr "전화번호를 블랙리스트에서 제외할 수 있는 권한이 없습니다. 관리자에게 문의하시기 바랍니다."
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

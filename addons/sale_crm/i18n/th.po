@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -45,6 +45,11 @@ msgid "Create a new customer"
 msgstr "สร้างลูกค้าใหม่"
 
 #. module: sale_crm
+#: model:ir.model,website_form_label:sale_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "สร้างโอกาส"
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
 msgstr "สร้างใหม่หรือใช้ลูกค้าที่มีอยู่ในใบเสนอราคาใหม่"
@@ -70,7 +75,10 @@ msgid "Customer"
 msgstr "ลูกค้า"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
@@ -86,14 +94,12 @@ msgid "Expected revenue has been updated based on the linked Sales Orders."
 msgstr "รายได้ที่คาดหวังได้รับการอัปเดตตามคำสั่งซื้อที่เชื่อมโยง"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__id
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__id
 msgid "ID"
 msgstr "ไอดี"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
-msgid "Invoiced in Sales Orders Target"
-msgstr "ออกใบแจ้งหนี้ในเป้าหมายคำสั่งขาย"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -107,8 +113,8 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "ลูกค้าเป้าหมาย / โอกาส"
+msgid "Lead"
+msgstr "ลูกค้าเป้าหมาย"
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
@@ -198,11 +204,6 @@ msgstr "จำนวนคำสั่งรวม"
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
 msgid "Untaxed Total of Confirmed Orders"
 msgstr "ยอดรวมของคำสั่งที่ยืนยันแล้วและยังไม่รวมภาษี"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "User"
-msgstr "ผู้ใช้"
 
 #. module: sale_crm
 #. odoo-python

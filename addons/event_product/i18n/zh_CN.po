@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -46,11 +46,22 @@ msgid "Description"
 msgstr "描述"
 
 #. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_registration__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_product__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_template__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: event_product
 #: model:ir.model,name:event_product.model_event_event
 msgid "Event"
 msgstr "活动"
 
 #. module: event_product
+#: model:ir.model,name:event_product.model_event_registration
 #: model:ir.model.fields.selection,name:event_product.selection__product_template__service_tracking__event
 msgid "Event Registration"
 msgstr "事件登记"
@@ -79,6 +90,27 @@ msgstr "活动门票"
 #: model:ir.model.fields,field_description:event_product.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "活动门票"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__free
+msgid "Free"
+msgstr "免费"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__id
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_event_registration__id
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_product_product__id
+#: model:ir.model.fields,field_description:event_product.field_product_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr "未售出"
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
@@ -115,6 +147,11 @@ msgid "Product Variant"
 msgstr "产品变体"
 
 #. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr "促销状态"
+
+#. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales End"
 msgstr "销售结束"
@@ -123,3 +160,14 @@ msgstr "销售结束"
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales Start"
 msgstr "销售开始"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Sold"
+msgstr "已售出"
+
+#. module: event_product
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Transaction"
+msgstr "交易"

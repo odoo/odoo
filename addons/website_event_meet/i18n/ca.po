@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -77,13 +77,13 @@ msgstr "Permet la creació de la sala"
 
 #. module: website_event_meet
 #. odoo-javascript
-#: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
+#: code:addons/website_event_meet/static/src/interactions/meeting_room.js:0
 msgid "Are you sure you want to close this room?"
 msgstr ""
 
 #. module: website_event_meet
 #. odoo-javascript
-#: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
+#: code:addons/website_event_meet/static/src/interactions/meeting_room.js:0
 msgid "Are you sure you want to duplicate this room?"
 msgstr ""
 
@@ -185,7 +185,10 @@ msgid "Discard"
 msgstr "Descartar"
 
 #. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__display_name
+#: model:ir.model.fields,field_description:website_event_meet.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_meet.field_website_event_menu__display_name
 msgid "Display Name"
 msgstr "Nom mostrat"
 
@@ -243,7 +246,10 @@ msgid "Group By"
 msgstr "Agrupar per"
 
 #. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__id
+#: model:ir.model.fields,field_description:website_event_meet.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_meet.field_website_event_menu__id
 msgid "ID"
 msgstr "ID"
 
@@ -463,9 +469,14 @@ msgid ""
 msgstr ""
 
 #. module: website_event_meet
+#: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_url
-msgid "The full URL to access the document through the website."
-msgstr "L'URL completa per accedir al document a través del lloc web."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__name
@@ -502,6 +513,11 @@ msgstr "¿Els seus mobles favorits?"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Want to create your own discussion room?"
+msgstr ""
+
+#. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__website_absolute_url
+msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_event_meet

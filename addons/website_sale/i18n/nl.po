@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -198,19 +198,9 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
 msgstr "<i class=\"fa fa-pencil me-1\"/>Bewerken"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_row
-msgid ""
-"<i class=\"fa fa-plus me-md-2\"/>\n"
-"                    <span class=\"d-none d-md-inline\">Add address</span>"
-msgstr ""
-"<i class=\"fa fa-plus me-md-2\"/>\n"
-"                    <span class=\"d-none d-md-inline\">Adres toevoegen</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -268,16 +258,6 @@ msgstr ""
 "role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">Country...</option>"
-msgstr "<option value=\"\">Land...</option>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Staat / Provincie...</option>"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 msgid ""
@@ -295,14 +275,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
 msgstr "<small class=\"d-none d-lg-inline text-muted\">Sorteren op:</small>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                                            Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.\n"
-"                                        </small>"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
@@ -817,11 +789,6 @@ msgid "Anonymous express checkout partner for order %s"
 msgstr "Anonieme express checkout-partner voor order %s"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Apartment, suite, etc."
-msgstr "Appartement, suite, enz."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Apply"
 msgstr "Toepassen"
@@ -1171,38 +1138,6 @@ msgstr "Locatie wijzigen"
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"Het wijzigen van een btw-nummer is niet toegestaan zodra documenten zijn "
-"uitgegeven voor je account. Neem direct contact met ons op voor deze "
-"bewerking."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing company name is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"Het wijzigen van de bedrijfsnaam is niet toegestaan nadat document(en) voor "
-"je account zijn uitgegeven. Neem rechtstreeks contact met ons op voor deze "
-"bewerking."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Het wijzigen van je naam is niet toegestaan zodra facturen zijn uitgegeven voor je account. \n"
-"Neem direct contact met ons op voor deze bewerking."
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Checkout"
 msgstr "Afrekenen"
@@ -1239,11 +1174,6 @@ msgstr "Deze locatie kiezen"
 #: model:product.pricelist,name:website_sale.list_christmas
 msgid "Christmas"
 msgstr "Kerstmis"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "City"
-msgstr "Plaats"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -1347,7 +1277,6 @@ msgstr "Bedrijven"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
 msgstr "Bedrijfsnaam"
 
@@ -1502,11 +1431,6 @@ msgstr "Verder winkelen"
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
 msgid "Couches"
 msgstr "Banken"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country"
-msgstr "Land"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2037,11 +1961,6 @@ msgid "Edit the price of this product by clicking on the amount."
 msgstr "Bewerk de prijs van dit producten door te klikken op het bedrag."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-msgid "Edit this address"
-msgstr "Bewerk dit adres"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_education
 msgid "Education Tools"
 msgstr "Onderwijs"
@@ -2216,11 +2135,6 @@ msgid "From Website"
 msgstr "Van website"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Full name"
-msgstr "Volledige naam"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
 msgid "Furnitures"
 msgstr "Meubels"
@@ -2380,18 +2294,6 @@ msgstr ""
 "hun winkelmandje hebben verlaten"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Als je bestelt voor een externe persoon, plaats je order via de back-end. "
-"Indien je je naam of e-mailadres wilt wijzigen, kan je dit doen in de "
-"accountinstellingen of contact opnemen met je administrator."
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__website_id
 msgid ""
 "If you want a pricelist to be available on a website,you must fill in this "
@@ -2478,12 +2380,6 @@ msgstr "Breedte afbeeldingen"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Instant checkout, instead of adding to cart"
 msgstr "Direct afrekenen, in plaats van toevoegen aan winkelmandje"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "Invalid Email! Please enter a valid email address."
-msgstr "Foutieve e-mail! Graag een geldig e-mailadres in te geven."
 
 #. module: website_sale
 #. odoo-python
@@ -3234,11 +3130,6 @@ msgstr "De betaling wordt verwerkt."
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Pedal-based opening system"
 msgstr "Op pedaal gebaseerd openingssysteem"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Phone"
-msgstr "Telefoon"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4189,12 +4080,6 @@ msgstr "Uitverkocht"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Some required fields are empty."
-msgstr "Sommige verplichte velden zijn leeg."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
 msgstr "Sorry, het is niet mogelijk om je order te verzenden."
 
@@ -4226,11 +4111,6 @@ msgid "Standing Desks"
 msgstr "Staande Bureaus"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province"
-msgstr "Staat / Provincie"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Status"
 msgstr "Status"
@@ -4244,11 +4124,6 @@ msgstr "Blijf op de productpagina"
 #: model:product.public.category,name:website_sale.public_category_cabinets_storage
 msgid "Storage Cabinets"
 msgstr "Opbergkasten"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Street and Number"
-msgstr "Straat en nummer"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4410,6 +4285,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given product does not have a price therefore it cannot be added to "
@@ -4703,12 +4579,6 @@ msgid "Use Google Places API to validate addresses entered by your visitors"
 msgstr ""
 "Gebruik Google Places API om adressen te bevestigen die door je bezoekers "
 "zijn ingevoerd"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "VAT"
-msgstr "Btw"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
@@ -5109,11 +4979,6 @@ msgstr "Je postcode"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Je vorige winkelmandje is al voltooid."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Zip Code"
-msgstr "Postcode"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix

@@ -3,13 +3,14 @@
 # 	* website_event_booth
 # 
 # Translators:
+# Chloe Wang, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -112,7 +113,7 @@ msgstr "展位注册完成！"
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
 msgid "Booth registration failed."
 msgstr "展位注册失败。"
 
@@ -149,6 +150,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "Contact Us"
 msgstr "联系我们"
+
+#. module: website_event_booth
+#: model:ir.model.fields,field_description:website_event_booth.field_event_event__display_name
+#: model:ir.model.fields,field_description:website_event_booth.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_booth.field_website_event_menu__display_name
+msgid "Display Name"
+msgstr "显示名称"
 
 #. module: website_event_booth
 #: model:ir.model,name:website_event_booth.model_event_event
@@ -194,12 +202,22 @@ msgid "Go back"
 msgstr "返回"
 
 #. module: website_event_booth
+#: model:ir.model.fields,field_description:website_event_booth.field_event_event__id
+#: model:ir.model.fields,field_description:website_event_booth.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_booth.field_website_event_menu__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_event_booth
 #. odoo-javascript
-#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
-#: code:addons/website_event_booth/static/src/js/booth_register.js:0
-#, python-format
+#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
 msgid "It looks like your email is linked to an existing account."
-msgstr ""
+msgstr "您的电子邮件似乎已与现有账户关联。"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
+msgid "It's no longer possible to book a booth."
+msgstr "现在已无法预订展位。"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_layout
@@ -229,11 +247,11 @@ msgstr "电话"
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid "Please Sign In."
-msgstr ""
+msgstr "请登入。"
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
 msgid "Please fill out the form correctly."
 msgstr "请正确填写表格。"
 
@@ -249,7 +267,7 @@ msgstr "对不起，所有的摊位都卖完了。"
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
 msgid "The booth category doesn't exist."
 msgstr "展位类别不存在。"
 

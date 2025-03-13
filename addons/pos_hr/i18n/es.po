@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,18 +21,13 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_hr
-#: model:ir.model,name:pos_hr.model_report_pos_hr_multi_employee_sales_report
-msgid "A collection of single session reports. One for each employee"
-msgstr "Una recopilación de informes de una sesión, uno para cada empleado"
-
-#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
 msgstr "Abigal Peterson"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
+#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Access Denied"
 msgstr "Acceso denegado"
 
@@ -74,7 +70,7 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash in/out"
 msgstr "Entrada y salida de efectivo"
 
@@ -99,7 +95,7 @@ msgstr "Nombre del cajero"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "Change Cashier"
 msgstr "Cambiar cajero"
 
@@ -116,21 +112,36 @@ msgstr "Ajustes de configuración"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Counted"
 msgstr "Contado"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Difference"
 msgstr "Diferencia"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.js:0
+#: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.js:0
 msgid "Discard"
 msgstr "Descartar"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_product_product__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -140,11 +151,6 @@ msgstr "Descartar"
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
 msgid "Employee"
 msgstr "Empleado"
-
-#. module: pos_hr
-#: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
-msgid "Employee Sales Details"
-msgstr "Detalles de ventas de empleados"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -175,14 +181,37 @@ msgid "Employees with manager access"
 msgstr "Empleados con acceso de gerente"
 
 #. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
+msgid "Employees with minimal access"
+msgstr "Empleados con acceso mínimo"
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
+#: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
 msgstr "Introduzca su PIN"
 
 #. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_account_bank_statement_line__id
+#: model:ir.model.fields,field_description:pos_hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_hr.field_product_product__id
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_hr_single_employee_sales_report__id
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__id
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_pos_config__minimal_employee_ids
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "If left empty, all employees can log in to PoS"
 msgstr "Si se deja vacío, todos los empleados pueden acceder al TPV"
 
@@ -196,19 +225,25 @@ msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/navbar/navbar.xml:0
+#: code:addons/pos_hr/static/src/app/components/navbar/navbar.xml:0
 msgid "Lock"
 msgstr "Bloquear"
 
 #. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Minimal rights"
+msgstr "Permisos mínimos"
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "No Cashiers"
 msgstr "Sin cajeros"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
+#: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Open Register"
 msgstr "Abrir caja registradora"
 
@@ -220,31 +255,37 @@ msgstr "Caja registradora abierta"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Opening"
 msgstr "Apertura"
 
 #. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/pos_session.py:0
+msgid "Others"
+msgstr "Otros"
+
+#. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "PIN not found"
 msgstr "No se encontró el código PIN"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "Password?"
 msgstr "¿Contraseña?"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Payments"
 msgstr "Pagos"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.js:0
+#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Payments in %(paymentMethod)s"
 msgstr "Pagos en %(paymentMethod)s"
 
@@ -277,12 +318,6 @@ msgstr "Pagos en el punto de venta"
 #: model:ir.model,name:pos_hr.model_pos_session
 msgid "Point of Sale Session"
 msgstr "Sesión TPV"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/print_report_button/print_report_button.xml:0
-msgid "Print"
-msgstr "Imprimir"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_product_product
@@ -318,25 +353,25 @@ msgstr "El empleado que usa la caja registradora."
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "There is no cashier available."
 msgstr "No hay cajeros disponibles."
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
+#: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Unlock Register"
 msgstr "Desbloquear caja registradora"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "Wrong PIN"
 msgstr "PIN incorrecto"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
+#: code:addons/pos_hr/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "You are not allowed to change the price of a product."
 msgstr "No está permitido cambiar el precio de un producto."
 

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -42,6 +42,11 @@ msgstr ""
 "유튜브에 동영상이 이미 업로드된 경우 이 옵션을 선택하면 '다이렉트' 옵션 (채팅, ...)을 보이지 않도록 설정할 수 있습니다."
 
 #. module: website_event_track_live
+#: model:ir.model.fields,field_description:website_event_track_live.field_event_track__display_name
+msgid "Display Name"
+msgstr "이름 표시"
+
+#. module: website_event_track_live
 #: model:ir.model,name:website_event_track_live.model_event_track
 msgid "Event Track"
 msgstr "행사 과정"
@@ -54,6 +59,11 @@ msgid ""
 msgstr "동영상 URL에서 추출하여 다양한 링크(임베드/썸네일/...)를 유추하는 데 사용됩니다."
 
 #. module: website_event_track_live
+#: model:ir.model.fields,field_description:website_event_track_live.field_event_track__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_event_track_live
 #: model:ir.model.fields,field_description:website_event_track_live.field_event_track__is_youtube_chat_available
 msgid "Is Chat Available"
 msgstr "채팅 사용 가능"
@@ -64,7 +74,7 @@ msgid "Is YouTube Replay"
 msgstr "유튜브 재생"
 
 #. module: website_event_track_live
-#: model_terms:ir.ui.view,arch_db:website_event_track_live.tracks_display_list
+#: model_terms:ir.ui.view,arch_db:website_event_track_live.track_list_item
 msgid "Replay"
 msgstr "재생"
 

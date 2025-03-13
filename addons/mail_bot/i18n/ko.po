@@ -3,13 +3,14 @@
 # 	* mail_bot
 # 
 # Translators:
+# Sarah Park, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -38,9 +39,11 @@ msgid "Discussion Channel"
 msgstr "메일 및 채팅 채널"
 
 #. module: mail_bot
-#: model:ir.model,name:mail_bot.model_mail_thread
-msgid "Email Thread"
-msgstr "이메일 스레드"
+#: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:mail_bot.field_mail_bot__display_name
+#: model:ir.model.fields,field_description:mail_bot.field_res_users__display_name
+msgid "Display Name"
+msgstr "이름 표시"
 
 #. module: mail_bot
 #. odoo-python
@@ -66,11 +69,6 @@ msgid ""
 msgstr ""
 "잘하셨습니다! 👍%(new_line)s특수 명령어를 사용하시려면, %(bold_start)s입력 시%(bold_end)s "
 "%(command_start)s/%(command_end)s를 사용하여 시작하시면 됩니다. 편리하게 사용해보세요."
-
-#. module: mail_bot
-#: model:ir.model,name:mail_bot.model_ir_http
-msgid "HTTP Routing"
-msgstr "HTTP 라우팅"
 
 #. module: mail_bot
 #. odoo-python
@@ -99,6 +97,13 @@ msgid ""
 msgstr ""
 "해당 질문에 대답할 수 있을 정도로 제가 똑똑하지는 않습니다.%(new_line)s제 안내를 따르시려면, 이렇게 질문해주세요: "
 "%(command_start)s투어 시작하기%(command_end)s."
+
+#. module: mail_bot
+#: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__id
+#: model:ir.model.fields,field_description:mail_bot.field_mail_bot__id
+#: model:ir.model.fields,field_description:mail_bot.field_res_users__id
+msgid "ID"
+msgstr "ID"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__idle
@@ -283,6 +288,8 @@ msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to use"
 " canned responses. I've created a temporary one for you."
 msgstr ""
+"훌륭합니다! 😇 %(new_line)s미리 준비된 응답을 사용하려면 %(command_start)s::%(command_end)s을 "
+"입력해 보세요. 임시로 응답을 준비해 두었습니다."
 
 #. module: mail_bot
 #. odoo-python

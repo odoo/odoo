@@ -3,13 +3,14 @@
 # 	* project_timesheet_holidays
 # 
 # Translators:
+# Manon Rondou, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -30,18 +31,6 @@ msgid "Analytic Lines"
 msgstr "Lignes analytiques"
 
 #. module: project_timesheet_holidays
-#. odoo-python
-#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
-msgid ""
-"Both the internal project and task are required to generate a timesheet for "
-"the time off %s. If you don't want a timesheet, you should leave the "
-"internal project and task empty."
-msgstr ""
-"Le projet interne et la tâche sont tous les deux requis pour générer une "
-"feuille de temps pour les congés %s. Si vous ne souhaitez pas de feuille de "
-"temps, vous pouvez laisser le projet interne et la tâche vides."
-
-#. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
 msgid "Companies"
 msgstr "Sociétés"
@@ -52,30 +41,36 @@ msgid "Config Settings"
 msgstr "Paramètres de configuration"
 
 #. module: project_timesheet_holidays
+#: model:ir.model,website_form_label:project_timesheet_holidays.model_project_task
+msgid "Create a Task"
+msgstr "Créer une tâche"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Employé"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
-msgid "Generate Timesheets"
-msgstr "Générer des feuilles de temps"
-
-#. module: project_timesheet_holidays
-#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
-msgid "Generate timesheets when validating time off requests of this type"
-msgstr ""
-"Générer des feuilles de temps lors de la validation des demandes de congé de"
-" ce type"
-
-#. module: project_timesheet_holidays
-#: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
-msgid ""
-"If checked, when validating a time off, timesheet will be generated in the "
-"Vacation Project of the company."
-msgstr ""
-"Si coché, une feuille de temps sera générée dans le projet Vacances de la "
-"société lorsque le congé sera validé."
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_employee__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__id
+msgid "ID"
+msgstr "ID"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -95,7 +90,6 @@ msgid "Operation not supported"
 msgstr "Opération non prise en charge"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Project"
 msgstr "Projet"
@@ -108,7 +102,6 @@ msgstr "Détails des congés des ressources"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_project_task
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__task_id
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
 msgstr "Tâche"
@@ -157,19 +150,30 @@ msgid "Time Off Task"
 msgstr "Tâche de congé"
 
 #. module: project_timesheet_holidays
-#: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
-msgid "Time Off Type"
-msgstr "Type de congés"
-
-#. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
 msgstr "Nombre de types de congés"
 
 #. module: project_timesheet_holidays
-#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
-msgid "Timesheets"
-msgstr "Feuilles de temps"
+#: model:ir.model.fields,help:project_timesheet_holidays.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"Utilisez ces mots-clés dans le titre pour définir de nouvelles tâches :\n"
+"\n"
+"        30h Allouer 30 heures à la tâche\n"
+"        #tags Définir des étiquettes sur la tâche\n"
+"        @user Assigner la tâche à un utilisateur\n"
+"        ! Donner à la tâche une priorité élevée\n"
+"\n"
+"        Assurez-vous d'utiliser le bon format et le bon ordre par ex. Améliorez l'écran de configuration 5h #feature #v16 @Mitchell !"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -187,6 +191,13 @@ msgstr ""
 "Vous ne pouvez pas créer des feuilles de temps pour une tâche qui est "
 "associée à un type de congé. Veuillez utiliser l'application Congés pour "
 "plutôt demander un nouveau congé."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "You cannot delete timesheets that are linked to global time off."
+msgstr ""
+"Vous ne pouvez pas supprimer des feuilles de temps liées à un congé général."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -209,3 +220,9 @@ msgstr ""
 "Vous ne pouvez pas modifier des feuilles de temps qui sont associées à des "
 "demandes de congé. Veuillez plutôt utiliser l'application Congés pour "
 "modifier vos demandes de congé."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
+msgid "allow_timesheets"
+msgstr ""

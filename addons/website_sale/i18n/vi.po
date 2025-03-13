@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -197,19 +197,9 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"Trang web\"/>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
 msgstr "<i class=\"fa fa-pencil me-1\"/>Chỉnh sửa"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_row
-msgid ""
-"<i class=\"fa fa-plus me-md-2\"/>\n"
-"                    <span class=\"d-none d-md-inline\">Add address</span>"
-msgstr ""
-"<i class=\"fa fa-plus me-md-2\"/>\n"
-"                    <span class=\"d-none d-md-inline\">Thêm địa chỉ</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -267,16 +257,6 @@ msgstr ""
 "role=\"img\" aria-label=\"Tiếp\" title=\"Tiếp\"/>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">Country...</option>"
-msgstr "<option value=\"\">Quốc gia...</option>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Tỉnh thành...</option>"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 msgid ""
@@ -294,14 +274,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
 msgstr "<small class=\"d-none d-lg-inline text-muted\">Sắp xếp theo:</small>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                                            Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.\n"
-"                                        </small>"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
@@ -856,11 +828,6 @@ msgid "Anonymous express checkout partner for order %s"
 msgstr "Đối tác thanh toán nhanh ẩn danh cho đơn hàng %s"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Apartment, suite, etc."
-msgstr "Căn hộ, phòng suite,..."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Apply"
 msgstr "Áp dụng"
@@ -1211,37 +1178,6 @@ msgstr "Thay đổi vị trí"
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"Không được phép đổi MST khi (các) chứng từ đã được xuất cho tài khoản của "
-"bạn. Vui lòng liên hệ trực tiếp với chúng tôi để thực hiện thao tác này."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing company name is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"Không được phép đổi tên công ty khi (các) chứng từ đã được xuất cho tài "
-"khoản của bạn. Vui lòng liên hệ trực tiếp với chúng tôi để thực hiện thao "
-"tác này."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Không được phép thay đổi tên bạn khi đã xuất hóa đơn cho tài khoản của bạn. "
-"Vui lòng liên hệ trực tiếp với chúng tôi để thực hiện thao tác này."
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Checkout"
 msgstr "Check-out"
@@ -1278,11 +1214,6 @@ msgstr "Chọn vị trí này"
 #: model:product.pricelist,name:website_sale.list_christmas
 msgid "Christmas"
 msgstr "Giáng sinh"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "City"
-msgstr "Thành phố"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -1386,7 +1317,6 @@ msgstr "Công ty"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
 msgstr "Tên công ty"
 
@@ -1541,11 +1471,6 @@ msgstr "Tiếp tục mua hàng"
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
 msgid "Couches"
 msgstr "Ghế đi văng"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country"
-msgstr "Quốc gia"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2072,11 +1997,6 @@ msgid "Edit the price of this product by clicking on the amount."
 msgstr "Chỉnh sửa giá của sản phẩm bày bằng cách nhấp vào giá."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-msgid "Edit this address"
-msgstr "Chỉnh sửa địa chỉ này"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_education
 msgid "Education Tools"
 msgstr "Dụng cụ giáo dục"
@@ -2214,6 +2134,8 @@ msgstr "Điền địa chỉ của bạn"
 msgid ""
 "Final price may vary based on selection. Tax will be calculated at checkout."
 msgstr ""
+"Giá cuối cùng có thể thay đổi tùy theo lựa chọn. Thuế sẽ được tính khi thanh"
+" toán."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_foldable
@@ -2245,11 +2167,6 @@ msgstr "Miễn phí"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "From Website"
 msgstr "Từ trang web"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Full name"
-msgstr "Tên đầy đủ"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
@@ -2408,18 +2325,6 @@ msgstr ""
 "giỏ hàng của họ"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Nếu bạn đang đặt hàng cho người bên ngoài, vui lòng đặt hàng qua back-end. "
-"Nếu bạn muốn thay đổi tên hoặc địa chỉ email của mình, vui lòng thực hiện "
-"việc đó trong cài đặt tài khoản hoặc liên hệ với quản trị viên."
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__website_id
 msgid ""
 "If you want a pricelist to be available on a website,you must fill in this "
@@ -2506,12 +2411,6 @@ msgstr "Chiều rộng hình ảnh"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Instant checkout, instead of adding to cart"
 msgstr "Thanh toán ngay, thay vì thêm vào giỏ hàng"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "Invalid Email! Please enter a valid email address."
-msgstr "Email không hợp lệ! Vui lòng điền một địa chỉ email hợp lệ."
 
 #. module: website_sale
 #. odoo-python
@@ -3256,18 +3155,13 @@ msgstr "Giao dịch thanh toán"
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "Payment is already being processed."
-msgstr ""
+msgstr "Thanh toán đang được xử lý."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Pedal-based opening system"
 msgstr "Hệ thống mở bằng bàn đạp"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Phone"
-msgstr "Điện thoại"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3367,7 +3261,7 @@ msgstr "Bảng giá khả dụng cho thương mại điện tử/trang web này 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Price will be updated after choosing a delivery method"
-msgstr ""
+msgstr "Giá sẽ được cập nhật sau khi chọn phương thức giao hàng"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -4219,12 +4113,6 @@ msgstr "Hết hàng"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Some required fields are empty."
-msgstr "Một số trường bắt buộc vẫn đang để trống."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
 msgstr "Rất tiếc, chúng tôi không thể vận chuyển đơn hàng của bạn."
 
@@ -4256,11 +4144,6 @@ msgid "Standing Desks"
 msgstr "Bàn đứng"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province"
-msgstr "Tỉnh/TP"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Status"
 msgstr "Trạng thái"
@@ -4274,11 +4157,6 @@ msgstr "Ở lại trang sản phẩm"
 #: model:product.public.category,name:website_sale.public_category_cabinets_storage
 msgid "Storage Cabinets"
 msgstr "Tủ đồ"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Street and Number"
-msgstr "Đường và số"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4382,7 +4260,7 @@ msgstr "Token truy cập không hợp lệ."
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has already been paid. Please refresh the page."
-msgstr ""
+msgstr "Giỏ hàng đã được thanh toán. Vui lòng làm mới trang."
 
 #. module: website_sale
 #. odoo-python
@@ -4432,6 +4310,7 @@ msgstr "Không thể thêm vào giỏ hàng do sản phẩm không tồn tại."
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given product does not have a price therefore it cannot be added to "
@@ -4718,12 +4597,6 @@ msgstr "Tải lên tệp từ thư viện nội bộ của bạn. "
 msgid "Use Google Places API to validate addresses entered by your visitors"
 msgstr ""
 "Sử dụng Google Places API để xác thực các địa chỉ mà khách truy cập đã nhập"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "VAT"
-msgstr "Thuế GTGT"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
@@ -5127,11 +5000,6 @@ msgstr "Mã bưu điện của bạn"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
 msgstr "Giỏ hàng trước đó của bạn đã được hoàn thành."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Zip Code"
-msgstr "Mã bưu điện"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix

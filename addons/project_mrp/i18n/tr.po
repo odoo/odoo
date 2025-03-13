@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Hakan Türkün, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Hakan Türkün, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,7 @@ msgstr "Ürün Reçetesi"
 #. odoo-python
 #: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials
+#: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials_dashboard
 msgid "Bills of Materials"
 msgstr "Ürün Reçetesi"
 
@@ -41,6 +43,24 @@ msgid ""
 msgstr ""
 
 #. module: project_mrp
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_project_project__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_stock_move__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "Gösterilecek İsim"
+
+#. module: project_mrp
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:project_mrp.field_project_project__id
+#: model:ir.model.fields,field_description:project_mrp.field_stock_move__id
+#: model:ir.model.fields,field_description:project_mrp.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_mrp_production
 msgid "Manufacturing Order"
 msgstr "Üretim Emri"
@@ -49,6 +69,7 @@ msgstr "Üretim Emri"
 #. odoo-python
 #: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders
+#: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders_dashboard
 msgid "Manufacturing Orders"
 msgstr "Üretim Emirleri"
 

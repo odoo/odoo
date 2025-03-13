@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -22,7 +22,6 @@ msgstr ""
 #. module: website_event_exhibitor
 #. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid ""
 ")\n"
 "                    to meet them!"
@@ -324,8 +323,12 @@ msgid "Discover more"
 msgstr "Opdag mere"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__display_name
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__display_name
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website__display_name
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website_event_menu__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
@@ -337,7 +340,7 @@ msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
-msgid "Display in footer"
+msgid "Display on website footer"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -472,8 +475,12 @@ msgid "Has Message"
 msgstr "Har besked"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__id
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__id
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website__id
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website_event_menu__id
 msgid "ID"
 msgstr "ID"
 
@@ -512,6 +519,13 @@ msgstr "Billede 256"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__website_image_url
 msgid "Image URL"
 msgstr "Billede URL"
+
+#. module: website_event_exhibitor
+#: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__event_date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
@@ -662,12 +676,6 @@ msgstr "Besked ved leveringsfejl"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_ids
 msgid "Messages"
 msgstr "Beskeder"
-
-#. module: website_event_exhibitor
-#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_mobile
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
-msgid "Mobile"
-msgstr "Mobil"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
@@ -874,6 +882,11 @@ msgid "Sequence"
 msgstr "Sekvens"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__show_on_ticket
+msgid "Show on ticket"
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__exhibitor_menu
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__exhibitor_menu
 msgid "Showcase Exhibitors"
@@ -889,12 +902,6 @@ msgstr "Sølv"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__subtitle
 msgid "Slogan"
 msgstr "Slogan"
-
-#. module: website_event_exhibitor
-#. odoo-python
-#: code:addons/website_event_exhibitor/models/event_sponsor.py:0
-msgid "Sponsor"
-msgstr "Sponsor"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__sponsor_count
@@ -916,11 +923,6 @@ msgstr ""
 #: model:ir.ui.menu,name:website_event_exhibitor.menu_event_sponsor_type
 msgid "Sponsor Levels"
 msgstr ""
-
-#. module: website_event_exhibitor
-#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__mobile
-msgid "Sponsor Mobile"
-msgstr "Sponsor Mobil"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__name
@@ -995,9 +997,14 @@ msgid "Talent Management"
 msgstr "Talent Administration"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Den fulde URL for at få adgang til dokumentet via hjemmesiden."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -1040,10 +1047,16 @@ msgid "We could not find any exhibitor matching your search for:"
 msgstr ""
 
 #. module: website_event_exhibitor
+#: model:ir.model,name:website_event_exhibitor.model_website
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_tree
 msgid "Website"
 msgstr "Hjemmeside"
+
+#. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model:ir.model,name:website_event_exhibitor.model_website_event_menu
@@ -1125,6 +1138,11 @@ msgstr ""
 "                  <br/>"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar
+msgid "sponsor"
+msgstr ""
+
+#. module: website_event_exhibitor
 #. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -1137,3 +1155,8 @@ msgstr "begynder om"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "starts on"
 msgstr "begynder den"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
+msgid "to meet them!"
+msgstr ""

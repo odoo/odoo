@@ -3,16 +3,16 @@
 # 	* mail_bot
 # 
 # Translators:
-# Wil Odoo, 2025
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,9 +39,11 @@ msgid "Discussion Channel"
 msgstr "討論群組"
 
 #. module: mail_bot
-#: model:ir.model,name:mail_bot.model_mail_thread
-msgid "Email Thread"
-msgstr "電郵線程"
+#: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:mail_bot.field_mail_bot__display_name
+#: model:ir.model.fields,field_description:mail_bot.field_res_users__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
 
 #. module: mail_bot
 #. odoo-python
@@ -66,11 +68,6 @@ msgid ""
 msgstr ""
 "太棒了！ 👍%(new_line)s若要使用特殊指令，請以 "
 "%(command_start)s/%(command_end)s（斜線）%(bold_start)s起首%(bold_end)s。試試要求幫助。"
-
-#. module: mail_bot
-#: model:ir.model,name:mail_bot.model_ir_http
-msgid "HTTP Routing"
-msgstr "HTTP 路由"
 
 #. module: mail_bot
 #. odoo-python
@@ -99,6 +96,13 @@ msgid ""
 msgstr ""
 "我不夠聰明，無法回答你的問題。%(new_line)s要跟隨我的導覽，請輸入 %(command_start)sstart the "
 "tour%(command_end)s（開始導覽）。"
+
+#. module: mail_bot
+#: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__id
+#: model:ir.model.fields,field_description:mail_bot.field_mail_bot__id
+#: model:ir.model.fields,field_description:mail_bot.field_res_users__id
+msgid "ID"
+msgstr "識別碼"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__idle

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -28,6 +28,7 @@ msgstr "Daftar Kebutuhan Material (BOM)"
 #. odoo-python
 #: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials
+#: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials_dashboard
 msgid "Bills of Materials"
 msgstr "Daftar Kebutuhan Material (BOM)"
 
@@ -43,6 +44,24 @@ msgstr ""
 "untuk membuat produk jadi; melalui manufacturing order atau paket produk."
 
 #. module: project_mrp
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_project_project__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_stock_move__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: project_mrp
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:project_mrp.field_project_project__id
+#: model:ir.model.fields,field_description:project_mrp.field_stock_move__id
+#: model:ir.model.fields,field_description:project_mrp.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_mrp_production
 msgid "Manufacturing Order"
 msgstr "Manufacturing Order"
@@ -51,6 +70,7 @@ msgstr "Manufacturing Order"
 #. odoo-python
 #: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders
+#: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders_dashboard
 msgid "Manufacturing Orders"
 msgstr "Manufacturing Orders"
 

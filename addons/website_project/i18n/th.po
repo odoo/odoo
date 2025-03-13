@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -18,15 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: website_project
-#: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid ""
-"<i class=\"fa fa-check-circle fa-1x text-success me-2\" role=\"img\" aria-"
-"label=\"Success\" title=\"Success\"/>"
-msgstr ""
-"<i class=\"fa fa-check-circle fa-1x text-success me-2\" role=\"รูปภาพ\" "
-"aria-label=\"สำเร็จ\" title=\"สำเร็จ\"/>"
 
 #. module: website_project
 #. odoo-javascript
@@ -48,31 +39,31 @@ msgid "Company Name"
 msgstr "ชื่อบริษัท"
 
 #. module: website_project
+#: model:ir.model,website_form_label:website_project.model_project_task
+msgid "Create a Task"
+msgstr "สร้างงาน"
+
+#. module: website_project
 #: model:ir.model.fields,field_description:website_project.field_project_task__partner_name
 msgid "Customer Name"
 msgstr "ชื่อลูกค้า"
 
 #. module: website_project
-#: model:ir.model.fields,field_description:website_project.field_project_task__partner_phone
-msgid "Customer Phone"
-msgstr "โทรศัพท์ลูกค้า"
+#: model:ir.model.fields,field_description:website_project.field_project_task__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: website_project
+#. odoo-python
+#: code:addons/website_project/controllers/main.py:0
+msgid "Email"
+msgstr "อีเมล"
 
 #. module: website_project
 #. odoo-javascript
 #: code:addons/website_project/static/src/js/website_project_editor.js:0
 msgid "Email Address"
 msgstr "ที่อยู่อีเมล"
-
-#. module: website_project
-#. odoo-python
-#: code:addons/website_project/controllers/main.py:0
-msgid "Other Information"
-msgstr "ข้อมูลอื่นๆ"
-
-#. module: website_project
-#: model:ir.model.fields,field_description:website_project.field_project_task__email_from
-msgid "Email From"
-msgstr "อีเมลจาก"
 
 #. module: website_project
 #. odoo-javascript
@@ -82,14 +73,30 @@ msgstr "ชื่อเต็ม"
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "Go to the Homepage"
+msgid "Go to Homepage"
 msgstr "ไปที่หน้าแรก"
+
+#. module: website_project
+#: model:ir.model.fields,field_description:website_project.field_project_task__id
+msgid "ID"
+msgstr "ไอดี"
 
 #. module: website_project
 #. odoo-javascript
 #: code:addons/website_project/static/src/js/website_project_editor.js:0
 msgid "Message Subject"
 msgstr "หัวเรื่องของข้อความ"
+
+#. module: website_project
+#. odoo-python
+#: code:addons/website_project/controllers/main.py:0
+msgid "Other Information"
+msgstr "ข้อมูลอื่นๆ"
+
+#. module: website_project
+#: model_terms:ir.ui.view,arch_db:website_project.task_submitted
+msgid "Our team will get right on it."
+msgstr ""
 
 #. module: website_project
 #. odoo-javascript
@@ -110,15 +117,36 @@ msgstr "งาน"
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "Thank you for contacting us, our team will get right on it!"
-msgstr "ขอบคุณที่ติดต่อเรา ทีมงานของเราจะจัดการให้โดยทันที!"
+msgid "Task #"
+msgstr ""
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "View Task"
-msgstr "ดูงาน"
+msgid "Thank you!"
+msgstr "ขอบคุณ"
+
+#. module: website_project
+#: model:ir.model.fields,help:website_project.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"ใช้คำสำคัญเหล่านี้ในชื่อเรื่องเพื่อกำหนดงานใหม่:\n"
+"\n"
+"        30 ชม. จัดสรรเวลา 30 ชั่วโมงให้กับงาน\n"
+"        #แท็ก ตั้งค่าแท็กในงาน\n"
+"        @ผู้ใช้ มอบหมายงานให้กับผู้ใช้\n"
+"        ! กำหนดให้งานมีลำดับความสำคัญสูง\n"
+"\n"
+"        ตรวจสอบให้แน่ใจว่าใช้รูปแบบและลำดับที่ถูกต้อง เช่น ปรับหน้าจอของการกำหนดค่า 5 ชม #feature #v16 @Mitchell !"
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "Your Task Number is"
+msgid "Your task has been sent."
 msgstr ""

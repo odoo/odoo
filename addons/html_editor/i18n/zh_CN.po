@@ -3,13 +3,14 @@
 # 	* html_editor
 # 
 # Translators:
+# Chloe Wang, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -32,18 +33,6 @@ msgstr "如果无法显示图像，则'Alt tag' 指定图像的替代文本（�
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 msgid "'Title tag' is shown as a tooltip when you hover the picture."
 msgstr "'标题标签' 当您移动鼠标到图片上面悬停的时候显示标记说明."
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "(ALT Tag)"
-msgstr "(ALT 标签)"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "(TITLE Tag)"
-msgstr "(TITLE 标签)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -158,6 +147,12 @@ msgstr "添加下载框"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Add a label for your link"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
 msgid "Add a link"
 msgstr "添加链接"
@@ -171,8 +166,14 @@ msgstr "添加表情"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
-msgid "Add headings in this field to fill the Table of Content"
-msgstr "在此字段中添加标题以填充目录"
+msgid "Add headings to fill the Table of Contents"
+msgstr "加入标题，以填写目录内容"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin.js:0
+msgid "Add something inside this toggle"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -341,12 +342,6 @@ msgstr "取消"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "Change media description and tooltip"
-msgstr "更改媒体说明和工具提示"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
 msgid "ChatGPT"
 msgstr "ChatGPT"
@@ -365,9 +360,15 @@ msgstr "清除"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/backend/excalidraw/excalidraw.xml:0
-msgid "Click here to update the source"
-msgstr "单击此处更新消息来源"
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Clear content"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/image_plugin.js:0
+msgid "Click again to reset transformation"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -387,14 +388,6 @@ msgstr "代码"
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Code view"
 msgstr "代码视图"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
-msgid ""
-"Collaborative Links require joining, while Embed Links directly show the "
-"drawing."
-msgstr "协作链接需要加入，而嵌入链接则直接显示绘图。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -535,7 +528,6 @@ msgstr "描述"
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.xml:0
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
 msgid "Discard"
 msgstr "丢弃"
 
@@ -548,16 +540,15 @@ msgid ""
 msgstr "在我们的无版权图片天堂，发现精彩世界。没有法律纠纷，只有精美图片！"
 
 #. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "Documents"
 msgstr "文档"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin.js:0
-msgid "Drawing Board"
-msgstr "绘图板"
 
 #. module: html_editor
 #. odoo-javascript
@@ -712,6 +703,12 @@ msgstr "字体颜色"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/font_family_plugin.js:0
+msgid "Font family"
+msgstr "字形体系"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Font size"
 msgstr "字体大小"
@@ -850,6 +847,12 @@ msgstr "隐藏Dailymotion标志"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin.js:0
+msgid "Hide Text under foldable toggles"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Hide fullscreen button"
 msgstr "隐藏全屏按钮"
@@ -869,8 +872,8 @@ msgstr "隐藏分享按钮"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
-msgid "Highlight the structure (headings) of this field"
-msgstr "突出显示此字段的结构（标题）"
+msgid "Highlight the structure (headings)"
+msgstr "突出结构（标题）"
 
 #. module: html_editor
 #. odoo-javascript
@@ -883,6 +886,11 @@ msgstr "历史"
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Html"
 msgstr "HTML"
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+msgid "ID"
+msgstr "ID"
 
 #. module: html_editor
 #. odoo-javascript
@@ -955,6 +963,12 @@ msgstr "图像宽度"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/image_description.xml:0
+msgid "Image description"
+msgstr "图片描述"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Image padding"
 msgstr "图片内边距"
@@ -975,12 +989,6 @@ msgstr "插入"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
-msgid "Insert Drawing"
-msgstr "插入图纸"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
 msgid "Insert Video"
 msgstr "插入视频"
@@ -996,12 +1004,6 @@ msgstr "插入视频"
 #: code:addons/html_editor/static/src/main/banner_plugin.js:0
 msgid "Insert a danger banner"
 msgstr "插入危险模幅"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
-msgid "Insert a drawing board"
-msgstr "插入绘图板"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1056,12 +1058,6 @@ msgstr "插入警告模幅"
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Insert above"
 msgstr "插入上方"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin.js:0
-msgid "Insert an Excalidraw Board"
-msgstr "插入 Excalidraw 板"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1307,12 +1303,6 @@ msgstr "打开一个新标签"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
-msgid "Open in new Window"
-msgstr "在新窗口开启"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
 msgid "Optimized"
 msgstr "优化"
@@ -1337,6 +1327,12 @@ msgstr "大纲 + 圆角"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
+msgid "Paragraph"
+msgstr "段落"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Paragraph block"
 msgstr "段落区块"
 
@@ -1345,6 +1341,12 @@ msgstr "段落区块"
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
 msgid "Paste as URL"
 msgstr "粘贴为网址"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Paste or type your URL"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1403,6 +1405,12 @@ msgstr "辐射"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/core/history_plugin.js:0
+msgid "Redo"
+msgstr "重做"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Remove (DELETE)"
 msgstr "移除（DELETE）。"
@@ -1428,9 +1436,21 @@ msgstr "移除栏"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
+msgid "Replace"
+msgstr "替换"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Replace URL with its title?"
 msgstr "将URL替换为其标题？"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
+msgid "Replace icon"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1536,6 +1556,12 @@ msgstr "选择媒体"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/core/format_plugin.js:0
+msgid "Selection has no format"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_prompt_dialog.xml:0
 msgid "Send a message"
 msgstr "发送消息"
@@ -1613,19 +1639,6 @@ msgid "Solid"
 msgstr "实体"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
-msgid "Something went wrong!"
-msgstr "出现一些问题。"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
-msgid ""
-"Sorry, we could not find your drawing, please verify that the URL is valid."
-msgstr "抱歉，我们找不到您的绘图，请验证 URL 是否有效。"
-
-#. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Sorry, we could not generate a response. Please try again later."
@@ -1675,8 +1688,9 @@ msgstr "表格"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
-msgid "Table Of Content"
+msgid "Table of Contents"
 msgstr "目录"
 
 #. module: html_editor
@@ -1684,12 +1698,6 @@ msgstr "目录"
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Text"
 msgstr "文本"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
-msgid "The Excalidraw URL is not valid."
-msgstr "Excalidraw 网址无效無。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1779,9 +1787,21 @@ msgstr "切换斜体"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin.js:0
+msgid "Toggle list"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
 msgid "Toggle strikethrough"
 msgstr "切换删除线"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin.js:0
+msgid "Toggle title"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1853,14 +1873,20 @@ msgstr "请输入您的网址"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "Type your link label"
-msgstr "请输入您的链接标签"
+msgid "URL"
+msgstr "生成新的考勤机网址"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
-msgid "URL"
-msgstr "生成新的考勤机网址"
+#: code:addons/html_editor/static/src/main/link/link_plugin.js:0
+msgid "Unable to create a link on the current selection."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/core/history_plugin.js:0
+msgid "Undo"
+msgstr "取消"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1885,12 +1911,6 @@ msgstr "上传一个文件"
 #: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.js:0
 msgid "Upload an image"
 msgstr "上传图像"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.js:0
-msgid "Uploaded image's format is not supported. Try with: "
-msgstr "上传的图像格式不支持。试一试:"
 
 #. module: html_editor
 #. odoo-python
@@ -2054,12 +2074,6 @@ msgstr "度"
 #: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "document"
 msgstr "单据"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
-msgid "e.g. https://link.excalidraw.com/..."
-msgstr "例如：https://link.excalidraw.com/..."
 
 #. module: html_editor
 #. odoo-javascript

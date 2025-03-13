@@ -3,13 +3,14 @@
 # 	* cloud_storage_google
 # 
 # Translators:
+# Maitê Dietze, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -18,6 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/ir_attachment.py:0
+msgid "%s is not a valid Google Cloud Storage URL."
+msgstr "%s não é um URL válido do Google Cloud Storage."
 
 #. module: cloud_storage_google
 #: model:ir.model,name:cloud_storage_google.model_ir_attachment
@@ -33,6 +40,12 @@ msgstr "Provedor de armazenamento em nuvem para novos anexos"
 #: model:ir.model,name:cloud_storage_google.model_res_config_settings
 msgid "Config Settings"
 msgstr "Configurações"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_bucket_name
@@ -53,6 +66,12 @@ msgstr "Informações da conta de serviço do Google"
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_service_account_key
 msgid "Google Service Account Key"
 msgstr "Chave da conta de serviço do Google"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
 
 #. module: cloud_storage_google
 #. odoo-python

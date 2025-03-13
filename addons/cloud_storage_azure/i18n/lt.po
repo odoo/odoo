@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
@@ -18,6 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: cloud_storage_azure
+#. odoo-python
+#: code:addons/cloud_storage_azure/models/ir_attachment.py:0
+msgid "%s is not a valid Azure Blob Storage URL."
+msgstr ""
 
 #. module: cloud_storage_azure
 #: model:ir.model,name:cloud_storage_azure.model_ir_attachment
@@ -63,6 +69,18 @@ msgstr ""
 #: model:ir.model,name:cloud_storage_azure.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigūracijos nustatymai"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
+
+#. module: cloud_storage_azure
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_invalidate_user_delegation_key

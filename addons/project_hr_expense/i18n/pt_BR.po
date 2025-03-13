@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -20,6 +20,12 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: project_hr_expense
+#: model:ir.model.fields,field_description:project_hr_expense.field_hr_expense__display_name
+#: model:ir.model.fields,field_description:project_hr_expense.field_project_project__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: project_hr_expense
 #: model:ir.model,name:project_hr_expense.model_hr_expense
 msgid "Expense"
 msgstr "Despesa"
@@ -28,8 +34,15 @@ msgstr "Despesa"
 #. odoo-python
 #: code:addons/project_hr_expense/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_hr_expense.project_embedded_action_hr_expenses
+#: model:ir.embedded.actions,name:project_hr_expense.project_embedded_action_hr_expenses_dashbord
 msgid "Expenses"
 msgstr "Despesas"
+
+#. module: project_hr_expense
+#: model:ir.model.fields,field_description:project_hr_expense.field_hr_expense__id
+#: model:ir.model.fields,field_description:project_hr_expense.field_project_project__id
+msgid "ID"
+msgstr "ID"
 
 #. module: project_hr_expense
 #: model:ir.model,name:project_hr_expense.model_project_project

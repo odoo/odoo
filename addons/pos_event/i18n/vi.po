@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -21,13 +21,13 @@ msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid " (%s seats available)"
 msgstr " (còn %s ghế)"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "--- Select ---"
 msgstr "--- Chọn ---"
 
@@ -42,6 +42,11 @@ msgid "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>Print Event Tick
 msgstr "<i class=\"fa fa-file-pdf-o me-1\" aria-hidden=\"true\"/>In vé sự kiện"
 
 #. module: pos_event
+#: model_terms:ir.ui.view,arch_db:pos_event.event_registration_ticket_view_form
+msgid "<span class=\"o_stat_text\">PoS Order</span>"
+msgstr ""
+
+#. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_pos_order__attendee_count
 msgid "Attendee Count"
 msgstr "Số người tham dự"
@@ -53,21 +58,35 @@ msgstr "Người Tham dự"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Cancel"
 msgstr "Hủy"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Confirm"
 msgstr "Xác nhận"
 
 #. module: pos_event
+#: model:ir.model.fields,field_description:pos_event.field_event_event__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_question__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_question_answer__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:pos_event.field_event_registration_answer__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_event.field_pos_session__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid "Error"
 msgstr "Lỗi"
 
@@ -128,9 +147,23 @@ msgstr "Từ %s"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Global questions"
 msgstr "Câu hỏi chung"
+
+#. module: pos_event
+#: model:ir.model.fields,field_description:pos_event.field_event_event__id
+#: model:ir.model.fields,field_description:pos_event.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:pos_event.field_event_question__id
+#: model:ir.model.fields,field_description:pos_event.field_event_question_answer__id
+#: model:ir.model.fields,field_description:pos_event.field_event_registration__id
+#: model:ir.model.fields,field_description:pos_event.field_event_registration_answer__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_event.field_pos_session__id
+msgid "ID"
+msgstr "ID"
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_event_event__image_1024
@@ -181,20 +214,20 @@ msgstr "In vé toàn trang"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid "Select tickets for %s"
 msgstr "Chọn vé cho %s"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.js:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 msgid ""
 "The selected ticket (%s) is not available. Please select a different ticket."
 msgstr "Vé đã chọn (%s) không còn. Vui lòng chọn một vé khác."
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Ticket #"
 msgstr "Vé #"
 
@@ -206,13 +239,14 @@ msgstr "Lỗi vé"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "Tickets"
 msgstr "Phiếu hỗ trợ"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "Unlimited"
 msgstr "Không giới hạn"
 
@@ -227,13 +261,13 @@ msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/popup/event_registration_popup/event_registration_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 msgid "for"
 msgstr "cho"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/generic_components/product_card/product_card.xml:0
-#: code:addons/pos_event/static/src/app/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
+#: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 msgid "left"
 msgstr "trái"

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -79,13 +79,13 @@ msgstr "Разрешить создание комнат"
 
 #. module: website_event_meet
 #. odoo-javascript
-#: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
+#: code:addons/website_event_meet/static/src/interactions/meeting_room.js:0
 msgid "Are you sure you want to close this room?"
 msgstr "Вы уверены, что хотите закрыть эту комнату?"
 
 #. module: website_event_meet
 #. odoo-javascript
-#: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
+#: code:addons/website_event_meet/static/src/interactions/meeting_room.js:0
 msgid "Are you sure you want to duplicate this room?"
 msgstr "Вы уверены, что хотите продублировать эту комнату?"
 
@@ -187,7 +187,10 @@ msgid "Discard"
 msgstr "Отменить"
 
 #. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__display_name
+#: model:ir.model.fields,field_description:website_event_meet.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_meet.field_website_event_menu__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -245,7 +248,10 @@ msgid "Group By"
 msgstr "Группировать по"
 
 #. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__id
+#: model:ir.model.fields,field_description:website_event_meet.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_meet.field_website_event_menu__id
 msgid "ID"
 msgstr "ID"
 
@@ -466,9 +472,14 @@ msgid ""
 msgstr ""
 
 #. module: website_event_meet
+#: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Полный URL-адрес для доступа к документу через веб-сайт."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__name
@@ -506,6 +517,11 @@ msgstr "Какие предметы вы предпочитаете?"
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Want to create your own discussion room?"
 msgstr "Хотите создать свою собственную комнату для дискуссий?"
+
+#. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_website_event_menu

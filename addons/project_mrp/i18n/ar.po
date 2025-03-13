@@ -3,16 +3,16 @@
 # 	* project_mrp
 # 
 # Translators:
-# Wil Odoo, 2025
 # Malaz Abuidris <msea@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,7 @@ msgstr "قائمة المواد"
 #. odoo-python
 #: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials
+#: model:ir.embedded.actions,name:project_mrp.project_embedded_action_bills_of_materials_dashboard
 msgid "Bills of Materials"
 msgstr "قوائم المواد "
 
@@ -44,6 +45,24 @@ msgstr ""
 "المنتج النهائي؛ عن طريق أمر تصنيع أو مجموعة من منتجات. "
 
 #. module: project_mrp
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_project_project__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_stock_move__display_name
+#: model:ir.model.fields,field_description:project_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: project_mrp
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:project_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:project_mrp.field_project_project__id
+#: model:ir.model.fields,field_description:project_mrp.field_stock_move__id
+#: model:ir.model.fields,field_description:project_mrp.field_stock_rule__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_mrp_production
 msgid "Manufacturing Order"
 msgstr "أمر التصنيع "
@@ -52,6 +71,7 @@ msgstr "أمر التصنيع "
 #. odoo-python
 #: code:addons/project_mrp/models/project_project.py:0
 #: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders
+#: model:ir.embedded.actions,name:project_mrp.project_embedded_action_manufacturing_orders_dashboard
 msgid "Manufacturing Orders"
 msgstr "أوامر التصنيع"
 

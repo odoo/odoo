@@ -3,13 +3,14 @@
 # 	* event_product
 # 
 # Translators:
+# Sarah Park, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -46,11 +47,22 @@ msgid "Description"
 msgstr "설명"
 
 #. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_registration__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_product__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_template__display_name
+msgid "Display Name"
+msgstr "이름 표시"
+
+#. module: event_product
 #: model:ir.model,name:event_product.model_event_event
 msgid "Event"
 msgstr "행사"
 
 #. module: event_product
+#: model:ir.model,name:event_product.model_event_registration
 #: model:ir.model.fields.selection,name:event_product.selection__product_template__service_tracking__event
 msgid "Event Registration"
 msgstr "행사 등록"
@@ -79,6 +91,27 @@ msgstr "행사 티켓"
 #: model:ir.model.fields,field_description:event_product.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "행사 티켓"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__free
+msgid "Free"
+msgstr "무료"
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__id
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_event_registration__id
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_product_product__id
+#: model:ir.model.fields,field_description:event_product.field_product_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr "판매되지 않음"
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
@@ -115,6 +148,11 @@ msgid "Product Variant"
 msgstr "품목 세부선택"
 
 #. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr "판매 현황"
+
+#. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales End"
 msgstr "판매 종료"
@@ -123,3 +161,14 @@ msgstr "판매 종료"
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales Start"
 msgstr "판매 시작"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Sold"
+msgstr "판매됨"
+
+#. module: event_product
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Transaction"
+msgstr "거래"

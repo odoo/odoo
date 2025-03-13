@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -62,11 +62,39 @@ msgstr ""
 "휴가를 할당받지 못하는 방식으로 휴가 기간이 변경됩니다. 계약을 변경하기 전 이러한 휴가 및/또는 할당 내용을 검토하시기 바랍니다."
 
 #. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_leave.py:0
+msgid ""
+"Contract %(contract)s from %(start_date)s to %(end_date)s, status: "
+"%(status)s"
+msgstr ""
+
+#. module: hr_holidays_contract
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_leave__display_name
+msgid "Display Name"
+msgstr "이름 표시"
+
+#. module: hr_holidays_contract
 #: model:ir.model,name:hr_holidays_contract.model_hr_contract
 msgid "Employee Contract"
 msgstr "근로 계약서"
 
 #. module: hr_holidays_contract
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_leave__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_holidays_contract
 #: model:ir.model,name:hr_holidays_contract.model_hr_leave
 msgid "Time Off"
 msgstr "휴가"
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_leave.py:0
+msgid "undefined"
+msgstr ""

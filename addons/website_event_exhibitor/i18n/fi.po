@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,6 @@ msgstr ""
 #. module: website_event_exhibitor
 #. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid ""
 ")\n"
 "                    to meet them!"
@@ -326,8 +326,12 @@ msgid "Discover more"
 msgstr "Lue lisää"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__display_name
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__display_name
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website__display_name
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website_event_menu__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -341,8 +345,8 @@ msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
-msgid "Display in footer"
-msgstr "Näytä alalaidassa"
+msgid "Display on website footer"
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_email
@@ -476,8 +480,12 @@ msgid "Has Message"
 msgstr "Sisältää viestin"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__id
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__id
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website__id
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website_event_menu__id
 msgid "ID"
 msgstr "ID"
 
@@ -516,6 +524,15 @@ msgstr "Kuva 256"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__website_image_url
 msgid "Image URL"
 msgstr "Kuvan URL"
+
+#. module: website_event_exhibitor
+#: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__event_date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
+"Ilmoittaa aikavyöhykkeen, jossa tapahtuman päivämäärät/ajat näytetään "
+"verkkosivustolla."
 
 #. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
@@ -666,12 +683,6 @@ msgstr "Ongelma viestin toimituksessa"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_ids
 msgid "Messages"
 msgstr "Viestit"
-
-#. module: website_event_exhibitor
-#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_mobile
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
-msgid "Mobile"
-msgstr "Matkapuhelin"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
@@ -880,6 +891,11 @@ msgid "Sequence"
 msgstr "Järjestys"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__show_on_ticket
+msgid "Show on ticket"
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__exhibitor_menu
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__exhibitor_menu
 msgid "Showcase Exhibitors"
@@ -895,12 +911,6 @@ msgstr "Hopea"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__subtitle
 msgid "Slogan"
 msgstr "Iskulause"
-
-#. module: website_event_exhibitor
-#. odoo-python
-#: code:addons/website_event_exhibitor/models/event_sponsor.py:0
-msgid "Sponsor"
-msgstr "Sponsori"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__sponsor_count
@@ -922,11 +932,6 @@ msgstr "Sponsorin taso"
 #: model:ir.ui.menu,name:website_event_exhibitor.menu_event_sponsor_type
 msgid "Sponsor Levels"
 msgstr "Sponsirin taso"
-
-#. module: website_event_exhibitor
-#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__mobile
-msgid "Sponsor Mobile"
-msgstr "Sponsorin sähköposti"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__name
@@ -1003,9 +1008,14 @@ msgid "Talent Management"
 msgstr "Taitojen hallinta"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Dokumentin URL-osoite verkkosivustolla."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -1048,10 +1058,16 @@ msgid "We could not find any exhibitor matching your search for:"
 msgstr "Emme löytäneet yhtään näytteilleasettajaa, joka vastaisi hakuasi:"
 
 #. module: website_event_exhibitor
+#: model:ir.model,name:website_event_exhibitor.model_website
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_tree
 msgid "Website"
 msgstr "Verkkosivu"
+
+#. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model:ir.model,name:website_event_exhibitor.model_website_event_menu
@@ -1133,6 +1149,11 @@ msgstr ""
 "                <br/>"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar
+msgid "sponsor"
+msgstr "sponsori"
+
+#. module: website_event_exhibitor
 #. odoo-javascript
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -1145,3 +1166,8 @@ msgstr "alkaa kello"
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "starts on"
 msgstr "alkaa"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
+msgid "to meet them!"
+msgstr ""

@@ -3,13 +3,14 @@
 # 	* website_project
 # 
 # Translators:
+# Abe Manyo, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -18,15 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: website_project
-#: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid ""
-"<i class=\"fa fa-check-circle fa-1x text-success me-2\" role=\"img\" aria-"
-"label=\"Success\" title=\"Success\"/>"
-msgstr ""
-"<i class=\"fa fa-check-circle fa-1x text-success me-2\" role=\"img\" aria-"
-"label=\"Success\" title=\"Sukses\"/>"
 
 #. module: website_project
 #. odoo-javascript
@@ -48,31 +40,31 @@ msgid "Company Name"
 msgstr "Nama Perusahaan"
 
 #. module: website_project
+#: model:ir.model,website_form_label:website_project.model_project_task
+msgid "Create a Task"
+msgstr "Buat Task"
+
+#. module: website_project
 #: model:ir.model.fields,field_description:website_project.field_project_task__partner_name
 msgid "Customer Name"
 msgstr "Nama Pelanggan"
 
 #. module: website_project
-#: model:ir.model.fields,field_description:website_project.field_project_task__partner_phone
-msgid "Customer Phone"
-msgstr "Telepon Pelanggan"
+#: model:ir.model.fields,field_description:website_project.field_project_task__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: website_project
+#. odoo-python
+#: code:addons/website_project/controllers/main.py:0
+msgid "Email"
+msgstr "Email"
 
 #. module: website_project
 #. odoo-javascript
 #: code:addons/website_project/static/src/js/website_project_editor.js:0
 msgid "Email Address"
 msgstr "Alamat Email"
-
-#. module: website_project
-#. odoo-python
-#: code:addons/website_project/controllers/main.py:0
-msgid "Other Information"
-msgstr "Informasi Lainnya"
-
-#. module: website_project
-#: model:ir.model.fields,field_description:website_project.field_project_task__email_from
-msgid "Email From"
-msgstr "Email Dari"
 
 #. module: website_project
 #. odoo-javascript
@@ -82,14 +74,30 @@ msgstr "Nama Lengkap"
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "Go to the Homepage"
-msgstr "Pergi ke Beranda"
+msgid "Go to Homepage"
+msgstr "Kunjungi Beranda"
+
+#. module: website_project
+#: model:ir.model.fields,field_description:website_project.field_project_task__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_project
 #. odoo-javascript
 #: code:addons/website_project/static/src/js/website_project_editor.js:0
 msgid "Message Subject"
 msgstr "Subyek Pesan"
+
+#. module: website_project
+#. odoo-python
+#: code:addons/website_project/controllers/main.py:0
+msgid "Other Information"
+msgstr "Informasi Lainnya"
+
+#. module: website_project
+#: model_terms:ir.ui.view,arch_db:website_project.task_submitted
+msgid "Our team will get right on it."
+msgstr "Tim kami akan segera mengerjakannya."
 
 #. module: website_project
 #. odoo-javascript
@@ -110,15 +118,42 @@ msgstr "Kegiatan"
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "Thank you for contacting us, our team will get right on it!"
-msgstr "Terima kasih sudah menghubungi kami, tim kami akan segera membantu!"
+msgid "Task #"
+msgstr "Task #"
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "View Task"
-msgstr "Lihat Task"
+msgid "Thank you!"
+msgstr ""
+"<p>Dear ${object.partner_name atau 'pelamar'},</p>\n"
+"        <p>Kami terima kasih atas minat Anda pada perusahaan kami dan untuk aplikasi Anda.\n"
+"        Sayangnya, profil Anda tidak cocok dengan kebutuhan kita atau kampanye rekrutmen kami telah mencapai istilah.</p>\n"
+"        <p>Jika Anda ingin informasi lebih lanjut, jangan ragu untuk menghubungi kami melalui telepon.</p>\n"
+"        <p>Salam</p>\n"
+"        <br>${object.user_id dan object.user_id.signature | aman atau ''}"
+
+#. module: website_project
+#: model:ir.model.fields,help:website_project.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"Gunakan keyword-keyword ini di judul untuk menetapkan task baru:\n"
+"\n"
+"        30h Alokasi 30 jam ke task\n"
+"        #tags Tetapkan tag pada task\n"
+"        @user Tetapkan task ke user\n"
+"        ! Tetapkan task sebagai prioritas tinggi\n"
+"\n"
+"        Pastikan Anda menggunakan format dan order yang benar contoh Perbarui layar konfigurasi 5h #feature #v16 @Mitchell !"
 
 #. module: website_project
 #: model_terms:ir.ui.view,arch_db:website_project.task_submitted
-msgid "Your Task Number is"
-msgstr "Nomor Task Anda adalah"
+msgid "Your task has been sent."
+msgstr "Task Anda terkirim."

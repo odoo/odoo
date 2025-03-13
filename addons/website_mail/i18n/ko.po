@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -30,10 +30,27 @@ msgid "<small>Unfollow</small><i class=\"fa fa-fw ms-1\"/>"
 msgstr "<small>팔로우 취소</small><i class=\"fa fa-fw ms-1\"/>"
 
 #. module: website_mail
+#: model:ir.model.fields,field_description:website_mail.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_mail.field_publisher_warranty_contract__display_name
+msgid "Display Name"
+msgstr "이름 표시"
+
+#. module: website_mail
 #. odoo-javascript
-#: code:addons/website_mail/static/src/js/follow.js:0
+#: code:addons/website_mail/static/src/interactions/follow.js:0
 msgid "Error"
 msgstr "오류"
+
+#. module: website_mail
+#: model:ir.model,name:website_mail.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 라우팅"
+
+#. module: website_mail
+#: model:ir.model.fields,field_description:website_mail.field_ir_http__id
+#: model:ir.model.fields,field_description:website_mail.field_publisher_warranty_contract__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
@@ -44,12 +61,6 @@ msgstr "게시자 보증 계약"
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
 msgstr "구독"
-
-#. module: website_mail
-#. odoo-python
-#: code:addons/website_mail/controllers/main.py:0
-msgid "Suspicious activity detected by Google reCaptcha."
-msgstr ""
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow

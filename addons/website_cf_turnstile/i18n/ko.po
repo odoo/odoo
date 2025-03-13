@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Daye Jeong, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +42,7 @@ msgstr "CF 사이트 키"
 
 #. module: website_cf_turnstile
 #. odoo-javascript
-#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
 msgid "Cloudflare Turnstile Error"
 msgstr "Cloudflare Turnstile 오류"
 
@@ -51,9 +52,27 @@ msgid "Config Settings"
 msgstr "환경 설정"
 
 #. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "이름 표시"
+
+#. module: website_cf_turnstile
 #: model:ir.model,name:website_cf_turnstile.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP 라우팅"
+
+#. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_ir_http__id
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_cf_turnstile
+#. odoo-python
+#: code:addons/website_cf_turnstile/models/ir_http.py:0
+msgid "Suspicious activity detected by Turnstile CAPTCHA."
+msgstr "Turnstile CAPTCHA에서 의심스러운 활동이 감지되었습니다."
 
 #. module: website_cf_turnstile
 #. odoo-python
@@ -75,7 +94,7 @@ msgstr "요청이 유효하지 않거나 잘못된 형식입니다."
 
 #. module: website_cf_turnstile
 #. odoo-javascript
-#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
 msgid ""
 "There was an error with Cloudflare Turnstile, the captcha system.\n"
 "Please make sure your credentials for this service are properly set up.\n"

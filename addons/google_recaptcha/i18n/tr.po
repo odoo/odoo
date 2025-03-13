@@ -3,13 +3,14 @@
 # 	* google_recaptcha
 # 
 # Translators:
+# Hakan Türkün, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -37,20 +38,31 @@ msgid "Config Settings"
 msgstr "Yapılandırma Ayarları"
 
 #. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_ir_http__display_name
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Gösterilecek İsim"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__enable_recaptcha
+msgid "Enable reCAPTCHA"
+msgstr ""
+
+#. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
 
 #. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_ir_http__id
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_min_score
 msgid "Minimum score"
 msgstr "Minimum puan"
-
-#. module: google_recaptcha
-#. odoo-javascript
-#: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
-msgid "No recaptcha site key set."
-msgstr "Recaptcha site anahtarı seti yok."
 
 #. module: google_recaptcha
 #. odoo-javascript
@@ -73,6 +85,12 @@ msgstr "Gizli Şifre"
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_public_key
 msgid "Site Key"
 msgstr "Site Anahtarı"
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+msgid "Suspicious activity detected by google reCAPTCHA."
+msgstr ""
 
 #. module: google_recaptcha
 #. odoo-javascript
@@ -115,3 +133,11 @@ msgstr "İsteğiniz zaman aşımına uğradı, lütfen tekrar deneyin."
 #: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
 msgid "apply."
 msgstr "uygula."
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
+msgid ""
+"reCAPTCHA disabled or no site key has been configured. Please check your "
+"settings."
+msgstr ""

@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,8 +139,16 @@ msgid "Details"
 msgstr "詳細資訊"
 
 #. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__display_name
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__display_name
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__display_name
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__display_name
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__display_name
+#: model:ir.model.fields,field_description:event_booth_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:event_booth_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -186,8 +195,16 @@ msgid "Final Sale Order Line"
 msgstr "最終銷售訂單項目"
 
 #. module: event_booth_sale
+#: model:ir.model.fields,field_description:event_booth_sale.field_account_move__id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_category__id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__id
+#: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__id
+#: model:ir.model.fields,field_description:event_booth_sale.field_product_product__id
+#: model:ir.model.fields,field_description:event_booth_sale.field_product_template__id
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__id
 msgid "ID"
 msgstr "識別號"
 
@@ -332,11 +349,32 @@ msgstr "選擇活動攤位"
 
 #. module: event_booth_sale
 #. odoo-python
+#: code:addons/event_booth_sale/models/product_template.py:0
+msgid ""
+"The \"service_tracking\" for the product template, %(product_template_name)s"
+" cannot be changed because one of its variants is assigned to the Event "
+"Booth Category, %(event_booth_category_name)s. The service_tracking must "
+"remain \"Event Booth\"."
+msgstr ""
+"產品範本「%(product_template_name)s」的 service_tracking "
+"無法更改，因為它的其中一個變體，已獲指派為活動展位類別「%(event_booth_category_name)s」。該項 "
+"service_tracking 必須保留為「活動展位」。"
+
+#. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 msgid ""
 "The following booths are unavailable, please remove them to continue : "
 "%(booth_names)s"
 msgstr "以下攤位不可用，請移除它們以繼續：%(booth_names)s"
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/models/event_booth_category.py:0
+msgid ""
+"The product, %(product_name)s , is used for Event Booth, it must have "
+"service_tracking set to \"Event Booth\"."
+msgstr "產品「%(product_name)s」是用作活動展位的，其 service_tracking 必須設為「活動展位」。"
 
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
@@ -360,6 +398,18 @@ msgid ""
 "You can't delete the following booths as they are linked to sales orders: "
 "%(booths)s"
 msgstr "您無法刪除以下攤位，因為它們與銷售訂單相關聯：%(booths)s"
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/models/product_product.py:0
+msgid ""
+"You cannot change the service_tracking of the product %(product_name)s "
+"because it is already assigned to %(booth_category_name)s. The "
+"service_tracking must remain 'event_booth'."
+msgstr ""
+"你不可更改產品「%(product_name)s」的 "
+"service_tracking，因為它已獲指派為類別「%(booth_category_name)s」。該項 service_tracking "
+"必須保留為 event_booth（活動展位）。"
 
 #. module: event_booth_sale
 #. odoo-python

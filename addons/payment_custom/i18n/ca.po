@@ -3,13 +3,14 @@
 # 	* payment_custom
 # 
 # Translators:
+# Carlos Mun Mas <cmun@tda.ad>, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -32,6 +33,18 @@ msgid "<strong class=\"mt-auto\">Communication: </strong>"
 msgstr ""
 
 #. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Bank Account"
+msgstr "Compte bancari"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Bank Accounts"
+msgstr "Comptes bancaris"
+
+#. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
 msgid "Code"
 msgstr "Codi"
@@ -47,6 +60,12 @@ msgid "Custom Mode"
 msgstr "Mode personalitzat"
 
 #. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nom mostrat"
+
+#. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
 msgid "Enable QR Codes"
 msgstr "Habilitar els codis QR"
@@ -60,6 +79,12 @@ msgstr "Habilitar l'ús de codis QR al pagar per transferència bancària."
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
 msgid "Finalize your payment"
 msgstr ""
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_custom
 #. odoo-python
@@ -86,6 +111,12 @@ msgstr "Proveïdor de pagament"
 #: model:ir.model,name:payment_custom.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transacció de pagament"
+
+#. module: payment_custom
+#. odoo-python
+#: code:addons/payment_custom/models/payment_provider.py:0
+msgid "Please use the following transfer details"
+msgstr "Utilitzeu els detalls de transferència següents"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form

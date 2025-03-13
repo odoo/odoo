@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -23,20 +23,26 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid " (Consumer)"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid " (Customer not on Peppol)"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Demo/Test mode)"
 msgstr " (데모/테스트 모드)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid " (customer not on Peppol)"
-msgstr "(고객이 Peppol에 가입되어 있지 않음)"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid "%(peppol_label)s%(not_valid)s%(peppol_proxy_mode)s"
-msgstr "%(peppol_label)s%(not_valid)s%(peppol_proxy_mode)s"
+msgid "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -625,6 +631,12 @@ msgstr ""
 "발송</b>되었습니다."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid "Partner doesn't have a valid Peppol configuration."
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
 msgid "Pending Reception"
 msgstr "수신 대기 중"
@@ -644,7 +656,7 @@ msgstr "Peppol 환경설정 마법사"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
-#: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details_fields
+#: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details
 msgid "Peppol Endpoint"
 msgstr "Peppol Endpoint"
 
@@ -689,7 +701,7 @@ msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
 msgstr "Peppol 문서(UUID: %(uuid)s)가 성공적으로 수신되었습니다."
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details_fields
+#: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details
 msgid "Peppol e-Address (EAS)"
 msgstr "페폴 전자 주소 (EAS)"
 
@@ -812,7 +824,7 @@ msgstr "수신자로 등록"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Register with Odoo"
-msgstr ""
+msgstr "Odoo 등록하기"
 
 #. module: account_peppol
 #. odoo-python
@@ -897,6 +909,8 @@ msgid ""
 "Some service support migration keys. If this is your case you can enter your migration key below.\n"
 "                        If not, you should de-register from your current service provider and register with Odoo afterward."
 msgstr ""
+"일부 서비스에서는 마이그레이션 키를 지원합니다.\n"
+"                        이 경우 아래에 마이그레이션 키를 입력할 수 있습니다. 그렇지 않은 경우 현재 사용 중인 서비스 공급업체에서 등록을 취소한 후 Odoo에 등록해야 합니다."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1122,7 +1136,7 @@ msgstr "이 휴대폰 번호로 인증 코드가 전송됩니다."
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
 "Your company is already registered on another Access Point (%s) for "
-"receiving invoices.We will register you on Odoo as a sender only."
+"receiving invoices. We will register you on Odoo as a sender only."
 msgstr ""
 
 #. module: account_peppol

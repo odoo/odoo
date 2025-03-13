@@ -3,13 +3,14 @@
 # 	* delivery_mondialrelay
 # 
 # Translators:
+# Junko Augias, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -36,9 +37,30 @@ msgid "Country Code"
 msgstr "国コード"
 
 #. module: delivery_mondialrelay
+#: model:ir.model,website_form_label:delivery_mondialrelay.model_res_partner
+msgid "Create a Customer"
+msgstr "顧客を作成する"
+
+#. module: delivery_mondialrelay
 #: model:ir.model,name:delivery_mondialrelay.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
 msgstr "配送業者選択ガイド"
+
+#. module: delivery_mondialrelay
+#: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery_mondialrelay.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery_mondialrelay.field_res_partner__display_name
+#: model:ir.model.fields,field_description:delivery_mondialrelay.field_sale_order__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: delivery_mondialrelay
+#: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery_mondialrelay.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery_mondialrelay.field_res_partner__id
+#: model:ir.model.fields,field_description:delivery_mondialrelay.field_sale_order__id
+msgid "ID"
+msgstr "ID"
 
 #. module: delivery_mondialrelay
 #: model:ir.model.fields,field_description:delivery_mondialrelay.field_choose_delivery_carrier__is_mondialrelay
@@ -58,6 +80,7 @@ msgstr "選択された最後の中継"
 #: model:delivery.carrier,name:delivery_mondialrelay.delivery_carrier_mondialrelay_es
 #: model:delivery.carrier,name:delivery_mondialrelay.delivery_carrier_mondialrelay_fr_nl
 #: model:product.template,name:delivery_mondialrelay.product_product_delivery_mondialrelay_product_template
+#: model_terms:ir.ui.view,arch_db:delivery_mondialrelay.address_kanban
 msgid "Mondial Relay"
 msgstr "Mondial Relay"
 

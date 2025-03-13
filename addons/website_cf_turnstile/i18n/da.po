@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -41,7 +41,7 @@ msgstr ""
 
 #. module: website_cf_turnstile
 #. odoo-javascript
-#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
 msgid "Cloudflare Turnstile Error"
 msgstr ""
 
@@ -51,9 +51,27 @@ msgid "Config Settings"
 msgstr "Konfigurer opsætning"
 
 #. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: website_cf_turnstile
 #: model:ir.model,name:website_cf_turnstile.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Routing"
+
+#. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_ir_http__id
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_cf_turnstile
+#. odoo-python
+#: code:addons/website_cf_turnstile/models/ir_http.py:0
+msgid "Suspicious activity detected by Turnstile CAPTCHA."
+msgstr ""
 
 #. module: website_cf_turnstile
 #. odoo-python
@@ -75,7 +93,7 @@ msgstr "Anmodningen er ugyldig eller misdannet."
 
 #. module: website_cf_turnstile
 #. odoo-javascript
-#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
 msgid ""
 "There was an error with Cloudflare Turnstile, the captcha system.\n"
 "Please make sure your credentials for this service are properly set up.\n"

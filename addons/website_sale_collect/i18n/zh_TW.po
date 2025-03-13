@@ -3,16 +3,16 @@
 # 	* website_sale_collect
 # 
 # Translators:
-# Wil Odoo, 2025
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,8 +23,8 @@ msgstr ""
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been confirmed.</i><br> Please come to the store to pay "
-"for your products."
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
+" your products."
 msgstr "<b>你的訂單已確認。</b><i></i><br>請前往實體商店，支付產品費用。"
 
 #. module: website_sale_collect
@@ -65,6 +65,30 @@ msgstr "自訂模式"
 #: code:addons/website_sale_collect/models/res_config_settings.py:0
 msgid "Delivery Methods"
 msgstr "送貨方式"
+
+#. module: website_sale_collect
+#: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_website__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: website_sale_collect
+#: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_website__id
+msgid "ID"
+msgstr "識別碼"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
@@ -118,6 +142,11 @@ msgid "Payment Provider"
 msgstr "付款服務商"
 
 #. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: model:delivery.carrier,name:website_sale_collect.carrier_pick_up_in_store
@@ -141,6 +170,11 @@ msgstr "產品"
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__delivery_type
 msgid "Provider"
 msgstr "服務商"
+
+#. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "Remove"
+msgstr "移除"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
