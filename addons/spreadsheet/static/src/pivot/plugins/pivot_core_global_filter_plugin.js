@@ -133,15 +133,13 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
      * @param {Record<string,FieldMatching>} pivotFieldMatches
      */
     _setPivotFieldMatching(filterId, pivotFieldMatches) {
-        const pivots = { ...this.pivots };
         for (const [pivotId, fieldMatch] of Object.entries(pivotFieldMatches)) {
             const pivot = this.getters.getPivotCoreDefinition(pivotId);
             if (pivot.type !== "ODOO") {
                 continue;
             }
-            this.pivots[pivotId].fieldMatching[filterId] = fieldMatch;
+            this.history.update("pivots", pivotId, "fieldMatching", filterId, fieldMatch);
         }
-        this.history.update("pivots", pivots);
     }
 
     _onFilterDeletion(filterId) {
@@ -158,13 +156,10 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
     _addPivot(id, fieldMatching = undefined) {
         const pivot = this.getters.getPivotCoreDefinition(id);
         if (pivot.type === "ODOO") {
-            const pivots = { ...this.pivots };
-            const model = pivot.model;
-            pivots[id] = {
+            this.history.update("pivots", id, {
                 id,
-                fieldMatching: fieldMatching || this.getters.getFieldMatchingForModel(model),
-            };
-            this.history.update("pivots", pivots);
+                fieldMatching: fieldMatching || this.getters.getFieldMatchingForModel(pivot.model),
+            });
         }
     }
 
