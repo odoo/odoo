@@ -49,9 +49,9 @@ export const onError = makeRuntimeHook("onError");
 export const getFixture = runner.fixture.get;
 
 // Other functions
+export const definePreset = runner.exportFn(runner.definePreset);
 export const dryRun = runner.exportFn(runner.dryRun);
 export const getCurrent = runner.exportFn(runner.getCurrent);
-export const registerPreset = runner.exportFn(runner.registerPreset);
 export const start = runner.exportFn(runner.start);
 export const stop = runner.exportFn(runner.stop);
 
