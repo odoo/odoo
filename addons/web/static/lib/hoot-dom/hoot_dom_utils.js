@@ -39,6 +39,7 @@
 const {
     Boolean,
     navigator: { userAgent: $userAgent },
+    Object: { assign: $assign },
     RegExp,
     SyntaxError,
 } = globalThis;
@@ -116,7 +117,7 @@ const makeInteractorFn = (type, fn, name) =>
  * }}
  */
 export function interactor(type, fn) {
-    return Object.assign(makeInteractorFn(type, fn, fn.name), {
+    return $assign(makeInteractorFn(type, fn, fn.name), {
         as(alias) {
             return makeInteractorFn(type, fn, alias);
         },
