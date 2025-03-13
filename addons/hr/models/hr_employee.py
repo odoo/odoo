@@ -314,15 +314,13 @@ class HrEmployee(models.Model):
     def _compute_current_version_id(self):
         today = fields.Date.today()
         for record in self:
-            history = record._get_version(today)
-            record.current_version_id = history
+            record.selected_version_id = record._get_version(today)
 
     @api.depends('version_ids')
     def _compute_selected_version_id(self):
         today = fields.Date.today()
         for record in self:
-            history = record._get_version(today)
-            record.selected_version_id = history
+            record.selected_version_id = record._get_version(today)
 
     @api.depends('contract_ids')
     def _compute_selected_contract_id(self):
