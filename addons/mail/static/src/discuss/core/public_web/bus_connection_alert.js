@@ -16,4 +16,12 @@ export class BusConnectionAlert extends Component {
     }
 }
 
-registry.category("main_components").add("bus.connection_alert", { Component: BusConnectionAlert });
+export const connectionAlertService = {
+    dependencies: ["bus.monitoring_service", "mail.store"],
+    start() {
+        registry
+            .category("main_components")
+            .add("bus.ConnectionAlert", { Component: BusConnectionAlert });
+    },
+};
+registry.category("services").add("bus.connection_alert", connectionAlertService);
