@@ -21,7 +21,7 @@ import { HootCopyButton } from "./hoot_copy_button";
 //-----------------------------------------------------------------------------
 
 const {
-    Object: { entries: $entries, values: $values },
+    Object: { entries: $entries, keys: $keys, values: $values },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -35,22 +35,25 @@ export class HootConfigMenu extends Component {
     static template = xml`
         <form class="contents" t-on-submit.prevent="refresh">
             <h3 class="pb-1 border-b text-gray border-gray">Behavior</h3>
-            <div class="flex items-center gap-1">
-                <t t-set="hasCorrectViewPort" t-value="env.runner.checkPresetForViewPort()" />
-                <t t-set="highlightClass" t-value="hasCorrectViewPort ? 'text-primary' : 'text-amber'" />
-                <span class="me-auto">Preset</span>
-                <t t-foreach="env.runner.presets.entries()" t-as="preset" t-key="preset[0]">
-                    <button
-                        type="button"
-                        class="border rounded transition-colors hover:bg-gray-300 dark:hover:bg-gray-700"
-                        t-att-class="{ ['border-primary ' + highlightClass]: config.preset === preset[0] }"
-                        t-att-title="preset[0] ? preset[1].label : 'No preset'"
-                        t-on-click.stop="() => this.onPresetChange(preset[0])"
-                    >
-                        <i t-attf-class="fa w-5 h-5 {{ preset[1].icon or 'fa-ban' }}" />
-                    </button>
-                </t>
-            </div>
+            <t t-if="hasPresets()">
+                <div class="flex items-center gap-1">
+                    <t t-set="hasCorrectViewPort" t-value="env.runner.checkPresetForViewPort()" />
+                    <t t-set="highlightClass" t-value="hasCorrectViewPort ? 'text-primary' : 'text-amber'" />
+                    <span class="me-auto">Preset</span>
+                    <t t-foreach="env.runner.presets" t-as="presetKey" t-key="presetKey">
+                        <t t-set="preset" t-value="env.runner.presets[presetKey]" />
+                        <button
+                            type="button"
+                            class="border rounded transition-colors hover:bg-gray-300 dark:hover:bg-gray-700"
+                            t-att-class="{ ['border-primary ' + highlightClass]: config.preset === presetKey }"
+                            t-att-title="presetKey ? preset.label : 'No preset'"
+                            t-on-click.stop="() => this.onPresetChange(presetKey)"
+                        >
+                            <i t-attf-class="fa w-5 h-5 {{ preset.icon or 'fa-ban' }}" />
+                        </button>
+                    </t>
+                </div>
+            </t>
             <div
                 class="flex items-center gap-1"
                 title="Determines the order of the tests execution"
@@ -291,6 +294,10 @@ export class HootConfigMenu extends Component {
         return CONFIG_KEYS.every((key) =>
             strictEqual(this.config[key], this.env.runner.initialConfig[key])
         );
+    }
+
+    hasPresets() {
+        return $keys(this.env.runner.presets).filter(Boolean).length > 0;
     }
 
     /**
