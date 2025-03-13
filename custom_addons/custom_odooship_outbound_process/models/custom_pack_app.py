@@ -30,6 +30,7 @@ class PackAPP(models.Model):
         ('automation_bulk','Automation Bulk'),
         ('manual','Manual'),
     ], string='Automation Bulk Manual')
+    pc_container_code_ids = fields.Many2many('pc.container.barcode.configuration', string='PC Totes')
 
 
     @api.model_create_multi
@@ -92,6 +93,7 @@ class PackAPPLine(models.Model):
     remaining_quantity = fields.Float(string='Remaining Quantity')
     display_type_line_section = fields.Boolean(string='Display Type Line Section', default=False)
     picking_id = fields.Many2one('stock.picking', string='Picking Number')
+    sale_order_id = fields.Many2one('sale.order', string='Sale Orders')
     tenant_code_id = fields.Many2one(related='picking_id.tenant_code_id', string='Tenant ID')
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code')
 
