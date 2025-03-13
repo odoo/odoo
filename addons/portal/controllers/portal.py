@@ -544,7 +544,7 @@ class CustomerPortal(Controller):
 
         self._handle_extra_form_data(extra_form_data, address_values)
 
-        return partner_sudo, {'successUrl': callback}
+        return partner_sudo, {'redirectUrl': callback}
 
     def _parse_form_data(self, form_data):
         """ Parse the form data and return them converted into address values and extra form data.
