@@ -51,6 +51,13 @@ class AccountMove(models.Model):
         posted.sudo().landed_costs_ids.reconcile_landed_cost()
         return posted
 
+    def _update_order_line_info(self, product_id, quantity, **kwargs):
+        price_unit = super()._update_order_line_info(product_id, quantity, **kwargs)
+        move_line = self.line_ids.filtered(lambda line: line.product_id.id == product_id)
+        if move_line:
+            move_line.is_landed_costs_line = move_line.product_id.landed_cost_ok
+        return price_unit
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
