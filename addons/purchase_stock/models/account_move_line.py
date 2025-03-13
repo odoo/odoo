@@ -240,10 +240,18 @@ class AccountMoveLine(models.Model):
             # Generate the SVL values for the on hand quantities (and impact the parent layer)
             po_pu_curr = po_line.currency_id._convert(po_line.price_unit, self.currency_id, self.company_id, self.move_id.invoice_date or self.date or fields.Date.context_today(self), round=False)
             price_difference_curr = po_pu_curr - aml_gross_price_unit
-            if not float_is_zero(unit_valuation_difference * qty_to_correct, precision_rounding=self.company_id.currency_id.rounding):
-                svl_vals = self._prepare_pdiff_svl_vals(layer, sign * qty_to_correct, unit_valuation_difference, price_difference_curr)
-                layer.remaining_value += svl_vals['value']
+            # Create a full layer linked to the invoice line and one to compensate the remaining qty
+            remaining_value = 0
+            if not float_is_zero(unit_valuation_difference * invoicing_layer_qty, precision_rounding=self.company_id.currency_id.rounding):
+                svl_vals = self._prepare_pdiff_svl_vals(layer, sign * invoicing_layer_qty, unit_valuation_difference, price_difference_curr)
+                remaining_value += svl_vals['value']
                 svl_vals_list.append(svl_vals)
+            if not float_is_zero(unit_valuation_difference * out_qty_to_invoice, precision_rounding=self.company_id.currency_id.rounding):
+                svl_vals = self._prepare_pdiff_svl_vals(layer, -1 * sign * out_qty_to_invoice, unit_valuation_difference, price_difference_curr)
+                svl_vals.update({'account_move_id': False, 'account_move_line_id': False})
+                remaining_value += svl_vals['value']
+                svl_vals_list.append(svl_vals)
+            layer.remaining_value += remaining_value
         return svl_vals_list, aml_vals_list
 
     def _prepare_pdiff_aml_vals(self, qty, unit_valuation_difference):
