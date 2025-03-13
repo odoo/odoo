@@ -7,6 +7,7 @@ import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer } from "./mock_server/mock_server";
+
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
  *
