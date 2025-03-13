@@ -43,12 +43,20 @@
             'html_builder/static/src/**/*',
             ('remove', 'html_builder/static/src/website_preview/**/*'),
             ('remove', 'html_builder/static/src/website_mass_mailing/**/*'),
+            ('remove', 'html_builder/static/src/website_builder/plugins/website_edit_service.js'),
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_primary_variables'),
             'web/static/src/scss/bootstrap_overridden.scss',
             'html_builder/static/src/**/*.inside.scss',
+        ],
+        'html_builder.assets_edit_frontend': [
+            ('include', 'website.assets_edit_frontend'),
+            # website_edit_service must reference the right history
+            ('replace', 'website/static/src/core/website_edit_service.js', 'html_builder/static/src/website_builder/plugins/website_edit_service.js'),
+            # this imports website_edit_service from its old location, let's get rid of it
+            ('remove', 'website/static/src/interactions/carousel/carousel_bootstrap_upgrade_fix.edit.js'),
         ],
         'html_builder.iframe_add_dialog': [
             ('include', 'web.assets_frontend'),
