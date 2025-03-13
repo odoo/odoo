@@ -21,7 +21,13 @@ export const connectionAlertService = {
     start() {
         registry
             .category("main_components")
+<<<<<<< saas-18.2
             .add("bus.ConnectionAlert", { Component: BusConnectionAlert });
+||||||| cfc1afbe6ba1ec461d00f391f5f8f64309f249e9
+registry.category("main_components").add("bus.connection_alert", { Component: BusConnectionAlert });
+=======
+            .add("bus.connection_alert", { Component: BusConnectionAlert });
+>>>>>>> defc98b989763d79c92c72920efe19ad76a97695
     },
 };
 registry.category("services").add("bus.connection_alert", connectionAlertService);
