@@ -276,7 +276,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = po_form.save()
 
         self.assertEqual(po.order_line[0].price_unit, 200)
-        self.assertEqual(po.order_line[1].price_unit, 1200)
+        self.assertEqual(po.order_line[1].price_unit, 0, "No vendor with matching UoM is found, so price should be 0")
 
     def test_on_change_quantity_description(self):
         """
@@ -997,3 +997,36 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = po_form.save()
         self.assertEqual(po.order_line.product_qty, 10.0)
         self.assertEqual(po.order_line.name, '[HHH] product_a')
+
+    def test_purchase_order_uom(self):
+        fuzzy_drink = self.env['product.product'].create({
+            'name': 'Fuzzy Drink',
+            'is_storable': True,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                'price': 1,
+            }),
+            Command.create({
+                'partner_id': self.partner_a.id,
+                'product_uom_id': self.env.ref('uom.product_uom_pack_6').id,
+                'min_qty': 2,
+                'price': 5,
+            })],
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': fuzzy_drink.id,
+                'product_qty': 15,
+                'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            })],
+        })
+        self.assertEqual(po.order_line.price_unit, 1)
+        po.order_line.product_qty = 1
+        po.order_line.product_uom_id = self.env.ref('uom.product_uom_pack_6')
+        self.assertEqual(po.order_line.price_unit, 6)
+        po.order_line.product_qty = 2
+        self.assertEqual(po.order_line.price_unit, 5)
