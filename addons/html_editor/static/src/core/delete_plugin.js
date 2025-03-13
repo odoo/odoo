@@ -903,8 +903,11 @@ export class DeletePlugin extends Plugin {
         return range;
     }
 
-    // Expand the range to fully include all contentEditable=False elements.
     /**
+     * Expand the range to fully include all contentEditable=False elements.
+     * This scenario happens when the range has one end inside a non-editable
+     * element and the other end outside of it.
+     *
      * @param {Range} range
      * @returns {Range}
      */
@@ -913,15 +916,7 @@ export class DeletePlugin extends Plugin {
         const isNonEditable = (node) => !isContentEditable(node);
         const startUneditable = findFurthest(startContainer, commonAncestor, isNonEditable);
         if (startUneditable) {
-            // @todo @phoenix: Review this spec. I suggest this instead (no block merge after removing):
-            // startContainer = startUneditable.parentElement;
-            // startOffset = childNodeIndex(startUneditable);
-            const leaf = previousLeaf(startUneditable);
-            if (leaf) {
-                range.setStart(leaf, nodeSize(leaf));
-            } else {
-                range.setStart(commonAncestor, 0);
-            }
+            range.setStartBefore(startUneditable);
         }
         const endUneditable = findFurthest(endContainer, commonAncestor, isNonEditable);
         if (endUneditable) {
