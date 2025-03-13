@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add('category_page_and_products_snippet_use'
             // Fetch the category's id from the url.
             const productCategoryId = window.location.href.match('/shop/category/test-category-(\\d+)')[1]
             const productGridEl = this.anchor.closest('#products_grid');
-            const regex = new RegExp(`^/shop/[\\w-/]+-(\\d+)\\?category=${productCategoryId}$`);
+            const regex = new RegExp(`^/shop/test-category-${productCategoryId}/[\\w-/]+-(\\d+)$`);
             const allPageProductIDs = [...productGridEl.querySelectorAll('.oe_product_image_link')]
                 .map(el => el.getAttribute('href').match(regex)[1]);
 

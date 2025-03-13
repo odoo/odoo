@@ -16,9 +16,8 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
      */
     _onPriceRangeSelected(ev) {
         const range = ev.currentTarget;
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.delete("min_price");
-        searchParams.delete("max_price");
+        const url = new URL(range.dataset.url, window.location.origin);
+        const searchParams = url.searchParams;
         if (parseFloat(range.min) !== range.valueLow) {
             searchParams.set("min_price", range.valueLow);
         }
@@ -29,6 +28,6 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         if (product_list_div) {
             product_list_div.classList.add('opacity-50');
         }
-        window.location.search = searchParams.toString();
+        window.location.href = `${url.pathname}?${searchParams.toString()}`;
     },
 });
