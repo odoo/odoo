@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import logging
 from collections import defaultdict, namedtuple, OrderedDict
 from dateutil.relativedelta import relativedelta
@@ -351,6 +352,7 @@ class StockRule(models.Model):
             'origin': origin,
             'picking_type_id': self.picking_type_id.id,
             'group_id': group_id,
+            'procurement_values': self._serialize_procurement_values(values),
             'route_ids': [(4, route.id) for route in values.get('route_ids', [])],
             'never_product_template_attribute_value_ids': values.get('never_product_template_attribute_value_ids'),
             'warehouse_id': self.warehouse_id.id,
@@ -366,6 +368,29 @@ class StockRule(models.Model):
             if field in values:
                 move_values[field] = values.get(field)
         return move_values
+
+    def _serialize_procurement_values(self, values):
+        """Helper method to serialize procurement values for storage.
+
+        This method handles the serialization of different types of values:
+        - BaseModel instances are converted to their IDs
+        - Datetime and Date fields are converted to strings
+        - Other values are kept as is
+
+        :param values: Dictionary of procurement values
+        :return: Dictionary with serialized values
+        """
+        serialized = {}
+        for key, value in values.items():
+            if isinstance(value, models.BaseModel):
+                serialized[key] = value.ids
+            elif isinstance(value, (datetime.datetime, datetime.date)):
+                serialized[key] = value.isoformat()
+            elif isinstance(value, (fields.Datetime, fields.Date)):
+                serialized[key] = fields.Datetime.to_string(value) if isinstance(value, fields.Datetime) else fields.Date.to_string(value)
+            else:
+                serialized[key] = value
+        return serialized
 
     def _get_lead_days(self, product, **values):
         """Returns the cumulative delay and its description encountered by a
