@@ -600,6 +600,8 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                     api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
                 elif self.site_code_id.name == "SHIPEROOALTONA":
                     api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
+                elif self.site_code_id.name == "SHIPEROOALTONA6":
+                    api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
                 else:
                     raise ValidationError(_("Unknown warehouse. Cannot determine API endpoint."))
                 # Send the payload to the API
