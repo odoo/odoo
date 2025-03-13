@@ -17,7 +17,8 @@ class AccountMoveLine(models.Model):
         product = self.product_id
 
         # Separate tax into the regular and luxury component
-        luxury_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == self.env.ref('l10n_id.l10n_id_tax_group_luxury_goods'))
+        luxury_tax_group = self.env.ref('l10n_id.l10n_id_tax_group_luxury_goods', raise_if_not_found=False)
+        luxury_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == luxury_tax_group)
         regular_tax = self.tax_ids - luxury_tax
 
         line_val = {
