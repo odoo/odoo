@@ -534,13 +534,18 @@ class PurchaseOrderLine(models.Model):
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
         today = fields.Date.today()
-        seller = product_id.with_company(company_id)._select_seller(
+        seller = product_id.with_company(company_id).with_context(
+            from_orderpoint=self.env.context.get('from_orderpoint'),
+            from_replenishment_wizard=self.env.context.get('from_replenishment_wizard'),
+            from_procurement=self.env.context.get('from_procurement')
+        )._select_seller(
             partner_id=partner,
-            quantity=uom_po_qty,
+            quantity=product_qty if self.env.context.get('from_replenishment_wizard') else uom_po_qty,
             date=po.date_order and max(po.date_order.date(), today) or today,
-            uom_id=product_id.uom_id)
+            uom_id=product_uom if self.env.context.get('from_replenishment_wizard') else product_id.uom_id
+        )
         if seller and (seller.product_uom_id or seller.product_tmpl_id.uom_id) != product_uom:
-            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id or seller.product_tmpl_id.uom_id, rounding_method='HALF-UP')
+            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)

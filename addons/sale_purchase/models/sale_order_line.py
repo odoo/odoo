@@ -187,7 +187,7 @@ class SaleOrderLine(models.Model):
 
         # determine vendor (real supplier, sharing the same partner as the one from the PO, but with more accurate informations like validity, quantity, ...)
         # Note: one partner can have multiple supplier info for the same product
-        supplierinfo = self.product_id._select_seller(
+        supplierinfo = self.product_id.with_context(from_procurement=True)._select_seller(
             partner_id=purchase_order.partner_id,
             quantity=purchase_qty_uom,
             date=purchase_order.date_order and purchase_order.date_order.date(),  # and purchase_order.date_order[:10],
@@ -221,7 +221,7 @@ class SaleOrderLine(models.Model):
 
     def _purchase_service_match_supplier(self, warning=True):
         # determine vendor of the order (take the first matching company and product)
-        suppliers = self.product_id._select_seller(partner_id=self._retrieve_purchase_partner(), quantity=self.product_uom_qty, uom_id=self.product_uom_id)
+        suppliers = self.product_id.with_context(from_procurement=True)._select_seller(partner_id=self._retrieve_purchase_partner(), quantity=self.product_uom_qty, uom_id=self.product_uom_id)
         if warning and not suppliers:
             raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.", self.product_id.display_name))
         return suppliers[0]

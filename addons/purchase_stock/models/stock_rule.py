@@ -60,7 +60,7 @@ class StockRule(models.Model):
             elif procurement.values.get('orderpoint_id') and procurement.values['orderpoint_id'].supplier_id:
                 supplier = procurement.values['orderpoint_id'].supplier_id
             else:
-                supplier = procurement.product_id.with_company(company_id.id)._select_seller(
+                supplier = procurement.product_id.with_company(company_id.id).with_context(from_procurement=True, from_replenishment_wizard=self.env.context.get('from_replenishment_wizard'))._select_seller(
                     partner_id=self._get_partner_id(procurement.values, rule),
                     quantity=procurement.product_qty,
                     date=max(procurement_date_planned.date(), fields.Date.today()),
@@ -146,7 +146,7 @@ class StockRule(models.Model):
                     # Generate the create values for it and add it to a list in
                     # order to create it in batch.
                     partner = procurement.values['supplier'].partner_id
-                    po_line_values.append(self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
+                    po_line_values.append(self.env['purchase.order.line'].with_context(from_procurement=True)._prepare_purchase_order_line_from_procurement(
                         *procurement, po))
                     # Check if we need to advance the order date for the new line
                     order_date_planned = procurement.values['date_planned'] - relativedelta(
@@ -338,4 +338,4 @@ class StockRule(models.Model):
         return res
 
     def _get_partner_id(self, values, rule):
-        return values.get("supplierinfo_name") or (values.get("group_id") and values.get("group_id").partner_id)
+        return values.get("supplierinfo_name") or (self.env.context.get('from_replenishment_wizard') and values.get("group_id") and values.get("group_id").partner_id)
