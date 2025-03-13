@@ -521,6 +521,7 @@
                                        help="When the cost of an expense product is different than 0, then the user using this product won't be able to change the amount of the expense, only the quantity. Use a cost different than 0 for expense categories funded by the company at fixed cost like allowances for mileage, per diem, accommodation or meal."/>
                                 <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 <field name="uom_po_id" invisible="1"/>
+                                <field name="categ_id"/>
                                 <label for="default_code"/>
                                 <div>
                                     <field name="default_code"/>
