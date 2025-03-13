@@ -614,17 +614,36 @@ class TestCrmPls(CrmPlsCommon):
         self.assertEqual(tools.float_compare(leads[0].probability, 0.01, 2), 0)
 
     def test_pls_no_share_stage(self):
-        """ We test here the situation where all stages are team specific, as there is
-            a current limitation (can be seen in _pls_get_won_lost_total_count) regarding
-            the first stage (used to know how many lost and won there is) that requires
-            to have no team assigned to it."""
+        """ We test that we correctly use first team stage instead of not computing the
+            probability when all stages are team-specific. The stage is used to get the number
+            of won/lost leads of the team/overall, necessary to compute the probability. If
+            no entry exists in the frequency table, we still cannot update the probability.
+        """
         Lead = self.env['crm.lead']
         team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
-        self.env['crm.stage'].search([('team_id', '=', False)]).write({'team_id': team_id})
+        teamless_stages = self.env['crm.stage'].search([('team_id', '=', False)])
+        teamless_won_stage = next((stage for stage in teamless_stages if stage.is_won), False)
+        self.assertTrue(teamless_won_stage)
+        self.assertTrue(teamless_stages - teamless_won_stage)
+
+        teamless_stages.team_id = team_id
         lead = Lead.create({'name': 'team', 'team_id': team_id, 'probability': 41.23})
         Lead._cron_update_automated_probabilities()
+        # No update, as no record is won/lost for this team
         self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
         self.assertEqual(tools.float_compare(lead.automated_probability, 0, 2), 0)
+
+        # Fill table. Probability should be computed now (and high, since we only create one won)
+        Lead.create({'name': 'team', 'team_id': team_id, 'stage_id': teamless_won_stage.id})
+        Lead._cron_update_automated_probabilities()
+        self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
+        self.assertEqual(tools.float_compare(lead.automated_probability, 91.67, 2), 0)
+
+        # Update correctly the probability when moving from won state
+        lead.action_set_won()
+        self.assertEqual(lead.probability, 100)
+        lead.stage_id = teamless_stages[0]
+        self.assertLess(lead.probability, 100)
 
     def test_pls_tooltip_data(self):
         """ Assert that the method preparing tooltip data correctly returns (field, couple)
