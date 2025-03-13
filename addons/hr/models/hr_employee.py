@@ -58,6 +58,18 @@ class HrEmployee(models.Model):
         store=True,
         readonly=False)
 
+    contract_ids = fields.One2many(
+        'hr.employee.contract',
+        'employee_id',
+        copy=False)
+    selected_contract_id = fields.Many2one(
+        'hr.employee.contract',
+        compute='_compute_selected_contract_id',
+        domain="[('employee_id', '=', id)]",
+        copy=False,
+        store=True,
+        readonly=False)
+
     # Global Fields
     resource_id = fields.Many2one('resource.resource')
     # required on the resource, make sure required="True" set in the view
@@ -206,6 +218,9 @@ class HrEmployee(models.Model):
     form_resource_calendar_id = fields.Many2one(related='selected_version_id.resource_calendar_id', readonly=False)
     form_tz = fields.Selection(related='selected_version_id.tz', readonly=False)
 
+    # Contract Information
+
+
     # user
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
 
@@ -309,14 +324,27 @@ class HrEmployee(models.Model):
             history = record._get_version(today)
             record.selected_version_id = history
 
+    @api.depends('contract_ids')
+    def _compute_selected_contract_id(self):
+        today = fields.Date.today()
+        for record in self:
+            record.selected_contract_id = record._get_contract(today)
+
     def _get_version(self, date):
         version = self.version_ids.filtered(
             lambda v:
             (not v.date_from and not v.date_to) or
             (not v.date_from and v.date_to >= date) or
-            (not v.date_to and v.date_from <= date) or
+            (v.date_from <= date and not v.date_to) or
             (v.date_from and v.date_to and v.date_from <= date <= v.date_to))
         return version[0] if version else False
+
+    def _get_contract(self, date):
+        contract = self.version_ids.filtered(
+            lambda c:
+            (c.date_from <= date and not c.date_to) or
+            (c.date_from and c.date_to and c.date_from <= date <= c.date_to))
+        return contract[0] if contract else False
 
     @api.depends('name', 'user_id.avatar_1920', 'image_1920')
     def _compute_avatar_1920(self):
