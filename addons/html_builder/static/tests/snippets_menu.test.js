@@ -4,7 +4,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, openBuilderSidebar, setupWebsiteBuilder } from "./website_helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 
 defineWebsiteModels();
 
@@ -16,7 +16,9 @@ test("open BuilderSidebar and discard", async () => {
             super.setup();
         },
     });
-    await setupWebsiteBuilder(`<h1> Homepage </h1>`, { openEditor: false });
+    const { openBuilderSidebar } = await setupWebsiteBuilder(`<h1> Homepage </h1>`, {
+        openEditor: false,
+    });
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
     await openBuilderSidebar();
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(0);
@@ -54,9 +56,12 @@ test("navigate between builder tab don't fetch snippet description again", async
 });
 
 test("undo and redo buttons", async () => {
-    const { getEditor, getEditableContent } = await setupWebsiteBuilder("<p> Text </p>", {
-        openEditor: false,
-    });
+    const { getEditor, getEditableContent, openBuilderSidebar } = await setupWebsiteBuilder(
+        "<p> Text </p>",
+        {
+            openEditor: false,
+        }
+    );
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
     await openBuilderSidebar();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
