@@ -518,5 +518,15 @@ describe("Range not collapsed", () => {
                 contentAfter: '<p>[ab</p><p contenteditable="false">cd</p><p>ef]</p>',
             });
         });
+
+        test("should turn an unordered list into paragraphs with text alignment", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul><li style="text-align: center;">[abc</li><li style="text-align: right;">def]</li></ul>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<p style="text-align: center;">[abc</p><p style="text-align: right;">def]</p>',
+            });
+        });
     });
 });
