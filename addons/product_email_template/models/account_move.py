@@ -12,9 +12,6 @@ class AccountMove(models.Model):
             self = self.with_user(SUPERUSER_ID)
         for invoice in self.filtered(lambda x: x.move_type == 'out_invoice'):
             # send template only on customer invoice
-            # subscribe the partner to the invoice
-            if invoice.partner_id not in invoice.message_partner_ids:
-                invoice.message_subscribe([invoice.partner_id.id])
             comment_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             for line in invoice.invoice_line_ids:
                 if line.product_id.email_template_id:
