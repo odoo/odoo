@@ -24,6 +24,8 @@
         'wizard/pos_daily_sales_reports.xml',
         'wizard/pos_confirmation_wizard.xml',
         'wizard/pos_make_invoice.xml',
+        'wizard/pos_receipt_layout_preview.xml',
+        'wizard/pos_receipt_layout.xml',
         'views/pos_assets_index.xml',
         'views/point_of_sale_report.xml',
         'views/point_of_sale_view.xml',
@@ -82,6 +84,7 @@
             'point_of_sale/static/src/backend/pos_payment_provider_cards/*',
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
+            'point_of_sale/static/src/backend/receipt_preview_iframe/*',
         ],
         "web.assets_web_dark": [
             'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
@@ -241,6 +244,16 @@
             'barcodes/static/tests/legacy/helpers.js',
             'point_of_sale/static/tests/generic_helpers/**/*',
             'point_of_sale/static/tests/pos/tours/**/*',
+        ],
+        'point_of_sale.receipt_assets_lazy': [
+            ('include', 'web.assets_backend_lazy'),
+            'point_of_sale/static/src/app/screens/receipt_screen/receipt/**/*',
+            'point_of_sale/static/src/utils.js',
+        ],
+        'point_of_sale.receipt_assets': [
+            ('include', 'web.assets_frontend'),
+            'web/static/fonts/fonts.scss',
+            'point_of_sale/static/src/css/pos_receipts.css',
         ],
     },
     'author': 'Odoo S.A.',

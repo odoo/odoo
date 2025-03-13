@@ -114,8 +114,13 @@ class PosConfig(models.Model):
         help='When disabled, only PoS manager can view the margin and cost of product among the Product info.')
     cash_control = fields.Boolean(string='Advanced Cash Control', compute='_compute_cash_control', help="Check the amount of the cashbox at opening and closing.")
     set_maximum_difference = fields.Boolean('Set Maximum Difference', help="Set a maximum difference allowed between the expected and counted money during the closing of the session.")
-    receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
-    receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
+    receipt_layout = fields.Selection([('default', 'Default'), ('boxes', 'Boxes'), ('lined', 'Lined')], string='Receipt Layout', default='default')
+    receipt_header = fields.Html(string='Receipt Header', translate=True, help="Company details, which is included in a printed receipt's header.")
+    receipt_footer = fields.Html(string='Receipt Footer', translate=True, help='A short info or tagline that will be inserted as a footer in the printed receipt.')
+    receipt_logo = fields.Binary(string='Receipt Logo', default=lambda self: self.env.company.logo, help='A logo that will be printed in the receipt.')
+    receipt_bg_layout = fields.Selection([('blank', 'Blank'), ('config_logo', 'Config logo'), ('custom', 'Custom')], default='blank', string='Background Layout', required=True)
+    receipt_bg_image = fields.Binary(string='Receipt Background Image', help='A logo that will be printed in the receipt.')
+    receipt_font = fields.Selection([('Lato', 'Lato'), ('Roboto', 'Roboto'), ('Open_Sans', 'Open Sans'), ('Montserrat', 'Montserrat'), ('Oswald', 'Oswald'), ('Raleway', 'Raleway'), ('Tajawal', 'Tajawal'), ('Fira_Mono', 'Fira Mono')], default='Lato')
     basic_receipt = fields.Boolean(string='Basic Receipt', help="Print basic ticket without prices. Can be used for gifts.")
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
@@ -162,7 +167,6 @@ class PosConfig(models.Model):
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_appointment = fields.Boolean("Online Booking")
     is_posbox = fields.Boolean("PosBox")
-    is_header_or_footer = fields.Boolean("Custom Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
     amount_authorized_diff = fields.Float('Amount Authorized Difference',
         help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
@@ -429,10 +433,6 @@ class PosConfig(models.Model):
                 if trusted_config.currency_id != config.currency_id:
                     raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
 
-    def _check_header_footer(self, values):
-        if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
-            raise AccessError(_('Only administrators can edit receipt headers and footers'))
-
     def _config_sequence_implementation(self):
         return 'standard'
 
@@ -444,7 +444,6 @@ class PosConfig(models.Model):
                 'company_id': self.env.company.id,
             })
         for vals in vals_list:
-            self._check_header_footer(vals)
             IrSequence = self.env['ir.sequence'].sudo()
             val = {
                 'name': _('POS Order %s', vals['name']),
@@ -485,7 +484,6 @@ class PosConfig(models.Model):
         self.last_data_change = self.env.cr.now()
 
     def write(self, vals):
-        self._check_header_footer(vals)
         self._reset_default_on_vals(vals)
         if ('is_order_printer' in vals and not vals['is_order_printer']):
             vals['printer_ids'] = [fields.Command.clear()]

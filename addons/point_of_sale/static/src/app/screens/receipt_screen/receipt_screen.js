@@ -88,7 +88,7 @@ export class ReceiptScreen extends Component {
             {
                 order: this.pos.getOrder(),
             },
-            { addClass: "pos-receipt-print p-3" }
+            { addClass: "pos-receipt-print" }
         );
     async _sendReceiptToCustomer({ action, destination }) {
         const order = this.currentOrder;

@@ -1,79 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderReceipt">
-        <div class="pos-receipt p-2">
+        <div class="pos-receipt table-responsive position-relative z-1" t-attf-class="pos-receipt-#{this.layout}-layout #{previewMode ? 'pos-receipt-preview' : ''}"
+            t-attf-style="font-family: #{order.config.receipt_font};">
+            <img t-if="bgImageUrl" t-att-src="bgImageUrl" class="pos-receipt-background-image" />
             <t t-set="showTaxGroupLabels" t-value="doesAnyOrderlineHaveTaxLabel()"/>
-            <ReceiptHeader order="order" />
-            <div class="pt-3"/>
-            <OrderDisplay order="order" t-slot-scope="scope" mode="'receipt'">
-                <t t-set="line" t-value="scope.line"/>
-                <Orderline line="line" showTaxGroup="showTaxGroupLabels" mode="'receipt'" basic_receipt="props.basic_receipt">
-                    <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
-                        <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
-                        <t t-esc="line.customerNote" />
-                    </li>
-                </Orderline>
-            </OrderDisplay>
-            <t t-if="!props.basic_receipt">
-                <t t-set="taxTotals" t-value="order.taxTotals"/>
-                <div t-if="taxTotals and taxTotals.has_tax_groups" class="pos-receipt-taxes pt-3">
-                    <t t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name">
-                        <div class="d-flex">
-                            <span class="text-nowrap mw-100">Subtotal</span>
-                            <span t-out="formatCurrency(subtotal.base_amount_currency)" class="ms-auto font-monospace"/>
-                        </div>
-
-                        <div t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id" class="d-flex">
-                            <span>
-                                <span t-esc="tax_group.group_name"/>
-                                <t t-if="showTaxGroupLabels">
-                                    (<span t-if="tax_group.group_label" t-out="tax_group.group_label"/>)
+            <ReceiptHeader order="order" previewMode="previewMode"/>
+            <!-- Orderlines -->
+            <table t-att-class="receiptClasses.table" >
+                <thead>
+                    <tr t-att-class="receiptClasses.thr">
+                        <th t-foreach="headerInfo" t-as="headerName" t-key="headerName_index" t-out="headerName.value" t-att-class="headerName.class" class="fw-bolder"/>
+                    </tr>
+                </thead>
+                <tbody class="order-container">
+                    <t t-foreach="orderLines" t-as="line" t-key="line.id">
+                        <tr class="orderline">
+                            <td t-foreach="getLineInfo(line, line_index)" t-as="lineInfo" t-key="lineInfo_index">
+                                <div t-att-class="lineInfo.class" t-out="lineInfo.value"/>
+                                <t t-if="lineInfo.other" >
+                                    <ul class="info-list d-flex flex-column p-0 m-0">
+                                        <li t-foreach="lineInfo.other" t-as="info" t-key="info_index" t-att-class="info.class" class="list-unstyled">
+                                            <i t-if="info.iclass" t-attf-class="fa #{info.iclass} me-1"/>
+                                            <t t-out="info.value" />
+                                        </li>
+                                    </ul>
                                 </t>
-                                <t id="tax_base" t-if="!taxTotals.same_tax_base">
-                                    on
-                                    <span t-esc="formatCurrency(tax_group.base_amount_currency)"/>
-                                </t>
-                            </span>
-                            <span t-out="formatCurrency(tax_group.tax_amount_currency)" class="ms-auto font-monospace"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <div t-if="order.general_customer_note or internalNotes.length" class="receipt-order-notes p-1 ps-2">
+                <div t-if="order.general_customer_note" class="flex-wrap w-100">
+                    <t t-foreach="order.general_customer_note.trim().split('\n')" t-as="subNote" t-key="subNote_index">
+                        <div class="d-inline text-break">
+                            <t t-out="subNote"/><br/>
                         </div>
                     </t>
                 </div>
+                <div t-if="internalNotes.length" class="internal-note-container d-flex flex-wrap gap-2 mt-1">
+                    <TagsList tags="internalNotes" />
+                </div>
+            </div>
+
+            <t t-if="!props.basic_receipt">
+                <t t-set="taxTotals" t-value="order.taxTotals"/>
 
                 <!-- Total -->
-                <div class="pos-receipt-amount receipt-total fw-bolder">
-                    <span class="label-total">Total</span>
-                    <span t-out="formatCurrency(taxTotals.order_sign * taxTotals.order_total)" class="pos-receipt-right-align font-monospace"/>
+                <div class="pos-receipt-total-container">
+                    <div t-if="!isDefaultLayout" class="pos-receipt-amount total-qty">
+                        <span class="label-total-qty pe-1">Total Qty: </span>
+                        <span t-out="orderQuantity"/>
+                    </div>
+                    <div class="pos-receipt-amount pos-receipt-amount-container">
+                        <div class="receipt-total">
+                            <span class="label-total">Total</span>
+                            <span t-out="formatCurrency(taxTotals.order_sign * taxTotals.order_total)" class="pos-receipt-right-align font-monospace"/>
+                        </div>
+                        <t t-if="order.showRounding">
+                            <div class="receipt-rounding">
+                                <span class="label-rounding">Rounding</span>
+                                <span t-out='formatCurrency(taxTotals.order_sign * taxTotals.order_rounding)' class="pos-receipt-right-align font-monospace"/>
+                            </div>
+                            <div class="receipt-to-pay">
+                                <span>To Pay</span>
+                                <span t-out='formatCurrency(taxTotals.order_sign * (taxTotals.order_total + taxTotals.order_rounding))' class="pos-receipt-right-align font-monospace"/>
+                            </div>
+                        </t>
+                    </div>
                 </div>
-                <t t-if="order.showRounding">
-                    <div class="pos-receipt-amount receipt-rounding">
-                        <span class="label-rounding">Rounding</span>
-                        <span t-out='formatCurrency(taxTotals.order_sign * taxTotals.order_rounding)' class="pos-receipt-right-align font-monospace"/>
-                    </div>
-                    <div class="pos-receipt-amount receipt-to-pay">
-                        To Pay
-                        <span t-out='formatCurrency(taxTotals.order_sign * (taxTotals.order_total + taxTotals.order_rounding))' class="pos-receipt-right-align font-monospace"/>
-                    </div>
-                </t>
 
                 <!-- Payment Lines -->
-                <div class="paymentlines text-start pt-1" t-foreach="paymentLines" t-as="line" t-key="line_index">
-                    <t t-esc="line.payment_method_id.name" />
-                    <span t-out="formatCurrency(line.getAmount())" class="pos-receipt-right-align font-monospace"/>
-                </div>
+                <div t-if="paymentLines.length" class="pos-receipt-payment-container">
+                    <div t-if="!isDefaultLayout" class="pos-receipt-total-qty" />
+                    <div class="pos-receipt-amount" >
+                        <div class="paymentlines text-start" t-foreach="paymentLines" t-as="line" t-key="line_index">
+                            <span t-out="line.payment_method_id.name" />
+                            <span t-out="formatCurrency(line.getAmount())" class="pos-receipt-right-align font-monospace"/>
+                        </div>
 
-                <div t-if="order.showChange" class="pos-receipt-amount receipt-change">
-                    <span class="label-change">Change</span>
-                    <span t-out="formatCurrency(order.orderChange)" class="pos-receipt-right-align font-monospace"/>
-                </div>
+                        <div t-if="order.showChange" class="receipt-change">
+                            <span class="label-change">Change</span>
+                            <span t-out="formatCurrency(order.orderChange)" class="pos-receipt-right-align font-monospace"/>
+                        </div>
 
-                <!-- Extra Payment Info -->
-                <t t-set="totalDiscount" t-value="order.getTotalDiscount()" />
-                <t t-if="totalDiscount">
-                    <div class="text-start">
-                        <span class="label-discount">Discounts</span>
-                        <span t-out="formatCurrency(totalDiscount)" class="pos-receipt-right-align font-monospace"/>
+                        <!-- Extra Payment Info -->
+                        <t t-set="totalDiscount" t-value="order.getTotalDiscount()" />
+                        <div t-if="totalDiscount">
+                            <span class="label-discount">Discounts</span>
+                            <span t-out="formatCurrency(totalDiscount)" class="pos-receipt-right-align font-monospace"/>
+                        </div>
                     </div>
-                </t>
+                </div>
+
+                <!-- Tax Details -->
+                <div t-if="taxTotals and taxTotals.has_tax_groups" class="pos-receipt-taxes">
+                    <t t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name">
+                        <t t-if="isDefaultLayout">
+                            <div class="d-flex">
+                                <span class="text-nowrap mw-100">Subtotal</span>
+                                <span t-out="formatCurrency(subtotal.base_amount_currency)" class="ms-auto font-monospace"/>
+                            </div>
+
+                            <div t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id" class="d-flex">
+                                <span>
+                                    <span t-out="tax_group.group_name"/>
+                                    <t t-if="showTaxGroupLabels">
+                                        (<span t-if="tax_group.group_label" t-out="tax_group.group_label"/>)
+                                    </t>
+                                    <t t-if="!taxTotals.same_tax_base">
+                                        on
+                                        <span t-out="formatCurrency(tax_group.base_amount_currency)"/>
+                                    </t>
+                                </span>
+                                <span t-out="formatCurrency(tax_group.tax_amount_currency)" class="ms-auto"/>
+                            </div>
+                        </t>
+                        <table t-else="" class="mt-3 tax-table" t-att-class="receiptClasses.table">
+                            <thead>
+                                <tr t-att-class="receiptClasses.thr">
+                                    <th>Tax</th>
+                                    <th>Amount</th>
+                                    <th>Base</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id">
+                                    <td>
+                                        <span t-if="showTaxGroupLabels and tax_group.group_label" t-out="tax_group.group_label" class="me-2"/>
+                                        <span t-out="tax_group.group_name"/>
+                                    </td>
+                                    <td t-out="formatCurrency(tax_group.tax_amount_currency)" />
+                                    <td t-out="formatCurrency(tax_group.base_amount_currency)" />
+                                    <td t-out="formatCurrency(tax_group.tax_amount_currency + tax_group.base_amount_currency)" />
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
 
                 <div t-if="qrCode" class="gap-2 d-flex flex-row pt-3" style="font-size: 75%;">
                     <div t-if="['qr_code', 'qr_code_and_url'].includes(header.company.point_of_sale_ticket_portal_url_display_mode)" class="pt-1">
@@ -97,14 +163,14 @@
 
             <!-- Footer -->
             <div t-if="order.config.receipt_footer" class="pos-receipt-center-align pt-3 text-center" style="white-space:pre-line">
-                <t t-esc="order.config.receipt_footer" />
+                <t t-out="footerMarkup" />
             </div>
 
             <div class="after-footer">
                 <t t-foreach="paymentLines" t-as="line" t-key="line_index">
                     <t t-if="line.ticket">
                         <div class="pos-payment-terminal-receipt pt-3">
-                            <pre t-esc="line.ticket" />
+                            <pre t-out="line.ticket" />
                         </div>
                     </t>
                 </t>
@@ -113,7 +179,7 @@
             <t t-if="order.shipping_date">
                 <div class="pos-receipt-order-data d-flex gap-2 pt-3">
                     Expected delivery:
-                    <div><t t-esc="order.formatDateOrTime('shipping_date', 'date')" /></div>
+                    <div><t t-out="order.formatDateOrTime('shipping_date', 'date')" /></div>
                 </div>
             </t>
 

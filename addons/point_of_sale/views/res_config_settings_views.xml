@@ -20,7 +20,7 @@
 
                 <app data-string="Point of sale" string="Point of Sale" name="point_of_sale" groups="point_of_sale.group_pos_manager">
                     <div style="z-index:1000;" class="position-fixed w-100 bg-white">
-                        <setting type="header" string="Point of Sale">
+                        <setting type="header" string="Point of Sale">  
                             <field name="pos_config_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this point of sale."/>
                             <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="btn btn-link"/>
                         </setting>
@@ -295,18 +295,8 @@
                             </block>
 
                             <block title="Bills &amp; Receipts" id="pos_bills_and_receipts_section">
-                                <setting help="Add a custom message to header and footer" documentation="/applications/sales/point_of_sale/receipts_invoices.html">
-                                    <field name="pos_is_header_or_footer"/>
-                                    <div class="content-group mt16" invisible="not pos_is_header_or_footer">
-                                        <div>
-                                            <label string="Header" for="pos_receipt_header" class="col-lg-2 o_light_label"/>
-                                            <field name="pos_receipt_header" placeholder="e.g. Company Address, Website"/>
-                                        </div>
-                                        <div>
-                                            <label string="Footer" for="pos_receipt_footer" class="col-lg-2 o_light_label"/>
-                                            <field name="pos_receipt_footer" placeholder="e.g. Return Policy, Thanks for shopping with us!"/>
-                                        </div>
-                                    </div>
+                                <setting string="Receipt Layout">
+                                    <button name="action_view_pos_receipt_layout" string="Configure Receipt" type="object" class="oe_link" icon="oi-arrow-right"/>
                                 </setting>
                                 <setting id="auto_printing" help="Print receipts automatically once the payment is registered" documentation="/applications/sales/point_of_sale/receipts_invoices.html">
                                     <field name="pos_iface_print_auto"/>
