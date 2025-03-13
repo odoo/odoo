@@ -51,6 +51,10 @@ export class CheckBox extends Component {
             type: String,
             optional: true,
         },
+        indeterminate: {
+            type: Boolean,
+            optional: true,
+        },
     };
 
     setup() {
