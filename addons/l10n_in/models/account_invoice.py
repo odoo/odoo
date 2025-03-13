@@ -112,6 +112,7 @@ class AccountMove(models.Model):
                     )
             return False
 
+        FiscalPosition = self.env['account.fiscal.position']
         # To avoid ORM call in loops, we are passing the `foreign_state` as parameter
         foreign_state = self.env['res.country.state'].search([('code', '!=', 'IN')], limit=1)
         for state_id, moves in self.grouped(lambda move: _get_fiscal_state(move, foreign_state)).items():
@@ -120,7 +121,11 @@ class AccountMove(models.Model):
                     'state_id': state_id.id,
                     'country_id': state_id.country_id.id,
                 })
-                moves.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(virtual_partner)
+                # Group moves by company to avoid multi-company conflicts
+                for company_id, company_moves in moves.grouped('company_id').items():
+                    company_moves.fiscal_position_id = FiscalPosition.with_company(
+                        company_id
+                    )._get_fiscal_position(virtual_partner)
             else:
                 super(AccountMove, moves)._compute_fiscal_position_id()
 
