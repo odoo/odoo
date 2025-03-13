@@ -99,3 +99,12 @@ test("drag inner content & drop in outside of a dropzone", async () => {
     await drop(builderEl);
     expect(contentEl).toHaveInnerHTML(`<div><p>Text</p></div>`);
 });
+
+test("A snippet should appear disabled if there is nowhere to drop it", async () => {
+    const { contentEl } = await setupHTMLBuilder("", {
+        snippetContent,
+        dropzoneSelectors,
+    });
+    expect(contentEl).toHaveInnerHTML("");
+    expect(".o_block_tab .o_snippet.o_disabled").toHaveCount(2);
+});
