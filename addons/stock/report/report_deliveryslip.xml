@@ -62,7 +62,7 @@
                         </div>
                     </div>
                     <div class="oe_structure"></div>
-                    <t t-set="format_number" t-value="lambda x: int(x) if x.is_integer() else x"/>
+                    <t t-set="format_number" t-value="lambda x: int(x) if x == int(x) else x"/>
                     <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table" style="table-layout: fixed; width: 100%">
                         <thead>
                             <tr>
