@@ -897,6 +897,9 @@ export class PropertiesField extends Component {
         };
 
         this.popover.open(target, {
+            fieldName: this.props.name,
+            definitionRecordField: this.definitionRecordField,
+            definitionRecordId: this.props.record.data[this.definitionRecordField][0],
             readonly: this.props.readonly || !this.state.canChangeDefinition,
             canChangeDefinition: this.state.canChangeDefinition,
             checkDefinitionWriteAccess: () => this.checkDefinitionWriteAccess(),
