@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:01+0000\n"
-"PO-Revision-Date: 2025-02-20 10:01+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"PO-Revision-Date: 2025-03-12 20:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -83,11 +83,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
-msgid "# of Digits"
 msgstr ""
 
 #. module: account
@@ -209,10 +204,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
+#: code:addons/account/models/account_payment_term.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_report.py:0
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
 msgid "%s (copy)"
 msgstr ""
 
@@ -741,7 +735,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid ""
 "<small class=\"form-text text-muted\">\n"
 "                    You can choose how you want us to send your invoices, and with which electronic format.\n"
@@ -1641,6 +1635,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
+#: model:ir.model.fields,field_description:account.field_account_move_line__account_name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Account Name"
 msgstr ""
@@ -2429,6 +2424,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__allowed_uom_ids
+msgid "Allowed Uom"
 msgstr ""
 
 #. module: account
@@ -4033,30 +4033,6 @@ msgid "Changed Lock Date"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/controllers/portal.py:0
-msgid ""
-"Changing VAT number is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/controllers/portal.py:0
-msgid ""
-"Changing your company name is not allowed once invoices have been issued for"
-" your account. Please contact us directly for this operation."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/controllers/portal.py:0
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__chart_template
 #: model:ir.model.fields,field_description:account.field_res_config_settings__chart_template
 msgid "Chart Template"
@@ -4213,6 +4189,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__code
 #: model:ir.model.fields,field_description:account.field_account_code_mapping__code
 #: model:ir.model.fields,field_description:account.field_account_incoterms__code
+#: model:ir.model.fields,field_description:account.field_account_move_line__account_code
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_code
 #: model:ir.model.fields,field_description:account.field_account_payment_method__code
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__code
@@ -6578,7 +6555,7 @@ msgid "Electronic Data Interchange"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Electronic format"
 msgstr ""
 
@@ -6752,8 +6729,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
-"Error while loading the localization. You should probably update your "
-"localization app first."
+"Error while loading the localization: missing tax tag %(tag_name)s for "
+"country %(country_name)s. You should probably update your localization app "
+"first."
 msgstr ""
 
 #. module: account
@@ -8617,6 +8595,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.report,name:account.account_invoices
+msgid "Invoice PDF"
 msgstr ""
 
 #. module: account
@@ -11239,11 +11222,6 @@ msgid "PAY001"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.report,name:account.account_invoices
-msgid "PDF"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_pdf_report_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_pdf_report_id
 msgid "PDF Attachment"
@@ -12394,7 +12372,7 @@ msgid "Receive Money"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_details_fields
+#: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Receive invoices"
 msgstr ""
 
@@ -12468,13 +12446,13 @@ msgid "Reconciliation Parts"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
-msgid "Record a new vendor bill"
+#: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
+msgid "Record"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
-msgid "Record"
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
 msgstr ""
 
 #. module: account
@@ -13133,6 +13111,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr ""
 
@@ -14945,14 +14924,6 @@ msgid "The entry is secured with an inalterable hash."
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"The existing PDFs will be used for sending. If you want to regenerate them, "
-"please delete the attachment from the invoice."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 msgid ""
@@ -14965,12 +14936,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_line_label_uniq
 msgid "The expression label must be unique per report line."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/controllers/portal.py:0
-msgid "The field %s must be filled."
 msgstr ""
 
 #. module: account
@@ -15807,13 +15772,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This journal entry has been secured."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal.py:0
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
 msgstr ""
 
 #. module: account
@@ -17496,7 +17454,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-#, python-format
 msgid "You cannot deprecate an account that is used in a tax distribution."
 msgstr ""
 

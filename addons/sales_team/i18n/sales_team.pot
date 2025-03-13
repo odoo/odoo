@@ -4,16 +4,28 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
-"PO-Revision-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-12 20:37+0000\n"
+"PO-Revision-Date: 2025-03-12 20:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid "%(user_name)s already in other teams (%(team_names)s)."
+msgstr ""
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid "%(user_names)s already in other teams (%(team_names)s)."
+msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
@@ -43,6 +55,12 @@ msgid "Action Needed"
 msgstr ""
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Activate \"Multi-team\""
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__active
 msgid "Active"
@@ -65,47 +83,14 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current team"
-" %(team_name)s."
-msgstr ""
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team_member.py:0
-msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current "
-"teams %(team_names)s."
-msgstr ""
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Adding %(user_names)s in this team would remove them from their current "
-"teams (%(team_names)s)."
-msgstr ""
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team_member.py:0
-msgid ""
-"Adding %(user_name)s in this team will remove them from %(team_names)s. "
-"Working in multiple teams? Activate the option under Configuration>Settings."
-msgstr ""
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Adding %(user_names)s in this team will remove them from %(team_names)s."
-msgstr ""
-
-#. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
+msgstr ""
+
+#. module: sales_team
+#. odoo-javascript
+#: code:addons/sales_team/static/src/js/crm_team_form.js:0
+msgid "An error occurred while activating the Multi-Team option."
 msgstr ""
 
 #. module: sales_team
@@ -232,6 +217,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__display_name
+#: model:ir.model.fields,field_description:sales_team.field_res_users__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -283,6 +269,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__id
+#: model:ir.model.fields,field_description:sales_team.field_res_users__id
 msgid "ID"
 msgstr ""
 
@@ -385,11 +372,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_ids
 msgid "Messages"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member__mobile
-msgid "Mobile"
 msgstr ""
 
 #. module: sales_team
@@ -609,14 +591,6 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
-"settings."
-msgstr ""
-
-#. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
 msgid "Training"
 msgstr ""
@@ -696,15 +670,19 @@ msgid "Users assigned to this team."
 msgstr ""
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Visible to all"
+msgstr ""
+
+#. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr ""
 
 #. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Working in multiple teams? Activate the option under Configuration>Settings."
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Working in multiple teams?"
 msgstr ""
 
 #. module: sales_team

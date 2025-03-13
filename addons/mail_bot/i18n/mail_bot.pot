@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"PO-Revision-Date: 2025-03-12 20:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,8 +34,10 @@ msgid "Discussion Channel"
 msgstr ""
 
 #. module: mail_bot
-#: model:ir.model,name:mail_bot.model_mail_thread
-msgid "Email Thread"
+#: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:mail_bot.field_mail_bot__display_name
+#: model:ir.model.fields,field_description:mail_bot.field_res_users__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: mail_bot
@@ -56,11 +58,6 @@ msgid ""
 "Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your "
 "sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
 "help."
-msgstr ""
-
-#. module: mail_bot
-#: model:ir.model,name:mail_bot.model_ir_http
-msgid "HTTP Routing"
 msgstr ""
 
 #. module: mail_bot
@@ -87,6 +84,13 @@ msgstr ""
 msgid ""
 "I'm not smart enough to answer your question.%(new_line)sTo follow my guide,"
 " ask: %(command_start)sstart the tour%(command_end)s."
+msgstr ""
+
+#. module: mail_bot
+#: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__id
+#: model:ir.model.fields,field_description:mail_bot.field_mail_bot__id
+#: model:ir.model.fields,field_description:mail_bot.field_res_users__id
+msgid "ID"
 msgstr ""
 
 #. module: mail_bot
