@@ -536,6 +536,39 @@ class MrpBom(models.Model):
         attachements = self.env['product.document'].search(final_domain).ir_attachment_id
         return attachements
 
+    @api.model
+    def _skip_for_no_variant(self, product, bom_attribule_values, never_attribute_values=False):
+        """ Controls if a Component/Operation/Byproduct line should be skipped based on the 'no_variant' attributes
+            Cases:
+                - no_variant:
+                    1. attribute present on the line
+                        => need to be at least one attribute value matching between the one passed as args and the ones one the line
+                    2. attribute not present on the line
+                        => valid if the line has no attribute value selected for that attribute
+                - always and dynamic: match_all_variant_values()
+        """
+        no_variant_bom_attributes = bom_attribule_values.filtered(lambda av: av.attribute_id.create_variant == 'no_variant')
+
+        # Attributes create_variant 'always' and 'dynamic'
+        other_attribute_valid = product._match_all_variant_values(bom_attribule_values - no_variant_bom_attributes)
+
+        # If there are no never attribute values on the line => 'always' and 'dynamic'
+        if not no_variant_bom_attributes:
+            return not other_attribute_valid
+
+        # Or if there are never attribute on the line values but no value is passed => impossible to match
+        if not never_attribute_values:
+            return True
+
+        bom_values_by_attribute = no_variant_bom_attributes.grouped('attribute_id')
+        never_values_by_attribute = never_attribute_values.grouped('attribute_id')
+
+        for attribute, values in bom_values_by_attribute.items():
+            if any(val.id in never_values_by_attribute[attribute].ids for val in values):
+                continue
+            return True
+        return not other_attribute_valid
+
 
 class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'
@@ -651,29 +684,7 @@ class MrpBomLine(models.Model):
         if not product or product._name == 'product.template':
             return False
 
-        # attributes create_variant 'always' and 'dynamic'
-        other_attribute_valid = product._match_all_variant_values(self.bom_product_template_attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant != 'no_variant'))
-
-        # if there are no never attribute values on the bom line => always and dynamic
-
-        if not self.bom_product_template_attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant == 'no_variant'):
-            return not other_attribute_valid
-
-        # or if there are never attribute on the line values but no value is passed => impossible to match
-        if not never_attribute_values:
-            return True
-
-        bom_values_by_attribute = self.bom_product_template_attribute_value_ids.filtered(
-                lambda a: a.attribute_id.create_variant == 'no_variant'
-            ).grouped('attribute_id')
-
-        never_values_by_attribute = never_attribute_values.grouped('attribute_id')
-
-        for a_id, a_values in bom_values_by_attribute.items():
-            if any(a.id in never_values_by_attribute[a_id].ids for a in a_values):
-                continue
-            return True
-        return not other_attribute_valid
+        return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
 
     def action_see_attachments(self):
         domain = [
@@ -779,7 +790,9 @@ class MrpBomByproduct(models.Model):
         self.ensure_one()
         if not product or product._name == 'product.template':
             return False
-        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
+
+        never_attribute_values = self.env.context.get('never_attribute_ids')
+        return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
 
     # -------------------------------------------------------------------------
     # CATALOG
