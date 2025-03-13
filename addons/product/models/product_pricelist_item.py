@@ -274,7 +274,7 @@ class ProductPricelistItem(models.Model):
             )
 
     def _get_integer(self, percentage):
-        return int(percentage) if percentage.is_integer() else percentage
+        return int(percentage) if percentage == int(percentage) else percentage
 
     def _get_displayed_discount(self, item):
         if item.base == 'standard_price':

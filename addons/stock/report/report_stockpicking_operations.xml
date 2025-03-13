@@ -92,7 +92,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <t t-set="format_number" t-value="lambda x: int(x) if x.is_integer() else '{:.2f}'.format(x)"/>
+                            <t t-set="format_number" t-value="lambda x: int(x) if x == int(x) else '{:.2f}'.format(x)"/>
                             <!-- In this step, we loop over every move of the picking and do the following
                                 1. We add the barcode column if any of the products has a barcode or if we have a tracked move
                                 2. We add From/To columns according to the type of the picking
