@@ -6,7 +6,6 @@ import {
     addOption,
     confirmAddSnippet,
     defineWebsiteModels,
-    openBuilderSidebar,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "./website_helpers";
@@ -16,7 +15,7 @@ import { xml } from "@odoo/owl";
 defineWebsiteModels();
 
 test("dropping a new snippet starts its interaction", async () => {
-    await setupWebsiteBuilder("", { openEditor: false });
+    const { openBuilderSidebar } = await setupWebsiteBuilder("", { openEditor: false });
     patchWithCleanup(EditInteractionPlugin.prototype, {
         setup() {
             super.setup();
@@ -34,7 +33,9 @@ test("dropping a new snippet starts its interaction", async () => {
 });
 
 test("replacing a snippet starts the interaction of the new snippet", async () => {
-    await setupWebsiteBuilderWithSnippet("s_text_block", { openEditor: false });
+    const { openBuilderSidebar } = await setupWebsiteBuilderWithSnippet("s_text_block", {
+        openEditor: false,
+    });
     patchWithCleanup(EditInteractionPlugin.prototype, {
         setup() {
             super.setup();

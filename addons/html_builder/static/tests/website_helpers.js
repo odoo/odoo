@@ -9,7 +9,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
 import { after, describe } from "@odoo/hoot";
-import { advanceTime, animationFrame, click, queryOne, waitFor } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -99,6 +99,10 @@ export async function setupWebsiteBuilder(
             resolve(el);
         };
     });
+    let resolveEditAssetsLoaded = () => {};
+    const editAssetsLoaded = new Promise((resolve) => {
+        resolveEditAssetsLoaded = () => resolve();
+    });
 
     patchWithCleanup(WebsiteBuilder.prototype, {
         setup() {
@@ -117,18 +121,19 @@ export async function setupWebsiteBuilder(
             props.iframeLoaded = iframeLoaded;
             return props;
         },
-        loadAssetsEditBundle() {
+        async loadAssetsEditBundle() {
             // To instantiate interactions in the iframe test we need to
             // load the edit and frontend bundle in it. The problem is that
             // Hoot does not have control of this iframe and therefore
-            // does not mock anything in it (location, rpc, ...).
+            // does not mock anything in it (location, rpc, ...). So we don't
+            // load the website.assets_edit_frontend bundle.
 
             if (loadIframeBundles) {
-                // TODO: await
-                loadBundle("html_builder.inside_builder_style", {
-                    targetDoc: iframe.contentDocument,
+                await loadBundle("html_builder.inside_builder_style", {
+                    targetDoc: queryOne("iframe[data-src^='/website/force/1']").contentDocument,
                 });
             }
+            await resolveEditAssetsLoaded();
         },
     });
     await getService("action").doAction({
@@ -189,20 +194,24 @@ export async function setupWebsiteBuilder(
     resolveIframeLoaded(iframe);
     await animationFrame();
     if (openEditor) {
-        await openBuilderSidebar();
+        await openBuilderSidebar(editAssetsLoaded);
     }
     return {
         getEditor: () => editor,
         getEditableContent: () => editableContent,
+        openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
     };
 }
 
-export async function openBuilderSidebar() {
+async function openBuilderSidebar(editAssetsLoaded) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
     await Promise.all([getWebsiteSnippets(), loadBundle("html_builder.assets")]);
 
     await click(".o-website-btn-custo-primary");
-    // linked to the setTimeout in the WebsiteBuilder component
+    await editAssetsLoaded;
+    // advanceTime linked to the setTimeout in the WebsiteBuilder component
+    // tick needed to wait for the timeout to be called before advancing time.
+    await tick();
     await advanceTime(200);
     await animationFrame();
 }
@@ -374,13 +383,13 @@ export async function setupWebsiteBuilderWithDummySnippet(content) {
             ),
         },
     };
-    const { getEditor, getEditableContent } = await setupWebsiteBuilder(
+    const { getEditor, getEditableContent, openBuilderSidebar } = await setupWebsiteBuilder(
         content || "",
         snippetsStructure
     );
     const snippetContent = getSnippetEl(true);
 
-    return { getEditor, getEditableContent, snippetContent };
+    return { getEditor, getEditableContent, openBuilderSidebar, snippetContent };
 }
 
 export async function confirmAddSnippet(snippetName) {
