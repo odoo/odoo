@@ -372,10 +372,13 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         """
         if not line.move_id._is_downpayment() and line.sale_line_ids and all(sale_line.is_downpayment for sale_line in line.sale_line_ids):
             prepayment_move_id = line.sale_line_ids.invoice_lines.move_id.filtered(lambda m: m._is_downpayment())
+            if prepayment_move_id:
+                issue_date = prepayment_move_id.l10n_sa_confirmation_datetime
+            else:
+                issue_date = line.sale_line_ids.create_date
             return {
-                'prepayment_id': prepayment_move_id.name,
-                'issue_date': fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'),
-                                                                prepayment_move_id.l10n_sa_confirmation_datetime),
+                'prepayment_id': prepayment_move_id.name or line.sale_line_ids.order_id.name,
+                'issue_date': fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), issue_date),
                 'document_type_code': 386
             }
         return {}
