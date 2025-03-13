@@ -1723,10 +1723,9 @@ export class PosStore extends Reactive {
         }
     }
 
-    async getRenderedReceipt(order, title, lines, fullReceipt = false, diningModeUpdate) {
+    getPrintingChanges(order, diningModeUpdate) {
         const time = DateTime.now().toFormat("HH:mm");
-
-        const printingChanges = {
+        return {
             table_name: order.table_id ? order.table_id.table_number : "",
             config_name: order.config.name,
             time: time,
@@ -1736,10 +1735,12 @@ export class PosStore extends Reactive {
             order_note: order.general_note,
             diningModeUpdate: diningModeUpdate,
         };
+    }
 
+    async getRenderedReceipt(order, title, lines, fullReceipt = false, diningModeUpdate) {
         const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
             operational_title: title,
-            changes: printingChanges,
+            changes: this.getPrintingChanges(order, diningModeUpdate),
             changedlines: lines,
             fullReceipt: fullReceipt,
         });
