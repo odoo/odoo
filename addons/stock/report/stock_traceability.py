@@ -247,7 +247,7 @@ class StockTraceabilityReport(models.TransientModel):
             [body],
             header=header.decode(),
             landscape=True,
-            specific_paperformat_args={'data-report-margin-top': 17, 'data-report-header-spacing': 12}
+            specific_paperformat_args={'data-report-margin-top': 30, 'data-report-header-spacing': 25}
         )
 
     def _get_main_lines(self):
