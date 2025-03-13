@@ -23,7 +23,8 @@
                                 <tr>
                                     <td>Update to:</td>
                                     <td style="pointer-events: none;">
-                                        <Field name="field.name" record="props.record" type="field.widget" readonly="true" fieldInfo="field.fieldNode"/>
+                                        <span t-if="isValueEmpty(field)">None</span>
+                                        <Field t-else="" name="field.name" record="props.record" type="field.widget" readonly="true" fieldInfo="field.fieldNode"/>
                                     </td>
                                 </tr>
                             </t>
