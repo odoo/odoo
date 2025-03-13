@@ -22,10 +22,10 @@
 # Albena Mincheva <albena_vicheva@abv.bg>, 2024
 # Petko Karamotchev, 2025
 # Любомир Георгиев, 2025
-# Veselina Slavkova, 2025
 # Igor Sheludko <igor.sheludko@gmail.com>, 2025
-# Martin Dinovski, 2025
 # Emil Krastev, 2025
+# Martin Dinovski, 2025
+# Veselina Slavkova, 2025
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Emil Krastev, 2025\n"
+"Last-Translator: Veselina Slavkova, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6424,7 +6424,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
 #: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__route_id
 msgid "Preferred Route"
-msgstr ""
+msgstr "Предпочитан маршрут"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
@@ -8853,6 +8853,15 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
 "The Serial Number (%(serial_number)s) is already used in location(s): %(location_list)s.\n"
@@ -10354,7 +10363,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Етикет на мерната единица за тегло"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight

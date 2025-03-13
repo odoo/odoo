@@ -3346,6 +3346,16 @@ msgid "Auto-post until"
 msgstr "Conferma automatica fino al"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-post was disabled on this invoice because a potential duplicate was "
+"detected."
+msgstr ""
+"La registrazione automatica è stata disattivata perché è stato individuato "
+"un potenziale duplicato della fattura."
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto-validate"
@@ -18506,6 +18516,14 @@ msgid ""
 msgstr ""
 "Non è possibile eliminare questo rendiconto (%s). È utilizzato dal "
 "generatore PDF della contabilità."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot deprecate an account that is used in a tax distribution."
+msgstr ""
+"Non è possibile disattivare un conto utilizzano in una ripartizione imposta."
 
 #. module: account
 #. odoo-python

@@ -3160,6 +3160,14 @@ msgid "Auto-post until"
 msgstr "Tarixə kimi Avtomatik dərc etmə"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-post was disabled on this invoice because a potential duplicate was "
+"detected."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto-validate"
@@ -17684,6 +17692,13 @@ msgstr ""
 msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot deprecate an account that is used in a tax distribution."
 msgstr ""
 
 #. module: account

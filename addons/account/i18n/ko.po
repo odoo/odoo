@@ -171,8 +171,8 @@ msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
-"%(move)s 항목이 관련 명세서 내역과 대비하여 유효하지 않습니다.\n"
-"일치시키려면 전표에 가계정 내역은 반드시 하나만 있어야 합니다."
+"%(move)s 항목이 관련 명세서 내역과 관련하여 유효하지 않습니다.\n"
+"일관되게 유지하려면 가계정 내역과 관련된 전표 항목은 반드시 하나만 있어야 합니다."
 
 #. module: account
 #. odoo-python
@@ -3234,6 +3234,14 @@ msgstr "청구서 자동 발행"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_until
 msgid "Auto-post until"
 msgstr "자동 발행 종료일"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"Auto-post was disabled on this invoice because a potential duplicate was "
+"detected."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -17770,6 +17778,13 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr "이 보고서 (%s)는 회계 PDF 생성 엔진에서 사용 중이므로 삭제할 수 없습니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot deprecate an account that is used in a tax distribution."
+msgstr "세금 배분에 사용되는 계정은 삭제할 수 없습니다."
 
 #. module: account
 #. odoo-python
