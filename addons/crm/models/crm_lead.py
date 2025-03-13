@@ -2184,7 +2184,8 @@ class CrmLead(models.Model):
         # Get unique couples to search in frequency table and won leads.
         leads_fields = set()  # keep unique fields, as a lead can have multiple tag_ids
         won_leads = set()
-        won_stage_ids = self.env['crm.stage'].search([('is_won', '=', True)]).ids
+        all_stages = self.env['crm.stage'].search([], order='sequence, id')
+        won_stage_ids = all_stages.filtered('is_won').ids
         for lead_id, values in leads_values_dict.items():
             for field, value in values['values']:
                 if field == 'stage_id' and value in won_stage_ids:
@@ -2235,11 +2236,24 @@ class CrmLead(models.Model):
             result[-1][field]['won_total'] += frequency['won_count']
             result[-1][field]['lost_total'] += frequency['lost_count']
 
-        # Get all won, lost and total count for all records in frequencies per team_id
-        for team_id in result:
-            result[team_id]['team_won'], \
-            result[team_id]['team_lost'], \
-            result[team_id]['team_total'] = self._pls_get_won_lost_total_count(result[team_id])
+        for team_id, team_values in result.items():
+            # -Getting total number of leads won / lost by team. They only impact the probability value when the lead is
+            # in a stage with no entry in the frequency table. They cancel out in the formula otherwise.
+            # -For each team, the stage considered as the first one should be first(first_stage_overall, first_stage_team_only)
+            # as lost_count could differ on a first stage that would be only for the team. For example, if stages are in order
+            # A1 A2 X3 X4 X5, and A1 and A2 are stages of team A, and X are teamless stages, losing a lead in A2 will update
+            # frequencies of stage A1 and A2, so we need to take A1 lost_count to be accurate, not X3.
+            # -For -1, we need to take the sum of team totals, already done in the result dict on the first stage overall.
+            # If first stage is a new stage (no frequency in table), then proba is not supported (until next table update).
+            team_totals = 0, 0
+            first_stage_id = (
+                all_stages[0] if all_stages and team_id == -1 else
+                next((stage.id for stage in all_stages if not stage.team_id or stage.team_id.id == team_id), None)
+            )
+            stage_totals = team_values.get('stage_id', {}).get(str(first_stage_id))
+            if first_stage_id and stage_totals:
+                team_totals = stage_totals['won'], stage_totals['lost']
+            result[team_id]['team_won'], result[team_id]['team_lost'] = team_totals
 
         save_team_id = None
         p_won, p_lost = 1, 1
@@ -2260,12 +2274,11 @@ class CrmLead(models.Model):
                 save_team_id = lead_team_id
                 team_won = result[save_team_id]['team_won']
                 team_lost = result[save_team_id]['team_lost']
-                team_total = result[save_team_id]['team_total']
-                # if one count = 0, we cannot compute lead probability
-                if not team_won or not team_lost:
+                # if counts are 0, we cannot compute lead probability
+                if not team_won and not team_lost:
                     continue
-                p_won = team_won / team_total
-                p_lost = team_lost / team_total
+                p_won = team_won
+                p_lost = team_lost
 
             # 2. Compute won and lost score using each variable's individual probability
             s_lead_won, s_lead_lost = p_won, p_lost
@@ -2584,23 +2597,6 @@ class CrmLead(models.Model):
         pls_fields = pls_fields_config.split(',') if pls_fields_config else []
         pls_safe_fields = [field for field in pls_fields if field in self._fields.keys()]
         return pls_safe_fields
-
-    # Compute Automated Probability Tools
-    # -----------------------------------
-    def _pls_get_won_lost_total_count(self, team_results):
-        """ Get all won and all lost + total :
-               first stage can be used to know how many lost and won there is
-               as won count are equals for all stage
-               and first stage is always incremented in lost_count
-        :param team_results:
-        :return: won count, lost count and total count for all records in frequencies
-        """
-        # TODO : check if we need to handle specific team_id stages [for lost count] (if first stage in sequence is team_specific)
-        first_stage_id = self.env['crm.stage'].search([('team_id', '=', False)], order='sequence, id', limit=1)
-        if str(first_stage_id.id) not in team_results.get('stage_id', []):
-            return 0, 0, 0
-        stage_result = team_results['stage_id'][str(first_stage_id.id)]
-        return stage_result['won'], stage_result['lost'], stage_result['won'] + stage_result['lost']
 
     # PLS: Rebuild Frequency Table Tools
     # ----------------------------------
