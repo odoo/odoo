@@ -50,7 +50,7 @@ class HrEmployeeVersion(models.Model):
     emergency_contact = fields.Char(related='employee_id.emergency_contact', readonly=False)
     emergency_phone = fields.Char(related='employee_id.emergency_phone', readonly=False)
 
-    gender = fields.Selection(related='employee_id.gender', readonly=False)
+    sex = fields.Selection(related='employee_id.sex', readonly=False)
     place_of_birth = fields.Char(related='employee_id.place_of_birth', readonly=False)
     country_of_birth = fields.Many2one(related='employee_id.country_of_birth', readonly=False)
     birthday = fields.Date(related='employee_id.birthday', readonly=False)

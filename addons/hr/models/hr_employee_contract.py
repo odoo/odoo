@@ -7,7 +7,7 @@ class HrEmployeeContract(models.Model):
     _description = "Employee Contract"
     _order = 'date_to'
 
-    name = fields.Char(string='Name', required=True)
+    name = fields.Char(string='Contract Reference', required=True)
     date_from = fields.Date(string='Date From', required=True)
     date_to = fields.Date(string='Date To')
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type")

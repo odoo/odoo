@@ -246,6 +246,11 @@
                                 <div class="alert alert-info" role="alert" invisible="contract_ids">
                                     This employee doesn't have any contract, create one first.
                                 </div>
+                                <div invisible="not contract_ids">
+                                    <group>
+                                        <field name="selected_contract_id"/>
+                                    </group>
+                                </div>
                             </page>
                         </notebook>
                     </sheet>

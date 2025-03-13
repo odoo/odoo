@@ -347,7 +347,7 @@ class HrEmployee(models.Model):
         contract = self.version_ids.filtered(
             lambda c:
             (c.date_from <= date and not c.date_to) or
-            (c.date_from and c.date_to and c.date_from <= date <= c.date_to))
+            (c.date_to and c.date_from <= date <= c.date_to))
         return contract[0] if contract else False
 
     @api.depends('name', 'user_id.avatar_1920', 'image_1920')

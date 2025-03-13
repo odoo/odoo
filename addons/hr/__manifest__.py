@@ -24,7 +24,7 @@
         'data/digest_data.xml',
         'data/report_paperformat.xml',
         'wizard/hr_departure_wizard_views.xml',
-        'wizard/hr_employee_history_wizard_views.xml',
+        'wizard/hr_employee_version_wizard_views.xml',
         'wizard/mail_activity_schedule_views.xml',
         'views/mail_activity_plan_views.xml',
         'views/hr_departure_reason_views.xml',
