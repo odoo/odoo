@@ -164,7 +164,7 @@ class MrpRoutingWorkcenter(models.Model):
             }
         }
 
-    def _skip_operation_line(self, product):
+    def _skip_operation_line(self, product, never_attribute_values=False):
         """ Control if a operation should be processed, can be inherited to add
         custom control.
         """
@@ -174,7 +174,8 @@ class MrpRoutingWorkcenter(models.Model):
             return True
         if not product or product._name == 'product.template':
             return False
-        return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
+
+        return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
 
     def _get_duration_expected(self, product, quantity, unit=False, workcenter=False):
         product = product or self.bom_id.product_tmpl_id
