@@ -524,11 +524,12 @@ class AccountMoveSend(models.AbstractModel):
 
         self._generate_dynamic_reports(moves_data)
 
-        for move, move_data in [(move, move_data) for move, move_data in moves_data.items() if move.partner_id.email]:
+        for move, move_data in moves_data.items():
             mail_template = move_data['mail_template']
             mail_lang = move_data['mail_lang']
             mail_params = self._get_mail_params(move, move_data)
-            if not mail_params:
+            valid_mail_contacts = self.env['res.partner'].browse(move_data['mail_partner_ids'] + move.partner_id.ids).filtered('email')
+            if not mail_params or not valid_mail_contacts:
                 continue
 
             if move_data.get('proforma_pdf_attachment'):
