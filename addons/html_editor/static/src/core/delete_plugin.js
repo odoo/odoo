@@ -44,6 +44,7 @@ import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
 import { hasTouch, isBrowserChrome } from "@web/core/browser/feature_detection";
+import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils/selection";
 
 /**
  * @typedef {Object} RangeLike
@@ -115,6 +116,24 @@ export class DeletePlugin extends Plugin {
         this.findNextPosition = this.makeFindPositionFn("forward");
     }
 
+    /**
+     * @param {EditorSelection} selection
+     * @returns {Range}
+     */
+    getNormalizedRange(selection) {
+        let { startContainer, startOffset, endContainer, endOffset, isCollapsed } = selection;
+        for (const normalizer of [normalizeDeepCursorPosition, normalizeFakeBR]) {
+            [startContainer, startOffset] = normalizer(startContainer, startOffset);
+            [endContainer, endOffset] = isCollapsed
+                ? [startContainer, startOffset]
+                : normalizer(endContainer, endOffset);
+        }
+        const range = this.document.createRange();
+        range.setStart(startContainer, startOffset);
+        range.setEnd(endContainer, endOffset);
+        return range;
+    }
+
     // --------------------------------------------------------------------------
     // commands
     // --------------------------------------------------------------------------
@@ -126,14 +145,11 @@ export class DeletePlugin extends Plugin {
         // @todo @phoenix: handle non-collapsed selection around a ZWS
         // see collapseIfZWS
 
-        // Normalize selection
-        selection = this.dependencies.selection.setSelection(selection);
-
-        if (selection.isCollapsed) {
+        let range = this.getNormalizedRange(selection);
+        if (range.collapsed || !closestElement(range.commonAncestorContainer).isContentEditable) {
             return;
         }
-
-        let range = this.adjustRange(selection, [
+        range = this.adjustRange(range, [
             this.expandRangeToIncludeNonEditables,
             this.includeEndOrStartBlock,
             this.fullyIncludeLinks,
@@ -176,8 +192,10 @@ export class DeletePlugin extends Plugin {
      * @param {"character"|"word"|"line"} granularity
      */
     deleteBackward(selection, granularity) {
-        // Normalize selection
-        const { endContainer, endOffset } = this.dependencies.selection.setSelection(selection);
+        const { endContainer, endOffset } = this.getNormalizedRange(selection);
+        if (!closestElement(endContainer).isContentEditable) {
+            return;
+        }
 
         let range = this.getRangeForDelete(endContainer, endOffset, "backward", granularity);
 
@@ -205,8 +223,10 @@ export class DeletePlugin extends Plugin {
      * @param {"character"|"word"|"line"} granularity
      */
     deleteForward(selection, granularity) {
-        // Normalize selection
-        const { startContainer, startOffset } = this.dependencies.selection.setSelection(selection);
+        const { startContainer, startOffset } = this.getNormalizedRange(selection);
+        if (!closestElement(startContainer).isContentEditable) {
+            return;
+        }
 
         let range = this.getRangeForDelete(startContainer, startOffset, "forward", granularity);
 
