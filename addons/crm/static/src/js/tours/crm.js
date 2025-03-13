@@ -34,14 +34,16 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "click",
 }, {
     trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id'] input",
-    content: markup(_t('<b>Write a few letters</b> to look for a company, or create a new one.')),
+    content: markup(_t('<b>Click</b> to look for, or create, a company.')),
     position: "top",
-    run: "edit Brandon Freeman",
-}, {
-    isActive: ["auto"],
-    trigger: ".ui-menu-item > a",
-    in_modal: false,
     run: "click",
+}, {
+    trigger: ".ui-menu-item > a",
+    content: markup(_t('<b>Select</b> a company.')),
+    position: "right",
+    run: "click",
+}, {
+    trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id'] .o_external_button", // Wait for other fields to update
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     content: markup(_t("Now, <b>add your Opportunity</b> to your Pipeline.")),
