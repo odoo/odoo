@@ -414,7 +414,7 @@ class StockWarehouseOrderpoint(models.Model):
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Group orderpoint by product-location
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
-            [('id', 'in', orderpoints.ids)],
+            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
             ['product_id', 'location_id', 'qty_to_order:sum'],
             ['product_id', 'location_id'], lazy=False)
         orderpoint_by_product_location = {
@@ -433,7 +433,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         # With archived ones to avoid `product_location_check` SQL constraints
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False)._read_group(
-            [('id', 'in', orderpoints.ids)],
+            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
             ['product_id', 'location_id', 'ids:array_agg(id)'],
             ['product_id', 'location_id'], lazy=False)
         orderpoint_by_product_location = {
