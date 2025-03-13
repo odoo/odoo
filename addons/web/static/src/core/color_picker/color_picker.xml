@@ -1,18 +1,18 @@
 <templates xml:space="preserve">
 <t t-name="web.ColorPicker">
     <div class="o_font_color_selector user-select-none" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true">
-        <div class="mb-1 d-flex">
-            <button class="btn btn-sm btn-light ms-1"
+        <div class="my-1 d-flex">
+            <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab"
                 t-att-class="{active: state.activeTab === 'solid'}"
                 t-on-click="() => this.setTab('solid')">
                 Solid
             </button>
-            <button class="btn btn-sm btn-light"
+            <button class="btn btn-sm btn-light text-truncate btn-tab"
                 t-att-class="{active: state.activeTab === 'custom'}"
                 t-on-click="() => this.setTab('custom')">
                 Custom
             </button>
-            <button class="btn btn-sm btn-light"
+            <button class="btn btn-sm btn-light text-truncate btn-tab"
                 t-att-class="{active: state.activeTab === 'gradient'}"
                 t-on-click="() => this.setTab('gradient')">
                 Gradient
@@ -37,7 +37,7 @@
                 </div>
 
                 <t t-foreach="DEFAULT_COLORS" t-as="line" t-key="line_index">
-                    <div class="o_color_section d-flex">
+                    <div class="o_color_section justify-content-center d-flex">
                         <t t-foreach="line" t-as="color" t-key="color_index">
                             <button class="o_color_button btn" t-att-class="{'selected': color === this.state.currentCustomColor.toUpperCase()}" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                         </t>
@@ -49,7 +49,7 @@
             <div class="p-1">
                 <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
                     <t t-foreach="this.usedCustomColors" t-as="color" t-key="color_index">
-                        <button t-if="color !== this.state.currentCustomColor.toLowerCase()" class="o_color_button btn" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
+                        <button t-if="color !== this.state.currentCustomColor?.toLowerCase()" class="o_color_button btn" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                     </t>
                     <button class="o_color_button btn selected" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
                 </div>
@@ -66,7 +66,8 @@
                 <CustomColorPicker
                     defaultColor="this.defaultColor"
                     onColorSelect.bind="(color) => this.applyColor(color.hex)"
-                    onColorPreview.bind="onColorPreview" />
+                    onColorPreview.bind="onColorPreview" 
+                    showRgbaField="false" />
             </div>
         </t>
         <t t-if="state.activeTab==='gradient'">
@@ -76,8 +77,8 @@
                 </t>
             </div>
             <div class="px-2">
-                <button t-attf-style="background-image: {{ getCurrentGradientColor() }};" class="w-50 border btn" title="Define a custom gradient">Custom</button>
-                <GradientPicker onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
+                <button t-attf-style="background-image: {{ getCurrentGradientColor() }};" class="w-50 border btn mb-2" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">Custom</button>
+                <GradientPicker t-if="state.showGradientPicker" onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
             </div>
         </t>
     </div>
