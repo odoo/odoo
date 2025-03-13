@@ -36,6 +36,7 @@ class ResConfigSettings(models.TransientModel):
     module_pos_viva_com = fields.Boolean(string="Viva.com Payment Terminal", help="The transactions are processed by Viva.com on terminal or tap on phone.")
     module_pos_razorpay = fields.Boolean(string="Razorpay Payment Terminal", help="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method.")
     module_pos_mercado_pago = fields.Boolean(string="Mercado Pago Payment Terminal", help="The transactions are processed by Mercado Pago. Set your Mercado Pago credentials on the related payment method.")
+    module_pos_pine_labs = fields.Boolean(string="Pine Labs Payment Terminal", help="The transactions are processed by Pine Labs. Set your Pine Labs credentials on the related payment method.")
     module_pos_pricer = fields.Boolean(string="Pricer electronic price tags", help="Display the price of your products through electronic price tags")
     update_stock_quantities = fields.Selection(related="company_id.point_of_sale_update_stock_quantities", readonly=False)
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False, check_company=True)
