@@ -16,6 +16,9 @@
         'views/res_config_settings_views.xml',
         'wizard/account_move_send_views.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'installable': True,
     'license': 'LGPL-3',
 }
