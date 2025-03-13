@@ -2305,17 +2305,18 @@ class TestBoM(TestMrpCommon):
         self.assertEqual((notification['type'], notification['tag']), ('ir.actions.client', 'display_notification'))
 
     def test_bom_never_attribute(self):
-        # We create 4 bom lines, one without any attribute values, two with one value and one with two values
-        # Create a MO with, modify its never_product_template_attribute_value_ids and check if the moves created are correct
+        # We create 4 bom lines, 4 operations and 4 byproducts, each with:
+        # one without any attribute values, two with one value and one with two values
+        # Create a MO with, modify its never_product_template_attribute_value_ids and check if the moves/workorders created are correct
 
         product_attribute_radio = self.env['product.attribute'].create({
             'name': 'PA',
             'display_type': 'radio',
             'create_variant': 'no_variant',
         })
-        product = self.env['product.product'].create({
-            'name': 'test1',
-        })
+        product, bp1, bp2, bp3, bp4 = self.env['product.product'].create([{
+            'name': name,
+        } for name in ['test1', 'bp1', 'bp2', 'bp3', 'bp4']])
         self.env['product.attribute.value'].create([{
             'name': 'radio_PAV' + str(i),
             'attribute_id': product_attribute_radio.id
@@ -2352,7 +2353,49 @@ class TestBoM(TestMrpCommon):
                     'product_qty': 10,
                     'bom_product_template_attribute_value_ids': [Command.link(tmpl_attr_line_radio.product_template_value_ids[1].id), Command.link(tmpl_attr_line_radio.product_template_value_ids[2].id)]
                 }),
-            ]
+            ],
+            'operation_ids': [
+                Command.create({
+                    'name': 'OPE_ALL',
+                    'workcenter_id': self.workcenter_1.id,
+                }),
+                Command.create({
+                    'name': 'OPE_VAR_1',
+                    'workcenter_id': self.workcenter_1.id,
+                    'bom_product_template_attribute_value_ids': [Command.link(tmpl_attr_line_radio.product_template_value_ids[0].id)],
+                }),
+                Command.create({
+                    'name': 'OPE_VAR_2',
+                    'workcenter_id': self.workcenter_1.id,
+                    'bom_product_template_attribute_value_ids': [Command.link(tmpl_attr_line_radio.product_template_value_ids[1].id)],
+                }),
+                Command.create({
+                    'name': 'OPE_VAR_2_3',
+                    'workcenter_id': self.workcenter_1.id,
+                    'bom_product_template_attribute_value_ids': [Command.link(tmpl_attr_line_radio.product_template_value_ids[1].id), Command.link(tmpl_attr_line_radio.product_template_value_ids[2].id)],
+                }),
+            ],
+            'byproduct_ids': [
+                Command.create({
+                    'product_id': bp1.id,
+                    'product_qty': 1.0,
+                }),
+                Command.create({
+                    'product_id': bp2.id,
+                    'product_qty': 1.0,
+                    'bom_product_template_attribute_value_ids': [Command.link(tmpl_attr_line_radio.product_template_value_ids[0].id)],
+                }),
+                Command.create({
+                    'product_id': bp3.id,
+                    'product_qty': 1.0,
+                    'bom_product_template_attribute_value_ids': [Command.link(tmpl_attr_line_radio.product_template_value_ids[1].id)],
+                }),
+                Command.create({
+                    'product_id': bp4.id,
+                    'product_qty': 1.0,
+                    'bom_product_template_attribute_value_ids': [Command.link(tmpl_attr_line_radio.product_template_value_ids[1].id), Command.link(tmpl_attr_line_radio.product_template_value_ids[2].id)],
+                }),
+            ],
         })
 
         mo_form = Form(self.env['mrp.production'])
@@ -2362,16 +2405,28 @@ class TestBoM(TestMrpCommon):
         # no never values, so only the first bom line should be used
         self.assertEqual(len(mo_order.move_raw_ids), 1, "Only one move with no never_product_template_attribute_value_ids should be created")
         self.assertEqual(mo_order.move_raw_ids.product_id, self.product_2)
+        self.assertEqual(len(mo_order.workorder_ids), 1)
+        self.assertEqual(mo_order.workorder_ids.name, 'OPE_ALL')
+        self.assertEqual(len(mo_order.move_byproduct_ids), 1)
+        self.assertEqual(mo_order.move_byproduct_ids.product_id, bp1)
 
         # one never values, the two first bom line should match
         mo_order.never_product_template_attribute_value_ids = tmpl_attr_line_radio.product_template_value_ids[0]
         self.assertEqual(len(mo_order.move_raw_ids), 2)
         self.assertEqual(mo_order.move_raw_ids.product_id, self.product_2 + self.product_3)
+        self.assertEqual(len(mo_order.workorder_ids), 2)
+        self.assertListEqual(mo_order.workorder_ids.mapped('name'), ['OPE_ALL', 'OPE_VAR_1'])
+        self.assertEqual(len(mo_order.move_byproduct_ids), 2)
+        self.assertEqual(mo_order.move_byproduct_ids.product_id, bp1 + bp2)
 
         # two never values, the first and fourth bom line should match
         mo_order.never_product_template_attribute_value_ids = tmpl_attr_line_radio.product_template_value_ids[1] + tmpl_attr_line_radio.product_template_value_ids[2]
         self.assertEqual(len(mo_order.move_raw_ids), 3)
         self.assertEqual(mo_order.move_raw_ids.product_id, self.product_2 + product + self.product_8)
+        self.assertEqual(len(mo_order.workorder_ids), 3)
+        self.assertListEqual(mo_order.workorder_ids.mapped('name'), ['OPE_ALL', 'OPE_VAR_2', 'OPE_VAR_2_3'])
+        self.assertEqual(len(mo_order.move_byproduct_ids), 3)
+        self.assertEqual(mo_order.move_byproduct_ids.product_id, bp1 + bp3 + bp4)
 
     def test_workorders_on_bom_changes(self):
         """
