@@ -10,6 +10,9 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
         'input input[name="partner_name"]': '_onPartnerNameInput',
         'click .o_wetrack_proposal_submit_button': '_onProposalFormSubmit',
     },
+    assetLibs: [
+        "website_event_track.assets_widget_xml",
+    ],
 
     /**
      * @override

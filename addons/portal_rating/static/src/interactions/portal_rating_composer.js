@@ -13,6 +13,25 @@ import { user } from "@web/core/user";
 export class RatingPopupComposer extends Interaction {
     static selector = ".o_rating_popup_composer";
 
+    // assetLibs = [
+    //     "portal.assets_widget_xml",
+    //     "portal_rating.assets_widget_xml",
+    // ];
+    xmlTemplates = {
+        "/portal/static/src/xml/portal_chatter.xml": [
+            "portal.Composer",
+        ],
+        "/portal_rating/static/src/xml/portal_chatter.xml": [
+            "portal.Composer",
+        ],
+        // "/portal_rating/static/src/xml/portal_tools.xml": [
+        //     "portal_rating.rating_stars_static",
+        // ], template being used in component mail.Message
+        "/portal_rating/static/src/xml/portal_rating_composer.xml": [
+            "portal_rating.PopupComposer",
+        ]
+    };
+
     setup() {
         const options = this.el.dataset;
         this.rating_avg = Math.round(options["rating_avg"] * 100) / 100 || 0.0;

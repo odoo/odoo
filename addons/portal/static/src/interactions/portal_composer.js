@@ -27,6 +27,16 @@ export class PortalComposer extends Interaction {
         },
     };
 
+    // assetLibs = [
+    //     "portal.assets_widget_xml",
+    // ];
+    xmlTemplates = {
+        "/portal/static/src/xml/portal_chatter.xml": [
+            "portal.Chatter.Attachments",
+            "portal.Composer",
+        ],
+    };
+
     static prepareOptions(options) {
         if (typeof options.default_attachment_ids === "string") {
             options.default_attachment_ids = JSON.parse(options.default_attachment_ids);

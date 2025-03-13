@@ -26,7 +26,10 @@ Display your booths on your website for the users to register.
         'web.assets_frontend': [
             '/website_event_booth/static/src/interactions/*',
             '/website_event_booth/static/src/scss/website_event_booth.scss',
-            '/website_event_booth/static/src/xml/event_booth_registration_templates.xml',
+            # '/website_event_booth/static/src/xml/event_booth_registration_templates.xml',
+        ],
+        'website_event_booth.assets_widget_xml': [
+            # 'website_event_booth/static/src/xml/event_booth_registration_templates.xml', To investigate
         ],
     },
     'author': 'Odoo S.A.',
