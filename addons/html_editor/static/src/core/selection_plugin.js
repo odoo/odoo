@@ -19,7 +19,6 @@ import { Plugin } from "../plugin";
 import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
-    normalizeCursorPosition,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
     normalizeNotEditableNode,
@@ -452,10 +451,16 @@ export class SelectionPlugin extends Plugin {
             throw new Error("Selection is not in editor");
         }
         const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
-        [focusNode, focusOffset] = normalizeCursorPosition(focusNode, focusOffset, "right");
+        [focusNode, focusOffset] = normalizeSelfClosingElement(focusNode, focusOffset, "right");
         [anchorNode, anchorOffset] = isCollapsed
             ? [focusNode, focusOffset]
-            : normalizeCursorPosition(anchorNode, anchorOffset, "left");
+            : normalizeSelfClosingElement(anchorNode, anchorOffset, "left");
+        // In conformity to some spec we don't understand why (ask FGE!):
+        // "set a collapse selection in a contenteditable false should move it after this node"
+        if (isCollapsed) {
+            const [node, offset] = normalizeNotEditableNode(anchorNode, anchorOffset, "right");
+            [anchorNode, anchorOffset, focusNode, focusOffset] = [node, offset, node, offset];
+        }
         if (normalize) {
             // normalize selection
             [anchorNode, anchorOffset] = normalizeDeepCursorPosition(anchorNode, anchorOffset);
