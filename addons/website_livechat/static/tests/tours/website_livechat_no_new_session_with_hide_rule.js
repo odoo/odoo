@@ -11,7 +11,8 @@ const sendFirstMessageSteps = [
         run: "press Enter",
     },
     {
-        trigger: ".o-livechat-root:shadow .o-mail-Message:contains('Hello, I need help!')",
+        trigger:
+            ".o-livechat-root:shadow .o-mail-Thread:not([data-transient]) .o-mail-Message:contains('Hello, I need help!')",
     },
 ];
 registry.category("web_tour.tours").add("website_livechat_no_session_with_hide_rule", {
