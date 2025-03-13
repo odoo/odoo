@@ -1716,6 +1716,13 @@ class Website(models.Model):
         self._force()
         return self.get_client_action(path)
 
+    def _get_canonical_url(self):
+        """ Returns the canonical URL of the current request. """
+        self.ensure_one()
+        return self.env['ir.http']._url_localized(
+            lang_code=request.lang.code, canonical_domain=self.get_base_url()
+        )
+
     def _is_canonical_url(self):
         """Returns whether the current request URL is canonical."""
         self.ensure_one()
@@ -1723,7 +1730,7 @@ class Website(models.Model):
         # the language in the path. It is important to also test the domain of
         # the current URL.
         current_url = request.httprequest.url_root[:-1] + request.httprequest.environ['REQUEST_URI']
-        canonical_url = self.env['ir.http']._url_localized(lang_code=request.lang.code, canonical_domain=self.get_base_url())
+        canonical_url = self._get_canonical_url()
         # A request path with quotable characters (such as ",") is never
         # canonical because request.httprequest.base_url is always unquoted,
         # and canonical url is always quoted, so it is never possible to tell

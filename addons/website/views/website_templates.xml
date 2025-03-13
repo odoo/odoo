@@ -186,7 +186,7 @@
             </t>
         <link rel="alternate" hreflang="x-default" t-att-href="url_localized(lang_code=website.env['res.lang']._get_data(id=website._get_cached('default_lang_id')).code, canonical_domain=canonical_domain)"/>
         </t>
-        <link rel="canonical" t-att-href="url_localized(lang_code=lang,canonical_domain=canonical_domain)"/>
+        <link rel="canonical" t-att-href="website._get_canonical_url()"/>
         <!-- TODO: Once we have style in DB, add this preconnect only if a
         google font is actually used. Note that if no font is used, the
         preconnect is actually not connecting to the google servers. -->
