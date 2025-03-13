@@ -418,6 +418,7 @@ class AccountMove(models.Model):
             and any(child_tax._l10n_it_is_split_payment() for child_tax in tax_data['group'].children_tax_ids)
         )
 
+<<<<<<< 18.0
     @api.model
     def _l10n_it_edi_grouping_function_base_lines(self, base_line, tax_data):
         tax = tax_data['tax']
@@ -453,6 +454,26 @@ class AccountMove(models.Model):
     def _l10n_it_edi_grouping_function_total(self, base_line, tax_data):
         skip = tax_data['is_reverse_charge'] or self._l10n_it_edi_is_neg_split_payment(tax_data)
         return not skip
+||||||| bd88e2983d6e0fde7cf60be88796c965a69e309e
+    def _get_l10n_it_amount_split_payment(self):
+        self.ensure_one()
+        amount = 0.0
+        if self.is_sale_document(False):
+            for line in self.line_ids:
+                if line.tax_line_id and line.tax_line_id._l10n_it_is_split_payment():
+                    if self.move_type  == 'out_invoice':
+                        amount += line.credit
+                    else:
+                        amount += line.debit
+        return amount
+=======
+    def _get_l10n_it_amount_split_payment(self):
+        self.ensure_one()
+        if not self.is_sale_document(False):
+            return 0.0
+        sign = -1 if self.move_type == "out_invoice" else 1
+        return sum(sign * line.balance for line in self.line_ids.filtered(lambda l: l.tax_line_id and l.tax_line_id._l10n_it_is_split_payment()))
+>>>>>>> ea1dd208fe3497409262d8d9ebf99174a7c5307a
 
     def _l10n_it_edi_get_values(self, pdf_values=None):
         self.ensure_one()
