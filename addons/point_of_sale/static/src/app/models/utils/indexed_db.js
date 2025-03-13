@@ -80,6 +80,9 @@ export default class IndexedDB {
     }
 
     create(storeName, arrData) {
+        if (!arrData?.length) {
+            return;
+        }
         return this.promises(storeName, arrData, "put");
     }
 
@@ -123,6 +126,9 @@ export default class IndexedDB {
     }
 
     delete(storeName, uuids) {
+        if (!uuids?.length) {
+            return;
+        }
         return this.promises(storeName, uuids, "delete");
     }
 }
