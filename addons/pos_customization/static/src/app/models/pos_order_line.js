@@ -6,6 +6,6 @@ patch(PosOrderline.prototype, {
         if (this.product_id.alternative_name) {
             return this.product_id.alternative_name;
         }
-        return this.full_product_name || this.product_id?.display_name;
+        return super.get_full_product_name();
     },
 });

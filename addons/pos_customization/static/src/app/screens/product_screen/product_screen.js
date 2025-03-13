@@ -8,24 +8,18 @@ patch(ProductScreen.prototype, {
         const products = this.pos.selectedCategory?.id
             ? this.getProductsByCategory(this.pos.selectedCategory)
             : this.products;
+        return products.filter((p) =>
+            unaccent(p.alternative_name || p.searchString, false)
+                .toLowerCase()
+                .includes(words)
+        );
+    },
 
-        const exactMatches = products.filter((product) => product.exactMatch(words));
-
-        if (exactMatches.length > 0 && words.length > 2) {
-            return exactMatches;
-        }
-
-        const matches = products.filter((p) => {
-            if (p.alternative_name) {
-                const altNameMatch = unaccent(p.alternative_name, false)
-                    .toLowerCase()
-                    .includes(words);
-                return altNameMatch;
-            }
-            const searchStringMatch = unaccent(p.searchString, false).toLowerCase().includes(words);
-            return searchStringMatch;
-        });
-
-        return Array.from(new Set([...exactMatches, ...matches]));
+    get productsToDisplay() {
+        return super.productsToDisplay.sort((a, b) =>
+            (a.alternative_name || a.display_name).localeCompare(
+                b.alternative_name || b.display_name
+            )
+        );
     },
 });

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_customization.ProductInfoBanner" t-inherit="point_of_sale.ProductInfoBanner" t-inherit-mode="extension">
         <!-- Override the product name display -->
-        <xpath expr="//div[@class='h4' and @t-esc='props.product.productDisplayName']" position="replace">
+        <xpath expr="//div[@t-esc='props.product.productDisplayName']" position="replace">
             <div class="h4" t-out="props.product.alternative_name || props.product.productDisplayName" />
         </xpath>
     </t>
