@@ -192,7 +192,7 @@ class InteractionService {
     }
 }
 
-registry.category("services").add("public.interactions", {
+export const publicInteractionService = {
     dependencies: ["localization"],
     async start(env) {
         const el = document.querySelector("#wrapwrap");
@@ -205,4 +205,6 @@ registry.category("services").add("public.interactions", {
         service.activate(Interactions);
         return service;
     },
-});
+};
+
+registry.category("services").add("public.interactions", publicInteractionService);
