@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo import tools
 
@@ -60,3 +60,19 @@ class PurchaseTestCommon(TestStockCommon):
             'email': "purchaseuser@yourcompany.com",
             'group_ids': [(6, 0, [cls.env.ref('purchase.group_purchase_user').id])],
             })
+
+        cls.fuzzy_drink = cls.env['product.product'].create({
+            'name': 'Fuzzy Drink',
+            'is_storable': True,
+            'route_ids': [Command.set([cls.route_buy, cls.route_mto])],
+            'seller_ids': [Command.create({
+                'partner_id': cls.partner_1.id,
+                'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                'price': 1.0,
+            }), Command.create({
+                'partner_id': cls.partner_1.id,
+                'product_uom_id': cls.env.ref('uom.product_uom_pack_6').id,
+                'price': 5.0,
+                'min_qty': 2,
+            })]
+        })
