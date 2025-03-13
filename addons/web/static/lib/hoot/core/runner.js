@@ -38,7 +38,7 @@ import { makeExpect } from "./expect";
 import { HootFixtureElement, destroy, makeFixtureManager } from "./fixture";
 import { LOG_LEVELS, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
-import { Tag, getTags, getTagSimilarities } from "./tag";
+import { Tag, getTagSimilarities, getTags } from "./tag";
 import { Test, testError } from "./test";
 import { EXCLUDE_PREFIX, createUrlFromId, setParams } from "./url";
 
@@ -173,41 +173,6 @@ const formatAssertions = (assertions) => {
 };
 
 /**
- * @returns {Map<string, Preset>}
- */
-const getDefaultPresets = () =>
-    new Map([
-        [
-            "",
-            {
-                label: "No preset",
-            },
-        ],
-        [
-            "desktop",
-            {
-                icon: "fa-desktop",
-                label: "Desktop",
-                platform: "linux",
-                size: [1366, 768],
-                tags: ["-mobile"],
-                touch: false,
-            },
-        ],
-        [
-            "mobile",
-            {
-                icon: "fa-mobile font-bold",
-                label: "Mobile",
-                platform: "android",
-                size: [375, 667],
-                tags: ["-desktop"],
-                touch: true,
-            },
-        ],
-    ]);
-
-/**
  * @param {Event} ev
  */
 const safePrevent = (ev) => ev.cancelable && ev.preventDefault();
@@ -333,7 +298,10 @@ export class Runner {
     expect;
     /** @type {ReturnType<typeof makeExpect>[1]} */
     expectHooks;
-    presets = reactive(getDefaultPresets());
+    /** @type {Record<string, Preset>} */
+    presets = reactive({
+        [""]: { label: "No preset" },
+    });
     reporting = createReporting();
     /** @type {Suite[]} */
     rootSuites = [];
@@ -734,7 +702,7 @@ export class Runner {
 
     checkPresetForViewPort() {
         const presetId = this.config.preset;
-        const preset = this.presets.get(presetId);
+        const preset = this.presets[presetId];
         if (!preset.size) {
             return true;
         }
@@ -764,6 +732,14 @@ export class Runner {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param {string} key
+     * @param {Preset} preset
+     */
+    definePreset(key, preset) {
+        this.presets[key] = preset;
     }
 
     /**
@@ -848,14 +824,6 @@ export class Runner {
         for (const callback of callbacks) {
             callbackRegistry.add("error", callback, Boolean(test));
         }
-    }
-
-    /**
-     * @param {string} name
-     * @param {Preset} preset
-     */
-    registerPreset(name, preset) {
-        this.presets.set(name, preset);
     }
 
     /**
@@ -1582,7 +1550,7 @@ export class Runner {
         this._prepared = true;
 
         if (this.config.preset) {
-            const preset = this.presets.get(this.config.preset);
+            const preset = this.presets[this.config.preset];
             if (!preset) {
                 throw new HootError(`unknown preset: "${this.config.preset}"`);
             }
