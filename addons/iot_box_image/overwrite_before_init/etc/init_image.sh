@@ -327,11 +327,19 @@ BOOT_CONFIG_FILE="/boot/config.txt"
 echo "disable_overscan=1" >> ${BOOT_CONFIG_FILE}
 
 # Allow to detect displays after boot
-echo "hdmi_force_hotplug=1" >> ${BOOT_CONFIG_FILE} # HDMI output mode will be used, even if no HDMI monitor is detected
-echo "​hdmi_force_mode=1" >> ${BOOT_CONFIG_FILE} # Allow forced options below
-echo "hdmi_group=0" >> ${BOOT_CONFIG_FILE} # Automatically detect hdmi group
-echo "hdmi_mode=16" >> ${BOOT_CONFIG_FILE} # 1080p 60Hz 16:9
-echo "hdmi_ignore_edid=0xa5000080" >> ${BOOT_CONFIG_FILE} # safeguard against invalid display EDID
+HDMI_CONFIG="
+hdmi_force_hotplug=1         # HDMI output mode will be used, even if no HDMI monitor is detected
+hdmi_force_mode=1            # Allow forced options below
+hdmi_group=0                 # Automatically detect hdmi group
+hdmi_mode=16                 # 1080p 60Hz 16:9
+hdmi_ignore_edid=0xa5000080  # safeguard against invalid display EDID
+"
+
+echo "[HDMI:0]" >> ${BOOT_CONFIG_FILE}
+echo "$HDMI_CONFIG" >> ${BOOT_CONFIG_FILE}
+
+echo "[HDMI:1]" >> ${BOOT_CONFIG_FILE}
+echo "$HDMI_CONFIG" >> ${BOOT_CONFIG_FILE}
 
 # Use the fkms driver instead of the legacy one (RPI3 requires this)
 sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' ${BOOT_CONFIG_FILE}
