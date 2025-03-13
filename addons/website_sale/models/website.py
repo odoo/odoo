@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug import urls
+from werkzeug.exceptions import NotFound
+
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.fields import Domain
-from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import lazy, ormcache
+from odoo.tools import ormcache
 from odoo.tools.translate import LazyTranslate, _
 
 _lt = LazyTranslate(__name__)
@@ -624,3 +626,24 @@ class Website(models.Model):
     def has_ecommerce_access(self):
         """ Return whether the current user is allowed to access eCommerce-related content. """
         return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
+
+    def _get_canonical_url(self):
+        """ Override of `website` to customize the canonical URL for product pages.
+
+        A product page URL can have a category in its path. However, since the page is exactly the
+        same whether the category is present or not, the canonical URL shouldn't include the
+        category.
+        """
+        canonical_url = urls.url_parse(super()._get_canonical_url())
+
+        try:
+            rule = self.env['ir.http']._match(canonical_url.path)[0].rule
+        except NotFound:
+            rule = None
+        if rule == (
+            '/shop/<model("product.public.category"):category>/<model("product.template"):product>'
+        ):
+            path_parts = canonical_url.path.split('/')
+            path_parts.pop(2)
+            canonical_url = canonical_url.replace(path='/'.join(path_parts))
+        return canonical_url.to_url()
