@@ -407,3 +407,49 @@ class TestMrpByProduct(common.TransactionCase):
         mo.move_byproduct_ids[0].quantity_done = 1
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
+
+    def test_3_steps_byproduct(self):
+        """ Test that non-bom byproducts are correctly pushed from
+        post-production to the stock location in 3-steps manufacture. """
+        self.warehouse.manufacture_steps = 'pbm_sam'
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        component = self.env['product.product'].create({
+            'name': 'Old Blood',
+            'type': 'product'
+        })
+        self.env['stock.quant']._update_available_quantity(component, self.warehouse.lot_stock_id, 1)
+        final_product = self.env['product.product'].create({
+            'name': 'Insight',
+            'type': 'product'
+        })
+        byproduct = self.env['product.product'].create({
+            'name': 'Eyes on the Inside',
+            'type': 'product'
+        })
+        mo = self.env["mrp.production"].create({
+            'product_id': final_product.id,
+            'product_qty': 1.0,
+        })
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = component
+        with mo_form.move_byproduct_ids.new() as line:
+            line.product_id = byproduct
+        mo = mo_form.save()
+        mo.action_confirm()
+        preprod_picking = mo.picking_ids.filtered(lambda p: p.state == 'assigned')
+        preprod_picking.move_line_ids.qty_done = 1
+        preprod_picking.button_validate()
+        mo.move_raw_ids.quantity_done = 1
+        mo.qty_producing = 1
+        mo.button_mark_done()
+        postprod_picking = mo.picking_ids.filtered(lambda p: p.state == 'assigned')
+
+        self.assertEqual(len(postprod_picking.move_ids), 2)
+        self.assertEqual(postprod_picking.move_ids.product_id, final_product + byproduct)
+        postprod_picking.move_ids.quantity_done = 1
+        postprod_picking.button_validate()
+        final_product_quant = self.env['stock.quant'].search([('product_id', '=', final_product.id), ('quantity', '=', 1)])
+        byproduct_quant = self.env['stock.quant'].search([('product_id', '=', byproduct.id), ('quantity', '=', 1)])
+        self.assertEqual(final_product_quant.location_id, self.warehouse.lot_stock_id)
+        self.assertEqual(byproduct_quant.location_id, self.warehouse.lot_stock_id)
