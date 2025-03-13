@@ -1218,12 +1218,7 @@ def unique(it: Iterable[T]) -> Iterator[T]:
     :param Iterable it:
     :rtype: Iterator
     """
-    seen = set()
-    for e in it:
-        if e not in seen:
-            seen.add(e)
-            yield e
-
+    return iter(dict.fromkeys(it))
 
 def submap(mapping: Mapping[K, T], keys: Iterable[K]) -> Mapping[K, T]:
     """
