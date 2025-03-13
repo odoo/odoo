@@ -138,6 +138,7 @@ class ProductReplenish(models.TransientModel):
             'route_ids': self.route_id,
             'date_planned': self.date_planned,
             'group_id': replenishment,
+            'force_uom': True,
         }
         return values
 
