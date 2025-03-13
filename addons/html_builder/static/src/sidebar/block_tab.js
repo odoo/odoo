@@ -82,6 +82,7 @@ export class BlockTab extends Component {
                     return;
                 }
                 addElement(snippet.content.cloneNode(true));
+                this.disableSnippetsPlugin.disableUndroppableSnippets();
             },
             onDragEnd: () => {
                 copyOnDrag.clean();
@@ -91,6 +92,10 @@ export class BlockTab extends Component {
 
     get dropzonePlugin() {
         return this.env.editor.shared.dropzone;
+    }
+
+    get disableSnippetsPlugin() {
+        return this.env.editor.shared.disableSnippets;
     }
 
     openSnippetDialog(snippet, position) {
@@ -110,6 +115,7 @@ export class BlockTab extends Component {
             onSelect: (snippet) => {
                 const newSnippet = snippet.content.cloneNode(true);
                 addElement(newSnippet);
+                this.disableSnippetsPlugin.disableUndroppableSnippets();
                 return newSnippet;
             },
             onClose: () => this.dropzonePlugin.clearDropZone(),
