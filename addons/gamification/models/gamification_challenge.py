@@ -209,11 +209,6 @@ class GamificationChallenge(models.Model):
 
         write_res = super().write(vals)
 
-        if vals.get('report_message_frequency', 'never') != 'never':
-            # _recompute_challenge_users do not set users for challenges with no reports, subscribing them now
-            for challenge in self:
-                challenge.message_subscribe([user.partner_id.id for user in challenge.user_ids])
-
         if vals.get('state') == 'inprogress':
             self._recompute_challenge_users()
             self._generate_goals_from_challenge()
