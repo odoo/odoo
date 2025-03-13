@@ -570,7 +570,7 @@ class MrpProduction(models.Model):
             elif any(production.move_raw_ids.mapped('picked')):
                 production.state = 'progress'
 
-    @api.depends('bom_id', 'product_id', 'product_qty', 'product_uom_id')
+    @api.depends('bom_id', 'product_id', 'product_qty', 'product_uom_id', 'never_product_template_attribute_value_ids')
     def _compute_workorder_ids(self):
         for production in self:
             if production.state != 'draft':
@@ -598,7 +598,11 @@ class MrpProduction(models.Model):
                     if not (bom.operation_ids and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.operation_ids != bom.operation_ids)):
                         continue
                     for operation in bom.operation_ids:
-                        if operation._skip_operation_line(bom_data['product']):
+                        if operation.with_context(never_attribute_ids=production.never_product_template_attribute_value_ids)._skip_operation_line(bom_data['product']):
+                            workorder = production.workorder_ids.filtered(lambda wo: wo.operation_id == operation and wo.operation_id.bom_id == bom)
+                            if workorder:
+                                # If for some reason a non-relevant workorder is still there, e.g. after a change in never_product_template_attribute_value_ids
+                                workorders_list += [Command.delete(workorder.id)]
                             continue
                         workorders_values += [{
                             'name': operation.name,
@@ -770,7 +774,7 @@ class MrpProduction(models.Model):
             else:
                 production.move_raw_ids = [Command.delete(move.id) for move in production.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
-    @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids')
+    @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids', 'never_product_template_attribute_value_ids')
     def _compute_move_finished_ids(self):
         for production in self:
             if production.state != 'draft':
@@ -788,7 +792,7 @@ class MrpProduction(models.Model):
             production.move_finished_ids = [Command.delete(m) for m in production.move_finished_ids.ids]
             production.move_finished_ids = [Command.clear()]
             if production.product_id:
-                production._create_update_move_finished()
+                production.with_context(never_attribute_ids=production.never_product_template_attribute_value_ids)._create_update_move_finished()
             else:
                 production.move_finished_ids = [
                     Command.delete(move.id) for move in production.move_finished_ids if move.bom_line_id
