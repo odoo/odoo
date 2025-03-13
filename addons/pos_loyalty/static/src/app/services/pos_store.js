@@ -223,9 +223,11 @@ patch(PosStore.prototype, {
                     };
                     if (program && program.program_type === "gift_card") {
                         couponPointChange.product_id = order.getSelectedOrderline()?.product_id.id;
-                        couponPointChange.expiration_date = serializeDate(
-                            luxon.DateTime.now().plus({ year: 1 })
-                        );
+                        if (!pa.manual) {
+                            couponPointChange.expiration_date = serializeDate(
+                                luxon.DateTime.now().plus({ year: 1 })
+                            );
+                        }
                     }
 
                     order.uiState.couponPointChanges[coupon.id] = couponPointChange;

@@ -44,3 +44,7 @@ class LoyaltyCard(models.Model):
         count_per_coupon = {coupon.id: count for coupon, count in read_group_res}
         for card in self:
             card.use_count += count_per_coupon.get(card.id, 0)
+
+    def get_loyalty_card_order_ids(self):
+        self.ensure_one()
+        return [i for i in self.history_ids.mapped('order_id') if i != 0]

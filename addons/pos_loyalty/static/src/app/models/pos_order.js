@@ -868,7 +868,7 @@ patch(PosOrder.prototype, {
      * @param {String} newGiftCardCode gift card code as a string if new gift card to be created.
      * @param {number} points number of points to assign to the gift card.
      */
-    processGiftCard(newGiftCardCode, points, expirationDate) {
+    processGiftCard(newGiftCardCode, points, expirationDate, isBackendGiftCard) {
         const partner_id = this.partner_id?.id || false;
         const product_id = this.getSelectedOrderline().product_id.id;
         const program = this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
@@ -879,6 +879,7 @@ patch(PosOrder.prototype, {
             points: points,
             manual: true,
             product_id: product_id,
+            is_backend_gift_card: isBackendGiftCard,
         };
 
         // Fetch all coupon_ids for the specified points and not manually created, that are associated with the gift card program
