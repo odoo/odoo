@@ -17,6 +17,7 @@ import {
     Component,
     markup,
     onMounted,
+    onWillUnmount,
     useChildSubEnv,
     useEffect,
     useRef,
@@ -172,6 +173,9 @@ export class Composer extends Component {
         );
         onMounted(() => {
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
+        });
+        onWillUnmount(() => {
+            this.props.composer.isFocused = false;
         });
     }
 
