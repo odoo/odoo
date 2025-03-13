@@ -1,11 +1,11 @@
 import { expect, test } from "@odoo/hoot";
-import { press, queryAll, waitFor } from "@odoo/hoot-dom";
+import { press, queryAll, tick, waitFor, click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { loadLanguages } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { setupEditor } from "./_helpers/editor";
-import { getContent } from "./_helpers/selection";
+import { getContent, setContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 
 import { DEFAULT_ALTERNATIVES_MODES } from "@html_editor/main/chatgpt/chatgpt_alternatives_dialog";
@@ -118,6 +118,30 @@ test("ChatGPT dialog opens in translate mode when clicked on translate dropdown 
     const alternativesDialogHeaderSelector = `.o_dialog .modal-header:contains("${ALTERNATIVES_DIALOG_TITLE}")`;
     expect(alternativesDialogHeaderSelector).toHaveCount(0);
     loadLanguages.installedLanguages = false;
+});
+
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable", async () => {
+    const { el } = await setupEditor("<div>[ab]</div>");
+    await animationFrame();
+    await tick();
+    await click('button[name="expand_toolbar"]');
+    await animationFrame();
+    expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
+
+    setContent(el, "<div>a[b</div><div>c]d</div>");
+    await animationFrame();
+    await tick();
+    expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
+
+    setContent(el, '<div contenteditable="false">a[b</div><div>c]d</div>');
+    await animationFrame();
+    await tick();
+    expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
+
+    setContent(el, '<div class="oe_unbreakable">a[b</div><div>c]d</div>');
+    await animationFrame();
+    await tick();
+    expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
 });
 
 test("ChatGPT alternatives dialog generates alternatives for each button", async () => {
