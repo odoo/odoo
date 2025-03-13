@@ -31,6 +31,7 @@ class TestReplenishWizard(PurchaseTestCommon):
 
         # Additional Values required by the replenish wizard
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.uom_pack_6 = cls.env.ref('uom.product_uom_pack_6')
         cls.wh = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.user.id)], limit=1)
 
     def test_replenish_buy_1(self):
@@ -519,3 +520,76 @@ class TestReplenishWizard(PurchaseTestCommon):
         stock_picking = self.env[model_name].browse(int(stock_picking_id))
 
         self.assertEqual(stock_picking.partner_id, second_warehouse.partner_id)
+
+    def test_purchase_order_uom(self):
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.fuzzy_drink.id,
+            'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': 10,
+            'warehouse_id': self.wh.id,
+            'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
+            'supplier_id': self.fuzzy_drink.seller_ids[1].id,  # pricelist with uom "Pack of 6"
+        })
+        replenish_wizard.launch_replenishment()
+        po = self.env['purchase.order'].search([
+            ('partner_id', '=', self.fuzzy_drink.seller_ids[1].partner_id.id)
+        ], order='id DESC', limit=1)
+        self.assertEqual(po.order_line.product_qty, 10, 'Generated PO line must respect the requested quantity from the wizard')
+        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.order_line.price_unit, 1, 'Generated PO line must respect the supplier price of UoM "Unit"')
+        po.button_cancel()
+
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.fuzzy_drink.id,
+            'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': 15,
+            'warehouse_id': self.wh.id,
+            'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
+            'supplier_id': self.fuzzy_drink.seller_ids[1].id,  # pricelist with uom "Pack of 6"
+        })
+        replenish_wizard.launch_replenishment()
+        po = self.env['purchase.order'].search([
+            ('partner_id', '=', self.fuzzy_drink.seller_ids[1].partner_id.id)
+        ], order='id DESC', limit=1)
+        self.assertEqual(po.order_line.product_qty, 15, 'Generated PO line must respect the requested quantity from the wizard')
+        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.order_line.price_unit, 1, 'Generated PO line must respect the supplier price of UoM "Unit"')
+        po.button_cancel()
+
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.fuzzy_drink.id,
+            'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
+            'product_uom_id': self.uom_pack_6.id,
+            'quantity': 1,
+            'warehouse_id': self.wh.id,
+            'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
+            'supplier_id': self.fuzzy_drink.seller_ids[1].id,  # pricelist with uom "Pack of 6"
+        })
+        replenish_wizard.launch_replenishment()
+        po = self.env['purchase.order'].search([
+            ('partner_id', '=', self.fuzzy_drink.seller_ids[1].partner_id.id)
+        ], order='id DESC', limit=1)
+        self.assertEqual(po.order_line.product_qty, 1, 'Generated PO line must respect the requested quantity from the wizard')
+        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.order_line.price_unit, 6, 'Generated PO line must respect the supplier price of UoM "Unit" because the quantity doesn\'t match the "Pack of 6" pricelist')
+        po.button_cancel()
+
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.fuzzy_drink.id,
+            'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
+            'product_uom_id': self.uom_pack_6.id,
+            'quantity': 2,
+            'warehouse_id': self.wh.id,
+            'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
+            'supplier_id': self.fuzzy_drink.seller_ids[0].id,  # pricelist with uom "Unit"
+        })
+        replenish_wizard.launch_replenishment()
+        po = self.env['purchase.order'].search([
+            ('partner_id', '=', self.fuzzy_drink.seller_ids[0].partner_id.id)
+        ], order='id DESC', limit=1)
+        self.assertEqual(po.order_line.product_qty, 2, 'Generated PO line must respect the requested quantity from the wizard')
+        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.order_line.price_unit, 5, 'Generated PO line must respect the supplier price of UoM "Pack of 6" because the quantity matches the "Pack of 6" pricelist')
+        po.button_cancel()
