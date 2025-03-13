@@ -973,11 +973,7 @@ class CrmLead(models.Model):
         :param old_status_by_lead: dict of old status by lead: {lead.id: {'is_lost': ..., 'is_won': ...}}
         :param new_status_by_lead: dict of new status by lead: {lead.id: {'is_lost': ..., 'is_won': ...}}
         """
-        leads_reach_won_ids = self.env['crm.lead']
-        leads_leave_won_ids = self.env['crm.lead']
-        leads_reach_lost_ids = self.env['crm.lead']
-        leads_leave_lost_ids = self.env['crm.lead']
-
+        pending_update_values = []
         for lead in self:
             new_status = new_status_by_lead.get(
                 lead.id, {'is_lost': False, 'is_won': False}
@@ -988,21 +984,27 @@ class CrmLead(models.Model):
             if new_status['is_lost'] and new_status['is_won']:
                 raise ValidationError(_("The lead %s cannot be won and lost at the same time.", lead))
 
+            from_lost = from_won = to_lost = to_won = False
             if new_status['is_lost'] and not old_status['is_lost']:
-                leads_reach_lost_ids += lead
+                to_lost = True
             elif not new_status['is_lost'] and old_status['is_lost']:
-                leads_leave_lost_ids += lead
+                from_lost = True
 
             if new_status['is_won'] and not old_status['is_won']:
-                leads_reach_won_ids += lead
+                to_won = True
             elif not new_status['is_won'] and old_status['is_won']:
-                leads_leave_won_ids += lead
+                from_won = True
 
-        leads_reach_won_ids._pls_increment_frequencies(to_state='won')
-        leads_leave_won_ids._pls_increment_frequencies(from_state='won')
-        leads_reach_lost_ids._pls_increment_frequencies(to_state='lost')
-        leads_leave_lost_ids._pls_increment_frequencies(from_state='lost')
+            if from_lost or from_won or to_lost or to_won:
+                pending_update_values.append({
+                    'lead_id': lead.id,
+                    'from_lost': from_lost,
+                    'from_won': from_won,
+                    'to_lost': to_lost,
+                    'to_won': to_won,
+                })
 
+        self.env['crm.lead.scoring.pending.update'].sudo().create(pending_update_values)
         return True
 
     def copy_data(self, default=None):
@@ -2111,13 +2113,14 @@ class CrmLead(models.Model):
     #   E.g. : A won lead from Belgium will increase the won count of the frequency country_id='Belgium' by 1.
     # The frequencies are split by team_id, so each team has its own frequencies environment. (Team A doesn't impact B)
     # There are two main ways to build the frequency table:
-    #   - Live Increment: At each Won/lost, we increment directly the frequencies based on the lead values.
-    #       Done right after writing the lead as won or lost, in the write and create methods. see _handle_won_lost
-    #       Used each time a lead is won or lost, to ensure frequency table is always up to date
+    #   - Periodic Increment: At each Won/lost, we create pending updates, that will be processed by a CRON running
+    #       periodically, updating the frequencies based on the lead values (at the time of the CRON execution).
+    #       See `_cron_process_pls_pending_updates`
     #   - One shot Rebuild: empty the frequency table and rebuild it from scratch, based on every already won/lost leads
     #       Done during cron process (not running by default), or manually from the settings ("Update probabilities").
     #       Used in one shot, mainly when modifying the criteria to take into account (fields or reference date)
     #       SQL may be used to fasten the table rebuild, the data fetching and update of leads' probability (by batch).
+    #       See `_cron_update_automated_probabilities`
     #
     # Heuristics Details:
     #   - About frequencies of field 'stage_id':
@@ -2190,7 +2193,7 @@ class CrmLead(models.Model):
         ] if batch_mode else []
 
         # When not in batch_mode, does not use SQL, but still returns PLS values of leads in self
-        leads_values_dict = self._pls_get_lead_pls_values(domain=domain)
+        leads_values_dict = self._pls_get_pls_values_per_lead(domain=domain)
         if not leads_values_dict:
             return lead_probabilities
 
@@ -2224,7 +2227,7 @@ class CrmLead(models.Model):
         # Group frequencies by variable to be able to compute their own probabilities.
         # As all the variables are not always taken into account (as we mostly reject unset values in the process),
         # each probability must be computed only with their own variable-related total count.
-        # Special case: for leads having no team, or one not in frequency table, we aggregate all the records in result[-1]
+        # Special case: for leads having no team, or one not in frequency table, we aggregate all entries in result[-1]
         result = dict((team_id, dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)) for team_id in frequency_team_ids)
         result[-1] = dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)
         for frequency in frequencies:
@@ -2271,12 +2274,11 @@ class CrmLead(models.Model):
                 team_totals = stage_totals['won'], stage_totals['lost']
             result[team_id]['team_won'], result[team_id]['team_lost'] = team_totals
 
-        save_team_id = None
-        p_won, p_lost = 1, 1
+        # Computing Probabilities
         for lead_id, lead_values in leads_values_dict.items():
-            lead_fields = [value[0] for value in lead_values.get('values', [])]
-            # if stage_id is null, return 0 and bypass computation
-            if not 'stage_id' in lead_fields:
+            stage_id = next((tuple[1] for tuple in lead_values.get('values', []) if tuple[0] == 'stage_id'), None)
+            # Stageless Leads probability is always set to 0.
+            if not stage_id:
                 lead_probabilities[lead_id] = 0
                 continue
             # if lead stage is won, return 100
@@ -2284,44 +2286,47 @@ class CrmLead(models.Model):
                 lead_probabilities[lead_id] = 100
                 continue
 
+            stage_value = stage_id.origin if hasattr(stage_id, 'origin') else stage_id
             lead_team_id = lead_values['team_id'] if lead_values['team_id'] in result else -1
-            if lead_team_id != save_team_id:
-                save_team_id = lead_team_id
-                team_won = result[save_team_id]['team_won']
-                team_lost = result[save_team_id]['team_lost']
-                # if counts are 0, we cannot compute lead probability
-                if not team_won and not team_lost:
-                    continue
-                p_won = team_won
-                p_lost = team_lost
+            stage_counts = result.get(lead_team_id, {}).get('stage_id')
 
-            # 2. Compute won and lost score using each variable's individual probability
-            s_lead_won, s_lead_lost = p_won, p_lost
+            # 1. Initialize scores. Covers stage_id and team_id.
+            s_lead_lost = s_lead_won = 0
+            if stage_counts:
+                s_lead_lost = stage_counts.get(str(stage_value), {}).get('lost', 0)
+                s_lead_won = stage_counts.get(str(stage_value), {}).get('won', 0)
+            if not s_lead_lost and not s_lead_won:
+                # In order to support computing a probability for leads in new stages that have no entry in the frequency table,
+                # e.g. before having a team lead won or lost and the processing of pending updates, we use team totals instead.
+                s_lead_lost = result[lead_team_id].get('team_lost', 0)
+                s_lead_won = result[lead_team_id].get('team_won', 0)
+            elif is_tooltip and (team_lost := result[lead_team_id].get('team_lost', 0)):
+                score = 1 - (s_lead_lost / (team_lost))
+                tooltip_data['scores'].append((score, 'stage_id', stage_value))
+            if not s_lead_lost and not s_lead_won:
+                continue
+
+            # 2. Update scores using the values of other PLS fields.
             for field, value in lead_values['values']:
+                if field == 'stage_id':
+                    continue
                 # Get team counts for the (field, value count). Note that origin may be used instead,
                 # as leads_values_dict could contain <NewId origin=...> values, for instance when reading
                 # values of tags on a lead that is changing stage.
-                field_result = result.get(save_team_id, {}).get(field)
+                field_result = result.get(lead_team_id, {}).get(field)
                 value = value.origin if hasattr(value, 'origin') else value
                 value_counts = field_result.get(str(value)) if field_result else False
 
                 # The lead's team (or aggregator team -1) has an entry in result for this couple (field, value)
-                if value_counts:
-                    total_won = team_won if field == 'stage_id' else field_result['won_total']
-                    total_lost = team_lost if field == 'stage_id' else field_result['lost_total']
-                    # if one count = 0, we cannot compute lead probability
-                    if not total_won or not total_lost:
-                        continue
-                    p_field_value_won = value_counts['won'] / total_won
-                    p_field_value_lost = value_counts['lost'] / total_lost
+                # if one count = 0, we cannot compute lead probability due to 0 division -> Skip this couple (field, value)
+                if value_counts and field_result['won_total'] and field_result['lost_total']:
+                    p_field_value_won = value_counts['won'] / field_result['won_total']
+                    p_field_value_lost = value_counts['lost'] / field_result['lost_total']
                     s_lead_won *= p_field_value_won
                     s_lead_lost *= p_field_value_lost
 
                     if is_tooltip:
-                        score = (
-                            1 - p_field_value_lost if field == 'stage_id'
-                            else p_field_value_won / (p_field_value_won + p_field_value_lost)
-                        )
+                        score = p_field_value_won / (p_field_value_won + p_field_value_lost)
                         tooltip_data['scores'].append((score, field, value))
             # 3. Compute Probability to win
             probability = s_lead_won / (s_lead_won + s_lead_lost)
@@ -2333,24 +2338,37 @@ class CrmLead(models.Model):
         return lead_probabilities, tooltip_data
 
     # ---------------------------------
-    # PLS: Live Increment
+    # PLS: Pending Frequency Updates Processing
     # ---------------------------------
-    def _pls_increment_frequencies(self, from_state=None, to_state=None):
-        """ This method will handle the frequencies for leads in self, increasing or decreasing
-            the won_count or lost_count of frequencies associated with each lead values. This is
-            done when the lead(s) changes of won_status (becoming lost or won, or leaving such state),
-            hence mainly checked in the write and create methods of crm.lead (we also have to increase
-            counts when creating a won / lost lead !). Note that in Live Increment, this method is
-            called once per type of state change in live increment (all leads in self would change
-            to/from the same state, see _handle_won_lost)
-            :param from_state: 'won' or 'lost', the state that the leads in self leave.
-            :param to_state: 'won' or 'lost', the state that the leads in self reach.
-        """
-        frequency_updates_by_team, existing_frequencies_by_team = self._pls_prepare_update_frequency_table(target_state=from_state or to_state)
+    @api.model
+    def _cron_process_pls_pending_updates(self):
+        """ CRON : Processes all the pending frequency updates and applies the corresponding frequency
+            updates on the crm.lead.scoring.frequency table. The pending updates track the different
+            status update of leads leaving / reaching 'won' or 'lost' won_status. """
+        cron_start_date = datetime.now()
+        self._process_pls_pending_updates()
+        _logger.info(
+            "Predictive Lead Scoring - Processing Pending Updates : Cron duration = %d seconds",
+            (datetime.now() - cron_start_date).total_seconds()
+        )
 
-        # update frequency table
-        self._pls_update_frequency_table(frequency_updates_by_team, 1 if to_state else -1,
-                                         existing_frequencies_by_team=existing_frequencies_by_team)
+    def _process_pls_pending_updates(self):
+        """ This method processes all pending updates of frequencies caused by changes of won_status for leads.
+            (or at creation of won / lost leads) First, it prepares all updates of the frequency table according
+            to pending updates, then updates the frequency table, then unlinks the processed pending updates.
+        """
+        CrmLeadScoringPendingUpdate = self.env['crm.lead.scoring.pending.update']
+        state_change_per_lead, pending_update_ids = CrmLeadScoringPendingUpdate._extract_state_change_per_lead()
+        if not pending_update_ids:
+            return
+        if state_change_per_lead:
+            frequency_deltas_by_team, existing_frequencies_by_team = self._pls_prepare_update_frequency_table(
+                state_change_per_lead=state_change_per_lead
+            )
+            self._pls_update_frequency_table(
+                frequency_deltas_by_team, existing_frequencies_by_team=existing_frequencies_by_team
+            )
+        CrmLeadScoringPendingUpdate.browse(pending_update_ids).sudo().unlink()
 
     # ---------------------------------
     # PLS: One shot rebuild
@@ -2368,6 +2386,7 @@ class CrmLead(models.Model):
     def _rebuild_pls_frequency_table(self):
         """ Truncate and rebuild the frequency table based on all leads that are won or lost
             Only the leads created after the PLS start date will be used to rebuild the table.
+            Pending update table is also truncated as the operation will cover their processing.
         """
         try:
             self.browse().check_access('unlink')
@@ -2375,9 +2394,10 @@ class CrmLead(models.Model):
             raise UserError(_("You don't have the access needed to run this cron."))
         else:
             self.env.cr.execute('TRUNCATE TABLE crm_lead_scoring_frequency')
+            self.env.cr.execute('TRUNCATE TABLE crm_lead_scoring_pending_update')
 
-        frequency_updates_by_team, _unused = self._pls_prepare_update_frequency_table(rebuild=True)
-        self._pls_update_frequency_table(frequency_updates_by_team, 1)
+        frequency_deltas_by_team, _unused = self._pls_prepare_update_frequency_table(rebuild=True)
+        self._pls_update_frequency_table(frequency_deltas_by_team)
 
         _logger.info("Predictive Lead Scoring : crm.lead.scoring.frequency table rebuilt")
 
@@ -2457,21 +2477,22 @@ class CrmLead(models.Model):
     # ---------------------------------
     # PLS: Common parts for both modes
     # ---------------------------------
-    def _pls_prepare_update_frequency_table(self, rebuild=False, target_state=False):
+    def _pls_prepare_update_frequency_table(self, rebuild=False, state_change_per_lead=None):
         """
-        This method is common to Live Increment and Full Rebuild mode, as it shares the main steps.
+        This method is common to Periodic Increment and Full Rebuild mode, as it shares the main steps.
         This method will prepare and return two frequency dicts needed to update the frequency table.
         If possible, we will always update existing frequencies instead of creating new ones.
-            -> In rebuild mode, only the values of update are needed as existing frequencies are truncated.
+            -> In rebuild mode, only the frequency deltas are needed as existing frequencies are truncated.
         Both dicts contain frequencies for each field/value present in the target leads, namely:
-            - in Live increment mode : ongoing leads (self)
+            - in Periodic increment mode : ongoing leads (self). state_change_per_lead will be used to compute
+                the delta values (sign, amount)
             - in Full rebuild mode : all the won and lost leads in the DB, created after the PLS start date
 
         :param rebuild: boolean, if true we will prepare the values of frequencies for a full rebuild
-        :param target_state: in Live Increment, determine which count to increment between won or lost.
+        :param state_change_per_lead: in Periodic Increment, determine which count to increment between won or lost.
         :returns: A two-element tuple with:
 
-            - frequency_updates_by_team: by team, values to be added (to new/existing frequencies) in the table.
+            - frequency_deltas_by_team: by team, values to be added (to new/existing frequencies) in the table.
             - existing_frequencies_by_team: by team, frequencies that already exist in the frequency table.
         """
         # Keep eligible leads
@@ -2479,17 +2500,19 @@ class CrmLead(models.Model):
         if not pls_start_date:
             return {}, {}
 
-        if rebuild:  # rebuild will treat every closed lead in DB, increment will treat current ongoing leads
+        if rebuild:
             pls_leads = self
-        else:
+        elif state_change_per_lead:
+            state_changing_leads = self.browse(list(state_change_per_lead.keys()))
             # Only treat leads created after the PLS start Date
-            pls_leads = self.filtered(
+            pls_leads = state_changing_leads.filtered(
                 lambda lead: fields.Date.to_date(pls_start_date) <= fields.Date.to_date(lead.create_date))
             if not pls_leads:
                 return {}, {}
+        else:
+            return {}, {}
 
-        # Extract target leads values
-        if rebuild:  # rebuild is ok
+        if rebuild:
             domain = [
                 ('create_date', '>=', pls_start_date),
                 ('won_status', 'in', ['lost', 'won']),
@@ -2499,15 +2522,15 @@ class CrmLead(models.Model):
             domain = [('id', 'in', pls_leads.ids)]
             team_ids = pls_leads.mapped('team_id').ids + [0]
 
-        leads_values_dict = pls_leads._pls_get_lead_pls_values(domain=domain)
+        leads_values_dict = pls_leads._pls_get_pls_values_per_lead(domain=domain)
 
         # split leads values by team_id
         # get current frequencies related to the target leads
-        leads_frequency_values_by_team = dict((team_id, []) for team_id in team_ids)
+        leads_pls_values_per_team = {team_id: [] for team_id in team_ids}
         leads_pls_fields = set()  # ensure to keep each field unique (can have multiple tag_id leads_values_dict)
-        for values in leads_values_dict.values():
+        for lead_id, values in leads_values_dict.items():
             team_id = values.get('team_id', 0)  # If team_id is unset, consider it as team 0
-            lead_frequency_values = {'count': 1}
+            lead_pls_values = {'lead_id': lead_id}
             for field, value in values['values']:
                 if field != "probability":  # was added to lead values in batch mode to know won/lost state before rebuild, but is not a pls fields.
                     leads_pls_fields.add(field)
@@ -2516,18 +2539,18 @@ class CrmLead(models.Model):
                 if field == 'tag_id':
                     # handle tag_id separately. As it is the only m2m field, we create one entry per tag (will each update one frequency)
                     # Keep the rest of fields in a single dict, with count and probability if present. This prevents useless duplication.
-                    leads_frequency_values_by_team[team_id].append({field: value, 'count': 1, 'probability': lead_probability})
+                    leads_pls_values_per_team[team_id].append({'lead_id': lead_id, field: value, 'probability': lead_probability})
                 else:
-                    lead_frequency_values[field] = value
-            leads_frequency_values_by_team[team_id].append(lead_frequency_values)
+                    lead_pls_values[field] = value
+            leads_pls_values_per_team[team_id].append(lead_pls_values)
         leads_pls_fields = sorted(leads_pls_fields)
 
-        # get frequency 'update' values, either the new ones in rebuild mode, or the increment ones in Live Update
-        frequency_updates_by_team = {}
+        # get deltas by team. If unset, team_id is set to 0.
+        frequency_deltas_by_team = {}
         for team_id in team_ids:
-            # prepare fields and tag values for leads by team
-            frequency_updates_by_team[team_id] = self._pls_prepare_frequencies(
-                leads_frequency_values_by_team[team_id], leads_pls_fields, target_state=target_state)
+            frequency_deltas_by_team[team_id] = self._pls_prepare_update_team_frequency_deltas(
+                leads_pls_values_per_team[team_id], leads_pls_fields, state_change_per_lead
+            )
 
         # get existing frequencies
         existing_frequencies_by_team = {}
@@ -2547,32 +2570,27 @@ class CrmLead(models.Model):
                     'lost': frequency['lost_count']
                 }
 
-        return frequency_updates_by_team, existing_frequencies_by_team
+        return frequency_deltas_by_team, existing_frequencies_by_team
 
-    def _pls_update_frequency_table(self, frequency_updates_by_team, step, existing_frequencies_by_team=None):
+    def _pls_update_frequency_table(self, frequency_deltas_by_team, existing_frequencies_by_team=None):
         """
         Update the frequency table by creating or updating the existing frequencies, of which values are given in
-        existing_frequencies_by_team, with update values given in frequency_updates_by_team.
-        Step is +1 or -1 in practice and is used in Live Increment mode to indicate whether we want to increase or
-        decrease existing frequencies by the values in frequency_updates_by_team, that are always positive.
-        For instance, when leaving a won stage, we may have an entry for the 'won' count, but as we leave the stage,
-        we must decrease the existing won_count, if any.
+        existing_frequencies_by_team, with deltas given in frequency_deltas_by_team.
         """
         values_to_update = {}
         values_to_create = []
         if not existing_frequencies_by_team:
             existing_frequencies_by_team = {}
         # build the create multi + frequencies to update
-        for team_id, frequency_updates in frequency_updates_by_team.items():
+        for team_id, frequency_deltas_by_field in frequency_deltas_by_team.items():
             existing_team_frequencies = existing_frequencies_by_team.get(team_id, {})
-            for variable, value_counts in frequency_updates.items():
-                for value, counts in value_counts.items():
-                    # frequency already present ?
-                    existing_frequency = existing_team_frequencies.get(variable, {}).get(value, {})
+            for field, frequency_deltas_by_value in frequency_deltas_by_field.items():
+                for value, frequency_deltas in frequency_deltas_by_value.items():
+                    existing_frequency = existing_team_frequencies.get(field, {}).get(value, {})
                     # If frequency already present : UPDATE IT
                     if existing_frequency:
-                        new_won = existing_frequency['won'] + (counts['won'] * step)
-                        new_lost = existing_frequency['lost'] + (counts['lost'] * step)
+                        new_won = existing_frequency['won'] + frequency_deltas['won']
+                        new_lost = existing_frequency['lost'] + frequency_deltas['lost']
                         # ensure to have always positive frequencies
                         values_to_update[existing_frequency['frequency_id']] = {
                             'won_count': new_won if new_won > 0 else 0.1,
@@ -2584,10 +2602,10 @@ class CrmLead(models.Model):
                     # We add + 0.1 in won and lost counts to avoid zero frequency issues
                     # should be +1 but it weights too much on small recordset.
                     values_to_create.append({
-                        'variable': variable,
+                        'variable': field,
                         'value': value,
-                        'won_count': counts['won'] + 0.1,
-                        'lost_count': counts['lost'] + 0.1,
+                        'won_count': max(frequency_deltas['won'] + 0.1, 0.1),
+                        'lost_count': max(frequency_deltas['lost'] + 0.1, 0.1),
                         'team_id': team_id if team_id else None  # team_id = 0 means no team_id
                     })
 
@@ -2627,37 +2645,42 @@ class CrmLead(models.Model):
 
     # PLS: Rebuild Frequency Table Tools
     # ----------------------------------
-    def _pls_prepare_frequencies(self, lead_values, leads_pls_fields, target_state=None):
-        """
-        This method prepares and returns positive counts for frequency updates, according
-        to values of leads_pls_fields present in lead_value.
-        :param lead_values: dict of dicts containing a count (1) and values per lead. Values for tags have
-            a single entry per tag per lead and are treated separately. We can loop on values otherwise,
-            as each entry of lead_values is related to a single lead.
-        :param leads_pls_fields: restrict to those fields
-        :param target_state: 'won' or 'lost', used in Live Increment to know which count to increase
-        :return frequencies: dict containing all frequency 'updates' for all values in lead_values, as
-            {'field_1': {value_1 : {}, value_2 : {} ...}, 'field_2': {...}}
+    def _pls_prepare_update_team_frequency_deltas(self, lead_values, leads_pls_fields, state_change_per_lead=None):
+        """ This method prepares and returns the deltas (~ positive or negative increments) of frequencies.
+            In both cases, we will go through lead_values and add won/lost counts according to the lead state
+            change, to count (positively or negatively) couples (field, value) for lead_pls_fields.
+            It is used in two occasions:
+            - When processing the table of pending frequency updates (state_change_per_lead is set).
+            For all leads in state_change_per_lead, we will compute won and lost deltas based on their previous
+            and new stage see `_pls_get_lead_won_lost_deltas`.
+            - When rebuilding the whole table (state_change_per_lead is None), in that case lead_values should
+            contain the 'probability' value, as it is used to differentiate between lost and won leads.
+
+            :param lead_values: dict of pls values per target lead FOR A GIVEN TEAM (or a team not set).
+            :param leads_pls_fields: list of unique PLS fields present in lead_values.
+            :param state_change_per_lead: dict containing 'from_state' and 'lost_state' for leads.
+            :return: a dict containing 'won' and 'lost' deltas per field in leads_pls_fields for each value in lead_values.
+            -> format is: {field_1: {value_1: {'won': 1, 'lost': -2}, value_2: {..}}, field_2: {..}, ..}
         """
         pls_fields = leads_pls_fields.copy()
-        frequencies = dict((field, {}) for field in pls_fields)
+        frequency_deltas = {field: {} for field in pls_fields}
+        if 'tag_id' in pls_fields:
+            pls_fields.remove('tag_id')
 
         stage_ids = self.env['crm.stage'].search_read([], ['sequence', 'name', 'id'], order='sequence, id')
         stage_sequences = {stage['id']: stage['sequence'] for stage in stage_ids}
 
-        # Increment won / lost frequencies by criteria (field / value couple)
+        # Compute won and lost frequency_deltas for all (field, value) couples
         for values in lead_values:
-            if target_state:  # ignore probability values if target state (as probability is the old value)
-                won_count = values['count'] if target_state == 'won' else 0
-                lost_count = values['count'] if target_state == 'lost' else 0
-            else:
-                # In Full Rebuild, probability value is used to determine if lead was won or lost.
-                won_count = values['count'] if values.get('probability', 0) == 100 else 0
-                lost_count = values['count'] if values.get('probability', 1) == 0  else 0
+            if state_change_per_lead:
+                won_delta, lost_delta = self._pls_get_lead_won_lost_deltas(state_change_per_lead.get(values['lead_id'], False))
+            else:  # Probability is the one before rebuild. Only used in rebuild mode.
+                won_delta = int(values.get('probability', 0) == 100)
+                lost_delta = int(values.get('probability', 1) == 0)
 
-            # Handle tags separately. (done once per tag entry, increasing the counts for that tag)
+            # Handle tags separately. (done once per couple (lead, tag) in lead_values)
             if 'tag_id' in values:
-                frequencies = self._pls_increment_frequency_dict(frequencies, 'tag_id', values['tag_id'], won_count, lost_count)
+                self._pls_increment_frequency_deltas(frequency_deltas, 'tag_id', values['tag_id'], won_delta, lost_delta)
                 continue
 
             # Else, treat other fields
@@ -2669,33 +2692,46 @@ class CrmLead(models.Model):
                 value = values[field]
                 if value or field in ('email_state', 'phone_state'):
                     if field == 'stage_id':
-                        if won_count:  # increment all stages if won
-                            stages_to_increment = [stage['id'] for stage in stage_ids]
-                        else:  # increment only current + previous stages if lost
+                        if won_delta:  # increment all stages if won
+                            for stage_id in [stage['id'] for stage in stage_ids]:
+                                self._pls_increment_frequency_deltas(frequency_deltas, field, stage_id, won_delta, lost_delta)
+                        if lost_delta:  # increment only current + previous stages if lost
                             current_stage_sequence = stage_sequences[value]
-                            stages_to_increment = [stage['id'] for stage in stage_ids if stage['sequence'] <= current_stage_sequence]
-                        for stage_id in stages_to_increment:
-                            frequencies = self._pls_increment_frequency_dict(frequencies, field, stage_id, won_count, lost_count)
+                            for stage_id in [stage['id'] for stage in stage_ids if stage['sequence'] <= current_stage_sequence]:
+                                self._pls_increment_frequency_deltas(frequency_deltas, field, stage_id, won_delta, lost_delta)
                     else:
-                        frequencies = self._pls_increment_frequency_dict(frequencies, field, value, won_count, lost_count)
+                        self._pls_increment_frequency_deltas(frequency_deltas, field, value, won_delta, lost_delta)
 
-        return frequencies
+        return frequency_deltas
 
     @staticmethod
-    def _pls_increment_frequency_dict(frequencies, field, value, won, lost):
+    def _pls_get_lead_won_lost_deltas(state_change):
+        """ Computes won and lost deltas: -1, 0 or 1 depending on lead movement 'from_state' -> 'to_state' """
+        if state_change:
+            from_state = state_change['from_state']
+            to_state = state_change['to_state']
+            won_delta = -1 if from_state == 'won' else int(to_state == 'won')
+            lost_delta = -1 if from_state == 'lost' else int(to_state == 'lost')
+            return won_delta, lost_delta
+        return 0, 0
+
+    @staticmethod
+    def _pls_increment_frequency_deltas(frequency_deltas, field, value, won_delta, lost_delta):
+        """ This method adds increments in the given frequency_deltas dict, positive or negative
+            for won_delta and lost_delta of different couples (field, value).
+        """
         value = str(value)  # Ensure we will always compare strings.
-        if value not in frequencies[field]:
-            frequencies[field][value] = {'won': won, 'lost': lost}
+        if value not in frequency_deltas[field]:
+            frequency_deltas[field][value] = {'won': won_delta, 'lost': lost_delta}
         else:
-            frequencies[field][value]['won'] += won
-            frequencies[field][value]['lost'] += lost
-        return frequencies
+            frequency_deltas[field][value]['won'] += won_delta
+            frequency_deltas[field][value]['lost'] += lost_delta
 
     # Common PLS Tools
     # ----------------
-    def _pls_get_lead_pls_values(self, domain=None):
+    def _pls_get_pls_values_per_lead(self, domain=None):
         """
-        This method will retrieve values of PLS fields for leads, for Live Increment and Full Rebuild modes.
+        This method will retrieve values of PLS fields for leads, in Periodic Increment and Full Rebuild modes.
         It is also used to retrieve values for a lead when recomputing its probability (see `_compute_probabilities`).
         In all cases:
         - In case a lead has no value for a field, will not return the (field, value). However, as 'phone_state'
@@ -2710,7 +2746,7 @@ class CrmLead(models.Model):
         - We also add 'probability' field value, even though not a PLS field. This is used to distinguish between
         values of won and lost leads. (Since it depends on the table we truncate, we use it as the value a priori)
 
-        In Live Increment / When we recompute probability for some lead:
+        In Periodic Increment / When we recompute probability for some lead:
         - We return values for leads in self.
 
         :param domain: If set, use SQL and the domain to restrict leads used. Full Rebuild should set a domain.
@@ -2744,7 +2780,7 @@ class CrmLead(models.Model):
             query.order = SQL("%(table)s.team_id asc, %(table)s.id desc", table=SQL.identifier(table))
             sql_fields = [SQL.identifier(field) for field in pls_fields]
 
-            # We add the probability field, to be used later in rebuild mode to distinguish between won and lost leads.
+            # Add probability, to be used in _pls_prepare_update_team_frequency_deltas to distinguish won / lost leads.
             self.env.cr.execute(query.select(
                 SQL("id"),
                 SQL("probability"),
@@ -2767,7 +2803,7 @@ class CrmLead(models.Model):
             # get all (variable, value) couple for all in self
             for lead in lead_results:
                 lead_values = []
-                for field in pls_fields + ['probability']:  # add probability as used in _pls_prepare_frequencies (needed in rebuild mode)
+                for field in pls_fields + ['probability']:
                     value = lead[field]
                     if field == 'team_id':  # stored separately in leads_values_dict, see below
                         continue
