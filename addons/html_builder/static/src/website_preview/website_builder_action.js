@@ -105,9 +105,9 @@ export class WebsiteBuilder extends Component {
         console.log("todo: new page");
     }
 
-    onEditPage() {
+    async onEditPage() {
         document.querySelector(".o_main_navbar").setAttribute("style", "margin-top: -100%;");
-        this.loadAssetsEditBundle();
+        await this.loadAssetsEditBundle();
 
         setTimeout(() => {
             this.state.isEditing = true;
@@ -115,14 +115,15 @@ export class WebsiteBuilder extends Component {
         }, 200);
     }
 
-    loadAssetsEditBundle() {
-        // TODO: await both
-        loadBundle("website.assets_edit_frontend", {
-            targetDoc: this.websiteContent.el.contentDocument,
-        });
-        loadBundle("html_builder.inside_builder_style", {
-            targetDoc: this.websiteContent.el.contentDocument,
-        });
+    async loadAssetsEditBundle() {
+        await Promise.all([
+            loadBundle("website.assets_edit_frontend", {
+                targetDoc: this.websiteContent.el.contentDocument,
+            }),
+            loadBundle("html_builder.inside_builder_style", {
+                targetDoc: this.websiteContent.el.contentDocument,
+            }),
+        ]);
     }
 
     onIframeLoad(ev) {
