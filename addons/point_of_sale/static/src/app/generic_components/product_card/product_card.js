@@ -8,6 +8,7 @@ export class ProductCard extends Component {
         product: Object,
         productId: Number | String,
         price: String,
+        priceExtra: { type: String, optional: true },
         color: { type: [Number, undefined], optional: true },
         imageUrl: [String, Boolean],
         productInfo: { Boolean, optional: true },
