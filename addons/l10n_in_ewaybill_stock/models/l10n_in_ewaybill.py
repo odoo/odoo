@@ -182,7 +182,7 @@ class Ewaybill(models.Model):
     def _compute_fiscal_position(self):
         for ewaybill in self.filtered(lambda ewb: ewb.state == 'pending'):
             ewaybill.fiscal_position_id = (
-                self.env['account.fiscal.position']._get_fiscal_position(
+                self.env['account.fiscal.position'].with_company(ewaybill.company_id)._get_fiscal_position(
                     ewaybill.picking_type_code == 'incoming'
                     and ewaybill.partner_bill_from_id
                     or ewaybill.partner_bill_to_id
