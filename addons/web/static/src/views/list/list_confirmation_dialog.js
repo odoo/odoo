@@ -1,6 +1,6 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { Field } from "@web/views/fields/field";
+import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 import { Component } from "@odoo/owl";
@@ -47,5 +47,16 @@ export class ListConfirmationDialog extends Component {
             await this.props.confirm();
         }
         this.props.close();
+    }
+
+    /**
+     * Whether the Field component would show nothing
+     */
+    isValueEmpty(field) {
+        // force readonly as we force that state on the Field component
+        return fieldVisualFeedback(field, this.props.record, field.name, {
+            ...field.fieldNode,
+            readonly: true,
+        }).empty;
     }
 }
