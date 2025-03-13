@@ -67,7 +67,9 @@ class QueryURL:
                     paths[key] = "%s" % value
             elif value:
                 if isinstance(value, (list, set)):
-                    fragments.append(werkzeug.urls.url_encode([(key, item) for item in value]))
+                    fragments.append(
+                        werkzeug.urls.url_encode([(key, item) for item in value if item])
+                    )
                 else:
                     fragments.append(werkzeug.urls.url_encode([(key, value)]))
         for key in path_args:
