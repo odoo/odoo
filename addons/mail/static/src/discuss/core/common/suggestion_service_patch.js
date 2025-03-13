@@ -15,6 +15,43 @@ const suggestionServicePatch = {
     /**
      * @override
      */
+    isSuggestionValid(persona, thread) {
+        if (thread?.model === "discuss.channel" && persona.eq(this.store.odoobot)) {
+            return true;
+        }
+        return super.isSuggestionValid(...arguments);
+    },
+    /**
+     * @override
+     */
+    getPartnerSuggestions(thread) {
+        const isNonPublicChannel =
+            thread &&
+            (thread.channel_type === "group" ||
+                thread.channel_type === "chat" ||
+                (thread.channel_type === "channel" &&
+                    (thread.parent_channel_id || thread).group_public_id));
+        if (isNonPublicChannel) {
+            // Only return the channel members when in the context of a
+            // group restricted channel. Indeed, the message with the mention
+            // would be notified to the mentioned partner, so this prevents
+            // from inadvertently leaking the private message to the
+            // mentioned partner.
+            let partners = thread.channel_member_ids
+                .map((member) => member.persona)
+                .filter((persona) => persona.type === "partner");
+            if (thread.channel_type === "channel") {
+                const group = (thread.parent_channel_id || thread).group_public_id;
+                partners = new Set([...partners, ...(group?.personas ?? [])]);
+            }
+            return partners;
+        } else {
+            return super.getPartnerSuggestions(...arguments);
+        }
+    },
+    /**
+     * @override
+     */
     searchSuggestions({ delimiter, term }, { thread, sort = false } = {}) {
         if (delimiter === "/") {
             return this.searchChannelCommand(cleanTerm(term), thread, sort);
