@@ -37,7 +37,7 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
         According to GST: Compare place of supply (instead of delivery address) with company state
         '''
 
-        self.env.company = self.default_company
+        self.env = self.env['base'].with_company(self.default_company).env
         template = self.env['account.chart.template']
         company_state = self.env.company.state_id
 
