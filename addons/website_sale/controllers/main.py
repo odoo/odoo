@@ -1179,7 +1179,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order_sudo = request.website.sale_get_order()
         if redirection := self._check_cart(order_sudo):
-            return redirection
+            return json.dumps({'redirectUrl': redirection.location})
 
         partner_sudo, address_type = self._prepare_address_update(
             order_sudo, partner_id=partner_id and int(partner_id), address_type=address_type
@@ -1258,7 +1258,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         self._handle_extra_form_data(extra_form_data, address_values)
 
         return json.dumps({
-            'successUrl': callback,
+            'redirectUrl': callback,
         })
 
     def _prepare_address_update(self, order_sudo, partner_id=None, address_type=None):
