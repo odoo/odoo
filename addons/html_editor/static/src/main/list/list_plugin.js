@@ -668,7 +668,7 @@ export class ListPlugin extends Plugin {
         }
         // Preserve style properties
         const dir = li.getAttribute("dir") || ul.getAttribute("dir");
-        const textAlign = ul.style.getPropertyValue("text-align");
+        const textAlign = li.style.getPropertyValue("text-align");
         const liColorStyle = getTextColorOrClass(li);
         const liFontSizeStyle = getFontSizeOrClass(li);
         const wrapChildren = (parent, tag) => {
