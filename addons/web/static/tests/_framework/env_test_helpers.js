@@ -2,12 +2,12 @@ import { after, afterEach, beforeEach, registerDebugInfo } from "@odoo/hoot";
 import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
 import { translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+import { allowedFns } from "@web/core/py_js/py_interpreter";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer } from "./mock_server/mock_server";
-import { allowedFns } from "@web/core/py_js/py_interpreter";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
@@ -113,7 +113,7 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
     });
     Object.assign(currentEnv, partialEnv, createDebugContext(currentEnv)); // This is needed if the views are in debug mode
 
-    registerDebugInfo(currentEnv);
+    registerDebugInfo("env", currentEnv);
 
     startRouter();
     await startServices(currentEnv);
