@@ -17,54 +17,7 @@ class CrmTeam(models.Model):
     invoiced_target = fields.Float(
         string='Invoicing Target',
         help="Revenue Target for the current month (untaxed total of paid invoices).")
-    quotations_count = fields.Integer(
-        compute='_compute_quotations_to_invoice',
-        string='Number of quotations to invoice', readonly=True)
-    quotations_amount = fields.Float(
-        compute='_compute_quotations_to_invoice',
-        string='Amount of quotations to invoice', readonly=True)
-    sales_to_invoice_count = fields.Integer(
-        compute='_compute_sales_to_invoice',
-        string='Number of sales to invoice', readonly=True)
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', string='# Sale Orders')
-
-    def _compute_quotations_to_invoice(self):
-        query = self.env['sale.order']._where_calc([
-            ('team_id', 'in', self.ids),
-            ('state', 'in', ['draft', 'sent']),
-        ])
-        self.env['sale.order']._apply_ir_rules(query, 'read')
-        select_sql = SQL("""
-            SELECT team_id, count(*), sum(amount_total /
-                CASE COALESCE(currency_rate, 0)
-                WHEN 0 THEN 1.0
-                ELSE currency_rate
-                END
-            ) as amount_total
-            FROM sale_order
-            WHERE %s
-            GROUP BY team_id
-        """, query.where_clause or SQL("TRUE"))
-        self.env.cr.execute(select_sql)
-        quotation_data = self.env.cr.dictfetchall()
-        teams = self.browse()
-        for datum in quotation_data:
-            team = self.browse(datum['team_id'])
-            team.quotations_amount = datum['amount_total']
-            team.quotations_count = datum['count']
-            teams |= team
-        remaining = (self - teams)
-        remaining.quotations_amount = 0
-        remaining.quotations_count = 0
-
-    def _compute_sales_to_invoice(self):
-        sale_order_data = self.env['sale.order']._read_group([
-            ('team_id', 'in', self.ids),
-            ('invoice_status','=','to invoice'),
-        ], ['team_id'], ['__count'])
-        data_map = {team.id: count for team, count in sale_order_data}
-        for team in self:
-            team.sales_to_invoice_count = data_map.get(team.id,0.0)
 
     def _compute_invoiced(self):
         if self.ids:
