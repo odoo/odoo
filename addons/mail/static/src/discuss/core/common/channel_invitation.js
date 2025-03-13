@@ -6,6 +6,7 @@ import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useOrmOnInput } from "@mail/utils/common/hooks";
+import { useSuggestion } from "@mail/core/common/suggestion_hook";
 
 export class ChannelInvitation extends Component {
     static components = { ImStatus, ActionPanel };
@@ -26,7 +27,7 @@ export class ChannelInvitation extends Component {
         this.ormOnInput = useOrmOnInput();
         this.store = useService("mail.store");
         this.notification = useService("notification");
-        this.suggestionService = useService("mail.suggestion");
+        this.suggestion = useSuggestion();
         this.ui = useService("ui");
         this.inputRef = useRef("input");
         this.state = useState({
@@ -35,7 +36,6 @@ export class ChannelInvitation extends Component {
             searchResultCount: 0,
             searchStr: "",
         });
-        this.debouncedFetchPartnersToInvite = useDebounced(this.fetchPartnersToInvite.bind(this), 250);
         onWillStart(() => {
             if (this.store.self.type === "partner") {
                 this.fetchPartnersToInvite(true);
@@ -120,7 +120,7 @@ export class ChannelInvitation extends Component {
             return;
         }
         const { Persona: selectablePartners = [] } = this.store.insert(results.data);
-        this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
+        this.selectablePartners = this.suggestion.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,
             this.props.thread

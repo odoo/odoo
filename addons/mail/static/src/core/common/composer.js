@@ -357,7 +357,7 @@ export class Composer extends Component {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
             },
-            isLoading: !!this.suggestion.search.term && this.suggestion.state.isFetching,
+            isLoading: !!this.suggestion.state.term && this.suggestion.state.isFetching,
             options: [],
         };
         if (!this.hasSuggestions) {

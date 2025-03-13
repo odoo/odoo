@@ -15,7 +15,7 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { convertBrToLineBreak } from "./format";
-import { useDebounced } from "@web/core/utils/timing";
+import { debounce } from "@web/core/utils/timing";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -542,10 +542,12 @@ export const useMovable = makeDraggableHook({
     },
 });
 
-export function useOrmOnInput() {
-    const orm = useService("orm");
+/**
+ * Make an ORM call with a cancellable signal.
+ */
+export function ormOnInput(orm) {
     let abortController;
-    const call = useDebounced((model, method, args, kwargs) => {
+    return debounce((model, method, args, kwargs) => {
         abortController?.abort();
         abortController = new AbortController();
         return new Promise((res, rej) => {
@@ -563,5 +565,9 @@ export function useOrmOnInput() {
                 .finally(() => abortController.signal.removeEventListener("abort", onAbort));
         });
     }, 250);
-    return call;
+}
+
+export function useOrmOnInput() {
+    const orm = useService("orm");
+    return ormOnInput(orm);
 }

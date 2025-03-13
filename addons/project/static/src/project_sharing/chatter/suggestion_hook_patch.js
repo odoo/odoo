@@ -1,11 +1,11 @@
-import { SuggestionService } from "@mail/core/common/suggestion_service";
+import { UseSuggestion } from "@mail/core/common/suggestion_hook";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(SuggestionService.prototype, {
+patch(UseSuggestion.prototype, {
     async fetchPartners(term, thread, { abortSignal } = {}) {
         if (thread.model === "project.task") {
-            const suggestedPartners = await this.makeOrmCall(
+            const suggestedPartners = await this.ormOnInput(
                 "project.task",
                 "get_mention_suggestions",
                 [thread.id],
