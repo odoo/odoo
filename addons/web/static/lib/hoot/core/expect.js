@@ -97,7 +97,7 @@ const {
     Array: { isArray: $isArray },
     Boolean,
     Error,
-    Math: { floor: $floor },
+    Math: { abs: $abs, floor: $floor },
     Object: { assign: $assign, fromEntries: $fromEntries, entries: $entries, keys: $keys },
     parseFloat,
     performance,
@@ -310,15 +310,6 @@ const parseInlineStyle = (style) => {
 
 /** @type {StringConstructor["raw"]} */
 const r = (template, ...substitutions) => makeLabel(String.raw(template, ...substitutions), null);
-
-/**
- * @param {number} value
- * @param {number} digits
- */
-const roundTo = (value, digits) => {
-    const divisor = 10 ** digits;
-    return $floor(value * divisor) / divisor;
-};
 
 /**
  * @param {string} method
@@ -962,35 +953,36 @@ export class Matcher {
     }
 
     /**
-     * Expects the received value to be close to the `expected` value up to a given
-     * amount of digits (default is 2).
+     * Expects the received value to be close to the `expected` value by a given
+     * margin (i.e. the maximum difference allowed between the 2, default is 1).
+     *
+     * Note: the margin is exclusive; it should be strictly larger than the diff.
      *
      * @param {R} expected
-     * @param {ExpectOptions & { digits?: number }} [options]
+     * @param {ExpectOptions & { margin?: number }} [options]
      * @example
      *  expect(0.2 + 0.1).toBeCloseTo(0.3);
      * @example
-     *  expect(3.51).toBeCloseTo(3.5, { digits: 1 });
+     *  expect(3.51).toBeCloseTo(3.5, { margin: 0.1 });
      */
     toBeCloseTo(expected, options) {
         this._saveStack();
 
         ensureArguments(arguments, "number", ["object", null]);
 
-        const digits = options?.digits ?? 2;
+        const margin = options?.margin ?? 1;
         return this._resolve((received) => {
-            const rounded = roundTo(received, digits);
             return {
                 name: "toBeCloseTo",
                 acceptedType: "number",
-                predicate: () => strictEqual(rounded, expected),
+                predicate: () => $abs(expected - received) < margin,
                 message:
                     options?.message ||
                     ((pass) =>
                         pass
                             ? [r`received value is[! not] close to`, received]
                             : [r`expected values to be close to the given value`]),
-                failedDetails: () => detailsFromValuesWithDiff(expected, rounded),
+                failedDetails: () => detailsFromValuesWithDiff(expected, received),
             };
         });
     }
