@@ -1063,7 +1063,8 @@ class ProductCategory(models.Model):
     filter_for_stock_putaway_rule = fields.Boolean('stock.putaway.rule', store=False, search='_search_filter_for_stock_putaway_rule')
 
     def _search_total_route_ids(self, operator, value):
-        categ_ids = self.filtered_domain([('total_route_ids', operator, value)]).ids
+        categories = self.env['product.category'].sudo().search([])
+        categ_ids = categories.filtered_domain([('total_route_ids', operator, value)]).ids
         return [('id', 'in', categ_ids)]
 
     def _compute_total_route_ids(self):
