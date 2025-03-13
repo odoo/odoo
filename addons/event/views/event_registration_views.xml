@@ -68,10 +68,21 @@
                         <group string="Event Information" name="event">
                             <field class="text-break" name="event_id"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
+                            <!-- If multi slots + tickets: pick a slot ticket -->
+                            <!-- Else: pick only the slot or ticket -->
+                            <field name="slot_ticket_id" invisible="not is_multi_slots or not event_ticket_ids"
+                                   required="is_multi_slots and event_ticket_ids"
+                                   context="{'name_with_seats_availability': True}"
+                                   options="{'no_create': True}"/>
+                            <field name="slot_id" invisible="not is_multi_slots or event_ticket_ids"
+                                   required="is_multi_slots and not event_ticket_ids"
+                                   context="{'name_with_seats_availability': True}"
+                                   options="{'no_create': True}"/>
+                            <field name="event_ticket_id" invisible="not event_ticket_ids or is_multi_slots"
+                                   required="event_ticket_ids and not is_multi_slots"
+                                   context="{'name_with_seats_availability': True}"
+                                   options="{'no_open': True, 'no_create': True}" domain="[('event_id', '=', event_id)]"/>
                             <field name="barcode" groups="base.group_no_one"/>
-                            <field name="event_ticket_id" invisible="not event_id"
-                                   context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"
-                                   domain="[('event_id', '=', event_id)]"/>
                             <field name="partner_id"/>
                             <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
                             <field name="date_closed" groups="base.group_no_one"/>

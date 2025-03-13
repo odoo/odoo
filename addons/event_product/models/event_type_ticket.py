@@ -92,6 +92,6 @@ class EventTypeTicket(models.Model):
         )
 
     @api.model
-    def _get_event_ticket_fields_whitelist(self):
+    def _get_fields_whitelist(self):
         """ Add sale specific fields to copy from template to ticket """
-        return super()._get_event_ticket_fields_whitelist() + ['product_id', 'price']
+        return super()._get_fields_whitelist() + ['product_id', 'price']

@@ -11,7 +11,8 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="description" optional="hide"/>
-                <field name="seats_max"/>
+                <field name="seats_max" width="105px" string="Maximum" column_invisible="context.get('default_is_multi_slots')"/>
+                <field name="seats_max" width="120px" string="Maximum per slot" column_invisible="not context.get('default_is_multi_slots')"/>
                 <field name="seats_limited"/>
             </list>
         </field>
@@ -76,8 +77,10 @@
                 <field name="description" optional="hide"/>
                 <field name="start_sale_datetime" optional="show"/>
                 <field name="end_sale_datetime" optional="show"/>
-                <field name="seats_max" sum="Total" width="105px" string="Maximum"/>
-                <field name="seats_taken" sum="Total" width="105px" string="Registration"/>
+                <field name="seats_max" sum="Total" width="105px" string="Maximum" column_invisible="context.get('default_is_multi_slots')"/>
+                <field name="seats_max" sum="Total" width="120px" string="Maximum per slot" column_invisible="not context.get('default_is_multi_slots')"/>
+                <field name="seats_taken" sum="Total" width="105px" string="Registration" column_invisible="context.get('default_is_multi_slots')"/>
+                <field name="seats_taken" sum="Total" width="140px" string="Total Registrations" column_invisible="not context.get('default_is_multi_slots')"/>
                 <field name="color" widget="color" optional="hidden"/>
             </list>
         </field>

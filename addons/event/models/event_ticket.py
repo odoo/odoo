@@ -44,6 +44,7 @@ class EventEventTicket(models.Model):
     seats_taken = fields.Integer(string="Taken Seats", compute="_compute_seats", store=False)
     is_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_is_sold_out', help='Whether seats are not available for this ticket.')
+    event_slot_ticket_ids = fields.One2many("event.slot.ticket", "ticket_id", string="Slots Seats")
     # reports
     color = fields.Char('Color', default="#875A7B")
 
@@ -102,7 +103,8 @@ class EventEventTicket(models.Model):
         for ticket in self:
             ticket.update(results.get(ticket._origin.id or ticket.id, {}))
             if ticket.seats_max > 0:
-                ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
+                seats_max = ticket.seats_max * len(ticket.event_id.slot_ids or []) if ticket.event_id.is_multi_slots else ticket.seats_max
+                ticket.seats_available = seats_max - (ticket.seats_reserved + ticket.seats_used)
             ticket.seats_taken = ticket.seats_reserved + ticket.seats_used
 
     @api.depends('seats_limited', 'seats_available')
@@ -150,6 +152,22 @@ class EventEventTicket(models.Model):
                     count=formatLang(self.env, ticket.seats_available, digits=0),
                 )
             ticket.display_name = name
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        new_tickets = super().create(vals_list)
+        # Create missing slot-ticket combinations when a new ticket is added
+        existing_combinations = [(slot_ticket.slot_id.id, slot_ticket.ticket_id.id) for slot_ticket in self.env['event.slot.ticket'].search([])]
+        new_combinations = []
+        for ticket in new_tickets:
+            for slot in ticket.event_id.slot_ids:
+                if not (slot.id, ticket.id) in existing_combinations:
+                    new_combinations.append((slot.id, ticket.id))
+        self.env["event.slot.ticket"].create([{
+            "slot_id": slot_id,
+            "ticket_id": ticket_id,
+        } for (slot_id, ticket_id) in new_combinations])
+        return new_tickets
 
     def _get_ticket_multiline_description(self):
         """ Compute a multiline description of this ticket. It is used when ticket

@@ -30,7 +30,7 @@ class EventTypeTicket(models.Model):
             ticket.seats_limited = ticket.seats_max
 
     @api.model
-    def _get_event_ticket_fields_whitelist(self):
+    def _get_fields_whitelist(self):
         """ Whitelist of fields that are copied from event_type_ticket_ids to event_ticket_ids when
         changing the event_type_id field of event.event """
         return ['sequence', 'name', 'description', 'seats_max']

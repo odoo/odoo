@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 import logging
 import os
 
@@ -34,7 +35,10 @@ class EventRegistration(models.Model):
     event_id = fields.Many2one(
         'event.event', string='Event', required=True, tracking=True, index=True)
     event_ticket_id = fields.Many2one(
-        'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True, index='btree_not_null')
+        'event.event.ticket', string='Ticket Type',
+        compute="_compute_event_ticket_id", store=True, readonly=False,
+        ondelete='restrict', tracking=True, index='btree_not_null')
+    event_ticket_ids = fields.One2many(related='event_id.event_ticket_ids', readonly=True)
     active = fields.Boolean(default=True)
     barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
     # utm informations
@@ -50,6 +54,15 @@ class EventRegistration(models.Model):
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=4)
     company_name = fields.Char(
         string='Company Name', compute='_compute_company_name', readonly=False, store=True, tracking=5)
+    # slots
+    is_multi_slots = fields.Boolean(string="Is Event Multi Slots", related="event_id.is_multi_slots")
+    slot_id = fields.Many2one(
+        "event.slot", string="Slot",
+        compute="_compute_slot_id", store=True, readonly=False,
+        index="btree_not_null", domain="[('event_id', '=', event_id)]")
+    slot_ticket_id = fields.Many2one(
+        "event.slot.ticket", string="Slot Ticket",
+        compute="_compute_slot_ticket_id", store=True, readonly=False)
     # organization
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
@@ -90,11 +103,14 @@ class EventRegistration(models.Model):
         'Barcode should be unique',
     )
 
-    @api.constrains('state', 'event_id', 'event_ticket_id')
+    @api.constrains('state', 'event_id', 'event_ticket_id', 'slot_ticket_id')
     def _check_seats_availability(self):
         registrations_confirmed = self.filtered(lambda registration: registration.state in ('open', 'done'))
         registrations_confirmed.event_id._check_seats_availability()
-        registrations_confirmed.event_ticket_id._check_seats_availability()
+        registrations_confirmed.event_id._check_slot_seats_availability()
+        registrations_w_slot_ticket = registrations_confirmed.filtered(lambda reg: reg.slot_ticket_id)
+        registrations_w_slot_ticket.slot_ticket_id._check_seats_availability()
+        (registrations_confirmed - registrations_w_slot_ticket).event_ticket_id._check_seats_availability()
 
     def default_get(self, fields):
         ret_vals = super().default_get(fields)
@@ -158,6 +174,40 @@ class EventRegistration(models.Model):
     def _compute_date_range(self):
         for registration in self:
             registration.event_date_range = registration.event_id._get_date_range_str(registration.partner_id.lang)
+
+    @api.depends('event_id', 'slot_ticket_id')
+    def _compute_event_ticket_id(self):
+        for registration in self:
+            if registration.event_id != registration.slot_id.event_id:
+                # Resets the slot if the event is changed in the registration desk
+                registration.event_ticket_id = False
+            if registration.slot_ticket_id:
+                # Update event_ticket_id if a slot_ticket_id is set
+                registration.event_ticket_id = registration.slot_ticket_id.ticket_id
+
+    @api.depends('event_id', 'slot_ticket_id')
+    def _compute_slot_id(self):
+        for registration in self:
+            if registration.event_id != registration.slot_id.event_id:
+                # Resets the slot if the event is changed in the registration desk
+                registration.slot_id = False
+            if registration.slot_ticket_id:
+                # Update slot_id if a slot_ticket_id is set
+                registration.slot_id = registration.slot_ticket_id.slot_id
+
+    @api.depends('event_id', 'slot_id', 'event_ticket_id')
+    def _compute_slot_ticket_id(self):
+        slot_ticket_mapping = defaultdict(dict)
+        for slot_ticket in self.env['event.slot.ticket'].search([('slot_id', 'in', self.slot_id.ids), ('ticket_id', 'in', self.event_ticket_id.ids)]):
+            slot_ticket_mapping[slot_ticket.slot_id.id][slot_ticket.ticket_id.id] = slot_ticket
+
+        for registration in self:
+            if registration.event_id != registration.slot_ticket_id.event_id:
+                # Resets the slot_ticket if the event is changed in the registration desk
+                registration.slot_ticket_id = False
+            if registration.slot_id and registration.event_ticket_id:
+                # Update the slot_ticket if the slot or the ticket is changed
+                registration.slot_ticket_id = slot_ticket_mapping.get(registration.slot_id.id, {}).get(registration.event_ticket_id.id)
 
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):
@@ -251,7 +301,10 @@ class EventRegistration(models.Model):
         # Event(Ticket) models constraints.
         if unarchived := self.filtered(self._active_name):
             unarchived.event_id._check_seats_availability()
-            unarchived.event_ticket_id._check_seats_availability()
+            unarchived.event_id._check_slot_seats_availability()
+            unarchived_w_slot_ticket = unarchived.filtered(lambda reg: reg.slot_ticket_id)
+            unarchived_w_slot_ticket.slot_ticket_id._check_seats_availability()
+            (unarchived - unarchived_w_slot_ticket).event_ticket_id._check_seats_availability()
         return res
 
     # ------------------------------------------------------------
