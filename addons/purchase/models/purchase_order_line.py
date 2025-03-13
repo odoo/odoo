@@ -531,6 +531,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.model
     def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
+        values = self.env.context.get('procurement_values', {})
         partner = supplier.partner_id
         uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_id, rounding_method='HALF-UP')
         # _select_seller is used if the supplier have different price depending
@@ -538,11 +539,13 @@ class PurchaseOrderLine(models.Model):
         today = fields.Date.today()
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
-            quantity=uom_po_qty,
+            quantity=product_qty if values.get('force_uom') else uom_po_qty,
             date=po.date_order and max(po.date_order.date(), today) or today,
-            uom_id=product_id.uom_id)
+            uom_id=product_uom if values.get('force_uom') else product_id.uom_id,
+            params={'force_uom': values.get('force_uom')}
+        )
         if seller and (seller.product_uom_id or seller.product_tmpl_id.uom_id) != product_uom:
-            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id or seller.product_tmpl_id.uom_id, rounding_method='HALF-UP')
+            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
@@ -628,4 +631,5 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         return {
             "order_id": self.order_id,
+            "force_uom": True,
         }
