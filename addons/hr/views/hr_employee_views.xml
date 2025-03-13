@@ -60,11 +60,11 @@
             <field name="arch" type="xml">
                 <form string="Employee History" class="o_hr_employee_form_view">
                     <header groups="hr.group_hr_user">
+                        <button name="%(hr_employee_version_wizard_action)d" icon="fa-plus" string="New Version" type="action"/>
+                        <button name="%(hr_employee_contract_wizard_action)d" icon="fa-plus" string="New Contract" type="action"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                                 invisible="not active or not id" context="{'sort_by_responsible': True}"/>
                         <field name="selected_version_id" widget="statusbar_employee" options="{'clickable': '1'}"/>
-                        <button name="%(hr_employee_version_wizard_action)d" icon="fa-plus" string="New Version" type="action"/>
-                        <button name="%(hr_employee_version_wizard_action)d" icon="fa-plus" string="New Contract" type="action"/>
                     </header>
                     <sheet>
                         <div class="row justify-content-between position-relative w-100 m-0 mb-2">
@@ -242,13 +242,38 @@
                                     </div>
                                 </div>
                             </page>
-                            <page name="contract" string="Contract">
+                            <page name="contracts" string="Contracts">
                                 <div class="alert alert-info" role="alert" invisible="contract_ids">
                                     This employee doesn't have any contract, create one first.
                                 </div>
-                                <div invisible="not contract_ids">
+                                <group>
                                     <group>
-                                        <field name="selected_contract_id"/>
+                                        <h1>
+                                            <field name="selected_contract_id"
+                                                   options='{"no_open": True, "no_create": True}'
+                                                   invisible="not contract_ids"
+                                                   required="contract_ids"
+                                                   placeholder="Select a Contract"/>
+                                        </h1>
+                                    </group>
+                                    <group>
+                                        <div class="alert alert-info" role="alert"
+                                             invisible="not contract_ids or selected_contract_id">
+                                            No contract selected, please select one first.
+                                        </div>
+                                    </group>
+                                </group>
+                                <div invisible="not contract_ids or not selected_contract_id">
+                                    <group>
+                                        <group>
+                                            <field name="form_contract_name" equired="selected_contract_id"/>
+                                            <field name="form_contract_reference"
+                                                   invisible="not contract_ids or not selected_contract_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="form_contract_date_from" required="selected_contract_id"/>
+                                            <field name="form_contract_date_to" placeholder="No End Date"/>
+                                        </group>
                                     </group>
                                 </div>
                             </page>

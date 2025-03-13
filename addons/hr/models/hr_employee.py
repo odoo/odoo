@@ -219,7 +219,10 @@ class HrEmployee(models.Model):
     form_tz = fields.Selection(related='selected_version_id.tz', readonly=False)
 
     # Contract Information
-
+    form_contract_name = fields.Char(related='selected_contract_id.name', readonly=False)
+    form_contract_reference = fields.Char(related='selected_contract_id.reference', string="Reference")
+    form_contract_date_from = fields.Date(related='selected_contract_id.date_from', readonly=False)
+    form_contract_date_to = fields.Date(related='selected_contract_id.date_to', readonly=False)
 
     # user
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
@@ -344,7 +347,7 @@ class HrEmployee(models.Model):
         return version[0] if version else False
 
     def _get_contract(self, date):
-        contract = self.version_ids.filtered(
+        contract = self.contract_ids.filtered(
             lambda c:
             (c.date_from <= date and not c.date_to) or
             (c.date_to and c.date_from <= date <= c.date_to))
