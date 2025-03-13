@@ -121,7 +121,8 @@ registry.category("web_tour.tours").add("PosLoyaltyTour2", {
             PosLoyalty.hasRewardLine("90% on the cheapest product", "-4.59"),
             // set quantity to 18
             // free qty stays the same since the amount of points on the card only allows for 4 free products
-            ProductScreen.clickNumpad("⌫", "8"),
+            //TODO: The following step should works with ProductScreen.clickNumpad("⌫", "8"),
+            ProductScreen.clickNumpad("⌫", "⌫", "1", "8"),
             PosLoyalty.hasRewardLine("10% on your order", "-6.68"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-20.40"),
             // scan the code again and check notification
