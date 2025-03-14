@@ -258,6 +258,34 @@
                     </span>
                 </t>
             </xpath>
+            <!-- Insert Position Column as the First Column in the Table Header -->
+            <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[1]" position="before">
+                <t t-if="o.company_id.has_position_column">
+                    <th name="th_position" class="text-start">Position</th>
+                </t>
+            </xpath>
+
+            <xpath expr="//table[@name='invoice_line_table']/tbody//t[1]" position="before">
+                <t t-if="o.company_id.has_position_column">
+                    <t t-set="line_number" t-value="1"/>
+                 </t>
+            </xpath>
+            <xpath expr="//table[@name='invoice_line_table']/tbody//tr[1]//td[1]" position="before">
+                <t t-if="o.company_id.has_position_column">
+                    <td class="text-start" t-esc="line_number"/>
+                    <t t-set="line_number" t-value="line_number+1"/>
+                 </t>
+            </xpath>
+
+            <!--adding currency to unit price-->
+            <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
+                <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+            </xpath>
+
+            <!-- Insert the payments terms under the total line-->
+            <xpath expr="//div[@id='payment_term']" position="before">
+                <hr class="w-100 border-0"/>
+            </xpath>
         </template>
     </data>
 </odoo>
