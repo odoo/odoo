@@ -13950,3 +13950,67 @@ test("group by numeric field (with aggregator)", async () => {
     });
     expect.verifySteps(["web_read_group"]);
 });
+
+test.tags("desktop")("drag and drop records and quickly open a record", async () => {
+    Partner._views["kanban,false"] = `
+        <kanban>
+            <templates>
+                <t t-name="kanban-box">
+                    <div><field name="foo"/></div>
+                </t>
+            </templates>
+        </kanban>`;
+    Partner._views["search,false"] = "<search/>";
+    Partner._views["form,false"] = `
+        <form>
+            <field name="foo"/>
+        </form>`;
+
+    const defs = [new Deferred(), new Deferred()];
+    let saveCount = 0;
+    onRpc("web_save", () => {
+        expect.step("web_save");
+        return defs[saveCount++];
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "form"],
+        ],
+        context: {
+            group_by: ["product_id"],
+        },
+    });
+
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
+
+    await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
+        ".o_kanban_group:nth-child(2)"
+    );
+    await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
+        ".o_kanban_group:nth-child(2)"
+    );
+    await contains(".o_kanban_record:eq(0)").click();
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(0);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(4);
+    expect.verifySteps(["web_save"]);
+
+    defs[0].resolve();
+    await animationFrame();
+    // because of the mutex in the model, the second web_save is done only once the first one
+    // returned, but that rpc can't be done if the component has already been destroyed.
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(0);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(4);
+    expect.verifySteps(["web_save"]);
+
+    defs[1].resolve();
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+});
