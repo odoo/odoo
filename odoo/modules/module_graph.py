@@ -10,7 +10,7 @@ import typing
 from odoo.tools import lazy_property, OrderedSet
 from odoo.tools.sql import column_exists
 
-from .module import get_manifest
+from .module import _get_manifest_cached
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator
@@ -134,7 +134,9 @@ class ModuleNode:
     def __init__(self, name: str, module_graph: ModuleGraph) -> None:
         # manifest data
         self.name: str = name
-        self.manifest: dict = get_manifest(name)
+        # for performance reasons, use the cached value to avoid deepcopy; it is
+        # acceptable in this context since we don't modify it
+        self.manifest: dict = _get_manifest_cached(name)
 
         # ir_module_module data                     # column_name
         self.id: int = 0                            # id
