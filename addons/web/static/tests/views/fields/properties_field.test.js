@@ -2623,3 +2623,61 @@ test("properties: split, moving property from 1st group to 2nd", async () => {
         ],
     ]);
 });
+
+test("properties: do not write undefined value", async () => {
+    Partner._records.push({
+        id: 5000,
+        display_name: "third partner",
+        properties: {
+            property_1: "test",
+            property_2: undefined,
+        },
+        company_id: 37,
+    });
+    ResCompany._records[0].definitions = [
+        {
+            name: "property_1",
+            string: "Property 1",
+            type: "char",
+        },
+        {
+            name: "property_2",
+            string: "Property 2",
+            type: "char",
+        },
+    ];
+    onRpc(({ method, args }) => {
+        if (method === "has_access") {
+            return true;
+        }
+        if (method === "web_save") {
+            expect.step("web_save");
+            expect(args[1].properties).toEqual([
+                {
+                    name: "property_1",
+                    string: "Property 1",
+                    type: "char",
+                    value: "edited",
+                },
+                {
+                    name: "property_2",
+                    string: "Property 2",
+                    type: "char",
+                    // Value not added here
+                },
+            ]);
+        }
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 5000,
+        arch: /* xml */ `<form><field name="company_id"/><field name="properties"/></form>`,
+    });
+
+    await contains("[property-name=property_1] input").edit("edited");
+
+    expect.verifySteps([]);
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
