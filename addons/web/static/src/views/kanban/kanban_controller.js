@@ -147,6 +147,10 @@ export class KanbanController extends Component {
         });
         useSetupView({
             rootRef: this.rootRef,
+            beforeLeave: () => {
+                // wait for potential pending write operations (e.g. records being moved)
+                return this.model.mutex.getUnlockedDef();
+            },
             getGlobalState: () => {
                 return {
                     resIds: this.model.root.records.map((rec) => rec.resId), // WOWL: ask LPE why?
