@@ -126,9 +126,10 @@ class IrQWeb(models.AbstractModel):
             if not module or module.state == 'installed':
                 return []
             name = el.attrib.get('string') or 'Snippet'
-            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s><section/></div>') % (
+            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s><section/></div>') % (
                 name,
                 module.id,
+                module.display_name,
                 escape_silent(image_preview),
                 thumbnail,
                 Markup('data-o-group="%s"') % group if group else '',
