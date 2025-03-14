@@ -120,7 +120,7 @@ except ImportError:
             _phonenumbers_lib_warning = True
         return number
 
-    def phone_get_region_code_for_number(number):
+    def phone_get_region_data_for_number(number):
         return {
             'code': '',
             'national_number': '',
