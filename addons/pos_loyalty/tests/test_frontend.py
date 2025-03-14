@@ -2497,6 +2497,40 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(coupon), 1, "Coupon not generated")
         self.assertEqual(coupon.expiration_date, date.today() + timedelta(days=2), "Coupon not generated with correct expiration date")
 
+    def test_points_applied_in_backend(self):
+        """
+        This will test that only paid orders apply points in the backend.
+        """
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Test Partner'})
+        partner_bbb = self.env['res.partner'].create({'name': 'BBB Test Partner'})
+        self.product_a.write({
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        card_aaa = self.env['loyalty.card'].create({
+            'partner_id': partner_aaa.id,
+            'program_id': loyalty_program.id,
+            'points': 100,
+        })
+        card_bbb = self.env['loyalty.card'].create({
+            'partner_id': partner_bbb.id,
+            'program_id': loyalty_program.id,
+            'points': 100,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_points_applied_in_backend",
+            login="pos_user",
+        )
+        self.assertEqual(card_aaa.points, 100)
+        self.assertEqual(card_bbb.points, 0)
+
     def test_ewallet_loyalty_history(self):
         """
         This will test that all transactions made on an ewallet are registered in the loyalty history

@@ -567,3 +567,24 @@ registry.category("web_tour.tours").add("RefundRulesProduct", {
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_points_applied_in_backend", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("product_a", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Test Partner"),
+            PosLoyalty.claimReward("5% on your order"),
+            PosLoyalty.orderTotalIs("95"),
+
+            Chrome.createFloatingOrder(),
+            ProductScreen.addOrderline("product_a", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("BBB Test Partner"),
+            PosLoyalty.claimReward("5% on your order"),
+            PosLoyalty.orderTotalIs("95"),
+            PosLoyalty.finalizeOrder("Cash", "95"),
+        ].flat(),
+});

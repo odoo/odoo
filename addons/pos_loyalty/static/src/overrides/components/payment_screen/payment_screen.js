@@ -136,7 +136,10 @@ patch(PaymentScreen.prototype, {
                 })
                 .map(([key, value]) => [key, omit(value, "appliedRules")])
         );
-        if (Object.keys(couponData || {}).length > 0) {
+        if (
+            Object.keys(couponData || {}).length > 0 &&
+            !["draft", "cancel"].includes(order.state)
+        ) {
             const payload = await this.pos.data.call("pos.order", "confirm_coupon_programs", [
                 order.id,
                 couponData,
