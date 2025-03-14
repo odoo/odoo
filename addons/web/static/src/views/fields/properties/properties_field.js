@@ -80,7 +80,8 @@ export class PropertiesField extends Component {
                     if (!canChangeDefinition) {
                         this.notification.add(
                             _t('Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
-                                parentName: this.props.record.data[this.definitionRecordField].display_name,
+                                parentName:
+                                    this.props.record.data[this.definitionRecordField].display_name,
                                 parentFieldLabel:
                                     this.props.record.fields[this.definitionRecordField].string,
                             }),
@@ -651,17 +652,24 @@ export class PropertiesField extends Component {
      * @param {string} propertyName
      */
     onPropertyDelete(propertyName) {
+        let message = _t("Are you sure you want to delete this property field?");
+        if (this.definitionRecordModel !== "properties.base.definition") {
+            message +=
+                " " +
+                _t(
+                    'It will be removed for everyone using the "%(parentName)s" %(parentFieldLabel)s.',
+                    {
+                        parentName: this.props.record.data[this.definitionRecordField].display_name,
+                        parentFieldLabel:
+                            this.props.record.fields[this.definitionRecordField].string,
+                    }
+                );
+        }
         this.popover.close();
         const dialogProps = {
             title: _t("Delete Property Field"),
-            body: _t(
-                'Are you sure you want to delete this property field? It will be removed for everyone using the "%(parentName)s" %(parentFieldLabel)s.',
-                {
-                    parentName: this.props.record.data[this.definitionRecordField].display_name,
-                    parentFieldLabel: this.props.record.fields[this.definitionRecordField].string,
-                }
-            ),
-            confirmLabel: _t("Delete Field"),
+            body: message,
+            confirmLabel: _t("Delete"),
             confirm: () => {
                 const propertiesDefinitions = this.propertiesList;
                 propertiesDefinitions.find(
