@@ -353,8 +353,9 @@ class Properties(Field):
                 if property_name and context_key in env.context:
                     default = env.context[context_key]
                 else:
-                    default = properties_value.get('default') or False
-                properties_value['value'] = default
+                    default = properties_value.get('default')
+                if default:
+                    properties_value['value'] = default
 
         return properties_list_values
 
@@ -467,6 +468,9 @@ class Properties(Field):
             if property_type not in cls.ALLOWED_TYPES:
                 raise ValueError(f'Wrong property type {property_type!r}')
 
+            if property_value is None:
+                continue
+
             if property_type == 'boolean':
                 # E.G. convert zero to False
                 property_value = bool(property_value)
@@ -505,9 +509,6 @@ class Properties(Field):
                     id_ for id_ in property_value
                     if id_ in res_ids_per_model[res_model]
                 ] if res_model in env else []
-
-            elif property_value is None:
-                property_value = False
 
             property_definition['value'] = property_value
 
@@ -553,6 +554,9 @@ class Properties(Field):
             property_value = property_definition.get('value')
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
+            if property_value is None:
+                # Do not store None key
+                continue
 
             if property_type == 'separator':
                 # "separator" is used as a visual separator in the form view UI
@@ -586,7 +590,10 @@ class Properties(Field):
 
         values_list = copy.deepcopy(properties_definition)
         for property_definition in values_list:
-            property_definition['value'] = values_dict.get(property_definition['name'])
+            if property_definition['name'] in values_dict:
+                property_definition['value'] = values_dict[property_definition['name']]
+            else:
+                property_definition.pop('value', None)
         return values_list
 
     def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:

@@ -926,7 +926,9 @@ export class PropertiesField extends Component {
     _setDefaultPropertyValue(propertyName) {
         const propertiesValues = this.propertiesList;
         const newProperty = propertiesValues.find((property) => property.name === propertyName);
-        newProperty.value = newProperty.default;
+        if (newProperty.default) {
+            newProperty.value = newProperty.default;
+        }
         // it won't update the props, it's a trick because the onClose event of the popover
         // is called not synchronously, and so if we click on "create a property", it will close
         // the popover, calling this function, but the value will be overwritten because of onPropertyCreate
