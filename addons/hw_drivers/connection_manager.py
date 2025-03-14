@@ -27,6 +27,7 @@ class ConnectionManager(Thread):
         self.pairing_code_expired = False
         self.pairing_code_expires = 0
         self.pairing_code_count = 0
+        self.new_database_url = False
         requests.packages.urllib3.disable_warnings()
 
     def run(self):
@@ -90,11 +91,14 @@ class ConnectionManager(Thread):
                 self._try_print_pairing_code()
 
     def _connect_to_server(self, url, token, db_uuid, enterprise_code):
+        self.new_database_url = url
         # Save DB URL and token
         helpers.save_conf_server(url, token, db_uuid, enterprise_code)
         # Notify the DB, so that the kanban view already shows the IoT Box
         manager.send_all_devices()
-        # Restart to checkout the git branch, get a certificate, load the IoT handlers...
+        # Switch git branch before restarting, this avoids restarting twice
+        helpers.check_git_branch()
+        # Restart to get a certificate, load the IoT handlers...
         helpers.odoo_restart(2)
 
     def _try_print_pairing_code(self):
