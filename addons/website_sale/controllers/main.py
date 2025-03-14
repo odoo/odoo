@@ -1570,7 +1570,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             new_partner_sudo = self._create_new_address(
                 billing_address, address_type='billing', use_same=False, order_sudo=order_sudo,
             )
-            with request.env.protecting(['pricelist_id'], order_sudo):
+            with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
 
             # Add the new partner as follower of the cart
