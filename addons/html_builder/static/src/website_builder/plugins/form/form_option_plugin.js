@@ -2,14 +2,44 @@ import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
 import { FormOption } from "./form_option";
-import { getDefaultFormat, getMark, isOptionalMark, isRequiredMark, renderField } from "./utils";
+import { FormOptionAddFieldButton } from "./form_option_add_field_button";
+import {
+    getCustomField,
+    getDefaultFormat,
+    getFieldFormat,
+    getMark,
+    isOptionalMark,
+    isRequiredMark,
+    renderField,
+} from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
+import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 
 export class FormOptionPlugin extends Plugin {
     static id = "websiteFormOption";
     static dependencies = ["builderActions", "builder-options"];
     resources = {
+        builder_header_middle_buttons: [
+            {
+                Component: FormOptionAddFieldButton,
+                selector: ".s_website_form",
+                applyTo: "form",
+                props: {
+                    addField: (formEl) => this.addFieldToForm(formEl),
+                    tooltip: _t("Add a new field at the end"),
+                },
+            },
+            {
+                Component: FormOptionAddFieldButton,
+                selector: ".s_website_form_field",
+                exclude: ".s_website_form_dnone",
+                props: {
+                    addField: (fieldEl) => this.addFieldAfterField(fieldEl),
+                    tooltip: _t("Add a new field after this one"),
+                },
+            },
+        ],
         builder_options: [
             {
                 OptionComponent: FormOption,
@@ -461,6 +491,27 @@ export class FormOptionPlugin extends Plugin {
             span.textContent = ` ${mark}`;
             field.querySelector(".s_website_form_label").appendChild(span);
         });
+    }
+    addFieldToForm(formEl) {
+        const field = getCustomField("char", _t("Custom Text"));
+        field.formatInfo = getDefaultFormat(formEl);
+        const fieldEl = renderField(field);
+        const locationEl = formEl.querySelector(
+            ".s_website_form_submit, .s_website_form_recaptcha"
+        );
+        locationEl.insertAdjacentElement("beforebegin", fieldEl);
+        this.dependencies["builder-options"].updateContainers(fieldEl);
+    }
+    addFieldAfterField(fieldEl) {
+        const formEl = fieldEl.closest("form");
+        const field = getCustomField("char", _t("Custom Text"));
+        field.formatInfo = getFieldFormat(fieldEl);
+        field.formatInfo.requiredMark = isRequiredMark(formEl);
+        field.formatInfo.optionalMark = isOptionalMark(formEl);
+        field.formatInfo.mark = getMark(formEl);
+        const newFieldEl = renderField(field);
+        fieldEl.insertAdjacentElement("afterend", newFieldEl);
+        this.dependencies["builder-options"].updateContainers(newFieldEl);
     }
 }
 
