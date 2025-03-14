@@ -458,6 +458,9 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
             raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
+        if update_module and tools.config['update']:
+            for pyfile in tools.config['pre_upgrade_scripts']:
+                odoo.modules.migration.exec_script(cr, graph['base'].installed_version, pyfile, 'base', 'pre')
 
         if update_module and tools.sql.table_exists(cr, 'ir_model_fields'):
             # determine the fields which are currently translated in the database
