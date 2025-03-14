@@ -20,7 +20,6 @@ from .identifiers import NewId
 from .models import BaseModel
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_pg_name
 
-M = typing.TypeVar('M', bound=BaseModel)
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
     from .types import CommandValue, ContextType, DomainType, Environment
@@ -30,7 +29,7 @@ if typing.TYPE_CHECKING:
 _schema = logging.getLogger('odoo.schema')
 
 
-class _Relational(Field[M], typing.Generic[M]):
+class _Relational(Field[BaseModel]):
     """ Abstract class for relational fields. """
     relational: typing.Literal[True] = True
     comodel_name: str
@@ -163,7 +162,7 @@ class _Relational(Field[M], typing.Generic[M]):
         return domain or []
 
 
-class Many2one(_Relational[M]):
+class Many2one(_Relational):
     """ The value of such a field is a recordset of size 0 (no
     record) or 1 (a single record).
 
@@ -482,7 +481,7 @@ class Many2one(_Relational[M]):
         return self.condition_to_sql(fname, operator, domain_query, model, alias, query)
 
 
-class _RelationalMulti(_Relational[M], typing.Generic[M]):
+class _RelationalMulti(_Relational):
     r"Abstract class for relational fields \*2many."
     write_sequence = 20
 
@@ -772,7 +771,7 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
         raise NotImplementedError
 
 
-class One2many(_RelationalMulti[M]):
+class One2many(_RelationalMulti):
     """One2many field; the value of such a field is the recordset of all the
     records in ``comodel_name`` such that the field ``inverse_name`` is equal to
     the current record.
@@ -1121,7 +1120,7 @@ class One2many(_RelationalMulti[M]):
         )
 
 
-class Many2many(_RelationalMulti[M]):
+class Many2many(_RelationalMulti):
     """ Many2many field; the value of such a field is the recordset.
 
     :param str comodel_name: name of the target model (string)
