@@ -9,7 +9,7 @@ export class ForecastKanbanColumnQuickCreate extends KanbanColumnQuickCreate {
     get relatedFieldName() {
         const { granularity = "month" } = this.props.groupByField;
         const { description } = INTERVAL_OPTIONS[granularity];
-        return _t("Add next %s", description.toLocaleLowerCase());
+        return _t("next %s", description.toLocaleLowerCase());
     }
     /**
      * @override
