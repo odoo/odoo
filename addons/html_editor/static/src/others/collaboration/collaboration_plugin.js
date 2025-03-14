@@ -120,23 +120,23 @@ export class CollaborationPlugin extends Plugin {
      * @param {Object} newSteps External steps to be applied
      */
     onExternalHistorySteps(newSteps) {
-        this.dependencies.history.disableObserver();
-        const selectionData = this.dependencies.selection.getSelectionData();
-
         let stepIndex = 0;
-        const steps = this.dependencies.history.getHistorySteps();
-        for (const newStep of newSteps) {
-            // todo: add a test that no 2 history_missing_parent_step_handlers
-            // are called in same stack.
-            const insertIndex = this.getInsertStepIndex(steps, newStep);
-            if (typeof insertIndex === "undefined") {
-                continue;
-            }
-            this.dependencies.history.addExternalStep(newStep, insertIndex);
-            stepIndex++;
-        }
+        let selectionData;
+        this.dependencies.history.ignoreDOMChanges(() => {
+            selectionData = this.dependencies.selection.getSelectionData();
 
-        this.dependencies.history.enableObserver();
+            const steps = this.dependencies.history.getHistorySteps();
+            for (const newStep of newSteps) {
+                // todo: add a test that no 2 history_missing_parent_step_handlers
+                // are called in same stack.
+                const insertIndex = this.getInsertStepIndex(steps, newStep);
+                if (typeof insertIndex === "undefined") {
+                    continue;
+                }
+                this.dependencies.history.addExternalStep(newStep, insertIndex);
+                stepIndex++;
+            }
+        });
         if (selectionData.documentSelectionIsInEditable) {
             this.dependencies.selection.rectifySelection(selectionData.editableSelection);
         }
@@ -264,7 +264,6 @@ export class CollaborationPlugin extends Plugin {
         this.dependencies.history.resetFromSteps(steps);
         this.snapshots = [{ step: steps[0] }];
         this.branchStepIds = branchStepIds;
-        this.dependencies.history.enableObserver();
 
         // @todo @phoenix: test that the hint are proprely handeled
         // this._handleCommandHint();
