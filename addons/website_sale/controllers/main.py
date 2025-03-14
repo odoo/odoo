@@ -1183,7 +1183,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
-            with request.env.protecting(['pricelist_id'], order_sudo):
+            with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
 
             # Add the new partner as follower of the cart
