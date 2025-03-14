@@ -88,6 +88,16 @@ registry.category("services").add("website_edit", {
 
             patches.push(
                 patch(Colibri.prototype, {
+                    setupInteraction() {
+                        historyCallbacks.disableObserver();
+                        super.setupInteraction();
+                        historyCallbacks.enableObserver();
+                    },
+                    destroyInteraction() {
+                        historyCallbacks.disableObserver();
+                        super.destroyInteraction();
+                        historyCallbacks.enableObserver();
+                    },
                     protectSyncAfterAsync(interaction, name, fn) {
                         fn = super.protectSyncAfterAsync(interaction, name, fn);
                         const fullName = `${interaction.constructor.name}/${name}`;
