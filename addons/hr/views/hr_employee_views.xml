@@ -60,8 +60,16 @@
             <field name="arch" type="xml">
                 <form string="Employee History" class="o_hr_employee_form_view">
                     <header groups="hr.group_hr_user">
-                        <button name="%(hr_employee_version_wizard_action)d" icon="fa-plus" string="New Version" type="action"/>
-                        <button name="%(hr_employee_contract_wizard_action)d" icon="fa-plus" string="New Contract" type="action"/>
+                        <button name="%(hr_employee_contract_wizard_action)d" class="btn btn-primary"
+                                icon="fa-plus" string="New Contract" type="action" invisible="contract_ids"/>
+                        <button name="%(hr_employee_contract_wizard_action)d" class="btn btn-secondary"
+                                icon="fa-plus" string="New Contract" type="action" invisible="not contract_ids"/>
+                        <button name="action_delete_selected_contract" class="btn btn-secondary"
+                                icon="fa-trash" string="Delete Contract" type="object"
+                                confirm="Are you sure you want to proceed ? The record will be lost forever"
+                                invisible="not selected_contract_id"/>
+                        <button name="%(hr_employee_version_wizard_action)d" class="btn btn-secondary"
+                                icon="fa-plus" string="New Version" type="action"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                                 invisible="not active or not id" context="{'sort_by_responsible': True}"/>
                         <field name="selected_version_id" widget="statusbar_employee" options="{'clickable': '1'}"/>
@@ -76,8 +84,11 @@
                                     <field name="name" placeholder="Employee's Name"
                                         required="True" style="font-size: min(4vw, 2.6rem);"/>
                                 </h1>
-                                <h2>
-                                    <field name="form_job_title" placeholder="Job Title"/>
+                                <h2 invisible="not contract_ids">
+                                    <field name="selected_contract_id"
+                                           options='{"no_open": True, "no_create": True}'
+                                           required="contract_ids"
+                                           placeholder="Select a Contract"/>
                                 </h2>
                             </div>
                             <div class="o_employee_avatar m-0 p-0">
@@ -210,7 +221,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="work_information" string="Work Information">
+                            <page name="work_information" string="Work Information" invisible="not selected_contract_id">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
                                     <div id="o_work_employee_main" class="flex-grow-1">
                                         <group name="organization" string="Organization">
@@ -242,47 +253,21 @@
                                     </div>
                                 </div>
                             </page>
-                            <page name="salary_information" string="Salary Information">
+                            <page name="salary_information" string="Salary Information" invisible="not selected_contract_id">
 
                             </page>
-                            <page name="contracts" string="Contracts">
-                                <div class="alert alert-info" role="alert" invisible="contract_ids">
-                                    This employee doesn't have any contract, create one first.
-                                </div>
+                            <page name="contract_information" string="Contract Information" invisible="not selected_contract_id">
                                 <group>
-                                    <group>
-                                        <h2>
-                                            <field name="selected_contract_id"
-                                                   options='{"no_open": True, "no_create": True}'
-                                                   invisible="not contract_ids"
-                                                   required="contract_ids"
-                                                   placeholder="Select a Contract"/>
-                                        </h2>
+                                    <group string="General Information">
+                                        <field name="form_contract_reference"/>
+                                        <field name="form_contract_name" required="selected_contract_id"/>
+                                        <field name="form_contract_type_id"/>
                                     </group>
-                                    <group>
-                                        <div class="alert alert-info" role="alert"
-                                             invisible="not contract_ids or selected_contract_id">
-                                            No contract selected, please select one first.
-                                        </div>
-                                        <button name="action_delete_selected_contract"
-                                                icon="fa-trash" string="Delete Contract" type="object"
-                                                confirm="Are you sure you want to proceed ? The record will be lost forever"
-                                                invisible="not selected_contract_id"/>
+                                    <group string="Contract Period">
+                                        <field name="form_contract_date_from" required="selected_contract_id"/>
+                                        <field name="form_contract_date_to" placeholder="No End Date"/>
                                     </group>
                                 </group>
-                                <div invisible="not contract_ids or not selected_contract_id">
-                                    <group>
-                                        <group>
-                                            <field name="form_contract_name" required="selected_contract_id"/>
-                                            <field name="form_contract_type_id"/>
-                                        </group>
-                                        <group>
-                                            <field name="form_contract_reference"/>
-                                            <field name="form_contract_date_from" required="selected_contract_id"/>
-                                            <field name="form_contract_date_to" placeholder="No End Date"/>
-                                        </group>
-                                    </group>
-                                </div>
                             </page>
                         </notebook>
                     </sheet>

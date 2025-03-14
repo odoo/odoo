@@ -327,11 +327,10 @@ class HrEmployee(models.Model):
         for record in self:
             record.selected_version_id = record._get_version(today)
 
-    @api.depends('version_ids')
+    @api.depends('current_version_id')
     def _compute_selected_version_id(self):
-        today = fields.Date.today()
         for record in self:
-            record.selected_version_id = record._get_version(today)
+            record.selected_version_id = record.current_version_id
 
     @api.depends('contract_ids')
     def _compute_selected_contract_id(self):
@@ -343,7 +342,7 @@ class HrEmployee(models.Model):
             lambda v:
             (not v.date_from and not v.date_to) or
             (not v.date_from and v.date_to >= date) or
-            (v.date_from <= date and not v.date_to) or
+            (not v.date_to and v.date_from <= date) or
             (v.date_from and v.date_to and v.date_from <= date <= v.date_to))
         return version[0] if version else False
 
