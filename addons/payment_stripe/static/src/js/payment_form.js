@@ -3,6 +3,8 @@
 import paymentForm from '@payment/js/payment_form';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
 import { _t } from '@web/core/l10n/translation';
+import { rpc, RPCError } from '@web/core/network/rpc';
+
 
 paymentForm.include({
 
@@ -55,25 +57,52 @@ paymentForm.include({
         );
 
         // Instantiate the elements.
-        let elementsOptions =  {
-            appearance: { theme: 'stripe' },
-            currency: this.stripeInlineFormValues['currency_name'],
-            captureMethod: this.stripeInlineFormValues['capture_method'],
-            paymentMethodTypes: [
-                this.stripeInlineFormValues['payment_methods_mapping'][paymentMethodCode]
-                ?? paymentMethodCode
-            ],
-        };
-        if (this.paymentContext['mode'] === 'payment') {
-            elementsOptions.mode = 'payment';
-            elementsOptions.amount = parseInt(this.stripeInlineFormValues['minor_amount']);
-            if (this.stripeInlineFormValues['is_tokenization_required']) {
+        let elementsOptions;
+        if (paymentMethodCode === 'msi') {
+            this.paymentContext.providerId = providerId;
+            this.paymentContext.paymentMethodId = paymentOptionId;
+            this.paymentContext.tokenizationRequested = false; // not sure how to handle this
+            let processingValues;
+            try {
+                processingValues = await rpc(
+                    this.paymentContext['transactionRoute'],
+                    this._prepareTransactionRouteParams(),
+                );
+            } catch (error) {
+                if (error instanceof RPCError) {
+                    this._displayErrorDialog(_t("Payment preparation failed"), error.data.message);
+                }
+                return;
+            }
+            elementsOptions = {
+                appearance: { theme: 'stripe' },
+                clientSecret: processingValues['client_secret'],
+            };
+            if (this.paymentContext['mode'] === 'setup') {
+                elementsOptions.currency = this.stripeInlineFormValues['currency_name'];
+            }
+            this.returnURL = processingValues['return_url']; // save for later
+        } else {
+            elementsOptions = {
+                appearance: { theme: 'stripe' },
+                currency: this.stripeInlineFormValues['currency_name'],
+                captureMethod: this.stripeInlineFormValues['capture_method'],
+                paymentMethodTypes: [
+                    this.stripeInlineFormValues['payment_methods_mapping'][paymentMethodCode]
+                    ?? paymentMethodCode
+                ],
+            };
+            if (this.paymentContext['mode'] === 'payment') {
+                elementsOptions.mode = 'payment';
+                elementsOptions.amount = parseInt(this.stripeInlineFormValues['minor_amount']);
+                if (this.stripeInlineFormValues['is_tokenization_required']) {
+                    elementsOptions.setupFutureUsage = 'off_session';
+                }
+            }
+            else {
+                elementsOptions.mode = 'setup';
                 elementsOptions.setupFutureUsage = 'off_session';
             }
-        }
-        else {
-            elementsOptions.mode = 'setup';
-            elementsOptions.setupFutureUsage = 'off_session';
         }
         this.stripeElements[paymentOptionId] = this.stripeJS.elements(elementsOptions);
 
@@ -94,7 +123,7 @@ paymentForm.include({
         const tokenizationCheckbox = inlineForm.querySelector(
             'input[name="o_payment_tokenize_checkbox"]'
         );
-        if (tokenizationCheckbox) {
+        if (paymentMethodCode !== 'msi' && tokenizationCheckbox) {
             // Display tokenization-specific inputs when the tokenization checkbox is checked.
             this.stripeElements[paymentOptionId].update({
                 setupFutureUsage: tokenizationCheckbox.checked ? 'off_session' : null,
@@ -124,6 +153,18 @@ paymentForm.include({
         if (providerCode !== 'stripe' || flow === 'token') {
             await this._super(...arguments); // Tokens are handled by the generic flow.
             return;
+        }
+
+        if (paymentMethodCode === 'msi') {
+            const { error } = await this.stripeJS.confirmPayment({
+                elements: this.stripeElements[paymentOptionId],
+                confirmParams: {return_url: this.returnURL},
+            });
+            if (error) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.message);
+                this._enableButton();
+            }
+            return; // overrides completely the method as the processing values have already been created
         }
 
         // Trigger form validation and wallet collection.

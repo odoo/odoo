@@ -31,6 +31,7 @@ PAYMENT_METHODS_MAPPING = {
     'clearpay': 'afterpay_clearpay',
     'cash_app_pay': 'cashapp',
     'mobile_pay': 'mobilepay',
+    'msi': 'card',
     'unknown': 'card',  # For express checkout.
 }
 

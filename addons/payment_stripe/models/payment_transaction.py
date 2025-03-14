@@ -131,6 +131,8 @@ class PaymentTransaction(models.Model):
                 self.payment_method_code, self.payment_method_code
             ),
         }
+        if self.payment_method_code == 'msi':
+            setup_intent_payload['payment_method_options[card][installments][enabled]'] = True
         if self.currency_id.name in const.INDIAN_MANDATES_SUPPORTED_CURRENCIES:
             setup_intent_payload.update(**self._stripe_prepare_mandate_options())
         return setup_intent_payload
@@ -156,6 +158,9 @@ class PaymentTransaction(models.Model):
             'expand[]': 'payment_method',
             **stripe_utils.include_shipping_address(self),
         }
+        if payment_method_type == 'msi':
+            payment_intent_payload['payment_method_options[card][installments][enabled]'] = True
+            payment_intent_payload['payment_method'] = 'pm_card_mx'
         if self.operation in ['online_token', 'offline']:
             if not self.token_id.stripe_payment_method:  # Pre-SCA token, migrate it.
                 self.token_id._stripe_sca_migrate_customer()

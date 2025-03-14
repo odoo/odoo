@@ -2128,6 +2128,28 @@
         />
     </record>
 
+    <record id="payment_method_msi" model="payment.method">
+        <field name="name">Meses Sin Intereses</field>
+        <field name="code">msi</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_express_checkout">True</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.mx'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.MXN'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_multibanco" model="payment.method">
         <field name="name">Multibanco</field>
         <field name="code">multibanco</field>
