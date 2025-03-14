@@ -47,22 +47,31 @@ export const fieldService = {
          * @param {import("@web/core/domain").DomainListRepr} [domain=[]]
          * @returns {Promise<Object>}
          */
-        async function _loadPropertyDefinitions(fieldDefs, name, domain = []) {
+        async function _loadPropertyDefinitions(resModel, fieldDefs, name, domain = []) {
             const {
                 definition_record: definitionRecord,
                 definition_record_field: definitionRecordField,
             } = fieldDefs[name];
             const definitionRecordModel = fieldDefs[definitionRecord].relation;
 
-            // @ts-ignore
-            domain = Domain.and([[[definitionRecordField, "!=", false]], domain]).toList();
-
-            const result = await orm.webSearchRead(definitionRecordModel, domain, {
-                specification: {
-                    display_name: {},
-                    [definitionRecordField]: {},
-                },
-            });
+            let result;
+            if (definitionRecordModel === "properties.base.definition") {
+                // Record without parent (eg `res.partner`)
+                result = await orm.call(
+                    "properties.base.definition",
+                    "get_properties_base_definition",
+                    [resModel, name]
+                );
+            } else {
+                // @ts-ignore
+                domain = Domain.and([[[definitionRecordField, "!=", false]], domain]).toList();
+                result = await orm.webSearchRead(definitionRecordModel, domain, {
+                    specification: {
+                        display_name: {},
+                        [definitionRecordField]: {},
+                    },
+                });
+            }
 
             const definitions = {};
             for (const record of result.records) {
@@ -90,7 +99,7 @@ export const fieldService = {
          */
         async function loadPropertyDefinitions(resModel, fieldName, domain) {
             const fieldDefs = await loadFields(resModel);
-            return _loadPropertyDefinitions(fieldDefs, fieldName, domain);
+            return _loadPropertyDefinitions(resModel, fieldDefs, fieldName, domain);
         }
 
         /**
@@ -126,7 +135,7 @@ export const fieldService = {
             } else if (fieldDef.type === "properties") {
                 subResult = await _loadPath(
                     followRelationalProperties ? resModel : "*",
-                    await _loadPropertyDefinitions(fieldDefs, name),
+                    await _loadPropertyDefinitions(resModel, fieldDefs, name),
                     remainingNames
                 );
             }
