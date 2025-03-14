@@ -1177,7 +1177,6 @@ class MailThread(models.AbstractModel):
         replying_to_msg = self.env['mail.message'].sudo().search(
             [('message_id', 'in', msg_references)], limit=1, order='id desc'
         ) if msg_references else self.env['mail.message']
-        is_a_reply, reply_model, reply_thread_id = bool(replying_to_msg), replying_to_msg.model, replying_to_msg.res_id
 
         # author and recipients
         email_from = message_dict['email_from']
@@ -1190,27 +1189,12 @@ class MailThread(models.AbstractModel):
         rcpt_tos_valid_list = list(rcpt_tos_list)
 
         # 1. Handle reply
-        #    if destination = alias with different model -> consider it is a forward and not a reply
-        #    if destination = alias with same model -> check contact settings as they still apply
-        if reply_model and reply_thread_id:
-            reply_model_id = self.env['ir.model']._get_id(reply_model)
-            other_model_aliases = self.env['mail.alias'].search([
-                '&',
-                ('alias_model_id', '!=', reply_model_id),
-                '|',
-                ('alias_full_name', 'in', email_to_list),
-                '&', ('alias_name', 'in', email_to_localparts), ('alias_incoming_local', '=', True),
-            ])
-            if other_model_aliases:
-                is_a_reply, reply_model, reply_thread_id = False, False, False
-                rcpt_tos_valid_list = [
-                    to
-                    for to in rcpt_tos_valid_list
-                    if (
-                        to in other_model_aliases.mapped('alias_full_name')
-                        or to.split('@', 1)[0] in other_model_aliases.filtered('alias_incoming_local').mapped('alias_name')
-                    )
-                ]
+        # find if message is a reply to an existing thread
+        is_a_reply, reply_model, reply_thread_id, rcpt_tos_valid_list = self._message_route_check_is_a_reply(
+            message_dict, replying_to_msg,
+            email_to_list, email_to_localparts,
+            rcpt_tos_list, rcpt_tos_valid_list,
+        )
         rcpt_tos_valid_localparts = list(filter(None, (_filter_excluded_local_part(email_to) for email_to in rcpt_tos_valid_list)))
 
         if is_a_reply and reply_model:
@@ -1314,6 +1298,35 @@ class MailThread(models.AbstractModel):
             'Create an appropriate mail.alias or force the destination model.' %
             (email_from, message_dict['to'], message_id)
         )
+
+    def _message_route_check_is_a_reply(
+        self, message_dict, replying_to_msg, email_to_list, email_to_localparts,
+        rcpt_tos_list, rcpt_tos_valid_list,
+    ):
+        #    if destination = alias with different model -> consider it is a forward and not a reply
+        #    if destination = alias with same model -> check contact settings as they still apply
+        is_a_reply, reply_model, reply_thread_id = bool(replying_to_msg), replying_to_msg.model, replying_to_msg.res_id
+
+        if reply_model and reply_thread_id:
+            reply_model_id = self.env['ir.model']._get_id(reply_model)
+            other_model_aliases = self.env['mail.alias'].search([
+                '&',
+                ('alias_model_id', '!=', reply_model_id),
+                '|',
+                ('alias_full_name', 'in', email_to_list),
+                '&', ('alias_name', 'in', email_to_localparts), ('alias_incoming_local', '=', True),
+            ])
+            if other_model_aliases:
+                is_a_reply, reply_model, reply_thread_id = False, False, False
+                rcpt_tos_valid_list = [
+                    to
+                    for to in rcpt_tos_valid_list
+                    if (
+                        to in other_model_aliases.mapped('alias_full_name')
+                        or to.split('@', 1)[0] in other_model_aliases.filtered('alias_incoming_local').mapped('alias_name')
+                    )
+                ]
+        return is_a_reply, reply_model, reply_thread_id, rcpt_tos_valid_list
 
     @api.model
     def _message_route_process(self, message, message_dict, routes):
