@@ -94,5 +94,26 @@
                 </span>
             </t>
         </xpath>
+        <!-- Insert Position Column as the First Column in the Table Header -->
+        <xpath expr="//table/thead/tr/th[1]" position="before">
+            <t t-if="doc.company_id.has_position_column">
+                <th name="th_position" class="text-start">Position</th>
+            </t>
+        </xpath>
+        <xpath expr="//table/tbody" position="before">
+            <t t-if="doc.company_id.has_position_column">
+                <t t-set="line_number" t-value="1"/>
+            </t>
+        </xpath>
+        <xpath expr="//table/tbody//tr[1]//td[1]" position="before">
+            <t t-if="doc.company_id.has_position_column">
+               <td class="text-start" t-esc="line_number"/>
+                <t t-set="line_number" t-value="line_number+1"/>
+            </t>
+        </xpath>
+        <!--adding currency to unit price-->
+        <xpath expr="//td[@name='td_priceunit']/span" position="attributes">
+            <attribute name="t-options"  >{"widget": "monetary", "display_currency": line.currency_id}</attribute>
+        </xpath>
     </template>
 </odoo>
