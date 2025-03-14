@@ -646,17 +646,23 @@ export class PropertiesField extends Component {
      * @param {string} propertyName
      */
     onPropertyDelete(propertyName) {
+        let message = _t("Are you sure you want to delete this property field?") + " ";
+        if (this.definitionRecordModel !== "properties.base.definition") {
+            const parentName = this.props.record.data[this.definitionRecordField].display_name;
+            const parentFieldLabel = this.props.record.fields[this.definitionRecordField].string;
+            message += _t(
+                'It will be removed for everyone using the "%(parentName)s" %(parentFieldLabel)s.',
+                { parentName, parentFieldLabel }
+            );
+        } else {
+            message += _t("It will be removed for everyone!");
+        }
         this.popover.close();
         const dialogProps = {
             title: _t("Delete Property Field"),
-            body: _t(
-                'Are you sure you want to delete this property field? It will be removed for everyone using the "%(parentName)s" %(parentFieldLabel)s.',
-                {
-                    parentName: this.props.record.data[this.definitionRecordField].display_name,
-                    parentFieldLabel: this.props.record.fields[this.definitionRecordField].string,
-                }
-            ),
+            body: message,
             confirmLabel: _t("Delete Field"),
+            cancelLabel: _t("Discard"),
             confirm: () => {
                 const propertiesDefinitions = this.propertiesList;
                 propertiesDefinitions.find(

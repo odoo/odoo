@@ -183,7 +183,7 @@ class ResPartnerCategory(models.Model):
 class ResPartner(models.Model):
     _name = 'res.partner'
     _description = 'Contact'
-    _inherit = ['format.address.mixin', 'format.vat.label.mixin', 'avatar.mixin']
+    _inherit = ['format.address.mixin', 'format.vat.label.mixin', 'avatar.mixin', 'properties.base.definition.mixin']
     _order = "complete_name ASC, id DESC"
     _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
     _allow_sudo_commands = False

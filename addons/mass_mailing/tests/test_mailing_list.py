@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import copy
 
 from datetime import datetime
 from freezegun import freeze_time
@@ -8,6 +9,37 @@ from unittest.mock import patch
 from odoo import exceptions
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests import Form, tagged, users
+
+
+@tagged('mailing_list')
+class TestMailingContactAccess(MassMailCommon):
+
+    @users('user_marketing')
+    def test_mailing_contact_properties_access(self):
+        # Check that mailing user can edit properties on mailing contact
+        value = [{'type': 'char', 'name': 'test', 'value': 'test', 'definition_changed': True}]
+        contact = self.env['mailing.contact'].create({'properties': copy.deepcopy(value)})
+        self.assertEqual(dict(contact.properties), {'test': 'test'})
+
+        delete_value = [{'type': 'char', 'name': 'test', 'value': 'test', 'definition_deleted': True}]
+        contact = self.env['mailing.contact'].create({'properties': copy.deepcopy(delete_value)})
+        self.assertEqual(dict(contact.properties), {})
+
+        # Sanity check, mailing user can only edit the definition on partner in SUDO
+        with self.assertRaises(exceptions.AccessError):
+            self.env['res.partner'].create({'properties': copy.deepcopy(value), 'name': 'test'})
+
+        partner = self.env['res.partner'].sudo().create({'properties': copy.deepcopy(value), 'name': 'test'})
+        self.assertEqual(dict(partner.properties), {'test': 'test'})
+
+        base_definition = self.env['properties.base.definition']._get_definition_for_property_field('mailing.contact', 'properties')
+        self.assertTrue(base_definition)
+        with self.assertRaises(exceptions.AccessError):
+            base_definition.properties_field_id = self.env["ir.model.fields"].sudo()._get('res.partner', 'properties').id
+
+        partner_base_definition = self.env['properties.base.definition']._get_definition_for_property_field('res.partner', 'properties')
+        with self.assertRaises(exceptions.AccessError):
+            partner_base_definition.unlink()
 
 
 @tagged('mailing_list')
