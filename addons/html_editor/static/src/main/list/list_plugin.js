@@ -1045,16 +1045,19 @@ export class ListPlugin extends Plugin {
 
     handleListPlaceholderPosition(el) {
         if (el.tagName === "LI" && el.style.listStylePosition === "inside") {
-            this.dependencies.history.disableObserver();
-            const rangeEl = document.createElement("range-el");
-            el.prepend(rangeEl);
-            el.style.listStylePosition = "";
-            const initialRect = rangeEl.getBoundingClientRect();
-            el.style.listStylePosition = "inside";
-            const afterRect = rangeEl.getBoundingClientRect();
-            el.style.setProperty("--placeholder-left", `${afterRect.left - initialRect.left}px`);
-            rangeEl.remove();
-            this.dependencies.history.enableObserver();
+            this.dependencies.history.ignoreDOMChanges(() => {
+                const rangeEl = document.createElement("range-el");
+                el.prepend(rangeEl);
+                el.style.listStylePosition = "";
+                const initialRect = rangeEl.getBoundingClientRect();
+                el.style.listStylePosition = "inside";
+                const afterRect = rangeEl.getBoundingClientRect();
+                el.style.setProperty(
+                    "--placeholder-left",
+                    `${afterRect.left - initialRect.left}px`
+                );
+                rangeEl.remove();
+            });
         }
     }
 
