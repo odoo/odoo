@@ -12,7 +12,7 @@ class MailingContact(models.Model):
     be able to deal with large contact list to email without bloating the partner
     base."""
     _name = 'mailing.contact'
-    _inherit = ['mail.thread.blacklist']
+    _inherit = ['mail.thread.blacklist', 'properties.base.definition.mixin']
     _description = 'Mailing Contact'
     _order = 'name ASC, id DESC'
     _mailing_enabled = True

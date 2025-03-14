@@ -1022,7 +1022,9 @@ export class SearchModel extends EventBus {
                     propertyDomain: [definitionRecord, "=", definitionRecordId],
                     propertyFieldDefinition: definition,
                     propertyItemId: searchItem.id,
-                    description: `${definition.string} (${definitionRecordName})`,
+                    description: definitionRecordName
+                        ? `${definition.string} (${definitionRecordName})`
+                        : definition.string,
                     groupId: this.nextGroupId++,
                 };
                 if (["many2many", "tags"].includes(definition.type)) {

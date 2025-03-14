@@ -157,7 +157,7 @@ class TestOrmMessage(models.Model):
     has_important_sibling = fields.Boolean(compute='_compute_has_important_sibling')
 
     attributes = fields.Properties(
-        string='Properties',
+        string='Discussion Properties',
         definition='discussion.attributes_definition',
     )
 
@@ -242,6 +242,7 @@ class TestOrmEmailmessage(models.Model):
     _name = 'test_orm.emailmessage'
     _description = 'Test ORM Email Message'
     _inherits = {'test_orm.message': 'message'}
+    _inherit = 'properties.base.definition.mixin'
 
     message = fields.Many2one('test_orm.message', 'Message',
                               required=True, ondelete='cascade')

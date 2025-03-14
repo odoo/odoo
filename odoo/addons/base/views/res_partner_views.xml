@@ -30,6 +30,7 @@
                     <field name="application_statistics" widget="contact_statistics" nolabel="1" optional="show" width="270"/>
                     <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                    <field name="properties" optional="hide"/>
                 </list>
             </field>
         </record>
@@ -190,6 +191,9 @@
                                    placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
                         </group>
                     </group>
+                    <div class="d-flex">
+                        <field name="properties" nolabel="1" columns="2"/>
+                    </div>
 
                     <notebook colspan="4">
                         <page string="Contacts" name="contact_addresses" autofocus="autofocus">
@@ -323,11 +327,13 @@
                     <filter string="Companies" name="type_company" domain="[('is_company', '=', True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <field name="properties"/>
                     <separator/>
                     <group expand="0" name="group_by" string="Group By">
                         <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
                         <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                        <filter string="Properties" name="group_by_properties" context="{'group_by': 'properties'}"/>
                     </group>
                 </search>
             </field>
@@ -375,6 +381,7 @@
                                     <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
                                     <field name="country_id"/>
                                 </div>
+                                <field name="properties" widget="properties"/>
                                 <footer><field name="application_statistics" widget="contact_statistics"/></footer>
                             </main>
                         </t>
