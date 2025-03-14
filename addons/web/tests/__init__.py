@@ -24,3 +24,4 @@ from . import test_webmanifest
 from . import test_ir_qweb
 from . import test_reports
 from . import test_perf_load_menu
+from . import test_properties
