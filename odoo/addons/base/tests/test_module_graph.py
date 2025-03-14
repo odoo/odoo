@@ -32,7 +32,7 @@ class TestGraph(BaseCase):
         }
         with (
             patch('odoo.modules.module_graph.ModuleGraph._update_from_database'),
-            patch('odoo.modules.module_graph.get_manifest', lambda name: manifests.get(name, {})),
+            patch('odoo.modules.module_graph._get_manifest_cached', lambda name: manifests.get(name, {})),
             patch('odoo.modules.module_graph.ModuleGraph._imported_modules', {'studio_customization'}),
         ):
             dummy_cr = None
