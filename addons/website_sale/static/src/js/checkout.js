@@ -20,7 +20,11 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     // #=== WIDGET LIFECYCLE ===#
 
     async start() {
-        this.mainButton = document.querySelector('a[name="website_sale_main_button"]');
+        // There is two main buttons in the DOM for mobile or desktop.
+        // We need to get the one that is not display: none;.
+        this.mainButton = Array.from(document.getElementsByName("website_sale_main_button")).find(button => {
+            return button.offsetParent !== null;
+        });
         this.use_delivery_as_billing_toggle = document.querySelector('#use_delivery_as_billing');
         this.billingContainer = this.el.querySelector('#billing_container');
         await this._prepareDeliveryMethods();
@@ -286,7 +290,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         this._showLoadingBadge(radio);
         const result = await this._setDeliveryMethod(radio.dataset.dmId);
         this._updateAmountBadge(radio, result);
-        this._updateCartSummary(result);
+        this._updateCartSummaries(result);
     },
 
     /**
@@ -333,24 +337,41 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      *
      * @private
      * @param {Object} result - The order summary values.
+     * @param {Object} targetEl - Specific cart summary to update.
      * @return {void}
      */
-    _updateCartSummary(result) {
-        const amountDelivery = document.querySelector('#order_delivery .monetary_field');
-        const amountUntaxed = document.querySelector('#order_total_untaxed .monetary_field');
-        const amountTax = document.querySelector('#order_total_taxes .monetary_field');
-        const amountTotal = document.querySelectorAll(
-            '#order_total .monetary_field, #amount_total_summary.monetary_field'
+    _updateCartSummary(result, targetEl) {
+        const amountDelivery = targetEl.querySelector('tr[name="o_order_delivery"] .monetary_field')
+        const amountUntaxed = targetEl.querySelector('tr[name="o_order_total_untaxed"] .monetary_field');
+        const amountTax = targetEl.querySelector('tr[name="o_order_total_taxes"] .monetary_field');
+        const amountTotal = targetEl.parentElement.querySelectorAll(
+            'tr[name="o_order_total"] .monetary_field, #amount_total_summary.monetary_field'
         );
+
         // When no dm is set and a price span is hidden, hide the message and show the price span.
         if (amountDelivery.classList.contains('d-none')) {
-            document.querySelector('#message_no_dm_set').classList.add('d-none');
+            amountDelivery.querySelector('span[name="o_message_no_dm_set"]').classList.add('d-none');
             amountDelivery.classList.remove('d-none');
         }
+
         amountDelivery.innerHTML = result.amount_delivery;
         amountUntaxed.innerHTML = result.amount_untaxed;
         amountTax.innerHTML = result.amount_tax;
         amountTotal.forEach(total => total.innerHTML = result.amount_total);
+    },
+
+    /**
+     * Update the order summary table with the delivery rate of the selected delivery method.
+     *
+     * @private
+     * @param {Object} result - The order summary values.
+     * @return {void}
+     */
+    _updateCartSummaries(result) {
+        const parentElements = document.querySelectorAll('#o_cart_summary_offcanvas, div.o_total_card');
+        parentElements.forEach(el => {
+            this._updateCartSummary(result, el);
+        });
     },
 
     /**

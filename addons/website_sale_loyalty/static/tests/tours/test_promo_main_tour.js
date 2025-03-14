@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check loyalty points",
-            trigger: '.oe_website_sale_gift_card span:contains("372.03 Points")',
+            trigger: '.oe_website_sale_gift_card strong[name="o_loyalty_points"]:contains("372.03")',
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
@@ -79,7 +79,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             ...tourUtils.addToCart({productName: "Taxed Product"}),
             tourUtils.goToCart({quantity: 3}),
         {
-            trigger: ".oe_currency_value:contains(/74.00/):not(#cart_total)",
+            trigger: ".oe_currency_value:contains(/74.00/):not(div[name='o_cart_total'])",
         },
         {
             content: "check reduction amount got recomputed and merged both discount lines into one only",

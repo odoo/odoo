@@ -70,7 +70,9 @@ function updateCartNavBar(data) {
     }
 
     $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
-    $("#cart_total").replaceWith(data['website_sale.total']);
+    document.querySelectorAll('div.o_cart_total').forEach(
+        div => div.innerHTML = data['website_sale.total']
+    );
     if (data.cart_ready) {
         document.querySelector("a[name='website_sale_main_button']")?.classList.remove('disabled');
     } else {
