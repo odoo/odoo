@@ -163,6 +163,9 @@ export class KanbanController extends Component {
         });
         useSetupAction({
             rootRef: this.rootRef,
+            beforeLeave: () =>
+                // wait for potential pending write operations (e.g. records being moved)
+                this.model.mutex.getUnlockedDef(),
             getLocalState: () => ({
                 activeBars: this.progressBarState?.activeBars,
                 modelState: this.model.exportState(),
