@@ -105,7 +105,7 @@ class MrpProduction(models.Model):
             for line in account_move.line_ids[:-1]:
                 workorders[line.account_id].time_ids.write({'account_move_line_id': line.id})
 
-    def button_mark_done(self):
-        res = super().button_mark_done()
-        self._post_labour()
+    def _post_inventory(self, cancel_backorder=False):
+        res = super()._post_inventory(cancel_backorder=cancel_backorder)
+        self.filtered(lambda mo: mo.state == 'done')._post_labour()
         return res
