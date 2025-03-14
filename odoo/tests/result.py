@@ -84,8 +84,8 @@ class OdooTestResult(object):
         self.had_failure = False
         self.stats = collections.defaultdict(Stat)
         self.global_report = global_report
-        self.shouldStop = False
-        
+        self.shouldStop = self.global_report and self.global_report.shouldStop or False
+
     def total_errors_count(self):
         result = self.errors_count + self.failures_count
         if self.global_report:
