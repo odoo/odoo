@@ -3,7 +3,7 @@
 
 from markupsafe import Markup
 
-from odoo import fields, models
+from odoo import _, fields, models
 from odoo.tools.misc import file_open
 
 
@@ -45,6 +45,20 @@ class MailComposeMessage(models.TransientModel):
                 )
                 if body:
                     mail_values['body_html'] = body
+            if mail_values.get('body'):
+                mail_values['body'] = Markup(
+                    '<div><span>{mailing_sent_message}</span></div>'
+                    '<blockquote class="border-start" data-o-mail-quote="1" data-o-mail-quote-node="1">'
+                    '{original_body}'
+                    '</blockquote>'
+                ).format(
+                    mailing_sent_message=Markup(_(
+                        'Received the mailing <b>{mailing_name}</b>',
+                    )).format(
+                        mailing_name=self.mass_mailing_id.display_name
+                    ),
+                    original_body=mail_values['body'],
+                )
 
             mail_values.update({
                 'mailing_id': self.mass_mailing_id.id,
