@@ -21,24 +21,23 @@ class HrEmployeeContractWizard(models.TransientModel):
     date_from = fields.Date(required=True, default=lambda self: fields.Date.today())
     date_to = fields.Date()
 
-    # TODO: there can be multiple contracts to split/delete
-    contract_to_split = fields.Many2one('hr.employee.contract', compute='_compute_contract_to_split')
-    contract_name = fields.Char(related='contract_to_split.name', readonly=True)
+    overlapping_contract_ids = fields.Many2one('hr.employee.contract',
+                                               compute='_compute_overlapping_contract_ids')
 
-    @api.depends('date_from')
-    def _compute_contract_to_split(self):
-        self.contract_to_split = self.employee_id._get_contract(self.date_from)
+    @api.depends('date_from', 'date_to')
+    def _compute_overlapping_contract_ids(self):
+        self.contract_to_split = self.employee_id._get_contracts(self.date_from)
 
     def action_create_new_contract(self):
-        if self.contract_to_split.date_from == self.date_from:
-            raise UserError(_('Another contract was started on that date'))
+        # if self.contract_to_split.date_from == self.date_from:
+        #     raise UserError(_('Another contract was started on that date'))
         new_contract = self.env['hr.employee.contract'].create([{
             'employee_id': self.employee_id.id,
             'name': self.name,
             'date_from': self.date_from,
             'date_to': self.date_to,
         }])
-        self.contract_to_split.date_to = self.date_from - timedelta(days=1)
+        # self.contract_to_split.date_to = self.date_from - timedelta(days=1)
         self.employee_id.contract_ids |= new_contract
         self.employee_id.selected_contract_id = new_contract
 

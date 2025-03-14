@@ -242,35 +242,42 @@
                                     </div>
                                 </div>
                             </page>
+                            <page name="salary_information" string="Salary Information">
+
+                            </page>
                             <page name="contracts" string="Contracts">
                                 <div class="alert alert-info" role="alert" invisible="contract_ids">
                                     This employee doesn't have any contract, create one first.
                                 </div>
                                 <group>
                                     <group>
-                                        <h1>
+                                        <h2>
                                             <field name="selected_contract_id"
                                                    options='{"no_open": True, "no_create": True}'
                                                    invisible="not contract_ids"
                                                    required="contract_ids"
                                                    placeholder="Select a Contract"/>
-                                        </h1>
+                                        </h2>
                                     </group>
                                     <group>
                                         <div class="alert alert-info" role="alert"
                                              invisible="not contract_ids or selected_contract_id">
                                             No contract selected, please select one first.
                                         </div>
+                                        <button name="action_delete_selected_contract"
+                                                icon="fa-trash" string="Delete Contract" type="object"
+                                                confirm="Are you sure you want to proceed ? The record will be lost forever"
+                                                invisible="not selected_contract_id"/>
                                     </group>
                                 </group>
                                 <div invisible="not contract_ids or not selected_contract_id">
                                     <group>
                                         <group>
-                                            <field name="form_contract_name" equired="selected_contract_id"/>
-                                            <field name="form_contract_reference"
-                                                   invisible="not contract_ids or not selected_contract_id"/>
+                                            <field name="form_contract_name" required="selected_contract_id"/>
+                                            <field name="form_contract_type_id"/>
                                         </group>
                                         <group>
+                                            <field name="form_contract_reference"/>
                                             <field name="form_contract_date_from" required="selected_contract_id"/>
                                             <field name="form_contract_date_to" placeholder="No End Date"/>
                                         </group>

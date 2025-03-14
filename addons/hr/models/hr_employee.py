@@ -69,6 +69,7 @@ class HrEmployee(models.Model):
         copy=False,
         store=True,
         readonly=False)
+    contract_index = fields.Integer(default=1, readonly=True)
 
     # Global Fields
     resource_id = fields.Many2one('resource.resource')
@@ -108,7 +109,7 @@ class HrEmployee(models.Model):
     emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char("Contact Phone", groups="hr.group_hr_user", tracking=True)
 
-    legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user")
+    legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user", tracking=True)
     sex = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
@@ -223,6 +224,7 @@ class HrEmployee(models.Model):
     form_contract_reference = fields.Char(related='selected_contract_id.reference', string="Reference")
     form_contract_date_from = fields.Date(related='selected_contract_id.date_from', readonly=False)
     form_contract_date_to = fields.Date(related='selected_contract_id.date_to', readonly=False)
+    form_contract_type_id = fields.Many2one(related='selected_contract_id.contract_type_id', readonly=False)
 
     # user
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
@@ -333,9 +335,8 @@ class HrEmployee(models.Model):
 
     @api.depends('contract_ids')
     def _compute_selected_contract_id(self):
-        today = fields.Date.today()
         for record in self:
-            record.selected_contract_id = record._get_contract(today)
+            record.selected_contract_id = record.contract_ids[0] if record.contract_ids else 0
 
     def _get_version(self, date):
         version = self.version_ids.filtered(
@@ -346,12 +347,21 @@ class HrEmployee(models.Model):
             (v.date_from and v.date_to and v.date_from <= date <= v.date_to))
         return version[0] if version else False
 
-    def _get_contract(self, date):
-        contract = self.contract_ids.filtered(
+    def _get_contracts(self, date):
+        return self.contract_ids.filtered(
             lambda c:
             (c.date_from <= date and not c.date_to) or
             (c.date_to and c.date_from <= date <= c.date_to))
-        return contract[0] if contract else False
+
+    # def _get_contracts_between(self, date_from, date_to):
+    #     return self.contract_ids.filtered(
+    #         lambda c:
+    #         (c.date_from <= date and not c.date_to) or
+    #         (c.date_to and c.date_from <= date <= c.date_to))
+
+    def action_delete_selected_contract(self):
+        self.ensure_one()
+        self.selected_contract_id.unlink()
 
     @api.depends('name', 'user_id.avatar_1920', 'image_1920')
     def _compute_avatar_1920(self):
