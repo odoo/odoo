@@ -2337,6 +2337,22 @@ export class PosStore extends WithLazyGetterTrap {
 
         list = list
             .filter((product) => !excludedProductIds.includes(product.id) && product.canBeDisplayed)
+            .sort((a, b) => {
+                // Sort in the same order as what we receive (look _load_product_with_domain)
+                if (a.sequence !== b.sequence) {
+                    return a.sequence - b.sequence;
+                }
+                if (a.default_code !== b.default_code) {
+                    if (!b.default_code) {
+                        return -1;
+                    }
+                    if (!a.default_code) {
+                        return 1;
+                    }
+                    return a.default_code.localeCompare(b.default_code);
+                }
+                return a.name.localeCompare(b.name);
+            })
             .slice(0, 100);
 
         return searchWord !== ""
