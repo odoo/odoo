@@ -1,5 +1,7 @@
 import ast
+import datetime
 import os
+import re
 import logging
 from email._policybase import _PolicyBase
 from odoo import MIN_PY_VERSION
@@ -45,6 +47,15 @@ else:
     xlsx.ET = etree
     xlsx.ET_has_iterparse = True
     xlsx.Element_has_iter = True
+
+try:
+    import isodate
+    from zeep.xsd.types.builtins import treat_whitespace, Date
+except ImportError:
+    isodate = None
+    treat_whitespace = lambda *args: None
+    Date = None
+
 
 FileStorage.save = lambda self, dst, buffer_size=1<<20: copyfileobj(self.stream, dst, buffer_size)
 
@@ -165,3 +176,20 @@ def policy_clone(self, **kwargs):
 
 orig_policy_clone = _PolicyBase.clone
 _PolicyBase.clone = policy_clone
+
+
+@treat_whitespace("collapse")
+def new_pythonvalue(self, value):
+    try:
+        return isodate.parse_date(value)
+    except isodate.ISO8601Error:
+        # Recent versions of isodate don't support timezone in date's. This
+        # is not really ISO8601 compliant anway, but we should try to handle
+        # it, so lets just use a regex to parse the date directly.
+        m = re.compile(r"(\d{4})-(\d{2})-(\d{2})").match(value)
+        if m:
+            return datetime.date(*map(int, m.groups()))
+        raise
+
+if Date:
+    Date.pythonvalue = new_pythonvalue
