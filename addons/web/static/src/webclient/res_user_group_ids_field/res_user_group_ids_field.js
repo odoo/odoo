@@ -57,7 +57,7 @@ export class ResUserGroupIdsField extends Component {
         const ids = this.props.record.data[this.props.name].currentIds;
         for (const category of this.categories) {
             values[this.getFieldName(category)] =
-                category.groups.find((g) => ids.includes(g[0]))?.[0] || false;
+                category.groups.findLast((g) => ids.includes(g[0]))?.[0] || false;
         }
         return values;
     }
