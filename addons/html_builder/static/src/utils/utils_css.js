@@ -600,7 +600,7 @@ export function applyNeededCss(
     { force = false, allowImportant = true } = {}
 ) {
     if (force) {
-        el.style.setProperty(cssProp, cssValue, "important");
+        el.style.setProperty(cssProp, cssValue, allowImportant ? "important" : "");
         return true;
     }
     el.style.removeProperty(cssProp);
