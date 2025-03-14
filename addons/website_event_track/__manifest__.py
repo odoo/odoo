@@ -48,7 +48,6 @@
             'website_event_track/static/src/scss/pwa_frontend.scss',
             'website_event_track/static/src/js/website_event_track.js',
             'website_event_track/static/src/js/website_event_track_proposal_form.js',
-            'website_event_track/static/src/js/event_track_reminder.js',
             'website_event_track/static/src/js/website_event_pwa_widget.js',
             'website_event_track/static/lib/idb-keyval/idb-keyval.js',
             'website_event_track/static/src/xml/event_track_proposal_templates.xml',
