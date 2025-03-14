@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             run: `edit ${leaveType2}`,
         },
         {
-            trigger: `.ui-autocomplete .ui-menu-item a:contains('${noRecords}')`,
+            trigger: `.ui-autocomplete .ui-menu-item span:contains('${noRecords}')`,
         },
         // Check if a time-off could be requested using leave_type_3
         {
