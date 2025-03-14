@@ -21,13 +21,13 @@
             border-radius: $border-radius-pill;
         }
 
+        .fc-dayGridMonth-view .fc-day.fc-day-today[class*="hr_mandatory_day_"] {
+            --o-cw-bg: var(--mandatory-day-color);
+        }
+
         @for $size from 1 through length($o-colors) {
             .hr_mandatory_day_#{$size - 1} {
                 --mandatory-day-color: #{nth($o-colors, $size)};
-            }
-
-            .fc-dayGridMonth-view .fc-day.fc-day-today.hr_mandatory_day_#{$size - 1} {
-                --o-cw-bg: var(--mandatory-day-color);
             }
         }
 
