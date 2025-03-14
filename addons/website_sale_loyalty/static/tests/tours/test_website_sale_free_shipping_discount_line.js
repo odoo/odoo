@@ -8,9 +8,9 @@ import {
     pay,
 } from "@website_sale/js/tours/tour_utils";
 
-function assertRewardAmounts(rewards, visibleOnly) {
+function assertRewardAmounts(rewards) {
     const steps = [];
-    const currencyValue = `.oe_currency_value${visibleOnly ? ":visible" : ":not(:visible)"}`;
+    const currencyValue = `.oe_currency_value:visible`;
     for (const [reward, amount] of Object.entries(rewards)) {
         steps.push({
             content: `check if ${reward} reward is correct`,
@@ -28,10 +28,6 @@ function selectDelivery(provider) {
     };
 }
 
-const waitForPaymentPage = {
-    content: "wait for Payment page to load",
-    trigger: ".o_total_card:contains(Order summary)",
-};
 
 const webTours = registry.category("web_tour.tours");
 
@@ -63,10 +59,9 @@ webTours.add("check_shipping_discount", {
         ...assertRewardAmounts({ shipping: "- 6.00" }),
         {
             content: "pay with eWallet",
-            trigger: "form[name=claim_reward] a.btn-primary:contains(Pay with eWallet)",
+            trigger: "form[name=claim_reward] a[name='o_loyalty_claim']:contains('Use')",
             run: "click",
         },
-        waitForPaymentPage,
         ...assertRewardAmounts({ discount: "- 304.00" }),
         selectDelivery("delivery1"),
         ...assertCartAmounts({ delivery: "5.00" }),
@@ -87,7 +82,7 @@ webTours.add("update_shipping_after_discount", {
         goToCart(),
         {
             content: "use eWallet to check it doesn't impact `free_over` shipping",
-            trigger: "a.btn-primary:contains(Pay with eWallet)",
+            trigger: "a[name='o_loyalty_claim']:contains('Use')",
             run: "click",
         },
         {
@@ -102,7 +97,6 @@ webTours.add("update_shipping_after_discount", {
         }),
         ...assertRewardAmounts({ discount: "- 100.00" }),
         confirmOrder(),
-        waitForPaymentPage,
         {
             content: "enter discount code",
             trigger: "form[name=coupon_code] input[name=promo]",
@@ -119,11 +113,11 @@ webTours.add("update_shipping_after_discount", {
         }),
         {
             content: "check discount code discount doesn't apply to shipping",
-            trigger: '[data-reward-type=discount] .oe_currency_value:not(:visible):contains(/^- 50.00$/)',
+            trigger: '[data-reward-type=discount] .oe_currency_value:contains(/^- 50.00$/)',
         },
         {
             content: "check eWallet discount applies to shipping ($50 for Plumbus + $5 for delivery)",
-            trigger: '[data-reward-type=discount] .oe_currency_value:not(:visible):contains(/^- 55.00$/)',
+            trigger: '[data-reward-type=discount] .oe_currency_value:contains(/^- 55.00$/)',
         },
     ],
 });

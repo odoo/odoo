@@ -2629,12 +2629,16 @@
             - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.
         -->
-        <form t-attf-action="/shop/pricelist#{redirect and '?r=' + redirect or ''}"
-            method="post" name="coupon_code">
+        <form
+            class="mb-3"
+            t-attf-action="/shop/pricelist#{redirect and '?r=' + redirect or ''}"
+            method="post"
+            name="coupon_code"
+        >
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-            <div class="input-group w-100 my-2">
+            <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" placeholder="Discount code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
-                <a href="#" role="button" class="btn btn-secondary a-submit">Apply</a>
+                <a href="#" role="button" class="btn btn-light a-submit border">Apply</a>
             </div>
         </form>
         <t t-if="request.params.get('code_not_available')" name="code_not_available">
@@ -2653,8 +2657,13 @@
         <!-- Checkout context:
             - website_sale_order: The current order.
         -->
-        <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} mb-5 mb-lg-0 pt-4">
+        <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} gap-2">
             <t t-if="website_sale_order and website_sale_order.website_order_line">
+                <t
+                    t-if="(website.account_on_checkout != 'mandatory' or
+                            not website.is_public_user()) and show_shorter_cart_summary"
+                    t-call="payment.express_checkout"
+                />
                 <t t-if="current_website_checkout_step_href == '/shop/confirm_order'">
                     <div t-if="not errors and not website_sale_order.amount_total"
                          name="o_website_sale_free_cart">
@@ -2683,19 +2692,25 @@
                     </a>
                 </t>
             </t>
-            <div t-if="not hide_payment_button" t-attf-class="position-relative #{_form_send_navigation and 'd-flex d-lg-none' or 'd-flex'} w-100 justify-content-center align-items-center my-2 opacity-75">
+            <div
+                t-if="not hide_payment_button"
+                t-attf-class="position-relative #{_form_send_navigation and 'd-flex d-lg-none' or 'd-none d-lg-flex'} w-100 justify-content-center align-items-center opacity-75"
+            >
                 <hr class="w-100"/>
                 <span class="px-3">or</span>
                 <hr class="w-100"/>
             </div>
             <t t-if="previous_website_checkout_step">
-                <a t-att-href="previous_website_checkout_step.step_href" class="text-center">
+                <a
+                    t-att-href="previous_website_checkout_step.step_href"
+                    class="pt-2 pt-lg-0 text-center"
+                >
                     <i class="fa fa-angle-left me-2 fw-light"/>
                     <span t-field="previous_website_checkout_step.back_button_label"/>
                 </a>
             </t>
             <t t-else="">
-                <a t-att-href="'/shop'" class="text-center">
+                <a t-att-href="'/shop'" class="pt-2 pt-lg-0 text-center">
                     <i class="fa fa-angle-left me-2 fw-light"/>
                     Continue shopping
                 </a>
@@ -2859,8 +2874,11 @@
                     >
                         <t t-if="is_anonymous_cart">
                             <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-1">
-                                <h4 class="w-100">Details</h4>
-                                <div t-if="website.account_on_checkout != 'disabled'" class="w-100 text-end">
+                                <h4 class="w-100 w-md-auto">Details</h4>
+                                <div
+                                    t-if="website.account_on_checkout != 'disabled'"
+                                    class="o_address_signin d-flex d-md-block justify-content-between align-items-center p-3 p-md-0 w-100 text-md-end"
+                                >
                                     <span class="align-middle">Already have an account?</span>
                                     <a
                                         role="button"
@@ -2977,7 +2995,7 @@
                     </div>
                 </t>
             </div>
-            <div class="oe_structure clearfix mb-3" id="oe_structure_website_sale_payment_1"/>
+            <div class="oe_structure clearfix" id="oe_structure_website_sale_payment_1"/>
 
             <div t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                 <div id="payment_method" class="o_not_editable mb-3">
@@ -3018,6 +3036,8 @@
             - show_shorter_cart_summary: Whether to show the shorter cart_summary (without items
                                          summary and with express checkout buttons) or the full;
                                          default: `None`.
+            - show_mobile_cart_summary: Whether to show the mobile offcanvas cart_summary;
+                                        default: `True`.
             - oe_structure: The structure element to append at the bottom of the page;
                             default: `None`.
         -->
@@ -3030,125 +3050,126 @@
             <t t-set="show_navigation_button" t-value="True if show_navigation_button is None else show_navigation_button"/>
             <t t-set="expand_order_summary" t-value="not show_navigation_button"/>
             <t t-set="show_wizard_checkout" t-value="True if show_wizard_checkout is None else show_wizard_checkout"/>
-            <div id="wrap">
-                <div class="oe_website_sale o_website_sale_checkout container py-2">
-                    <div t-attf-class="row #{show_navigation_button and 'position-relative'} #{not show_wizard_checkout and 'mt32'} mb32">
+            <t
+                t-set="show_mobile_cart_summary"
+                t-value="True if show_mobile_cart_summary is None else show_mobile_cart_summary"
+            />
+            <t t-set="body_classname" t-value="'o_website_sale_checkout'"/>
+            <div id="wrap" class="d-flex flex-column flex-grow-1">
+                <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
+                    <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">
                         <div t-if="show_wizard_checkout" class="col-12">
                             <t t-call="website_sale.wizard_checkout"/>
                         </div>
-                        <div t-if="show_shorter_cart_summary"
-                             class="offset-xl-1 col-lg-5 col-xl-4 order-2"
-                             id="o_cart_summary">
-                            <div class="o_total_card card sticky-lg-top"
-                                 t-if="website_sale_order and website_sale_order.website_order_line">
-                                <div class="card-body p-0 p-lg-4">
-                                    <t t-call="website_sale.total"/>
-                                    <t
-                                        t-if="website.account_on_checkout != 'mandatory' or
-                                              not website.is_public_user()"
-                                        t-call="payment.express_checkout"
-                                    />
+                        <!-- Checkout Page Content | Left Column -->
+                        <div class="oe_clear_stucture oe_cart col-12 col-lg-7">
+                            <t t-out="0"/>
+                        </div>
+                        <!-- Short Checkout Summary displayed on /cart | Right Column -->
+                        <div
+                            t-if="show_shorter_cart_summary"
+                            class="offset-xxl-1 col-lg-5 col-xxl-4"
+                        >
+                            <div
+                                t-if="website_sale_order and website_sale_order.website_order_line"
+                                class="o_total_card card sticky-lg-top"
+                            >
+                                <div class="card-body p-0 p-lg-4" name="o_cart_total_card_body">
+                                    <t t-call="website_sale.total">
+                                        <t
+                                            t-set="_cart_total_classes"
+                                            t-valuef="o_checkout_cart_total pt-2 pt-lg-0"
+                                        />
+                                    </t>
                                     <t t-call="website_sale.navigation_buttons"/>
                                 </div>
                             </div>
                         </div>
-                        <div t-else=""
-                             class="o_wsale_accordion accordion sticky-lg-top offset-xl-1 col-12 col-lg-5 col-xl-4 order-lg-2 rounded"
-                             id="o_wsale_total_accordion">
-                            <div class="o_total_card sticky-lg-top">
-                                <div id="o_wsale_total_accordion_item" class="accordion-item p-lg-4 border-0">
-                                    <div class="accordion-header d-block align-items-center mb-2">
-                                        <button
-                                            t-attf-class="accordion-button pt-0 pb-1 px-0 {{ not expand_order_summary and 'collapsed' }}"
-                                            t-att-aria-expanded="expand_order_summary and 'True' or 'False'"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#o_wsale_accordion_item"
-                                            aria-controls="o_wsale_accordion_item"
-                                        >
-                                            <div class="d-flex flex-wrap">
-                                                <b class="w-100">Order summary</b>
-                                                <span t-out="str(website_sale_order.cart_quantity)"/>
-                                                &amp;nbsp;item(s)&amp;nbsp;-&amp;nbsp;
-                                                <span id="amount_total_summary"
-                                                    class="monetary_field ms-1"
-                                                    t-field="website_sale_order.amount_total"
-                                                    t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
-                                            </div>
-                                        </button>
-                                    </div>
-                                    <div name="cart_summary_info" t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
-                                        Your cart is empty!
-                                    </div>
-                                    <div id="o_wsale_accordion_item"
-                                        t-attf-class="accordion-collapse collapse mb-4 pt-4 mb-lg-0 {{ expand_order_summary and 'show' }}"
-                                        data-bs-parent="#o_wsale_total_accordion">
-                                        <div t-att-class="len(website_sale_order.website_order_line) &gt; 3 and 'o_wsale_scrollable_table mt-n4 me-n4 pe-4'">
-                                            <table t-if="website_sale_order and website_sale_order.website_order_line"
-                                                class="table accordion-body mb-0"
-                                                id="cart_products">
-                                                <tbody>
-                                                    <tr t-foreach="website_sale_order.website_order_line" t-as="line" t-att-class="line_last and 'border-transparent'">
-                                                        <t t-set="o_cart_sum_padding_top"
-                                                        t-value="'pt-3' if line_size &gt; 1 and not line_first else 'pt-0'"/>
-                                                        <td t-if="not line.product_id" colspan="2"/>
-                                                        <t t-else="">
-                                                            <td t-attf-class="td-img ps-0 #{o_cart_sum_padding_top}">
-                                                                <span t-if="not line._is_sellable() and line.product_id.image_128">
-                                                                    <img t-att-src="image_data_uri(line.product_id.image_128)" class="o_image_64_max img rounded" t-att-alt="line.name_short"/>
-                                                                </span>
-                                                                <span t-else=""
-                                                                    t-field="line.product_id.image_128"
-                                                                    t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"
-                                                                />
-                                                            </td>
-                                                            <td t-attf-class="#{o_cart_sum_padding_top} td-product_name td-qty w-100"
-                                                                name='website_sale_cart_summary_product_name'>
-                                                                <h6>
-                                                                    <t t-out="int(line.product_uom_qty)" />
-                                                                    <t t-if="line._get_shop_warning(clear=False)">
-                                                                        <i class="fa fa-warning text-warning"
-                                                                        role="img"
-                                                                        t-att-title="line._get_shop_warning()"
-                                                                        aria-label="Warning"/>
-                                                                    </t>
-                                                                    x
-                                                                    <t t-out="line.name_short"/>
-                                                                </h6>
-                                                            </td>
-                                                        </t>
-                                                        <td t-attf-class="#{o_cart_sum_padding_top} td-price pe-0 text-end"
-                                                            name="website_sale_cart_summary_line_price">
-                                                            <t t-call="website_sale.cart_product_price">
-                                                                <t
-                                                                    t-set="product_price"
-                                                                    t-value="line._get_cart_display_price()"
-                                                                />
-                                                            </t>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <t t-if='website_sale_order'>
-                                            <t t-set='warning' t-value='website_sale_order._get_shop_warning(clear=False)' />
-                                            <div t-if='warning' class="alert alert-warning" role="alert">
-                                                <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
-                                            </div>
+                        <!-- Full Checkout Summary displayed on all checkout pages | Right Column -->
+                        <div
+                            t-else=""
+                            class="d-none d-lg-block offset-xxl-1 col-12 col-lg-5 col-xxl-4 rounded"
+                        >
+                            <div class="o_total_card card sticky-lg-top mb-3 mb-lg-0">
+                                <div class="card-body p-lg-4 pt-lg-3">
+                                    <div class="d-none d-lg-block">
+                                        <t t-call="website_sale.cart_summary_content"/>
+                                        <t t-call="website_sale.total">
+                                            <t
+                                                t-set="_cart_total_classes"
+                                                t-valuef="border-top pt-2"
+                                            />
                                         </t>
                                     </div>
-                                    <t t-call="website_sale.total">
-                                        <t t-set="_cart_total_classes" t-valuef="border-top pt-2"/>
-                                    </t>
-                                    <div t-if="show_navigation_button" class="o_cta_navigation_container position-absolute position-lg-static start-0 top-100 col-12">
+                                    <div
+                                        t-if="show_navigation_button"
+                                        class="o_cta_navigation_container px-0"
+                                    >
                                         <t t-call="website_sale.navigation_buttons"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div t-attf-class="oe_clear_stucture oe_cart col-12 col-lg-7">
-                            <t t-out="0"/>
-                        </div>
                     </div>
+                    <!-- Mobile Order Summary | Bottom of page and Offcanvas -->
+                    <t t-if="not show_shorter_cart_summary and show_mobile_cart_summary">
+                        <div class="o_mobile_summary d-lg-none sticky-bottom mt-auto bg-body">
+                            <button
+                                class="btn btn-light d-flex justify-content-between align-items-center gap-2 w-100 mb-2"
+                                data-bs-toggle="offcanvas"
+                                href="#o_cart_summary_offcanvas"
+                                role="button"
+                                aria-controls="o_cart_summary_offcanvas"
+                            >
+                                Order
+                                <span
+                                    id="amount_total_summary"
+                                    class="monetary_field ms-auto"
+                                    t-field="website_sale_order.amount_total"
+                                    t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'
+                                />
+                                <span
+                                    class="o_cart_item_count badge ms-1 top-0 bg-primary"
+                                    t-out="str(website_sale_order.cart_quantity)"
+                                />
+                                <i class="fa fa-angle-right ms-2" role="img"/>
+                            </button>
+                            <t
+                                t-if="show_navigation_button"
+                                t-call="website_sale.navigation_buttons"
+                            />
+                        </div>
+                        <div
+                            id="o_cart_summary_offcanvas"
+                            class="offcanvas offcanvas-end"
+                            tabindex="-1"
+                            aria-labelledby="o_cart_summary_offcanvas"
+                        >
+                            <div class="offcanvas-body">
+                                <t t-call="website_sale.cart_summary_content"/>
+                            </div>
+                            <div class="offcanvas-footer p-3">
+                                <a href="/shop/cart" class="btn btn-link w-100">
+                                    Coupon, Gift card, Promo-code?
+                                </a>
+                                <t t-call="website_sale.total">
+                                    <t t-set="hide_promotions" t-value="True"/>
+                                    <t
+                                        t-set="_cart_total_classes"
+                                        t-valuef="border-top px-3 pt-2 mx-n3"
+                                    />
+                                </t>
+                                <button
+                                    class="btn btn-light w-100"
+                                    type="button"
+                                    data-bs-dismiss="offcanvas"
+                                    aria-label="Close"
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </t>
                 </div>
                 <!-- This is the drag-and-drop area for website building blocs at the end of each
                      checkout page. The templates created in the database to store blocs are hooked
@@ -3159,10 +3180,90 @@
         </t>
     </template>
 
+    <!-- Called in `website_sale.checkout_layout` and `website_sale.confirmation`. -->
+    <template id="website_sale.cart_summary_content">
+        <div
+            t-if="not website_sale_order or not website_sale_order.website_order_line"
+            name="cart_summary_info"
+            class="alert alert-info"
+        >
+            Your cart is empty!
+        </div>
+        <div>
+            <div t-att-class="len(website_sale_order.website_order_line) &gt; 3 and 'o_wsale_scrollable_table'">
+                <table
+                    t-if="website_sale_order and website_sale_order.website_order_line"
+                    class="o_cart_products_table table mb-0"
+                >
+                    <tbody>
+                        <tr
+                            t-foreach="website_sale_order.website_order_line"
+                            t-as="line"
+                            t-att-class="line_last and 'border-transparent'"
+                        >
+                            <td class="td-img ps-0 pt-3">
+                                <div class="position-relative">
+                                    <span
+                                        t-if="not line._is_sellable() and line.product_id.image_128"
+                                    >
+                                        <img
+                                            t-att-src="image_data_uri(line.product_id.image_128)"
+                                            class="o_image_64_max img rounded"
+                                            t-att-alt="line.name_short"
+                                        />
+                                    </span>
+                                    <span
+                                        t-else=""
+                                        t-field="line.product_id.image_128"
+                                        t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"
+                                    />
+                                    <span class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle">
+                                        <t t-out="int(line.product_uom_qty)" />
+                                        <i
+                                            t-if="line._get_shop_warning(clear=False)"
+                                            class="fa fa-warning"
+                                            role="img"
+                                            t-att-title="line._get_shop_warning()"
+                                            aria-label="Warning"
+                                        />
+                                    </span>
+                                </div>
+                            </td>
+                            <td
+                                class="td-product_name td-qty w-100 pt-3"
+                                name="website_sale_cart_summary_product_name"
+                            >
+                                <span class="text-wrap">
+                                    <t t-out="line.name_short"/>
+                                </span>
+                            </td>
+                            <td class="td-price pe-0 pt-3 text-end"
+                                name="website_sale_cart_summary_line_price">
+                                <t t-call="website_sale.cart_product_price">
+                                    <t
+                                        t-set="product_price"
+                                        t-value="line._get_cart_display_price()"
+                                    />
+                                </t>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <t t-if='website_sale_order'>
+                <t t-set='warning' t-value='website_sale_order._get_shop_warning(clear=False)' />
+                <div t-if='warning' class="alert alert-warning" role="alert">
+                    <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
+                </div>
+            </t>
+        </div>
+    </template>
+
     <!-- /shop/confirmation route -->
     <template id="confirmation">
         <t t-call="website_sale.checkout_layout">
             <t t-set="show_wizard_checkout" t-value="False"/>
+            <t t-set="show_mobile_cart_summary" t-value="False"/>
             <t t-set="show_navigation_button" t-value="False"/>
             <t t-set="show_footer" t-value="True"/>
             <t t-set="additional_title">Shop - Confirmed</t>
@@ -3209,23 +3310,39 @@
             </div>
             <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
             <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Shop' t-attf-data-event-params='{"CTA": "Order Confirmed", "amount": "#{"%3s-%3s" % (max(0, round(website_sale_order.amount_total/100)*100 - 50), round(website_sale_order.amount_total/100)*100 + 50)}"}' />
+            <div class="d-lg-none">
+                <t t-call="website_sale.cart_summary_content"/>
+                <t t-call="website_sale.total">
+                    <t
+                        t-set="_cart_total_classes"
+                        t-valuef="border-top pt-2"
+                    />
+                </t>
+            </div>
         </t>
     </template>
 
     <!-- Called in `website_sale.checkout_layout`. -->
     <template id="total">
-        <div id="cart_total" t-if="website_sale_order and website_sale_order.website_order_line" t-att-class="_cart_total_classes">
+        <!-- Layout customization parameters:
+            - _cart_total_classes: CSS classes to append on the root div of the total template;
+                                   default `None`.
+        -->
+        <div
+            t-if="website_sale_order and website_sale_order.website_order_line"
+            t-attf-class="o_cart_total #{_cart_total_classes}"
+        >
             <table class="table mb-0">
                 <tr
                     t-if="website_sale_order._has_deliverable_products()"
-                    id="order_delivery"
+                    name="o_order_delivery"
                 >
-                    <td class="ps-0 pt-1 pb-2 border-0 text-muted" colspan="2">
+                    <td class="ps-0 pt-0 pb-2 border-0 text-muted" colspan="2">
                         Delivery
                     </td>
-                    <td class="text-end pe-0 pt-1 pb-2 border-0">
+                    <td class="text-end pe-0 pt-0 pb-2 border-0">
                         <span
-                            id="message_no_dm_set"
+                            name="o_message_no_dm_set"
                             t-att-class="'d-none' if website_sale_order.carrier_id else ''"
                             title="Price will be updated after choosing a delivery method"
                         >
@@ -3239,8 +3356,8 @@
                         />
                     </td>
                 </tr>
-                <tr id="order_total_untaxed">
-                    <td id="cart_total_subtotal"
+                <tr name="o_order_total_untaxed">
+                    <td
                         class="border-0 pb-2 ps-0 pt-0 text-start text-muted"
                         colspan="2">
                         Subtotal
@@ -3252,7 +3369,7 @@
                               t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                     </td>
                 </tr>
-                <tr id="order_total_taxes">
+                <tr name="o_order_total_taxes">
                     <td colspan="2" class="text-muted border-0 p-0 pe-3 pb-2">Taxes</td>
                     <td class="text-end border-0 p-0 ps-3 pb-2">
                         <span t-field="website_sale_order.amount_tax"
@@ -3261,9 +3378,9 @@
                               t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                     </td>
                 </tr>
-                <tr id="order_total" class="border-top">
-                    <td colspan="2" class="border-0 ps-0 pt-3"><strong>Total</strong></td>
-                    <td class="text-end border-0 px-0 pt-3">
+                <tr name="o_order_total" class="border-top">
+                    <td colspan="2" class="border-0 ps-0 pt-2"><strong>Total</strong></td>
+                    <td class="text-end border-0 px-0 pt-2">
                         <strong t-field="website_sale_order.amount_total"
                                 class="monetary_field text-end p-0"
                                 t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
@@ -3280,7 +3397,7 @@
             - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.
         -->
-        <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
+        <xpath expr="//div[contains(@t-attf-class, 'o_cart_total')]//table/tr[last()]" position="after">
             <tr t-if="not hide_promotions">
                 <td colspan="3" class="text-end text-xl-end border-0 p-0">
                 <span>

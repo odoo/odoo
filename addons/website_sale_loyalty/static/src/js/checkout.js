@@ -4,11 +4,11 @@ WebsiteSaleCheckout.include({
     /**
      * @override
      */
-    _updateCartSummary(result) {
+    _updateCartSummary(result, targetEl) {
         this._super.apply(this, arguments);
         if (result.amount_delivery_discounted) {
             // Update discount of the order
-            const cart_summary_shipping_reward = document.querySelector(
+            const cart_summary_shipping_reward = targetEl.querySelector(
                 '[data-reward-type="shipping"]'
             );
             if (cart_summary_shipping_reward) {
@@ -16,7 +16,7 @@ WebsiteSaleCheckout.include({
             }
         }
         if (result.discount_reward_amounts) {
-            const cart_summary_discount_rewards = document.querySelectorAll(
+            const cart_summary_discount_rewards = targetEl.querySelectorAll(
                 '[data-reward-type=discount]'
             );
             if (cart_summary_discount_rewards.length !== result.discount_reward_amounts.length) {

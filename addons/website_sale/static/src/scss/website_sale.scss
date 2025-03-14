@@ -1087,6 +1087,11 @@ a.no-decoration {
 }
 
 .o_website_sale_checkout {
+    main {
+        display: flex;
+        flex-direction: column;
+    }
+
     #shop_cart {
         &.o_img_ratio_4_3 {
             --card-product-img-ratio: 4/3;
@@ -1122,56 +1127,42 @@ a.no-decoration {
         }
     }
 
+    .o_cart_item_count {
+        font-variant-numeric: tabular-nums;
+    }
+
     .o_total_card {
-        // The accordion have to mimick the styling of a card
-        background-color: $card-bg;
-        border: $border-width solid $border-color;
-        border-radius: $card-border-radius;
+        @include media-breakpoint-down(lg) {
+            position: static;
+            border: none;
 
-        .accordion-item {
-            @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
+            .o_checkout_cart_total {
+                border-top: $border-width solid $border-color;
+            }
+        }
+    }
+
+    .o_mobile_summary {
+        margin-left: -$grid-gutter-width * .5;
+        margin-right: -$grid-gutter-width * .5;
+        padding: $spacer $grid-gutter-width * .5;
+
+        @include media-breakpoint-down(lg) {
+            box-shadow: $box-shadow-lg;
+        }
+    }
+
+    .o_wsale_scrollable_table {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
         }
 
-        // TODO VCR This value should adapt to the offsetHeight
-        // of the header this is an arbitrary value as a temporary solution
-        // to offset the summary regarding the tallest header (Magazine)
         @include media-breakpoint-up(lg) {
-            top: 9rem;
-        }
-
-        @include media-breakpoint-down(lg) {
-            border: 0;
-
-            .card-body, .accordion-item, .accordion-button {
-                border-radius: 0;
-                background-color: var(--o-cc1-bg) !important;
-                color: inherit;
-            }
-        }
-    }
-
-    #cart_total {
-        @include media-breakpoint-down(lg) {
-            padding-top: map-get($spacers, 3);
-            border-top: $border-width solid $border-color;
-        }
-    }
-
-    .o_wsale_accordion {
-        .accordion-button{
-            background-color: unset;
-        }
-
-        .o_wsale_scrollable_table {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            &::-webkit-scrollbar {
-              display: none;
-            }
-            @include media-breakpoint-up(lg) {
-                overflow-y: scroll;
-                height: 15rem;
-            }
+            overflow-y: scroll;
+            height: 15rem;
         }
     }
 
@@ -1193,22 +1184,15 @@ a.no-decoration {
         }
     }
 
-    div[name="o_express_checkout_container"] {
-        margin-bottom: -#{map-get($spacers, 3)};
-        margin-top: map-get($spacers, 3);
+    .o_address_signin {
+        @include media-breakpoint-down(md) {
+            border-radius: $border-radius;
+            background-color: $gray-100;
+        }
     }
 
     button[name="o_payment_submit_button"] {
         margin-left: 0 !important;
-    }
-
-    // We can't technically duplicate navigations CTA therefore we use
-    // an absolute positioning to move the CTA from the summary to the
-    // bottom of the page.
-    @include media-breakpoint-down(lg){
-        .o_cta_navigation_container {
-            padding: 0 calc(var(--gutter-x) * .5);
-        }
     }
 
     a.disabled {

@@ -42,7 +42,7 @@ registry
             },
             {
                 content: "Verify the order's total price",
-                trigger: 'tr#order_total_untaxed:contains(93.00)',
+                trigger: 'tr[name="o_order_total_untaxed"]:contains(93.00)',
             },
             // Assert that the combo quantity can be updated in the cart.
             {
