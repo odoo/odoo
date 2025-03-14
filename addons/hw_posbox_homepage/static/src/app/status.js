@@ -3,6 +3,8 @@ import { DEVICE_ICONS } from "./components/dialog/DeviceDialog.js";
 
 const { Component, mount, xml, useState } = owl;
 
+const STATUS_POLL_DELAY_MS = 5000;
+
 class StatusPage extends Component {
     static props = {};
 
@@ -11,9 +13,6 @@ class StatusPage extends Component {
         this.icons = DEVICE_ICONS;
 
         this.loadInitialData();
-        setInterval(() => {
-            this.loadInitialData();
-        }, 10000);
     }
 
     async loadInitialData() {
@@ -24,6 +23,7 @@ class StatusPage extends Component {
         } catch {
             console.warn("Error while fetching data");
         }
+        setTimeout(() => this.loadInitialData(), STATUS_POLL_DELAY_MS);
     }
 
     get accessPointSsid() {
@@ -31,10 +31,18 @@ class StatusPage extends Component {
     }
 
     static template = xml`
-    <div t-if="!state.loading" class="container-fluid">
-        <div class="text-center pt-5">
-            <img class="odoo-logo" src="/web/static/img/logo2.png" alt="Odoo logo"/>
+    <div class="text-center pt-5">
+        <img class="odoo-logo" src="/web/static/img/logo2.png" alt="Odoo logo"/>
+    </div>
+    <div t-if="state.loading || state.data.new_database_url" class="position-fixed top-0 start-0 vh-100 w-100 justify-content-center align-items-center d-flex flex-column gap-5">
+        <div class="spinner-border">
+            <span class="visually-hidden">Loading...</span>
         </div>
+        <span t-if="state.data.new_database_url" class="fs-4">
+            Connecting to <t t-out="state.data.new_database_url"/>, please wait
+        </span>
+    </div>
+    <div t-else="" class="container-fluid">
         <!-- QR Codes shown on status page -->
         <div class="qr-code-box">
             <div class="status-display-box qr-code">
@@ -117,6 +125,10 @@ class StatusPage extends Component {
                         <tr>
                             <td class="col-3"><i class="me-1 fa fa-fw fa-id-card"/>Name</td>
                             <td class="col-3" t-out="state.data.hostname"/>
+                        </tr>
+                        <tr t-if="state.data.odoo_server_url">
+                            <td class="col-3"><i class="me-1 fa fa-fw fa-database"/>Database</td>
+                            <td class="col-3" t-out="state.data.odoo_server_url"/>
                         </tr>
                     </tbody>
                 </table>

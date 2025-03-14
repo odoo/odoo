@@ -276,6 +276,7 @@ def save_conf_server(url, token, db_uuid, enterprise_code):
         'db_uuid': db_uuid,
         'enterprise_code': enterprise_code,
     })
+    get_odoo_server_url.cache_clear()
 
 
 def generate_password():
