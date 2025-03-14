@@ -10,3 +10,4 @@ from . import sale_order
 from . import res_config_settings
 from . import project_sale_line_employee_map
 from . import hr_employee
+from . import account_move_reversal
