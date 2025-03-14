@@ -3349,6 +3349,8 @@ msgid ""
 "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
 "Make sure to close all sessions first to avoid any issues."
 msgstr ""
+"請稍等，在 POS 操作時段生效時封存產品，就像用餐中途收碟！\n"
+"請務必先關閉所有操作時段，以避免任何問題。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
@@ -8124,7 +8126,7 @@ msgstr "該欄位用於將POS使用者組的 ID 傳遞到POS客戶端。"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "This invoice has been created from the point of sale session: %s"
-msgstr "此結算是從銷售點時段創建的:%s"
+msgstr "此發票由以下銷售點操作時段建立：%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -9377,4 +9379,4 @@ msgstr "{{ line.hasValidProductLot() ? '產品批次有效' : '產品批次無�
 msgid ""
 "This journal is associated with payment method %s that is being used by "
 "order %s in the active pos session %s"
-msgstr ""
+msgstr "此日記賬已與付款方式 %s 相關聯，該付款方式由訂單 %s 所使用，相關的生效銷售點操作時段：%s"

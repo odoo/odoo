@@ -1943,19 +1943,6 @@ msgid "Canned responses"
 msgstr "คำตอบสำเร็จรูป"
 
 #. module: mail
-#: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
-msgid ""
-"Canned responses allow you to insert prewritten responses in\n"
-"                    your messages by typing <i>:shortcut</i>. The shortcut is\n"
-"                    replaced directly in your message, so that you can still edit\n"
-"                    it before sending."
-msgstr ""
-"การตอบกลับสำเร็จรูปช่วยให้คุณสามารถแทรกการตอบกลับที่เขียนไว้ล่วงหน้าใน\n"
-"                    ข้อความของคุณโดยการพิมพ์ <i>:shortcut</i> ทางลัดจะถูกแทนที่\n"
-"                    ด้วยข้อความของคุณโดยตรง ดังนั้นคุณจึงยังคงสามารถแก้ไขได้\n"
-"                    ก่อนที่จะส่ง"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change authorized group of sub-channel: %(channels)s."
@@ -2654,11 +2641,6 @@ msgstr "สร้างเทมเพลตอีเมล"
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__object_id
 msgid "Create a New Record"
 msgstr "สร้างบันทึกถัดไป"
-
-#. module: mail
-#: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
-msgid "Create a new canned response"
-msgstr "สร้างการตอบกลับสำเร็จรูปใหม่"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
@@ -6655,6 +6637,11 @@ msgid "No activities."
 msgstr "ไม่มีกิจกรรม"
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
+msgid "No canned response found. Let's create one!"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "No conversation found"
@@ -10571,6 +10558,13 @@ msgstr "ใช้สคริปต์ในตัวเครื่องเพ
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use an Outlook Server"
 msgstr "ใช้เซิร์ฟเวอร์ Outlook"
+
+#. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
+msgid ""
+"Use canned responses to quickly insert prewritten messages with "
+"<i>::shortcut</i>. You can edit the text before sending."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__custom_notifications

@@ -299,6 +299,29 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Thân gửi,<br/><br/>\n"
+"                Chúng tôi cảm ơn bạn đã quan tâm và dành thời gian ứng tuyển cho vị trí này.<br/>\n"
+"                Chúng tôi chúc bạn nhiều may mắn và thành công trong tương lai.\n"
+"                <br/><br/>\n"
+"                Trân trọng<br/>\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        -- <br/>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br/>\n"
+"                        Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br/>\n"
+"                        SĐT: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        -- <br/>\n"
+"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"                        Phòng nhân sự<br/>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </div>\n"
+"    </div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -2024,7 +2047,7 @@ msgstr "Đơn xin việc"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_boards
 msgid "Job Boards"
-msgstr "Bảng công việc"
+msgstr "Nền tảng việc làm"
 
 #. module: hr_recruitment
 #: model:utm.campaign,title:hr_recruitment.utm_campaign_job
