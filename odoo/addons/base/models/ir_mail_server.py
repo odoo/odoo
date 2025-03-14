@@ -732,7 +732,7 @@ class IrMailServer(models.Model):
         except smtplib.SMTPServerDisconnected:
             raise
         except Exception as e:
-            params = (ustr(smtp_server), e.__class__.__name__, ustr(e))
+            params = (ustr(smtp_server), e.__class__.__name__, e)
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s", *params)
             _logger.info(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
