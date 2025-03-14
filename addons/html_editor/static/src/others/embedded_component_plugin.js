@@ -186,31 +186,31 @@ export class EmbeddedComponentPlugin extends Plugin {
     destroyRemovedComponents(infos) {
         // Avoid registering mutations if removed hosts are handled in
         // the same microtask as when they were removed.
-        this.dependencies.history.disableObserver();
-        for (const info of infos) {
-            if (!this.editable.contains(info.host)) {
-                const host = info.host;
-                const display = host.style.display;
-                const parentNode = host.parentNode;
-                const clone = host.cloneNode(false);
-                if (parentNode) {
-                    parentNode.replaceChild(clone, host);
-                }
-                host.style.display = "none";
-                this.editable.after(host);
-                this.destroyComponent(info);
-                if (parentNode) {
-                    parentNode.replaceChild(host, clone);
-                } else {
-                    host.remove();
-                }
-                host.style.display = display;
-                if (!host.getAttribute("style")) {
-                    host.removeAttribute("style");
+        this.dependencies.history.ignoreDOMChanges(() => {
+            for (const info of infos) {
+                if (!this.editable.contains(info.host)) {
+                    const host = info.host;
+                    const display = host.style.display;
+                    const parentNode = host.parentNode;
+                    const clone = host.cloneNode(false);
+                    if (parentNode) {
+                        parentNode.replaceChild(clone, host);
+                    }
+                    host.style.display = "none";
+                    this.editable.after(host);
+                    this.destroyComponent(info);
+                    if (parentNode) {
+                        parentNode.replaceChild(host, clone);
+                    } else {
+                        host.remove();
+                    }
+                    host.style.display = display;
+                    if (!host.getAttribute("style")) {
+                        host.removeAttribute("style");
+                    }
                 }
             }
-        }
-        this.dependencies.history.enableObserver();
+        });
     }
 
     deepDestroyComponent({ host }) {

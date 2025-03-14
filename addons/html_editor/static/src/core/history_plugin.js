@@ -86,8 +86,6 @@ import { withSequence } from "@html_editor/utils/resource";
  * @property { HistoryPlugin['addStep'] } addStep
  * @property { HistoryPlugin['canRedo'] } canRedo
  * @property { HistoryPlugin['canUndo'] } canUndo
- * @property { HistoryPlugin['disableObserver'] } disableObserver
- * @property { HistoryPlugin['enableObserver'] } enableObserver
  * @property { HistoryPlugin['ignoreDOMChanges'] } ignoreDOMChanges
  * @property { HistoryPlugin['getHistorySteps'] } getHistorySteps
  * @property { HistoryPlugin['getNodeById'] } getNodeById
@@ -111,8 +109,6 @@ export class HistoryPlugin extends Plugin {
         "addStep",
         "canRedo",
         "canUndo",
-        "disableObserver",
-        "enableObserver",
         "ignoreDOMChanges",
         "getHistorySteps",
         "getNodeById",
@@ -169,7 +165,7 @@ export class HistoryPlugin extends Plugin {
             { hotkey: "control+shift+z", commandId: "historyRedo" },
         ],
         start_edition_handlers: () => {
-            this.enableObserver();
+            this.enableObserver(true);
             this.reset(this.config.content);
         },
     };
@@ -184,6 +180,7 @@ export class HistoryPlugin extends Plugin {
             this.stageSelection();
         });
         this.observer = new MutationObserver(this.handleNewRecords.bind(this));
+        this.isObserverInit = false;
         this.ignoreDOMChangesDepth = 0;
         this._cleanups.push(() => this.observer.disconnect());
         this.clean();
@@ -234,18 +231,17 @@ export class HistoryPlugin extends Plugin {
      * @param { HistoryStep[] } steps
      */
     resetFromSteps(steps) {
-        this.disableObserver();
-        this.editable.replaceChildren();
-        this.clean();
-        this.stageSelection();
-        for (const step of steps) {
-            this.applyMutations(step.mutations);
-        }
-        this.steps = steps;
-        // todo: to test
-        this.dispatchTo("history_reset_from_steps_handlers");
-
-        this.enableObserver();
+        this.ignoreDOMChanges(() => {
+            this.editable.replaceChildren();
+            this.clean();
+            this.stageSelection();
+            for (const step of steps) {
+                this.applyMutations(step.mutations);
+            }
+            this.steps = steps;
+            // todo: to test
+            this.dispatchTo("history_reset_from_steps_handlers");
+        });
         this.dispatchTo("history_reset_from_steps_handlers");
     }
     makeSnapshotStep() {
@@ -280,12 +276,15 @@ export class HistoryPlugin extends Plugin {
         return step;
     }
 
-    /**
-     * @deprecated - see ignoreDOMChanges
-     */
-    enableObserver() {
-        this.ignoreDOMChangesDepth--;
-        if (this.ignoreDOMChangesDepth === 0) {
+    enableObserver(initObserver = false) {
+        if (initObserver) {
+            this.isObserverInit = true;
+        } else {
+            // Don't count initial enableObserver, it is not accompanied by a disableObserver
+            this.ignoreDOMChangesDepth--;
+        }
+
+        if (this.isObserverInit && this.ignoreDOMChangesDepth === 0) {
             this.observer.observe(this.editable, {
                 childList: true,
                 subtree: true,
@@ -297,11 +296,8 @@ export class HistoryPlugin extends Plugin {
         }
     }
 
-    /**
-     * @deprecated - see ignoreDOMChanges
-     */
     disableObserver() {
-        if (this.ignoreDOMChangesDepth === 0) {
+        if (this.isObserverInit && this.ignoreDOMChangesDepth === 0) {
             this.handleObserverRecords();
             this.observer.disconnect();
         }
@@ -1034,7 +1030,7 @@ export class HistoryPlugin extends Plugin {
         let applied = false;
         // TODO ABD TODO @phoenix: selection may become obsolete, it should evolve with mutations.
         const selectionToRestore = this.dependencies.selection.preserveSelection();
-        const extraToRestore = {...this.currentStep.extra};
+        const extraToRestore = { ...this.currentStep.extra };
         return () => {
             if (applied) {
                 return;
