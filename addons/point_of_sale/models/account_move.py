@@ -10,6 +10,18 @@ class AccountMove(models.Model):
     pos_order_ids = fields.One2many('pos.order', 'account_move')
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
 
+    def _compute_always_tax_exigible(self):
+        super()._compute_always_tax_exigible()
+        # The pos closing move does not create caba entries (anymore); we set the tax values directly on the closing move.
+        # (But there may still be old closing moves that used caba entries from previous versions.)
+        relevant_moves = self.filtered(lambda move: not (move.always_tax_exigible or move.tax_cash_basis_created_move_ids))
+        if not relevant_moves:
+            return
+        sessions = self.env['pos.session'].with_context(active_test=False).search([
+            ('move_id', 'in', relevant_moves.ids),
+        ])
+        sessions.move_id.always_tax_exigible = True
+
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
         for invoice in self.filtered(lambda x: x.move_type == 'out_invoice'):
