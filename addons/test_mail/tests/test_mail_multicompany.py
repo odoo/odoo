@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 import socket
 
 from itertools import product
@@ -10,7 +11,7 @@ from werkzeug.urls import url_parse, url_decode
 
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged, users, HttpCase
 from odoo.tools import formataddr, mute_logger
 
@@ -405,3 +406,38 @@ class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
                     self.assertEqual(decoded_fragment['cids'], str(test_record.company_id.id))
                 else:
                     self.assertNotIn('cids', decoded_fragment)
+
+
+@tagged("-at_install", "post_install", "multi_company")
+class TestMultiCompanyThreadData(TestMailCommon, HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._activate_multi_company()
+
+    def test_mail_thread_data_follower(self):
+        partner_portal = self.env["res.partner"].create(
+            {"company_id": self.company_3.id, "name": "portal partner"}
+        )
+        record = self.env["mail.test.multi.company"].create({"name": "Multi Company Record"})
+        record.message_subscribe(partner_ids=partner_portal.ids)
+        with self.assertRaises(UserError):
+            partner_portal.with_user(self.user_employee_c2).check_access_rule("read")
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        response = self.url_open(
+            url="/mail/thread/data",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_id": record.id,
+                        "thread_model": "mail.test.multi.company",
+                        "request_list": ["followers"],
+                    }
+                },
+            ),
+        )
+        self.assertEqual(response.status_code, 200)
+        followers = json.loads(response.content)["result"]["followers"]
+        self.assertEqual(len(followers), 1)
+        self.assertEqual(followers[0]["partner"]["id"], partner_portal.id)
