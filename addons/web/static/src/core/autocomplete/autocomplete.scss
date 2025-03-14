@@ -10,6 +10,11 @@
     }
 
     .ui-menu-item {
+        > span {
+            --dropdown-link-hover-color: var(--dropdown-color);
+            --dropdown-link-hover-bg: var(--dropdown-bg);
+        }
+
         > a.ui-state-active {
             margin: 0;
             border: none;
