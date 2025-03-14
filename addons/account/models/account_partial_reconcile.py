@@ -124,6 +124,13 @@ class AccountPartialReconcile(models.Model):
         # Remove the matching numbers before reversing the moves to avoid trying to remove the full twice.
         full_to_unlink.unlink()
 
+        # Remove link between invoice(s) and payment(s)
+        all_reconciled_invoice_lines = all_reconciled.filtered(lambda line: line.move_id.is_invoice(include_receipts=True))
+        if all_reconciled_invoice_lines:
+            for line in all_reconciled:
+                if line.move_id.origin_payment_id:
+                    line.move_id.origin_payment_id.invoice_ids = line.move_id.origin_payment_id.invoice_ids.filtered(lambda invoice: invoice not in all_reconciled_invoice_lines.move_id)
+
         # Reverse CABA entries.
         if moves_to_reverse:
             default_values_list = [{
@@ -141,6 +148,14 @@ class AccountPartialReconcile(models.Model):
         partials = super().create(vals_list)
         partials._get_to_update_payments(from_state='in_process').state = 'paid'
         self._update_matching_number(partials.debit_move_id + partials.credit_move_id)
+        for partial in partials:
+            invoice, payment = (
+                (partial.debit_move_id.move_id, partial.credit_move_id.move_id.origin_payment_id)
+                if partial.credit_move_id.move_id.origin_payment_id
+                else (partial.credit_move_id.move_id, partial.debit_move_id.move_id.origin_payment_id)
+            )
+            if invoice and payment and invoice.is_invoice(include_receipts=True) and payment not in invoice.matched_payment_ids:
+                invoice.matched_payment_ids += payment
         return partials
 
     def _get_to_update_payments(self, from_state):
