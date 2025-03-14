@@ -33,7 +33,7 @@ methods_to_sanitize = {
     if not method_name.startswith('_')
 } - {
     # Not yet sanitized...
-    'write', 'create', 'default_get', 'init'
+    'write', 'create', 'default_get'
 }
 
 
@@ -133,6 +133,9 @@ class TestLintOverrideSignatures(LintCase):
             for method_name, _ in inspect.getmembers(model_cls, inspect.isroutine):
                 if method_name not in methods_to_sanitize:
                     # TODO sanitize all methods
+                    continue
+                if method_name == 'init' and model_name == 'ir.config_parameter':
+                    # TODO refactor ir.config_parameter
                     continue
 
                 # Find the original function definition
