@@ -37,7 +37,7 @@ class _OdooOption(optparse.Option):
     config = None  # must be overriden
 
     TYPES = ['int', 'float', 'string', 'choice', 'bool', 'path', 'comma',
-             'addons_path', 'upgrade_path', 'without_demo']
+             'addons_path', 'upgrade_path', 'pre_upgrade_scripts', 'without_demo']
 
     @classproperty
     def TYPE_CHECKER(cls):
@@ -51,6 +51,7 @@ class _OdooOption(optparse.Option):
             'comma': cls.config._check_comma,
             'addons_path': cls.config._check_addons_path,
             'upgrade_path': cls.config._check_upgrade_path,
+            'pre_upgrade_scripts': cls.config._check_scripts,
             'without_demo': cls.config._check_without_demo,
         }
 
@@ -66,6 +67,7 @@ class _OdooOption(optparse.Option):
             'comma': cls.config._format_list,
             'addons_path': cls.config._format_list,
             'upgrade_path': cls.config._format_list,
+            'pre_upgrade_scripts': cls.config._format_list,
             'without_demo': cls.config._format_without_demo,
         }
 
@@ -212,6 +214,8 @@ class configmanager:
                          help="specify additional addons paths (separated by commas).")
         group.add_option("--upgrade-path", dest="upgrade_path", type='upgrade_path', metavar='PATH,...', my_default=[],
                          help="specify an additional upgrade path.")
+        group.add_option('--pre-upgrade-scripts', dest='pre_upgrade_scripts', type='pre_upgrade_scripts', metavar='PATH,...', my_default=[],
+                         help="Run specific upgrade scripts before loading any module when -u is provided.")
         group.add_option("--load", dest="server_wide_modules", type='comma', metavar='MODULE,...', my_default=DEFAULT_SERVER_WIDE_MODULES,
                          help="Comma-separated list of server-wide modules.")
         group.add_option("-D", "--data-dir", dest="data_dir", type='path',  # sensitive default set in _load_default_options
@@ -767,6 +771,17 @@ class configmanager:
             if path not in upgrade_path:
                 upgrade_path.append(path)
         return upgrade_path
+
+    @classmethod
+    def _check_scripts(cls, option, opt, value):
+        pre_upgrade_scripts = []
+        for path in map(cls._normalize, cls._check_comma(option, opt, value)):
+            if not os.path.isfile(path):
+                cls._log(logging.WARNING, "option %s, no such file %r, skipped", opt, path)
+                continue
+            if path not in pre_upgrade_scripts:
+                pre_upgrade_scripts.append(path)
+        return pre_upgrade_scripts
 
     @classmethod
     def _is_upgrades_path(cls, path):
