@@ -85,7 +85,7 @@ export function useSpreadsheetPrint(model) {
         };
         frozenPrintState = {
             viewRect,
-            offset: model().getters.getActiveSheetDOMScrollInfo(),
+            offset: model().getters.getActiveSheetScrollInfo(),
             mode: model().config.mode,
         };
         model().updateMode("dashboard");
