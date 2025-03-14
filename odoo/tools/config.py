@@ -124,6 +124,9 @@ class configmanager(object):
         group.add_option("--upgrade-path", dest="upgrade_path",
                          help="specify an additional upgrade path.",
                          action="callback", callback=self._check_upgrade_path, nargs=1, type="string")
+        group.add_option("--pre-upgrade-scripts", dest="pre_upgrade_scripts", my_default="",
+                         help="Run specific upgrade scripts before loading any module when -u is provided.",
+                         action="callback", callback=self._check_scripts, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='base,web')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
@@ -461,7 +464,7 @@ class configmanager(object):
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',
                 'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
-                'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
+                'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path', 'pre_upgrade_scripts',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface',
@@ -533,6 +536,12 @@ class configmanager(object):
             if self.options['upgrade_path']
             else ""
         )
+        self.options["pre_upgrade_scripts"] = (
+            ",".join(self._normalize(x)
+                for x in self.options['pre_upgrade_scripts'].split(','))
+            if self.options['pre_upgrade_scripts']
+            else ""
+        )
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options['demo'] = (dict(self.options['init'])
@@ -600,6 +609,18 @@ class configmanager(object):
             ad_paths.append(res)
 
         setattr(parser.values, option.dest, ",".join(ad_paths))
+
+    def _check_scripts(self, option, opt, value, parser):
+        pre_upgrade_scripts = []
+        for path in value.split(','):
+            path = path.strip()
+            res = self._normalize(path)
+            if not os.path.isfile(res):
+                raise optparse.OptionValueError("option %s: no such file: %r" % (opt, path))
+            if res not in pre_upgrade_scripts:
+                pre_upgrade_scripts.append(res)
+        setattr(parser.values, option.dest, ",".join(pre_upgrade_scripts))
+
 
     def _check_upgrade_path(self, option, opt, value, parser):
         upgrade_path = []
