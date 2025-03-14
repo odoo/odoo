@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.TimePickerBottomSheet">
+        <div class="o_time_picker_bottom_sheet pb-4" t-ref="container">
+
+            <!-- Action buttons
+                 TODO: It should be properly use the BottomSheet "header" slot instead
+                 and switch-back to the dateTime component when it's the source.
+            -->
+            <div class="o_time_picker_buttons o_bottom_sheet_header offcanvas-header">
+                <button
+                    type="button"
+                    class="btn p-0 me-auto fs-5"
+                    aria-label="Discard"
+                    t-on-click="discardSelection"
+                    >
+                    <i class="oi oi-arrow-left" role="img"/>
+                </button>
+                <div class="offcanvas-title fs-5">Select Time</div>
+                <button
+                    class="o_time_picker_buttons_confirm btn btn-link px-0"
+                    t-on-click="confirmSelection"
+                    >
+                    Confirm
+                </button>
+            </div>
+
+            <!-- Scrollable time picker columns -->
+            <div class="o_time_picker_columns d-flex align-items-center justify-content-center my-2">
+                <!-- Selection indicator -->
+                <div class="o_time_picker_selection_indicator"/>
+
+                <!-- Hours column -->
+                <div class="o_time_picker_column o_hours" t-ref="hourRef">
+                    <t t-foreach="hours" t-as="hour" t-key="hour">
+                        <div
+                            class="o_time_picker_cell d-flex align-items-center justify-content-center lh-1"
+                            t-att-class="{
+                                'o_time_picker_cell_selected': state.hour === hour,
+                                'o_time_picker_cell_preceding': isPrecedingCell(hour, state.hour, hours)
+                            }"
+                        >
+                            <span t-esc="formatTwoDigits(hour)"/>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Separator -->
+                <div class="o_time_picker_separator position-relative">:</div>
+
+                <!-- Minutes column -->
+                <div class="o_time_picker_column o_minutes" t-ref="minuteRef">
+                    <t t-foreach="minutes" t-as="minute" t-key="minute">
+                        <div
+                            class="o_time_picker_cell d-flex align-items-center justify-content-center lh-1"
+                            t-att-class="{
+                                'o_time_picker_cell_selected': state.minute === minute,
+                                'o_time_picker_cell_preceding': isPrecedingCell(minute, state.minute, minutes)
+                            }"
+                        >
+                            <span t-esc="formatTwoDigits(minute)"/>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Seconds column (optional) -->
+                <t t-if="props.showSeconds">
+                    <div class="o_time_picker_separator position-relative">:</div>
+                    <div class="o_time_picker_column o_seconds" t-ref="secondRef">
+                        <t t-foreach="seconds" t-as="second" t-key="second">
+                            <div
+                                class="o_time_picker_cell d-flex align-items-center justify-content-center lh-1"
+                                t-att-class="{
+                                    'o_time_picker_cell_selected': state.second === second,
+                                    'o_time_picker_cell_preceding': isPrecedingCell(second, state.second, seconds)
+                                }"
+                            >
+                                <span t-esc="formatTwoDigits(second)"/>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
