@@ -286,7 +286,7 @@
         <field name="mode">primary</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
-            <filter name="date_last_stage_update" position="after">
+            <filter name="creation_date_filter" position="after">
                 <filter string="Deadline" name="date_deadline" date="date_deadline">
                     <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;', datetime.datetime.combine(context_today(), datetime.time(23,59,59)).to_utc())]"/>
                     <filter name="deadline_this_week" string="This Week" domain="[
@@ -300,7 +300,7 @@
                     <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc())]"/>
                 </filter>
             </filter>
-            <filter name="last_stage_update" position="after">
+            <filter name="create_date" position="after">
                 <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
             </filter>
         </field>
@@ -321,7 +321,6 @@
             <field name="user_ids" position="after">
                 <field name="portal_user_names" string="Assignees" optional="show"/>
             </field>
-            
         </field>
     </record>
 
