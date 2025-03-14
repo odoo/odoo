@@ -101,7 +101,7 @@ export class Many2One extends Component {
         specification: { type: Object, optional: true },
         string: { type: String, optional: true },
         update: { type: Function },
-        value: { type: [Array, Object, { value: false }] },
+        value: { type: [Array, Object, { value: false }], optional: true },
     };
     static defaultProps = {
         canCreate: true,
