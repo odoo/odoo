@@ -655,7 +655,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     def check_null_constraints(self, cr: Cursor) -> None:
         """ Check that all not-null constraints are set. """
-        cr.execute("SELECT table_name, column_name FROM information_schema.columns WHERE is_nullable = 'NO' AND table_schema = 'public'")
+        cr.execute('''
+            SELECT c.relname, a.attname
+            FROM pg_attribute a
+            JOIN pg_class c ON a.attrelid = c.oid
+            JOIN pg_namespace n ON c.relnamespace = n.oid
+            WHERE n.nspname = 'public'
+            AND a.attnotnull = true
+            AND a.attnum > 0;
+        ''')
         not_null_columns = set(cr.fetchall())
 
         self.not_null_fields.clear()
