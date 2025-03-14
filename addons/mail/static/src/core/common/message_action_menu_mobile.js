@@ -11,7 +11,6 @@ export class MessageActionMenuMobile extends Component {
         "thread?",
         "isFirstMessage?",
         "messageEdition?",
-        "messageToReplyTo?",
         "openReactionMenu?",
         "state",
     ];
