@@ -46,7 +46,6 @@ const EDIT_CLICK_TYPE = {
 /**
  * @typedef {Object} Props
  * @property {import("models").Composer} composer
- * @property {import("@mail/utils/common/hooks").MessageToReplyTo} messageToReplyTo
  * @property {import("@mail/utils/common/hooks").MessageEdition} [messageEdition]
  * @property {'compact'|'normal'|'extended'} [mode] default: 'normal'
  * @property {'message'|'note'|false} [type] default: false
@@ -76,7 +75,6 @@ export class Composer extends Component {
     static props = [
         "composer",
         "autofocus?",
-        "messageToReplyTo?",
         "onCloseFullComposerCallback?",
         "onDiscardCallback?",
         "onPostCallback?",
@@ -182,12 +180,12 @@ export class Composer extends Component {
             () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
         );
         useEffect(
-            (rThread, cThread) => {
-                if (cThread && cThread.eq(rThread)) {
+            () => {
+                if (this.props.composer.replyToMessage) {
                     this.props.composer.autofocus++;
                 }
             },
-            () => [this.props.messageToReplyTo?.thread, this.props.composer.thread]
+            () => [this.props.composer.replyToMessage]
         );
         useEffect(
             () => {
@@ -319,7 +317,7 @@ export class Composer extends Component {
     }
 
     get thread() {
-        return this.props.messageToReplyTo?.message?.thread ?? this.props.composer.thread ?? null;
+        return this.props.composer.replyToMessage?.thread ?? this.props.composer.thread ?? null;
     }
 
     get allowUpload() {
@@ -603,7 +601,7 @@ export class Composer extends Component {
                 } else {
                     this.clear();
                 }
-                this.props.messageToReplyTo?.cancel();
+                this.props.composer.replyToMessage = undefined;
                 this.onCloseFullComposerCallback();
                 this.state.isFullComposerOpen = false;
                 // Use another event bus so that no message is sent to the
@@ -693,7 +691,7 @@ export class Composer extends Component {
             mentionedChannels: composer.mentionedChannels || [],
             mentionedPartners: composer.mentionedPartners || [],
             cannedResponseIds: composer.cannedResponses.map((c) => c.id),
-            parentId: this.props.messageToReplyTo?.message?.id,
+            parentId: this.props.composer.replyToMessage?.id,
         };
     }
 
@@ -726,7 +724,7 @@ export class Composer extends Component {
         }
         this.suggestion?.clearRawMentions();
         this.suggestion?.clearCannedResponses();
-        this.props.messageToReplyTo?.cancel();
+        this.props.composer.replyToMessage = undefined;
         this.props.composer.emailAddSignature = true;
         this.props.composer.thread.additionalRecipients = [];
     }
@@ -799,19 +797,26 @@ export class Composer extends Component {
 
     saveContent() {
         const composer = toRaw(this.props.composer);
-        const saveContentToLocalStorage = (text, emailAddSignature) => {
-            const config = {
-                emailAddSignature,
-                text,
-            };
-            browser.localStorage.setItem(composer.localId, JSON.stringify(config));
+        const saveContentToLocalStorage = ({ text, emailAddSignature, replyToMessageId }) => {
+            browser.localStorage.setItem(
+                composer.localId,
+                JSON.stringify({
+                    emailAddSignature,
+                    replyToMessageId,
+                    text,
+                })
+            );
         };
         if (this.state.isFullComposerOpen) {
             this.fullComposerBus.trigger("SAVE_CONTENT", {
                 onSaveContent: saveContentToLocalStorage,
             });
         } else {
-            saveContentToLocalStorage(composer.text, true);
+            saveContentToLocalStorage({
+                text: composer.text,
+                emailAddSignature: true,
+                replyToMessageId: composer.replyToMessage?.id,
+            });
         }
     }
 
@@ -822,6 +827,11 @@ export class Composer extends Component {
             if (config.text) {
                 composer.emailAddSignature = config.emailAddSignature;
                 composer.text = config.text;
+            }
+            if (Number.isInteger(config.replyToMessageId)) {
+                composer.replyToMessage = this.store["mail.message"].insert(
+                    config.replyToMessageId
+                );
             }
         } catch {
             browser.localStorage.removeItem(composer.localId);

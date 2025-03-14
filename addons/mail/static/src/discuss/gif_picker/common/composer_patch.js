@@ -38,7 +38,7 @@ const composerPatch = {
     },
     async sendGifMessage(gif) {
         await this._sendMessage(gif.url, {
-            parentId: this.props.messageToReplyTo?.message?.id,
+            parentId: this.props.composer.replyToMessage?.id,
         });
     },
 };

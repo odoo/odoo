@@ -5,6 +5,7 @@ export class Composer extends Record {
 
     clear() {
         this.attachments.length = 0;
+        this.replyToMessage = undefined;
         this.text = "";
         Object.assign(this.selection, {
             start: 0,
@@ -32,6 +33,7 @@ export class Composer extends Record {
     forceCursorMove;
     isFocused = false;
     autofocus = 0;
+    replyToMessage = Record.one("mail.message");
 }
 
 Composer.register();

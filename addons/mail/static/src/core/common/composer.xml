@@ -31,14 +31,14 @@
             <div t-if="showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0">
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
             </div>
-            <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread?.eq(props.composer.thread)">
-                <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message, props.composer.thread)">
-                    Replying to <b t-esc="props.messageToReplyTo.message.author?.name ?? props.messageToReplyTo.message.email_from"/>
+            <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.replyToMessage">
+                <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.composer.replyToMessage, props.composer.thread)">
+                    Replying to <b t-esc="props.composer.replyToMessage.author?.name ?? props.composer.replyToMessage.email_from"/>
                 </span>
-                <span t-if="props.messageToReplyTo.message.thread.notEq(props.composer.thread)">
-                    on: <b><t t-esc="props.messageToReplyTo.message.thread.displayName"/></b>
+                <span t-if="props.composer.replyToMessage.thread.notEq(props.composer.thread)">
+                    on: <b><t t-esc="props.composer.replyToMessage.thread.displayName"/></b>
                 </span>
-                <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
+                <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
             </div>
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended or props.composer.message }">
                 <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 border shadow-sm border-secondary rounded-3"

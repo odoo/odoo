@@ -462,55 +462,6 @@ export function useMessageEdition() {
     return state;
 }
 
-/**
- * @typedef {Object} MessageToReplyTo
- * @property {function} cancel
- * @property {function} isNotSelected
- * @property {function} isSelected
- * @property {import("models").Message|null} message
- * @property {import("models").Thread|null} thread
- * @property {function} toggle
- * @returns {MessageToReplyTo}
- */
-export function useMessageToReplyTo() {
-    return useState({
-        cancel() {
-            Object.assign(this, { message: null, thread: null });
-        },
-        /**
-         * @param {import("models").Thread} thread
-         * @param {import("models").Message} message
-         * @returns {boolean}
-         */
-        isNotSelected(thread, message) {
-            return thread.eq(this.thread) && message.notEq(this.message);
-        },
-        /**
-         * @param {import("models").Thread} thread
-         * @param {import("models").Message} message
-         * @returns {boolean}
-         */
-        isSelected(thread, message) {
-            return thread.eq(this.thread) && message.eq(this.message);
-        },
-        /** @type {import("models").Message|null} */
-        message: null,
-        /** @type {import("models").Thread|null} */
-        thread: null,
-        /**
-         * @param {import("models").Thread} thread
-         * @param {import("models").Message} message
-         */
-        toggle(thread, message) {
-            if (message.eq(this.message)) {
-                this.cancel();
-            } else {
-                Object.assign(this, { message, thread });
-            }
-        },
-    });
-}
-
 export function useSequential() {
     let inProgress = false;
     let nextFunction;

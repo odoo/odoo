@@ -164,6 +164,7 @@ test("Display highligthed search in Discuss", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
     await insertText(".o_searchview_input", "empty");
     triggerHotkey("Enter");
@@ -183,6 +184,7 @@ test("Display multiple highligthed search in Discuss", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
     await insertText(".o_searchview_input", "not empty");
     triggerHotkey("Enter");

@@ -34,7 +34,6 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
  * @property {number} [jumpPresent=0]
  * @property {number} [jumpToNewMessage=0]
  * @property {import("@mail/utils/common/hooks").MessageEdition} [messageEdition]
- * @property {import("@mail/utils/common/hooks").MessageToReplyTo} [messageToReplyTo]
  * @property {"asc"|"desc"} [order="asc"]
  * @property {import("models").Thread} thread
  * @property {string} [searchTerm]
@@ -50,7 +49,6 @@ export class Thread extends Component {
         "jumpToNewMessage?",
         "thread",
         "messageEdition?",
-        "messageToReplyTo?",
         "order?",
         "scrollRef?",
         "showEmptyMessage?",

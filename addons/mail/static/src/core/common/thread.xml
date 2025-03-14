@@ -31,7 +31,6 @@
                         message="msg"
                         previousMessage="prevMsg"
                         registerMessageRef="registerMessageRef"
-                        messageToReplyTo="props.messageToReplyTo"
                         squashed="isSquashed(msg, prevMsg)"
                         onParentMessageClick.bind="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage, props.thread)"
                         thread="props.thread"

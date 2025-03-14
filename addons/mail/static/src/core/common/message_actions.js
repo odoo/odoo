@@ -52,7 +52,11 @@ messageActionsRegistry
         onClick: (component) => {
             const message = toRaw(component.props.message);
             const thread = toRaw(component.props.thread);
-            component.props.messageToReplyTo.toggle(thread, message);
+            if (message.eq(thread.composer.replyToMessage)) {
+                thread.composer.replyToMessage = undefined;
+            } else {
+                thread.composer.replyToMessage = message;
+            }
         },
         sequence: (component) => (component.props.thread?.eq(component.store.inbox) ? 55 : 20),
     })

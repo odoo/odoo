@@ -1125,3 +1125,33 @@ test('can quickly add emoji with ":" keyword', async () => {
     await insertText(".o-mail-Composer-input", ":s", { replace: true });
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
 });
+
+test("composer reply-to message is restored on thread change", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+        name: "General",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Test",
+        attachment_ids: [],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Reply']");
+    await contains(".o-mail-Composer:contains('Replying to')");
+    await click(".o-mail-DiscussSidebar-item:contains('Inbox')");
+    await contains(".o-mail-Message", { count: 0 });
+    await click(".o-mail-DiscussSidebar-item:contains('General')");
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Composer:contains('Replying to')");
+});

@@ -48,7 +48,6 @@ import { NotificationMessage } from "./notification_message";
  * @property {boolean} [highlighted]
  * @property {function} [onParentMessageClick]
  * @property {import("models").Message} message
- * @property {import("@mail/utils/common/hooks").MessageToReplyTo} [messageToReplyTo]
  * @property {boolean} [squashed]
  * @property {import("models").Thread} [thread]
  * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
@@ -87,7 +86,6 @@ export class Message extends Component {
         "onParentMessageClick?",
         "message",
         "messageEdition?",
-        "messageToReplyTo?",
         "previousMessage?",
         "squashed?",
         "thread?",
@@ -203,10 +201,7 @@ export class Message extends Component {
             "o-card p-2 mt-2 border border-secondary": this.props.asCard,
             "pt-1": !this.props.asCard,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
-            "o-selected": this.props.messageToReplyTo?.isSelected(
-                this.props.thread,
-                this.props.message
-            ),
+            "o-selected": this.props.thread?.composer.replyToMessage?.eq(this.props.message),
             "o-squashed": this.props.squashed,
             "mt-1":
                 !this.props.squashed &&
@@ -214,10 +209,7 @@ export class Message extends Component {
                 !this.env.messageCard &&
                 !this.props.asCard,
             "px-2": this.props.isInChatWindow,
-            "opacity-50": this.props.messageToReplyTo?.isNotSelected(
-                this.props.thread,
-                this.props.message
-            ),
+            "opacity-50": this.props.thread?.composer.replyToMessage?.notEq(this.props.message),
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
             "o-editing": this.state.isEditing,
         };
@@ -439,7 +431,6 @@ export class Message extends Component {
                 thread: this.props.thread,
                 isFirstMessage: this.props.isFirstMessage,
                 messageEdition: this.props.messageEdition,
-                messageToReplyTo: this.props.messageToReplyTo,
                 openReactionMenu: () => this.openReactionMenu(),
                 state: this.state,
             },
