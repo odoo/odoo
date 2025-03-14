@@ -136,3 +136,29 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         xml = self.env['account.edi.xml.ubl_bis3']._export_invoice(new_invoice)[0]
         root = etree.fromstring(xml)
         self.assertEqual(root.findtext('./{*}AccountingCustomerParty/{*}Party/{*}EndpointID'), None)
+
+    def test_import_partner_fields(self):
+        """ We are going to import the e-invoice and check partner is correctly imported."""
+        file_path = "bis3_bill_example.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+
+        bill = self.env['account.journal']\
+                .with_context(default_journal_id=self.company_data["default_journal_purchase"].id)\
+                ._create_document_from_attachment(xml_attachment.id)
+
+        self.assertRecordValues(bill.partner_id, [{
+            'name': "ALD Automotive LU",
+            'phone': False,
+            'email': 'adl@test.com',
+            'vat': 'LU12977109',
+            'street': '270 rte d\'Arlon',
+            'street2': False,
+            'city': 'Strassen',
+            'zip': '8010',
+        }])

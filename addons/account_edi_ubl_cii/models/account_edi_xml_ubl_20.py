@@ -598,7 +598,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         name = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:Name', tree) or \
             self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:RegistrationName', tree)
         country_code = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)
-        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat, country_code=country_code)
+        street = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:StreetName', tree)
+        street2 = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:AdditionalStreetName', tree)
+        city = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:CityName', tree)
+        zip_code = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:PostalZone', tree)
+
+        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat, country_code=country_code, street=street, street2=street2, city=city, zip_code=zip_code)
 
         # ==== currency_id ====
 
