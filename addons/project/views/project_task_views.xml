@@ -12,20 +12,19 @@
                     <field name="stage_id"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>
                     <field name="partner_id" operator="child_of"/>
-                    <filter string="Followed" name="followed_by_me" domain="[('message_is_follower', '=', True)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator invisible="context.get('default_project_id')"/>
                     <filter string="Favorite Projects" name="favorite_projects" domain="[('project_id.is_favorite', '=', True)]" invisible="context.get('default_project_id')"/>
                     <separator/>
-                    <filter string="Starred Tasks" name="starred_tasks" domain="[('priority', '=', '1')]"/>
+                    <filter string="Starred" name="starred_tasks" domain="[('priority', '=', '1')]"/>
                     <separator groups="project.group_project_task_dependencies"/>
                     <filter string="Blocked" name="blocked" domain="[('state', '=', '04_waiting_normal')]" groups="project.group_project_task_dependencies"/>
                     <filter string="Blocking" name="blocking" domain="[('is_closed', '=', False), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
                     <separator/>
-                    <filter string="Last Stage Update" name="date_last_stage_update" date="date_last_stage_update"/>
+                    <filter string="Creation Date" name="creation_date_filter" date="create_date"/>
                     <separator/>
-                    <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
-                    <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
+                    <filter string="Open" name="open_tasks" domain="[('is_closed', '=', False)]"/>
+                    <filter string="Closed" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
                     <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update">
                         <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('date_last_stage_update', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=30), datetime.time(23, 59, 59)).to_utc())]"/>
                         <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
@@ -39,7 +38,6 @@
                         <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
                         <filter string="Company" name="company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Creation Date" name="create_date" context="{'group_by': 'create_date'}"/>
-                        <filter string="Last Stage Update" name="last_stage_update" context="{'group_by': 'date_last_stage_update'}"/>
                     </group>
                 </search>
             </field>
@@ -80,7 +78,7 @@
             <field name="mode">primary</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
-                <filter name="date_last_stage_update" position="after">
+                <filter name="creation_date_filter" position="after">
                     <filter string="Deadline" name="date_deadline" date="date_deadline">
                         <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;', datetime.datetime.combine(context_today(), datetime.time(23,59,59)).to_utc())]"/>
                         <filter name="deadline_this_week" string="This Week" domain="[
@@ -94,7 +92,7 @@
                         <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc())]"/>
                     </filter>
                 </filter>
-                <filter name="last_stage_update" position="after">
+                <filter name="create_date" position="after">
                     <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
                     <separator/>
                     <filter string="Properties" name="group_by_properties" context="{'group_by': 'task_properties'}"/>
@@ -115,8 +113,6 @@
                 <filter name="hide_subtasks" position="after">
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
-                    <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator invisible="1"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
