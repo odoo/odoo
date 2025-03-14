@@ -1226,7 +1226,7 @@ class AccountMove(models.Model):
     @api.depends('matched_payment_ids')
     def _compute_payment_count(self):
         for invoice in self:
-            invoice.payment_count = len(invoice.matched_payment_ids)
+            invoice.payment_count = len(invoice.matched_payment_ids) or len(invoice._get_reconciled_payments())
 
     @api.depends('invoice_payment_term_id', 'invoice_date', 'currency_id', 'amount_total_in_currency_signed', 'invoice_date_due')
     def _compute_needed_terms(self):
@@ -5082,7 +5082,8 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def open_payments(self):
-        return self.matched_payment_ids._get_records_action(name=_("Payments"))
+        payments = self.matched_payment_ids or self._get_reconciled_payments()
+        return payments._get_records_action(name=_("Payments"))
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
