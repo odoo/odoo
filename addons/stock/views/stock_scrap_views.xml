@@ -124,6 +124,7 @@
             </field>
         </record>
 
+        <!-- aqui sao as views do action_stock_scrap -->
         <record model="ir.actions.act_window" id="action_stock_scrap">
             <field name="name">Scrap Orders</field>
             <field name="res_model">stock.scrap</field>
@@ -178,11 +179,65 @@
             </field>
         </record>
 
+        <record id="stock_scrap_form_view3" model="ir.ui.view">
+            <field name="name">stock.scrap.form3</field>
+            <field name="model">stock.move.line</field>
+            <field name="arch" type="xml">
+                <form string="Scrap">
+                    <group>
+                        <group>
+                            <field name="scrap_state" invisible="1"/>
+                            <field name="product_id" option="{'no_create': True}" domain="[('id', 'in', context.get('product_ids', []))]" readonly="scrap_state == 'done'"/>
+                            <field name="tracking" invisible="1"/>
+                            <label for="quantity"/>
+                            <div class="o_row">
+                                <field name="quantity" readonly="tracking == 'serial'"/>
+                                <field name="product_uom_id" readonly="tracking == 'serial'" groups="uom.group_uom" widget="many2one_uom"/>
+                            </div>
+                            <field name="lot_id" groups="stock.group_production_lot"
+                                context="{'default_product_id': product_id}"
+                                invisible="not product_id or tracking == 'none'"
+                                readonly="state == 'done'"
+                                required="tracking != 'none'"
+                            />
+                        </group>
+                        <group>
+                            <!-- picking_id is not used. remove it later -->
+                            <field name="picking_id" invisible="1" readonly="scrap_state == 'done'"/>
+                            <field name="package_id" groups="stock.group_tracking_lot" readonly="scrap_state == 'done'"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner" readonly="scrap_state == 'done'"/>
+                            <field name="company_id" invisible="1" readonly="scrap_state == 'done'"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}" readonly="scrap_state == 'done'"/>
+                            <field name="scrap_final_location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}"  readonly="scrap_state == 'done'"/>
+                            <field name="scrap_should_replenish" readonly="scrap_state == 'done'"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+    <record id="action_scrapped_moves" model="ir.actions.act_window">
+        <field name="name">Scrapped Moves</field>
+        <field name="res_model">stock.move.line</field>
+        <field name="view_mode">list,kanban,pivot,form</field>
+        <field name="view_id" ref="view_move_line_tree"/>
+        <field name="context">{'search_default_done': 1, 'create': 0, 'pivot_measures': ['quantity_product_uom', '__count__']}</field>
+        <field name="domain">[('move_id.scrapped', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There's no product move yet
+            </p><p>
+                This menu gives you the full traceability of inventory operations on a specific product.
+                You can filter on the product to see all the past movements for the product.
+            </p>
+        </field>
+    </record>
+
     <menuitem
         id="menu_stock_scrap"
         name="Scrap"
         parent="menu_stock_adjustments"
-        action="action_stock_scrap"
+        action="action_scrapped_moves"
         sequence="99"/>
 
 </odoo>

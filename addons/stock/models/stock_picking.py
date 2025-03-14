@@ -1886,6 +1886,7 @@ class StockPicking(models.Model):
 
         return date_category_to_search_domain.get(date_category)
 
+    # scrap via receipts
     def button_scrap(self):
         self.ensure_one()
         view = self.env.ref('stock.stock_scrap_form_view2')
