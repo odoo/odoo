@@ -1493,7 +1493,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
 msgid "A reconciliation model already bears this name."
-msgstr "Một đối tượng đối chiếu khác đã có tên này."
+msgstr "Một mẫu đối chiếu khác đã có tên này."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -15246,6 +15246,13 @@ msgid "This Quarter"
 msgstr "Quý này"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "This specific error occurred during the import:"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
 msgstr "Kỳ thuế này"
@@ -17377,11 +17384,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
-msgid ""
-"You cannot remove parts of the audit trail. Archive the record instead."
+msgid "You cannot remove parts of the audit trail."
 msgstr ""
-"Bạn không thể xóa các phần của dấu vết kiểm toán. Thay vào đó, hãy lưu trữ "
-"bản ghi."
 
 #. module: account
 #. odoo-python
