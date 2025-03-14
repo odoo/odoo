@@ -11,7 +11,7 @@ class EventEvent(models.Model):
 
     event_booth_ids = fields.One2many(
         'event.booth', 'event_id', string='Booths', copy=True,
-        compute='_compute_event_booth_ids', readonly=False, store=True)
+        compute='_compute_event_booth_ids', readonly=False, store=True, precompute=True)
     event_booth_count = fields.Integer(
         string='Total Booths',
         compute='_compute_event_booth_count')
