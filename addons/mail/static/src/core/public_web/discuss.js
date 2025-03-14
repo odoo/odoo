@@ -6,11 +6,7 @@ import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
-import {
-    useMessageEdition,
-    useMessageHighlight,
-    useMessageToReplyTo,
-} from "@mail/utils/common/hooks";
+import { useMessageEdition, useMessageHighlight } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -52,7 +48,6 @@ export class Discuss extends Component {
         this.store = useService("mail.store");
         this.messageHighlight = useMessageHighlight();
         this.messageEdition = useMessageEdition();
-        this.messageToReplyTo = useMessageToReplyTo();
         this.contentRef = useRef("content");
         this.root = useRef("root");
         this.state = useState({ jumpThreadPresent: 0 });
