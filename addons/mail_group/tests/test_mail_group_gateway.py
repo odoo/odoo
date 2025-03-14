@@ -47,9 +47,12 @@ class TestMailGroupGateway(TestMailListCommon):
                 debug_log=True,
             )
 
-        last_message = self.test_group.mail_group_message_ids[-1]
-        self.assertEqual(last_message.email_from, self.test_group_member_2.email)
-        self.assertEqual(last_message.subject, 'Re: Hello')
+        test_group_message = self.test_group.mail_group_message_ids[-1]
+        self.assertEqual(test_group_message, last_message)
+
+        forward = self.test_group_other.mail_group_message_ids[-1]
+        self.assertEqual(forward.email_from, self.test_group_member_2.email)
+        self.assertEqual(forward.subject, 'Re: Hello')
 
     def test_gateway_forward_to_other_model(self):
         """ Test forwarding an email from a mailing list to another one. """
