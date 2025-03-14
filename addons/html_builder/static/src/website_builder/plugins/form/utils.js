@@ -148,3 +148,63 @@ export function renderField(field, resetId = false) {
     });
     return template.content.firstElementChild;
 }
+
+/**
+ * Returns true if the field is required by the model or by the user.
+ *
+ * @param {HTMLElement} fieldEl
+ * @returns {boolean}
+ */
+export function isFieldRequired(fieldEl) {
+    const classList = fieldEl.classList;
+    return (
+        classList.contains("s_website_form_required") ||
+        classList.contains("s_website_form_model_required")
+    );
+}
+
+/**
+ * Returns the multiple checkbox/radio element if it exist else null
+ *
+ * @param {HTMLElement} fieldEl
+ * @returns {HTMLElement}
+ */
+export function getMultipleInputs(fieldEl) {
+    return fieldEl.querySelector(".s_website_form_multiple");
+}
+
+export function getLabelPosition(fieldEl) {
+    const label = fieldEl.querySelector(".s_website_form_label");
+    if (fieldEl.querySelector(".row:not(.s_website_form_multiple)")) {
+        return label.classList.contains("text-end") ? "right" : "left";
+    } else {
+        return label.classList.contains("d-none") ? "none" : "top";
+    }
+}
+
+/**
+ * Returns the format object of a field containing
+ * the position, labelWidth and bootstrap col class
+ *
+ * @param {HTMLElement} fieldEl
+ * @returns {Object}
+ */
+export function getFieldFormat(fieldEl) {
+    let requiredMark, optionalMark;
+    const mark = fieldEl.querySelector(".s_website_form_mark");
+    if (mark) {
+        requiredMark = isFieldRequired(fieldEl);
+        optionalMark = !requiredMark;
+    }
+    const multipleInputEl = getMultipleInputs(fieldEl);
+    const format = {
+        labelPosition: getLabelPosition(fieldEl),
+        labelWidth: fieldEl.querySelector(".s_website_form_label").style.width,
+        multiPosition: (multipleInputEl && multipleInputEl.dataset.display) || "horizontal",
+        col: [...fieldEl.classList].filter((el) => el.match(/^col-/g)).join(" "),
+        requiredMark: requiredMark,
+        optionalMark: optionalMark,
+        mark: mark && mark.textContent,
+    };
+    return format;
+}
