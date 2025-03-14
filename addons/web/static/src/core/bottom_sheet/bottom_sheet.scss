@@ -342,4 +342,19 @@
         --KanbanColorPickerField-padding: #{map-get($spacers, 3)} var(--BottomSheet-Entry-paddingX);
         --KanbanColorPickerField-gap: #{map-get($spacers, 3)};
     }
+
+    // Avatar Card
+    &.o_avatar_bottom_sheet .o_avatar_card {
+        --card-spacer-y: 0;
+        --card-spacer-x: 0;
+        max-width: none;
+
+        .card-body {
+            margin-bottom: map-get($spacers, 2);
+
+            > div {
+                gap: map-get($spacers, 3) !important;
+            }
+        }
+    }
 }

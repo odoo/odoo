@@ -1,6 +1,6 @@
 import { usePopover } from "@web/core/popover/popover_hook";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
-
+import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 
 export class Avatar extends Component {
@@ -20,10 +20,15 @@ export class Avatar extends Component {
 
     setup() {
         this.avatarCard = usePopover(this.constructor.components.Popover);
+        this.bottomSheet = useService("bottomSheet");
     }
 
     get canOpenPopover() {
         return this.props.canOpenPopover && !this.env.isSmall && !!this.props.resId;
+    }
+
+    get canOpenBottomSheet() {
+        return this.props.canOpenPopover && this.env.isSmall && !!this.props.resId;
     }
 
     get popoverProps() {
@@ -36,6 +41,15 @@ export class Avatar extends Component {
         const target = ev.currentTarget;
         if (!this.avatarCard.isOpen && this.canOpenPopover) {
             this.avatarCard.open(target, this.popoverProps);
+        } else if (this.canOpenBottomSheet) {
+            this.bottomSheet.add(
+                AvatarCardPopover,
+                { id: this.props.resId },
+                {
+                    title: this.props.displayName || '',
+                    sheetClasses: 'o_avatar_bottom_sheet'
+                }
+            );
         }
     }
 }
