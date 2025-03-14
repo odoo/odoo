@@ -863,7 +863,7 @@ class PosSession(models.Model):
 
             if not order_is_invoiced:
                 base_lines = order._prepare_tax_base_line_values(sign=1)
-                tax_results = self.env['account.tax']._compute_taxes(base_lines, order.company_id)
+                tax_results = self.env['account.tax']._compute_taxes(base_lines, order.company_id, include_caba_tags=True)
                 for base_line, to_update in tax_results['base_lines_to_update']:
                     # Combine sales/refund lines
                     sale_key = (
