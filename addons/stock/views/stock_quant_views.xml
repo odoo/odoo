@@ -123,6 +123,7 @@
                 <field name="id" column_invisible="True"/>
                 <field name="tracking" column_invisible="True"/>
                 <field name="company_id" column_invisible="True"/>
+                <field name="rounding" column_invisible="True"/>
                 <field name="location_id"
                        column_invisible="context.get('hide_location', False)"
                        readonly="id"
@@ -143,8 +144,8 @@
                        readonly="id"
                        options="{'no_create': True}"/>
                 <field name="inventory_quantity_auto_apply" string="On Hand Quantity" readonly="0" sum="Total On Hand"/>
-                <field name="reserved_quantity" optional="show" sum="Total Reserved"/>
-                <field name="available_quantity" optional="hide" sum="Total Available"/>
+                <field name="reserved_quantity" optional="show" widget="rounded_float" sum="Total Reserved"/>
+                <field name="available_quantity" optional="hide" widget="rounded_float" sum="Total Available"/>
                 <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                 <field name="lot_properties" optional="hide"/>
                 <button name="action_view_stock_moves" string="History" type="object" class="btn-link" icon="fa-history"/>
@@ -434,6 +435,7 @@ in this location. That leads to a negative stock.
                 <field name="tracking" column_invisible="True"/>
                 <field name="inventory_quantity_set" column_invisible="True"/>
                 <field name="company_id" column_invisible="True"/>
+                <field name="rounding" column_invisible="True"/>
                 <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" column_invisible="context.get('hide_location', False)" readonly="id" options="{'no_create': True}"/>
                 <field name="storage_category_id" groups="stock.group_stock_multi_locations" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
                 <field name="cyclic_inventory_frequency" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
@@ -450,8 +452,8 @@ in this location. That leads to a negative stock.
                 <field name="package_id" groups="stock.group_tracking_lot" readonly="id"/>
                 <field name="owner_id" groups="stock.group_tracking_owner" readonly="id" options="{'no_create': True}"/>
                 <field name="last_count_date" optional='hidden' readonly='1'/>
-                <field name="available_quantity" string="Available Quantity" decoration-danger="available_quantity &lt; 0" optional="hidden"/>
-                <field name="quantity" optional="show" decoration-warning="quantity &lt; 0" string="On Hand Quantity"/>
+                <field name="available_quantity" string="Available Quantity" decoration-danger="available_quantity &lt; 0" widget="rounded_float" optional="hidden"/>
+                <field name="quantity" optional="show" decoration-warning="quantity &lt; 0" widget="rounded_float" string="On Hand Quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                 <field name="inventory_quantity" widget="counted_quantity_widget"/>
                 <field name="inventory_diff_quantity" string="Difference"  invisible="not inventory_quantity_set" decoration-muted="inventory_diff_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
