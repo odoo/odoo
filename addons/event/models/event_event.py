@@ -128,7 +128,7 @@ class EventEvent(models.Model):
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
-        compute='_compute_event_ticket_ids', readonly=False, store=True)
+        compute='_compute_event_ticket_ids', readonly=False, store=True, precompute=True)
     event_registrations_started = fields.Boolean(
         'Registrations started', compute='_compute_event_registrations_started',
         help="registrations have started if the current datetime is after the earliest starting date of tickets."
@@ -192,7 +192,7 @@ class EventEvent(models.Model):
     # questions
     question_ids = fields.One2many(
         'event.question', 'event_id', 'Questions', copy=True,
-        compute='_compute_question_ids', readonly=False, store=True)
+        compute='_compute_question_ids', readonly=False, store=True, precompute=True)
     general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
                                            domain=[('once_per_order', '=', True)])
     specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
