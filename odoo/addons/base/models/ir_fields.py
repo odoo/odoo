@@ -232,7 +232,6 @@ class IrFieldsConverter(models.AbstractModel):
 
             val = property_dict.get('value')
             if not val:
-                property_dict.pop('value', None)
                 continue
 
             property_type = property_dict['type']
