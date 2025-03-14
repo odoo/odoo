@@ -109,9 +109,10 @@ class IrQWeb(models.AbstractModel):
             if not module or module.state == 'installed':
                 return []
             name = el.attrib.get('string') or 'Snippet'
-            div = '<div name="%s" data-oe-type="snippet" data-module-id="%s" data-oe-thumbnail="%s"><section/></div>' % (
+            div = '<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-oe-thumbnail="%s"><section/></div>' % (
                 escape(pycompat.to_text(name)),
                 module.id,
+                module.display_name,
                 escape(pycompat.to_text(thumbnail))
             )
             self._append_text(div, compile_context)
