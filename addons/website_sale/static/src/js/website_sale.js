@@ -427,7 +427,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         }
         if ($aSubmit.hasClass('a-submit-loading')) {
             var loading = '<span class="fa fa-cog fa-spin"/>';
-            var fa_span = $aSubmit.find('span[class*="fa"]');
+            var fa_span = $aSubmit.find('i[class*="fa"]');
             if (fa_span.length) {
                 fa_span.replaceWith(loading);
             } else {
