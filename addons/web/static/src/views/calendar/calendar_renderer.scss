@@ -187,14 +187,16 @@
         .fc-timeGridDay-view {
             .fc-col-header-cell {
                 text-align: left;
+                vertical-align: middle;
 
                 a {
                     gap: map-get($spacers, 1);
                     margin-left: map-get($spacers, 1);
-                    margin-bottom: map-get($spacers, 1);
                 }
                 .o_cw_day_number {
                     padding: map-get($spacers, 1);
+                    place-content: center;
+                    line-height: 1;
                 }
             }
         }
@@ -210,7 +212,7 @@
                 }
 
                 .o_cw_day_number {
-                    padding: map-get($spacers, 1) map-get($spacers, 2);
+                    padding: map-get($spacers, 1);
 
                     @include media-breakpoint-up(lg) {
                         font-size: 1.25rem;
@@ -243,21 +245,10 @@
                     --o-cw-bg: #{$o-cw-color-today-accent};
 
                     .o_cw_day_number {
-                        z-index: 0;
-                        position:relative;
                         color: var(--o-cw-color);
-
-                        &:before {
-                            content: '';
-                            @include o-position-absolute($top: 50%, $left: 50%);
-                            transform: translate(-50%,-50%);
-                            z-index: -1;
-                            width: 100%;
-                            border-radius: $border-radius-pill;
-                            background: var(--o-cw-bg);
-                            aspect-ratio: 1;
-                            color: $o-view-background-color;
-                        }
+                        background-color: var(--o-cw-bg);
+                        border-radius: 50%;
+                        aspect-ratio: 1;
                     }
                 }
             }
@@ -444,26 +435,19 @@
                         }
                     }
 
-                    .fc-daygrid-day-number:before {
-                        content: "";
-                        z-index: -1;
-                        display: none;
-                        @include o_position-absolute($top: 50%, $left: 50%);
-                        transform: translate(-50%, -50%);
+                    .fc-daygrid-day-number {
+                        $padding-size: map-get($spacers, 1);
+                        padding: $padding-size;
+                        line-height: calc(100% + #{$padding-size});
                         aspect-ratio: 1/1;
-                        height: 100%;
-                        border-radius: 100%;
+                        border-radius: 50%;
                         background: var(--o-cw-bg, none);
-                        padding: var(--o-circle-padding);
                     }
 
                     &.fc-day-today {
                         --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
                         --o-cw-bg: #{$o-cw-color-today-accent};
 
-                        .fc-daygrid-day-number:before {
-                            display: block;
-                        }
                     }
                 }
             }
@@ -532,10 +516,6 @@
 
                             --o-cw-color: #{color-contrast($-bg)};
                             --o-cw-bg: #{$-bg};
-
-                            &:before {
-                                display: block;
-                            }
                         }
 
                         .fc-daygrid-day-number:before {
