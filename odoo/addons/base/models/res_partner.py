@@ -7,11 +7,13 @@ import datetime
 import pytz
 
 from collections import defaultdict
+from collections.abc import Iterable
 from random import randint
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.fields import Domain
 
 import typing
 if typing.TYPE_CHECKING:
@@ -305,6 +307,28 @@ class ResPartner(models.Model):
                                           store=True)
     company_name = fields.Char('Company Name')
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
+
+    properties = fields.Properties(
+        string="Properties",
+        definition="properties_base_definition_id.properties_definition",
+        copy=True,
+    )
+    properties_base_definition_id = fields.Many2one(
+        "properties.base.definition",
+        compute="_compute_properties_base_definition_id",
+        search="_search_properties_base_definition_id",
+    )
+
+    def _compute_properties_base_definition_id(self):
+        self.properties_base_definition_id = self.env['properties.base.definition'].sudo()._get_record_for_properties('res.partner', 'properties')
+
+    def _search_properties_base_definition_id(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        properties_base_definition_id = self.env['properties.base.definition'].sudo()._get_record_id_for_properties('res.partner', 'properties')
+        if not isinstance(value, Iterable):
+            value = (value,)
+        return Domain.TRUE if properties_base_definition_id in value else Domain.FALSE
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self: ResPartner = fields.Many2one(comodel_name='res.partner', compute='_compute_get_ids')
@@ -911,6 +935,9 @@ class ResPartner(models.Model):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
+
+            # Needed to add the default properties values
+            vals['properties_base_definition_id'] = self.env['properties.base.definition']._get_record_id_for_properties('res.partner', 'properties')
         partners = super().create(vals_list)
         # due to ir.default, compute is not called as there is a default value
         # hence calling the compute manually
