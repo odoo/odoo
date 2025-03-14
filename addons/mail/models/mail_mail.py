@@ -469,8 +469,9 @@ class MailMail(models.Model):
         # load attachment binary data with a separate read(), as prefetching all
         # `datas` (binary field) could bloat the browse cache, triggering
         # soft/hard mem limits with temporary data.
+        # attachments sorted by increasing ID to match front-end and upload ordering
         email_attachments = [(a['name'], a['raw'], a['mimetype'])
-                             for a in attachments.sudo().read(['name', 'raw', 'mimetype'])
+                             for a in attachments.sudo().sorted('id').read(['name', 'raw', 'mimetype'])
                              if a['raw'] is not False]
 
         # Build final list of email values with personalized body for recipient
