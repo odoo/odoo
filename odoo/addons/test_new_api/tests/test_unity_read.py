@@ -763,6 +763,28 @@ class TestUnityRead(TransactionCase):
             }
         ])
 
+    def test_reference_id_without_model(self):
+        self.course.m2o_reference_model = False
+        read = self.course.web_read(
+            {
+                'm2o_reference_id':
+                    {
+                        'fields':
+                            {
+                                'display_name': {},
+                                'write_date': {},
+                            },
+                    },
+                'm2o_reference_model': {}
+            })
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'm2o_reference_id': False,
+                'm2o_reference_model': False,
+            }
+        ])
+
     def test_reference_with_deleted_record(self):
         self.lesson_day1.unlink()
         read = self.course.web_read(
