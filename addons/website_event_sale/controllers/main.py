@@ -16,10 +16,10 @@ class WebsiteEventSaleController(WebsiteEventController):
             item['price'] = item['ticket']['price'] if item['ticket'] else 0
         return res
 
-    def _create_attendees_from_registration_post(self, event, registration_data):
+    def _create_attendees_from_registration_post(self, event, slot_id, registration_data):
         # we have at least one registration linked to a ticket -> sale mode activate
         if not any(info.get('event_ticket_id') for info in registration_data):
-            return super()._create_attendees_from_registration_post(event, registration_data)
+            return super()._create_attendees_from_registration_post(event, slot_id, registration_data)
 
         event_ticket_ids = [registration['event_ticket_id'] for registration in registration_data if registration.get('event_ticket_id')]
         event_ticket_by_id = {
@@ -29,7 +29,7 @@ class WebsiteEventSaleController(WebsiteEventController):
 
         if all(event_ticket.price == 0 for event_ticket in event_ticket_by_id.values()) and not request.cart.id:
             # all chosen tickets are free AND no existing SO -> skip SO and payment process
-            return super()._create_attendees_from_registration_post(event, registration_data)
+            return super()._create_attendees_from_registration_post(event, slot_id, registration_data)
 
         order_sudo = request.cart or request.website._create_cart()
         tickets_data = defaultdict(int)
@@ -45,6 +45,7 @@ class WebsiteEventSaleController(WebsiteEventController):
                 product_id=ticket_sudo.product_id.id,
                 quantity=count,
                 event_ticket_id=ticket_id,
+                slot_id=slot_id,
             )
             cart_data[ticket_id] = cart_values['line_id']
 
@@ -55,7 +56,7 @@ class WebsiteEventSaleController(WebsiteEventController):
                 data['sale_order_id'] = order_sudo.id
                 data['sale_order_line_id'] = cart_data[event_ticket_id]
 
-        return super()._create_attendees_from_registration_post(event, registration_data)
+        return super()._create_attendees_from_registration_post(event, slot_id, registration_data)
 
     @route()
     def registration_confirm(self, event, **post):

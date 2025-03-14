@@ -19,10 +19,10 @@ class PaymentPortalOnsite(PaymentPortal):
         ]
         count_per_ticket = request.env['event.registration'].sudo()._read_group(
             registration_domain,
-            ['event_ticket_id'], ['__count']
+            ['event_ticket_id', 'slot_ticket_id'], ['__count']
         )
-        for ticket, count in count_per_ticket:
-            ticket._check_seats_availability(minimal_availability=count)
+        for ticket, slot_ticket, count in count_per_ticket:
+            (slot_ticket or ticket)._check_seats_availability(minimal_availability=count)
 
         count_per_event = request.env['event.registration'].sudo()._read_group(
             registration_domain,
@@ -30,3 +30,4 @@ class PaymentPortalOnsite(PaymentPortal):
         )
         for event, count in count_per_event:
             event._check_seats_availability(minimal_availability=count)
+            event._check_slot_seats_availability(minimal_availability=count)

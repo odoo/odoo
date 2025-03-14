@@ -6,6 +6,7 @@ import werkzeug
 
 from ast import literal_eval
 from collections import Counter
+from datetime import datetime
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -207,6 +208,7 @@ class WebsiteEventController(http.Controller):
         urls = lazy(event._get_event_resource_urls)
         return {
             'event': event,
+            'slots': event.slot_ids.filtered(lambda s: s.start_datetime > datetime.now()).grouped('date') if event.is_multi_slots else False,
             'main_object': event,
             'range': range,
             'google_url': lazy(lambda: urls.get('google_url')),
@@ -245,8 +247,7 @@ class WebsiteEventController(http.Controller):
             'quantity': count,
         } for tid, count in ticket_order.items() if count]
 
-    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
-    def registration_new(self, event, **post):
+    def _check_registration_tickets(self, event, post):
         tickets = self._process_tickets_form(event, post)
         availability_check = True
         if event.seats_limited:
@@ -255,6 +256,14 @@ class WebsiteEventController(http.Controller):
                 ordered_seats += ticket['quantity']
             if event.seats_available < ordered_seats:
                 availability_check = False
+        return tickets, availability_check
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        if post.get("selected_tickets"):
+            post = post | literal_eval(post["selected_tickets"])
+            del post["selected_tickets"]
+        tickets, availability_check = self._check_registration_tickets(event, post)
         if not tickets:
             return False
         default_first_attendee = {}
@@ -277,6 +286,25 @@ class WebsiteEventController(http.Controller):
             'event': event,
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
+            **({"selected_slot": post['selected_slot']} if post.get("selected_slot") else {})
+        })
+
+    @http.route(['/event/<model("event.event"):event>/registration/slot'], type='jsonrpc', auth="public", methods=['POST'], website=True)
+    def registration_slot(self, event, **post):
+        tickets, availability_check = self._check_registration_tickets(event, post)
+        ticket_quantity = {ticket['id']: ticket['quantity'] for ticket in tickets}
+        return request.env['ir.ui.view']._render_template("website_event.registration_slot_details", {
+            'event': event,
+            'available_slots': event.slot_ids.filtered(lambda s:
+                                   s.start_datetime > datetime.now() and
+                                   all(  # Enough available seats or unlimited seats
+                                       st.seats_available >= ticket_quantity.get(st.ticket_id.id, 0) or
+                                       (not st.seats_available and (not st.event_id.seats_limited and not st.ticket_id.seats_limited))
+                                       for st in s.event_slot_ticket_ids
+                                    )
+                               ).grouped('date'),
+            'availability_check': availability_check,
+            'selected_tickets': post,
         })
 
     def _process_attendees_form(self, event, form_details):
@@ -359,7 +387,7 @@ class WebsiteEventController(http.Controller):
 
         return list(registrations.values())
 
-    def _create_attendees_from_registration_post(self, event, registration_data):
+    def _create_attendees_from_registration_post(self, event, slot_id, registration_data):
         """ Also try to set a visitor (from request) and
         a partner (if visitor linked to a user for example). Purpose is to gather
         as much informations as possible, notably to ease future communications.
@@ -369,6 +397,8 @@ class WebsiteEventController(http.Controller):
         registrations_to_create = []
         for registration_values in registration_data:
             registration_values['event_id'] = event.id
+            if slot_id:
+                registration_values['slot_id'] = slot_id
             if not registration_values.get('partner_id') and visitor_sudo.partner_id:
                 registration_values['partner_id'] = visitor_sudo.partner_id.id
             elif not registration_values.get('partner_id'):
@@ -391,12 +421,14 @@ class WebsiteEventController(http.Controller):
             request.env['ir.http']._verify_request_recaptcha_token('website_event_registration')
         except UserError:
             return request.redirect('/event/%s/register?registration_error_code=recaptcha_failed' % event.id)
+        slot_id = int(post['selected_slot']) if post.get('selected_slot') else False
+        post.pop('selected_slot', None)
         registrations_data = self._process_attendees_form(event, post)
         registration_tickets = Counter(registration['event_ticket_id'] for registration in registrations_data)
         event_tickets = request.env['event.event.ticket'].browse(list(registration_tickets.keys()))
         if any(event_ticket.seats_limited and event_ticket.seats_available < registration_tickets.get(event_ticket.id) for event_ticket in event_tickets):
             return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
-        attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
+        attendees_sudo = self._create_attendees_from_registration_post(event, slot_id, registrations_data)
 
         return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
 
@@ -415,12 +447,14 @@ class WebsiteEventController(http.Controller):
             self._get_registration_confirm_values(event, attendees_sudo))
 
     def _get_registration_confirm_values(self, event, attendees_sudo):
-        urls = event._get_event_resource_urls()
+        slot = attendees_sudo.slot_id
+        urls = event._get_event_resource_urls(slot)
         return {
             'attendees': attendees_sudo,
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
+            'slot': slot,
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
