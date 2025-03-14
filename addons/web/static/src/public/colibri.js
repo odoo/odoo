@@ -23,6 +23,10 @@ export class Colibri {
         this.dynamicNodes = new Map();
         this.core = core;
         this.interaction = new I(el, core.env, this);
+        this.setupInteraction();
+    }
+
+    setupInteraction() {
         this.interaction.setup();
     }
 
@@ -379,13 +383,9 @@ export class Colibri {
             }
         }
 
-        for (const cleanup of this.cleanups.reverse()) {
-            cleanup();
-        }
-        this.cleanups = [];
         this.listeners.clear();
         this.dynamicNodes.clear();
-        this.interaction.destroy();
+        this.destroyInteraction();
         this.core = null;
         this.isDestroyed = true;
         this.isReady = false;
