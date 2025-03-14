@@ -21,8 +21,7 @@ export class EditInteractionPlugin extends Plugin {
         );
         const event = new CustomEvent("edit_interaction_plugin_loaded");
         event.historyCallbacks = {
-            disableObserver: this.dependencies.history.disableObserver,
-            enableObserver: this.dependencies.history.enableObserver,
+            ignoreDOMChanges: this.dependencies.history.ignoreDOMChanges,
         };
         window.parent.document.dispatchEvent(event);
     }
