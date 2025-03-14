@@ -244,7 +244,7 @@ class AccountEdiXmlCii(models.AbstractModel):
         template_values['tax_basis_total_amount'] = tax_details['base_amount_currency']
         template_values['tax_total_amount'] = tax_details['tax_amount_currency']
 
-        if self.env['account.payment']._fields.get('sdd_mandate_id') and invoice.matched_payment_ids.sdd_mandate_id:
+        if self.env['account.payment']._fields.get('sdd_mandate_id') and invoice.reconciled_payment_ids.sdd_mandate_id:
             template_values['payment_means_code'] = PAYMENT_MEAN_CODES['SEPA direct debit']
         else:
             template_values['payment_means_code'] = PAYMENT_MEAN_CODES['Payment to bank account']
