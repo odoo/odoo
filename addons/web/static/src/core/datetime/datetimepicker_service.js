@@ -6,6 +6,7 @@ import { ensureArray, zip, zipWith } from "../utils/arrays";
 import { deepCopy, shallowEqual } from "../utils/objects";
 import { DateTimePicker } from "./datetime_picker";
 import { DateTimePickerPopover } from "./datetime_picker_popover";
+import { DateTimePickerBottomSheet } from "./datetime_picker_bottom_sheet";
 
 /**
  * @typedef {luxon["DateTime"]["prototype"]} DateTime
@@ -51,8 +52,8 @@ const parsers = {
 };
 
 export const datetimePickerService = {
-    dependencies: ["popover"],
-    start(env, { popover: popoverService }) {
+    dependencies: ["popover", "bottomSheet"],
+    start(env, { popover: popoverService, bottomSheet: bottomSheetService }) {
         return {
             /**
              * @param {DateTimePickerHookParams} hookParams
@@ -76,6 +77,11 @@ export const datetimePickerService = {
                         }
                     },
                 });
+
+                // Variables for bottom sheet
+                let bottomSheetClose = null;
+                let isBottomSheetOpen = false;
+
                 // Hook methods
 
                 /**
@@ -196,7 +202,7 @@ export const datetimePickerService = {
                 const onInputChange = (ev) => {
                     updateValueFromInputs();
                     inputsChanged[ev.target === getInput(1) ? 1 : 0] = true;
-                    if (!popover.isOpen || inputsChanged.every(Boolean)) {
+                    if ((!popover.isOpen && !isBottomSheetOpen) || inputsChanged.every(Boolean)) {
                         saveAndClose();
                     }
                 };
@@ -248,19 +254,47 @@ export const datetimePickerService = {
                 const openPicker = (inputIndex) => {
                     pickerProps.focusedDateIndex = inputIndex;
 
-                    if (!popover.isOpen) {
-                        const popoverTarget = getPopoverTarget();
-                        if (ensureVisibility()) {
-                            const { marginBottom } = popoverTarget.style;
-                            // Adds enough space for the popover to be displayed below the target
-                            // even on small screens.
-                            popoverTarget.style.marginBottom = `100vh`;
-                            popoverTarget.scrollIntoView(true);
-                            restoreTargetMargin = async () => {
-                                popoverTarget.style.marginBottom = marginBottom;
-                            };
+                    if (!popover.isOpen && !isBottomSheetOpen) {
+                        if (env.isSmall) {
+                            // Use BottomSheet for mobile
+                            isBottomSheetOpen = true;
+                            bottomSheetClose = bottomSheetService.add(
+                                DateTimePickerBottomSheet,
+                                {
+                                    pickerProps,
+                                    close: () => {
+                                        isBottomSheetOpen = false;
+                                        updateValueFromInputs();
+                                        apply();
+                                        setFocusClass(null);
+                                    }
+                                },
+                                {
+                                    withBodyPadding: false,
+                                    startExpanded: true,
+                                    onClose: () => {
+                                        isBottomSheetOpen = false;
+                                        updateValueFromInputs();
+                                        apply();
+                                        setFocusClass(null);
+                                    }
+                                }
+                            );
+                        } else {
+                            // Use Popover for desktop
+                            const popoverTarget = getPopoverTarget();
+                            if (ensureVisibility()) {
+                                const { marginBottom } = popoverTarget.style;
+                                // Adds enough space for the popover to be displayed below the target
+                                // even on small screens.
+                                popoverTarget.style.marginBottom = `100vh`;
+                                popoverTarget.scrollIntoView(true);
+                                restoreTargetMargin = async () => {
+                                    popoverTarget.style.marginBottom = marginBottom;
+                                };
+                            }
+                            popover.open(popoverTarget, { pickerProps });
                         }
-                        popover.open(popoverTarget, { pickerProps });
                     }
 
                     focusActiveInput();
@@ -298,8 +332,9 @@ export const datetimePickerService = {
                  */
                 const saveAndClose = () => {
                     if (popover.isOpen) {
-                        // apply will be done in the "onClose" callback
                         popover.close();
+                    } else if (isBottomSheetOpen && bottomSheetClose) {
+                        bottomSheetClose();
                     } else {
                         apply();
                     }
@@ -313,7 +348,7 @@ export const datetimePickerService = {
                 const setFocusClass = (input) => {
                     for (const el of getInputs()) {
                         if (el) {
-                            el.classList.toggle(FOCUS_CLASSNAME, popover.isOpen && el === input);
+                            el.classList.toggle(FOCUS_CLASSNAME, (popover.isOpen || isBottomSheetOpen) && el === input);
                         }
                     }
                 };
@@ -418,7 +453,7 @@ export const datetimePickerService = {
                     onSelect: (value, unit) => {
                         value &&= markRaw(value);
                         updateValue(value, unit, "picker");
-                        if (!pickerProps.range && pickerProps.type === "date") {
+                        if (!pickerProps.range && pickerProps.type === "date" && !env.isSmall) {
                             saveAndClose();
                         }
                     },
@@ -462,13 +497,36 @@ export const datetimePickerService = {
                 let restoreTargetMargin = null;
                 let shouldFocus = false;
 
+                function close() {
+                    if (isBottomSheetOpen && bottomSheetClose) {
+                        bottomSheetClose();
+                        isBottomSheetOpen = false;
+                    } else {
+                        popover.close?.();
+                    }
+                }
+
+                function toggle(ref, onSelect = props.onSelect) {
+                    if (isBottomSheetOpen || popover.isOpen) {
+                        close();
+                    } else {
+                        open(ref, { ...props, onSelect });
+                    }
+                }
                 return {
                     state: pickerProps,
                     open: openPicker,
+                    close,
                     computeBasePickerProps,
                     focusIfNeeded() {
-                        if (popover.isOpen && shouldFocus) {
-                            focusActiveInput();
+                        if ((popover.isOpen || isBottomSheetOpen) && shouldFocus) {
+                            // Prevent the virtual keyboard to appear when using a
+                            // ButtonSheet
+                            if (!isBottomSheetOpen) {
+                                focusActiveInput();
+                            } else {
+                                shouldFocus = false;
+                            }
                         }
                     },
                     enable() {
@@ -495,18 +553,18 @@ export const datetimePickerService = {
                             calendarIconGroupEl.classList.add("cursor-pointer");
                             calendarIconGroupEl.addEventListener("click", () => openPicker(0));
                         }
-                        if (!editableInputs && popover.isOpen) {
+                        if (!editableInputs && (popover.isOpen || isBottomSheetOpen)) {
                             saveAndClose();
                         }
                         return () => {};
                     },
                     get isOpen() {
-                        return popover.isOpen;
-                    },
+                        return popover.isOpen || isBottomSheetOpen;
+                    }
                 };
             },
         };
-    },
+    }
 };
 
 registry.category("services").add("datetime_picker", datetimePickerService);
