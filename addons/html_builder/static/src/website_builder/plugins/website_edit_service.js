@@ -89,24 +89,18 @@ registry.category("services").add("website_edit", {
             patches.push(
                 patch(Colibri.prototype, {
                     setupInteraction() {
-                        historyCallbacks.disableObserver();
-                        super.setupInteraction();
-                        historyCallbacks.enableObserver();
+                        historyCallbacks.ignoreDOMChanges(() => {
+                            super.setupInteraction();
+                        });
                     },
                     destroyInteraction() {
-                        historyCallbacks.disableObserver();
-                        super.destroyInteraction();
-                        historyCallbacks.enableObserver();
+                        historyCallbacks.ignoreDOMChanges(() => {
+                            super.destroyInteraction();
+                        });
                     },
                     protectSyncAfterAsync(interaction, name, fn) {
                         fn = super.protectSyncAfterAsync(interaction, name, fn);
-                        const fullName = `${interaction.constructor.name}/${name}`;
-                        return (...args) => {
-                            historyCallbacks.disableObserver(fullName);
-                            const result = fn(...args);
-                            historyCallbacks.enableObserver(fullName);
-                            return result;
-                        };
+                        return (...args) => historyCallbacks.ignoreDOMChanges(() => fn(...args));
                     },
                     addListener(target, event, fn, options) {
                         fn = fn.bind(this.interaction);
@@ -118,28 +112,17 @@ registry.category("services").add("website_edit", {
                             delete options?.keepInHistory;
                         }
                         let stealthFn = fn;
-                        if (historyCallbacks.disableObserver && !fn.isHandler && stealth) {
-                            const name = `${this.interaction.constructor.name}/${event}`;
-                            stealthFn = async (...args) => {
-                                historyCallbacks.disableObserver(name);
-                                const result = await fn(...args);
-                                historyCallbacks.enableObserver(name);
-                                return result;
-                            };
+                        if (historyCallbacks.ignoreDOMChanges && !fn.isHandler && stealth) {
+                            stealthFn = (...args) =>
+                                historyCallbacks.ignoreDOMChanges(() => fn(...args));
                         }
                         return super.addListener(target, event, stealthFn, options);
                     },
-                    applyAttr(el, attr, value) {
-                        const name = `${this.interaction.constructor.name}/${attr}`;
-                        historyCallbacks.disableObserver(name);
-                        super.applyAttr(...arguments);
-                        historyCallbacks.enableObserver(name);
+                    applyAttr(...args) {
+                        historyCallbacks.ignoreDOMChanges(() => super.applyAttr(...args));
                     },
-                    applyTOut(el, value) {
-                        const name = `${this.interaction.constructor.name}/t-out`;
-                        historyCallbacks.disableObserver(name);
-                        super.applyTOut(...arguments);
-                        historyCallbacks.enableObserver(name);
+                    applyTOut(...args) {
+                        historyCallbacks.ignoreDOMChanges(() => super.applyTOut(...args));
                     },
                 })
             );

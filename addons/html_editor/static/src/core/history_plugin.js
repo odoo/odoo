@@ -88,6 +88,7 @@ import { withSequence } from "@html_editor/utils/resource";
  * @property { HistoryPlugin['canUndo'] } canUndo
  * @property { HistoryPlugin['disableObserver'] } disableObserver
  * @property { HistoryPlugin['enableObserver'] } enableObserver
+ * @property { HistoryPlugin['ignoreDOMChanges'] } ignoreDOMChanges
  * @property { HistoryPlugin['getHistorySteps'] } getHistorySteps
  * @property { HistoryPlugin['getNodeById'] } getNodeById
  * @property { HistoryPlugin['makePreviewableOperation'] } makePreviewableOperation
@@ -112,6 +113,7 @@ export class HistoryPlugin extends Plugin {
         "canUndo",
         "disableObserver",
         "enableObserver",
+        "ignoreDOMChanges",
         "getHistorySteps",
         "getNodeById",
         "makePreviewableOperation",
@@ -182,6 +184,7 @@ export class HistoryPlugin extends Plugin {
             this.stageSelection();
         });
         this.observer = new MutationObserver(this.handleNewRecords.bind(this));
+        this.ignoreDOMChangesDepth = 0;
         this._cleanups.push(() => this.observer.disconnect());
         this.clean();
     }
@@ -277,20 +280,57 @@ export class HistoryPlugin extends Plugin {
         return step;
     }
 
+    /**
+     * @deprecated - see ignoreDOMChanges
+     */
     enableObserver() {
-        this.observer.observe(this.editable, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeOldValue: true,
-            characterData: true,
-            characterDataOldValue: true,
-        });
+        this.ignoreDOMChangesDepth--;
+        if (this.ignoreDOMChangesDepth === 0) {
+            this.observer.observe(this.editable, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeOldValue: true,
+                characterData: true,
+                characterDataOldValue: true,
+            });
+        }
     }
+
+    /**
+     * @deprecated - see ignoreDOMChanges
+     */
     disableObserver() {
-        // @todo @phoenix do we still want to unobserve sometimes?
-        this.handleObserverRecords();
-        this.observer.disconnect();
+        if (this.ignoreDOMChangesDepth === 0) {
+            this.handleObserverRecords();
+            this.observer.disconnect();
+        }
+        this.ignoreDOMChangesDepth++;
+    }
+
+    /**
+     * Execute {@link callback} while DOM observer is disabled.
+     *
+     * @param {Function} callback
+     * @return {ReturnType<callback>}
+     */
+    ignoreDOMChanges(callback) {
+        this.disableObserver();
+        let result;
+        let isResultPromise;
+        try {
+            result = callback();
+            isResultPromise = result?.finally;
+            return isResultPromise
+                ? result.finally(() => {
+                      this.enableObserver();
+                  })
+                : result;
+        } finally {
+            if (!isResultPromise) {
+                this.enableObserver();
+            }
+        }
     }
 
     handleObserverRecords() {
