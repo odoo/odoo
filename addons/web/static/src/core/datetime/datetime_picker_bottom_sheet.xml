@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.DateTimePickerBottomSheet">
+        <div class="o_datetime_picker_bottom_sheet pb-2">
+            <DateTimePicker t-props="props.pickerProps">
+                <t t-set-slot="buttons">
+                    <button
+                        class="o_apply btn btn-primary btn-sm h-100 w-100"
+                        tabindex="-1"
+                        t-on-click="onApply"
+                        >
+                        <i class="fa fa-check" />
+                        <span>Apply</span>
+                    </button>
+                </t>
+            </DateTimePicker>
+        </div>
+    </t>
+</templates>
