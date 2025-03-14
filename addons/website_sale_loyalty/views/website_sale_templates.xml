@@ -185,8 +185,8 @@
         </xpath>
     </template>
 
-    <template id="cart_summary_inherit_website_gift_card_sale" inherit_id="website_sale.checkout_layout">
-        <xpath expr="//td[@name='website_sale_cart_summary_product_name']/h6" position="after">
+    <template id="cart_summary_inherit_website_gift_card_sale" inherit_id="website_sale.cart_summary_content">
+        <xpath expr="//td[@name='website_sale_cart_summary_product_name']/span" position="after">
             <t t-call="sale_loyalty.used_gift_card"/>
         </xpath>
     </template>
