@@ -4131,13 +4131,13 @@ var SnippetsMenu = Widget.extend({
     _onInstallBtnClick: function (ev) {
         var $snippet = $(ev.currentTarget).closest('[data-module-id]');
         var moduleID = $snippet.data('moduleId');
-        var name = $snippet.attr('name');
-        const bodyText = _t("Do you want to install %s App?", name);
+        const moduleDisplayName = `"${$snippet[0].dataset.moduleDisplayName}"`;
+        const bodyText = _t("Do you want to install %s App?", moduleDisplayName);
         const linkText = _t("More info about this app.");
         const linkUrl = '/web#id=' + encodeURIComponent(moduleID) + '&view_type=form&model=ir.module.module&action=base.open_module_tree';
         this.dialog.add(ConfirmationDialog, {
-            title: _t("Install %s", name),
-            body: markup(`${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`),
+            title: _t("Install %s", moduleDisplayName),
+            body: markup(`${escape(bodyText)}\n<a href="${linkUrl}" target="_blank"><i class="oi oi-arrow-right me-1"></i>${escape(linkText)}</a>`),
             confirm: async () => {
                 try {
                     await this.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]);
@@ -4148,7 +4148,7 @@ var SnippetsMenu = Widget.extend({
                     });
                 } catch (e) {
                     if (e instanceof RPCError) {
-                        const message = escape(_t("Could not install module %s", name));
+                        const message = escape(_t("Could not install module %s", moduleDisplayName));
                         this.notification.add(message, {
                             type: "danger",
                             sticky: true,
