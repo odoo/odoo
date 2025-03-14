@@ -121,4 +121,23 @@
         <field name="view_id" ref="project_milestone_view_form"/>
     </record>
 
+    <record id="project_embedded_action_project_milestones" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">10</field>
+        <field name="name">Milestones</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="action_id" ref="project.project_milestone_action"/>
+        <field name="domain">[('allow_milestones', '=', True)]</field>
+        <field name="groups_ids" eval="[(4, ref('project.group_project_milestone'))]" />
+    </record>
+
+    <record id="project_embedded_action_update_milestones" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">25</field>
+        <field name="name">Milestones</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="action_id" ref="project.project_milestone_action"/>
+        <field name="domain">[('allow_milestones', '=', True)]</field>
+        <field name="groups_ids" eval="[(4, ref('project.group_project_milestone'))]" />
+    </record>
 </odoo>
