@@ -12,6 +12,11 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
+    livechat_channel_count = fields.Integer(compute='_compute_livechat_channel_count')
+
+    def _compute_livechat_channel_count(self):
+        for partner in self:
+            partner.livechat_channel_count = self.env["discuss.channel"].search_count([("channel_member_ids.partner_id", "in", [partner.id]), ("channel_type", "=", "livechat")])
 
     def _search_for_channel_invite_to_store(self, store: Store, channel):
         super()._search_for_channel_invite_to_store(store, channel)
