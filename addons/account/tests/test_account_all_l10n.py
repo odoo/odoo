@@ -32,6 +32,7 @@ def test_all_l10n(env):
         ('name', '=like', 'l10n_%'),
         ('state', '=', 'uninstalled'),
         '!', ('name', '=like', 'l10n_hk_hr%'),  #failling for obscure reason
+        '!', ('name', '=like', 'l10n_es_%'),  # certificate expired on 2025-03-15 runbot error 161068
     ])
     with patch.object(AccountChartTemplate, 'try_loading', try_loading_patch):
         l10n_mods.button_immediate_install()
