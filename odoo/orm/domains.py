@@ -181,7 +181,7 @@ class Domain:
     # because we overwrite __new__ so typechecking for abstractmethod is incorrect.
     # We do this so that we can use the Domain as both a factory for multiple
     # types of domains, while still having `isinstance` working for it.
-    __slots__ = '_opt_level'
+    __slots__ = ('_opt_level',)
     _opt_level: OptimizationLevel
 
     def __new__(cls, *args):
@@ -410,7 +410,7 @@ class DomainBool(Domain):
     It is NOT considered as a condition and these constants are removed
     from nary domains.
     """
-    __slots__ = 'value'
+    __slots__ = ('value',)
     value: bool
 
     def __new__(cls, value: bool):
@@ -461,7 +461,7 @@ class DomainNot(Domain):
     """Negation domain, contains a single child"""
     OPERATOR = '!'
 
-    __slots__ = 'child'
+    __slots__ = ('child',)
     child: Domain
 
     def __new__(cls, child: Domain):
@@ -504,7 +504,7 @@ class DomainNary(Domain):
     OPERATOR_SQL: SQL = SQL(" ??? ")
     ZERO: DomainBool = _FALSE_DOMAIN  # default for lint checks
 
-    __slots__ = 'children'
+    __slots__ = ('children',)
     children: list[Domain]
 
     def __new__(cls, children: list[Domain]):
