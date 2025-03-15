@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from markupsafe import Markup
 
 from odoo import api, models, fields, _
@@ -13,6 +14,7 @@ class ResPartner(models.Model):
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
     chatbot_script_ids = fields.One2many("chatbot.script", "operator_partner_id")
+    livechat_channel_count = fields.Integer(compute='_compute_livechat_channel_count')
 
     def _search_for_channel_invite_to_store(self, store: Store, channel):
         super()._search_for_channel_invite_to_store(store, channel)
@@ -55,6 +57,17 @@ class ResPartner(models.Model):
         for partner in self:
             partner.user_livechat_username = next(iter(partner.user_ids.mapped('livechat_username')), False)
 
+    def _compute_livechat_channel_count(self):
+        livechat_count_by_partner = dict(
+            self.env["im_livechat.channel.member.history"]._read_group(
+                domain=[("partner_id", "in", self.ids), ("livechat_member_type", "=", "visitor")],
+                groupby=["partner_id"],
+                aggregates=["channel_id:count_distinct"],
+            )
+        )
+        for partner in self:
+            partner.livechat_channel_count = livechat_count_by_partner.get(partner, 0)
+
     def _to_store(self, store: Store, fields, **kwargs):
         """Override to add name when user_livechat_username is not set."""
         super()._to_store(store, fields, **kwargs)
@@ -80,3 +93,15 @@ class ResPartner(models.Model):
             return
         for partner in self:
             partner.display_name = partner.name
+
+    def action_view_livechat_sessions(self):
+        action = self.env["ir.actions.act_window"]._for_xml_id("im_livechat.discuss_channel_action")
+        livechat_channel_ids = self.env['im_livechat.channel.member.history'].search([
+            ('partner_id', '=', self.id),
+            ('livechat_member_type', '=', 'visitor'),
+        ]).channel_id.ids
+        action["domain"] = Domain.AND([
+            ast.literal_eval(action["domain"]),
+            [('id', 'in', livechat_channel_ids)]
+        ])
+        return action
