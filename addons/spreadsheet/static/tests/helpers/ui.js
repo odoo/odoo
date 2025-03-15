@@ -42,11 +42,11 @@ export async function mountSpreadsheet(model) {
  * Mount public spreadsheet component with the given data
  * @returns {Promise<HTMLElement>}
  */
-export async function mountPublicSpreadsheet(dataUrl, mode) {
+export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "downloadUrl") {
     mountWithCleanup(PublicReadonlySpreadsheet, {
         props: {
             dataUrl,
-            downloadExcelUrl: "downloadUrl",
+            downloadExcelUrl,
             mode,
         },
         noMainContainer: true,

@@ -68,7 +68,8 @@ class TestStockLandedCostsLots(TestLotValuation):
         (picking_1 | picking_2).move_ids.picked = True
         (picking_1 | picking_2).button_validate()
 
-        og_layer = (picking_2.move_ids.stock_valuation_layer_ids | picking_1.move_ids.stock_valuation_layer_ids).sorted('product_id')
+        og_p1_layers = picking_1.move_ids.stock_valuation_layer_ids
+        og_p2_layers = picking_2.move_ids.stock_valuation_layer_ids
         lc_form = Form(self.env['stock.landed.cost'])
         lc_form.picking_ids = (picking_1 | picking_2)
         with lc_form.cost_lines.new() as cost_line:
@@ -92,12 +93,12 @@ class TestStockLandedCostsLots(TestLotValuation):
         lot = self.env['stock.lot'].search([('name', 'ilike', 'LClot')])
         lot_product_a = lot.filtered(lambda l: l.product_id == self.product1)
         lot_product_b = lot - lot_product_a
-        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted('id'), [
-            {'lot_id': lot_product_b[0].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_layer[0].id, 'quantity': 0, 'value': 1.5},
-            {'lot_id': lot_product_b[1].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_layer[1].id, 'quantity': 0, 'value': 1.5},
-            {'lot_id': lot_product_a[0].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[2].id, 'quantity': 0, 'value': 1},
-            {'lot_id': lot_product_a[1].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[3].id, 'quantity': 0, 'value': 1},
-            {'lot_id': lot_product_a[2].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[4].id, 'quantity': 0, 'value': 1},
+        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted('product_id'), [
+            {'lot_id': lot_product_b[0].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[0].id, 'quantity': 0, 'value': 1.5},
+            {'lot_id': lot_product_b[1].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[1].id, 'quantity': 0, 'value': 1.5},
+            {'lot_id': lot_product_a[0].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[0].id, 'quantity': 0, 'value': 1},
+            {'lot_id': lot_product_a[1].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[1].id, 'quantity': 0, 'value': 1},
+            {'lot_id': lot_product_a[2].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[2].id, 'quantity': 0, 'value': 1},
         ])
 
         for l, price in zip(lot_product_a, [10.2, 10.2, 10.2]):

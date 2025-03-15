@@ -163,4 +163,4 @@ class ResCompany(models.Model):
 
     def _l10n_es_freelancer(self):
         self.ensure_one()
-        return self.vat and re.fullmatch(r"(ES)?\d{8}[A-Z]", self.vat) or False
+        return self.vat and re.fullmatch(r"(ES)?(\d{8}[A-Z]|[X-Z].*)", self.vat) or False

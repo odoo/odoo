@@ -8,7 +8,12 @@ const demoCssModif = '// demo_edition';
 
 registerWebsitePreviewTour('html_editor_language', {
     url: '/test_page',
-}, () => [{
+}, () => [
+    {
+        content: "Wait the content is loaded and html/css editor is in menu before clicking on open site menu",
+        trigger: ":iframe main:contains(rommelpot)",
+    },
+    {
     content: "open site menu",
     trigger: 'button[data-menu-xmlid="website.menu_site"]',
     run: "click",

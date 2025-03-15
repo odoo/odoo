@@ -170,7 +170,8 @@ class HrAttendance(models.Model):
 
     @api.depends('validated_overtime_hours')
     def _compute_no_validated_overtime_hours(self):
-        self.no_validated_overtime_hours = not float_compare(self.validated_overtime_hours, 0.0, precision_digits=5)
+        for attendance in self:
+            attendance.no_validated_overtime_hours = not float_compare(attendance.validated_overtime_hours, 0.0, precision_digits=5)
 
     @api.depends('employee_id')
     def _compute_overtime_status(self):
