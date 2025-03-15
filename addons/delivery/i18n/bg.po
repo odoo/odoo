@@ -17,6 +17,7 @@
 # Elena Varbanova, 2024
 # Martin Dinovski, 2025
 # Maria Boyadjieva <marabo2000@gmail.com>, 2025
+# Veselina Slavkova, 2025
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2025\n"
+"Last-Translator: Veselina Slavkova, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +80,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr ""
+msgstr "<span class=\"text-success\">Заявки за дебъгване</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -167,6 +168,9 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"Описание на метода на доставка, което желаете да съобщите на клиентите си в "
+"Поръчката за продажба и имейла за потвърждение на продажбата. Например, "
+"инструкции за клиентите, които трябва да следват."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -413,12 +417,12 @@ msgstr "Рейтинг на успеха при доставка"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr ""
+msgstr "Набор доставки"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "Префикс на пощенски код за доставка"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -692,7 +696,7 @@ msgstr "Лог-вай заявките за по-лесна диагностик
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "Управление на префикси на пощенски кодове за доставка"
 
 #. module: delivery
 #. odoo-python
@@ -806,7 +810,7 @@ msgstr "Префикс"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "Префиксът вече съществува!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -816,6 +820,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Префикси на пощенски кодове, за които се прилага този превозвач. Имайте "
+"предвид, че могат да се използват регулярни изрази за поддръжка на държави с"
+" различна дължина на пощенските кодове, т.е. '$' може да се добави в края на"
+" префикса, за да съвпадне с точния пощенски код (например '100$'ще съвпадне "
+"само с '100', а не и с '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -947,7 +956,7 @@ msgstr "Последователност"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
 msgid "Service Product"
-msgstr ""
+msgstr "Продукт услуга"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
@@ -1007,6 +1016,9 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"Транспортната застраховка е услуга, която може да възстанови суми на "
+"изпращачи, чиито пратки са изгубени, откраднати и/или повредени по време на "
+"транспортиране."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1097,7 +1109,7 @@ msgstr "Етикетът за връщане автоматично се съз�
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
+msgstr "Транспортната застраховка трябва да бъде процент между 0 и 100."
 
 #. module: delivery
 #. odoo-python
@@ -1265,7 +1277,7 @@ msgstr "Тегло за доставка"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Етикет на мерната единица за тегло"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
@@ -1282,6 +1294,10 @@ msgid ""
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
 msgstr ""
+"Не можете да актуализирате разходите за доставка на поръчка, за която вече е издадена фактура!\n"
+"\n"
+"Следните редове за доставка (продукт, фактурирано количество и цена) вече са обработени:\n"
+"\n"
 
 #. module: delivery
 #. odoo-python
@@ -1324,12 +1340,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 #: model:ir.ui.menu,name:delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Префикс на пощенски код"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Префикси на пощенските кодове"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery
