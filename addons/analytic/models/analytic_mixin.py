@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
 from odoo.fields import Domain
@@ -13,7 +12,9 @@ class AnalyticMixin(models.AbstractModel):
 
     analytic_distribution = fields.Json(
         'Analytic Distribution',
-        compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
+        compute="_compute_analytic_distribution",
+        search="_search_analytic_distribution",
+        store=True, copy=True, readonly=False,
     )
     analytic_precision = fields.Integer(
         store=False,
@@ -39,9 +40,6 @@ class AnalyticMixin(models.AbstractModel):
             self.env.cr.execute(query)
         super().init()
 
-    def _compute_analytic_distribution(self):
-        pass
-
     def _query_analytic_accounts(self, table=False):
         return SQL(
             r"""regexp_split_to_array(jsonb_path_query_array(%s, '$.keyvalue()."key"')::text, '\D+')""",
@@ -59,12 +57,15 @@ class AnalyticMixin(models.AbstractModel):
     def _search_distribution_analytic_account_ids(self, operator, value):
         return [('analytic_distribution', operator, value)]
 
-    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
+    def _compute_analytic_distribution(self):
+        pass
+
+    def _search_analytic_distribution(self, operator, value):
         # Don't use this override when account_report_analytic_groupby is truly in the context
         # Indeed, when account_report_analytic_groupby is in the context it means that `analytic_distribution`
         # doesn't have the same format and the table is a temporary one, see _prepare_lines_for_analytic_groupby
-        if field_expr != 'analytic_distribution' or self.env.context.get('account_report_analytic_groupby'):
-            return super()._condition_to_sql(alias, field_expr, operator, value, query)
+        if self.env.context.get('account_report_analytic_groupby'):
+            return Domain('analytic_distribution', operator, value)
 
         def search_value(value: str, exact: bool):
             return list(self.env['account.analytic.account']._search(
@@ -85,25 +86,24 @@ class AnalyticMixin(models.AbstractModel):
             raise UserError(_('Operation not supported'))
 
         if not ids:
-            # not ids found, just call super with an empty list
-            return super()._condition_to_sql(alias, field_expr, operator, ids, query)
+            # not ids found, just let it optimize to a constant
+            return Domain(operator == 'not in')
 
         # keys can be comma-separated ids, we will split those into an array and then make an array comparison with the list of ids to check
-        analytic_accounts_query = self._query_analytic_accounts()
         ids = [str(id_) for id_ in ids if id_]  # list of ids -> list of string
         if operator == 'in':
-            return SQL(
+            return Domain.custom(to_sql=lambda model, alias, query: SQL(
                 "%s && %s",
-                analytic_accounts_query,
+                self._query_analytic_accounts(alias),
                 ids,
-            )
+            ))
         else:
-            return SQL(
+            return Domain.custom(to_sql=lambda model, alias, query: SQL(
                 "(NOT %s && %s OR %s IS NULL)",
-                analytic_accounts_query,
+                self._query_analytic_accounts(alias),
                 ids,
-                self._field_to_sql(alias, 'analytic_distribution', query),
-            )
+                model._field_to_sql(alias, 'analytic_distribution', query),
+            ))
 
     def _read_group_groupby(self, groupby_spec: str, query: Query) -> SQL:
         """To group by `analytic_distribution`, we first need to separate the analytic_ids and associate them with the ids to be counted

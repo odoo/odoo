@@ -806,10 +806,8 @@ class DomainCondition(Domain):
         elif isinstance(value, BaseModel):
             _logger.warning("The domain condition %r should not have a value which is a model", (self.field_expr, self.operator, self.value))
             value = value.ids
-        elif isinstance(value, (Domain, Query)) and operator not in ('any', 'not any', 'in', 'not in'):
-            # accept SQL object in the right part for simple operators
+        elif isinstance(value, (Domain, Query, SQL)) and operator not in ('any', 'not any', 'in', 'not in'):
             # use case: compare 2 fields
-            # TODO we should remove support for SQL for these other operators, add DomainCustom
             _logger.warning("The domain condition %r should use the 'any' or 'not any' operator.", (self.field_expr, self.operator, self.value))
         if value is not self.value:
             return DomainCondition(self.field_expr, operator, value)
@@ -1319,8 +1317,10 @@ def _optimize_like_str(condition, model):
         if condition._field(model).relational or '=' in condition.operator:
             return DomainCondition(condition.field_expr, '!=' if result else '=', False)
         return Domain(result)
-    if isinstance(value, (str, SQL)):
-        # accept both str and SQL
+    if isinstance(value, str):
+        return condition
+    if isinstance(value, SQL):
+        warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
         return condition
     if '=' in condition.operator:
         condition._raise("The pattern to match must be a string", error=TypeError)
@@ -1407,7 +1407,7 @@ def _value_to_date(value):
     # check datetime first, because it's a subclass of date
     if isinstance(value, datetime):
         return value.date()
-    if isinstance(value, (SQL, date)) or value is False:
+    if isinstance(value, date) or value is False:
         return value
     if isinstance(value, str):
         if len(value) <= 10:
@@ -1415,6 +1415,9 @@ def _value_to_date(value):
         return datetime.fromisoformat(value).date()
     if isinstance(value, COLLECTION_TYPES):
         return OrderedSet(_value_to_date(v) for v in value)
+    if isinstance(value, SQL):
+        warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
+        return value
     raise ValueError(f'Failed to cast {value!r} into a date')
 
 
@@ -1455,6 +1458,7 @@ def _value_to_datetime(value):
         value, is_date = zip(*(_value_to_datetime(v) for v in value))
         return OrderedSet(value), all(is_date)
     if isinstance(value, SQL):
+        warnings.warn("Since 19.0, use Domain.custom(to_sql=lambda model, alias, query: SQL(...))", DeprecationWarning)
         return value, False
     raise ValueError(f'Failed to cast {value!r} into a datetime')
 
