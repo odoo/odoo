@@ -259,6 +259,11 @@ class Domain:
         return operator in NEGATIVE_CONDITION_OPERATORS
 
     @staticmethod
+    def _custom_domain(to_sql: Callable[[BaseModel, str, Query], SQL]) -> DomainCustom:
+        """Create a custom domain part."""
+        return DomainCustom(to_sql)
+
+    @staticmethod
     def AND(items: Iterable) -> Domain:
         """Build the conjuction of domains: (item1 AND item2 AND ...)"""
         return DomainAnd.apply(Domain(item) for item in items)
@@ -650,6 +655,33 @@ class DomainOr(DomainNary):
         return super().__or__(other)
 
 
+class DomainCustom(Domain):
+    """Domain condition that generates SQL directly."""
+    __slots__ = ('_sql',)
+    _sql: Callable[[BaseModel, str, Query], SQL]
+
+    def __new__(cls, sql: Callable[[BaseModel, str, Query], SQL]):
+        self = object.__new__(cls)
+        self._sql = sql
+        self._opt_level = OptimizationLevel.FULL
+        return self
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, DomainCustom)
+            and self._sql == other._sql
+        )
+
+    def __hash__(self):
+        return hash(self._sql)
+
+    def __iter__(self):
+        yield self
+
+    def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
+        return self._sql(model, alias, query)
+
+
 class DomainCondition(Domain):
     """Domain condition on field: (field, operator, value)
 
@@ -706,7 +738,7 @@ class DomainCondition(Domain):
         elif isinstance(value, (Domain, Query)) and operator not in ('any', 'not any', 'in', 'not in'):
             # accept SQL object in the right part for simple operators
             # use case: compare 2 fields
-            # TODO we should remove support for SQL for these other operators, add DomainSQLCondition
+            # TODO we should remove support for SQL for these other operators, add DomainCustom
             _logger.warning("The domain condition %r should use the 'any' or 'not any' operator.", (self.field_expr, self.operator, self.value))
         if value is not self.value:
             return DomainCondition(self.field_expr, operator, value)
@@ -966,10 +998,11 @@ def _optimize_nary_sort_key(domain: Domain) -> tuple[str, str, str]:
         else:
             order = positive_op
         return domain.field_expr, order, operator
-    else:
+    elif hasattr(domain, 'OPERATOR') and isinstance(domain.OPERATOR, str):
         # in python; '~' > any letter
-        assert hasattr(domain, 'OPERATOR') and isinstance(domain.OPERATOR, str)
         return '~', '', domain.OPERATOR
+    else:
+        return '~', '~', domain.__class__.__name__
 
 
 def nary_optimization(optimization: MergeOptimization):
