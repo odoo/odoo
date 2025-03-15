@@ -10,8 +10,12 @@ from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_ACTION, PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
+from odoo.tools import SQL
+
 from ...tools import jwt, discuss
+
 
 _logger = logging.getLogger(__name__)
 SFU_MODE_THRESHOLD = 3
@@ -112,10 +116,19 @@ class DiscussChannelMember(models.Model):
     def _search_is_pinned(self, operator, operand):
         if operator != 'in':
             return NotImplemented
-        return expression.OR([
-            [("unpin_dt", "=", False)],
-            [("last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
-            [("channel_id.last_interest_dt", ">=", self._field_to_sql(self._table, "unpin_dt"))],
+        unpin_field = self._field_to_sql(self._table, "unpin_dt")
+        return Domain.OR([
+            Domain("unpin_dt", "=", False),
+            Domain._custom_domain(to_sql=lambda model, alias, query: SQL(
+                "%s >= %s",
+                model._field_to_sql(alias, "last_interest_dt", query),
+                unpin_field,
+            )),
+            Domain("channel_id", "any", Domain._custom_domain(to_sql=lambda model, alias, query: SQL(
+                "%s >= %s",
+                model._field_to_sql(alias, "last_interest_dt", query),
+                unpin_field,
+            ))),
         ])
 
     @api.depends("channel_id.message_ids", "new_message_separator")
