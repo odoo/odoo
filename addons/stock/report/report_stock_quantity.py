@@ -53,7 +53,9 @@ WITH
         LEFT JOIN stock_warehouse w ON sl.parent_path::text like concat('%%/', w.view_location_id, '/%%')
     ),
     existing_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
-        SELECT m.id, m.product_id, pt.id, m.product_qty, m.date, m.state, m.company_id, source.w_id, dest.w_id
+        SELECT m.id, m.product_id, pt.id, m.product_qty,
+               date_trunc('month', m.date)::date as date,
+               m.state, m.company_id, source.w_id, dest.w_id
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
         LEFT JOIN warehouse_cte dest ON dest.sl_id = CASE
@@ -67,7 +69,8 @@ WITH
             (source.w_id IS NULL OR dest.w_id IS NULL OR source.w_id <> dest.w_id) AND
             m.product_qty != 0 AND
             m.state NOT IN ('draft', 'cancel') AND
-            (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
+            (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or
+             m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
     ),
     all_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
         SELECT sm.id, sm.product_id, sm.tmpl_id,
@@ -103,7 +106,7 @@ FROM (SELECT
             WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN 'out'
             WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN 'in'
         END AS state,
-        m.date::date AS date,
+        m.date AS date,
         CASE
             WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL THEN -m.product_qty
             WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL THEN m.product_qty
@@ -124,13 +127,15 @@ FROM (SELECT
         q.product_id,
         pp.product_tmpl_id,
         'forecast' as state,
-        date.*::date,
+        date_trunc('month', date.*)::date as date,
         q.quantity as product_qty,
         q.company_id,
         wh.id as warehouse_id
     FROM
-        GENERATE_SERIES((now() at time zone 'utc')::date - interval '%(report_period)s month',
-        (now() at time zone 'utc')::date + interval '%(report_period)s month', '1 day'::interval) date,
+        GENERATE_SERIES(
+            (now() at time zone 'utc')::date - interval '%(report_period)s month',
+            (now() at time zone 'utc')::date + interval '%(report_period)s month',
+            '1 month'::interval) date,
         stock_quant q
     LEFT JOIN stock_location l on (l.id=q.location_id)
     LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%%/', wh.view_location_id, '/%%')
@@ -152,7 +157,7 @@ FROM (SELECT
         CASE
             WHEN m.state != 'done' THEN (now() at time zone 'utc')::date + interval '%(report_period)s month'
             ELSE m.date::date - interval '1 day'
-        END, '1 day'::interval)::date date,
+        END, '1 month'::interval)::date date,
         CASE
             WHEN m.whs_id IS NOT NULL AND m.whd_id IS NULL AND m.state = 'done' THEN m.product_qty
             WHEN m.whd_id IS NOT NULL AND m.whs_id IS NULL AND m.state = 'done' THEN -m.product_qty
