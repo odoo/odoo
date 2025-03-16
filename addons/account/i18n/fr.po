@@ -7203,6 +7203,9 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
+"Erreur lors du chargement de la localisation : absence du tag taxes "
+"%(tag_name)s pour le pays %(country_name)s. Pensez d'abord à mettre à jour "
+"votre application de localisation."
 
 #. module: account
 #. odoo-python
@@ -16622,6 +16625,13 @@ msgstr "Ce mois"
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_quarter
 msgid "This Quarter"
 msgstr "Ce trimestre"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "This specific error occurred during the import:"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period

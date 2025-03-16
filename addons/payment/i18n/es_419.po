@@ -5,6 +5,7 @@
 # Translators:
 # Fernanda Alvarez, 2025
 # Wil Odoo, 2025
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1525,7 +1526,7 @@ msgstr "Manual"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_manual_capture
 msgid "Manual Capture"
-msgstr ""
+msgstr "Captura manual"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
@@ -2580,6 +2581,8 @@ msgid ""
 "The following payment methods cannot be enabled because their payment "
 "provider has manual capture activated: %s"
 msgstr ""
+"Los métodos de pago a continuación no se pudieron activar ya que su "
+"proveedor de pago tiene la captura manual activada: %s"
 
 #. module: payment
 #. odoo-python
@@ -2588,6 +2591,8 @@ msgid ""
 "The following payment methods must be disabled in order to enable manual "
 "capture: %s"
 msgstr ""
+"Los métodos de pago a continuación se deben desactivar para poder usar la "
+"captura manual: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -2673,7 +2678,7 @@ msgstr "El mensaje que aparece para explicar y ayudar al proceso de pago"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
 msgid "The payment is authorized and captured in two steps instead of one."
-msgstr ""
+msgstr "El pago se autoriza y captura en dos pasos en lugar de solo en uno."
 
 #. module: payment
 #. odoo-python
@@ -2804,6 +2809,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s is canceled "
 "(%(provider_name)s)."
 msgstr ""
+"Se canceló la transacción con referencia %(ref)s por %(amount)s "
+"(%(provider_name)s)."
 
 #. module: payment
 #. odoo-python
@@ -2812,6 +2819,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s is pending "
 "(%(provider_name)s)."
 msgstr ""
+"La transacción con referencia %(ref)s por %(amount)s se está procesando "
+"(%(provider_name)s)."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction

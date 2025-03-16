@@ -90,7 +90,7 @@ msgstr "<b>Vorgeschlagen von:</b>"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speaker Biography</b>:"
-msgstr "<b>Biographie des Referenten:</b>"
+msgstr "<b>Biographie des Redners:</b>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -118,6 +118,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Hallo <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t>,<br/>\n"
+"    wir freuen uns Ihnen mitteilen zu können, dass Ihr Vorschlag <t t-out=\"object.name or ''\">Alles über diese Veranstaltung</t> eingegangen ist und für die Veranstaltung <t t-out=\"object.event_id.name or ''\">Online-Enthüllung der OpenWood-Kollektion</t> akzeptiert wurde.\n"
+"    <br/>\n"
+"    Weitere Details finden Sie hier:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Vortrag anzeigen\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Vielen Dank!\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -1815,8 +1832,8 @@ msgid ""
 "Sent to speakers whose track proposal is accepted (set the template on the "
 "right stage)"
 msgstr ""
-"Versand an Referenten, deren Beitragsvorschlag akzeptiert wurde (Vorlage in "
-"der richtigen Phase festlegen)"
+"Versand an Redner, deren Beitragsvorschlag akzeptiert wurde (Vorlage in der "
+"richtigen Phase festlegen)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
@@ -1857,33 +1874,33 @@ msgstr "Beiträge präsentieren"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Speaker"
-msgstr "Referent"
+msgstr "Redner"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Speaker Bio"
-msgstr "Biografie des Referenten"
+msgstr "Biografie des Redners"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Speaker Name"
-msgstr ""
+msgstr "Name des Redners"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__image
 msgid "Speaker Photo"
-msgstr "Foto des Referenten"
+msgstr "Foto des Redners"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker Profile"
-msgstr "Profil des Referenten"
+msgstr "Profil des Redners"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "Speakers"
-msgstr "Referenten"
+msgstr "Redner"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -2425,8 +2442,8 @@ msgstr "Wir konnten keinen Beitrag finden, der Ihrer Suche entspricht:"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We require speakers to accept an agreement in which they commit to:"
 msgstr ""
-"Wir benötigen eine unterzeichnete Vereinbarung mit den Referenten, in der "
-"sie sich zu folgendem bereiterklären:"
+"Wir benötigen eine unterzeichnete Vereinbarung mit den Rednern, in der sie "
+"sich zu folgendem bereiterklären:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Jolien De Paepe, 2025
-# Manon Rondou, 2025
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -312,6 +312,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Bonjour <t t-out=\"client_name\">Nom du client</t>,</t>\n"
+"                        <t t-else=\"\">Bonjour,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Merci pour votre achat chez <t t-out=\"store_name\">Nom du magasin</t> !</div>\n"
+"                    <div>Vous trouverez ci-joint le reçu pour votre commande du <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or ''\">date</t> à <t t-out=\"format_time(time=object.date_order, tz=tz, time_format='short',                          lang_code=lg)\">heure</t>.</span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Cordialement,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Nom du magasin</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban

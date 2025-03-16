@@ -3,10 +3,10 @@
 # 	* portal
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Tiffany Chang, 2025
 # Fernanda Alvarez, 2025
 # Wil Odoo, 2025
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +76,8 @@ msgid ""
 "<i class=\"fa fa-pencil me-1\"/>\n"
 "                        Edit"
 msgstr ""
+"<i class=\"fa fa-pencil me-1\"/>\n"
+"                        Editar"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -85,7 +87,7 @@ msgstr "<i class=\"fa fa-pencil\"/> Editar información"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_row
 msgid "<i class=\"fa fa-plus fa-2x mb-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"fa fa-plus fa-2x mb-2\"/>Agregar dirección"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -137,6 +139,11 @@ msgid ""
 "                        operation.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        No puede cambiar el nombre de la empresa o el número de identificación fiscal si ya\n"
+"                        se emitieron documentos para su cuenta. Contáctenos para realizar esta\n"
+"                        operación.\n"
+"                    </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -157,7 +164,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "<span class=\"mx-2\">|</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">|</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -403,7 +410,7 @@ msgstr "Agregado el"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 msgid "Address Management"
-msgstr ""
+msgstr "Gestión de direcciones"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -467,6 +474,8 @@ msgid ""
 "Changing your name is not allowed once document(s) have been issued for your"
 " account. Please contact us directly for this operation."
 msgstr ""
+"No es posible cambiar su nombre una vez que se emitieron documentos para su "
+"cuenta. Contáctenos para realizar esta operación."
 
 #. module: portal
 #. odoo-javascript
@@ -793,7 +802,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Si quiere realizar una modificación, actualice"
 
 #. module: portal
 #. odoo-javascript
@@ -934,7 +943,7 @@ msgstr "Mi cuenta"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
-msgstr ""
+msgstr "Mi dirección"
 
 #. module: portal
 #. odoo-javascript
@@ -1103,7 +1112,7 @@ msgstr "Eliminar"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "Remove address"
-msgstr ""
+msgstr "Eliminar dirección"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1123,7 +1132,7 @@ msgstr "Igual que la dirección de entrega"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "Save Address"
-msgstr ""
+msgstr "Guardar dirección"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1237,13 +1246,13 @@ msgstr "Gracias"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your company account."
-msgstr ""
+msgstr "El %(field_name)s se gestiona en la cuenta de su empresa."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your main account address."
-msgstr ""
+msgstr "El %(field_name)s se gestiona en la dirección principal de su cuenta."
 
 #. module: portal
 #. odoo-python
@@ -1274,12 +1283,16 @@ msgstr ""
 msgid ""
 "The company name and VAT number can only be updated on the company account."
 msgstr ""
+"El nombre y número de identificación fiscal de la empresa solo se pueden "
+"actualizar en la cuenta de la empresa."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid ""
 "The company name and VAT number can only be updated on your main account."
 msgstr ""
+"El nombre y número de identificación fiscal de la empresa solo se pueden "
+"actualizar en su cuenta principal."
 
 #. module: portal
 #. odoo-python
@@ -1524,7 +1537,7 @@ msgstr "Contraseña incorrecta."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot archive your main address"
-msgstr ""
+msgstr "No puede archivar su dirección principal"
 
 #. module: portal
 #. odoo-python
@@ -1552,7 +1565,7 @@ msgstr "Primero debería proporcionarle acceso al portal al contacto \"%s\"."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "Your Account Address"
-msgstr ""
+msgstr "La dirección de su cuenta"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -1621,4 +1634,4 @@ msgstr "a su cuenta de usuario, es muy importante que guarde bien la clave."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
-msgstr ""
+msgstr "los detalles de su cuenta"

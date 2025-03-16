@@ -1533,7 +1533,7 @@ msgstr "Manuell"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_manual_capture
 msgid "Manual Capture"
-msgstr ""
+msgstr "Manueller Erfassung"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
@@ -2590,6 +2590,8 @@ msgid ""
 "The following payment methods cannot be enabled because their payment "
 "provider has manual capture activated: %s"
 msgstr ""
+"Die folgenden Zahlungsmethoden können nicht aktiviert werden, da ihr "
+"Zahlungsanbieter die manuelle Erfassung aktiviert hat: %s"
 
 #. module: payment
 #. odoo-python
@@ -2598,6 +2600,8 @@ msgid ""
 "The following payment methods must be disabled in order to enable manual "
 "capture: %s"
 msgstr ""
+"Die folgenden Zahlungsmethoden müssen deaktiviert werden, um die manuelle "
+"Erfassung zu ermöglichen: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -2687,6 +2691,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
 msgid "The payment is authorized and captured in two steps instead of one."
 msgstr ""
+"Die Zahlung wird in zwei Schritten statt in einem autorisiert und erfasst."
 
 #. module: payment
 #. odoo-python
@@ -2819,6 +2824,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s is canceled "
 "(%(provider_name)s)."
 msgstr ""
+"Die Transaktion mit der Referenz %(ref)s über %(amount)s wurde storniert "
+"(%(provider_name)s). "
 
 #. module: payment
 #. odoo-python
@@ -2827,6 +2834,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s is pending "
 "(%(provider_name)s)."
 msgstr ""
+"Die Transaktion mit der Referenz %(ref)s über %(amount)s ist ausstehend "
+"(%(provider_name)s). "
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction

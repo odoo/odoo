@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -54,7 +54,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_view_tree
 msgid "# Public Holidays"
-msgstr ""
+msgstr "# Ngày lễ"
 
 #. module: hr_holidays
 #. odoo-python
@@ -335,6 +335,8 @@ msgid ""
 "<span>The allocated days cannot be used, because the allocation is set to "
 "finish in the past.</span>"
 msgstr ""
+"<span>Không thể sử dụng số ngày được phân bổ vì theo cài đặt, phân bổ này "
+"kết thúc trong quá khứ.</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -723,6 +725,8 @@ msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to approve"
 " it."
 msgstr ""
+"Phân bổ phải ở trạng thái \"Cần phê duyệt\" hoặc \"Phê duyệt lần hai\" để có"
+" thể được phê duyệt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1737,6 +1741,8 @@ msgid ""
 "End date has been updated because the employee will leave the company on "
 "%(departure_date)s."
 msgstr ""
+"Ngày kết thúc đã được cập nhật vì nhân viên sẽ rời công ty vào "
+"%(departure_date)s."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__yes
@@ -2148,7 +2154,7 @@ msgstr "Không trả lương"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__is_used
 msgid "Is Used"
-msgstr ""
+msgstr "Đã sử dụng"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__jan
@@ -2777,19 +2783,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset a refused leave."
-msgstr ""
+msgstr "Chỉ Quản trị viên ngày nghỉ mới có thể đặt lại ngày nghỉ bị từ chối."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset a started leave."
-msgstr ""
+msgstr "Chỉ Quản trị viên ngày nghỉ mới có thể đặt lại ngày nghỉ đã bắt đầu."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset other people leaves."
 msgstr ""
+"Chỉ Quản trị viên ngày nghỉ mới có thể đặt lại ngày nghỉ của người khác."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2798,6 +2805,8 @@ msgid ""
 "Only a Time Off Officer or Administrator can approve/refuse its own "
 "requests."
 msgstr ""
+"Chỉ Người phụ trách ngày nghỉ hoặc Quản trị viên có thể phê duyệt/từ chối "
+"đơn của chính mình."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3475,7 +3484,7 @@ msgstr "Thời gian phải lớn hơn 0"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
 msgid "The employee will leave the company on %(departure_date)s."
-msgstr ""
+msgstr "Nhân viên sẽ rời công ty vào %(departure_date)s."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3852,7 +3861,7 @@ msgstr "Loại nghỉ phép"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Time Off Type's Name"
-msgstr ""
+msgstr "Tên của loại nghỉ phép"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
@@ -4180,6 +4189,8 @@ msgid ""
 "Validity End date has been updated because the employee will leave the "
 "company on %(departure_date)s."
 msgstr ""
+"Ngày kết thúc có hiệu lực đã được cập nhật vì nhân viên sẽ rời công ty vào "
+"%(departure_date)s."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4470,6 +4481,7 @@ msgstr "Bạn không có quyền phê duyệt lần 2 cho đơn nghỉ phép"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Time Off Approver to approve this leave"
 msgstr ""
+"Bạn phải là Người phê duyệt ngày nghỉ của %s để phê duyệt đơn nghỉ phép này"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4478,6 +4490,8 @@ msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "approve this leave"
 msgstr ""
+"Bạn phải là Người phê duyệt ngày nghỉ của %s hoặc Quản trị viên ngày nghỉ để"
+" phê duyệt đơn nghỉ phép này"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4486,8 +4500,8 @@ msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "validate this allocation request."
 msgstr ""
-"Bạn phải là Người phê duyệt nghỉ phép của %s hoặc Quản trị viên nghỉ nghỉ "
-"phép để phê duyệt đơn phân bổ này"
+"Bạn phải là Người phê duyệt ngày nghỉ của %s hoặc Quản trị viên ngày nghỉ để"
+" phê duyệt đơn phân bổ này"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4496,6 +4510,8 @@ msgid ""
 "You must either be a Time off Officer or Time off Administrator to approve "
 "this leave"
 msgstr ""
+"Bạn phải là Người phụ trách ngày nghỉ hoặc Quản trị viên ngày nghỉ để phê "
+"duyệt đơn nghỉ phép này"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero

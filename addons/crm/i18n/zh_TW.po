@@ -202,7 +202,7 @@ msgstr "<span class=\"opacity-50 p-2\">%</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads assigned the last 30 days out of a maximum of </span>"
-msgstr ""
+msgstr "<span> 個潛在客戶已在最近 30 天指派，最多為 </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -232,6 +232,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>定期根據優先次序及篩選器，將潛在客戶分派。</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    除非另行指定，否則所有銷售團隊都會\n"
+"                                    預設使用此設定。\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -405,7 +410,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A lead in a Won stage cannot be lost. Move it to another stage first."
-msgstr ""
+msgstr "處於已贏得階段的潛在客戶，不可設為已損失。請先將其移至其他階段。"
 
 #. module: crm
 #. odoo-python
@@ -837,7 +842,7 @@ msgid ""
 "Changing the value of 'Is Won Stage' may induce a large number of "
 "operations, as the probabilities of opportunities in this stage will be "
 "recomputed on saving."
-msgstr ""
+msgstr "更改「是已贏得階段」的值，可能會引發大量操作，因為此階段銷售機會的成交機率，將會在儲存時重新計算。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_tree
@@ -1936,7 +1941,7 @@ msgstr "指定潛在商機"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment"
-msgstr ""
+msgstr "潛在客戶分派"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -2367,7 +2372,7 @@ msgstr "使用者 %(user)s 和團隊 %(team)s 的成員分配篩選條件格式�
 msgid ""
 "Member preferred assignment domain for user %(user)s and team %(team)s is "
 "incorrectly formatted"
-msgstr ""
+msgstr "使用者 %(user)s 及團隊 %(team)s 的成員偏好分配篩選條件，格式不正確"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2606,7 +2611,7 @@ msgstr "庫存不足"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Not specified"
-msgstr ""
+msgstr "未指定"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__description
@@ -2888,7 +2893,7 @@ msgstr "合作夥伴黑名單"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_optout
 msgid "Pause assignment"
-msgstr ""
+msgstr "暫停分派"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__pending
@@ -3529,7 +3534,7 @@ msgstr "與此管道關聯的電郵地址。收到新電郵時，會自動建立
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "The lead %s cannot be won and lost at the same time."
-msgstr ""
+msgstr "潛在客戶「%s」不可同時設為已贏得及已損失。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id

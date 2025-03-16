@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Tiffany Chang, 2025
-# Larissa Manderfeld, 2025
 # Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,6 +75,8 @@ msgid ""
 "<i class=\"fa fa-pencil me-1\"/>\n"
 "                        Edit"
 msgstr ""
+"<i class=\"fa fa-pencil me-1\"/>\n"
+"                        Bearbeiten"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -84,7 +86,7 @@ msgstr "<i class=\"fa fa-pencil\"/> Informationen bearbeiten"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_row
 msgid "<i class=\"fa fa-plus fa-2x mb-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"fa fa-plus fa-2x mb-2\"/>Adresse hinzufügen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -134,6 +136,11 @@ msgid ""
 "                        operation.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Eine Änderung des Unternehmensnamens oder der USt-IdNr. ist nicht mehr möglich, sobald Dokumente\n"
+"                        für Ihr Konto ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang\n"
+"                        direkt an uns.\n"
+"                    </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -152,7 +159,7 @@ msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" tit
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "<span class=\"mx-2\">|</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">|</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -398,7 +405,7 @@ msgstr "Hinzugefügt am"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 msgid "Address Management"
-msgstr ""
+msgstr "Adressverwaltung"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -461,6 +468,9 @@ msgid ""
 "Changing your name is not allowed once document(s) have been issued for your"
 " account. Please contact us directly for this operation."
 msgstr ""
+"Eine Änderung Ihres Namens ist nicht mehr möglich, sobald Dokumente für Ihr "
+"Konto ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang direkt an"
+" uns."
 
 #. module: portal
 #. odoo-javascript
@@ -787,7 +797,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Wenn Sie Änderungen vornehmen möchten, aktualisieren Sie"
 
 #. module: portal
 #. odoo-javascript
@@ -930,7 +940,7 @@ msgstr "Mein Konto"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
-msgstr ""
+msgstr "Meine Adressen"
 
 #. module: portal
 #. odoo-javascript
@@ -1102,7 +1112,7 @@ msgstr "Entfernen"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "Remove address"
-msgstr ""
+msgstr "Adresse entfernen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1122,7 +1132,7 @@ msgstr "Gleich wie Lieferadresse"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "Save Address"
-msgstr ""
+msgstr "Adresse speichern"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1236,13 +1246,13 @@ msgstr "Vielen Dank!"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your company account."
-msgstr ""
+msgstr "%(field_name)s wird in Ihrem Unternehmenskonto verwaltet."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your main account address."
-msgstr ""
+msgstr "%(field_name)s wird in der Adresse Ihres Hauptkontos verwaltet."
 
 #. module: portal
 #. odoo-python
@@ -1271,12 +1281,16 @@ msgstr "Der Anhang existiert nicht oder Sie besitzen keine Zugriffsrechte."
 msgid ""
 "The company name and VAT number can only be updated on the company account."
 msgstr ""
+"Der Name und die USt-IdNr. des Unternehmens können nur im Unternehmenskonto "
+"aktualisiert werden."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid ""
 "The company name and VAT number can only be updated on your main account."
 msgstr ""
+"Der Name und die USt-IdNr. des Unternehmens können nur in Ihrem Hauptkonto "
+"aktualisiert werden."
 
 #. module: portal
 #. odoo-python
@@ -1523,7 +1537,7 @@ msgstr "Falsches Passwort."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot archive your main address"
-msgstr ""
+msgstr "Sie können Ihre Hauptadresse nicht archivieren"
 
 #. module: portal
 #. odoo-python
@@ -1551,7 +1565,7 @@ msgstr "Sie sollten dem Partner „%s“ erst Zugang zum Portal gewähren."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "Your Account Address"
-msgstr ""
+msgstr "Ihre Kontenadresse"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -1620,4 +1634,4 @@ msgstr "zu Ihrem Benutzerkonto, es ist wichtig, ihn sicher zu aufzubewahren."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
-msgstr ""
+msgstr "Ihre Kontodetails"

@@ -3,8 +3,8 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Tony Ng, 2025
 # Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3955,6 +3955,9 @@ msgid ""
 "\n"
 "Would you like to set %(customer_name)s as the customer for the selected POS order(s)?"
 msgstr ""
+"POS 訂單「%(order_ref)s」似乎未有客戶。\n"
+"\n"
+"要將 %(customer_name)s 設為所選 POS 訂單的客戶？"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7990,6 +7993,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"以下退款訂單不可成為合併發票的一部份，因為它們已就開立了發票的訂單完成退款。每張退款訂單應獨立處理。\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -8125,14 +8131,14 @@ msgstr "如果未選擇客戶或客戶未配置銷售價格表（如有）,則�
 msgid ""
 "The product will be available after this hour for online order and self "
 "order."
-msgstr ""
+msgstr "此時間之後，產品將接受線上訂購及自助訂購。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_until
 msgid ""
 "The product will be available until this hour for online order and self "
 "order."
-msgstr ""
+msgstr "產品將接受線上訂購及自助訂購，直至此時間為止。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
@@ -8398,7 +8404,7 @@ msgstr "該欄位用於將POS使用者組的 ID 傳遞到POS客戶端。"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "This invoice has been created from the point of sale session:%s"
-msgstr ""
+msgstr "此發票由以下銷售點操作時段建立：%s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -8421,6 +8427,8 @@ msgid ""
 "This journal is associated with payment method %(payment_method)s that is "
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
+"此日記賬已與付款方式 %(payment_method)s 相關聯，該付款方式由訂單 %(pos_order)s "
+"所使用，相關的生效銷售點操作時段：%(pos_session)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8802,6 +8810,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"未能建立合併發票，因為未能為以下訂單開立發票。\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9267,7 +9278,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "You cannot close the POS while there are still draft orders for the day."
-msgstr ""
+msgstr "若仍有當天的草稿訂單，便不可關閉 POS。"
 
 #. module: point_of_sale
 #. odoo-python
