@@ -55,7 +55,10 @@ class PaymentProvider(models.Model):
         :return: None
         :raise UserError: If the base URL is not in HTTPS.
         """
-        base_url = self.get_base_url()
+        # When hosted on premise with docker, Odoo use the docker host name instead of the base_url variable
+        base_url = self.env['ir.config_parameter'].sudo().get_param('payment.paypal.base_url')
+        if not base_url:
+            base_url = self.get_base_url()
         if 'localhost' in base_url:
             raise UserError(
                 "PayPal: " + _("You must have an HTTPS connection to generate a webhook.")

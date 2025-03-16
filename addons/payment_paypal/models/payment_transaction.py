@@ -58,6 +58,23 @@ class PaymentTransaction(models.Model):
         :return: The requested payload to create a Paypal order.
         :rtype: dict
         """
+
+        # Sometimes it's unnecessary to add all those information because we skipped the address.
+        simple_paypal_payload = self.env['ir.config_parameter'].sudo().get_param('payment.paypal.simple_payload')
+
+        if simple_paypal_payload:
+            _logger.info("Using simple payload with paypal")
+            return {
+            'intent': 'CAPTURE',
+            'purchase_units': [{
+                'reference_id': self.reference,
+                'amount': {
+                    'currency_code': self.currency_id.name,
+                    'value': self.amount
+                }
+            }],
+        }
+
         country_code = self.partner_country_id.code or self.company_id.country_id.code
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
         payload = {
