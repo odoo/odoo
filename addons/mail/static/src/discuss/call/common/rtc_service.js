@@ -176,10 +176,11 @@ class Network {
      * not setting it will remove the track from the server
      */
     async updateUpload(type, track) {
-        await Promise.all([
-            this.p2p.updateUpload(type, track),
-            this.sfu?.updateUpload(type, track),
-        ]);
+        const proms = [this.p2p.updateUpload(type, track)];
+        if (this.sfu?.state === "connected") {
+            proms.push(this.sfu.updateUpload(type, track));
+        }
+        await Promise.all(proms);
     }
     /**
      * Stop or resume the consumption of tracks from the other call participants.
@@ -1028,7 +1029,7 @@ export class Rtc extends Record {
     }
 
     async _handleSfuClientStateChange({ detail: { state, cause } }) {
-        this.log(this.localSession, "SFU connection state changed", { state, cause });
+        this.log(this.localSession, `connection state change: ${state}`, { state, cause });
         this.localSession.connectionState = state;
         switch (state) {
             case this.SFU_CLIENT_STATE.AUTHENTICATED:
@@ -1289,7 +1290,7 @@ export class Rtc extends Record {
     buildSnapshot() {
         const server = {};
         if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
-            server.info = this.serverInfo;
+            server.info = toRaw(this.serverInfo);
             server.state = this.sfuClient?.state;
             server.errors = this.sfuClient?.errors.map((error) => error.message);
         }
@@ -2016,6 +2017,8 @@ export const rtcService = {
                     return;
                 }
                 if (rtc.serverInfo?.channelUUID === serverInfo.channelUUID) {
+                    // we clear peers as inbound p2p connections may still be active
+                    rtc.p2pService.removeALlPeers();
                     // no reason to swap if the server is the same, if at some point we want to force a swap
                     // there should be an explicit flag in the event payload.
                     return;
