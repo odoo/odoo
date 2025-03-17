@@ -1916,7 +1916,7 @@ class BaseModel(metaclass=MetaModel):
         sql_order, sql_extra_groupby, fnames_used = self._read_group_orderby(order, groupby_terms, query)
         fnames_to_flush.update(fnames_used)
 
-        groupby_terms = list(groupby_terms.values())
+        groupby_terms = [groupby_terms[spec] for spec in groupby]
 
         query_parts = [
             SQL("SELECT %s", SQL(", ").join(groupby_terms + select_terms)),
