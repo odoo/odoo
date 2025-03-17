@@ -494,6 +494,32 @@ class TestViewInheritance(ViewCase):
             'active': False,
         })
 
+        child_view3 = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': """<data>
+                        <xpath expr="//div[hasclass('parasite')]" position="inside" >
+                            <div class="invalid" />
+                        </xpath>
+                    </data>""",
+            'inherit_id': base_view.id,
+            'priority': 7,
+            'active': False,
+        })
+
+        child_view4 = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': """<data>
+                        <xpath expr="//div[hasclass('parasite')]" position="inside" >
+                            <div class="valid" />
+                        </xpath>
+                    </data>""",
+            'inherit_id': child_applied.id,
+            'priority': 5,
+            'active': True,
+        })
+
         # Assert that accessing invalid_locators does not cause database writes.
         actual_queries = []
         with contextmanager(lambda: self._patchExecute(actual_queries))():
@@ -503,6 +529,8 @@ class TestViewInheritance(ViewCase):
 
         self.assertEqual(child_view.invalid_locators, [{'tag': 'xpath', 'attrib': {'expr': "//div[hasclass('parasite')]", 'position': 'inside'}, 'sourceline': 8}])
         self.assertEqual(child_view2.invalid_locators, [{'tag': 'field', 'attrib': {'name': 'user_id', 'position': 'after'}, 'sourceline': 5}])
+        self.assertEqual(child_view3.invalid_locators, [{'tag': 'xpath', 'attrib': {'expr': "//div[hasclass('parasite')]", 'position': 'inside'}, 'sourceline': 2}])
+        self.assertEqual(child_view4.invalid_locators, False)
 
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base

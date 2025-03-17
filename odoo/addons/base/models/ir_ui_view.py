@@ -622,15 +622,11 @@ actual arch.
     @api.model
     def _get_inheriting_views_domain(self):
         """ Return a domain to filter the sub-views to inherit from. """
-        base_domain =  [('active', '=', True)]
         tree_cut_off_view = self.env.context.get("ir_ui_view_tree_cut_off_view")
         if not tree_cut_off_view:
-            return base_domain
-        cut_off_domain = [
-            "|", ("priority", "<", tree_cut_off_view.priority),
-            "&", ("priority", "=", tree_cut_off_view.priority), ("id", "<", tree_cut_off_view.id)
-        ]
-        return expression.AND([base_domain, cut_off_domain])
+            return [('active', '=', True)]
+        else:
+            return ['|', ('active', '=', True), ('id','=', tree_cut_off_view.id)]
 
     @api.model
     def _get_filter_xmlid_query(self):
@@ -935,8 +931,11 @@ actual arch.
         # pushed at the other end of the queue, so that they are applied after
         # all extensions have been applied.
         queue = collections.deque(sorted(hierarchy[self], key=lambda v: v.mode))
+        tree_cut_off_view = self.env.context.get("ir_ui_view_tree_cut_off_view")
         while queue:
             view = queue.popleft()
+            if view == tree_cut_off_view:
+                break
             arch = etree.fromstring(view.arch or '<data/>')
             if view.env.context.get('inherit_branding'):
                 view.inherit_branding(arch)
