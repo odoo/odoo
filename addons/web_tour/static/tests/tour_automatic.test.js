@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
+import { afterEach, beforeEach, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryFirst } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -14,8 +14,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Macro } from "@web/core/macro";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-
-describe.current.tags("desktop");
 
 const tourRegistry = registry.category("web_tour.tours");
 let macro;
@@ -51,6 +49,7 @@ afterEach(() => {
     macro.stop();
 });
 
+test.tags("desktop");
 test("Step Tour validity", async () => {
     patchWithCleanup(console, {
         error: (msg) => expect.step(msg),
@@ -100,6 +99,7 @@ test("Step Tour validity", async () => {
     expect.verifySteps([waited_error1, waited_error2, waited_error3]);
 });
 
+test.tags("desktop");
 test("a tour with invalid step trigger", async () => {
     patchWithCleanup(browser.console, {
         groupCollapsed: (s) => expect.step(`log: ${s}`),
@@ -130,6 +130,7 @@ Failed to execute 'querySelectorAll' on 'Element': '.button0:contins(brol)' is n
     expect.verifySteps(expectedSteps);
 });
 
+test.tags("desktop");
 test("a failing tour logs the step that failed in run", async () => {
     patchWithCleanup(browser.console, {
         groupCollapsed: (s) => expect.step(`log: ${s}`),
@@ -179,6 +180,7 @@ Cannot read properties of null (reading 'click')`,
     expect.verifySteps(expectedError);
 });
 
+test.tags("desktop");
 test("a failing tour with disabled element", async () => {
     patchWithCleanup(browser.console, {
         log: (s) => {},
@@ -226,6 +228,7 @@ TIMEOUT step failed to complete within 500 ms.`,
     expect.verifySteps(expectedError);
 });
 
+test.tags("desktop");
 test("a failing tour logs the step that failed", async () => {
     patchWithCleanup(browser.console, {
         dir: (s) => expect.step(`runbot: ${s.replace(/[\s-]*/g, "")}`),
@@ -318,6 +321,7 @@ TIMEOUT step failed to complete within 111 ms.`,
     ]);
 });
 
+test.tags("desktop");
 test("check tour with inactive steps", async () => {
     class Root extends Component {
         static components = {};
@@ -367,6 +371,7 @@ test("check tour with inactive steps", async () => {
     ]);
 });
 
+test.tags("desktop");
 test("automatic tour with invisible element", async () => {
     patchWithCleanup(browser.console, {
         warn: (s) => {},
@@ -416,6 +421,7 @@ TIMEOUT step failed to complete within 777 ms.`,
     ]);
 });
 
+test.tags("desktop");
 test("automatic tour with invisible element but use :not(:visible))", async () => {
     patchWithCleanup(browser.console, {
         log: (s) => {
@@ -462,6 +468,7 @@ test("automatic tour with invisible element but use :not(:visible))", async () =
     expect.verifySteps(["succeeded"]);
 });
 
+test.tags("desktop");
 test("automatic tour with alternative trigger", async () => {
     let suppressLog = false;
     patchWithCleanup(browser.console, {
@@ -521,6 +528,7 @@ test("automatic tour with alternative trigger", async () => {
     expect.verifySteps(["on step", "on step", "on step", "on step", "succeeded"]);
 });
 
+test.tags("desktop");
 test("check not possible to click below modal", async () => {
     patchWithCleanup(console, {
         warn: () => {},
@@ -585,6 +593,7 @@ TIMEOUT step failed to complete within 888 ms.`,
     ]);
 });
 
+test.tags("desktop");
 test("a tour where hoot trigger failed", async () => {
     patchWithCleanup(browser.console, {
         error: (s) => expect.step(`error: ${s}`),

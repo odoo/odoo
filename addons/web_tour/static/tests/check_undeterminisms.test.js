@@ -1,14 +1,12 @@
 /** @odoo-module **/
 
-import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
+import { afterEach, beforeEach, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryFirst } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { Macro } from "@web/core/macro";
 import { registry } from "@web/core/registry";
-
-describe.current.tags("desktop");
 
 const mainErrorMessage = (trigger) =>
     `ERROR during perform action:\nPotential non deterministic behavior found in 300ms for trigger ${trigger}.`;
@@ -84,6 +82,7 @@ afterEach(() => {
     macro.stop();
 });
 
+test.tags("desktop");
 test("element is no longer visible", async () => {
     macro.onStep = (step, el, index) => {
         if (index == 2) {
@@ -103,6 +102,7 @@ ${expectedError}`,
     ]);
 });
 
+test.tags("desktop");
 test("change text", async () => {
     macro.onStep = (step, el, index) => {
         if (index == 2) {
@@ -130,6 +130,7 @@ Initial element has changed:
     ]);
 });
 
+test.tags("desktop");
 test("change attributes", async () => {
     macro.onStep = (step, el, index) => {
         if (index == 2) {
@@ -167,6 +168,7 @@ ${expectedError}`,
     ]);
 });
 
+test.tags("desktop");
 test("add child node", async () => {
     macro.onStep = (step, el, index) => {
         if (index == 4) {
@@ -204,6 +206,7 @@ ${expectedError}`,
     ]);
 });
 
+test.tags("desktop");
 test("snapshot is the same but has mutated", async () => {
     macro.onStep = async (step, el, index) => {
         if (index === 2) {
