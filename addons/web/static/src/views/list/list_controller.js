@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
@@ -79,6 +79,7 @@ export class ListController extends Component {
         this.editable = (!this.props.readonly && this.archInfo.editable) || false;
         this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
         this.model = useState(useModelWithSampleData(this.props.Model, this.modelParams));
+        useBus(this.model.bus, "render", () => this.render());
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
         // occurs on the change event for input fields. But we don't want to do it when clicking on
@@ -105,8 +106,10 @@ export class ListController extends Component {
             const { rendererScrollPositions } = this.props.state || {};
             if (rendererScrollPositions) {
                 const renderer = this.rootRef.el.querySelector(".o_list_renderer");
-                renderer.scrollLeft = rendererScrollPositions.left;
-                renderer.scrollTop = rendererScrollPositions.top;
+                if (renderer) {
+                    renderer.scrollLeft = rendererScrollPositions.left;
+                    renderer.scrollTop = rendererScrollPositions.top;
+                }
             }
         });
 
