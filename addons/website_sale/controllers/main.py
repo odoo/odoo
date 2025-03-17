@@ -979,10 +979,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ], limit=1)
         return super()._get_default_country(order_sudo=order_sudo, **kwargs)
 
-    @route(auth='public')
-    def portal_address_country_info(self, *args, **kwargs):
-        return super().portal_address_country_info(*args, **kwargs)
-
     @route(
         '/shop/address/submit', type='http', methods=['POST'], auth='public', website=True,
         sitemap=False
