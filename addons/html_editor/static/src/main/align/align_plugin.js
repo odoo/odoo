@@ -34,12 +34,6 @@ export class AlignPlugin extends Plugin {
                 run: () => this.setAlignment("justify"),
             },
         ],
-        shortcuts: [
-            { hotkey: "control+shift+l", commandId: "alignLeft" },
-            { hotkey: "control+shift+e", commandId: "alignCenter" },
-            { hotkey: "control+shift+r", commandId: "alignRight" },
-            { hotkey: "control+shift+j", commandId: "justify" },
-        ],
         toolbar_items: [
             {
                 id: "alignment",
