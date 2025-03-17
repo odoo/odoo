@@ -56,8 +56,3 @@ registry
     .category("public.interactions")
     .add("website.facebook_page", FacebookPage);
 
-registry
-    .category("public.interactions.edit")
-    .add("website.facebook_page", {
-        Interaction: FacebookPage,
-    });
