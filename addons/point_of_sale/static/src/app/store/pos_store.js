@@ -708,7 +708,7 @@ export class PosStore extends Reactive {
         if (!missingProductIds.size) {
             return;
         }
-        this._addProducts([...missingProductIds], false);
+        await this._addProducts([...missingProductIds], false);
     }
     async _loadMissingPricelistItems(products) {
         if (!products.length) {
