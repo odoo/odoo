@@ -445,7 +445,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })
-        holiday.sudo().action_validate()
+        holiday.sudo().action_approve()
         self.assertEqual(len(holiday.timesheet_ids), 5)
 
         # create overlapping global time off
@@ -488,7 +488,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })
-        holiday2.sudo().action_validate()
+        holiday2.sudo().action_approve()
 
         # recreate the global time off
         global_time_off = self.env['resource.calendar.leaves'].create({

@@ -73,10 +73,9 @@ export class LeaveStatsComponent extends Component {
             return;
         }
 
-        const dateFrom = date.startOf("month").setZone(null);
-        const dateTo = dateFrom.plus({'months': 1});
-
-        const departmentLeaves = await this.orm.searchRead(
+        const dateFrom = this.state.date_from.setZone(null);
+        const dateTo = this.state.date_to.setZone(null);
+        this.state.departmentLeaves = await this.orm.searchRead(
             "hr.leave",
             [
                 ["department_id", "=", department[0]],
@@ -126,9 +125,9 @@ export class LeaveStatsComponent extends Component {
             return;
         }
 
-        const dateFrom = date.startOf("year").setZone(null);
-        const dateTo = dateFrom.plus({"years": 1});
-        this.state.leaves = await this.orm.formattedReadGroup(
+        const dateFrom = this.state.date_from.setZone(null).startOf("year");
+        const dateTo = this.state.date_from.setZone(null).endOf("year");
+        this.state.leaves = await this.orm.searchRead(
             "hr.leave",
             [
                 ["employee_id", "=", employee[0]],

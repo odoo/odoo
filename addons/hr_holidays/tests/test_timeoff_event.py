@@ -22,7 +22,7 @@ class TestTimeoffEvent(TestHrHolidaysCommon):
             'request_date_from': datetime(2020, 1, 15),
             'request_date_to': datetime(2020, 1, 15) + relativedelta(days=1),
         })
-        self.holiday.with_user(self.user_hrmanager).action_validate()
+        self.holiday.with_user(self.user_hrmanager).action_approve()
 
         # Finding the event corresponding to the leave
         search_criteria = [

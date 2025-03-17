@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from ast import literal_eval
 from datetime import datetime, time
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
@@ -31,16 +31,12 @@ class HrEmployee(models.Model):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['leave_manager_id']
 
     def action_time_off_dashboard(self):
-        return {
-            'name': _('Time Off Dashboard'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.leave',
-            'views': [[self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],
-            'domain': [('employee_id', 'in', self.ids)],
-            'context': {
-                'employee_id': self.ids,
-            },
-        }
+        action = self.env['ir.actions.act_window']._for_xml_id('hr_holidays.hr_leave_action_action_approve_department')
+        action['context'] = dict(literal_eval(action['context']))
+        action['context']['search_default_employee_id'] = self.ids
+        action['context'].pop('search_default_waiting_for_me', False)
+        action['context'].pop('search_default_waiting_for_me_manager', False)
+        return action
 
     def _is_leave_user(self):
         return self == self.env.user.employee_id and self.env.user.has_group('hr_holidays.group_hr_holidays_user')

@@ -40,10 +40,10 @@ export class TimeOffCalendarModel extends CalendarModel {
 
     makeContextDefaults(record) {
         const context = super.makeContextDefaults(record);
-        if (this.employeeId) {
-            context["default_employee_id"] = this.employeeId;
+        const default_employee_id = context.active_id || this.employeeId
+        if (default_employee_id) {
+            context["default_employee_id"] = default_employee_id
         }
-
         function deserialize(str) {
             // "YYYY-MM-DD".length == 10
             return str.length > 10 ? deserializeDateTime(str) : deserializeDate(str);
