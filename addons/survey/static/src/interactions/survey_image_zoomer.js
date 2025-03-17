@@ -1,93 +1,63 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+import { fadeIn, fadeOut } from "@survey/utils";
 
-export const SurveyImageZoomer = publicWidget.Widget.extend({
-    template: 'survey.survey_image_zoomer',
-    events: {
-        'wheel .o_survey_img_zoom_image': '_onImgScroll',
-        'click': '_onZoomerClick',
-        'click .o_survey_img_zoom_in_btn': '_onZoomInClick',
-        'click .o_survey_img_zoom_out_btn': '_onZoomOutClick',
-    },
-    /**
-     * @override
-     */
-    init(params) {
+class SurveyImageZoomer extends Interaction {
+    static selector = ".o_survey_img_zoom_modal";
+    dynamicContent = {
+        _root: {
+            "t-on-click.prevent": this.onZoomerClick,
+        },
+        ".o_survey_img_zoom_image": {
+            "t-on-wheel": this.onImageScroll,
+            "t-att-style": () => ({
+                // !important is needed to prevent default 'no-transform' on smaller screens.
+                transform: `scale(${this.zoomImageScale}) !important`,
+            }),
+        },
+        ".o_survey_img_zoom_in_btn": {
+            "t-on-click.stop": () => this.addZoomSteps(1),
+        },
+        ".o_survey_img_zoom_out_btn": {
+            "t-on-click.stop": this.addZoomSteps(-1),
+        },
+    };
+
+    setup() {
+        this.fadeInOutDelay = 200;
         this.zoomImageScale = 1;
-        // The image is needed to render the template survey_image_zoom.
-        this.sourceImage = params.sourceImage;
-        this._super(... arguments);
-    },
-    /**
-     * Open a transparent modal displaying the survey choice image.
-     * @override
-     */
-    async start() {
-        const superResult = await this._super(...arguments);
-        // Prevent having hidden modal in the view.
-        this.$el.on('hidden.bs.modal', () => this.destroy());
-        this.$el.modal('show');
-        return superResult;
-    },
+    }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    async willStart() {
+        await this.waitFor(fadeOut([this.el], 0));
+        fadeIn([this.el], this.fadeInOutDelay);
+    }
 
-    /**
-     * Zoom in/out image on scrolling
-     *
-     * @private
-     * @param {WheelEvent} e
-     */
-    _onImgScroll(e) {
-        e.preventDefault();
-        if (e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
-            this._addZoomSteps(1);
-        } else {
-            this._addZoomSteps(-1);
-        }
-    },
     /**
      * Allow user to close by clicking anywhere (mobile...). Destroying the modal
      * without using 'hide' would leave a modal-open in the view.
-     * @private
-     * @param {Event} e
      */
-     _onZoomerClick(e) {
-        e.preventDefault();
-        this.$el.modal('hide');
-    },
-    /**
-     * @private
-     * @param {Event} e
-     */
-    _onZoomInClick(e) {
-        e.stopPropagation();
-        this._addZoomSteps(1);
-    },
-    /**
-     * @private
-     * @param {Event} e
-     */
-    _onZoomOutClick(e) {
-        e.stopPropagation();
-        this._addZoomSteps(-1);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    async onZoomerClick() {
+        await this.waitFor(fadeOut([this.el], this.fadeInOutDelay));
+        this.el.remove();
+    }
 
     /**
-     * Zoom in / out the image by changing the scale by the given number of steps.
-     *
-     * @private
-     * @param {integer} zoomStepNumber - Number of zoom steps applied to the scale of
-     * the image. It can be negative, in order to zoom out. Step is set to 0.1.
+     * Zoom in/out image on scrolling
+     * @param {WheelEvent} event
      */
-     _addZoomSteps(zoomStepNumber) {
-        const image = this.el.querySelector('.o_survey_img_zoom_image');
-        const body = this.el.querySelector('.o_survey_img_zoom_body');
+    onImageScroll(event) {
+        event.preventDefault();
+        if (event.wheelDelta > 0 || event.detail < 0) {
+            this.addZoomSteps(1);
+        } else {
+            this.addZoomSteps(-1);
+        }
+    }
+
+    addZoomSteps(zoomStepNumber) {
+        const image = this.el.querySelector(".o_survey_img_zoom_image");
+        const body = this.el.querySelector(".o_survey_img_zoom_body");
         const imageWidth = image.clientWidth;
         const imageHeight = image.clientHeight;
         const bodyWidth = body.clientWidth;
@@ -97,13 +67,17 @@ export const SurveyImageZoomer = publicWidget.Widget.extend({
             // Prevent the user from de-zooming too much
             return;
         }
-        if (zoomStepNumber > 0 && (imageWidth * newZoomImageScale > bodyWidth || imageHeight * newZoomImageScale > bodyHeight)) {
+        if (
+            zoomStepNumber > 0 &&
+            (imageWidth * newZoomImageScale > bodyWidth ||
+                imageHeight * newZoomImageScale > bodyHeight)
+        ) {
             // Prevent to user to further zoom in as the new image would becomes too large or too high for the screen.
             // Dezooming is still allowed to bring back image into frame (use case: resizing screen).
             return;
         }
-        // !important is needed to prevent default 'no-transform' on smaller screens.
-        image.setAttribute('style', 'transform: scale(' + newZoomImageScale + ') !important');
         this.zoomImageScale = newZoomImageScale;
-    },
-});
+    }
+}
+
+registry.category("public.interactions").add("survey.SurveyImageZoomer", SurveyImageZoomer);
