@@ -18,6 +18,7 @@ class MassMailingList(models.Model):
     _disable_data_merge = True
 
     name = fields.Char(string='Mailing List', required=True)
+    display_name = fields.Char(compute="_compute_display_name")
     active = fields.Boolean(default=True)
     contact_count = fields.Integer(compute="_compute_mailing_list_statistics", string='Number of Contacts')
     contact_count_email = fields.Integer(compute="_compute_mailing_list_statistics", string="Number of Emails")
@@ -104,6 +105,11 @@ class MassMailingList(models.Model):
                 mailing_list.contact_pct_opt_out = 0
                 mailing_list.contact_pct_blacklisted = 0
                 mailing_list.contact_pct_bounce = 0
+
+    @api.depends("name")
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = record.name
 
     # ------------------------------------------------------
     # ORM overrides

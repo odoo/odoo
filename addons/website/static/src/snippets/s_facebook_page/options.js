@@ -163,24 +163,26 @@ options.registry.facebookPage = options.Class.extend({
         if (match) {
             // Check if the page exists on Facebook or not
             const pageId = match.groups.nameid || match.groups.id;
+            const isPrivate = /^\d+$/.test(pageId);
             return fetch(`https://graph.facebook.com/${pageId}/picture`)
             .then((res) => {
-                if (res.ok) {
+                if (res.ok && !isPrivate) {
                     this.fbData.id = pageId;
+                } else if (isPrivate) {
+                    this._displayWarning(defaultURL, "Please provide public Facebook page.");
                 } else {
-                    this.fbData.id = "";
-                    this.fbData.href = defaultURL;
-                    this.notification.add(_t("We couldn't find the Facebook page"), {
-                        type: "warning",
-                    });
+                    this._displayWarning(defaultURL, "We couldn't find the Facebook page");
                 }
             });
         }
+        this._displayWarning(defaultURL, "You didn't provide a valid Facebook link");
+        return Promise.resolve();
+    },
+    _displayWarning(defaultURL, message) {
         this.fbData.id = "";
         this.fbData.href = defaultURL;
-        this.notification.add(_t("You didn't provide a valid Facebook link"), {
+        this.notification.add(_t(message), {
             type: "warning",
         });
-        return Promise.resolve();
     },
 });

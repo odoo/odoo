@@ -175,12 +175,24 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
         if (!amount) {
             amount = this.defaultAmount;
         }
-        const $form = this.$('.s_donation_form');
-        $('<input>').attr({type: 'hidden', name: 'amount', value: amount}).appendTo($form);
-        $('<input>').attr({type: 'hidden', name: 'currency_id', value: this.currency.id}).appendTo($form);
-        $('<input>').attr({type: 'hidden', name: 'csrf_token', value: odoo.csrf_token}).appendTo($form);
-        $('<input>').attr({type: 'hidden', name: 'donation_options', value: JSON.stringify(this.el.dataset)}).appendTo($form);
-        $form.submit();
+        const form = document.querySelector('.s_donation_form');
+        function updateOrAppendInput(name, value) {
+            let input = form.querySelector(`input[name="${name}"]`);
+            if (input) {
+                input.value = value;
+            } else {
+                let newInput = document.createElement('input');
+                newInput.type = 'hidden';
+                newInput.name = name;
+                newInput.value = value;
+                form.appendChild(newInput);
+            }
+        }
+        updateOrAppendInput('amount', amount);
+        updateOrAppendInput('currency_id', this.currency.id);
+        updateOrAppendInput('csrf_token', odoo.csrf_token);
+        updateOrAppendInput('donation_options', JSON.stringify(this.el.dataset));
+        form.submit();
     },
     /**
      * @private
