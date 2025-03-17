@@ -1,83 +1,59 @@
+import { Interaction } from "@web/public/interaction";
 import { deserializeDateTime } from "@web/core/l10n/dates";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { registry } from "@web/core/registry";
 const { DateTime } = luxon;
 
-publicWidget.registry.SurveyTimerWidget = publicWidget.Widget.extend({
-    //--------------------------------------------------------------------------
-    // Widget
-    //--------------------------------------------------------------------------
+class SurveyTimer extends Interaction {
+    static selector = ".o_survey_timer_container .o_survey_timer";
 
-    /**
-     * @override
-     */
-    init: function (parent, params) {
-        this._super.apply(this, arguments);
-        this.timer = params.timer;
-        this.timeLimitMinutes = params.timeLimitMinutes;
-        this.surveyTimerInterval = null;
+    setup() {
+        const timerDataEl = document.querySelector(".o_survey_form_content_data");
+        this.timeLimitMinutes = Number(timerDataEl.dataset.timeLimitMinutes);
+        this.timer = timerDataEl.dataset.timer;
         this.timeDifference = null;
-        if (params.serverTime) {
-            this.timeDifference = DateTime.utc().diff(
-                deserializeDateTime(params.serverTime)
-            ).milliseconds;
+        this.surveyTimerInterval = null;
+        const serverTime = timerDataEl.dataset.serverTime;
+        if (serverTime) {
+            this.timeDifference = DateTime.utc().diff(deserializeDateTime(serverTime)).milliseconds;
         }
-    },
 
-
-    /**
-    * Two responsabilities : Validate that time limit is not exceeded and Run timer otherwise.
-    * If end-user's clock OR the system clock  is de-synchronized before the survey is started, we apply the
-    * difference in timer (if time difference is more than 5 seconds) so that we can
-    * display the 'absolute' counter
-    *
-    * @override
-    */
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.countDownDate = DateTime.fromISO(self.timer, { zone: "utc" }).plus({
-                minutes: self.timeLimitMinutes,
-            });
-            if (Math.abs(self.timeDifference) >= 5000) {
-                self.countDownDate = self.countDownDate.plus({ milliseconds: self.timeDifference });
-            }
-            if (self.timeLimitMinutes <= 0 || self.countDownDate.diff(DateTime.utc()).seconds < 0) {
-                self.trigger_up('time_up');
-            } else {
-                self._updateTimer();
-                self.surveyTimerInterval = setInterval(self._updateTimer.bind(self), 1000);
-            }
+        this.countDownDate = DateTime.fromISO(this.timer, { zone: "utc" }).plus({
+            minutes: this.timeLimitMinutes,
         });
-    },
+        if (Math.abs(this.timeDifference) >= 5000) {
+            this.countDownDate = this.countDownDate.plus({ milliseconds: this.timeDifference });
+        }
+        if (this.timeLimitMinutes <= 0 || this.countDownDate.diff(DateTime.utc()).seconds < 0) {
+            this.triggerTimeUp();
+        } else {
+            this.updateTimer();
+            this.surveyTimerInterval = setInterval(this.updateTimer.bind(this), 1000);
+        }
+    }
 
-    // -------------------------------------------------------------------------
-    // Private
-    // -------------------------------------------------------------------------
+    formatTime(time) {
+        return time > 9 ? time : "0" + time;
+    }
 
-    _formatTime: function (time) {
-        return time > 9 ? time : '0' + time;
-    },
+    triggerTimeUp() {
+        this.el.dispatchEvent(new Event("time_up"));
+    }
 
-    /**
-    * This function is responsible for the visual update of the timer DOM every second.
-    * When the time runs out, it triggers a 'time_up' event to notify the parent widget.
-    *
-    * We use a diff in millis and not a second, that we round to the nearest second.
-    * Indeed, a difference of 999 millis is interpreted as 0 second by moment, which is problematic
-    * for our use case.
-    */
-    _updateTimer: function () {
-        var timeLeft = Math.round(this.countDownDate.diff(DateTime.utc()).milliseconds / 1000);
+    updateTimer() {
+        const timeLeft = Math.round(this.countDownDate.diff(DateTime.utc()).milliseconds / 1000);
 
         if (timeLeft >= 0) {
-            var timeLeftMinutes = parseInt(timeLeft / 60);
-            var timeLeftSeconds = timeLeft - (timeLeftMinutes * 60);
-            this.$el.text(this._formatTime(timeLeftMinutes) + ':' + this._formatTime(timeLeftSeconds));
+            const timeLeftMinutes = parseInt(timeLeft / 60);
+            const timeLeftSeconds = timeLeft - timeLeftMinutes * 60;
+            this.el.textContent =
+                this.formatTime(timeLeftMinutes) + ":" + this.formatTime(timeLeftSeconds);
         } else {
-            clearInterval(this.surveyTimerInterval);
-            this.trigger_up('time_up');
+            if (this.surveyTimerInterval) {
+                clearInterval(this.surveyTimerInterval);
+            }
+            this.triggerTimeUp();
         }
-    },
-});
+    }
+}
 
-export default publicWidget.registry.SurveyTimerWidget;
+registry.category("public.interactions").add("survey.SurveyTimer", SurveyTimer);
