@@ -4,11 +4,21 @@ from odoo.http import request
 
 class L10nESWebsiteSale(WebsiteSale):
 
+    def _get_mandatory_billing_address_fields(self, country_sudo):
+        """Require VAT/NIF for Spanish customers in billing addresses on Spanish e-commerce."""
+        field_names = super()._get_mandatory_billing_address_fields(country_sudo)
+
+        if request.website.sudo().company_id.country_code == country_sudo.code == 'ES':
+            field_names |= {'vat'}
+
+        return field_names
+
     def _get_mandatory_address_fields(self, country_sudo):
+        """Require State for Spanish customers on Spanish e-commerce."""
         field_names = super()._get_mandatory_address_fields(country_sudo)
 
         if request.website.sudo().company_id.country_code == country_sudo.code == 'ES':
-            field_names.update(('vat', 'state_id'))
+            field_names |= {'state_id'}
 
         return field_names
 
