@@ -15,12 +15,14 @@
                                 icon="fa-sitemap"
                                 string="Branches"/>
                     </div>
-                    <field name="logo" widget="image" class="oe_avatar"/>
-                    <div class="oe_title">
-                        <label for="name"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. My Company"/>
-                        </h1>
+                    <div class="d-flex gap-2">
+                        <field name="logo" widget="contact_image" class="oe_avatar text-start float-none" nolabel="1" options="{'size': [100,100], 'img_class': 'rounded-4'}"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. My Company"/>
+                            </h1>
+                        </div>
                     </div>
                     <notebook colspan="4">
                         <page string="General Information" name="general_info">
@@ -65,6 +67,7 @@
             <field name="arch" type="xml">
                 <list string="Companies" decoration-muted="not active">
                     <field name="sequence" widget="handle"/>
+                    <field name="logo" invisible="not logo" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name"/>
                     <field name="partner_id" required="0"/>
                     <field name="child_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
