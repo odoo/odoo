@@ -359,15 +359,14 @@
                     <filter name="delivery" invisible="1" string="Deliveries" domain="[('picking_type_code', '=', 'outgoing')]"/>
                     <filter name="internal" invisible="1" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
+                    <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
+                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
                     <filter name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
                     <filter name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
                     <filter name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
                     <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
                     <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
-                    <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
-                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
-                    <filter string="Planning Issues" name="planning_issues" help="Transfers that are late on scheduled time or one of pickings will be late"
-                        domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('scheduled_date','&lt;', time.strftime('%Y-%m-%d %H:%M:%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]"/>
+                    <separator/>
                     <filter string="Late Availability" name="late_availability" domain="[('products_availability_state', '=', 'late')]"/>
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id', '!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
@@ -379,9 +378,6 @@
                         domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <separator/>
-                    <filter string="Warnings" name="activities_exception"
-                        domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Scheduled Date" name="expected_date" domain="[]" context="{'group_by': 'scheduled_date'}"/>
