@@ -261,6 +261,13 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertEqual(backorder.state, 'done')
         self.assertEqual(mo.move_raw_ids.move_line_ids.mapped('quantity_product_uom'), [20, 80])
 
+    def test_produce_with_zero_available_qty(self):
+        """ Test that producing with 0 qty_available for the component
+        still links the stock.move.line to the production order. """
+        mo, *_ = self.generate_mo()
+        mo.button_mark_done()
+        self.assertEqual(mo.move_raw_ids.move_line_ids.production_id, mo)
+
 class TestKitPicking(common.TestMrpCommon):
     @classmethod
     def setUpClass(cls):
