@@ -42,7 +42,7 @@
                                     <AutoComplete
                                         id="dist_tag.id.toString()"
                                         placeholder="'Search Analytic Account'"
-                                        value="dist_tag.analytic_account_name"
+                                        value="dist_tag.analytic_account_name || ''"
                                         sources="sourcesAnalyticAccount(plan.id)"
                                         autoSelect="true"
                                         onSelect.alike="(option, params) => this.onSelect(option, params, dist_tag)"
