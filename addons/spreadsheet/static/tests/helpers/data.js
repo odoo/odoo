@@ -174,6 +174,14 @@ export class IrModel extends webModels.IrModel {
         }));
     }
 
+    has_searchable_parent_relation() {
+        return false;
+    }
+
+    get_available_models() {
+        return this.env["ir.model"].search_read([], ["display_name", "model"]);
+    }
+
     _records = [
         {
             id: 37,
