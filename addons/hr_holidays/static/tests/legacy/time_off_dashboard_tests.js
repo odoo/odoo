@@ -194,6 +194,6 @@ QUnit.test("test basic rendering", async (assert) => {
 
     assert.containsOnce($, ".o_calendar_filter:contains('Legend')");
     assert.containsOnce($, ".o_calendar_filter:contains('To Approve')");
-    assert.containsOnce($, ".o_calendar_filter:contains('March 17, 2025 : Test Mandatory Day')");
+    assert.containsOnce($, ".o_calendar_filter:contains('Mar 17, 2025 : Test Mandatory Day')");
     assert.containsOnce($, ".fc-day.hr_mandatory_day_5[data-date='2025-03-17']");
 });

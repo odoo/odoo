@@ -1,5 +1,3 @@
-import { getFormattedDateSpan } from "@web/views/calendar/utils";
-
 import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
@@ -18,7 +16,15 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         super.setup();
 
         this.orm = useService("orm");
-        this.getFormattedDateSpan = getFormattedDateSpan;
+        this.getFormattedDateSpan = function getFormattedDateSpan(start, end) {
+            const n = "numeric";
+            const s = "short";
+            const isSameDay = start.hasSame(end, "days");
+            if (isSameDay) {
+                return start.toLocaleString({ month: s, day: n, year: n });
+            }
+            return start.toLocaleString({ month: s, day: n, year: n }) + " - " + end.toLocaleString({ month: s, day: n, year: n });
+        };;
         this.leaveState = useState({
             mandatoryDays: [],
             bankHolidays: [],
