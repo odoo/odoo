@@ -1346,3 +1346,34 @@ class TestAccountMove(AccountTestInvoicingCommon):
         }])
         move.line_ids.account_id = shared_account
         move.action_post()
+
+    def test_modify_zero_line_in_locked_period(self):
+        """
+        Ensure that zero-amount lines in a locked period cannot be modified or reset to draft, but can be safely unlinked.
+        """
+        posted_move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2024-01-01',
+            'line_ids': [
+                Command.create({
+                    'name': 'zero line 1',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+                Command.create({
+                    'name': 'zero line 2',
+                    'account_id': self.company_data['default_account_expense'].id,
+                }),
+            ]
+        })
+        posted_move.action_post()
+
+        posted_move.company_id.sudo().write({
+            'fiscalyear_lock_date': '2025-01-01',
+        })
+
+        with self.assertRaisesRegex(UserError, "You cannot add/modify entries prior to and inclusive of"), self.cr.savepoint():
+            posted_move.line_ids[0].write({'account_id': self.company_data['default_account_expense'].id})
+
+        posted_move.line_ids.unlink()
+
+        self.assertFalse(posted_move.line_ids, "The zero-amount lines should have been successfully deleted.")
