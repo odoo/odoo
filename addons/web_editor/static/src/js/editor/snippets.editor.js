@@ -5201,8 +5201,11 @@ class SnippetsMenu extends Component {
             body: markup(`${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`),
             confirm: async () => {
                 try {
-                    await this.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]);
+                    this._execWithLoadingEffect(async () => {
+                        await this.orm.call("ir.module.module", "button_immediate_install", [[moduleID]]);
+                    }, "both");
                     this.invalidateSnippetCache = true;
+                    this.dialog.closeAll(); // Close the "add snippet" dialog.
                     this._onSaveRequest({
                         data: {
                             reloadWebClient: true,
