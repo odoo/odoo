@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.http import request
 from odoo.osv import expression
+
+SKIP_CAPTCHA_LOGIN = object()
 
 
 class ResUsers(models.Model):
@@ -27,4 +30,6 @@ class ResUsers(models.Model):
         self.ensure_one()
 
     def _should_captcha_login(self, credential):
+        if request and request.env.context.get('skip_captcha_login') is SKIP_CAPTCHA_LOGIN:
+            return False
         return credential['type'] == 'password'

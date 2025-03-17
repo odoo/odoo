@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import contextmanager
 from unittest.mock import patch
 
 import odoo
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 
 from datetime import datetime, timedelta
 
@@ -22,6 +23,14 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
     def _get_free_signup_url(self):
         return '/web/signup'
+
+    @contextmanager
+    def patch_captcha_signup(self):
+        def _verify_request_recaptcha_token(self, captcha):
+            if captcha != 'signup':
+                raise UserError("CAPTCHA test")
+        with patch.object(self.env.registry['ir.http'], '_verify_request_recaptcha_token', _verify_request_recaptcha_token):
+            yield
 
     def test_confirmation_mail_free_signup(self):
         """
@@ -46,10 +55,11 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         }
 
         # Override unlink to not delete the email if the send works.
-        with patch.object(odoo.addons.mail.models.mail_mail.MailMail, 'unlink', lambda self: None):
+        with patch.object(odoo.addons.mail.models.mail_mail.MailMail, 'unlink', lambda self: None), self.patch_captcha_signup():
             # Call the controller
             url_free_signup = self._get_free_signup_url()
-            self.url_open(url_free_signup, data=payload)
+            response = self.url_open(url_free_signup, data=payload)
+            self.assertIn('/web/login?redirect=%2Fweb%2Flogin_successful%3Faccount_created%3DTrue', response.url)
             # Check if an email is sent to the new userw
             new_user = self.env['res.users'].search([('name', '=', name)])
             self.assertTrue(new_user)
