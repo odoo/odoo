@@ -13,6 +13,8 @@ registry.category("web_tour.tours").add("PosRestaurantRewardStay", {
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.totalAmountIs("1.98"),
             Chrome.clickPlanButton(),
+            Chrome.clickBtn("second floor"),
+            Chrome.clickBtn("main floor"),
             FloorScreen.clickTable("5"),
             ProductScreen.totalAmountIs("1.98"),
         ].flat(),
