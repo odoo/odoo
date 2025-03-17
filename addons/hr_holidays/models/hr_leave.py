@@ -80,7 +80,7 @@ class HrLeave(models.Model):
 
         lt = self.env['hr.leave.type']
         if self.env.context.get('holiday_status_display_name', True) and 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
-            domain = ['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)]
+            domain = ['|', ('requires_allocation', '=', False), ('has_valid_allocation', '=', True)]
             if defaults.get('request_unit_hours'):
                 domain.append(('request_unit', '=', 'hour'))
             lt = self.env['hr.leave.type'].search(domain, limit=1, order='sequence')
@@ -142,7 +142,7 @@ class HrLeave(models.Model):
         required=True, readonly=False,
         domain="""[
             '|',
-                ('requires_allocation', '=', 'no'),
+                ('requires_allocation', '=', False),
                 ('has_valid_allocation', '=', True),
         ]""",
         tracking=True)
@@ -349,7 +349,7 @@ class HrLeave(models.Model):
     def _compute_from_employee_id(self):
         for holiday in self:
             holiday.manager_id = holiday.employee_id.parent_id.id
-            if holiday.holiday_status_id.requires_allocation == 'no':
+            if not holiday.holiday_status_id.requires_allocation:
                 continue
             if not holiday.employee_id:
                 holiday.holiday_status_id = False
@@ -638,7 +638,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         for leave in self:
             sorted_leaves[(leave.holiday_status_id, leave.date_from.date())] |= leave
         for (leave_type, date_from), leaves in sorted_leaves.items():
-            if leave_type.requires_allocation == 'no':
+            if not leave_type.requires_allocation:
                 continue
             employees = leaves.employee_id
             leave_data = leave_type.get_allocation_data(employees, date_from)

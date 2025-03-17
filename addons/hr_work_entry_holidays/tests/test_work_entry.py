@@ -81,7 +81,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': 'Sick',
             'request_unit': 'hour',
             'leave_validation_type': 'both',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'company_id': company.id,
         })
         leave1 = self.env['hr.leave'].create({
@@ -128,7 +128,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': 'Sick',
             'request_unit': 'hour',
             'leave_validation_type': 'both',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         leave = self.env['hr.leave'].create({

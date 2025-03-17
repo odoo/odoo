@@ -25,16 +25,16 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         HolidayStatusManagerGroup = HolidaysStatus.with_user(self.user_hrmanager_id)
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         self.holidays_status_hr = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'hr',
         })
         self.holidays_status_manager = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedManager',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'manager',
         })
 
@@ -86,8 +86,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
             holiday_status_paid_time_off = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
-                'requires_allocation': 'yes',
-                'employee_requests': 'no',
+                'requires_allocation': True,
+                'employee_requests': False,
                 'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
@@ -126,13 +126,13 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             HolidayStatusManagerGroup = HolidaysStatus.with_user(self.user_hrmanager_id)
             HolidayStatusManagerGroup.create({
                 'name': 'WithMeetingType',
-                'requires_allocation': 'no',
+                'requires_allocation': False,
             })
 
             self.holidays_status_limited = HolidayStatusManagerGroup.create({
                 'name': 'Limited',
-                'requires_allocation': 'yes',
-                'employee_requests': 'no',
+                'requires_allocation': True,
+                'employee_requests': False,
                 'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)]
@@ -236,8 +236,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
         holiday_status_paid_time_off = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'requires_allocation': 'yes',
-            'employee_requests': 'no',
+            'requires_allocation': True,
+            'employee_requests': False,
             'allocation_validation_type': 'hr',
             'leave_validation_type': 'both',
             'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],

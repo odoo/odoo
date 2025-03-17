@@ -172,7 +172,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             'user_id': user.id,
         } for user in self.users])
         self.leave_type = self.env['hr.leave.type'].create({
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'name': 'Legal Leaves',
             'time_type': 'leave',
         })
