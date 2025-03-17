@@ -1443,13 +1443,12 @@ class SaleOrder(models.Model):
         """Return the invoiceable lines for order `self`."""
         down_payment_line_ids = []
         invoiceable_line_ids = []
-        pending_section = None
+        section_line_ids = []
         precision = self.env['decimal.precision'].precision_get('Product Unit')
 
         for line in self.order_line:
             if line.display_type == 'line_section':
-                # Only invoice the section if one of its lines is invoiceable
-                pending_section = line
+                section_line_ids = [line.id]  # Start a new section.
                 continue
             if line.display_type != 'line_note' and float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 continue
@@ -1459,9 +1458,12 @@ class SaleOrder(models.Model):
                     # at the end of the invoice, in a specific dedicated section.
                     down_payment_line_ids.append(line.id)
                     continue
-                if pending_section:
-                    invoiceable_line_ids.append(pending_section.id)
-                    pending_section = None
+                if section_line_ids:
+                    if line.display_type:
+                        section_line_ids.append(line.id)
+                        continue
+                    invoiceable_line_ids.extend(section_line_ids)
+                    section_line_ids = []
                 invoiceable_line_ids.append(line.id)
 
         return self.env['sale.order.line'].browse(invoiceable_line_ids + down_payment_line_ids)
