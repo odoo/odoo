@@ -364,39 +364,82 @@ export class Many2XAutocomplete extends Component {
     async loadOptionsSource(request) {
         if (this.lastProm) {
             this.lastProm.abort(false);
+            this.lastProm = null;
         }
-        this.lastProm = this.abortableSearch(request);
-        const records = await this.lastProm.promise;
 
-        const options = records.map((record) => ({
-            ...this.mapRecordToOption(record),
-            record,
-        }));
+        const canCreateEdit =
+            "createEdit" in this.activeActions
+                ? this.activeActions.createEdit
+                : this.activeActions.create;
+        let addSearchMore = true;
 
-        if (this.props.quickCreate && request.length) {
-            options.push({
-                label: _t('Create "%s"', request),
-                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
-                action: async (params) => {
-                    try {
-                        await this.props.quickCreate(request, params);
-                    } catch (e) {
-                        if (
-                            e instanceof RPCError &&
-                            e.exceptionName === "odoo.exceptions.ValidationError"
-                        ) {
-                            return this.openMany2X({
-                                context: this.getCreationContext(request),
-                                nextRecordsContext: this.props.context,
-                            });
+        const options = [];
+        if (request.length < this.props.searchThreshold) {
+            if (!this.props.value) {
+                options.push({
+                    label: this.props.searchThreshold > 1 ? _t("Start typing %s characters", this.props.searchThreshold) : _t("Start typing..."),
+                    classList: "o_m2o_start_typing",
+                    unselectable: true,
+                });
+            }
+        } else {
+            this.lastProm = this.abortableSearch(request);
+            const records = await this.lastProm.promise;
+            if (records.length) {
+                for (const record of records) {
+                    options.push({
+                        ...this.mapRecordToOption(record),
+                        record,
+                    });
+                }
+            } else {
+                addSearchMore = false;
+                options.push({
+                    label: _t("No records"),
+                    classList: "o_m2o_no_result",
+                    unselectable: true,
+                });
+            }
+        }
+
+        if (request.length) {
+            const slowCreate = () => {
+                return this.openMany2X({
+                    context: this.getCreationContext(request),
+                    nextRecordsContext: this.props.context,
+                });
+            };
+
+            if (this.props.quickCreate) {
+                options.push({
+                    label: _t('Create "%s"', request),
+                    classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create",
+                    action: async (params) => {
+                        try {
+                            await this.props.quickCreate(request, params);
+                        } catch (e) {
+                            if (
+                                e instanceof RPCError &&
+                                e.exceptionName === "odoo.exceptions.ValidationError"
+                            ) {
+                                return slowCreate();
+                            }
+                            throw e;
                         }
-                        throw e;
-                    }
-                },
-            });
+                    },
+                });
+            }
+
+            if (canCreateEdit) {
+                options.push({
+                    label: _t("Create and edit..."),
+                    classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
+                    action: slowCreate,
+                });
+            }
         }
 
-        if (!this.props.noSearchMore) {
+        if (!this.props.noSearchMore && addSearchMore) {
             options.push({
                 label: this.SearchMoreButtonLabel,
                 action: this.onSearchMore.bind(this, request),
@@ -404,44 +447,11 @@ export class Many2XAutocomplete extends Component {
             });
         }
 
-        const canCreateEdit =
-            "createEdit" in this.activeActions
-                ? this.activeActions.createEdit
-                : this.activeActions.create;
-        if (request.length && canCreateEdit) {
-            options.push({
-                label: _t("Create and edit..."),
-                classList: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
-                action: () =>
-                    this.openMany2X({
-                        context: this.getCreationContext(request),
-                        nextRecordsContext: this.props.context,
-                    }),
-            });
-        }
-
-        const threshold = Math.max(1, this.props.searchThreshold);
-        if (request.length < threshold && !this.props.value && (this.props.quickCreate || canCreateEdit)) {
-            options.push({
-                label: this.props.searchThreshold > 1 ? _t("Start typing %s characters", this.props.searchThreshold) : _t("Start typing..."),
-                classList: "o_m2o_start_typing",
-                unselectable: true,
-            });
-        }
-
-        if (request.length >= this.props.searchThreshold && !records.length && !this.activeActions.createEdit && !this.props.quickCreate) {
-            options.push({
-                label: _t("No records"),
-                classList: "o_m2o_no_result",
-                unselectable: true,
-            });
-        }
-
         return options;
     }
 
     get SearchMoreButtonLabel() {
-        return this.props.searchMoreLabel ?? _t("Search More...");
+        return this.props.searchMoreLabel ?? _t("Search more...");
     }
 
     async onBarcodeSearch() {
