@@ -30,6 +30,30 @@ class TestSaleOrderDiscount(SaleCommon):
         self.assertEqual(discount_line.product_uom_qty, 1.0)
         self.assertFalse(discount_line.tax_ids)
 
+    def test_amount_discount_with_fixed_tax(self):
+        solines = self.sale_order.order_line
+        self.assertEqual(len(solines), 2)
+
+        # One fixed tax
+        fixed_tax = self.env['account.tax'].create({
+            'name': "fixed", 'amount_type': 'fixed', 'amount': 7,
+        })
+        solines[0].tax_ids = [Command.set(fixed_tax.ids)]
+        self.wizard.write({
+            'discount_amount': 55,
+            'discount_type': 'amount',
+        })
+        self.wizard.action_apply_discount()
+
+        discount_line = self.sale_order.order_line - solines
+        discount_line.ensure_one()
+
+        msg = "A fixed tax should not be discounted."
+        self.assertFalse(discount_line.tax_ids, msg=msg)
+        msg = "The discounted amount shouldn't be modified."
+        self.assertAlmostEqual(discount_line.price_total, -55, msg=msg)
+        self.assertEqual(discount_line.product_uom_qty, 1.0)
+
     def test_so_discount(self):
         solines = self.sale_order.order_line
         amount_before_discount = self.sale_order.amount_total
@@ -71,6 +95,33 @@ class TestSaleOrderDiscount(SaleCommon):
         self.assertEqual(discount_lines[0].tax_ids, solines[0].tax_ids)
         self.assertEqual(discount_lines[1].tax_ids, solines[1].tax_ids)
         self.assertTrue(all(line.product_uom_qty == 1.0 for line in discount_lines))
+
+    def test_so_discount_with_fixed_tax(self):
+        solines = self.sale_order.order_line
+        self.assertEqual(len(solines), 2)
+
+        # One fixed tax
+        fixed_tax = self.env['account.tax'].create({
+            'name': "fixed", 'amount_type': 'fixed', 'amount': 1,
+        })
+        solines[0].tax_ids = [Command.set(fixed_tax.ids)]
+        amount_before_discount = self.sale_order.amount_total
+
+        self.wizard.write({
+            'discount_percentage': 0.5,  # 50%
+            'discount_type': 'so_discount',
+        })
+        self.wizard.action_apply_discount()
+
+        discount_line = self.sale_order.order_line - solines
+        discount_line.ensure_one()
+        msg = "A fixed tax should not be discounted."
+        no_discount_amount = fixed_tax.amount * solines[0].product_uom_qty
+        self.assertAlmostEqual(
+            discount_line.price_unit, - (amount_before_discount - no_discount_amount) * 0.5, msg=msg
+        )
+        self.assertFalse(discount_line.tax_ids, msg=msg)
+        self.assertEqual(discount_line.product_uom_qty, 1.0)
 
     def test_sol_discount(self):
         so_amount = self.sale_order.amount_untaxed
