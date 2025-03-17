@@ -31,16 +31,6 @@
                     </div>
                 </group>
             </group>
-            <group name="payment_form" position='inside'>
-            <div colspan="2">
-                <field
-                    class="alert alert-warning"
-                    name="paymob_integration_message"
-                    invisible="code != 'paymob' or state=='disabled' or  not payment_method_ids"
-                />
-            </div>
-            </group>
         </field>
     </record>
-
 </odoo>

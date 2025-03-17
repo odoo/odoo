@@ -35,6 +35,26 @@ PAYMOB_CONFIG = {
     },
 }
 
+PAYMOB_PAYMENT_METHODS_MAPPING = {
+    'VPC': 'card',
+    'MIGS': 'card',
+    'UIG': 'mobile_wallets_egypt',
+    'CAGG': 'kiosk',
+    'HALAN': 'halan',
+    'SYMPL': 'sympl',
+    'VALU': 'valu',
+    'AMANV3': 'aman',
+    'SOUHOOLAV3': 'souhoola',
+    'CONTACT': 'contact',
+    'PREMIUM6': 'premiumcard',
+    'TABBY': 'tabby',
+    'TAMARA': 'tamara',
+    'STCPAY': 'stcpay',
+    'OMANNET': 'omannet',
+    'EASYPAISADIRECT': 'easypaisa',
+    'JAZZCASH': 'jazzcash',
+}
+
 # The codes of the payment methods to activate when Paymob is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.

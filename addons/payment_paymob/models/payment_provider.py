@@ -41,14 +41,6 @@ class PaymentProvider(models.Model):
         groups='base.group_system',
     )
     paymob_hmac_key = fields.Char(string="Paymob HMAC Key", required_if_provider='paymob')
-    paymob_integration_message = fields.Char(compute="_compute_paymob_integration_message")
-
-    # paymob_integration_ids = fields.Many2many(
-    #     string="Integration IDs",
-    #     help="Integration IDs configured on the paymob portal",
-    #     comodel_name="payment.method.paymob",
-    #     relation='payment_provider_payment_method_paymob_rel',
-    # )
 
     # ==== CONSTRAINT METHODS === #
 
@@ -66,14 +58,6 @@ class PaymentProvider(models.Model):
             if len(provider.available_currency_ids) == 1:
                 provider.paymob_account_country_id = self.env['res.country'].search(
                     [('code', '=', provider._get_country_from_currency())], limit=1)
-
-    def _compute_paymob_integration_message(self):
-        for provider in self:
-            payment_method_codes = '", "'.join(provider.payment_method_ids.mapped('code'))
-            provider.paymob_integration_message = _(
-                f"""To match the payment methods insalled in odoo, you need to rename your payment
-                methods in "Payment Integrations" on the Paymob portal to "{payment_method_codes}".
-                """)
 
     @api.onchange('paymob_account_country_id')
     def _onchange_paymob_account_country(self):
@@ -190,22 +174,3 @@ class PaymentProvider(models.Model):
             'currency_code': currency and currency.name,
         }
         return json.dumps(inline_form_values)
-
-# class PaymobPaymentMethod(models.Model):
-#     _name = 'payment.method.paymob'
-#     _description = "Paymob Payment Method"
-
-#     name = fields.Char(string="Integration ID", required=True)
-#     provider_ids = fields.Many2many(
-#         comodel_name='payment.provider',
-#         relation='payment_provider_payment_method_paymob_rel',
-#         string="Providers",
-#         help="The list of providers supporting this payment method.",
-#     )
-
-#     @api.model
-#     def name_create(self, name):
-#         existing_integration = self.search([('name', '=ilike', name.strip())], limit=1)
-#         if existing_integration:
-#             return existing_integration.id, existing_integration.display_name
-#         return super().name_create(name)
