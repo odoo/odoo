@@ -249,8 +249,12 @@ class L10nInEwaybill(models.Model):
             ewaybill.is_ship_to_editable = not is_incoming and not is_overseas
 
     def _compute_content(self):
+        dependent_fields = self._get_ewaybill_dependencies()
         for ewaybill in self:
-            ewaybill_json = ewaybill._ewaybill_generate_direct_json()
+            if any(ewaybill[d_field] for d_field in dependent_fields):
+                ewaybill_json = ewaybill._ewaybill_generate_direct_json()
+            else:
+                ewaybill_json = {}
             ewaybill.content = base64.b64encode(json.dumps(ewaybill_json).encode())
 
     @api.depends('name', 'state')
