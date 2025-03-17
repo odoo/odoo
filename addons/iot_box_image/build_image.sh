@@ -57,7 +57,7 @@ REPO="https://github.com/${REPO:-$current_repo}/odoo.git"
 echo "Using repo: ${REPO}"
 
 if ! file_exists *raspios*.img ; then
-    wget "https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2024-10-28/2024-10-22-raspios-bookworm-armhf-lite.img.xz" -O raspios.img.xz
+    wget "https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-2024-11-19/2024-11-19-raspios-bookworm-armhf-lite.img.xz" -O raspios.img.xz
     unxz --verbose raspios.img.xz
 fi
 
