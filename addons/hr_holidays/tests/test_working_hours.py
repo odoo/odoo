@@ -20,7 +20,7 @@ class TestWorkingHours(TestHrCalendarCommon):
 
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Unpaid Time Off',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'no_validation',
         })
 

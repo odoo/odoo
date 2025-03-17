@@ -42,7 +42,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Unlimited',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'company_id': cls.company.id,
         })
 

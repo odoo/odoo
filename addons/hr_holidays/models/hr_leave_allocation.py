@@ -23,15 +23,15 @@ class HrLeaveAllocation(models.Model):
 
     def _default_holiday_status_id(self):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes')]
+            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', True)]
         else:
-            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes'), ('employee_requests', '=', 'yes')]
+            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', True), ('employee_requests', '=', True)]
         return self.env['hr.leave.type'].search(domain, limit=1)
 
     def _domain_holiday_status_id(self):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            return [('requires_allocation', '=', 'yes')]
-        return [('employee_requests', '=', 'yes')]
+            return [('requires_allocation', '=', True)]
+        return [('employee_requests', '=', True)]
 
     def _domain_employee_id(self):
         domain = [('company_id', 'in', self.env.companies.ids)]
@@ -756,7 +756,7 @@ class HrLeaveAllocation(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_leaves(self):
-        if any(allocation.holiday_status_id.requires_allocation == 'yes' and allocation.leaves_taken > 0 for allocation in self):
+        if any(allocation.holiday_status_id.requires_allocation and allocation.leaves_taken > 0 for allocation in self):
             raise UserError(_('You cannot delete an allocation request which has some validated leaves.'))
 
     def copy(self, default=None):

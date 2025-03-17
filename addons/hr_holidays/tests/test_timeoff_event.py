@@ -13,7 +13,7 @@ class TestTimeoffEvent(TestHrHolidaysCommon):
 
         self.hr_leave_type = self.env['hr.leave.type'].with_user(self.user_hrmanager).create({
             'name': 'Time Off Type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         self.holiday = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).with_user(self.user_employee).create({
             'name': 'Time Off 1 sura',

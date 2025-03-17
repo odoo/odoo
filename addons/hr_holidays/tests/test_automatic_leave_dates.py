@@ -14,7 +14,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Automatic Test',
             'time_type': 'leave',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             # Required for `request_unit_half` to be visible in the view
             'request_unit': 'half_day',
         })

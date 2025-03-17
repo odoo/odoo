@@ -26,7 +26,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
         # This would cause the test case that uses the tour to fail.
         cls.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'request_unit': 'day',
             'company_id': cls.company.id,
         })

@@ -23,8 +23,8 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
 
             holiday_status_paid_time_off = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
-                'requires_allocation': 'yes',
-                'employee_requests': 'no',
+                'requires_allocation': True,
+                'employee_requests': False,
                 'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],

@@ -273,7 +273,7 @@ class HrEmployee(models.Model):
                         skip_excess = True
                         continue
 
-                    if leave_type.requires_allocation == 'yes':
+                    if leave_type.requires_allocation:
                         for allocation in sorted_leave_allocations:
                             # We don't want to include future leaves linked to accruals into the total count of available leaves.
                             # However, we'll need to check if those leaves take more than what will be accrued in total of those days
@@ -343,7 +343,7 @@ class HrEmployee(models.Model):
                         date_accrual_bonus += consumed_content[allocation]['accrual_bonus']
                         virtual_remaining += consumed_content[allocation]['virtual_remaining_leaves']
                     for leave in content['to_recheck_leaves']:
-                        additional_leaves_duration += leave.number_of_hours if leave_type.request_unit == 'hours' else leave.number_of_days
+                        additional_leaves_duration += leave.number_of_hours if leave_type.request_unit == 'hour' else leave.number_of_days
                     latest_remaining = virtual_remaining - date_accrual_bonus + latest_accrual_bonus
                     content['exceeding_duration'] = round(min(0, latest_remaining - additional_leaves_duration), 2)
 
