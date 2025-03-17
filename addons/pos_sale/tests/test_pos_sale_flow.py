@@ -1028,3 +1028,64 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertTrue(downpayment_line_pos)
         self.assertNotIn('(draft)', downpayment_line_pos.name.lower())
         self.assertNotIn('(canceled)', downpayment_line_pos.name.lower())
+
+    def test_settle_sale_order_from_pos_with_mto_and_buy_route(self):
+        """This test creates a sales order with a product that has MTO + Buy routes,
+        settles it in the PoS, and ships it later. We need to ensure that the sales
+        order is confirmed, its procurement is skipped, and the purchase order is
+        created from the pos.order thanks to the procurement.
+        """
+        if not self.env["ir.module.module"].search([("name", "=", "purchase"), ("state", "=", "installed")]):
+            self.skipTest("purchase module is required for this test")
+
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
+        route_mto = self.env.ref('stock.route_warehouse0_mto')
+
+        self.partner_test = self.env['res.partner'].create({
+            'name': 'Partner Test A',
+            'is_company': True,
+            'street': '77 Santa Barbara Rd',
+            'city': 'Pleasant Hill',
+            'country_id': self.env.ref('base.nl').id,
+            'zip': '1105AA',
+            'state_id': False,
+            'email': 'deco.addict82@example.com',
+            'phone': '(603)-996-3829',
+        })
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 10.0,
+            'seller_ids': [(0, 0, {
+                'partner_id': self.partner_test.id,
+                'min_qty': 1.0,
+                'price': 1.0,
+            })],
+            'route_ids': [(6, 0, [route_buy.id, route_mto.id])],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_test.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'product_uom': product_a.uom_id.id,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+        self.assertEqual(sale_order.state, 'draft')
+
+        self.main_pos_config.ship_later = True
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder4', login="accountman")
+
+        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.purchase_order_count, 0)
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner_test.id)], limit=1)
+        self.assertEqual(purchase_order.state, 'draft')
+        self.assertEqual(purchase_order.order_line.product_id, product_a)
+        self.assertEqual(purchase_order.origin, sale_order.pos_order_line_ids.order_id.name)
