@@ -90,6 +90,7 @@ export class ProjectTask extends models.Model {
     date_deadline = fields.Datetime({ string: "Stop Date" });
     depend_on_ids = fields.Many2many({ relation: "project.task" });
     closed_depend_on_count = fields.Integer();
+    is_closed = fields.Boolean();
 
     _records = [
         {
