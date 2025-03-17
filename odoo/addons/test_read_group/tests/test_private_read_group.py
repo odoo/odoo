@@ -1012,3 +1012,13 @@ class TestPrivateReadGroup(common.TransactionCase):
         Model = self.env['test_read_group.related_bar']
         field_info = Model.fields_get(['computed_base_ids'], ['groupable'])
         self.assertFalse(field_info['computed_base_ids']['groupable'])
+
+    def test_duplicate_arguments(self):
+        Model = self.env['test_read_group.aggregate']
+        Model.create({'key': 1, 'value': 5})
+        self.assertEqual(
+            Model._read_group([], groupby=['key', 'key'], aggregates=['value:sum', 'value:sum', 'key:sum']),
+            [
+                (1, 1, 5, 5, 1),
+            ],
+        )
