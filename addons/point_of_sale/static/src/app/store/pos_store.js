@@ -1058,6 +1058,74 @@ export class PosStore extends Reactive {
                 this.pendingOrder["create"].add(id);
             }
         }
+<<<<<<< saas-17.4
+||||||| 953eb7cc241e290e3e5d1ef19048213a206a1947
+        this.loadingOrderState = false;
+    }
+    load_server_orders() {
+        if (!this.open_orders_json) {
+            return;
+        }
+        this.loadOpenOrders(this.open_orders_json);
+    }
+    async _loadMissingProducts(orders) {
+        const missingProductIds = new Set([]);
+        for (const order of orders) {
+            for (const line of order.lines) {
+                const productId = line[2].product_id;
+                if (missingProductIds.has(productId)) {
+                    continue;
+                }
+                if (!this.db.get_product_by_id(productId)) {
+                    missingProductIds.add(productId);
+                }
+            }
+        }
+        if (!missingProductIds.size) {
+            return;
+        }
+        this._addProducts([...missingProductIds], false);
+    }
+    async _loadMissingPricelistItems(products) {
+        if (!products.length) {
+            return;
+        }
+        const product_tmpl_ids = products.map((product) => product.product_tmpl_id[0]);
+        const product_ids = products.map((product) => product.id);
+=======
+        this.loadingOrderState = false;
+    }
+    load_server_orders() {
+        if (!this.open_orders_json) {
+            return;
+        }
+        this.loadOpenOrders(this.open_orders_json);
+    }
+    async _loadMissingProducts(orders) {
+        const missingProductIds = new Set([]);
+        for (const order of orders) {
+            for (const line of order.lines) {
+                const productId = line[2].product_id;
+                if (missingProductIds.has(productId)) {
+                    continue;
+                }
+                if (!this.db.get_product_by_id(productId)) {
+                    missingProductIds.add(productId);
+                }
+            }
+        }
+        if (!missingProductIds.size) {
+            return;
+        }
+        await this._addProducts([...missingProductIds], false);
+    }
+    async _loadMissingPricelistItems(products) {
+        if (!products.length) {
+            return;
+        }
+        const product_tmpl_ids = products.map((product) => product.product_tmpl_id[0]);
+        const product_ids = products.map((product) => product.id);
+>>>>>>> 333cd36f04d2972a233dadd30834ddd2943eccec
 
         return true;
     }
