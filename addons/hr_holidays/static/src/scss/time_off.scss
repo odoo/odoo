@@ -41,3 +41,90 @@
         }
     }
 }
+
+.o_cw_popover_holidays {
+    max-width: 448px !important;
+    min-width: 250px;
+    width: fit-content;
+}
+
+.o_kanban_renderer {
+    .o_kanban_record.o_hr_holidays_kanban {
+        min-height: 105px;
+        .ribbon {
+            --Ribbon-wrapper-width: 6.7rem;
+            span {
+                --Ribbon-left-position-default: 0.3rem;
+            }
+            & .o_medium {
+                font-size: $font-size-sm !important;
+            }
+        }
+    }
+}
+
+.o_holidays_view_kanban .o_kanban_renderer{
+
+    .ribbon {
+        --Ribbon-wrapper-width: 6.77rem;
+        span {
+            --Ribbon-left-position-default: 0.3rem;
+        }
+        & .o_medium {
+            font-size: $font-size-sm !important;
+        }
+    }
+
+    &.o_kanban_grouped {
+        .o_hr_holidays_kanban {
+            display: none;
+        }
+    }
+
+    &.o_kanban_ungrouped {
+        padding: 0px;
+        @media only screen and (max-width:767px) {
+            .o_hr_holidays_kanban {
+                display: none;
+            }
+        }
+        @media only screen and (min-width:768px){
+            .o_kanban_record {
+                width: 100%;
+                min-height: 6.5rem;
+                margin: 0px;
+            }
+            .o_hr_holidays_kanban_mobile {
+                display: none;
+            }
+            .o_holidays_kanban_card {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                .o_hr_holidays_value {
+                    display: flex;
+                    flex-direction: row;
+                    .o_hr_holidays_name {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2;
+                        align-items: baseline;
+                    }
+                    .o_hr_holidays_card {
+                        flex-direction: column;
+                        display: flex;
+                        flex-wrap: wrap;
+                        align-items: baseline;
+                    }
+                }
+                .o_hr_holidays_button {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1;
+                }
+            }
+        }
+    }
+}
