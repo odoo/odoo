@@ -352,13 +352,13 @@ export class PosData extends Reactive {
 
         const ignore = Object.keys(this.opts.databaseTable);
         for (const model of Object.keys(this.relations)) {
-            if (ignore.includes(model)) {
-                continue;
-            }
-
             this.models[model].addEventListener("delete", (params) => {
                 this.indexedDB.delete(model, [params.key]);
             });
+
+            if (ignore.includes(model)) {
+                continue;
+            }
 
             this.models[model].addEventListener("update", (params) => {
                 const record = this.models[model].get(params.id).raw;
