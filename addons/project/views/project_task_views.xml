@@ -277,7 +277,7 @@
     </record>
 
     <record id="project_all_task_activity_action_view" model="ir.actions.act_window.view">
-        <field name="sequence" eval="90"/>
+        <field name="sequence" eval="65"/>
         <field name="view_mode">activity</field>
         <field name="act_window_id" ref="project.act_project_project_2_project_task_all"/>
     </record>
@@ -1004,7 +1004,7 @@
         <record id="action_view_my_task" model="ir.actions.act_window">
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,list,form,calendar,pivot,graph,activity</field>
+            <field name="view_mode">kanban,list,form,calendar,activity,pivot,graph</field>
             <field name="context">{
                 'search_default_open_tasks': 1,
                 'my_tasks': 1,
@@ -1060,7 +1060,7 @@
             <field name="name">All Tasks</field>
             <field name="res_model">project.task</field>
             <field name="path">all-tasks</field>
-            <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="view_mode">list,kanban,form,calendar,activity,pivot,graph</field>
             <field name="domain">[]</field>
             <field name="context">{'search_default_open_tasks': 1, 'default_user_ids': [(4, uid)]}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
