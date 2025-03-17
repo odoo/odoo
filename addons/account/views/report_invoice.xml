@@ -101,7 +101,7 @@
                                 <div t-else="" t-field="o.invoice_incoterm_id.code" class="m-0"/>
                             </div>
                         </div>
-
+ 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
                         <table class="o_has_total_table table o_main_table table-borderless" name="invoice_line_table">
