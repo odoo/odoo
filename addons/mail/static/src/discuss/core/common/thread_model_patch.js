@@ -240,8 +240,11 @@ const threadPatch = {
         return this.channel_member_ids.filter(({ persona }) => persona.notEq(this.store.self));
     },
     get displayName() {
+        if (this.supportsCustomChannelName && this.custom_channel_name) {
+            return this.custom_channel_name;
+        }
         if (this.channel_type === "chat" && this.correspondent) {
-            return this.custom_channel_name || this.correspondent.persona.name;
+            return this.correspondent.persona.name;
         }
         if (this.channel_type === "group" && !this.name) {
             return formatList(
