@@ -47,3 +47,62 @@ registry.category("web_tour.tours").add('shop_checkout_address', {
         },
     ]
 });
+
+registry.category("web_tour.tours").add('shop_checkout_address_create_partner', {
+    test: true,
+    url: '/shop',
+    steps: () => [
+        ...tourUtils.addToCart({ productName: "Storage Box" }),
+        tourUtils.goToCart(),
+        {
+            content: "go to address form",
+            trigger: 'a[href="/shop/checkout?try_skip_step=true"]',
+            run: "click",
+        },
+        {
+            content: "Fill address form with VAT",
+            trigger: 'form.checkout_autoformat',
+            run: function () {
+                $('input[name="name"]').val('abc');
+                $('input[name="phone"]').val('99999999');
+                $('input[name="email"]').val('abc@odoo.com');
+                $('input[name="vat"]').val('IT12345670017');
+                $('input[name="street"]').val('SO1 Billing Street, 33');
+                $('input[name="city"]').val('SO1BillingCity');
+                $('input[name="zip"]').val('10000');
+            },
+        },
+        {
+            id: 'o_country_id',
+            content: "Select country with code 'IT' to trigger compute of Codice Fiscale",
+            trigger: "form.checkout_autoformat",
+            run: function () {
+                $('select[name="country_id"]').val($('#o_country_id option[code="IT"]').val()).change();
+            }
+        },
+        {
+            content: "Check if the Codice Fiscale value matches",
+            trigger: "input[name='l10n_it_codice_fiscale']",
+            run: function () {
+                if ($("input[name='l10n_it_codice_fiscale']").val() !== "12345670017") {
+                    console.error('Expected "12345670017" for Codice Fiscale.');
+                }
+            }
+        },
+        {
+            content: "Add state",
+            trigger: 'select[name="state_id"]',
+            run: function () {
+                $('select[name="state_id"]').val($('select[name="state_id"] option:eq(1)').val())
+            },
+        },
+        {
+            content: "Click on next button",
+            trigger: '.oe_cart .btn:contains("Continue checkout")',
+            run: 'click',
+        },
+        {
+            content: "Check selected billing address is same as typed in previous step",
+            trigger: '#shop_checkout:contains(SO1 Billing Street, 33):contains(SO1BillingCity)',
+        },
+]});
