@@ -7,11 +7,21 @@ from odoo.addons.account.controllers.portal import PortalAccount
 
 class L10nESPortalAccount(PortalAccount):
 
-    def _get_mandatory_address_fields(self, country_sudo):
-        field_names = super()._get_mandatory_address_fields(country_sudo)
+    def _get_mandatory_billing_address_fields(self, country_sudo):
+        """Require VAT/NIF for Spanish customers in billing addresses on Spanish e-commerce."""
+        field_names = super()._get_mandatory_billing_address_fields(country_sudo)
 
         if request.env.company.country_code == country_sudo.code == 'ES':
             field_names.add('vat')
+
+        return field_names
+
+    def _get_mandatory_address_fields(self, country_sudo):
+        """Require State for Spanish customers on Spanish e-commerce."""
+        field_names = super()._get_mandatory_address_fields(country_sudo)
+
+        if request.env.company.country_code == country_sudo.code == 'ES':
+            field_names.add('state_id')
 
         return field_names
 
