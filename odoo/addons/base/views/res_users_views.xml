@@ -232,28 +232,30 @@
                             <field name="partner_id" required="0" readonly="1"/>
                           </div>
                         </div>
-                        <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
-                        <div class="oe_title mw-100">
-                            <label for="name"/>
-                            <h1 class="w-75"><field name="name" placeholder="e.g. John Doe" required="1"/></h1>
-                            <field name="email" invisible="1"/><!-- needed to update partner's email from on_change_login() -->
-                            <div class="d-flex flex-wrap">
-                                <div class="col-md-6 me-md-3 ps-0">
-                                    <label for="login" string="Email Address"/>
-                                    <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
-                                </div>
-                                <div class="col-md-4 ms-md-5 ps-0">
-                                    <label for="phone" string="Phone"/>
-                                    <h2><field name="phone" placeholder="e.g. 555-1234" widget="phone"/></h2>
-                                </div>
+                        <div class="d-flex">
+                            <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [100,100], 'img_class': 'rounded-4'}"/>
+                            <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
+                            <div class="d-flex flex-column ms-2 flex-grow-1">
+                                <h1 class="mb-0 w-sm-75">
+                                    <field name="name" placeholder="e.g. John Doe" required="1"/>
+                                </h1>
+                                <h3 class="d-flex align-items-baseline w-sm-50 mb-0">
+                                    <field name="email" invisible="1"/> <!-- needed to update partner's email from on_change_login() -->
+                                    <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                    <field name="login" class="w-100" placeholder="Email"/>
+                                </h3>
+                                <h3 class="d-flex align-items-baseline w-sm-50 mb-0">
+                                    <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
+                                    <field name="phone" class="w-100" widget="phone" placeholder="Phone"/>
+                                </h3>
                             </div>
-                            <group>
-                                <field name="partner_id" groups="base.group_no_one"
-                                        readonly="1"
-                                        required="0"
-                                        invisible="not id"/>
-                            </group>
                         </div>
+                        <group>
+                            <field name="partner_id" groups="base.group_no_one"
+                                readonly="1"
+                                required="0"
+                                invisible="not id"/>
+                        </group>
                         <notebook colspan="4">
                             <page name="access_rights" string="Access Rights">
                                 <group string="Multi Companies" invisible="companies_count &lt;= 1">
@@ -348,6 +350,7 @@
             <field name="model">res.users</field>
             <field name="arch" type="xml">
                 <list string="Users" multi_edit="1">
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" readonly="1"/>
                     <field name="login" readonly="1"/>
                     <field name="lang"/>

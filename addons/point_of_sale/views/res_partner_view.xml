@@ -29,10 +29,10 @@
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//footer/div" position="inside">
-                    <a t-if="record.pos_order_count.value>0" type="object" name="action_view_pos_order" groups="point_of_sale.group_pos_user" class="btn btn-sm btn-link smaller" role="button">
+                    <span t-if="record.pos_order_count.raw_value" groups="point_of_sale.group_pos_user" class="badge bg-secondary mx-1 rounded-pill smaller">
                         <i class="fa fa-fw fa-shopping-bag me-1" aria-label="Shopping cart" role="img" title="Shopping cart"/>
                         <field name="pos_order_count"/>
-                    </a>
+                    </span>
                 </xpath>
             </field>
         </record>

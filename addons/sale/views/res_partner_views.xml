@@ -24,15 +24,13 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <xpath expr="//footer/div" position="inside">
-                <a t-if="record.sale_order_count?.value"
-                    class="btn btn-sm btn-link smaller"
+                <span t-if="record.sale_order_count?.raw_value"
+                    class="badge bg-secondary mx-1 rounded-pill smaller"
                     groups="sales_team.group_sale_salesman"
-                    name="sale.act_res_partner_2_sale_order"
-                    role="button"
                     type="action">
                     <i class="fa fa-usd me-1" role="img" aria-label="Sale orders" title="Sales orders"/>
                     <field name="sale_order_count"/>
-                </a>
+                </span>
             </xpath>
         </field>
     </record>

@@ -9,10 +9,10 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <xpath expr="//footer/div" position="inside">
-                    <a t-if="record.meeting_count.value>0" type="object" name="schedule_meeting" class="btn btn-sm btn-link smaller" role="button">
+                    <span t-if="record.meeting_count.raw_value" class="badge bg-secondary mx-1 rounded-pill smaller">
                         <i class="fa fa-calendar me-1" aria-label="Meetings" role="img" title="Meetings"/>
                         <field name="meeting_count"/>
-                    </a>
+                    </span>
                 </xpath>
             </field>
         </record>

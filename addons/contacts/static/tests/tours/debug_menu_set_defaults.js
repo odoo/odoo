@@ -7,7 +7,7 @@
             ...stepUtils.goToAppSteps('contacts.menu_contacts', "Open the contacts menu"),
             {
                 content: "Create a new contact",
-                trigger: '.o-kanban-button-new',
+                trigger: '.o_list_button_add',
                 run: "click",
             },
             {
@@ -54,7 +54,7 @@
                 run: "click",
             },
             {
-                trigger: '.o_action_manager > .o_kanban_view .o-kanban-button-new',
+                trigger: '.o_action_manager > .o_list_view .o_list_button_add',
                 run: "click",
             },
             {
@@ -68,7 +68,7 @@
             },
             {
                 content: "Wait for discard",
-                trigger: '.o_control_panel .o-kanban-button-new',
+                trigger: '.o_control_panel .o_list_button_add',
             },
         ]
     });
