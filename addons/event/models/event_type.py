@@ -19,12 +19,14 @@ class EventType(models.Model):
                   'interval_unit': 'hours',
                   'interval_type': 'before_event',
                   'template_ref': 'mail.template, %i' % self.env.ref('event.event_reminder').id,
+                  'sequence': 12,
                  }),
                 (0, 0,
                  {'interval_nbr': 3,
                   'interval_unit': 'days',
                   'interval_type': 'before_event',
                   'template_ref': 'mail.template, %i' % self.env.ref('event.event_reminder').id,
+                  'sequence': 11,
                  })]
 
     def _default_question_ids(self):
