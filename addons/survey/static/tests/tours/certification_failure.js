@@ -1,14 +1,15 @@
 import { queryAll, queryOne } from "@odoo/hoot-dom";
+import { patch } from "@web/core/utils/patch";
 
 /**
  * Speed up fade-in fade-out to avoid useless delay in tests.
  */
-function patchSurveyWidget() {
-    const SurveyFormWidget = odoo.loader.modules.get("@survey/js/survey_form")[Symbol.for('default')]
-    SurveyFormWidget.include({
-        _submitForm: function () {
+function patchSurveyForm() {
+    const SurveyForm = odoo.loader.modules.get("@survey/interactions/survey_form").SurveyForm;
+    patch(SurveyForm.prototype, {
+        submitForm() {
             this.fadeInOutDelay = 0;
-            return this._super.apply(this, arguments);
+            return super.submitForm(...arguments);
         },
     });
 }
@@ -22,10 +23,10 @@ import { registry } from "@web/core/registry";
 
 const patchSteps = [
     {
-        content: "Patching Survey Widget",
+        content: "Patching Survey Form Interaction",
         trigger: "body",
         run: function () {
-            patchSurveyWidget();
+            patchSurveyForm();
         },
     },
 ];
