@@ -5,24 +5,21 @@
         <field name="arch" type="xml">
             <form string="Generate time off for multiple employees">
                 <group>
-                    <group>
-                        <field name="holiday_status_id" domain="[('requires_allocation', '=', False)]"/>
-                        <field name="allocation_mode" string="Mode"/>
-                        <field name="employee_ids" invisible="allocation_mode != 'employee'" required="allocation_mode == 'employee'" widget="many2many_avatar_employee"/>
-                        <field name="company_id" invisible="allocation_mode != 'company'"/>
-                        <field name="department_id" invisible="allocation_mode != 'department'" required="allocation_mode == 'department'"/>
-                        <field name="category_id" invisible="allocation_mode != 'category'" required="allocation_mode == 'category'"/>
-                        <label for="date_from" string="Dates"/>
-                        <div class="o_row">
-                            <field
-                                name="date_from"
-                                widget="daterange"
-                                options="{'end_date_field': 'date_to'}"/>
-                            <field name="date_to" invisible="1" />
-                        </div>
-                        <field name="name" widget="text" placeholder="e.g. Extra recuperation, Company unavailability, ..."/>
-                    </group>
+                    <field name="holiday_status_id" domain="[('requires_allocation', '=', False)]" class="w-100"/>
+                    <field name="allocation_mode" string="Mode"/>
+                    <field name="employee_ids" invisible="allocation_mode != 'employee'" required="allocation_mode == 'employee'" widget="many2many_avatar_employee"/>
+                    <field name="company_id" invisible="allocation_mode != 'company'"/>
+                    <field name="department_id" invisible="allocation_mode != 'department'" required="allocation_mode == 'department'"/>
+                    <field name="category_id" invisible="allocation_mode != 'category'" required="allocation_mode == 'category'"/>
+                    <label for="date_from" string="Dates"/>
+                    <field
+                        name="date_from"
+                        widget="daterange"
+                        options="{'end_date_field': 'date_to'}"
+                        class="w-50" nolabel="1"/>
+                    <field name="date_to" invisible="1" />
                 </group>
+                <field name="name" widget="text" placeholder="e.g. Extra recuperation, Company unavailability, ..."/>
                 <footer>
                     <button name="action_generate_time_off" type="object" class="btn-primary" string="Generate Time Off" accesskey="c"/>
                     <button special="cancel" string="Discard" close="1" accesskey="j" />

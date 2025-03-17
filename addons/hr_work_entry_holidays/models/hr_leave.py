@@ -139,7 +139,7 @@ class HrLeave(models.Model):
         self._regen_work_entries()
         return res
 
-    def _action_user_cancel(self, reason):
+    def _action_user_cancel(self, reason=None):
         res = super()._action_user_cancel(reason)
         self.sudo()._regen_work_entries()
         return res

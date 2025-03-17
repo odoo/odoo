@@ -117,7 +117,7 @@
         <field name="name">hr.leave.accrual.plan.list</field>
         <field name="model">hr.leave.accrual.plan</field>
         <field name="arch" type="xml">
-            <list string="Accrual Plans">
+            <list string="Accrual Plans" sample="1">
                 <field name="name"/>
                 <field name="level_count"/>
                 <field name="employees_count"/>
@@ -272,7 +272,8 @@
         <field name="name">hr.leave.accrual.plan.search</field>
         <field name="model">hr.leave.accrual.plan</field>
         <field name="arch" type="xml">
-            <search string="Group By">
+            <search string="Accrual Plan">
+                <field name="name"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <filter string="Company" name='company_id' context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
             </search>
@@ -283,6 +284,14 @@
         <field name="name">Accrual Plans</field>
         <field name="res_model">hr.leave.accrual.plan</field>
         <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Accrual Plan
+            </p>
+            <p>
+                Use accrual plans to give determined amount of time following the rules you define
+            </p>
+        </field>
     </record>
 
 </odoo>

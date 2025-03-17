@@ -82,7 +82,7 @@ class HrLeave(models.Model):
         self._check_missing_global_leave_timesheets()
         return result
 
-    def _action_user_cancel(self, reason):
+    def _action_user_cancel(self, reason=None):
         res = super()._action_user_cancel(reason)
         timesheets = self.sudo().timesheet_ids
         timesheets.write({'holiday_id': False})
