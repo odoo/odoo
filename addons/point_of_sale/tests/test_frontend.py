@@ -52,6 +52,10 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
             ],
         })
+        # When pos_mrp installed, protects from access error to mpr.bom (read when opening product info popup)
+        if group_mrp_user := cls.env.ref('mrp.group_mrp_user', raise_if_not_found=False):
+            cls.pos_user.write({'groups_id': [Command.link(group_mrp_user.id)]})
+
         cls.pos_admin = cls.env['res.users'].create({
             'name': 'A powerful PoS man!',
             'login': 'pos_admin',
