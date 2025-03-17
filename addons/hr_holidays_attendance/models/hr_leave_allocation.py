@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
 
 
@@ -14,10 +14,10 @@ class HrLeaveAllocation(models.Model):
     def default_get(self, fields):
         res = super().default_get(fields)
         if 'holiday_status_id' in fields and self.env.context.get('deduct_extra_hours'):
-            domain = [('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes')]
+            domain = Domain([('overtime_deductible', '=', True), ('requires_allocation', '=', True)])
             if self.env.context.get('deduct_extra_hours_employee_request', False):
                 # Prevent loading manager allocated time off type in self request contexts
-                domain = expression.AND([domain, [('employee_requests', '=', 'yes')]])
+                domain = expression.AND([domain, [('employee_requests', '=', True)]])
             leave_type = self.env['hr.leave.type'].search(domain, limit=1)
             res['holiday_status_id'] = leave_type.id
         return res

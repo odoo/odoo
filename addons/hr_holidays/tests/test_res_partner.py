@@ -39,7 +39,7 @@ class TestPartner(TransactionCase):
             'user_id': user.id,
         } for user in cls.users])
         cls.leave_type = cls.env['hr.leave.type'].create({
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'name': 'Legal Leaves',
             'time_type': 'leave',
             'responsible_ids': cls.users.ids

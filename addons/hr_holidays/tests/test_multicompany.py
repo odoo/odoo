@@ -24,7 +24,7 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         public_leave.company_id = self.company_2
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'request_unit': 'day',
             'company_id': False,
         })

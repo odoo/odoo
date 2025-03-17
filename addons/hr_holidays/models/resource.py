@@ -70,7 +70,7 @@ class ResourceCalendarLeaves(models.Model):
         for previous_duration, leave, state in zip(previous_durations, leaves, previous_states):
             duration_difference = previous_duration - leave.number_of_days
             message = False
-            if duration_difference > 0 and leave.holiday_status_id.requires_allocation == 'yes':
+            if duration_difference > 0 and leave.holiday_status_id.requires_allocation:
                 message = _("Due to a change in global time offs, you have been granted %s day(s) back.", duration_difference)
             if leave.number_of_days > previous_duration\
                     and (not sick_time_status or leave.holiday_status_id not in sick_time_status):

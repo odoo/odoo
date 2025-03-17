@@ -17,17 +17,17 @@
     <record id="hr_holiday_status_dv" model="hr.leave.type">
         <field name="name">Parental Leaves</field>
         <field name="requires_allocation">yes</field>
-        <field name="employee_requests">no</field>
+        <field name="employee_requests">False</field>
         <field name="leave_validation_type">both</field>
         <field name="allocation_validation_type">hr</field>
         <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
-        <field name="icon_id" ref="hr_holidays.icon_11"/>
+        <field name="icon_id" ref="hr_holidays.icon_17"/>
     </record>
 
     <record id="holiday_status_training" model="hr.leave.type">
         <field name="name">Training Time Off</field>
         <field name="requires_allocation">yes</field>
-        <field name="employee_requests">no</field>
+        <field name="employee_requests">False</field>
         <field name="leave_validation_type">both</field>
         <field name="allocation_validation_type">hr</field>
         <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
