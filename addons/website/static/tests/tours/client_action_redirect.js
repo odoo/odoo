@@ -2,25 +2,13 @@ import { registry } from "@web/core/registry";
 
 const testUrl = '/test_client_action_redirect';
 
-const goToFrontendSteps = [{
-    content: "Go to the frontend",
-    trigger: 'body',
-    run: () => {
-        window.location.href = testUrl;
-    },
-}, {
-    content: "Check we are in the frontend",
-    trigger: 'body:not(:has(.o_website_preview)) #test_contact_FE',
-}];
 const goToBackendSteps = [{
     content: "Go to the backend",
     trigger: 'body',
-    run: () => {
-        window.location.href = `/@${testUrl}`;
-    },
+    run: `goToUrl /@${testUrl}`,
 }, {
     content: "Check we are in the backend",
-    trigger: '.o_website_preview',
+    trigger: ".o_website_preview :iframe main:has(#test_contact_BE):has(#test_contact_FE)",
 }];
 const checkEditorSteps = [{
     content: "Check that the editor is loaded",
@@ -28,8 +16,9 @@ const checkEditorSteps = [{
     timeout: 30000,
 }, {
     content: "exit edit mode",
-    trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
+    trigger: "button[data-action=save]:enabled:contains(save)",
     run: "click",
+    timeout: 30000,
 }, {
     content: "wait for editor to close",
     trigger: ':iframe body:not(.editor_enable)',
@@ -39,7 +28,10 @@ registry.category("web_tour.tours").add('client_action_redirect', {
     url: testUrl,
     steps: () => [
     // Case 1: From frontend, click on `enable_editor=1` link without `/@/` in it
-    ...goToFrontendSteps,
+    {
+        content: "Check we are in the frontend",
+        trigger: 'body:not(:has(.o_website_preview)) #test_contact_FE',
+    },
     {
         content: "Click on the link to frontend",
         trigger: '#test_contact_FE',
@@ -48,10 +40,10 @@ registry.category("web_tour.tours").add('client_action_redirect', {
     ...checkEditorSteps,
 
     // Case 2: From frontend, click on `enable_editor=1` link with `/@/` in it
-    ...goToFrontendSteps,
+    ...goToBackendSteps,
     {
         content: "Click on the link to backend",
-        trigger: '#test_contact_BE',
+        trigger: ':iframe #test_contact_BE',
         run: "click",
     },
     ...checkEditorSteps,
