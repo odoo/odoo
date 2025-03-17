@@ -1,16 +1,35 @@
 import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
+import { reactive } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FormOption } from "./form_option";
+import { FormFieldOptionRedraw } from "./form_field_option_redraw";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
 import {
+    deleteConditionalVisibility,
+    findCircular,
+    getActiveField,
     getCustomField,
     getDefaultFormat,
+    getDependencyEl,
+    getDomain,
     getFieldFormat,
+    getFieldName,
+    getFieldType,
+    getLabelPosition,
     getMark,
+    getMultipleInputs,
+    getNewRecordId,
+    getQuotesEncodedName,
+    getSelect,
+    isFieldCustom,
     isOptionalMark,
     isRequiredMark,
     renderField,
+    replaceFieldElement,
+    setActiveProperties,
+    setVisibilityDependency,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -52,6 +71,19 @@ export class FormOptionPlugin extends Plugin {
                 selector: ".s_website_form",
                 applyTo: "form",
             },
+            {
+                OptionComponent: FormFieldOptionRedraw,
+                props: {
+                    loadFieldOptionData: this.loadFieldOptionData.bind(this),
+                },
+                selector: ".s_website_form_field",
+                exclude: ".s_website_form_dnone",
+            },
+            {
+                template: "html_builder.website.s_website_form_submit_option",
+                selector: ".s_website_form_submit",
+                exclude: ".s_website_form_no_submit_options",
+            },
         ],
         builder_actions: this.getActions(),
         system_classes: ["o_builder_form_show_message"],
@@ -83,6 +115,7 @@ export class FormOptionPlugin extends Plugin {
     };
     getActions() {
         return {
+            // Form actions
             // Components that use this action MUST await fetchModels before they start.
             selectAction: {
                 load: async ({ editingElement: el, value: modelId }) => {
@@ -266,6 +299,203 @@ export class FormOptionPlugin extends Plugin {
                     return !!recaptchaLegalEl;
                 },
             },
+            // Field actions
+            customField: {
+                load: this.prepareFields.bind(this),
+                apply: ({ editingElement: fieldEl, value, loadResult: fields }) => {
+                    const oldLabelText = fieldEl.querySelector(
+                        ".s_website_form_label_content"
+                    ).textContent;
+                    const field = getCustomField(value, oldLabelText);
+                    setActiveProperties(fieldEl, field);
+                    this.replaceField(fieldEl, field, fields);
+                },
+                isApplied: ({ editingElement: fieldEl, value }) => {
+                    const currentValue = isFieldCustom(fieldEl) ? getFieldType(fieldEl) : "";
+                    return currentValue === value;
+                },
+            },
+            existingField: {
+                load: this.prepareFields.bind(this),
+                apply: ({ editingElement: fieldEl, value, loadResult: fields }) => {
+                    const field = fields[value];
+                    setActiveProperties(fieldEl, field);
+                    this.replaceField(fieldEl, field, fields);
+                },
+                isApplied: ({ editingElement: fieldEl, value }) => {
+                    const currentValue = isFieldCustom(fieldEl) ? "" : getFieldName(fieldEl);
+                    return currentValue === value;
+                },
+            },
+            selectType: {
+                load: this.prepareFields.bind(this),
+                apply: ({ editingElement: fieldEl, value, loadResult: fields }) => {
+                    const field = getActiveField(fieldEl, { fields });
+                    field.type = value;
+                    this.replaceField(fieldEl, field, fields);
+                },
+                isApplied: ({ editingElement: fieldEl, value }) => {
+                    const currentValue = getFieldType(fieldEl);
+                    return currentValue === value;
+                },
+            },
+            existingFieldSelectType: {
+                load: this.prepareFields.bind(this),
+                apply: ({ editingElement: fieldEl, value, loadResult: fields }) => {
+                    const field = getActiveField(fieldEl, { fields });
+                    field.type = value;
+                    this.replaceField(fieldEl, field, fields);
+                },
+                isApplied: ({ editingElement: fieldEl, value }) => {
+                    const currentValue = getFieldType(fieldEl);
+                    return currentValue === value;
+                },
+            },
+            multiCheckboxDisplay: {
+                apply: ({ editingElement: fieldEl, value }) => {
+                    const targetEl = getMultipleInputs(fieldEl);
+                    const isHorizontal = value === "horizontal";
+                    for (const el of targetEl.querySelectorAll(".checkbox, .radio")) {
+                        el.classList.toggle("col-lg-4", isHorizontal);
+                        el.classList.toggle("col-md-6", isHorizontal);
+                    }
+                    targetEl.dataset.display = value;
+                },
+                isApplied: ({ editingElement: fieldEl, value }) => {
+                    const targetEl = getMultipleInputs(fieldEl);
+                    const currentValue = targetEl ? targetEl.dataset.display : "";
+                    return currentValue === value;
+                },
+            },
+            setLabelText: {
+                apply: ({ editingElement: fieldEl, value }) => {
+                    const labelEl = fieldEl.querySelector(".s_website_form_label_content");
+                    labelEl.textContent = value;
+                    if (isFieldCustom(fieldEl)) {
+                        value = getQuotesEncodedName(value);
+                        const multiple = fieldEl.querySelector(".s_website_form_multiple");
+                        if (multiple) {
+                            multiple.dataset.name = value;
+                        }
+                        const inputEls = fieldEl.querySelectorAll(".s_website_form_input");
+                        const previousInputName = fieldEl.name;
+                        inputEls.forEach((el) => (el.name = value));
+
+                        // Synchronize the fields whose visibility depends on this field
+                        const dependentEls = fieldEl
+                            .closest("form")
+                            .querySelectorAll(
+                                `.s_website_form_field[data-visibility-dependency="${CSS.escape(
+                                    previousInputName
+                                )}"]`
+                            );
+                        for (const dependentEl of dependentEls) {
+                            if (findCircular(fieldEl, dependentEl)) {
+                                // For all the fields whose visibility depends on this
+                                // field, check if the new name creates a circular
+                                // dependency and remove the problematic conditional
+                                // visibility if it is the case. E.g. a field (A) depends on
+                                // another (B) and the user renames "B" by "A".
+                                deleteConditionalVisibility(dependentEl);
+                            } else {
+                                dependentEl.dataset.visibilityDependency = value;
+                            }
+                        }
+                        /* TODO: make sure this is handled on non-preview:
+                        if (!previewMode) {
+                            // TODO: @owl-options is this still true ?
+                            // As the field label changed, the list of available visibility
+                            // dependencies needs to be updated in order to not propose a
+                            // field that would create a circular dependency.
+                            this.rerender = true;
+                        }
+                        */
+                    }
+                },
+                getValue: ({ editingElement: fieldEl }) => {
+                    const labelEl = fieldEl.querySelector(".s_website_form_label_content");
+                    return labelEl.textContent;
+                },
+            },
+            selectLabelPosition: {
+                load: this.prepareFields.bind(this),
+                apply: ({ editingElement: fieldEl, value, loadResult: fields }) => {
+                    const field = getActiveField(fieldEl, { fields });
+                    field.formatInfo.labelPosition = value;
+                    this.replaceField(fieldEl, field, fields);
+                },
+                isApplied: ({ editingElement: fieldEl, value }) => {
+                    const currentValue = getLabelPosition(fieldEl);
+                    return currentValue === value;
+                },
+            },
+            toggleDescription: {
+                load: this.prepareFields.bind(this),
+                apply: ({ editingElement: fieldEl, loadResult: fields, value }) => {
+                    const description = fieldEl.querySelector(".s_website_form_field_description");
+                    const hasDescription = !!description;
+                    const field = getActiveField(fieldEl, { fields });
+                    field.description = !hasDescription; // Will be changed to default description in qweb
+                    this.replaceField(fieldEl, field, fields);
+                },
+                isApplied: ({ editingElement: fieldEl }) => {
+                    const description = fieldEl.querySelector(".s_website_form_field_description");
+                    return !!description;
+                },
+            },
+            selectTextareaValue: {
+                apply: ({ editingElement: fieldEl, value }) => {
+                    fieldEl.textContent = value;
+                    fieldEl.value = value;
+                },
+                getValue: ({ editingElement: fieldEl }) => fieldEl.textContent,
+            },
+            toggleRequired: {
+                apply: ({ editingElement: fieldEl, param: { mainParam: activeValue } }) => {
+                    fieldEl.classList.add(activeValue);
+                    fieldEl
+                        .querySelectorAll("input, select, textarea")
+                        .forEach((el) => el.toggleAttribute("required", true));
+                    this.setLabelsMark(fieldEl.closest("form"));
+                },
+                clean: ({ editingElement: fieldEl, param: { mainParam: activeValue } }) => {
+                    fieldEl.classList.remove(activeValue);
+                    fieldEl
+                        .querySelectorAll("input, select, textarea")
+                        .forEach((el) => el.removeAttribute("required"));
+                    this.setLabelsMark(fieldEl.closest("form"));
+                },
+                isApplied: ({ editingElement: fieldEl, param: { mainParam: activeValue } }) =>
+                    fieldEl.classList.contains(activeValue),
+            },
+            setVisibility: {
+                load: this.prepareConditionInputs.bind(this),
+                apply: ({ editingElement: fieldEl, value, loadResult: conditionInputs }) => {
+                    if (value === "conditional") {
+                        for (const conditionInput of conditionInputs) {
+                            if (conditionInput.name) {
+                                // Set a default visibility dependency
+                                setVisibilityDependency(fieldEl, conditionInput.name);
+                                return;
+                            }
+                        }
+                        this.services.dialog.add(ConfirmationDialog, {
+                            body: _t("There is no field available for this option."),
+                        });
+                    }
+                    deleteConditionalVisibility(fieldEl);
+                },
+                isApplied: () => true,
+            },
+            setVisibilityDependency: {
+                apply: ({ editingElement: fieldEl, value }) => {
+                    setVisibilityDependency(fieldEl, value);
+                },
+                isApplied: ({ editingElement: fieldEl, value }) => {
+                    const currentValue = fieldEl.dataset.visibilityDependency || "";
+                    return currentValue === value;
+                },
+            },
         };
     }
     setup() {
@@ -299,6 +529,10 @@ export class FormOptionPlugin extends Plugin {
      * @returns {Promise<Object>}
      */
     async _fetchFieldRecords(field) {
+        // TODO remove this - put there to avoid crash
+        if (!field) {
+            return;
+        }
         // Convert the required boolean to a value directly usable
         // in qweb js to avoid duplicating this in the templates
         field.required = field.required ? 1 : null;
@@ -512,6 +746,217 @@ export class FormOptionPlugin extends Plugin {
         const newFieldEl = renderField(field);
         fieldEl.insertAdjacentElement("afterend", newFieldEl);
         this.dependencies["builder-options"].updateContainers(newFieldEl);
+    }
+    /**
+     * To be used in load for any action that uses getActiveField or
+     * replaceField
+     */
+    async prepareFields({ editingElement: fieldEl, value }) {
+        // TODO Through cache ?
+        const fieldOptionData = await this.loadFieldOptionData(fieldEl);
+        const fieldName = getFieldName(fieldEl);
+        const field = fieldOptionData.fields[fieldName];
+        await this.fetchFieldRecords(field);
+        if (fieldOptionData.fields[value]) {
+            await this.fetchFieldRecords(fieldOptionData.fields[value]);
+        }
+        return fieldOptionData.fields;
+    }
+    async prepareConditionInputs({ editingElement: fieldEl, value }) {
+        // TODO Through cache ?
+        const fieldOptionData = await this.loadFieldOptionData(fieldEl);
+        const fieldName = getFieldName(fieldEl);
+        const field = fieldOptionData.fields[fieldName];
+        await this.fetchFieldRecords(field);
+        if (fieldOptionData.fields[value]) {
+            await this.fetchFieldRecords(fieldOptionData.fields[value]);
+        }
+        return fieldOptionData.conditionInputs;
+    }
+    /**
+     * Replaces the old field content with the field provided.
+     *
+     * @param {HTMLElement} oldFieldEl
+     * @param {Object} field
+     * @param {Array} fields
+     * @returns {Promise}
+     */
+    replaceField(oldFieldEl, field, fields) {
+        const activeField = getActiveField(oldFieldEl, { fields });
+        if (activeField.type !== field.type) {
+            field.value = "";
+        }
+        const targetEl = oldFieldEl.querySelector(".s_website_form_input");
+        if (targetEl) {
+            if (["checkbox", "radio"].includes(targetEl.getAttribute("type"))) {
+                // Remove first checkbox/radio's id's final '0'.
+                field.id = targetEl.id.slice(0, -1);
+            } else {
+                field.id = targetEl.id;
+            }
+        }
+        const fieldEl = renderField(field);
+        replaceFieldElement(oldFieldEl, fieldEl);
+    }
+    async loadFieldOptionData(fieldEl) {
+        const formEl = fieldEl.closest("form");
+        const fields = {};
+        // Get the authorized existing fields for the form model
+        // Do it on each render because of custom property fields which can
+        // change depending on the project selected.
+        const existingFields = await this.fetchAuthorizedFields(formEl).then((fieldsFromCache) => {
+            for (const [fieldName, field] of Object.entries(fieldsFromCache)) {
+                field.name = fieldName;
+                const fieldDomain = getDomain(formEl, field.name, field.type, field.relation);
+                field.domain = fieldDomain || field.domain || [];
+                fields[fieldName] = field;
+            }
+            return Object.keys(fieldsFromCache)
+                .map((key) => {
+                    const field = fieldsFromCache[key];
+                    return {
+                        name: field.name,
+                        string: field.string,
+                    };
+                })
+                .sort((a, b) =>
+                    a.string.localeCompare(b.string, undefined, {
+                        numeric: true,
+                        sensitivity: "base",
+                    })
+                );
+        });
+        // Update available visibility dependencies
+        const existingDependencyNames = [];
+        const conditionInputs = [];
+        for (const el of formEl.querySelectorAll(
+            ".s_website_form_field:not(.s_website_form_dnone)"
+        )) {
+            const inputEl = el.querySelector(".s_website_form_input");
+            if (
+                el.querySelector(".s_website_form_label_content") &&
+                inputEl &&
+                inputEl.name &&
+                inputEl.name !== fieldEl.querySelector(".s_website_form_input").name &&
+                !existingDependencyNames.includes(inputEl.name) &&
+                !findCircular(el, fieldEl)
+            ) {
+                conditionInputs.push({
+                    name: inputEl.name,
+                    textContent: el.querySelector(".s_website_form_label_content").textContent,
+                });
+                existingDependencyNames.push(inputEl.name);
+            }
+        }
+
+        const comparator = fieldEl.dataset.visibilityComparator;
+        const dependencyEl = getDependencyEl(fieldEl);
+        const conditionValueList = [];
+        if (dependencyEl) {
+            if (
+                ["radio", "checkbox"].includes(dependencyEl.type) ||
+                dependencyEl.nodeName === "SELECT"
+            ) {
+                // Update available visibility options
+                const inputContainerEl = fieldEl;
+                if (dependencyEl.nodeName === "SELECT") {
+                    for (const option of dependencyEl.querySelectorAll("option")) {
+                        conditionValueList.push({
+                            value: option.value,
+                            textContent: option.textContent || `<${_t("no value")}>`,
+                        });
+                    }
+                    if (!inputContainerEl.dataset.visibilityCondition) {
+                        inputContainerEl.dataset.visibilityCondition =
+                            dependencyEl.querySelector("option").value;
+                    }
+                } else {
+                    // DependencyEl is a radio or a checkbox
+                    const dependencyContainerEl = dependencyEl.closest(".s_website_form_field");
+                    const inputsInDependencyContainer =
+                        dependencyContainerEl.querySelectorAll(".s_website_form_input");
+                    // TODO: @owl-options already wrong in master for e.g. Project/Tags
+                    for (const el of inputsInDependencyContainer) {
+                        conditionValueList.push({
+                            value: el.value,
+                            textContent: el.value,
+                        });
+                    }
+                    if (!inputContainerEl.dataset.visibilityCondition) {
+                        inputContainerEl.dataset.visibilityCondition =
+                            inputsInDependencyContainer[0].value;
+                    }
+                }
+                if (!inputContainerEl.dataset.visibilityComparator) {
+                    inputContainerEl.dataset.visibilityComparator = "selected";
+                }
+            }
+            if (!comparator) {
+                // Set a default comparator according to the type of dependency
+                if (dependencyEl.dataset.target) {
+                    fieldEl.dataset.visibilityComparator = "after";
+                } else if (
+                    ["text", "email", "tel", "url", "search", "password", "number"].includes(
+                        dependencyEl.type
+                    ) ||
+                    dependencyEl.nodeName === "TEXTAREA"
+                ) {
+                    fieldEl.dataset.visibilityComparator = "equal";
+                } else if (dependencyEl.type === "file") {
+                    fieldEl.dataset.visibilityComparator = "fileSet";
+                }
+            }
+        }
+
+        const currentFieldName = getFieldName(fieldEl);
+        const fieldsInForm = Array.from(
+            formEl.querySelectorAll(
+                ".s_website_form_field:not(.s_website_form_custom) .s_website_form_input"
+            )
+        )
+            .map((el) => el.name)
+            .filter((el) => el !== currentFieldName);
+        const availableFields = existingFields.filter(
+            (field) => !fieldsInForm.includes(field.name)
+        );
+
+        const selectEl = getSelect(fieldEl);
+        const multipleInputsEl = getMultipleInputs(fieldEl);
+        let valueList = undefined;
+        if (selectEl || multipleInputsEl) {
+            const field = Object.assign({}, fields[getFieldName(fieldEl)]);
+            const type = getFieldType(fieldEl);
+
+            const optionText = selectEl
+                ? "Option"
+                : type === "selection"
+                ? _t("Radio")
+                : _t("Checkbox");
+            const defaults = [...fieldEl.querySelectorAll("[checked], [selected]")].map((el) =>
+                /^-?[0-9]{1,15}$/.test(el.value) ? parseInt(el.value) : el.value
+            );
+            let availableRecords = undefined;
+            if (!isFieldCustom(fieldEl)) {
+                await this.fetchFieldRecords(field);
+                availableRecords = JSON.stringify(field.records);
+            }
+            valueList = reactive({
+                title: _t("%s List", optionText),
+                addItemTitle: _t("Add new %s", optionText),
+                hasDefault: ["one2many", "many2many"].includes(type) ? "multiple" : "unique",
+                defaults: JSON.stringify(defaults),
+                availableRecords: availableRecords,
+                newRecordId: isFieldCustom(fieldEl) ? getNewRecordId(fieldEl) : "",
+            });
+        }
+        return {
+            fields,
+            existingFields,
+            conditionInputs,
+            availableFields,
+            valueList,
+            conditionValueList,
+        };
     }
 }
 
