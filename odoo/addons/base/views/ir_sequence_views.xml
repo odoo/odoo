@@ -38,7 +38,7 @@
                                 <field name="number_next_actual" string="Next Number"/>
                             </list>
                         </field>
-                        <group col="3" string="Legend (for prefix, suffix)">
+                        <group col="4" string="Legend (for prefix, suffix)">
                             <group>
                                 <span colspan="2">Current Year with Century: %%(year)s</span>
                                 <span colspan="2">Current Year without Century: %%(y)s</span>
@@ -55,6 +55,11 @@
                                 <span colspan="2">Hour 00->12: %%(h12)s</span>
                                 <span colspan="2">Minute: %%(min)s</span>
                                 <span colspan="2">Second: %%(sec)s</span>
+                            </group>
+                            <group>
+                                <span colspan="2">ISO 8601 Week Year with Century: %%(isoyear)s</span>
+                                <span colspan="2">ISO 8601 Week Year without Century: %%(isoy)s</span>
+                                <span colspan="2">ISO 8601 Week Number: %%(isoweek)s</span>
                             </group>
                         </group>
                         <group invisible="not use_date_range">
