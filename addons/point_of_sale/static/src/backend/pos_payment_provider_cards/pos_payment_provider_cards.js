@@ -17,6 +17,7 @@ export class PosPaymentProviderCards extends Component {
         this.container = useRef("cards_container");
         this.state = useState({
             providers: [],
+            disabled: false,
         });
 
         onWillStart(async () => {
@@ -51,13 +52,22 @@ export class PosPaymentProviderCards extends Component {
     }
 
     async installModule(moduleId) {
-        const result = await this.orm.call("ir.module.module", "button_immediate_install", [
-            moduleId,
-        ]);
-
-        if (result) {
-            window.location.reload();
+        const recordSave = await this.props.record.save();
+        if (!recordSave) {
+            return;
         }
+        this.state.disabled = true;
+        await this.orm
+            .call("ir.module.module", "button_immediate_install", [moduleId])
+            .then((result) => {
+                this.state.disabled = false;
+                if (result) {
+                    window.location.reload();
+                }
+            })
+            .finally(() => {
+                this.state.disabled = false;
+            });
     }
 
     async setupProvider(moduleId) {
