@@ -28,6 +28,14 @@ E-invoice implementation
         'views/account_payment_method.xml',
         'views/l10n_it_document_type.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'l10n_it_edi/static/src/js/address.js',
+        ],
+        'web.assets_tests': [
+            'l10n_it_edi/static/tests/tours/*.js',
+        ],
+    },
     'demo': [
         'data/account_invoice_demo.xml',
     ],
