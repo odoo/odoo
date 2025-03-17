@@ -4033,7 +4033,6 @@ class BaseModel(metaclass=MetaModel):
         determine_inverses = defaultdict(list)      # {inverse: fields}
         fnames_modifying_relations = []
         protected = set()
-        check_company = False
         for fname, value in vals.items():
             field = self._fields.get(fname)
             if not field:
@@ -4063,8 +4062,6 @@ class BaseModel(metaclass=MetaModel):
                     # forcing its value to be recomputed once dependencies are
                     # up-to-date.
                     protected.update(self.pool.field_computed.get(field, [field]))
-            if fname == 'company_id' or (field.relational and field.check_company):
-                check_company = True
 
         # force the computation of fields that are computed with some assigned
         # fields, but are not assigned themselves
@@ -4150,8 +4147,8 @@ class BaseModel(metaclass=MetaModel):
             # validate inversed fields
             real_recs._validate_fields(inverse_fields)
 
-        if check_company and self._check_company_auto:
-            self._check_company()
+        if self._check_company_auto:
+            self._check_company(list(vals))
         return True
 
     def _write(self, vals: ValuesType) -> None:
