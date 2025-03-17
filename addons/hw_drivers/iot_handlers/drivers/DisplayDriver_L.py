@@ -19,6 +19,14 @@ from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
 
+MIN_IMAGE_VERSION_WAYLAND = 25.03
+
+ORIENTATION_WAYLAND = {
+    Orientation.NORMAL: "normal",
+    Orientation.INVERTED: "180",
+    Orientation.LEFT: "90",
+    Orientation.RIGHT: "270"
+}
 
 class DisplayDriver(Driver):
     connection_type = 'display'
@@ -105,8 +113,17 @@ class DisplayDriver(Driver):
 
         if type(orientation) is not Orientation:
             raise TypeError("orientation must be of type Orientation")
-        subprocess.run(['xrandr', '-o', orientation.value], check=True)
-        subprocess.run([file_path('hw_drivers/tools/sync_touchscreen.sh'), str(int(self._x_screen) + 1)], check=False)
+
+        if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION_WAYLAND:
+            subprocess.run(['wlr-randr', '--output', self.device_identifier, '--transform', ORIENTATION_WAYLAND[orientation]], check=True)
+            # Update touchscreen mapping to this display
+            with helpers.writable():
+                subprocess.run(['sed', '-i', f's/HDMI-A-[12]/{self.device_identifier}/', '/home/odoo/.config/labwc/rc.xml'])
+            # Tell labwc to reload its configuration
+            subprocess.run(['pkill', '-HUP', 'labwc'])
+        else:
+            subprocess.run(['xrandr', '-o', orientation.value], check=True)
+            subprocess.run([file_path('hw_drivers/tools/sync_touchscreen.sh'), str(int(self._x_screen) + 1)], check=False)
         helpers.save_browser_state(orientation=orientation)
 
 

@@ -3,25 +3,38 @@
 
 import logging
 import os
+import re
 import screeninfo
+import subprocess
 
 from odoo.addons.hw_drivers.interface import Interface
+from odoo.addons.hw_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
 
+MIN_IMAGE_VERSION_WAYLAND = 25.03
 
 class DisplayInterface(Interface):
-    _loop_delay = 0
+    _loop_delay = 3
     connection_type = 'display'
 
     def get_devices(self):
-        display_devices = {}
         dummy_display = {
             'distant_display': {
                 'identifier': 'distant_display',
                 'name': 'Distant Display',
             }
         }
+
+        if float(helpers.get_version()[1:]) >= MIN_IMAGE_VERSION_WAYLAND:
+            randr_result = subprocess.run(['wlr-randr'], capture_output=True, text=True)
+            if randr_result.returncode != 0:
+                return {}
+            displays = re.findall(r"(?<=\()HDMI-A-\d(?=\))", randr_result.stdout)
+            return {
+                monitor: self._add_device(monitor, x_screen)
+                for x_screen, monitor in enumerate(displays)
+            }
 
         try:
             os.environ['DISPLAY'] = ':0'
