@@ -227,8 +227,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         # employee should be set to current user
         allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_employee))
         allocation_form.holiday_status_id = self.holidays_type_2
-        allocation_form.date_from = date(2019, 5, 6)
-        allocation_form.date_to = date(2019, 5, 6)
         allocation_form.name = 'New Allocation Request'
         allocation_form.save()
 
@@ -371,7 +369,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave1.number_of_hours, 38)
         leave1.action_approve()
         self.assertEqual(leave1.number_of_hours, 38)
-        leave1.action_validate()
+        leave1.action_approve()
         self.assertEqual(leave1.number_of_hours, 38)
 
         leave2 = self.env['hr.leave'].create({
@@ -385,7 +383,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave2.number_of_hours, 4)
         leave2.action_approve()
         self.assertEqual(leave2.number_of_hours, 4)
-        leave2.action_validate()
+        leave2.action_approve()
         self.assertEqual(leave2.number_of_hours, 4)
 
     def test_number_of_hours_display_flexible_calendar(self):
@@ -544,7 +542,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave1.number_of_hours, 24)
         leave1.action_approve()
         self.assertEqual(leave1.number_of_hours, 24)
-        leave1.action_validate()
+        leave1.action_approve()
         self.assertEqual(leave1.number_of_hours, 24)
 
     def _test_leave_with_tz(self, tz, local_date_from, local_date_to, number_of_days):
@@ -669,8 +667,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         req1_form.request_date_from = fields.Date.to_date('2021-12-06')
         req1_form.request_date_to = fields.Date.to_date('2021-12-08')
 
-        self.assertEqual(req1_form.number_of_days, 3)
         req1_form.save().action_approve()
+        self.assertEqual(req1_form.record.number_of_days, 3)
 
     def test_leave_with_public_holiday_other_company(self):
         other_company = self.env['res.company'].create({
@@ -1012,11 +1010,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
             # A meeting is only created once the leave is validated
             self.assertFalse(leave.meeting_id)
-            leave.with_user(self.user_hrmanager_id).action_approve()
+            leave.with_user(self.user_responsible_id).action_approve()
             self.assertFalse(leave.meeting_id)
 
             # A meeting is created in the user's calendar when a leave is validated
-            leave.with_user(self.user_hrmanager_id).action_validate()
+            leave.with_user(self.user_hrmanager_id).action_approve()
             self.assertTrue(leave.meeting_id.active)
 
             # The meeting is archived when the leave is cancelled
@@ -1099,20 +1097,19 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_from': datetime.today() - timedelta(days=1),
                 'date_to': datetime.today() + timedelta(days=1),
             })
-
             if leave_validation_type in ('manager', 'both'):
                 self.assertFalse(employee.is_absent)
                 self.assertFalse(employee.current_leave_id)
                 self.assertEqual(employee.filtered_domain([('is_absent', '=', False)]), employee)
                 self.assertFalse(employee.filtered_domain([('is_absent', '=', True)]))
-                current_leave.with_user(self.user_hruser_id).action_approve()
+                current_leave.with_user(self.user_responsible_id).action_approve()
 
             if leave_validation_type in ('hr', 'both'):
                 self.assertFalse(employee.is_absent)
                 self.assertFalse(employee.current_leave_id)
                 self.assertEqual(employee.filtered_domain([('is_absent', '=', False)]), employee)
                 self.assertFalse(employee.filtered_domain([('is_absent', '=', True)]))
-                current_leave.with_user(self.user_hrmanager_id).action_validate()
+                current_leave.with_user(self.user_hrmanager_id).action_approve()
 
             employee.invalidate_recordset(fnames=["is_absent", "current_leave_id"])
             self.assertTrue(employee.is_absent)

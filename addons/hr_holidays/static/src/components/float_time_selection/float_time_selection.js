@@ -4,6 +4,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { FloatTimeSelectionPopover } from "./float_time_selection_popover";
 
 import { FloatTimeField, floatTimeField } from "@web/views/fields/float_time/float_time_field";
+const { DateTime } = luxon;
 
 function floatToHoursMinutes(floatValue) {
     const hours = Math.floor(floatValue);
@@ -39,6 +40,13 @@ export class FloatTimeSelectionField extends FloatTimeField {
             this.timeValues.minutes = minutes;
             this.timeValues.floatValue = initialValue;
         });
+    }
+
+    get formattedValue() {
+        const unitAmount = super.formattedValue;
+        return DateTime
+            .fromFormat(unitAmount, 'hh:mm', { numberingSystem: 'latn', zone: 'default'})
+            .toLocaleString({ hour: 'numeric', minute: 'numeric'});
     }
 
     onCharHoursClick(ev) {

@@ -206,7 +206,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'request_date_from': datetime(2024, 12, 3, 7, 0),
             'request_date_to': datetime(2024, 12, 5, 18, 0),
         })
-        partially_covered_leave.action_validate()
+        partially_covered_leave.action_approve()
 
         global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
             'name': 'Public holiday',
