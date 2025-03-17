@@ -1,33 +1,37 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+import { fadeIn, fadeOut } from "@survey/utils";
 
-export const SurveyImageZoomer = publicWidget.Widget.extend({
-    template: 'survey.survey_image_zoomer',
-    events: {
-        'wheel .o_survey_img_zoom_image': 'onImageScroll',
-        'click': 'onZoomerClick',
-        'click .o_survey_img_zoom_in_btn': 'onZoomInClick',
-        'click .o_survey_img_zoom_out_btn': 'onZoomOutClick',
-    },
-    /**
-     * @override
-     */
-    init(params) {
+export class SurveyImageZoomer extends Interaction {
+    static selector = ".o_survey_img_zoom_modal";
+    dynamicContent = {
+        _root: {
+            "t-on-click.prevent": this.onZoomerClick,
+        },
+        ".o_survey_img_zoom_image": {
+            "t-on-wheel": this.onImageScroll,
+            "t-att-style": () => ({
+                // !important is needed to prevent default 'no-transform' on smaller screens.
+                transform: `scale(${this.zoomImageScale}) !important`,
+            }),
+        },
+        ".o_survey_img_zoom_in_btn": {
+            "t-on-click.stop": () => this.addZoomSteps(1),
+        },
+        ".o_survey_img_zoom_out_btn": {
+            "t-on-click.stop": () => this.addZoomSteps(-1),
+        },
+    };
+
+    setup() {
+        this.fadeInOutDelay = 200;
         this.zoomImageScale = 1;
-        // The image is needed to render the template survey_image_zoom.
-        this.sourceImage = params.sourceImage;
-        this._super(... arguments);
-    },
-    /**
-     * Open a transparent modal displaying the survey choice image.
-     * @override
-     */
-    async start() {
-        const superResult = await this._super(...arguments);
-        // Prevent having hidden modal in the view.
-        this.$el.on('hidden.bs.modal', () => this.destroy());
-        this.$el.modal('show');
-        return superResult;
-    },
+    }
+
+    async willStart() {
+        await fadeOut([this.el], 0);
+        fadeIn([this.el], this.fadeInOutDelay);
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -39,43 +43,21 @@ export const SurveyImageZoomer = publicWidget.Widget.extend({
      */
     onImageScroll(ev) {
         ev.preventDefault();
-        ev = ev.originalEvent;
         if (ev.wheelDelta > 0 || ev.detail < 0) {
             this.addZoomSteps(1);
         } else {
             this.addZoomSteps(-1);
         }
-    },
+    }
 
     /**
      * Allow user to close by clicking anywhere (mobile...). Destroying the modal
      * without using 'hide' would leave a modal-open in the view.
-     * @param {Event} e
      */
-    onZoomerClick(e) {
-        e.preventDefault();
-        this.$el.modal('hide');
-    },
-    /**
-     * @private
-     * @param {Event} e
-     */
-    onZoomInClick(e) {
-        e.stopPropagation();
-        this.addZoomSteps(1);
-    },
-    /**
-     * @private
-     * @param {Event} e
-     */
-    onZoomOutClick(e) {
-        e.stopPropagation();
-        this.addZoomSteps(-1);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    async onZoomerClick() {
+        await this.waitFor(fadeOut([this.el], this.fadeInOutDelay));
+        this.el.remove();
+    }
 
     /**
      * Zoom in / out the image by changing the scale by the given number of steps.
@@ -99,8 +81,8 @@ export const SurveyImageZoomer = publicWidget.Widget.extend({
             // Dezooming is still allowed to bring back image into frame (use case: resizing screen).
             return;
         }
-        // !important is needed to prevent default 'no-transform' on smaller screens.
-        image.setAttribute('style', 'transform: scale(' + newZoomImageScale + ') !important');
         this.zoomImageScale = newZoomImageScale;
-    },
-});
+    }
+}
+
+registry.category("public.interactions").add("survey.SurveyImageZoomer", SurveyImageZoomer);

@@ -64,8 +64,8 @@ sent mails with personal token for the invitation of the survey.
     'assets': {
         'survey.survey_assets': [
             ('include', "web.chartjs_lib"),
+            'survey/static/src/utils.js',
             '/survey/static/src/interactions/survey_image_zoomer_templates.xml',
-            'survey/static/src/js/survey_breadcrumb.js',
             'survey/static/src/js/survey_preload_image_mixin.js',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
@@ -77,6 +77,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_templates_results.scss',
             'survey/static/src/interactions/survey_breadcrumb_templates.xml',
             'survey/static/src/xml/survey_paginated_results_rows_template.xml',
+            'survey/static/src/js/survey_timer.js',  # TODO: remove once session_manage has been translated into interaction
             'survey/static/src/interactions/*',
         ],
         'survey.survey_user_input_session_assets': [
