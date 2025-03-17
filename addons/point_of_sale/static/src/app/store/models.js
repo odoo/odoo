@@ -2269,6 +2269,7 @@ export class Order extends PosModel {
                     comboParent,
                     comboLine: line.comboLine,
                     attribute_value_ids: line.attribute_value_ids,
+                    attribute_custom_values: line.comboLine?.configuration?.attribute_custom_values,
                     extras: {price_type: "manual"},
                 }
             );
