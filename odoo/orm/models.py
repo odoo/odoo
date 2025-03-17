@@ -1896,7 +1896,7 @@ class BaseModel(metaclass=MetaModel):
         ]
 
         # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
-        row_values = self.env.execute_query(query.select(*groupby_terms.values(), *select_terms))
+        row_values = self.env.execute_query(query.select(*[groupby_terms[spec] for spec in groupby], *select_terms))
 
         if not row_values:
             return row_values
