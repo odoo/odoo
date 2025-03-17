@@ -6,9 +6,10 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
-import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
+import { refresh, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 registry.category("web_tour.tours").add("ChromeTour", {
     checkDelay: 50,
@@ -203,6 +204,7 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
         ].flat(),
 });
 
+<<<<<<< 67df6dad4f4e970252d7fdad4ce78133733eeb3f
 registry.category("web_tour.tours").add("test_cash_in_out", {
     checkDelay: 50,
     steps: () =>
@@ -220,5 +222,32 @@ registry.category("web_tour.tours").add("test_cash_in_out", {
             CashMoveList.deleteCashMove("10"),
             CashMoveList.checkNumberOfRows(1),
             CashMoveList.checkCashMoveShown("5"),
+||||||| b68964a01c5870f05d89d852fd1114eddcc8815e
+=======
+registry.category("web_tour.tours").add("test_indexed_db_draft_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
+            refresh(),
+            inLeftSide(ProductScreen.orderLineHas("Desk Organizer", "1")),
+            ProductScreen.clickDisplayedProduct("Desk Pad", true, "1.0"),
+            refresh(),
+            inLeftSide([
+                ...ProductScreen.orderLineHas("Desk Organizer", "1"),
+                ...ProductScreen.orderLineHas("Desk Pad", "1"),
+                ...ProductScreen.clickLine("Desk Pad"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "0", "0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.orderLineHas("Desk Pad").map(negateStep),
+            ]),
+            refresh(),
+            inLeftSide([
+                ...ProductScreen.orderLineHas("Desk Organizer", "1"),
+                ...ProductScreen.orderLineHas("Desk Pad").map(negateStep),
+            ]),
+>>>>>>> 91e07d208cfdc2ae4dbf6a6c6b51d2983a1f7d99
         ].flat(),
 });

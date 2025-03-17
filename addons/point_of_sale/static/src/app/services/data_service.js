@@ -267,8 +267,16 @@ export class PosData extends Reactive {
         delete data["pos.order"];
         delete data["pos.order.line"];
 
+<<<<<<< 67df6dad4f4e970252d7fdad4ce78133733eeb3f
         this.models.loadConnectedData(data, this.modelToLoad);
         this.models.loadConnectedData({ "pos.order": order, "pos.order.line": orderlines }, []);
+||||||| b68964a01c5870f05d89d852fd1114eddcc8815e
+        this.models.loadData(data, this.modelToLoad);
+        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
+=======
+        this.models.loadData(data, this.modelToLoad);
+        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines }, [], true);
+>>>>>>> 91e07d208cfdc2ae4dbf6a6c6b51d2983a1f7d99
         this.sanitizeData();
     }
 
@@ -344,13 +352,13 @@ export class PosData extends Reactive {
 
         const ignore = Object.keys(this.opts.databaseTable);
         for (const model of Object.keys(this.relations)) {
-            if (ignore.includes(model)) {
-                continue;
-            }
-
             this.models[model].addEventListener("delete", (params) => {
                 this.indexedDB.delete(model, [params.key]);
             });
+
+            if (ignore.includes(model)) {
+                continue;
+            }
 
             this.models[model].addEventListener("update", (params) => {
                 const record = this.models[model].get(params.id)?.raw;

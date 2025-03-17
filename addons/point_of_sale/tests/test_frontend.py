@@ -1828,6 +1828,80 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
 
+<<<<<<< 67df6dad4f4e970252d7fdad4ce78133733eeb3f
+||||||| b68964a01c5870f05d89d852fd1114eddcc8815e
+    def test_pricelist_parent_category_rule(self):
+        parent_category = self.env['product.category'].create({
+            'name': 'Parent Category',
+        })
+        child_category = self.env['product.category'].create({
+            'name': 'Child Category',
+            'parent_id': parent_category.id,
+        })
+        self.env['product.product'].create({
+            'name': 'Product with child category',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'categ_id': child_category.id,
+        })
+
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test pricelist on category',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 50,
+                'applied_on': '2_product_category',
+                'categ_id': parent_category.id,
+            })],
+        })
+
+        self.main_pos_config.write({
+            'pricelist_id': pricelist.id,
+            'available_pricelist_ids': [(6, 0, [pricelist.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_pricelist_parent_category_rule', login="pos_user")
+
+=======
+    def test_indexed_db_draft_order(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_indexed_db_draft_order', login="pos_user")
+
+    def test_pricelist_parent_category_rule(self):
+        parent_category = self.env['product.category'].create({
+            'name': 'Parent Category',
+        })
+        child_category = self.env['product.category'].create({
+            'name': 'Child Category',
+            'parent_id': parent_category.id,
+        })
+        self.env['product.product'].create({
+            'name': 'Product with child category',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'categ_id': child_category.id,
+        })
+
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test pricelist on category',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 50,
+                'applied_on': '2_product_category',
+                'categ_id': parent_category.id,
+            })],
+        })
+
+        self.main_pos_config.write({
+            'pricelist_id': pricelist.id,
+            'available_pricelist_ids': [(6, 0, [pricelist.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_pricelist_parent_category_rule', login="pos_user")
+
+>>>>>>> 91e07d208cfdc2ae4dbf6a6c6b51d2983a1f7d99
     def test_product_create_update_from_frontend(self):
         ''' This test verifies product creation and updates product details from the POS frontend. '''
         self.pos_admin.write({
