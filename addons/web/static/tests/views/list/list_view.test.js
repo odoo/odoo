@@ -9654,7 +9654,7 @@ test(`grouped list with another grouped list parent, click unfold`, async () => 
 
     await contains(`.o_data_cell`).click();
     await contains(`.o_field_widget[name=m2o] input`).click();
-    await contains(`.o-autocomplete--dropdown-item:contains(Search More...)`).click();
+    await contains(`.o-autocomplete--dropdown-item:contains(Search more...)`).click();
     expect(`.modal-content`).toHaveCount(1);
     expect(`.modal-content .o_group_name`).toHaveCount(0, { message: "list in modal not grouped" });
 
@@ -10909,7 +10909,7 @@ test(`multi edition: many2many_tags in many2many field`, async () => {
     await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_field_widget[name=m2m] input`).click();
-    await contains(`.o-autocomplete--dropdown-item:contains(Search More...)`).click();
+    await contains(`.o-autocomplete--dropdown-item:contains(Search more...)`).click();
     expect(`.modal`).toHaveCount(1, { message: "should have open the modal" });
 
     await contains(`.modal .o_data_row:eq(2) .o_field_cell`).click();
@@ -15978,7 +15978,7 @@ test(`Search more in a many2one`, async () => {
     ]);
 
     await contains(`.o_data_row:eq(0) td.o_list_many2one`).click();
-    await selectFieldDropdownItem("m2o", "Search More...");
+    await selectFieldDropdownItem("m2o", "Search more...");
     expect.verifySteps([]);
 
     await contains(`.modal .o_data_row:eq(2) td[name=display_name]`).click();
@@ -17175,7 +17175,7 @@ test(`context keys not passed down the stack and not to fields`, async () => {
     ]);
 
     await contains(
-        `.o_selected_row .o_field_many2many_tags .dropdown-item:contains(Search More...)`
+        `.o_selected_row .o_field_many2many_tags .dropdown-item:contains(Search more...)`
     ).click();
     expect.verifySteps([
         {

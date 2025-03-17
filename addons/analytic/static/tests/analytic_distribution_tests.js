@@ -159,7 +159,7 @@ QUnit.module("Analytic", (hooks) => {
         let field = target.querySelector('.o_field_analytic_distribution');
         await click(field, ".o_input_dropdown");
         assert.containsN(target, ".analytic_distribution_popup", 1, "popup should be visible");
-        
+
         let popup = target.querySelector('.analytic_distribution_popup');
         let planTable = popup.querySelectorAll('table')[0];
 
@@ -176,7 +176,7 @@ QUnit.module("Analytic", (hooks) => {
         await click(planTable, "tr:first-of-type .o_field_percentage input");
         let input = document.activeElement;
         await editInput(input, null, "19.7001");
-        
+
         // mandatory plan is red
         assert.containsOnce(planTable, 'th:contains("Departments") .text-danger:contains("50%")', "Mandatory plan has invalid status");
 
@@ -260,9 +260,9 @@ QUnit.module("Analytic", (hooks) => {
         // add a line
         let planTable = popup.querySelectorAll('table')[0];
         await addRow(planTable)
-        await selectDropdownItem(planTable.querySelector("tr[name='line_2']"), "x_plan5_id", "Search More...");
+        await selectDropdownItem(planTable.querySelector("tr[name='line_2']"), "x_plan5_id", "Search more...");
         assert.containsN(target, ".modal-dialog .o_list_renderer", 1, "select create list dialog is visible");
-        
+
         await click(target, ".modal-dialog .modal-title");
         await click(target, ".modal-dialog .o_data_row:nth-of-type(4) .o_data_cell:first-of-type");
         assert.containsNone(target, ".modal-dialog .o_list_renderer", "select create list dialog is closed");

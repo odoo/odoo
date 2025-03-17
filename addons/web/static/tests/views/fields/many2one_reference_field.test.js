@@ -169,7 +169,7 @@ test("Many2OneReferenceField set value with search more", async () => {
     });
 
     expect(".o_field_widget input").toHaveValue("type 1");
-    await selectFieldDropdownItem("res_id", "Search More...");
+    await selectFieldDropdownItem("res_id", "Search more...");
     expect(".o_dialog .o_list_view").toHaveCount(1);
     await contains(".o_data_row .o_data_cell:eq(6)").click();
     expect(".o_dialog .o_list_view").toHaveCount(0);
@@ -178,7 +178,7 @@ test("Many2OneReferenceField set value with search more", async () => {
         "get_views", // form view
         "web_read", // partner id 1
         "web_name_search", // many2one
-        "get_views", // Search More...
+        "get_views", // Search more...
         "web_search_read", // SelectCreateDialog
         "has_group",
         "web_read", // read selected value

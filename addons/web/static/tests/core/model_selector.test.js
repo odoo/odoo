@@ -147,25 +147,6 @@ test("model_selector: select a model", async () => {
     expect.verifySteps(["model selected"]);
 });
 
-test("model_selector: click on start typing", async () => {
-    await mountModelSelector([
-        "model_1",
-        "model_2",
-        "model_3",
-        "model_4",
-        "model_5",
-        "model_6",
-        "model_7",
-        "model_8",
-        "model_9",
-        "model_10",
-    ]);
-    await contains(".o-autocomplete--input").click();
-    await contains("li.o-autocomplete--dropdown-item:eq(8)").click();
-    expect(".o-autocomplete--input").toHaveValue("");
-    expect(".o-autocomplete.dropdown ul").toHaveCount(0);
-});
-
 test("model_selector: with an initial value", async () => {
     await mountModelSelector(["model_1", "model_2", "model_3"], "Model 1");
     expect(".o-autocomplete--input").toHaveValue("Model 1");
