@@ -1,58 +1,26 @@
-import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
-publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
-    selector: '.o_survey_result',
-    events: {
-        'click .o_survey_results_topbar_clear_filters': 'onClearFiltersClick',
-        'click .filter-add-answer': 'onFilterAddAnswerClick',
-        'click i.filter-remove-answer': 'onFilterRemoveAnswerClick',
-        'click a.filter-finished-or-not': 'onFilterFinishedOrNotClick',
-        'click a.filter-finished': 'onFilterFinishedClick',
-        'click a.filter-failed': 'onFilterFailedClick',
-        'click a.filter-passed': 'onFilterPassedClick',
-        'click a.filter-passed-and-failed': 'onFilterPassedAndFailedClick',
-        'click .o_survey_answer_image': 'onAnswerImageClick',
-        "click .o_survey_results_print": "onPrintResultsClick",
-        "click .o_survey_results_data_tab": "onDataViewChange",
-    },
+export class SurveyResult extends Interaction {
+    static selector = ".o_survey_result";
 
-    //--------------------------------------------------------------------------
-    // Widget
-    //--------------------------------------------------------------------------
-
-    /**
-    * @override
-    */
-    async start() {
-        await this._super.apply(this, arguments);
-
-        // Set the size of results tables so that they do not resize when switching pages.
-        document.querySelectorAll(".o_survey_results_table_wrapper").forEach((table) => {
-            table.style.height = table.clientHeight + "px";
-        });
-
-        $(document).on("keydown", this.onKeydown.bind(this));
-        return Promise.resolve();
-    },
-
-    // -------------------------------------------------------------------------
-    // Handlers
-    // -------------------------------------------------------------------------
-
-    /**
-     * Recompute the table height as the table could have been hidden when its height was initially computed (see 'start').
-     * @param {Event} ev
-     */
-    onDataViewChange(ev) {
-        const tableWrapper = document.querySelector(`div[id="${ev.currentTarget.getAttribute('aria-controls')}"] .o_survey_results_table_wrapper`);
-        if (tableWrapper) {
-            tableWrapper.style.height = 'auto';
-            tableWrapper.style.height = tableWrapper.clientHeight + 'px';
-        }
-    },
+    dynamicContent = {
+        ".o_survey_results_topbar_clear_filters": { "t-on-click": this.onClearFiltersClick },
+        ".filter-add-answer": { "t-on-click": this.onFilterAddAnswerClick },
+        "i.filter-remove-answer": { "t-on-click": this.onFilterRemoveAnswerClick },
+        "a.filter-finished-or-not": { "t-on-click": this.onFilterFinishedOrNotClick },
+        "a.filter-finished": { "t-on-click": this.onFilterFinishedClick },
+        "a.filter-failed": { "t-on-click": this.onFilterFailedClick },
+        "a.filter-passed": { "t-on-click": this.onFilterPassedClick },
+        "a.filter-passed-and-failed": { "t-on-click": this.onFilterPassedAndFailedClick },
+        ".o_survey_answer_image": { "t-on-click.prevent": this.onAnswerImageClick },
+        ".o_survey_results_print": { "t-on-click": this.onPrintResultsClick },
+        _document: {
+            "t-on-keydown": this.onKeydown,
+        },
+    };
 
     /**
      * Add an answer filter by updating the URL and redirecting.
@@ -62,7 +30,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         const params = new URLSearchParams(window.location.search);
         params.set("filters", this.prepareAnswersFilters(params.get("filters"), "add", ev));
         redirect(window.location.pathname + "?" + params.toString());
-    },
+    }
 
     /**
      * Remove an answer filter by updating the URL and redirecting.
@@ -77,7 +45,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
             params.delete("filters");
         }
         redirect(window.location.pathname + "?" + params.toString());
-    },
+    }
 
     onClearFiltersClick() {
         const params = new URLSearchParams(window.location.search);
@@ -86,54 +54,52 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         params.delete("failed");
         params.delete("passed");
         redirect(window.location.pathname + "?" + params.toString());
-    },
+    }
 
     onFilterFinishedOrNotClick() {
         const params = new URLSearchParams(window.location.search);
         params.delete("finished");
         redirect(window.location.pathname + "?" + params.toString());
-    },
+    }
 
     onFilterFinishedClick() {
         const params = new URLSearchParams(window.location.search);
         params.set("finished", "true");
         redirect(window.location.pathname + "?" + params.toString());
-    },
+    }
 
     onFilterFailedClick() {
         const params = new URLSearchParams(window.location.search);
         params.set("failed", "true");
         params.delete("passed");
         redirect(window.location.pathname + "?" + params.toString());
-    },
+    }
 
     onFilterPassedClick() {
         const params = new URLSearchParams(window.location.search);
         params.set("passed", "true");
         params.delete("failed");
         redirect(window.location.pathname + "?" + params.toString());
-    },
+    }
 
     onFilterPassedAndFailedClick() {
         const params = new URLSearchParams(window.location.search);
         params.delete("failed");
         params.delete("passed");
         redirect(window.location.pathname + "?" + params.toString());
-    },
+    }
 
     /**
      * Called when an image on an answer in multi-answers question is clicked.
-     * Starts a widget opening a dialog to display the now zoomable image.
-     * this.imgZoomer is the zoomer widget linked to the survey result widget, if any.
-     *
      * @param {Event} ev
      */
     onAnswerImageClick(ev) {
-        ev.preventDefault();
-        new SurveyImageZoomer({
-            sourceImage: $(ev.currentTarget).attr('src')
-        }).appendTo(document.body);
-    },
+        this.renderAt(
+            "survey.survey_image_zoomer",
+            { sourceImage: ev.currentTarget.src },
+            document.body
+        );
+    }
 
     /**
      * Call print dialog
@@ -148,7 +114,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         for (const paginatorEl of document.querySelectorAll(".survey_table_with_pagination")) {
             paginatorEl.dispatchEvent(new Event("restore_state"));
         }
-    },
+    }
 
     /**
      * Called when a key is pressed on the survey result page.
@@ -161,7 +127,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
             ev.stopImmediatePropagation();
             this.onPrintResultsClick();
         }
-    },
+    }
 
     /**
      * Returns the modified pathname string for filters after adding or removing an
@@ -195,8 +161,6 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         }
         return filters;
     }
-});
+}
 
-export default {
-    resultWidget: publicWidget.registry.SurveyResultWidget,
-};
+registry.category("public.interactions").add("survey.SurveyResult", SurveyResult);

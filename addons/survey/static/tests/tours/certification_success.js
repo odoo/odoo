@@ -1,15 +1,16 @@
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 
 /**
  * Speed up fade-in fade-out to avoid useless delay in tests.
  */
-function patchSurveyWidget() {
-    const SurveyFormWidget = odoo.loader.modules.get('@survey/js/survey_form')[Symbol.for('default')]
-    SurveyFormWidget.include({
-        _submitForm: function () {
+function patchSurveyForm() {
+    const SurveyForm = odoo.loader.modules.get("@survey/interactions/survey_form").SurveyForm;
+    patch(SurveyForm.prototype, {
+        submitForm() {
             this.fadeInOutDelay = 0;
-            return this._super.apply(this, arguments);
-        }
+            return super.submitForm(...arguments);
+        },
     });
 }
 
@@ -17,10 +18,10 @@ registry.category("web_tour.tours").add("test_certification_success", {
     url: "/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac",
     steps: () => [
         {
-            content: "Patching Survey Widget",
+            content: "Patching Survey Form Interaction",
             trigger: "body",
-            run: function(){
-                patchSurveyWidget();
+            run: function () {
+                patchSurveyForm();
             },
         },
         {
