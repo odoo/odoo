@@ -727,6 +727,9 @@ class DomainCondition(Domain):
             isinstance(other, DomainCondition)
             and self.field_expr == other.field_expr
             and self.operator == other.operator
+            # we want stricter equality than this: `OrderedSet([x]) == {x}`
+            # to ensure that optimizations always return OrderedSet values
+            and self.value.__class__ is other.value.__class__
             and self.value == other.value
         )
 
