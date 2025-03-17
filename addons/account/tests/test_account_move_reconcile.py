@@ -5552,3 +5552,35 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             self.assertEqual(payment2.state, 'paid')
             reconcile_move(payment1.move_id, 12, lines_filter=lambda l: l.account_id.account_type not in ('asset_receivable', 'liability_payable'))
             self.assertEqual(payment1.state, 'paid')
+
+    def test_reconcile_partial_reconciliations(self):
+        """
+        Check that it is only possible to reconcile entries belonging to a partial matching group if at least one of the
+        selected entries from that group is not fully reconciled. (.reconciled == False)
+        """
+        aml1 = self.create_line_for_reconciliation(1000.0, 1000.0, self.company_data['currency'], '2016-01-01')
+        aml2 = self.create_line_for_reconciliation(-999.0, -999.0, self.company_data['currency'], '2016-01-01')
+        aml3 = self.create_line_for_reconciliation(-1.0, -1.0, self.company_data['currency'], '2016-01-01')
+
+        # The following reconciliationn should cause both to share a partial matching number but only aml2 will have .reconciled == True.
+        (aml1 + aml2).reconcile()
+        self.assertRecordValues(aml1 + aml2, [
+            {'reconciled': False},
+            {'reconciled': True},
+        ])
+        self.assertTrue(aml1.matching_number.startswith("P"))
+        self.assertEqual(aml1.matching_number, aml2.matching_number)
+
+        # Since aml2 is already fully reconciled, it should not be possible to reconcile it with aml3.
+        with self.assertRaises(UserError):
+            (aml2 + aml3).reconcile()
+
+        # However, when including aml1 which is not fully reconciled, aml2 should be filtered out and let the reconcilitation happen.
+        (aml1 + aml2 + aml3).reconcile()
+        self.assertRecordValues(aml1 + aml2 + aml3, [
+            {'reconciled': True},
+            {'reconciled': True},
+            {'reconciled': True},
+        ])
+        self.assertFalse(aml1.matching_number.startswith("P"))
+        self.assertEqual(aml1.matching_number, aml3.matching_number)
