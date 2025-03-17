@@ -512,7 +512,6 @@ export class DateTimePicker extends Component {
             isSelectStart: false,
             isSelectEnd: false,
             isHighlighted: isInRange(this.state.hoveredDate, range),
-            isCurrent: false,
         };
 
         if (this.props.range) {
@@ -521,9 +520,6 @@ export class DateTimePicker extends Component {
                 result.isSelectStart = !selectStart || isInRange(selectStart, range);
                 result.isSelectEnd = !selectEnd || isInRange(selectEnd, range);
             }
-            result.isCurrent =
-                !isOutOfRange &&
-                (isInRange(this.values[0], range) || isInRange(this.values[1], range));
         } else {
             result.isSelectStart = result.isSelectEnd = result.isSelected;
         }
@@ -535,15 +531,16 @@ export class DateTimePicker extends Component {
      * @param {DateTimePickerProps} props
      */
     getTimeValues(props) {
-        const timeValues = this.values.map((val, index) =>
-            new Time({
-                hour:
-                    index === 1 && !this.values[1]
-                        ? (val || DateTime.local()).hour + 1
-                        : (val || DateTime.local()).hour,
-                minute: val?.minute || 0,
-                second: val?.second || 0,
-            })
+        const timeValues = this.values.map(
+            (val, index) =>
+                new Time({
+                    hour:
+                        index === 1 && !this.values[1]
+                            ? (val || DateTime.local()).hour + 1
+                            : (val || DateTime.local()).hour,
+                    minute: val?.minute || 0,
+                    second: val?.second || 0,
+                })
         );
 
         if (props.range) {
