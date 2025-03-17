@@ -2213,6 +2213,12 @@ class AccountMoveLine(models.Model):
                                     This is usefull if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         """
+        not_reconciled_partial_matching_numbers = set(self
+            .filtered(lambda aml: not aml.reconciled and aml.matching_number and aml.matching_number.startswith('P'))
+            .mapped('matching_number')
+        )
+        self = self.filtered(lambda aml: not aml.reconciled or aml.matching_number not in not_reconciled_partial_matching_numbers)
+
         if not self:
             return
 
