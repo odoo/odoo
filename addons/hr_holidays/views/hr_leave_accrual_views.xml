@@ -29,27 +29,27 @@
                         </div>
                         <div name="monthly" invisible="frequency != 'monthly'">
                             <field name="frequency" style="width: 4.5rem"/>
-                            <label for="first_day_display" string="on the" class="me-1"/>
-                            <field name="first_day_display" required="1" style="width: 4rem"/>
+                            <label for="first_day" string="on the" class="me-1"/>
+                            <field name="first_day" required="1" style="width: 4rem"/>
                             of the month
                         </div>
                         <div name="bimonthly" invisible="frequency != 'bimonthly'" style="width: 100%">
                             <field name="frequency" style="width: 7rem"/>
-                            <label for="first_day_display" string="on the" class="me-1"/><field name="first_day_display" required="1" style="width: 4rem"/>
-                            <label for="second_day_display" string="and on the" class="me-1"/><field name="second_day_display" required="1" style="width: 4.1rem"/>
+                            <label for="first_day" string="on the" class="me-1"/><field name="first_day" required="1" style="width: 4rem"/>
+                            <label for="second_day" string="and on the" class="me-1"/><field name="second_day" required="1" style="width: 4.1rem"/>
                             of the month
                         </div>
                         <div name="biyearly" invisible="frequency != 'biyearly'">
                             <field name="frequency" style="width: 6rem"/>
-                            <label for="first_month_day_display" string="on the" class="me-1"/>
-                            <field name="first_month_day_display" required="1" style="width: 4.1rem"/>of <field name="first_month" required="1" style="width: 4.55rem"/>
-                            <label for="second_month_day_display" string="and" class="me-1"/>
-                            <field name="second_month_day_display" required="1" style="width: 4.1rem"/>of <field name="second_month" required="1" style="width: 5.4rem"/>
+                            <label for="first_month_day" string="on the" class="me-1"/>
+                            <field name="first_month_day" widget="day_selection" required="1" style="width: 4.1rem" month_field="first_month"/>of <field name="first_month" required="1" style="width: 4.55rem"/>
+                            <label for="second_month_day" string="and" class="me-1"/>
+                            <field name="second_month_day" widget="day_selection" required="1" style="width: 4.1rem" month_field="second_month"/>of <field name="second_month" required="1" style="width: 5.4rem"/>
                         </div>
                         <div name="yearly" invisible="frequency != 'yearly'">
                             <field name="frequency" style="width: 4rem"/>
-                            <label for="yearly_day_display" string="on the" class="me-1"/>
-                            <field name="yearly_day_display" required="1" style="width: 4rem"/> of <field name="yearly_month" required="1" style="width: 5.4rem"/>
+                            <label for="yearly_day" string="on the" class="me-1"/>
+                            <field name="yearly_day" widget="day_selection" required="1" style="width: 4rem" month_field="yearly_month"/> of <field name="yearly_month" required="1" style="width: 5.4rem"/>
                         </div>
                     </group>
                     <group name="maximum_leave">
@@ -145,9 +145,8 @@
                             <field name="carryover_date" widget="radio"/>
                             <label for="carryover_month" string="Carry-Over Date" invisible="carryover_date != 'other'"/>
                             <div name="carryover" invisible="carryover_date != 'other'">
-                                <field name="carryover_day" invisible="1"/>
-                                <field name="carryover_day_display"  required="1" style="width: 4.75rem;"/> of
-                                <field name="carryover_month"  required="1" style="width: 6rem;"/>
+                                <field name="carryover_day" widget="day_selection" required="1" style="width: 3rem;" month_field="carryover_month"/> of
+                                <field name="carryover_month"  required="1" style="width: 14ch;"/>
                             </div>
                         </group>
                         <group>
