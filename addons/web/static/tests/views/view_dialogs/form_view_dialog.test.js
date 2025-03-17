@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAllTexts } from "@odoo/hoot-dom";
+import { click, edit, press, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -12,6 +12,7 @@ import {
     onRpc,
     mockService,
     fieldInput,
+    contains,
 } from "@web/../tests/web_test_helpers";
 
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -147,7 +148,8 @@ test("formviewdialog buttons in footer are not duplicated", async () => {
     });
 });
 
-test.tags("desktop")("Form dialog and subview with _view_ref contexts", async () => {
+test.tags("desktop");
+test("Form dialog and subview with _view_ref contexts", async () => {
     expect.assertions(2);
 
     Instrument._records = [{ id: 1, name: "Tromblon", badassery: [1] }];
@@ -246,16 +248,15 @@ test("click on view buttons in a FormViewDialog", async () => {
 });
 
 test("formviewdialog is not closed when button handlers return a rejected promise", async () => {
-    expect.errors(1);
     Partner._views["form,false"] = /* xml */ `
         <form string="Partner">
             <sheet><group><field name="foo"/></group></sheet>
         </form>
     `;
-    let reject = true;
+    let reject;
     onRpc("web_save", async () => {
         if (reject) {
-            return Promise.reject();
+            return Promise.reject("rejected");
         }
     });
     await mountWithCleanup(WebClient);
@@ -265,24 +266,24 @@ test("formviewdialog is not closed when button handlers return a rejected promis
     });
 
     await animationFrame();
-    expect(".modal-body button").toHaveCount(0, { message: "should not have any button in body" });
-    expect(".modal-footer button").toHaveCount(3, { message: "should have 3 buttons in footer" });
+    expect(".modal-body button").not.toHaveCount();
+    expect(".modal-footer button:visible").toHaveCount(2);
 
-    // clickSave inside the dialog
-    await clickSave({ index: 1 });
+    // Click "save" inside the dialog (with rejection)
+    expect.errors(1);
+    reject = true;
+    await clickSave();
 
-    expect(".modal").toHaveCount(2, {
-        message: "there are 2 modal opened, 1 for the error and 1 for the form view dialog",
-    });
-    await click(".o_error_dialog .btn-primary");
-    await animationFrame();
+    expect.verifyErrors(["rejected"]);
 
-    expect(".modal").toHaveCount(1, { message: "modal should still be opened" });
+    // Close error modal
+    await click(waitFor(".o_error_dialog .btn:contains(Close)"));
 
+    // Click "save" inside the dialog (without rejection)
     reject = false;
-    // clickSave inside the dialog
-    await clickSave({ index: 1 });
-    expect(".modal").toHaveCount(0, { message: "modal should be closed" });
+    await clickSave();
+
+    expect(".modal").not.toHaveCount();
 });
 
 test("FormViewDialog with remove button", async () => {
@@ -385,7 +386,8 @@ test("Save a FormViewDialog when a required field is empty don't close the dialo
     expect(".modal").toHaveCount(0, { message: "modal should be closed" });
 });
 
-test.tags("desktop")("new record has an expand button", async () => {
+test.tags("desktop");
+test("new record has an expand button", async () => {
     Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
     Partner._records = [];
     onRpc("web_save", async () => {
@@ -414,7 +416,8 @@ test.tags("desktop")("new record has an expand button", async () => {
     expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
 });
 
-test.tags("desktop")("existing record has an expand button", async () => {
+test.tags("desktop");
+test("existing record has an expand button", async () => {
     Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
     onRpc("web_save", async () => {
         expect.step("save");
@@ -443,7 +446,8 @@ test.tags("desktop")("existing record has an expand button", async () => {
     expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
 });
 
-test.tags("mobile")("no expand button on mobile", async () => {
+test.tags("mobile");
+test("no expand button on mobile", async () => {
     Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
     await mountWithCleanup(WebClient);
     getService("dialog").add(FormViewDialog, {
@@ -455,7 +459,8 @@ test.tags("mobile")("no expand button on mobile", async () => {
     expect(".o_dialog .modal-header .o_expand_button").toHaveCount(0);
 });
 
-test.tags("desktop")("expand button with save and new", async () => {
+test.tags("desktop");
+test("expand button with save and new", async () => {
     Instrument._views["form,false"] = /* xml */ `<form><field name="name"/></form>`;
     Instrument._records = [{ id: 1, name: "Violon" }];
     onRpc("web_save", async () => {
@@ -491,4 +496,34 @@ test.tags("desktop")("expand button with save and new", async () => {
         "save",
         [2, "instrument", "ir.actions.act_window", [[false, "form"]]],
     ]);
+});
+
+test.tags("desktop");
+test("close dialog with escape after modifying a field with onchange (no blur)", async () => {
+    Partner._views["form,false"] = `<form><field name="foo"/></form>`;
+    Partner._onChanges.foo = () => {};
+    onRpc("web_save", () => {
+        throw new Error("should not save");
+    });
+
+    await mountWithCleanup(WebClient);
+
+    // must focus something else than body before opening the form view dialog, such that the ui
+    // service has something to focus on dialog close, which will then blur the input and fire the
+    // change event
+    await contains(".o_navbar_apps_menu button").focus();
+    expect(".o_navbar_apps_menu button").toBeFocused();
+
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        resId: 1,
+    });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+
+    await contains(".o_field_widget[name=foo] input").edit("new value", { confirm: false });
+    await press("escape");
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
+    expect(".o_navbar_apps_menu button").toBeFocused();
 });

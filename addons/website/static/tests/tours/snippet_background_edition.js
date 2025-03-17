@@ -55,7 +55,6 @@ function addCheck(steps, checkX, checkNoX, xType, noSwitch = false) {
     }
     if (!selectorCheckX && selectorCheckNoX) {
         steps.push({
-            isActive: ["auto"],
             trigger: selectorCheckNoX,
         });
     }
@@ -103,7 +102,6 @@ function updateAndCheckCustomGradient({updateStep, checkGradient}) {
 registerWebsitePreviewTour('snippet_background_edition', {
     url: '/',
     edition: true,
-    test: true,
     checkDelay: 100,
 },
 () => [

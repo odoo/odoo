@@ -1,28 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* membership
-#
+# 
 # Translators:
-# Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
-# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
-# Martin Trigaux, 2022
-# Tamás Dombos, 2022
-# Tamás Németh <ntomasz81@gmail.com>, 2022
-# krnkris, 2022
-#
+# Ákos Nagy <akos.nagy@oregional.hu>, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# Tamás Dombos, 2024
+# Martin Trigaux, 2024
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# krnkris, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: krnkris, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: krnkris, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: membership
@@ -42,7 +41,9 @@ msgstr "# Várakozó"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
-msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/><strong> From: </strong>"
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> From: </strong>"
 msgstr "Kezdődátum"
 
 #. module: membership
@@ -58,8 +59,12 @@ msgstr "Záró dátum"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__associate_member
 #: model:ir.model.fields,help:membership.field_res_users__associate_member
-msgid "A member with whom you want to associate your membership.It will consider the membership state of the associated member."
-msgstr "Egy tag akihez a tagságát szeretné társítani.Fontolóra veszi a társított tag tagságának állapotát."
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr ""
+"Egy tag akihez a tagságát szeretné társítani.Fontolóra veszi a társított tag"
+" tagságának állapotát."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
@@ -102,7 +107,7 @@ msgstr "Tagság vásárlása"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Visszavonás"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_cancel
@@ -177,7 +182,7 @@ msgstr "Jelenlegi tagsági állapot"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Customers"
-msgstr "Ügyfelek"
+msgstr "Vevők"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_product__membership_date_from
@@ -222,7 +227,7 @@ msgstr "Beérkező / megkeresett összeg"
 #: model:ir.model.fields,field_description:membership.field_report_membership__date_to
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Date"
-msgstr "Záródátum"
+msgstr "Befejező dátum"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -274,7 +279,7 @@ msgstr "Csoportosítás..."
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__id
 #: model:ir.model.fields,field_description:membership.field_report_membership__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
@@ -360,7 +365,7 @@ msgstr "Könyvelési tétel"
 #. module: membership
 #: model:ir.model,name:membership.model_account_move_line
 msgid "Journal Item"
-msgstr "Könyvelési tételsor"
+msgstr "Könyvelési tétel"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__write_uid
@@ -372,7 +377,7 @@ msgstr "Frissítette"
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__write_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_date
 msgid "Last Updated on"
-msgstr "Frissítve ekkor"
+msgstr "Frissítve"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__partner_id
@@ -662,12 +667,14 @@ msgstr "Ez ki fogja jelezni a fizetve, régi és összes bevétel oszlopokat"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr "Ez ki fogja jelezni a várakozást, számlázott és teljes függőben lévő oszlopokat"
+msgstr ""
+"Ez ki fogja jelezni a várakozást, számlázott és teljes függőben lévő "
+"oszlopokat"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
 msgid "To"
-msgstr "Záró dátum"
+msgstr "Cél"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter

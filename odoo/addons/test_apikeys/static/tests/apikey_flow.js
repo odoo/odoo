@@ -4,10 +4,7 @@ import { queryAll, queryText } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add('apikeys_tour_setup', {
-    test: true,
-    url: '/odoo?debug=1', // Needed as API key part is now only displayed in debug mode
-    steps: () => [{
+const openUserPreferenceSecurity = () => [{
     content: 'Open user account menu',
     trigger: '.o_user_menu .dropdown-toggle',
     run: 'click',
@@ -19,17 +16,22 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
     content: "Switch to security tab",
     trigger: 'a[role=tab]:contains("Account Security")',
     run: 'click',
-}, {
+}]
+
+registry.category("web_tour.tours").add('apikeys_tour_setup', {
+    url: '/odoo?debug=1', // Needed as API key part is now only displayed in debug mode
+    steps: () => [
+    ...openUserPreferenceSecurity(), {
     content: "Open API keys wizard",
     trigger: 'button:contains("New API Key")',
     run: "click",
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: ".modal div:contains(enter your password)",
+    trigger: ".modal div:contains(entering your password)",
 }, {
     content: "Input password",
     trigger: '.modal [name=password] input',
-    run: "edit demo",
+    run: "edit test_user",
 }, {
     content: "Confirm",
     trigger: ".modal button:contains(Confirm Password)",
@@ -56,30 +58,12 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
             kwargs: {},
         });
     }
-}, 
+},
 {
     trigger: "button:contains(Done)",
     run: "click",
 },
-{
-    // HR is not installed: The profile is a dialog which closes automatically. Re-open the profile.
-    isActive: ["body:not(:has(a[name='page_account_security']))"],
-    content: 'Open user account menu',
-    trigger: '.o_user_menu .dropdown-toggle',
-    run: 'click',
-},
-{
-    isActive: ["body:not(:has(a[name='page_account_security']))"],
-    content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
-    run: 'click',
-},
-{
-    isActive: ["body:not(:has(a[name='page_account_security'].active))"],
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-},
+...openUserPreferenceSecurity(),
 {
     content: "check that our key is present",
     trigger: '[name=api_key_ids] td:contains("my key")',
@@ -87,7 +71,6 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 
 // deletes the previously created key
 registry.category("web_tour.tours").add('apikeys_tour_teardown', {
-    test: true,
     url: '/odoo?debug=1', // Needed as API key part is now only displayed in debug mode
     steps: () => [{
     content: 'Open preferences',
@@ -107,7 +90,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
 }, {
     content: "Input password for security mode again",
     trigger: ".modal [name=password] input",
-    run: "edit demo",
+    run: "edit test_user",
 }, {
     content: "And confirm",
     trigger: ".modal button:contains(Confirm Password)",

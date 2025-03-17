@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Manon Rondou, 2024
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-27 13:03+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,8 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"Expédition gratuite"
 
 #. module: delivery
 #. odoo-python
@@ -88,7 +90,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description</strong>"
-msgstr ""
+msgstr "<strong>Description de l'expédition</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -98,7 +100,7 @@ msgid ""
 "for customers to follow."
 msgstr ""
 "Une description du mode de livraison que vous souhaitez communiquer à vos "
-"clients sur le bon de commande et l'e-mail de confirmation de vente. Par ex."
+"clients sur la commande client et l'e-mail de confirmation de vente. Par ex."
 " instructions à suivre par les clients."
 
 #. module: delivery
@@ -204,16 +206,16 @@ msgstr "Choisir un point d'enlèvement"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
 msgstr "Choisir ce lieu"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.js:0
 msgid "Closed"
-msgstr "Résilié"
+msgstr "Fermé"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -283,7 +285,7 @@ msgstr "Enregistrement de débogage"
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr "Mode de livraison par défaut utilisé dans les bons de commande."
+msgstr "Mode de livraison par défaut utilisé dans les commandes clients."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -429,7 +431,7 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Coût estimé : le client se verra facturer le coût estimé de l'expédition. \n"
-"Coût réel : le client se verra facturer le coût réel de l'expédition, le coût de l'expédition sera mis à jour sur le bon de commande après la livraison."
+"Coût réel : le client se verra facturer le coût réel de l'expédition, le coût de l'expédition sera mis à jour sur la commande client après la livraison."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -576,13 +578,13 @@ msgstr "Mis à jour le"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
 msgstr "Vue de liste"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
 msgstr "En cours de chargement..."
 
@@ -603,7 +605,7 @@ msgstr "Gérer les préfixes postaux de livraison"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
 msgstr "Vue cartographique"
 
@@ -661,7 +663,7 @@ msgstr "Aucun point d'enlèvement disponible pour cette adresse de livraison."
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "No result"
 msgstr "Pas de résultat"
 
@@ -673,8 +675,8 @@ msgstr "Non disponible pour la commande en cours"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location/location.xml:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location/location.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Opening hours"
 msgstr "Heures d'ouverture"
 
@@ -686,7 +688,7 @@ msgstr "Opérateur"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__order_id
 msgid "Order"
-msgstr "Ordre"
+msgstr "Commander"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
@@ -786,7 +788,7 @@ msgstr "Prix de vente"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Bon de commande"
+msgstr "Commande client"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
@@ -848,9 +850,9 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
-"Les détails du mode d'expédition doivent être inclus dans les bons de "
-"commande et leurs e-mails de confirmation. Par ex. Instructions à suivre par"
-" les clients."
+"Les détails du mode d'expédition doivent être inclus dans les commandes "
+"clients et leurs e-mails de confirmation. Par ex. Instructions à suivre par "
+"les clients."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -920,7 +922,7 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
 msgstr "Un problème est survenu lors du chargement de la carte"
 
@@ -932,7 +934,7 @@ msgid ""
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Ces modes permettent de calculer automatiquement les prix de livraison\n"
-"en fonction de vos paramètres ; sur le bon de commande (basé sur le\n"
+"en fonction de vos paramètres ; sur la commande client (basée sur le\n"
 "devis) ou la facture (basée sur les bons de livraison)."
 
 #. module: delivery
@@ -1045,9 +1047,9 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Your postal code"
-msgstr ""
+msgstr "Votre code postal"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

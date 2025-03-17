@@ -48,7 +48,6 @@ const checkBodyColor = function () {
 };
 
 registerWebsitePreviewTour("website_style_edition", {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

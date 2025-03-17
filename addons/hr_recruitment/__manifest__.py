@@ -56,6 +56,9 @@
             'hr_recruitment/static/src/**/*.xml',
             'hr_recruitment/static/src/js/tours/hr_recruitment.js',
         ],
+        'web.assets_unit_tests': [
+            'hr_recruitment/static/tests/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }

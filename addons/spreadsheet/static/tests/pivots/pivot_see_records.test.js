@@ -1,4 +1,4 @@
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     defineSpreadsheetActions,
@@ -9,6 +9,7 @@ import {
 import { selectCell, setCellContent, updatePivot } from "@spreadsheet/../tests/helpers/commands";
 import { doMenuAction, getActionMenu } from "@spreadsheet/../tests/helpers/ui";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
+import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getCell, getCellFormula, getCellValue } from "@spreadsheet/../tests/helpers/getters";
@@ -312,4 +313,50 @@ test("See records is not visible on an empty cell", async function () {
     selectCell(model, "A21");
     const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
     expect(action.isVisible(env)).toBe(false);
+});
+
+test("Cannot see records of out of range positional pivot formula with calculated field", async function () {
+    const { env, model, pivotId } = await createSpreadsheetWithPivot();
+    updatePivot(model, pivotId, {
+        measures: [
+            {
+                id: "calculated",
+                fieldName: "calculated",
+                aggregator: "sum",
+                computedBy: {
+                    formula: "=0",
+                    sheetId: model.getters.getActiveSheetId(),
+                },
+            },
+        ],
+    });
+    await waitForDataLoaded(model);
+    setCellContent(model, "A1", `=PIVOT.VALUE(1,"calculated","bar",FALSE,"#foo",22)`);
+    selectCell(model, "A1");
+    const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
+    expect(!!action.isVisible(env)).toBe(false);
+});
+
+test("See records is not visible if the pivot is not loaded, even if the cell has a value", async function () {
+    let deferred = undefined;
+    const { env, model } = await createSpreadsheetWithPivot({
+        arch: /*xml*/ `
+        <pivot>
+            <field name="probability" type="measure"/>
+        </pivot>
+    `,
+        mockRPC: async function (route, args) {
+            if (deferred && args.method === "read_group" && args.model === "partner") {
+                await deferred;
+            }
+        },
+    });
+    setCellContent(model, "A1", '=IFERROR(PIVOT.VALUE("1","probability"), 42)');
+    deferred = new Deferred();
+    model.dispatch("REFRESH_ALL_DATA_SOURCES");
+    const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
+    expect(action.isVisible(env)).toBe(false);
+    deferred.resolve();
+    await animationFrame();
+    expect(action.isVisible(env)).toBe(true);
 });

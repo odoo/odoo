@@ -4,7 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Junko Augias, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,7 +159,7 @@ msgstr "説明をカスタマイズする"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
 msgid "Days To Arrive"
-msgstr ""
+msgstr "到着までの日数"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -177,12 +178,12 @@ msgstr "POを確認するために必要な日数、POを検証するタイミ�
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days to Purchase"
-msgstr "購買所要日数"
+msgstr "購買までの日数"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
 msgid "Delay Pass"
-msgstr ""
+msgstr "遅延パス"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
@@ -237,7 +238,7 @@ msgstr "昨年の有効日"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__days_to_arrival
 msgid "Effective Days To Arrival"
-msgstr ""
+msgstr "到着までの有効日数"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -314,7 +315,7 @@ msgstr "仕訳"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "仕訳項目"
+msgstr "仕訳明細"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
@@ -324,7 +325,7 @@ msgstr "最終購買"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_procurement_group__purchase_line_ids
 msgid "Linked Purchase Order Lines"
-msgstr ""
+msgstr "リンク済購買オーダ明細"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
@@ -471,7 +472,7 @@ msgstr "調達グループ"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__group_id
 msgid "Procurement group that generated this line"
-msgstr ""
+msgstr "この明細を生成した調達グループ"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_template
@@ -550,7 +551,7 @@ msgstr "購入セキュリティリードタイム"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
 msgid "Purchase Visibility Days"
-msgstr "購買可視性日数"
+msgstr "購買先読み日数"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
@@ -609,7 +610,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr "仕入先に顧客に直送するよう指示"
+msgstr "顧客に直送するよう仕入先に指示"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -820,7 +821,7 @@ msgstr "転送"
 msgid ""
 "Unable to cancel purchase order(s): %s since they have receipts that are "
 "already done."
-msgstr ""
+msgstr "処理された入荷がすでにあるため購買オーダ: %sは取消できません。 "
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -861,7 +862,7 @@ msgstr "仕入先"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
 msgid "Visibility Days applied on the purchase routes."
-msgstr "購買ルートに適用される可視性日数。"
+msgstr "購買ルートに適用される先読み日数。"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse

@@ -4,15 +4,17 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Daye Jeong, 2024
+# jay Lee, 2024
+# Daye Jeong, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +128,15 @@ msgstr "<i class=\"fa fa-star me-1\" aria-label=\"영업기회\" role=\"img\" ti
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                Install Extension"
+msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                확장 프로그램 설치"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
 "<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
 "fa-fw fa-refresh\"/>"
 msgstr ""
@@ -179,8 +190,8 @@ msgstr "<span class=\"o_stat_text\"> 영업제안</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2 text-nowrap\"> at </span>"
-msgstr "<span class=\"oe_grey p-2 text-nowrap\"> at </span>"
+msgid "<span class=\"oe_grey p-2 text-nowrap d-none d-sm-block\"> at </span>"
+msgstr "<span class=\"oe_grey p-2 text-nowrap d-none d-sm-block\">- </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -256,13 +267,13 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br>\n"
+"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interest in your products</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -274,15 +285,15 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
 "                            Welcome to <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            It's great to meet you! Now that you're on board, you'll discover what <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br>\n"
-"                            Feel free to reach out at any time!<br><br>\n"
-"                            Best,<br>\n"
+"                            It's great to meet you! Now that you're on board, you'll discover what <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br/>\n"
+"                            Feel free to reach out at any time!<br/><br/>\n"
+"                            Best,<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
@@ -296,8 +307,8 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br>\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
 "                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
@@ -327,13 +338,15 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">영업제안/영업기회 안내</span><br>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">귀사 제품에 관심이 있습니다</span>\n"
+"                    <span style=\"font-size: 10px;\">영업제안/영업기회</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+"                    <img src=\"/logo.png?company=${object.company_id.id}\" style=\"padding: 0px; margin: 0px; height: 48px;\" alt=\"${object.company_id.name}\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -345,19 +358,18 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            안녕하세요, <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>님,<br><br>\n"
-"                            <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>에 오신 것을 환영합니다.\n"
-"                            만나서 반갑습니다! 함께 하시게 된 것을 환영합니다. <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>에서 제안해 드리는 내용을 확인하시기 바랍니다. 제 이름은 <t t-out=\"object.user_id.name or ''\">Marc Demo</t>이며 Odoo에 대해 자세히 안내해 드리겠습니다. 시연용 데모를 예약해 드릴까요?<br>\n"
-"                            언제든 연락주시기 바랍니다!<br><br>\n"
-"                            감사합니다.<br>\n"
-"                            <t t-if=\"object.user_id\">\n"
-"                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br>이메일: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br>전화: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
-"                            </t>\n"
-"                            <t t-else=\"\">\n"
-"                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
-"                            </t>\n"
+"                            ${object.partner_id and object.partner_id.name or ''}님 안녕하세요,<br/><br/>\n"
+"                            ${object.company_id.name}에 오신것을 환영합니다.\n"
+"                            만나서 반갑습니다! 이제  ${object.company_id.name} 에서 해야 할 일을 발견할 수있습니다. 제 이름은 ${object.user_id.name} 이고, Odoo의 대부분에 대해 알수있도록 도움을 드리겠습니다. 머지않아 빠른 데모를 계획해도 될까요?<br/>\n"
+"                            언제든지 연락주세요. \n"
+"                            <br/>\n"
+"                            % if object.user_id:\n"
+"                                <b>${object.user_id.name}</b>\n"
+"                                <br/>Email: ${object.user_id.email or ''}\n"
+"                                <br/>Phone: ${object.user_id.phone or ''}\n"
+"                            % else:\n"
+"                                ${object.company_id.name}\n"
+"                            % endif\n"
 "                        </div>\n"
 "                    </td>\n"
 "                </tr>\n"
@@ -367,16 +379,16 @@ msgstr ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br>\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b>${object.company_id.name}</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
-"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
-"                <t t-if=\"object.company_id.email\">\n"
-"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
-"                </t>\n"
-"                <t t-if=\"object.company_id.website\">\n"
-"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
-"                </t>\n"
+"                ${object.company_id.phone}\n"
+"                % if object.company_id.email\n"
+"                    | <a href=\"'mailto:%s' % ${object.company_id.email}\" style=\"text-decoration:none; color: #999999;\">${object.company_id.email}</a>\n"
+"                % endif\n"
+"                % if object.company_id.website\n"
+"                    | <a href=\"'%s' % ${object.company_id.website}\" style=\"text-decoration:none; color: #999999;\">${object.company_id.website}</a>\n"
+"                % endif\n"
 "            </div>\n"
 "        </td>\n"
 "    </tr>\n"
@@ -2244,6 +2256,15 @@ msgstr "견적 만들기"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
+"messages, and get AI-powered transcripts of your conversations."
+msgstr ""
+"Ringover의 전화 걸기 기능을 사용하여 Odoo에서 전화를 걸고 받으세요. 통화, SMS 메시지를 추적하고 AI 기반 대화 내용을 "
+"확인하세요."
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manage Recurring Plans"
 msgstr "반복수익계획 관리"
 
@@ -2661,23 +2682,23 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Ongoing"
-msgstr "진행중"
+msgstr "진행 중"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Open Opportunities"
-msgstr "진행중인 영업 기회"
+msgstr "진행 중인 영업기회"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Open Opportunity"
-msgstr "진행중인 영업 기회"
+msgstr "진행 중인 영업기회"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Opp. Lost Reason"
-msgstr "윽. 실패 원인"
+msgstr "영업기회 실패 사유"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -2712,8 +2733,8 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
-"영업 기회 분석을 사용하면 예상 수익, 계획 비용, 마감 기한 또는 영업 기회 당 상호 작용 수와 같은 정보로 영업 기회에 즉시 접근 할"
-" 수 있습니다. 이 보고서는 주로 판매 관리자가 판매 파이프라인의 채널을 정기적으로 검토하는 데 사용됩니다."
+"영업기회 분석을 통해 예상 수익, 계획 비용, 마감일 누락 건이나 영업기회 당 상호 작용 수와 같은 정보를 활용하여 영업기회에 즉시 "
+"액세스할 수 있습니다. 이 보고서는 주로 영업 관리자가 판매 파이프라인의 채널을 주기적으로 검토하는 데 사용됩니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph_forecast
@@ -3133,6 +3154,11 @@ msgstr "담당 사용자"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Restore"
 msgstr "복원"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Ringover VOIP Phone"
+msgstr "Ringover VOIP 전화"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment

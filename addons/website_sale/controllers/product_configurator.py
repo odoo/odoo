@@ -84,7 +84,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         return super().sale_product_configurator_get_optional_products(*args, **kwargs)
 
     @route(
-        '/website_sale/product_configurator/update_cart',
+        route='/website_sale/product_configurator/update_cart',
         type='json',
         auth='public',
         methods=['POST'],
@@ -192,24 +192,23 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         )
 
         if request.is_frontend:
+            has_zero_price = float_is_zero(
+                basic_product_information['price'], precision_rounding=currency.rounding
+            )
+            basic_product_information['can_be_sold'] = not (
+                request.website.prevent_zero_price_sale and has_zero_price
+            )
+            # Don't compute the strikethrough price if there's a custom price (i.e. if `price_info`
+            # is populated).
             strikethrough_price = self._get_strikethrough_price(
                 product_or_template.with_context(
                     **product_or_template._get_product_price_context(combination)
-                ), currency, date, basic_product_information['price']
-            )
-            price = self._apply_taxes_to_price(
-                basic_product_information['price'], product_or_template, currency
-            )
-            has_zero_price = float_is_zero(
-                price, precision_rounding=currency.rounding
-            )
-            basic_product_information.update({
-                'price': price,
-                'can_be_sold': not (request.website.prevent_zero_price_sale and has_zero_price),
-                # The following fields are needed for tracking.
-                'category_name': product_or_template.categ_id.name,
-                'currency_name': currency.name,
-            })
+                ),
+                currency,
+                date,
+                basic_product_information['price'],
+                basic_product_information['pricelist_rule_id'],
+            ) if 'price_info' not in basic_product_information else None
             if strikethrough_price:
                 basic_product_information['strikethrough_price'] = strikethrough_price
         return basic_product_information
@@ -231,7 +230,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             return self._apply_taxes_to_price(price_extra, product_or_template, currency)
         return price_extra
 
-    def _get_strikethrough_price(self, product_or_template, currency, date, price):
+    def _get_strikethrough_price(self, product_or_template, currency, date, price, pricelist_rule_id=None):
         """ Return the strikethrough price of the product, if there is one.
 
         :param product.product|product.template product_or_template: The product for which to
@@ -242,27 +241,32 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :rtype: float|None
         :return: The strikethrough price of the product, if there is one.
         """
-        sales_price = request.env['product.pricelist.item']._compute_base_price(
-            product_or_template,
-            1.0,
-            product_or_template.uom_id,
-            date,
-            currency,
-        )
-        if currency.compare_amounts(sales_price, price) == 1:
-            # apply taxes
-            return self._apply_taxes_to_price(
-                sales_price,
+        pricelist_rule = request.env['product.pricelist.item'].browse(pricelist_rule_id)
+
+        # First, try to use the base price as the strikethrough price.
+        # Apply taxes before comparing it to the actual price.
+        if pricelist_rule._show_discount_on_shop():
+            pricelist_base_price = self._apply_taxes_to_price(
+                pricelist_rule._compute_price_before_discount(
+                    product=product_or_template,
+                    quantity=1.0,
+                    uom=product_or_template.uom_id,
+                    date=date,
+                    currency=currency,
+                ),
                 product_or_template,
                 currency,
             )
+            # Only show the base price if it's greater than the actual price.
+            if currency.compare_amounts(pricelist_base_price, price) == 1:
+                return pricelist_base_price
 
-        # First, try to use `compare_list_price` as the strikethrough price.
+        # Second, try to use `compare_list_price` as the strikethrough price.
+        # Don't apply taxes since this price should always be displayed as is.
         if (
             request.env.user.has_group('website_sale.group_product_price_comparison')
             and product_or_template.compare_list_price
         ):
-            # Don't apply taxes to `compare_list_price`, it should be displayed as is.
             compare_list_price = product_or_template.currency_id._convert(
                 from_amount=product_or_template.compare_list_price,
                 to_currency=currency,
@@ -270,7 +274,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 date=date,
                 round=False,
             )
-            # If `compare_list_price` is lower than `price`, don't show it.
+            # Only show `compare_list_price` if it's greater than the actual price.
             if currency.compare_amounts(compare_list_price, price) == 1:
                 return compare_list_price
         return None
@@ -291,3 +295,16 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 and product_template._is_add_to_cart_possible(parent_combination)
             )
         return should_show_product
+
+    @staticmethod
+    def _apply_taxes_to_price(price, product_or_template, currency):
+        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
+            request.env.company
+        )
+        if product_taxes:
+            fiscal_position = request.website.fiscal_position_id.sudo()
+            taxes = fiscal_position.map_tax(product_taxes)
+            return request.env['product.template']._apply_taxes_to_price(
+                price, currency, product_taxes, taxes, product_or_template, website=request.website
+            )
+        return price

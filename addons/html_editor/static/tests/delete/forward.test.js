@@ -202,11 +202,11 @@ describe("Selection collapsed", () => {
 
         test('should remove contenteditable="false"', async () => {
             await testEditor({
-                contentBefore: `<div>[]<span contenteditable="false">abc</span>def</div>`,
+                contentBefore: `<p>[]<span contenteditable="false">abc</span>def</p>`,
                 stepFunction: async (editor) => {
                     deleteForward(editor);
                 },
-                contentAfter: `<div>[]def</div>`,
+                contentAfter: `<p>[]def</p>`,
             });
         });
 
@@ -345,6 +345,14 @@ describe("Selection collapsed", () => {
                 contentBefore: `<p>[]<a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a></p>`,
                 stepFunction: deleteForward,
                 contentAfter: `<p>[]<br></p>`,
+            });
+        });
+
+        test("should delete only the button", async () => {
+            await testEditor({
+                contentBefore: `<p><a class="btn" href="#">[]</a>a</p>`,
+                stepFunction: deleteForward,
+                contentAfter: `<p>[]a</p>`,
             });
         });
     });

@@ -53,7 +53,10 @@
                                 <field name="body_html" widget="html_mail" class="oe-bordered-editor"
                                     options="{'codeview': true, 'dynamic_placeholder': true}"
                                     readonly="not can_write and id"/>
-                                <field name="attachment_ids" widget="many2many_binary"/>
+                                <div class="d-flex align-items-center gap-3">
+                                    <field name="attachment_ids" widget="many2many_binary" class="m-0"/>
+                                    <div class="text-muted">Write /field to insert dynamic content</div>
+                                </div>
                             </page>
                             <page string="Email Configuration" name="email_configuration">
                                 <group>

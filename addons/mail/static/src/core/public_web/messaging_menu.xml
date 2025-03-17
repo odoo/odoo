@@ -21,6 +21,8 @@
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
                     onSwipeLeft="hasTouch() and thread.canUnpin ? { action: () => thread.unpin(), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
+                    nameMaxLine="1"
+                    textMaxLine="2"
                 >
                     <t t-set-slot="name">
                         <div t-if="thread.parent_channel_id" class="d-flex align-items-center">

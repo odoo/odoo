@@ -1,6 +1,11 @@
 import { expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
-import { contains, getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    getService,
+    mountWithCleanup,
+    preloadBundle,
+} from "@web/../tests/web_test_helpers";
 import { FAKE_MODEL } from "./calendar_test_helpers";
 
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -28,7 +33,10 @@ async function start(params = {}) {
     await waitFor(`.o_dialog`);
 }
 
-test.tags("desktop")(`mount a CalendarQuickCreate`, async () => {
+preloadBundle("web.fullcalendar_lib");
+
+test.tags("desktop");
+test(`mount a CalendarQuickCreate`, async () => {
     await start();
     expect(`.o-calendar-quick-create`).toHaveCount(1);
     expect(`.o_dialog .modal-sm`).toHaveCount(1);

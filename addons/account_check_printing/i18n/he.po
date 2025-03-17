@@ -1,37 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-#
+# 
 # Translators:
-# NoaFarkash, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
-# Amit Spilman <amit@laylinetech.com>, 2022
-# שהאב חוסיין <shhab89@gmail.com>, 2022
-# Sagi Ahiel, 2022
-# Martin Trigaux, 2022
-# Yihya Hugirat <hugirat@gmail.com>, 2022
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
-# Moshe Flam <pashute@gmail.com>, 2022
-# Ha Ketem <haketem@gmail.com>, 2022
-#
+# Orel Nahmany, 2024
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
+# Amit Spilman <amit@laylinetech.com>, 2024
+# שהאב חוסיין <shhab89@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Yihya Hugirat <hugirat@gmail.com>, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
+# Moshe Flam <pashute@gmail.com>, 2024
+# Eyal arkush, 2025
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
-"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Language: he\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid ": Check Number Sequence"
+msgid "%(journal)s: Check Number Sequence"
+msgstr ""
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "<span>&amp;nbsp;</span>"
 msgstr ""
 
 #. module: account_check_printing
@@ -41,7 +46,9 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid "Adjust the margins of generated checks to make it fit your printer's settings."
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
 msgstr "הגדירו שוליים לצ'ק שיופס כדי שיתאים להגדרות המדפסת."
 
 #. module: account_check_printing
@@ -50,11 +57,18 @@ msgid "Amount in Words"
 msgstr "סכום במילים"
 
 #. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "Bills"
+msgstr "חשבוניות"
+
+#. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Cancel"
 msgstr "בטל"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__bank_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
@@ -110,6 +124,8 @@ msgid "Check to print"
 msgstr "שיק להדפסה"
 
 #. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
 msgstr "שיקים"
@@ -139,12 +155,7 @@ msgstr "חברות"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
-msgstr "הגדר הגדרות"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_partner
-msgid "Contact"
-msgstr "איש קשר"
+msgstr "הגדרות תצורה"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
@@ -155,6 +166,11 @@ msgstr "נוצר על-ידי"
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
 msgid "Created on"
 msgstr "נוצר ב-"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
+msgid "Default"
+msgstr "ברירת מחדל"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
@@ -175,18 +191,15 @@ msgstr "מזהה"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "In order to print multiple checks at once, they must belong to the same bank journal."
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank"
+" journal."
 msgstr "כדי להדפיס שיקים מרובים בבת אחת, עליהם להיות שייכים לאותו יומן בנק."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
 msgstr "יומן"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_move
-msgid "Journal Entry"
-msgstr "פקודת יומן"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -214,6 +227,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"ידני: שלם או קבל תשלום בכל שיטה מחוץ ל-Odoo.\n"
+"ספקי תשלומים: לכל ספק תשלומים יש אמצעי תשלום משלו. בקש עסקה בכרטיס/לכרטיס הודות לאסימון תשלום שנשמר על ידי השותף בקנייה או בהרשמה מקוונת.\n"
+"צ'ק: שלם חשבונות בצ'ק והדפיס אותו מ-Odoo.\n"
+"הפקדת אצווה: אסוף מספר צ'קים של לקוחות בו-זמנית, תוך הפקה והגשה של הפקדה אצווה לבנק שלך. מודול account_batch_payment הכרחי.\n"
+"העברת אשראי SEPA: שלם באזור SEPA על ידי שליחת קובץ העברת אשראי SEPA לבנק שלך. מודול account_sepa הכרחי.\n"
+"הוראת קבע SEPA: קבל תשלום באזור SEPA הודות למנדט שהשותף שלך יעניק לך. מודול account_sepa הכרחי.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -241,8 +260,6 @@ msgstr "אף אחד"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
 msgstr "אמצעי תשלום"
 
@@ -259,26 +276,17 @@ msgstr "תשלומים"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
 msgstr "כדי להדפיס צ'קים צריך לסמן 'צ'ק' כאמצעי תשלום בהוצאה שטרם עברה התאמה."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Please enter the number of the first pre-printed check that you are about to print on."
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to"
+" print on."
 msgstr "בבקשה להקליד את מספר השיק המודפס שאתה רוצה להדפיס עלוי"
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
-msgid "Preferred Payment Method"
-msgstr "שיטת תשלום"
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
-msgstr "אמצעי תשלום מועדף כשמשלמים לספק זה. נשתמש בזה כדי לסנן חשבוניות ספקים ולרשום הוצאות מרובות אוטומטית. שימושים אפשריים: יצירת קבצים להעברות מרובות, הדפסת צ'קים."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -310,9 +318,10 @@ msgid "Print Pre-numbered Checks"
 msgstr "הדפס שיקים ממוספרים מראש"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_payment_register
-msgid "Register Payment"
-msgstr "רשום תשלום"
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+msgid "Refunds"
+msgstr "החזרים כספיים"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -342,13 +351,17 @@ msgstr "מספר רץ של השיק המודפס הבא"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr ""
+msgstr "הראה מספר שיק"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
-msgstr "משהו השתבש בפריסת הצ'ק, נא להשתמש בפריסה אחרת תחת חשבוניות/הגדרות חשבונאיות ונסו שוב."
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
+"משהו השתבש בפריסת הצ'ק, נא להשתמש בפריסה אחרת תחת חשבוניות/הגדרות חשבונאיות "
+"ונסו שוב."
 
 #. module: account_check_printing
 #. odoo-python
@@ -363,19 +376,32 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
-msgstr "מספר השיק האחרון היה %s. על מנת למנוע את דחיית השיק על ידי הבנק, עליך לבחור מספר גבוה יותר."
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
+msgstr ""
+"מספר השיק האחרון היה %s. על מנת למנוע את דחיית השיק על ידי הבנק, עליך לבחור "
+"מספר גבוה יותר."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
-msgstr "יומן זה הותאם כך שידפיס מספרי שיקים. אם קיימים כבר מספרים על נייר ההדפסה או אם המספור כעת אינו נכון, אפשר לשנות זאת בהגדרות היומן."
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
+msgstr ""
+"יומן זה הותאם כך שידפיס מספרי שיקים. אם קיימים כבר מספרים על נייר ההדפסה או "
+"אם המספור כעת אינו נכון, אפשר לשנות זאת בהגדרות היומן."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
-msgstr "האפשרות הזו מאפשרת להדפיס פרטי צ'ק (ספח) במספר דפים, אם הפרטים לא נכנסים בעמוד אחד."
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
+msgstr ""
+"האפשרות הזו מאפשרת להדפיס פרטי צ'ק (ספח) במספר דפים, אם הפרטים לא נכנסים "
+"בעמוד אחד."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -384,10 +410,13 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"אפשרות זו מאפשרת להדפיס את תווית התאריך על השיק לפי עלות לרכישה.\n"
+"השבת זאת אם ההמחאה המודפסת מראש שלך כוללת את תווית התאריך."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "This will allow to save on payments the number of the corresponding check."
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
 msgstr "מאפשר לרשום את מספר השיק בשורת התשלום."
 
 #. module: account_check_printing
@@ -403,5 +432,9 @@ msgstr "צ'ק מבוטל"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
-msgstr "יש לבחור בפריסת צ'ק. עושים את זה תחת חשבוניות / הגדרות חשבונאיות, חפשו 'פריסת צ'ק' והגדירו תצורה."
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
+msgstr ""
+"יש לבחור בפריסת צ'ק. עושים את זה תחת חשבוניות / הגדרות חשבונאיות, חפשו "
+"'פריסת צ'ק' והגדירו תצורה."

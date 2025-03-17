@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { reactive, useState } from "@odoo/owl";
+import { STORAGE, storageGet, storageSet } from "../hoot_utils";
 
 /**
  * @typedef {"dark" | "light"} ColorScheme
@@ -11,23 +12,13 @@ import { reactive, useState } from "@odoo/owl";
 //-----------------------------------------------------------------------------
 
 const {
-    localStorage,
     matchMedia,
-    Object: { entries: $entries },
+    Object: { entries: $entries, keys: $keys },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-const updateClassNames = () => {
-    if (!colorRoot) {
-        return;
-    }
-    const { classList } = colorRoot;
-    classList.remove(...COLOR_SCHEMES);
-    classList.add(current.scheme);
-};
 
 const GRAYS = {
     100: "#f1f5f9",
@@ -63,22 +54,27 @@ const COLOR_VALUES = {
         // Generic colors
         primary: "#714b67",
         secondary: "#74b4b9",
-        abort: "#f59e0b",
-        "abort-900": "#fef3c7",
-        fail: "#9f1239",
-        "fail-900": "#fecdd3",
-        pass: "#047857",
-        "pass-900": "#ecfdf5",
-        skip: "#0891b2",
-        "skip-900": "#e0f2fe",
-        todo: "#581c87",
-        "todo-900": "#f3e8ff",
-        muted: GRAYS[400],
+        amber: "#f59e0b",
+        "amber-900": "#fef3c7",
+        cyan: "#0891b2",
+        "cyan-900": "#e0f2fe",
+        emerald: "#047857",
+        "emerald-900": "#ecfdf5",
+        gray: GRAYS[400],
+        lime: "#84cc16",
+        "lime-900": "#f7fee7",
+        orange: "#ea580c",
+        "orange-900": "#ffedd5",
+        purple: "#581c87",
+        "purple-900": "#f3e8ff",
+        rose: "#9f1239",
+        "rose-900": "#fecdd3",
 
         // App colors
         bg: GRAYS[100],
         text: GRAYS[900],
         "status-bg": GRAYS[300],
+        "link-text-hover": "var(--primary)",
         "btn-bg": "#714b67",
         "btn-bg-hover": "#624159",
         "btn-text": "#ffffff",
@@ -104,17 +100,21 @@ const COLOR_VALUES = {
     dark: {
         // Generic colors
         primary: "#14b8a6",
-        abort: "#fbbf24",
-        "abort-900": "#422006",
-        fail: "#fb7185",
-        "fail-900": "#4c0519",
-        pass: "#34d399",
-        "pass-900": "#064e3b",
-        skip: "#22d3ee",
-        "skip-900": "#083344",
-        todo: "#a855f7",
-        "todo-900": "#3b0764",
-        muted: GRAYS[500],
+        amber: "#fbbf24",
+        "amber-900": "#422006",
+        cyan: "#22d3ee",
+        "cyan-900": "#083344",
+        emerald: "#34d399",
+        "emerald-900": "#064e3b",
+        gray: GRAYS[500],
+        lime: "#bef264",
+        "lime-900": "#365314",
+        orange: "#fb923c",
+        "orange-900": "#431407",
+        purple: "#a855f7",
+        "purple-900": "#3b0764",
+        rose: "#fb7185",
+        "rose-900": "#4c0519",
 
         // App colors
         bg: GRAYS[900],
@@ -145,19 +145,38 @@ const COLOR_VALUES = {
 };
 
 /** @type {ColorScheme[]} */
-const COLOR_SCHEMES = ["dark", "light"];
+const COLOR_SCHEMES = $keys(COLOR_VALUES).filter((k) => k !== "default");
 
-const STORAGE_KEY = "hoot-color-scheme";
-
-/** @type {HTMLElement | null} */
-let colorRoot = null;
 /** @type {ColorScheme} */
-let defaultScheme = localStorage.getItem(STORAGE_KEY);
+let defaultScheme = storageGet(STORAGE.scheme);
 if (!COLOR_SCHEMES.includes(defaultScheme)) {
     defaultScheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    localStorage.setItem(STORAGE_KEY, defaultScheme);
+    storageSet(STORAGE.scheme, defaultScheme);
 }
-const current = reactive({ scheme: defaultScheme }, updateClassNames);
+
+const colorChangedCallbacks = [
+    () => {
+        const { classList } = current.root;
+        classList.remove(...COLOR_SCHEMES);
+        classList.add(current.scheme);
+    },
+];
+const current = reactive(
+    {
+        /** @type {HTMLElement | null} */
+        root: null,
+        scheme: defaultScheme,
+    },
+    () => {
+        if (!current.root) {
+            return;
+        }
+        for (const callback of colorChangedCallbacks) {
+            callback();
+        }
+    }
+);
+current.root;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -180,14 +199,23 @@ export function generateStyleSheets() {
     return styles;
 }
 
+/**
+ * @param {() => any} callback
+ */
+export function onColorSchemeChange(callback) {
+    colorChangedCallbacks.push(callback);
+}
+
+/**
+ * @param {HTMLElement | null} element
+ */
 export function setColorRoot(element) {
-    colorRoot = element;
-    updateClassNames();
+    current.root = element;
 }
 
 export function toggleColorScheme() {
     current.scheme = COLOR_SCHEMES.at(COLOR_SCHEMES.indexOf(current.scheme) - 1);
-    localStorage.setItem(STORAGE_KEY, current.scheme);
+    storageSet(STORAGE.scheme, current.scheme);
 }
 
 export function useColorScheme() {

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from odoo import Command
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
+from odoo.exceptions import UserError
 import base64
 
 
@@ -23,6 +25,7 @@ class TestUBLDE(TestUBLCommon):
             'country_id': cls.env.ref('base.de').id,
             'bank_ids': [(0, 0, {'acc_number': 'DE48500105176424548921'})],
             'ref': 'ref_partner_1',
+            'invoice_edi_format': 'xrechnung',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -34,6 +37,7 @@ class TestUBLDE(TestUBLCommon):
             'country_id': cls.env.ref('base.de').id,
             'bank_ids': [(0, 0, {'acc_number': 'DE50500105175653254743'})],
             'ref': 'ref_partner_2',
+            'invoice_edi_format': 'xrechnung',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
@@ -130,6 +134,46 @@ class TestUBLDE(TestUBLCommon):
             expected_file_path='from_odoo/xrechnung_ubl_out_invoice.xml',
         )
         self.assertEqual(attachment.name[-10:], "ubl_de.xml")
+        self._assert_imported_invoice_from_etree(invoice, attachment)
+
+    def test_export_import_invoice_without_vat_and_peppol_endpoint(self):
+        self.partner_2.write({
+            'vat': False,
+            'peppol_endpoint': False,
+            'email': 'partner_2@test.test',
+        })
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                },
+            ],
+        )
+        attachment = self._assert_invoice_attachment(
+            invoice.ubl_cii_xml_id,
+            xpaths=f'''
+                <xpath expr="./*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='InvoiceLine'][1]/*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
+                    <PaymentID>___ignore___</PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                    <attribute name="mimeCode">application/pdf</attribute>
+                    <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
+                </xpath>
+            ''',
+            expected_file_path='from_odoo/xrechnung_ubl_out_invoice_without_vat.xml',
+        )
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
@@ -253,3 +297,37 @@ class TestUBLDE(TestUBLCommon):
         self._detach_attachment(attachment)
         created_bill.message_post(attachment_ids=[attachment.id])
         self.assertTrue(created_bill)
+
+    def test_ensure_buyer_reference_xrechnung_xml(self):
+        acc_bank = self.env['res.partner.bank'].create({
+            'acc_number': 'BE15001559627232',
+            'partner_id': self.company_data['company'].partner_id.id,
+        })
+
+        self.partner_1.ref = False
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            partner_id=self.partner_1.id,
+            partner_bank_id=acc_bank.id,
+            invoice_date='2017-01-01',
+            date='2017-01-01',
+            invoice_line_ids=[{
+                'product_id': self.product_a.id,
+                'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                'price_unit': 275.0,
+                'quantity': 5,
+                'discount': 20.0,
+                'tax_ids': [(6, 0, self.tax_19.ids)],
+            }],
+        )
+
+        with self.assertRaises(UserError):
+            self.env['account.move.send'].with_context(
+                active_model='account.move',
+                active_ids=invoice.ids,
+            ).create({
+                'checkbox_download': False,
+                'checkbox_send_mail': False,
+            }).action_send_and_print()

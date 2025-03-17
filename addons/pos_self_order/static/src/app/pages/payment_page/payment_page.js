@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUnmount, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/self_order_service";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -17,14 +17,14 @@ export class PaymentPage extends Component {
             paymentMethodId: null,
         });
 
-        onWillUnmount(() => {
-            this.selfOrder.paymentError = false;
-        });
-
-        onWillStart(async () => {
+        onMounted(() => {
             if (this.selfOrder.models["pos.payment.method"].length === 1) {
                 this.selectMethod(this.selfOrder.models["pos.payment.method"].getFirst().id);
             }
+        });
+
+        onWillUnmount(() => {
+            this.selfOrder.paymentError = false;
         });
     }
 

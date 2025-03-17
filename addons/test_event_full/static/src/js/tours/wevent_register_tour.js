@@ -88,8 +88,8 @@ const registerSteps = [
         run: "click",
     },
     {
-        content: "Fill attendees details",
-        trigger: '.modal form[id="attendee_registration"] .btn[type=submit]',
+        content: "Wait the modal is shown before continue",
+        trigger: ".modal.modal_shown.show form[id=attendee_registration]",
     },
     {
         trigger: ".modal input[name*='1-name']",
@@ -187,7 +187,6 @@ var browseMeetSteps = [{
 
 registry.category("web_tour.tours").add('wevent_register', {
     url: '/event',
-    test: true,
     steps: () => [].concat(
         initTourSteps('Online Reveal'),
         browseTalksSteps,

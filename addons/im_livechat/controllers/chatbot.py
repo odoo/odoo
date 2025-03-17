@@ -54,11 +54,14 @@ class LivechatChatbotScriptController(http.Controller):
                 user_answer = user_messages.sorted(lambda message: message.id)[-1]
             next_step = current_step._process_answer(discuss_channel, user_answer.body)
         elif chatbot_script_id:  # when restarting, we don't have a "current step" -> set "next" as first step of the script
-            chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
+            chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id).with_context(lang=chatbot_language)
             if chatbot.exists():
                 next_step = chatbot.script_step_ids[:1]
 
         if not next_step:
+            # sudo: visitor cannot write on channel otherwise. Just writing a
+            # boolean is safe
+            discuss_channel.sudo().livechat_active = False
             return None
 
         posted_message = next_step._process_step(discuss_channel)
@@ -67,7 +70,7 @@ class LivechatChatbotScriptController(http.Controller):
         store.add(
             "ChatbotStep",
             {
-                "id": (next_step.id, discuss_channel.id),
+                "id": (next_step.id, posted_message.id),
                 "isLast": next_step._is_last_step(discuss_channel),
                 "message": Store.one(posted_message, only_id=True),
                 "operatorFound": next_step.step_type == "forward_operator"

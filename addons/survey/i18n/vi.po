@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,6 +76,12 @@ msgstr "%(participant)s vừa tham gia \"%(survey_title)s\"."
 #: code:addons/survey/models/survey_survey.py:0
 msgid "%s (copy)"
 msgstr "%s (sao chép)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+msgid "%s Votes"
+msgstr "%s phiếu bầu"
 
 #. module: survey
 #. odoo-python
@@ -184,7 +191,7 @@ msgid ""
 "<b>Certificate</b>\n"
 "                            <br/>"
 msgstr ""
-"<b>Chứng nhận</b>\n"
+"<b>Chứng chỉ</b>\n"
 "                            <br/>"
 
 #. module: survey
@@ -218,7 +225,7 @@ msgid ""
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name or ''\">Feedback Form</t>\n"
 "            </td></tr>\n"
@@ -233,7 +240,7 @@ msgid ""
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
 "                    certification\n"
 "                </p>\n"
-"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
+"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -245,7 +252,7 @@ msgstr ""
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- Chúng tôi sử dụng logo của công ty đã tạo khảo sát (để xử lý các trường hợp liên quan đến nhiều công ty) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Chứng nhận: <t t-out=\"object.survey_id.display_name or ''\">Biểu mẫu phản hồi</t>\n"
 "            </td></tr>\n"
@@ -260,7 +267,7 @@ msgstr ""
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Chế tạo Nội thất</strong>\n"
 "                    của bạn.\n"
 "                </p>\n"
-"                <p>Chúc mừng bạn đã vượt qua bài kiểm tra với số điểm là <strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
+"                <p>Chúc mừng bạn đã vượt qua bài kiểm tra với số điểm là <strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -272,14 +279,14 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            You have been invited to take a new certification.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            We are conducting a survey and your response would be appreciated.\n"
 "        </t>\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    Start Certification\n"
@@ -290,7 +297,7 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
+"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -298,20 +305,20 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            Thank you in advance for your participation.\n"
 "        </t>\n"
-"    </p>\n"
+"    \n"
 "</div>\n"
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Xin chào <t t-out=\"object.partner_id.name or 'participant'\">bạn</t><br><br>\n"
+"        Xin chào <t t-out=\"object.partner_id.name or 'bạn'\">bạn</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Bạn đã được mời thi để lấy một chứng nhận mới.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Chúng tôi đang tiến hành một cuộc khảo sát và rất trân trọng phản hồi từ bạn.\n"
 "        </t>\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    Bắt đầu chứng nhận\n"
@@ -320,9 +327,9 @@ msgstr ""
 "                    Bắt đầu khảo sát\n"
 "                </t>\n"
 "            </a>\n"
-"        </div>\n"
+"       </div> \n"
 "        <t t-if=\"object.deadline\">\n"
-"            Vui lòng trả lời khảo sát ngày <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
+"            Vui lòng trả lời khảo sát ngày <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Chúc bạn may mắn!\n"
@@ -330,7 +337,7 @@ msgstr ""
 "        <t t-else=\"\">\n"
 "            Xin cảm ơn sự góp mặt của bạn!\n"
 "        </t>\n"
-"    </p>\n"
+"    \n"
 "</div>\n"
 "            "
 
@@ -562,7 +569,7 @@ msgstr "<span class=\"text-break text-muted\">Thành công</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-muted\">Average Duration</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Thời gian trung bình</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -704,7 +711,7 @@ msgid ""
 "<span>This certificate is presented to</span>\n"
 "                                <br/>"
 msgstr ""
-"<span>Chứng nhận này được trao cho</span>\n"
+"<span>Chứng chỉ này được trao cho</span>\n"
 "                                <br/>"
 
 #. module: survey
@@ -1369,7 +1376,7 @@ msgstr "Chọn tùy chọn này nếu bạn muốn giới hạn số lần làm 
 #. odoo-javascript
 #: code:addons/survey/static/src/views/widgets/boolean_update_flag_field/boolean_update_flag_fields.js:0
 msgid "Checkbox updating comparison flag"
-msgstr "Checkbox updating comparison flag"
+msgstr "Hộp kiểm cập nhật cờ so sánh"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q2_sug2
@@ -1848,7 +1855,7 @@ msgstr "Tên hiển thị"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
 msgid "Display Progress as"
-msgstr "Hiển thị tiến trình dưới dạng"
+msgstr "Hiển thị tiến độ dưới dạng"
 
 #. module: survey
 #. odoo-javascript
@@ -2539,7 +2546,7 @@ msgstr "Chỉ người được mời"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__is_mail_template_editor
 msgid "Is Editor"
-msgstr "Là biên tập"
+msgstr "Là trình chỉnh sửa"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_is_follower
@@ -3223,7 +3230,7 @@ msgstr "Bây giờ bạn đã hoàn tất, hãy gửi biểu mẫu này."
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Now, use this shortcut to go back to the survey."
-msgstr "Bây giờ, hãy sử dụng phím tắt này để quay lại khảo sát."
+msgstr "Bây giờ, hãy sử dụng lối tắt này để quay lại khảo sát."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__number
@@ -3718,7 +3725,7 @@ msgstr "Sản phẩm"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Progress bar"
-msgstr "Thanh tiến trình"
+msgstr "Thanh tiến độ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -5612,8 +5619,8 @@ msgid ""
 "You can share your links through different means: email, invite shortcut, "
 "live presentation, ..."
 msgstr ""
-"Bạn có thể chia sẻ liên kết thông qua các phương tiện khác nhau: email, phím"
-" tắt lời mời, bản trình bày trực tiếp,..."
+"Bạn có thể chia sẻ liên kết thông qua các phương tiện khác nhau: email, lối "
+"tắt lời mời, bản trình bày trực tiếp,..."
 
 #. module: survey
 #. odoo-python
@@ -5759,7 +5766,7 @@ msgstr "VD: 4812"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "e.g. Guidelines, instructions, picture, ... to help attendees answer"
-msgstr "VD: Hướng dẫn, chỉ dẫn, hình ảnh,… giúp người tham gia trả lời"
+msgstr "VD: Chỉ dẫn, hướng dẫn, hình ảnh,… giúp người tham gia trả lời"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified

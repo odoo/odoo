@@ -141,9 +141,13 @@ class ResPartner(models.Model):
 
     @api.onchange('vat', 'country_id')
     def _l10n_it_onchange_vat(self):
-        if not self.l10n_it_codice_fiscale and self.vat and (self.country_id.code == "IT" or self.vat.startswith("IT")):
+        if self.vat and (
+            self.country_code == "IT"
+            if self.country_code
+            else self.vat.startswith("IT")
+        ):
             self.l10n_it_codice_fiscale = self._l10n_it_edi_normalized_codice_fiscale(self.vat)
-        elif self.country_id.code not in [False, "IT"]:
+        else:
             self.l10n_it_codice_fiscale = False
 
     @api.constrains('l10n_it_codice_fiscale')
@@ -196,3 +200,11 @@ class ResPartner(models.Model):
     def _peppol_eas_endpoint_depends(self):
         # extends account_edi_ubl_cii
         return super()._peppol_eas_endpoint_depends() + ['l10n_it_codice_fiscale']
+
+    def _get_suggested_invoice_edi_format(self):
+        # EXTENDS 'account'
+        res = super()._get_suggested_invoice_edi_format()
+        if self.country_code == 'IT':
+            return 'it_edi_xml'
+        else:
+            return res

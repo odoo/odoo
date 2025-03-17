@@ -6814,7 +6814,8 @@ window.print = function () {
       return activeServiceOnEntry.performPrint();
     }).catch(function () {}).then(function () {
       if (activeServiceOnEntry.active) {
-        abort();
+        // ODOO Patch: https://github.com/mozilla/pdf.js/issues/10630#issuecomment-855754913
+        setTimeout(abort, 1000);
       }
     });
   }

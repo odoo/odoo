@@ -18,11 +18,21 @@ class TestError(common.HttpCase):
         # Reset the admin's lang to avoid breaking tests due to admin not in English
         self.rpc("res.users", "write", [uid], {"lang": False})
 
+    def test_01_private(self):
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', '_create')
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', 'private_method')
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', 'init')
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', 'filtered', ['id'])
+
     def test_01_create(self):
         """ Create: mandatory field not provided """
         self.rpc("test_rpc.model_b", "create", {"name": "B1"})
         try:
-            with mute_logger("odoo.sql_db"):
+            with mute_logger("odoo.sql_db", "odoo.http"):
                 self.rpc("test_rpc.model_b", "create", {})
             raise
         except Exception as e:
@@ -42,7 +52,7 @@ class TestError(common.HttpCase):
         self.rpc("test_rpc.model_a", "create", {"name": "A1", "field_b1": b1, "field_b2": b2})
 
         try:
-            with mute_logger("odoo.sql_db"):
+            with mute_logger("odoo.sql_db", "odoo.http"):
                 self.rpc("test_rpc.model_b", "unlink", b1)
             raise
         except Exception as e:
@@ -56,7 +66,7 @@ class TestError(common.HttpCase):
 
         # Unlink b2 => ON DELETE RESTRICT constraint raises
         try:
-            with mute_logger("odoo.sql_db"):
+            with mute_logger("odoo.sql_db", "odoo.http"):
                 self.rpc("test_rpc.model_b", "unlink", b2)
             raise
         except Exception as e:
@@ -69,7 +79,7 @@ class TestError(common.HttpCase):
             self.assertIn("Constraint: test_rpc_model_a_field_b2_fkey", e.faultString)
 
     def test_03_sql_constraint(self):
-        with mute_logger("odoo.sql_db"):
+        with mute_logger("odoo.sql_db"), mute_logger("odoo.http"):
             with self.assertRaisesRegex(Fault, r'The operation cannot be completed: The value must be positive'):
                 self.rpc("test_rpc.model_b", "create", {"name": "B1", "value": -1})
 

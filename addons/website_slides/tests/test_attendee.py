@@ -581,7 +581,7 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
         mail_vals = wizard._prepare_mail_values(slide_channel_jean)
         self.assertEqual(
             mail_vals['body_html'],
-            'fr',
+            '<p>fr</p>',
             "Mail body should have been translated into recipient's language"
         )
         self.assertEqual(

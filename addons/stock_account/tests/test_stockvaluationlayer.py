@@ -6,6 +6,7 @@
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 
@@ -367,6 +368,31 @@ class TestStockValuationStandard(TestStockValuationCommon):
         finally:
             self.env.user.company_id = old_company
 
+    def test_change_qty_and_locations_of_done_sml(self):
+        sub_stock_loc = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+
+        move_in = self._make_in_move(self.product1, 25)
+        self.assertEqual(self.product1.value_svl, 250)
+        self.assertEqual(self.product1.qty_available, 25)
+
+        move_in.move_line_ids.write({
+            'location_dest_id': sub_stock_loc.id,
+            'quantity': 30,
+        })
+        self.assertEqual(self.product1.value_svl, 300)
+        self.assertEqual(self.product1.qty_available, 30)
+
+        sub_loc_quant = self.product1.stock_quant_ids.filtered(lambda q: q.location_id == sub_stock_loc)
+        self.assertEqual(sub_loc_quant.quantity, 30)
+
+        with self.assertRaises(ValidationError):
+            move_in.move_line_ids.location_id = self.stock_location
+
+
 class TestStockValuationAVCO(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -609,6 +635,23 @@ class TestStockValuationAVCO(TestStockValuationCommon):
 
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.value_svl, 0)
+
+    def test_rounding_svl_5(self):
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 10, unit_cost=16.83)
+        self._make_in_move(self.product1, 10, unit_cost=20)
+        self.assertEqual(self.product1.standard_price, 18.42)
+
+        self._make_out_move(self.product1, 10)
+        out_move = self._make_out_move(self.product1, 9)
+        self.assertEqual(out_move.stock_valuation_layer_ids[0].value, -165.73)
+
+        self.assertEqual(self.product1.value_svl, 18.42)
+        self.assertEqual(self.product1.quantity_svl, 1)
+
+        self._make_out_move(self.product1, 1)
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
 
     def test_return_delivery_2(self):
         self.product1.write({"standard_price": 1})

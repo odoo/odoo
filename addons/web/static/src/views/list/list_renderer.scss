@@ -167,12 +167,9 @@
                 justify-content: flex-end;
             }
             &.o_list_button {
-                white-space: nowrap;
-                > button {
+                > div > button {
+                    white-space: nowrap;
                     padding: 0 5px;
-                    &:not(:last-child) {
-                        margin-right: 3px;
-                    }
                 }
             }
 
@@ -187,6 +184,9 @@
                 > .o_field_text {
                     // text field with widget, className inside the td
                     white-space: pre !important;
+                }
+                &.o_list_button > div {
+                    flex-wrap: nowrap !important;
                 }
             }
         }
@@ -434,17 +434,12 @@
                         @include o-position-absolute(0, 0);
                     }
                 }
-                > input.o_field_translate,
+                input.o_field_translate,
                 textarea.o_field_translate {
-                    padding-right: 25px;
-                    + span.o_field_translate {
-                        margin-left: -35px;
-                        padding: 0px 1px;
-                        text-align: right;
-                        width: 35px;
-                        vertical-align: top;
-                        font-size: 12px;
-                    }
+                    padding-right: $o-field-translate-padding;
+                }
+                .o_field_input_buttons, .btn.o_field_translate {
+                    visibility: visible;
                 }
                 > .o_row_handle {
                     visibility: hidden; // hide sequence when editing
@@ -529,15 +524,6 @@
         }
     }
 
-    .o_data_row.o_dragged {
-        display: flex;
-
-        > td {
-            flex-grow: 0;
-            flex-shrink: 0;
-        }
-    }
-
     .o_optional_columns_dropdown .dropdown-item .o-checkbox .text-truncate {
         max-width: 30em;
     }
@@ -588,15 +574,7 @@
     .o_list_view .o_list_selection_container {
         position: fixed;
         top: 0;
-        right: 0;
         left: 0;
-        justify-content: center;
-        
-        .o_list_selection_box {
-            --#{$variable-prefix}list-group-active-color: #{$white};
-            --#{$variable-prefix}list-group-active-border-color: RGB(var(--primary-rgb));
-            --#{$variable-prefix}list-group-active-bg: RGB(var(--primary-rgb));
-        }
     }
 }
 .modal-footer .o_list_selection_box {

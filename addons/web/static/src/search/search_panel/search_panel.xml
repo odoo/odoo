@@ -157,7 +157,6 @@
             </div>
             <Dropdown t-foreach="sections" t-as="section" t-key="section.id" state="getDropdownState(section.id)" menuClass="'my-2 mx-1'" onOpened.bind="updateGroupHeadersChecked">
                 <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
-                    <i t-if="hasSelection(section.id)" class="fa fa-circle position-absolute top-0 start-100 translate-middle text-danger"/>
                     <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                         t-att-style="section.color and ('color: ' + section.color)"
                     />

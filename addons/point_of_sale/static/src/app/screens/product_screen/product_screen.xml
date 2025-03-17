@@ -33,10 +33,10 @@
                             class="pos.productViewMode"
                             name="getProductName(product)"
                             color="product.pos_categ_ids?.at(-1)?.color"
-                            price="this.getProductPrice(product)"
                             imageUrl="pos.config.show_product_images and this.getProductImage(product)"
                             onClick.bind="() => this.addProductToOrder(product)"
                             productInfo="true"
+                            productCartQty="this.state.quantityByProductTmplId[product.raw.product_tmpl_id]"
                             onProductInfoClick.bind="() => this.onProductInfoClick(product)" />
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">

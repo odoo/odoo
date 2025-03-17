@@ -63,6 +63,14 @@ class Page(models.Model):
         for page in self:
             page.website_url = page.url
 
+    @api.depends_context('uid')
+    def _compute_can_publish(self):
+        if self.env.user.has_group('website.group_website_designer'):
+            for record in self:
+                record.can_publish = True
+        else:
+            super()._compute_can_publish()
+
     def _get_most_specific_pages(self):
         ''' Returns the most specific pages in self. '''
         ids = []
@@ -155,7 +163,7 @@ class Page(models.Model):
 
             # If name has changed, check for key uniqueness
             if 'name' in vals and page.name != vals['name']:
-                vals['key'] = self.env['website'].with_context(website_id=website_id).get_unique_key(self.env['ir.http']._slugify(vals['name']))
+                vals['key'] = self.env['website'].with_context(website_id=website_id).get_unique_key(self.env['ir.http']._slugify(vals['name'] or ''))
             if 'visibility' in vals:
                 if vals['visibility'] != 'restricted_group':
                     vals['groups_id'] = False

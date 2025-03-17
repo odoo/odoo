@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-27 13:03+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,8 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"免费送货"
 
 #. module: delivery
 #. odoo-python
@@ -88,7 +91,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description</strong>"
-msgstr ""
+msgstr "<strong>运输说明</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -96,7 +99,7 @@ msgid ""
 "A description of the delivery method that you want to communicate to your "
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
-msgstr "您希望在销售订单和销售确认电子邮件中与客户沟通的交货方式的描述，例如，客户要遵循的指示。"
+msgstr "您希望在销售订单和销售确认电子邮件中与客户沟通的交货方式的描述，例如：客户要遵循的指示。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -106,7 +109,7 @@ msgstr "确认发货时触发"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
 msgid "Active"
-msgstr "已启用"
+msgstr "有效"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -140,13 +143,13 @@ msgstr "金额"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr "免费送货的订单金额，按公司本位货币显示"
+msgstr "免费送货的订单金额，按公司本位币别显示"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -182,7 +185,7 @@ msgstr "承运商"
 msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
 "Tags."
-msgstr ""
+msgstr "运输商 %s 的 “必须拥有标签” 及 “排除的标签” 中，不可拥有相同的标签。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -197,14 +200,14 @@ msgstr "选择提货点"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
 msgstr "选择此位置"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.js:0
 msgid "Closed"
 msgstr "已关闭"
 
@@ -260,7 +263,7 @@ msgstr "创建日期"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__currency_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__partner_id
@@ -429,7 +432,7 @@ msgstr "预估运费"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
 msgid "Excluded Tags"
-msgstr "排除的标记"
+msgstr "排除的标签"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -556,13 +559,13 @@ msgstr "上次更新日期"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
 msgstr "列表视图"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
 msgstr "加载中... 稍安勿躁"
 
@@ -583,7 +586,7 @@ msgstr "管理递送邮政编码前缀"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
 msgstr "地图视图"
 
@@ -620,7 +623,7 @@ msgstr "最大值"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "必须有的标签"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -637,11 +640,11 @@ msgstr "新服务商"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr ""
+msgstr "此送货地址没有可用的提货点。"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "No result"
 msgstr "没有结果"
 
@@ -653,8 +656,8 @@ msgstr "当前订单不提供"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location/location.xml:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location/location.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Opening hours"
 msgstr "营业时间"
 
@@ -696,7 +699,7 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
-"该承运商适用的邮编前缀。请注意，正则表达式可用于支持不同国家/地区的不同邮编长度，例如，可将“$”添加至邮编前缀的末尾，以匹配具体邮编（例如，“100$”"
+"该承运商适用的邮编前缀。请注意，正则表达式可用于支持不同国家/地区的不同邮编长度，例如：可将“$”添加至邮编前缀的末尾，以匹配具体邮编（例如：“100$”"
 " 只匹配“100”，而不匹配 “1000”）"
 
 #. module: delivery
@@ -819,7 +822,7 @@ msgstr "运输保险服务，可为包裹在运输途中丢失、被盗和/或�
 msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
-msgstr "送货方式详细信息将包含在底部销售订单及其确认电子邮件中。例如，客户要遵循的指示。"
+msgstr "送货方式详细信息将包含在底部销售订单及其确认电子邮件中。例如：客户要遵循的指示。"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -881,7 +884,7 @@ msgstr "由于订单金额超过 %.2f，因此免运费。"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
 msgstr "加载地图时出错"
 
@@ -999,9 +1002,9 @@ msgstr "您不能删除交货产品类别，因为该类别用于交货承运商
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Your postal code"
-msgstr ""
+msgstr "您的邮政编码"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1016,7 +1019,7 @@ msgstr "邮编前缀"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr "例如，UPS 快递"
+msgstr "例如：UPS 快递"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

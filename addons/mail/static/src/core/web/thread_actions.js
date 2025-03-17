@@ -10,7 +10,7 @@ threadActionsRegistry
             return component.thread?.id === "inbox";
         },
         disabledCondition(component) {
-            return component.thread.isEmpty;
+            return component.thread.isEmpty && !component.store.inbox.counter;
         },
         open(component) {
             component.orm.silent.call("mail.message", "mark_all_as_read");

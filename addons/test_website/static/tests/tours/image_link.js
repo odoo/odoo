@@ -18,7 +18,6 @@ const selectImageSteps = [{
 }];
 
 registerWebsitePreviewTour('test_image_link', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

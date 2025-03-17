@@ -8,7 +8,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("website_media_dialog_undraw", {
-    test: true,
     url: '/',
     edition: true,
 }, () => [
@@ -32,7 +31,6 @@ registerWebsitePreviewTour("website_media_dialog_undraw", {
 ]);
 
 registerWebsitePreviewTour("website_media_dialog_external_library", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [
@@ -43,46 +41,59 @@ registerWebsitePreviewTour("website_media_dialog_external_library", {
     }),
     {
         content: "Open the media dialog from the snippet",
-        trigger: "iframe .s_text_image img",
+        trigger: ":iframe .s_text_image img",
         run: "dblclick",
     }, {
         content: "Dummy search to call the media library",
         trigger: ".o_select_media_dialog .o_we_search",
-        run: "text a",
+        run: "edit a",
     }, {
         content: "Choose the media library to only show its media",
         trigger: ".o_select_media_dialog .o_we_search_select",
-        // This is a standard <select>: we can't simulate a click on the option
-        // directly.
-        async run(actions) {
-            await actions.click();
-            await actions.text("Illustrations");
-            this.$anchor.trigger($.Event("keydown", {key: 'Enter', keyCode: 13}));
-        },
+        run: "select Illustrations",
     }, {
         content: "Double click on the first image",
         trigger: ".o_select_media_dialog img.o_we_attachment_highlight",
-        run: "dblclick",
+        run: "click",
     }, {
         content: "Reopen the media dialog",
-        trigger: "iframe .s_text_image img",
+        trigger: ":iframe .s_text_image img",
         run: "dblclick",
     }, {
         content: "Check that the image was created only once",
-        trigger: ".o_select_media_dialog .o_we_existing_attachments",
+        trigger: ".o_select_media_dialog .o_we_existing_attachments .o_existing_attachment_cell img[src^='/html_editor/shape/illustration/']",
         run() {
-            const selector = ".o_existing_attachment_cell img[src^='/web_editor/shape/illustration/']";
-            const imgName = this.anchor.querySelector(selector).title;
-            const uploadedImgs = this.anchor.querySelectorAll(`${selector}[title='${imgName}']`);
+            const listEl = this.anchor.closest(".o_select_media_dialog .o_we_existing_attachments");
+            const selector = ".o_existing_attachment_cell img[src^='/html_editor/shape/illustration/']";
+            const uploadedImgs = listEl.querySelectorAll(`${selector}[title='${this.anchor.title}']`);
             if (uploadedImgs.length !== 1) {
                 throw new Error(`${uploadedImgs.length} attachment(s) were found. Exactly 1 should have been created.`);
             }
         },
     },
+    {
+        content: "Click on the first illustration image",
+        trigger: ".o_select_media_dialog .o_we_attachment_highlight",
+        run: "click",
+    },
+    {
+        content: "Select the image",
+        trigger: ":iframe .s_text_image img",
+        run: "click",
+    },
+    {
+        content: "Try to crop the image",
+        trigger: "#oe_snippets .o_we_customize_panel .o_we_user_value_widget[data-crop='true']",
+        run: "click",
+    },
+    {
+        content: "Observe the crop is denied for illustration image",
+        trigger: ".o_notification_manager .o_notification",
+    },
+    ...clickOnSave(),
 ]);
 
 registerWebsitePreviewTour('website_media_dialog_icons', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [
@@ -122,7 +133,6 @@ registerWebsitePreviewTour('website_media_dialog_icons', {
 ]);
 
 registerWebsitePreviewTour("website_media_dialog_image_shape", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [
@@ -140,8 +150,8 @@ registerWebsitePreviewTour("website_media_dialog_image_shape", {
     changeOption("ImageTools", "we-button[data-set-img-shape]"),
     {
         content: "Open MediaDialog from an image",
-        trigger: ":iframe .s_text_image img[data-shape]",
-        run: "dblclick",
+        trigger: "we-customizeblock-option:contains(media) we-button:contains(replace)",
+        run: "click",
     },
     {
         content: "Click on the 'Icons' tab",
@@ -156,5 +166,40 @@ registerWebsitePreviewTour("website_media_dialog_image_shape", {
     {
         content: "Checks that the icon doesn't have a shape",
         trigger: ":iframe .s_text_image .fa-heart:not([data-shape])",
+    },
+]);
+
+registerWebsitePreviewTour("website_media_dialog_insert_media", {
+    url: "/",
+    edition: true,
+}, () => [
+    ...insertSnippet({
+        id: "s_text_block",
+        name: "Text",
+        groupName: "Text",
+    }),
+    {
+        content: "Click on the first paragraph",
+        trigger: ":iframe .s_text_block p",
+        run: "click",
+    },
+    {
+        content: "Click on the toolbar's 'insert media' button",
+        trigger: ".oe-toolbar #media-insert",
+        run: "click",
+    },
+    {
+        content: "Click on the 'Icons' tab",
+        trigger: ".o_select_media_dialog a.nav-link:contains('Icons')",
+        run: "click",
+    },
+    {
+        content: "Click on the first icon",
+        trigger: ".o_select_media_dialog .font-icons-icon",
+        run: "click",
+    },
+    {
+        content: "Verify that the icon was inserted",
+        trigger: ":iframe .s_text_block p > span.fa",
     },
 ]);

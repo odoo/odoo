@@ -4,10 +4,12 @@ import { removeClass, toggleClass, wrapInlinesInBlocks } from "@html_editor/util
 import {
     getDeepestPosition,
     isEmptyBlock,
+    isListElement,
+    isListItemElement,
+    isParagraphRelatedElement,
     isProtected,
     isProtecting,
-    isVisible,
-    paragraphRelatedElements,
+    listElementSelector,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -15,102 +17,110 @@ import {
     getAdjacents,
     selectElements,
     ancestors,
+    childNodes,
 } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { getListMode, switchListMode } from "@html_editor/utils/list";
 import { withSequence } from "@html_editor/utils/resource";
-
-function isListActive(listMode) {
-    return (selection) => {
-        const block = closestBlock(selection.anchorNode);
-        return block?.tagName === "LI" && getListMode(block.parentNode) === listMode;
-    };
-}
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 export class ListPlugin extends Plugin {
-    static name = "list";
-    static dependencies = ["tabulation", "split", "selection", "delete", "dom"];
+    static id = "list";
+    static dependencies = [
+        "baseContainer",
+        "tabulation",
+        "history",
+        "input",
+        "split",
+        "selection",
+        "delete",
+        "dom",
+    ];
     resources = {
-        handle_delete_backward: this.handleDeleteBackward.bind(this),
-        handle_delete_range: this.handleDeleteRange.bind(this),
-        handle_tab: this.handleTab.bind(this),
-        handle_shift_tab: this.handleShiftTab.bind(this),
-        split_element_block: this.handleSplitBlock.bind(this),
-        toolbarCategory: withSequence(30, {
-            id: "list",
-        }),
-        toolbarItems: [
+        user_commands: [
             {
-                id: "bulleted_list",
-                category: "list",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "UL" });
-                },
-                icon: "fa-list-ul",
+                id: "toggleList",
+                run: this.toggleListCommand.bind(this),
+            },
+            {
+                id: "toggleListUL",
                 title: _t("Bulleted list"),
-                isFormatApplied: isListActive("UL"),
+                description: _t("Create a simple bulleted list"),
+                icon: "fa-list-ul",
+                run: () => this.toggleListCommand({ mode: "UL" }),
             },
             {
-                id: "numbered_list",
-                category: "list",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "OL" });
-                },
-                icon: "fa-list-ol",
+                id: "toggleListOL",
                 title: _t("Numbered list"),
-                isFormatApplied: isListActive("OL"),
+                description: _t("Create a list with numbering"),
+                icon: "fa-list-ol",
+                run: () => this.toggleListCommand({ mode: "OL" }),
             },
             {
-                id: "checklist",
-                category: "list",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "CL" });
-                },
-                icon: "fa-check-square-o",
+                id: "toggleListCL",
                 title: _t("Checklist"),
-                isFormatApplied: isListActive("CL"),
+                description: _t("Track tasks with a checklist"),
+                icon: "fa-check-square-o",
+                run: () => this.toggleListCommand({ mode: "CL" }),
             },
         ],
-        powerboxItems: [
+        toolbar_groups: withSequence(30, { id: "list" }),
+        toolbar_items: [
             {
                 id: "bulleted_list",
-                name: _t("Bulleted list"),
-                description: _t("Create a simple bulleted list"),
-                category: "structure",
-                fontawesome: "fa-list-ul",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "UL" });
-                },
+                groupId: "list",
+                commandId: "toggleListUL",
+                isActive: this.isListActive("UL"),
             },
             {
                 id: "numbered_list",
-                name: _t("Numbered list"),
-                description: _t("Create a list with numbering"),
-                category: "structure",
-                fontawesome: "fa-list-ol",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "OL" });
-                },
+                groupId: "list",
+                commandId: "toggleListOL",
+                isActive: this.isListActive("OL"),
             },
             {
                 id: "checklist",
-                name: _t("Checklist"),
-                description: _t("Track tasks with a checklist"),
-                category: "structure",
-
-                fontawesome: "fa-check-square-o",
-                action(dispatch) {
-                    dispatch("TOGGLE_LIST", { mode: "CL" });
-                },
+                groupId: "list",
+                commandId: "toggleListCL",
+                isActive: this.isListActive("CL"),
             },
         ],
+        powerbox_items: [
+            {
+                categoryId: "structure",
+                commandId: "toggleListUL",
+            },
+            {
+                categoryId: "structure",
+                commandId: "toggleListOL",
+            },
+            {
+                categoryId: "structure",
+                commandId: "toggleListCL",
+            },
+        ],
+        power_buttons: [
+            { commandId: "toggleListUL" },
+            { commandId: "toggleListOL" },
+            { commandId: "toggleListCL" },
+        ],
+
         hints: [{ selector: "LI", text: _t("List") }],
-        onInput: this.onInput.bind(this),
-        powerButtons: ["bulleted_list", "numbered_list", "checklist"],
+
+        /** Handlers */
+        input_handlers: this.onInput.bind(this),
+        normalize_handlers: this.normalize.bind(this),
+
+        /** Overrides */
+        delete_backward_overrides: this.handleDeleteBackward.bind(this),
+        delete_range_overrides: this.handleDeleteRange.bind(this),
+        tab_overrides: this.handleTab.bind(this),
+        shift_tab_overrides: this.handleShiftTab.bind(this),
+        split_element_block_overrides: this.handleSplitBlock.bind(this),
+        node_to_insert_processors: this.processNodeToInsert.bind(this),
     };
 
     setup() {
@@ -118,24 +128,16 @@ export class ListPlugin extends Plugin {
         this.addDomListener(this.editable, "mousedown", this.onPointerdown);
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "TOGGLE_LIST":
-                this.toggleList(payload.mode);
-                this.dispatch("ADD_STEP");
-                break;
-            case "NORMALIZE": {
-                this.normalize(payload.node);
-                break;
-            }
-        }
+    toggleListCommand({ mode } = {}) {
+        this.toggleList(mode);
+        this.dependencies.history.addStep();
     }
 
     onInput(ev) {
         if (ev.data !== " ") {
             return;
         }
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const blockEl = closestBlock(selection.anchorNode);
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
         let spaceOffset = selection.anchorOffset;
@@ -155,13 +157,13 @@ export class ListPlugin extends Plugin {
             (shouldCreateNumberList || shouldCreateBulletList || shouldCreateCheckList) &&
             !closestElement(selection.anchorNode, "li")
         ) {
-            this.shared.setSelection({
+            this.dependencies.selection.setSelection({
                 anchorNode: blockEl.firstChild,
                 anchorOffset: 0,
                 focusNode: selection.focusNode,
                 focusOffset: selection.focusOffset,
             });
-            this.dispatch("DELETE_SELECTION");
+            this.dependencies.delete.deleteSelection();
             if (shouldCreateNumberList) {
                 const listStyle = { a: "lower-alpha", A: "upper-alpha", 1: null }[
                     stringToConvert.substring(0, 1)
@@ -172,7 +174,7 @@ export class ListPlugin extends Plugin {
             } else if (shouldCreateCheckList) {
                 this.toggleList("CL");
             }
-            this.dispatch("ADD_STEP");
+            this.dependencies.history.addStep();
         }
     }
 
@@ -206,7 +208,7 @@ export class ListPlugin extends Plugin {
         // @todo @phoenix: original implementation removed whitespace-only text nodes from traversedNodes.
         // Check if this is necessary.
 
-        const traversedBlocks = this.shared.getTraversedBlocks();
+        const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
 
         // Keep deepest blocks only.
         for (const block of traversedBlocks) {
@@ -225,7 +227,7 @@ export class ListPlugin extends Plugin {
             }
             const li = closestElement(block, isListItem);
             if (li) {
-                if (getListMode(li.parentElement) === mode) {
+                if (this.getListMode(li.parentElement) === mode) {
                     sameModeListItems.add(li);
                 } else {
                     listsToSwitch.add(li.parentElement);
@@ -238,8 +240,8 @@ export class ListPlugin extends Plugin {
         // Apply changes.
         if (listsToSwitch.size || nonListBlocks.size) {
             for (const list of listsToSwitch) {
-                const cursors = this.shared.preserveSelection();
-                const newList = switchListMode(list, mode);
+                const cursors = this.dependencies.selection.preserveSelection();
+                const newList = this.switchListMode(list, mode);
                 cursors.remapNode(list, newList).restore();
             }
             for (const block of nonListBlocks) {
@@ -284,15 +286,15 @@ export class ListPlugin extends Plugin {
      * @param {"UL"|"OL"|"CL"} mode
      */
     blockToList(element, mode) {
-        if (element.tagName === "P") {
-            return this.pToList(element, mode);
+        if (element.matches(baseContainerGlobalSelector)) {
+            return this.baseContainerToList(element, mode);
         }
         // @todo @phoenix: check for callbacks registered as resources instead?
         if (element.matches("td, th, li.nav-item")) {
             return this.blockContentsToList(element, mode);
         }
         let list;
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         if (element === this.editable) {
             // @todo @phoenix: check if this is needed
             // Refactor insertListAfter in order to make proper preserveCursor
@@ -322,23 +324,99 @@ export class ListPlugin extends Plugin {
     }
 
     /**
-     * @param {HTMLParagraphElement} p
+     * @param {HTMLElement} baseContainer baseContainer Element (can be a div with the
+     *        necessary classes/attributes).
      * @param {"UL"|"OL"|"CL"} mode
      */
-    pToList(p, mode) {
-        const cursors = this.shared.preserveSelection();
-        const list = insertListAfter(this.document, p, mode, [[...p.childNodes]]);
-        this.shared.copyAttributes(p, list);
-        p.remove();
-        cursors.remapNode(p, list.firstChild).restore();
+    baseContainerToList(baseContainer, mode) {
+        const cursors = this.dependencies.selection.preserveSelection();
+        const list = insertListAfter(this.document, baseContainer, mode, [
+            childNodes(baseContainer),
+        ]);
+        this.dependencies.dom.copyAttributes(baseContainer, list);
+        baseContainer.remove();
+        cursors.remapNode(baseContainer, list.firstChild).restore();
         return list;
     }
 
     blockContentsToList(block, mode) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         const list = insertListAfter(this.document, block.lastChild, mode, [[...block.childNodes]]);
         cursors.remapNode(block, list.firstChild).restore();
         return list;
+    }
+
+    /**
+     * Converts a list element and its nested elements to the given list mode.
+     *
+     * @see switchListMode
+     * @param {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - HTML element
+     * representing a list or list item.
+     * @param {string} newMode - Target list mode
+     * @param {Object} options
+     * @returns {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - Modified
+     * list element after conversion.
+     */
+    convertList(node, newMode) {
+        if (!["UL", "OL", "LI"].includes(node.tagName)) {
+            return;
+        }
+        const listMode = this.getListMode(node);
+        if (listMode && newMode !== listMode) {
+            node = this.switchListMode(node, newMode);
+        }
+        for (const child of node.children) {
+            this.convertList(child, newMode);
+        }
+        return node;
+    }
+
+    getListMode(listContainerEl) {
+        if (!["UL", "OL"].includes(listContainerEl.tagName)) {
+            return;
+        }
+        if (listContainerEl.tagName === "OL") {
+            return "OL";
+        }
+        return listContainerEl.classList.contains("o_checklist") ? "CL" : "UL";
+    }
+
+    isListActive(listMode) {
+        return (selection) => {
+            const block = closestBlock(selection.anchorNode);
+            return block?.tagName === "LI" && this.getListMode(block.parentNode) === listMode;
+        };
+    }
+
+    /**
+     * Switches the list mode of the given list element.
+     *
+     * @param {HTMLOListElement|HTMLUListElement} list - The list element to switch the mode of.
+     * @param {"UL"|"OL"|"CL"} newMode - The new mode to switch to.
+     * @param {Object} options
+     * @returns {HTMLOListElement|HTMLUListElement} The modified list element.
+     */
+    switchListMode(list, newMode) {
+        if (this.getListMode(list) === newMode) {
+            return;
+        }
+        const newTag = newMode === "CL" ? "UL" : newMode;
+        const newList = this.dependencies.dom.setTagName(list, newTag);
+        // Clear list style (@todo @phoenix - why??)
+        newList.style.removeProperty("list-style");
+        for (const li of newList.children) {
+            if (li.style.listStyle !== "none") {
+                li.style.listStyle = null;
+                if (!li.style.all) {
+                    li.removeAttribute("style");
+                }
+            }
+        }
+        removeClass(newList, "o_checklist");
+        if (newMode === "CL") {
+            newList.classList.add("o_checklist");
+        }
+        return newList;
     }
 
     /**
@@ -362,7 +440,7 @@ export class ListPlugin extends Plugin {
             return;
         }
         // Transform <li> into <p> if they are not in a <ul> / <ol>.
-        const paragraph = this.document.createElement("p");
+        const paragraph = this.dependencies.baseContainer.createBaseContainer();
         element.replaceWith(paragraph);
         paragraph.replaceChildren(...element.childNodes);
     }
@@ -378,7 +456,7 @@ export class ListPlugin extends Plugin {
             previousSibling.isContentEditable &&
             compareListTypes(previousSibling, element)
         ) {
-            const cursors = this.shared.preserveSelection();
+            const cursors = this.dependencies.selection.preserveSelection();
             cursors.update(callbacksForCursorUpdate.merge(element));
             previousSibling.append(...element.childNodes);
             // @todo @phoenix: what if unremovable/unmergeable?
@@ -398,11 +476,14 @@ export class ListPlugin extends Plugin {
 
         if (
             [...element.children].some(
-                (child) => isBlock(child) && !this.shared.isUnsplittable(child)
+                (child) => isBlock(child) && !this.dependencies.split.isUnsplittable(child)
             )
         ) {
-            const cursors = this.shared.preserveSelection();
-            wrapInlinesInBlocks(element, cursors);
+            const cursors = this.dependencies.selection.preserveSelection();
+            wrapInlinesInBlocks(element, {
+                baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+                cursors,
+            });
             cursors.restore();
         }
     }
@@ -412,7 +493,7 @@ export class ListPlugin extends Plugin {
             return;
         }
         if (["UL", "OL"].includes(element.parentElement?.tagName)) {
-            const cursors = this.shared.preserveSelection();
+            const cursors = this.dependencies.selection.preserveSelection();
             const li = this.document.createElement("li");
             element.parentElement.insertBefore(li, element);
             li.appendChild(element);
@@ -431,19 +512,23 @@ export class ListPlugin extends Plugin {
      */
     indentLI(li) {
         const lip = this.document.createElement("li");
+        const parentLi = li.parentElement;
+        const nextSiblingLi = li.nextSibling;
         lip.classList.add("oe-nested");
         const destul =
             li.previousElementSibling?.querySelector("ol, ul") ||
             li.nextElementSibling?.querySelector("ol, ul") ||
             li.closest("ol, ul");
-
-        const ul = createList(this.document, getListMode(destul));
+        const cursors = this.dependencies.selection.preserveSelection();
+        // Remove the LI first to force a removal mutation in collaboration.
+        parentLi.removeChild(li);
+        const ul = createList(this.document, this.getListMode(destul));
         lip.append(ul);
 
-        const cursors = this.shared.preserveSelection();
         // lip replaces li
         li.before(lip);
         ul.append(li);
+        parentLi.insertBefore(lip, nextSiblingLi);
         cursors.update((cursor) => {
             if (cursor.node === lip.parentNode) {
                 const childIndex = childNodeIndex(lip);
@@ -481,7 +566,7 @@ export class ListPlugin extends Plugin {
      * @param {HTMLLIElement} li
      */
     splitList(li) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         // Create new list
         const currentList = li.parentElement;
         const newList = currentList.cloneNode(false);
@@ -508,7 +593,7 @@ export class ListPlugin extends Plugin {
     }
 
     outdentNestedLI(li) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         const ul = li.parentNode;
         const lip = ul.parentNode;
         // Move LI
@@ -529,38 +614,40 @@ export class ListPlugin extends Plugin {
         cursors.restore();
     }
 
+    /**
+     * @param {HTMLLIElement} li
+     */
     outdentTopLevelLI(li) {
-        const cursors = this.shared.preserveSelection();
+        const cursors = this.dependencies.selection.preserveSelection();
         const ul = li.parentNode;
         const dir = ul.getAttribute("dir");
-        let p;
-        let toMove = li.lastChild;
-        while (toMove) {
-            if (isBlock(toMove)) {
-                if (p && isVisible(p)) {
-                    cursors.update(callbacksForCursorUpdate.after(ul, p));
-                    ul.after(p);
-                }
-                p = undefined;
-                cursors.update(callbacksForCursorUpdate.after(ul, toMove));
-                ul.after(toMove);
-            } else {
-                p = p || this.document.createElement("P");
-                if (dir) {
-                    p.setAttribute("dir", dir);
-                    p.style.setProperty("text-align", ul.style.getPropertyValue("text-align"));
-                }
-                cursors.update(callbacksForCursorUpdate.prepend(p, toMove));
-                p.prepend(toMove);
+        const textAlign = ul.style.getPropertyValue("text-align");
+        wrapInlinesInBlocks(li, {
+            baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+            cursors,
+        });
+        if (!li.hasChildNodes()) {
+            // Outdenting an empty LI produces an empty baseContainer
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.append(this.document.createElement("br"));
+            li.append(baseContainer);
+            cursors.remapNode(li, baseContainer);
+        }
+        // Move LI's children to after UL
+        for (const block of childNodes(li).reverse()) {
+            if (dir && !block.getAttribute("dir")) {
+                block.setAttribute("dir", dir);
             }
-            toMove = li.lastChild;
+            if (textAlign && !block.style.getPropertyValue("text-align")) {
+                block.style.setProperty("text-align", textAlign);
+            }
+            cursors.update(callbacksForCursorUpdate.after(ul, block));
+            ul.after(block);
         }
-        if (p && isVisible(p)) {
-            cursors.update(callbacksForCursorUpdate.after(ul, p));
-            ul.after(p);
-        }
+        // Remove LI
         cursors.update(callbacksForCursorUpdate.remove(li));
         li.remove();
+        // Remove UL if left empty
         if (!ul.firstElementChild) {
             cursors.update(callbacksForCursorUpdate.remove(ul));
             ul.remove();
@@ -584,7 +671,7 @@ export class ListPlugin extends Plugin {
         const listItems = new Set();
         const navListItems = new Set();
         const nonListItems = [];
-        for (const block of this.shared.getTraversedBlocks()) {
+        for (const block of this.dependencies.selection.getTraversedBlocks()) {
             const closestLI = block.closest("li");
             if (closestLI) {
                 if (closestLI.classList.contains("nav-item")) {
@@ -604,14 +691,34 @@ export class ListPlugin extends Plugin {
     // Handlers of other plugins commands
     // --------------------------------------------------------------------------
 
+    processNodeToInsert({ nodeToInsert, container }) {
+        if (isListItemElement(container) && isParagraphRelatedElement(nodeToInsert)) {
+            nodeToInsert = this.dependencies.dom.setTagName(nodeToInsert, "LI");
+        }
+        const listEl = container && closestElement(container, listElementSelector);
+        if (!listEl) {
+            return nodeToInsert;
+        }
+        const mode = container && this.getListMode(listEl);
+        if (
+            (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) ||
+            isListElement(nodeToInsert)
+        ) {
+            return this.convertList(nodeToInsert, mode);
+        }
+        return nodeToInsert;
+    }
+
     handleTab() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
-                paragraphRelatedElements.includes(block.nodeName) &&
-                ancestors(block, closestLI).find((node) => this.shared.isUnsplittable(node));
+                isParagraphRelatedElement(block) &&
+                ancestors(block, closestLI).find((node) =>
+                    this.dependencies.split.isUnsplittable(node)
+                );
             if (isLiContainsUnSpittable) {
                 return;
             }
@@ -619,21 +726,23 @@ export class ListPlugin extends Plugin {
         const { listItems, navListItems, nonListItems } = this.separateListItems();
         if (listItems.length || navListItems.length) {
             this.indentListNodes(listItems);
-            this.shared.indentBlocks(nonListItems);
+            this.dependencies.tabulation.indentBlocks(nonListItems);
             // Do nothing to nav-items.
-            this.dispatch("ADD_STEP");
+            this.dependencies.history.addStep();
             return true;
         }
     }
 
     handleShiftTab() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
-                paragraphRelatedElements.includes(block.nodeName) &&
-                ancestors(block, closestLI).find((node) => this.shared.isUnsplittable(node));
+                isParagraphRelatedElement(block) &&
+                ancestors(block, closestLI).find((node) =>
+                    this.dependencies.split.isUnsplittable(node)
+                );
             if (isLiContainsUnSpittable) {
                 return;
             }
@@ -641,9 +750,9 @@ export class ListPlugin extends Plugin {
         const { listItems, navListItems, nonListItems } = this.separateListItems();
         if (listItems.length || navListItems.length) {
             this.outdentListNodes(listItems);
-            this.shared.outdentBlocks(nonListItems);
+            this.dependencies.tabulation.outdentBlocks(nonListItems);
             // Do nothing to nav-items.
-            this.dispatch("ADD_STEP");
+            this.dependencies.history.addStep();
             return true;
         }
     }
@@ -653,21 +762,24 @@ export class ListPlugin extends Plugin {
         const isBlockUnsplittable =
             closestLI &&
             Array.from(closestLI.childNodes).some(
-                (node) => isBlock(node) && this.shared.isUnsplittable(node)
+                (node) => isBlock(node) && this.dependencies.split.isUnsplittable(node)
             );
         if (!closestLI || isBlockUnsplittable) {
             return;
         }
-        if (!closestLI.textContent) {
+        if (isEmptyBlock(closestLI)) {
             this.outdentLI(closestLI);
             return true;
         }
-        const [, newLI] = this.shared.splitElementBlock({ ...params, blockToSplit: closestLI });
+        const [, newLI] = this.dependencies.split.splitElementBlock({
+            ...params,
+            blockToSplit: closestLI,
+        });
         if (closestLI.classList.contains("o_checked")) {
             removeClass(newLI, "o_checked");
         }
         const [anchorNode, anchorOffset] = getDeepestPosition(newLI, 0);
-        this.shared.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         return true;
     }
 
@@ -690,7 +802,7 @@ export class ListPlugin extends Plugin {
         // Check if li or parent list(s) are unsplittable.
         let element = closestLIendContainer;
         while (["LI", "UL", "OL"].includes(element.tagName)) {
-            if (this.shared.isUnsplittable(element)) {
+            if (this.dependencies.split.isUnsplittable(element)) {
                 return;
             }
             element = element.parentElement;
@@ -712,8 +824,8 @@ export class ListPlugin extends Plugin {
             return;
         }
 
-        range = this.shared.deleteRange(range);
-        this.shared.setSelection({
+        range = this.dependencies.delete.deleteRange(range);
+        this.dependencies.selection.setSelection({
             anchorNode: range.startContainer,
             anchorOffset: range.startOffset,
         });
@@ -734,7 +846,8 @@ export class ListPlugin extends Plugin {
      */
     onPointerdown(ev) {
         const node = ev.target;
-        const isChecklistItem = node.tagName == "LI" && getListMode(node.parentElement) == "CL";
+        const isChecklistItem =
+            node.tagName == "LI" && this.getListMode(node.parentElement) == "CL";
         if (!isChecklistItem) {
             return;
         }
@@ -749,7 +862,7 @@ export class ListPlugin extends Plugin {
         if (isChecklistItem && this.isPointerInsideCheckbox(node, offsetX, offsetY)) {
             toggleClass(node, "o_checked");
             ev.preventDefault();
-            this.dispatch("ADD_STEP");
+            this.dependencies.history.addStep();
         }
     }
 

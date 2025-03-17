@@ -3,23 +3,60 @@
 # 	* website_event_track
 # 
 # Translators:
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
 # Duy BQ <duybq86@gmail.com>, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_event_track
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid ""
+"\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    <br/>\n"
+"    You will find more details here:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            View Talk\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Thank you,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+msgstr ""
+"\n"
+"    Thân gửi <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    Chúng tôi rất vui mừng thông báo rằng đề xuất <t t-out=\"object.name or ''\">Nội dung sự kiện</t> đã được chấp nhận và xác nhận cho sự kiện <t t-out=\"object.event_id.name or ''\">Ra mắt Bộ sưu tập OpenWood Online</t>.\n"
+"    <br/>\n"
+"    Bạn có thể xem thêm chi tiết tại đây:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Xem bài phát biểu\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Cảm ơn bạn!\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -97,45 +134,6 @@ msgstr "<b>Tiểu sử diễn giả</b>:"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Talk Introduction</b>:"
 msgstr "<b>Giới thiệu Diễn thuyết</b>:"
-
-#. module: website_event_track
-#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
-msgid ""
-"<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
-"    <br>\n"
-"    You will find more details here:\n"
-"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"            View Talk\n"
-"        </a>\n"
-"    </div>\n"
-"    <br><br>\n"
-"    Thank you,\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
-"    </t>\n"
-"</div>"
-msgstr ""
-"<div>\n"
-"    Thân gửi <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
-"    Chúng tôi rất vui mừng thông báo rằng đề xuất <t t-out=\"object.name or ''\">Nội dung sự kiện</t> đã được chấp nhận và xác nhận cho sự kiện <t t-out=\"object.event_id.name or ''\">Ra mắt Bộ sưu tập OpenWood Online</t>.\n"
-"    <br>\n"
-"    Bạn có thể xem thêm chi tiết tại đây:\n"
-"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"            Xem bài phát biểu\n"
-"        </a>\n"
-"    </div>\n"
-"    <br><br>\n"
-"    Cảm ơn bạn!\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
-"    </t>\n"
-"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -235,7 +233,7 @@ msgstr "<span>Đề xuất nội dung mới</span>"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "<strong>Location:</strong>"
-msgstr "<strong>Địa điểm:</strong>"
+msgstr "<strong>Vị trí:</strong>"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
@@ -252,7 +250,7 @@ msgid ""
 msgstr ""
 "Trạng thái ở kanban của một phần nội dung cho biết tình huống đặc biệt đang xảy ra:\n"
 " * Màu xám là tình huống mặc định\n"
-" * Màu đỏ nghĩa là có trở ngại đối với tiến trình của nội dung\n"
+" * Màu đỏ nghĩa là có trở ngại đối với tiến độ của nội dung\n"
 " * Màu xanh nghĩa là nội dung đã sẵn sàng để chuyển sang giai đoạn tiếp theo"
 
 #. module: website_event_track
@@ -623,7 +621,7 @@ msgstr "Tạo một nội dung"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
 msgid "Create a Track Location"
-msgstr "Tạo địa điểm nội dung"
+msgstr "Tạo vị trí nội dung"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
@@ -704,7 +702,7 @@ msgid ""
 msgstr ""
 "Xác định các bước sẽ được sử dụng trong sự kiện, từ khi\n"
 "            tạo tới khi đóng nội dung.\n"
-"            Bạn sẽ sử dụng các giai đoạn để theo dõi tiến trình\n"
+"            Bạn sẽ sử dụng các giai đoạn để theo dõi tiến độ\n"
 "            giải quyết một phần nội dung trong sự kiện. "
 
 #. module: website_event_track
@@ -815,13 +813,13 @@ msgstr "Sự kiện"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "Event Location"
-msgstr "Địa điểm Sự kiện"
+msgstr "Vị trí Sự kiện"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_location
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 msgid "Event Locations"
-msgstr "Địa điểm Sự kiện"
+msgstr "Vị trí Sự kiện"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
@@ -849,7 +847,7 @@ msgstr "Nội dung sự kiện"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Event Track Location"
-msgstr "Địa điểm nội dung sự kiện"
+msgstr "Vị trí nội dung sự kiện"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
@@ -913,7 +911,7 @@ msgstr "Yêu thích bật"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "Favorites"
-msgstr "Yêu thích"
+msgstr "Danh sách yêu thích"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
@@ -1267,7 +1265,7 @@ msgstr "Chức vụ"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Job Title"
-msgstr "Chức danh công việc"
+msgstr "Chức danh"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_blocked
@@ -1610,7 +1608,8 @@ msgstr "Hình ảnh"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Plan your experience by adding your favorites talks to your wishlist"
-msgstr "Lập kế hoạch bằng cách thêm diễn thuyết yêu thích vào wishlist"
+msgstr ""
+"Lập kế hoạch bằng cách thêm bài talk yêu thích vào danh sách yêu thích"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1674,7 +1673,7 @@ msgstr "Đề xuất trên website"
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Published"
-msgstr "Đã công bố"
+msgstr "Đã đăng"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
@@ -1783,7 +1782,7 @@ msgstr "Buộc gỗ trong quá trình vận chuyển"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
 msgid "Select Categories"
-msgstr ""
+msgstr "Chọn danh mục"
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
@@ -1948,19 +1947,19 @@ msgstr "Đăng ký Diễn thuyết"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 msgid "Talk added to your Favorites"
-msgstr "Đã thêm diễn thuyết vào yêu thích"
+msgstr "Đã thêm bài talk vào Danh sách yêu thích"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 msgid "Talk already in your Favorites"
-msgstr "Diễn thuyết đã có trong yêu thích"
+msgstr "Bài talk đã có trong Danh sách yêu thích"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 msgid "Talk removed from your Favorites"
-msgstr "Đã bỏ diễn thuyết khỏi yêu thích"
+msgstr "Đã bỏ bài talk khỏi Danh sách yêu thích"
 
 #. module: website_event_track
 #. odoo-python
@@ -2165,7 +2164,7 @@ msgstr "Ngày kết thúc nội dung"
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Track Locations"
-msgstr "Địa điểm nội dung"
+msgstr "Vị trí nội dung"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
@@ -2610,7 +2609,7 @@ msgstr "phút sau khi nội dung bắt đầu "
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "register to your favorites talks now."
-msgstr "đăng ký tham dự buổi diễn thuyết bạn yêu thích ngay. "
+msgstr "đăng ký tham dự bài talk bạn yêu thích ngay. "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content

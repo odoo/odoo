@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 
 from werkzeug.urls import url_encode
 
@@ -9,6 +10,7 @@ import odoo.tests
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.web_editor.controllers.main import Web_Editor
+from odoo.fields import Command
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -64,6 +66,49 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiHtmlEditor(HttpCaseWithUserDemo):
+
+    def test_html_editor_language(self):
+        Lang = self.env['res.lang']
+        Page = self.env['website.page']
+
+        default_website = self.env.ref('website.default_website')
+        parseltongue = Lang.create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        Lang._activate_lang(parseltongue.code)
+        default_website.write({
+            'language_ids': [
+                Command.link(parseltongue.id),
+            ],
+            'default_lang_id': parseltongue.id,
+        })
+
+        page = Page.create({
+            'name': 'Test page',
+            'type': 'qweb',
+            'arch': '''
+                <t t-call="website.layout">
+                    <div>rumbler</div>
+                </t>
+            ''',
+            'key': 'test.generic_view',
+            'website_id': default_website.id,
+            'is_published': True,
+            'url': '/test_page',
+        })
+
+        page.view_id.update_field_translations('arch_db', {
+            parseltongue.code: {
+                'rumbler': 'rommelpot',
+            }
+        })
+        self.env.ref('base.user_admin').lang = parseltongue.code
+        self.start_tour(self.env['website'].get_client_action_url('/test_page'), 'html_editor_language', login='admin')
+        self.assertIn("rumbler", page.view_id.with_context(lang='en_US').arch)
+        self.assertIn("rommelpot", page.view_id.with_context(lang='pa_GB').arch)
 
     def test_html_editor_multiple_templates(self):
         Website = self.env['website']
@@ -185,6 +230,18 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
         self.assertNotEqual(new_menu.name, 'value pa-GB', msg="The new menu should not have its value edited, only its translation")
         self.assertEqual(new_menu.with_context(lang=parseltongue.code).name, 'value pa-GB', msg="The new translation should be set")
+
+    def test_translate_text_options(self):
+        lang_en = self.env.ref('base.lang_en')
+        lang_fr = self.env.ref('base.lang_fr')
+        self.env['res.lang']._activate_lang(lang_fr.code)
+        default_website = self.env.ref('website.default_website')
+        default_website.write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [(6, 0, (lang_en + lang_fr).ids)],
+        })
+
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_text_options', login='admin')
 
     def test_snippet_translation(self):
         ResLang = self.env['res.lang']
@@ -361,13 +418,12 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
 
     def test_09_website_edit_link_popover(self):
-        self.start_tour('/@/', 'edit_link_popover_1', login='admin')
-        self.start_tour('/@/', 'edit_link_popover_2', login='admin')
+        self.start_tour('/@/', 'edit_link_popover', login='admin', step_delay=500, timeout=180)
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
         self.start_tour('/odoo', 'conditional_visibility_2', login='admin')
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin', step_delay=500, timeout=180)
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_4', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
 
@@ -446,6 +502,9 @@ class TestUi(odoo.tests.HttpCase):
     def test_16_website_edit_megamenu(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu', login='admin')
 
+    def test_website_megamenu_active_nav_link(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'megamenu_active_nav_link', login='admin')
+
     def test_17_website_edit_menus(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus', login='admin')
 
@@ -469,12 +528,11 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_24_snippet_cache_across_websites(self):
         default_website = self.env.ref('website.default_website')
-        if self.env['website'].search_count([]) == 1:
-            self.env['website'].create({
-                'name': 'My Website 2',
-                'domain': '',
-                'sequence': 20,
-            })
+        website = self.env['website'].create({
+            'name': 'Test Website',
+            'domain': '',
+            'sequence': 20
+        })
         self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
             name='custom_snippet_test',
             arch="""
@@ -485,9 +543,20 @@ class TestUi(odoo.tests.HttpCase):
             thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
             snippet_key='s_text_block',
             template_key='website.snippets')
-        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin')
+        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin', cookies={
+            'websiteIdMapping': json.dumps({'Test Website': website.id})
+        })
 
     def test_26_website_media_dialog_icons(self):
+        self.env.ref('website.default_website').write({
+            'social_twitter': 'https://twitter.com/Odoo',
+            'social_facebook': 'https://www.facebook.com/Odoo',
+            'social_linkedin': 'https://www.linkedin.com/company/odoo',
+            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'social_github': 'https://github.com/odoo',
+            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
+            'social_tiktok': 'https://www.tiktok.com/@odoo',
+        })
         self.start_tour("/", 'website_media_dialog_icons', login='admin')
 
     def test_27_website_clicks(self):
@@ -514,14 +583,20 @@ class TestUi(odoo.tests.HttpCase):
     def test_31_website_edit_megamenu_big_icons_subtitles(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu_big_icons_subtitles', login='admin')
 
+    def test_32_website_background_colorpicker(self):
+        self.start_tour(self.env['website'].get_client_action_url("/"), "website_background_colorpicker", login="admin")
+
     def test_website_media_dialog_image_shape(self):
         self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
+
+    def test_website_media_dialog_insert_media(self):
+        self.start_tour("/", "website_media_dialog_insert_media", login="admin")
 
     def test_website_text_font_size(self):
         self.start_tour('/@/', 'website_text_font_size', login='admin', timeout=300)
 
     def test_update_column_count(self):
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_update_column_count', login="admin", step_delay=100)
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'website_update_column_count', login="admin")
 
     def test_website_text_highlights(self):
         self.start_tour("/", 'text_highlights', login='admin')
@@ -568,6 +643,9 @@ class TestUi(odoo.tests.HttpCase):
         website.menu_id.child_id[1:].unlink()
 
         self.start_tour('/', 'website_no_dirty_page', login='admin')
+
+    def test_website_default_snippet_text(self):
+        self.start_tour('/', 'website_default_snippet_text', login='admin')
 
     def test_widget_lifecycle(self):
         self.env['ir.asset'].create({
@@ -662,3 +740,18 @@ class TestUi(odoo.tests.HttpCase):
 
         self.env['website.menu'].save(website.id, {'data': [parent_menu, child_menu]})
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus_delete_parent', login='admin')
+
+    def test_snippet_carousel(self):
+        self.start_tour('/', 'snippet_carousel', login='admin')
+
+    def test_media_iframe_video(self):
+        self.start_tour("/", "website_media_iframe_video", login="admin")
+
+    def test_snippet_visibility_option(self):
+        self.start_tour("/", "snippet_visibility_option", login="admin")
+
+    def test_website_font_family(self):
+        self.start_tour("/", "website_font_family", login="admin")
+
+    def test_website_seo_notification(self):
+        self.start_tour(self.env['website'].get_client_action_url("/"), "website_seo_notification", login="admin")

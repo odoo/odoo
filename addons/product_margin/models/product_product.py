@@ -72,9 +72,11 @@ class ProductProduct(models.Model):
         base_aggregates = [*(agg for agg in aggregates if agg not in self._SPECIAL_SUM_AGGREGATES), 'id:recordset']
         base_result = super()._read_group(domain, groupby, base_aggregates, having, offset, limit, order)
 
-        # Force the compute with all records
+        # Force the compute of all records to bypass the limit compute batching (PREFETCH_MAX)
         all_records = self.browse().union(*(item[-1] for item in base_result))
-        all_records._compute_product_margin_fields_values()
+        # This line will compute all fields having _compute_product_margin_fields_values
+        # as compute method.
+        self._fields['turnover'].compute_value(all_records)
 
         # base_result = [(a1, b1, records), (a2, b2, records), ...]
         result = []
@@ -125,7 +127,7 @@ class ProductProduct(models.Model):
                         l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END) * ((100 - l.discount) * 0.01)
                     ) / NULLIF(SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)), 0) AS avg_unit_price,
                     SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS num_qty,
-                    SUM(ABS(l.balance) * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS total,
+                    SUM(CASE WHEN i.move_type = 'out_invoice' THEN -l.balance WHEN i.move_type = 'in_invoice' THEN l.balance ELSE -ABS(l.balance) END) AS total,
                     SUM(l.quantity * pt.list_price * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS sale_expected
                 FROM account_move_line l
                 LEFT JOIN account_move i ON (l.move_id = i.id)

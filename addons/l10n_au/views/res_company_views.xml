@@ -7,19 +7,17 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="attributes">
-                <attribute name="nolabel">1</attribute>
+                <attribute name="invisible" add="country_code == 'AU'" separator=" or "/> 
             </xpath>
-            <field name="vat" position="before">
-                <label for="vat" invisible="country_code == 'AU'" />
-                <label for="vat" string="ABN" invisible="country_code != 'AU'" />
-            </field>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="vat" string="ABN" invisible="country_code != 'AU'"/>
+            </xpath>
             <xpath expr="//field[@name='company_registry']" position="attributes">
-                <attribute name="nolabel">1</attribute>
+                <attribute name="invisible" add="country_code == 'AU'" separator=" or "/> 
             </xpath>
-            <field name="company_registry" position="before">
-                <label for="company_registry" invisible="country_code == 'AU'" />
-                <label for="company_registry" string="ACN" invisible="country_code != 'AU'" />
-            </field>
+            <xpath expr="//field[@name='company_registry']" position="after">
+                <field name="company_registry" string="ACN" invisible="country_code != 'AU'"/>
+            </xpath>
         </field>
     </record>
 

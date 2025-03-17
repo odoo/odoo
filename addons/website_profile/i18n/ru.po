@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_profile
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_profile
@@ -33,8 +35,12 @@ msgstr "(не проверено)"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid ". Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks."
-msgstr ". Набирайте очки на форуме или на платформе электронного обучения. Эти баллы позволят вам достичь новых рангов."
+msgid ""
+". Collect points on the forum or on the eLearning platform. Those points "
+"will make you reach new ranks."
+msgstr ""
+". Набирайте очки на форуме или на платформе электронного обучения. Эти баллы"
+" позволят вам достичь новых рангов."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
@@ -163,8 +169,12 @@ msgstr "<span class=\"text-muted\">XP</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "<span id=\"email_validated_message\">Congratulations! Your email has just been validated.</span>"
-msgstr "<span id=\"email_validated_message\">Поздравляем! Ваш e-mail только что был подтвержден.</span>"
+msgid ""
+"<span id=\"email_validated_message\">Congratulations! Your email has just "
+"been validated.</span>"
+msgstr ""
+"<span id=\"email_validated_message\">Поздравляем! Ваш e-mail только что был "
+"подтвержден.</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -188,12 +198,12 @@ msgid ""
 "                        </span>\n"
 "                    </td>\n"
 "                    <td t-if=\"not user.company_id.uses_default_logo\" valign=\"middle\" align=\"right\">\n"
-"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
 "                    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -206,21 +216,21 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Hello <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
+"                            Hello <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
 "                            You have been invited to validate your email in order to get access to \"<t t-out=\"object.company_id.name or ''\">YourCompany</t>\" website.\n"
 "                            To validate your email, please click on the following link:\n"
-"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                    Validate my account\n"
 "                                </a>\n"
 "                            </div>\n"
 "                            Thanks for your participation!\n"
-"                        </p>\n"
+"                        \n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
 "                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -261,92 +271,6 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\">\n"
-"                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                            Проверка профиля <t t-out=\"object.company_id.name or ''\">вашей компании</t> \n"
-"                        </span>\n"
-"                    </td>\n"
-"                    <td t-if=\"not user.company_id.uses_default_logo\" valign=\"middle\" align=\"right\">\n"
-"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Здравствуйте, <t t-out=\"object.name or ''\">Марк Демо</t>,<br><br>\n"
-"                            Для получения доступа к сайту<t t-out=\"object.company_id.name or ''\">\"YourCompany</t>\" вам было предложено подтвердить свою электронную почту.\n"
-"                            Чтобы подтвердить свою электронную почту, пожалуйста, перейдите по следующей ссылке:\n"
-"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                                    Подтвердить мою учетную запись\n"
-"                                </a>\n"
-"                            </div>\n"
-"                            Спасибо за участие!\n"
-"                        </p>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\" align=\"left\">\n"
-"                         <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
-"                        <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
-"                        <t t-if=\"user.company_id.email\">\n"
-"                            | <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
-"                        </t>\n"
-"                        <t t-if=\"user.company_id.website\">\n"
-"                            | <a t-attf-href=\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
-"                        </t>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"            Работает на <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>\n"
-"        </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>\n"
-"            "
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -520,8 +444,12 @@ msgstr "Не хватает кармы для просмотра профиля 
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "Please enter a valid email address in order to receive notifications from answers or comments."
-msgstr "Введите действительный адрес электронной почты, чтобы получать уведомления об ответах или комментариях."
+msgid ""
+"Please enter a valid email address in order to receive notifications from "
+"answers or comments."
+msgstr ""
+"Введите действительный адрес электронной почты, чтобы получать уведомления "
+"об ответах или комментариях."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -619,7 +547,8 @@ msgstr "Адрес сайта"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
-msgstr "Когда вы заканчиваете курс или достигаете этапов, вы получаете значки."
+msgstr ""
+"Когда вы заканчиваете курс или достигаете этапов, вы получаете значки."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_biography_editor
@@ -635,8 +564,14 @@ msgstr "XP"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid "You can score more points by answering quizzes at the end of each course content. Points can also be earned on the forum. Follow this link to the guidelines of the forum."
-msgstr "Вы можете набрать больше баллов, отвечая на вопросы викторины в конце каждого материала курса. Баллы также можно заработать на форуме. Перейдите по этой ссылке, чтобы ознакомиться с правилами форума."
+msgid ""
+"You can score more points by answering quizzes at the end of each course "
+"content. Points can also be earned on the forum. Follow this link to the "
+"guidelines of the forum."
+msgstr ""
+"Вы можете набрать больше баллов, отвечая на вопросы викторины в конце "
+"каждого материала курса. Баллы также можно заработать на форуме. Перейдите "
+"по этой ссылке, чтобы ознакомиться с правилами форума."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -650,7 +585,9 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "Your account does not have an email set up. Please set it up on"
-msgstr "В вашей учетной записи не настроена электронная почта. Пожалуйста, установите его на"
+msgstr ""
+"В вашей учетной записи не настроена электронная почта. Пожалуйста, "
+"установите его на"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -704,8 +641,12 @@ msgstr "настройки вашей учетной записи"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
-msgid "{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else ''}}"
-msgstr "{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else ''}}"
+msgid ""
+"{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else "
+"''}}"
+msgstr ""
+"{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else "
+"''}}"
 
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email

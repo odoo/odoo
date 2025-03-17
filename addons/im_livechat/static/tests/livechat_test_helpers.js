@@ -39,7 +39,7 @@ serverState.groupLivechatId = 42;
  * @returns {Promise<number>} the id of the livechat channel.
  */
 export async function loadDefaultEmbedConfig() {
-    const pyEnv = MockServer.current?.env ?? (await startServer());
+    const pyEnv = MockServer.env ?? (await startServer());
     const livechatChannelId = pyEnv["im_livechat.channel"].create({
         user_ids: [serverState.userId],
     });

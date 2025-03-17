@@ -112,7 +112,8 @@ class AccountInvoiceReport(models.Model):
                    * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
                    0.0) * account_currency_table.rate                               AS price_average,
                 CASE
-                    WHEN move.move_type NOT IN ('out_invoice', 'out_receipt') THEN 0.0
+                    WHEN move.move_type NOT IN ('out_invoice', 'out_receipt', 'out_refund') THEN 0.0
+                    WHEN move.move_type = 'out_refund' THEN -line.balance * account_currency_table.rate + (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product.standard_price -> line.company_id::text, to_jsonb(0.0))::float
                     ELSE -line.balance * account_currency_table.rate - (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product.standard_price -> line.company_id::text, to_jsonb(0.0))::float
                 END
                                                                             AS price_margin,
@@ -150,6 +151,30 @@ class AccountInvoiceReport(models.Model):
                 AND line.display_type = 'product'
             ''',
         )
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+        This is a hack to allow us to correctly calculate the average price.
+        """
+        set_fields = set(fields)
+
+        if 'price_average:avg' in fields:
+            set_fields.add('quantity')
+            set_fields.add('price_subtotal')
+
+        res = super().read_group(domain, list(set_fields), groupby, offset, limit, orderby, lazy)
+
+        if 'price_average:avg' in fields:
+            for data in res:
+                data['price_average'] = data['price_subtotal'] / data['quantity'] if data['quantity'] else 0
+
+                if 'quantity' not in fields:
+                    del data['quantity']
+                if 'price_subtotal' not in fields:
+                    del data['price_subtotal']
+
+        return res
 
 
 class ReportInvoiceWithoutPayment(models.AbstractModel):

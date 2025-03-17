@@ -8,7 +8,6 @@ import { markup } from "@odoo/owl";
 import { queryFirst } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
-    test: true,
     url: "/odoo",
     steps: () => [
 ...stepUtils.toggleHomeMenu().map(step => {
@@ -874,9 +873,6 @@ stepUtils.autoExpandMoreButtons(),
     trigger: ".o_control_panel_navigation .btn .fa-search",
     run: "click",
 }, {
-    trigger: ".o_searchview_facet:contains('To Reorder') .o_facet_remove",
-    run: "click",
-}, {
     isActive: ["desktop"],
     trigger: "td:contains('the_flow.component2')",
     run: "click",
@@ -1111,7 +1107,15 @@ stepUtils.autoExpandMoreButtons(true),
     trigger: '.modal-content.o_form_view div[name="unit_amount"] input',
     content: 'Enter one hour for this timesheet',
     run: "edit 10",
-}, {
+},
+{
+    isActive: ["mobile"],
+    content: "save",
+    trigger: ".modal .o_form_button_save",
+    run: "click",
+},
+{
+    isActive: ["desktop"],
     content: "save",
     trigger: ".o_form_button_save",
     run: "click",

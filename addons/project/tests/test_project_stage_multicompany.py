@@ -77,3 +77,65 @@ class TestProjectStagesMulticompany(TestMultiCompanyProject):
 
         # Check that project was moved to stage_company_b
         self.assertFalse(self.project_company_a.stage_id.company_id, "Project Company A should now be in a stage without company")
+
+    def test_project_creation_default_stage(self):
+        """
+         Check that when creating a project with a company set, the default stage
+         for this project has the same company as the project or no company.
+         If no company is set on the project, the first stage without a company
+         should be chosen.
+        """
+        # Stage order: company A, company B, no company
+        self.stage_company_a.sequence = 1
+        self.stage_company_b.sequence = 3
+
+        project_company_b = self.env['project.project'].with_user(self.user_manager_companies).create({
+            'name': 'Project company B',
+            'company_id': self.company_b.id,
+        })
+        self.assertEqual(project_company_b.company_id, self.company_b)
+        self.assertEqual(project_company_b.stage_id, self.stage_company_b)
+
+        # Stage order: company A, no company, company B
+        self.stage_company_none.sequence = 2
+
+        project_company_b = self.env['project.project'].with_user(self.user_manager_companies).create({
+            'name': 'Project company B',
+            'company_id': self.company_b.id,
+        })
+        self.assertEqual(project_company_b.company_id, self.company_b)
+        self.assertEqual(project_company_b.stage_id, self.stage_company_none)
+
+        project_no_company = self.env['project.project'].with_user(self.user_manager_companies).create({
+            'name': 'Project no company',
+        })
+        self.assertFalse(project_no_company.company_id)
+        self.assertEqual(project_no_company.stage_id, self.stage_company_none)
+
+        self.env['project.project.stage'].search([]).active = False
+        project_no_company = self.env['project.project'].with_user(self.user_manager_companies).create({
+            'name': 'Project no company',
+        })
+        self.assertFalse(project_no_company.stage_id)
+
+    def test_project_creation_default_stage_in_context(self):
+        """
+        Project's company should be the same as the default stage's company in the context.
+        """
+        project = self.env['project.project'].with_user(self.user_manager_companies).with_context(default_stage_id=self.stage_company_b.id).create({
+            'name': 'Project company B',
+        })
+        self.assertEqual(project.company_id, self.company_b)
+
+    def test_create_project_in_stage(self):
+        """ Test create project inside a specific stage """
+        self.env['res.config.settings'].create({'group_project_stages': True}).execute()
+        stage = self.env['project.project.stage'].create({
+            'name': 'Stage 2',
+            'sequence': 100,
+        })
+        project = self.env['project.project'].create({
+            'name': 'Project in stage 2',
+            'stage_id': stage.id,
+        })
+        self.assertEqual(project.stage_id, stage)

@@ -22,7 +22,10 @@ export class ComboSelection extends Component {
         }
 
         this.props.comboState.selectedProduct = productSelected;
-        if (productSelected.attribute_line_ids.length === 0) {
+        if (
+            productSelected.attribute_line_ids.length === 0 ||
+            productSelected.product_template_variant_value_ids.length !== 0
+        ) {
             this.props.next();
             return;
         }

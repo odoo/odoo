@@ -12,13 +12,8 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    Command,
-    getService,
-    patchWithCleanup,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { disableAnimations } from "@odoo/hoot-mock";
+import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -124,12 +119,7 @@ test("channel preview ignores transient message", async () => {
 });
 
 test("channel preview ignores messages from the past", async () => {
-    // make scroll behavior instantaneous.
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView() {
-            return super.scrollIntoView(true);
-        },
-    });
+    disableAnimations();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageId = pyEnv["mail.message"].create({

@@ -9,7 +9,7 @@ patch(PosData.prototype, {
         return await rpc(`/pos-self/data/${parseInt(configId)}`);
     },
     get databaseName() {
-        return `self_order-config-id_${session.data.config_id}_${session.data.access_token}`;
+        return `self_order-${odoo.access_token}`;
     },
     initIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
@@ -30,5 +30,8 @@ patch(PosData.prototype, {
         return session.data.self_ordering_mode === "mobile"
             ? await super.loadIndexedDBData(...arguments)
             : {};
+    },
+    async missingRecursive(recordMap) {
+        return recordMap;
     },
 });

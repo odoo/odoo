@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('project_create_sol_tour', {
-    test: true,
     url: "/odoo",
     steps: () => [
     stepUtils.showAppsMenuItem(), {
@@ -10,9 +9,9 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         content: 'Select Project main menu.',
         run: "click",
     }, {
-        trigger: ".o_kanban_record:contains('Test History Project'):first .o_dropdown_kanban .dropdown-toggle",
+        trigger: ".o_kanban_record:contains(Test History Project):first",
         content: "Open the project dropdown of project name 'Test History Project'.",
-        run: "click",
+        run: "hover && click .o_kanban_record:contains(Test History Project):first .o_dropdown_kanban .dropdown-toggle",
     }, {
         trigger: ".o_kanban_card_manage_settings a:contains('Settings')",
         content: 'Start editing the project.',
@@ -26,7 +25,7 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
         content: "Select the customer in the autocomplete dropdown",
         run: "click",
-    }, 
+    },
     {
         trigger: 'div.o_notebook_headers',
     },

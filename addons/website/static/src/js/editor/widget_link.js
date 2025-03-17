@@ -2,10 +2,12 @@
 
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
 import { patch } from "@web/core/utils/patch";
+import { useService } from "@web/core/utils/hooks";
 
 import { onWillStart, status, useEffect } from '@odoo/owl';
 import wUtils from "@website/js/utils";
 import { debounce } from "@web/core/utils/timing";
+import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 
 const LINK_DEBOUNCE = 1000;
 
@@ -23,6 +25,9 @@ patch(LinkTools.prototype, {
 
     setup() {
         super.setup();
+
+        this.websiteService = useService("website");
+
         onWillStart(() => {
             this._adaptPageAnchor = debounce(this._adaptPageAnchor, LINK_DEBOUNCE);
         });
@@ -84,6 +89,33 @@ patch(LinkTools.prototype, {
         }
         $selectMenu.data("anchor-for", urlInputValue);
     },
+    /**
+     * @override
+     */
+    _isAbsoluteURLInCurrentDomain(url) {
+        const res = super._isAbsoluteURLInCurrentDomain(url);
+        if (res) {
+            return true;
+        }
+
+        const w = this.websiteService.currentWebsite;
+        if (!w) {
+            return false;
+        }
+
+        // Make sure that while being on abc.odoo.com, if you edit a link and
+        // enter an absolute URL using your real domain, it is still considered
+        // to be added as relative, preferably.
+        // In the past, you could not edit your website from abc.odoo.com if you
+        // properly configured your real domain already.
+        let origin;
+        try { // Needed: "http:" would crash
+            origin = new URL(url, window.location.origin).origin;
+        } catch {
+            return false;
+        }
+        return `${origin}/`.startsWith(w.domain);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -119,5 +151,14 @@ patch(LinkTools.prototype, {
             this.__onURLInput();
         }
         super._onPickSelectOption(...arguments);
+    },
+});
+
+patch(Wysiwyg.prototype, {
+    /**
+     * @override
+     */
+    _getDelayBlurSelectors() {
+        return super._getDelayBlurSelectors().concat([".ui-autocomplete"]);
     },
 });

@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.res_partner import _tz_get
 
+from odoo.osv import expression
 
 class LeaveReportCalendar(models.Model):
     _name = "hr.leave.report.calendar"
@@ -11,7 +12,7 @@ class LeaveReportCalendar(models.Model):
     _auto = False
     _order = "start_datetime DESC, employee_id"
 
-    name = fields.Char(string='Name', readonly=True)
+    name = fields.Char(string='Name', readonly=True, compute="_compute_name", search="_search_name")
     start_datetime = fields.Datetime(string='From', readonly=True)
     stop_datetime = fields.Datetime(string='To', readonly=True)
     tz = fields.Selection(_tz_get, string="Timezone", readonly=True)
@@ -28,14 +29,15 @@ class LeaveReportCalendar(models.Model):
         ('validate', 'Approved')
     ], readonly=True)
     description = fields.Char("Description", readonly=True, groups='hr_holidays.group_hr_holidays_user')
-    holiday_status_id = fields.Many2one('hr.leave.type', readonly=True, string="Time Off Type")
+    holiday_status_id = fields.Many2one('hr.leave.type', readonly=True, string="Time Off Type",
+        groups='hr_holidays.group_hr_holidays_user')
 
     is_hatched = fields.Boolean('Hatched', readonly=True)
     is_striked = fields.Boolean('Striked', readonly=True)
 
     is_absent = fields.Boolean(related='employee_id.is_absent')
     leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
-    leave_id = fields.Many2one(comodel_name='hr.leave', readonly=True)
+    leave_id = fields.Many2one(comodel_name='hr.leave', readonly=True, groups='hr_holidays.group_hr_holidays_user')
     is_manager = fields.Boolean("Manager", compute="_compute_is_manager")
 
     def init(self):
@@ -44,7 +46,6 @@ class LeaveReportCalendar(models.Model):
         (SELECT
             hl.id AS id,
             hl.id AS leave_id,
-            CONCAT(em.name, ': ', hl.duration_display) AS name,
             hl.date_from AS start_datetime,
             hl.date_to AS stop_datetime,
             hl.employee_id AS employee_id,
@@ -79,18 +80,33 @@ class LeaveReportCalendar(models.Model):
         );
         """)
 
-    def _fetch_query(self, query, fields):
-        records = super()._fetch_query(query, fields)
+    def _compute_display_name(self):
         if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
-            self.env.cache.update(records, self._fields['name'], [
-                record.name.split(':')[-1].strip()
-                for record in records.with_user(SUPERUSER_ID)
-            ])
-        return records
+            for record in self:
+                record.display_name = record.name.removeprefix(f"{record.employee_id.name}: ")
+        else:
+            super()._compute_display_name()
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
         return self.env.user.employee_id._get_unusual_days(date_from, date_to)
+
+    @api.depends('employee_id.name', 'leave_id')
+    def _compute_name(self):
+        for leave in self:
+            leave.name = leave.employee_id.name
+            if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+                # Include the time off type name
+                leave.name += f" {leave.leave_id.holiday_status_id.name}"
+            # Include the time off duration.
+            leave.name += f": {leave.sudo().leave_id.duration_display}"
+
+    def _search_name(self, operator, value):
+        query = self.env['hr.leave.report.calendar'].sudo()._search([('leave_id.duration_display', operator, value)])
+        domain = ['|', ('employee_id.name', operator, value), ('id', 'in', query)]
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            domain = expression.OR([domain , [('leave_id.holiday_status_id.name', operator, value)]])
+        return domain
 
     @api.depends('leave_manager_id')
     def _compute_is_manager(self):

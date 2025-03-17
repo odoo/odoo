@@ -182,7 +182,8 @@ test("in editable list view", async () => {
     expect("textarea").toBeFocused();
 });
 
-test.tags("desktop")("with dynamic placeholder", async () => {
+test.tags("desktop");
+test("with dynamic placeholder", async () => {
     onRpc("mail_allowed_qweb_expressions", () => []);
 
     Product._fields.placeholder = fields.Char({ default: "product" });
@@ -211,7 +212,8 @@ test.tags("desktop")("with dynamic placeholder", async () => {
     expect(".o_popover .o_model_field_selector_popover").toHaveCount(1);
 });
 
-test.tags("mobile")("with dynamic placeholder in mobile", async () => {
+test.tags("mobile");
+test("with dynamic placeholder in mobile", async () => {
     onRpc("mail_allowed_qweb_expressions", () => []);
 
     Product._fields.placeholder = fields.Char({ default: "product" });

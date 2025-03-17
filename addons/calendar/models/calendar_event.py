@@ -289,11 +289,14 @@ class Meeting(models.Model):
     def _compute_user_can_edit(self):
         for event in self:
             # By default, only current attendees and the organizer can edit the event.
-            editor_candidates = event.partner_ids.user_ids + event.user_id
+            editor_candidates = set(event.partner_ids.user_ids + event.user_id)
             # Right before saving the event, old partners must be able to save changes.
             if event._origin:
-                editor_candidates += event._origin.partner_ids.user_ids
-            event.user_can_edit = self.env.user.id in editor_candidates.ids
+                editor_candidates |= set(event._origin.partner_ids.user_ids)
+            # Non-private events must be editable by uninvited administrators.
+            if self.env.user.has_group('base.group_system') and event.privacy != 'private':
+                editor_candidates.add(self.env.user)
+            event.user_can_edit = self.env.user in editor_candidates
 
     @api.depends('partner_ids')
     def _compute_invalid_email_partner_ids(self):
@@ -398,16 +401,24 @@ class Meeting(models.Model):
                 # because fullcalendar just drops times for full day events.
                 # i.e. Christmas is on 25/12 for everyone
                 # even if people don't celebrate it simultaneously
-                enddate = fields.Datetime.from_string(meeting.stop_date)
+                enddate = fields.Datetime.from_string(meeting.stop_date or meeting.stop)
                 enddate = enddate.replace(hour=18)
 
-                startdate = fields.Datetime.from_string(meeting.start_date)
+                startdate = fields.Datetime.from_string(meeting.start_date or meeting.start)
                 startdate = startdate.replace(hour=8)  # Set 8 AM
 
-                meeting.write({
-                    'start': startdate.replace(tzinfo=None),
-                    'stop': enddate.replace(tzinfo=None)
-                })
+                if meeting.start_date and meeting.stop_date:
+                    # If start_date or stop_date is set, use start_date and stop_date;
+                    # otherwise, use start and stop.
+                    meeting.write({
+                        'start': startdate.replace(tzinfo=None),
+                        'stop': enddate.replace(tzinfo=None)
+                    })
+                else:
+                    meeting.write({
+                        'start_date': startdate.replace(tzinfo=None),
+                        'stop_date': enddate.replace(tzinfo=None)
+                    })
 
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):
@@ -530,8 +541,17 @@ class Meeting(models.Model):
         # get list of models ids and filter out None values directly
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
         model_name = defaults.get('res_model')
-        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
-        if meeting_activity_type and not defaults.get('activity_ids'):
+        valid_activity_model_ids = model_name and model_name not in self._get_activity_excluded_models() and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
+
+        # if user is creating an event for an activity that already has one, create a second activity
+        existing_event = False
+        orig_activity_ids = self.env['mail.activity'].browse(self._context.get('orig_activity_ids', []))
+        if len(orig_activity_ids) == 1:
+            existing_event = orig_activity_ids.calendar_event_id
+            if existing_event and orig_activity_ids.activity_type_id.category == 'meeting':
+                meeting_activity_type = orig_activity_ids.activity_type_id
+
+        if meeting_activity_type and (not defaults.get('activity_ids') or existing_event):
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
                 if values.get('activity_ids'):
@@ -749,9 +769,10 @@ class Meeting(models.Model):
     def _check_private_event_conditions(self):
         """ Checks if the event is private, returning True if the conditions match and False otherwise. """
         self.ensure_one()
-        event_is_private = (self.privacy == 'private' or (not self.privacy and self.user_id and self.user_id.calendar_default_privacy == 'private'))
+        event_is_private = self.privacy == 'private'
+        calendar_is_private = not self.privacy and self.sudo().user_id.calendar_default_privacy == 'private'
         user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
-        return event_is_private and user_is_not_partner
+        return (event_is_private or calendar_is_private) and user_is_not_partner
 
     @api.depends('privacy', 'user_id')
     def _compute_display_name(self):
@@ -1333,6 +1354,16 @@ class Meeting(models.Model):
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
+
+    @api.model
+    def _get_activity_excluded_models(self):
+        """
+        For some models, we don't want to automatically create activities when a calendar.event is created.
+        (This is the case notably for appointment.types)
+        This hook method allows to specify those models.
+        See calendar.event create method for details.
+        """
+        return []
 
     def _reset_attendees_status(self):
         """ Reset attendees status to pending and accept event for current user. """

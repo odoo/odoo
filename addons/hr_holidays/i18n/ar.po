@@ -3,16 +3,17 @@
 # 	* hr_holidays
 # 
 # Translators:
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2024
 # Wil Odoo, 2024
-# Malaz Abuidris <msea@odoo.com>, 2024
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -709,17 +710,11 @@ msgstr "نوع المخصصات "
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
 msgstr ""
-"يجب أن تكون حالة المخصصات \"بانتظار الموافقة\" أو \"بانتظار الموافقة "
-"الثانية\" حتى تتمكن من تصديقها. "
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr "يجب أن يتم تأكيد المخصصات (\"بانتظار الموافقة\") حتى تتم الموافقة عليها. "
+"يجب تأكيد المخصصات التي تكون \"بانتظار الموافقة\" أو التصديق عليها بمجرد "
+"إصدار \"الموافقة الثانية\" حتى تتم الموافقة عليها. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -798,11 +793,6 @@ msgstr "مستحق بالفعل "
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Amount"
 msgstr "مبلغ"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
-msgid "Amount in Negative"
-msgstr "المبلغ السلبي "
 
 #. module: hr_holidays
 #. odoo-python
@@ -1205,7 +1195,7 @@ msgstr "شهر الترحيل "
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_employee.py:0
+#: code:addons/hr_holidays/models/hr_employee_base.py:0
 msgid ""
 "Changing this working schedule results in the affected employee(s) not "
 "having enough leaves allocated to accomodate for their leaves already taken "
@@ -2303,6 +2293,11 @@ msgid "Maximum Allowed"
 msgstr "الحد الاقصى المسموح"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
+msgid "Maximum Excess Amount"
+msgstr "الحد الأقصى للمبلغ الزائد "
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid ""
 "Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
@@ -2718,6 +2713,16 @@ msgstr "فقط"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+"يمكن فقط لمانح الموافقات المسند إلى %s أو موظف/مسؤول الإجازة أو المدير "
+"الموافقة على طلبات المخصصات أو رفضها. "
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "وحده مدير الإجازات بإمكانه إعادة تعيين طلب إجازة مرفوض. "
@@ -2750,21 +2755,22 @@ msgstr "وحده المدير بمقدوره تعديل إجازة ملغية. "
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "وحده مدير الإجازات بإمكانه الموافقة على طلباته الخاصة. "
+msgid "Only a time off Administrator can approve their own requests."
+msgstr "وحده مدير الإجازات من يمكنه الموافقة على طلباته الخاصة. "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"وحده موظف / مسؤول الإجازات بإمكانه الموافقة على أو رفض طلبات الإجازات. "
+"يمكن فقط لموظف/مسؤول الإجازة أو المدير الموافقة على طلبات المخصصات أو رفضها."
+" "
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_employee.py:0
+#: code:addons/hr_holidays/models/hr_employee_base.py:0
 msgid "Operation not supported"
 msgstr "العملية غير مدعومة "
 
@@ -3276,7 +3282,7 @@ msgstr "البدء بعد "
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__state
 msgid "State"
-msgstr "الولاية "
+msgstr "الحالة "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__state
@@ -3447,11 +3453,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_type_check_negative
 msgid ""
-"The negative amount must be greater than 0. If you want to set 0, disable "
-"the negative cap instead."
+"The maximum excess amount should be greater than 0. If you want to set 0, "
+"disable the negative cap instead."
 msgstr ""
-"يجب أن يكون المبلغ السالب أكبر من 0. إذا كنت تريد تعيين 0، فقم بتعطيل الحد "
-"الأقصى السالب بدلاً من ذلك. "
+"يجب أن يكون الحد الأقصى للمبلغ الزائد أكبر من 0. إذا كنت تريد تعيين 0، فقم "
+"بتعطيل الحد الأقصى السالب بدلاً من ذلك. "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
@@ -3526,6 +3532,16 @@ msgstr "تم إلغاء الإجازة: %s "
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr "النوع الذي يحتوي على أقل تسلسل هو القيمة الافتراضية في طلب الإجازة "
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr ""
+"لا يوجد موظف معين للإجازة. رجاءً تأكد من أنك قد قمت بتسجيل الدخول إلى الشركة"
+" الصحيحة. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4332,7 +4348,7 @@ msgstr "لا يمكنك وضع حد أقصى للوقت المستحق دون ت
 msgid ""
 "You cannot have a cap on yearly accrued time without setting a maximum "
 "amount."
-msgstr ""
+msgstr "لا يمكنك وضع حد أقصى للوقت المستحق سنوياً دون تحديد حد أقصى للمبلغ. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4377,6 +4393,16 @@ msgstr "لا تملك صلاحيات تطبيق الموافقة الثانية 
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "يجب أن تكون مدير %s لتتمكن من الموافقة على هذه الإجازة "
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
+"يجب أن تكون إما مانح الموافقات المسند إلى %s أو مدير الإجازات لتصديق طلب "
+"المخصصات هذا. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4455,8 +4481,8 @@ msgstr "بعد تاريخ بدء المخصصات "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
-msgid "all - Valid for"
-msgstr "الكل - صالح لمدة "
+msgid "all"
+msgstr "الكل "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form

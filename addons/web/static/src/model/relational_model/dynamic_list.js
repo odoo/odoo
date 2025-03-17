@@ -1,5 +1,6 @@
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
 import { resequence } from "./utils";
@@ -115,36 +116,40 @@ export class DynamicList extends DataPoint {
         } else {
             resIds = this.records.map((r) => r.resId);
         }
-        return resIds;
+        return unique(resIds);
     }
 
     async leaveEditMode({ discard } = {}) {
-        if (this.editedRecord) {
+        let editedRecord = this.editedRecord;
+        if (editedRecord) {
             let canProceed = true;
             if (discard) {
-                this._recordToDiscard = this.editedRecord;
-                await this.editedRecord.discard();
+                this._recordToDiscard = editedRecord;
+                await editedRecord.discard();
                 this._recordToDiscard = null;
-                if (this.editedRecord && this.editedRecord.isNew) {
-                    this._removeRecords([this.editedRecord.id]);
+                editedRecord = this.editedRecord;
+                if (editedRecord && editedRecord.isNew) {
+                    this._removeRecords([editedRecord.id]);
                 }
             } else {
                 if (!this.model._urgentSave) {
-                    await this.editedRecord.checkValidity();
-                    if (!this.editedRecord) {
+                    await editedRecord.checkValidity();
+                    editedRecord = this.editedRecord;
+                    if (!editedRecord) {
                         return true;
                     }
                 }
-                if (this.editedRecord.isNew && !this.editedRecord.dirty) {
-                    this._removeRecords([this.editedRecord.id]);
+                if (editedRecord.isNew && !editedRecord.dirty) {
+                    this._removeRecords([editedRecord.id]);
                 } else {
-                    canProceed = await this.editedRecord.save();
+                    canProceed = await editedRecord.save();
                 }
             }
 
-            if (canProceed && this.editedRecord) {
+            editedRecord = this.editedRecord;
+            if (canProceed && editedRecord) {
                 this.model._updateConfig(
-                    this.editedRecord.config,
+                    editedRecord.config,
                     { mode: "readonly" },
                     { reload: false }
                 );
@@ -202,7 +207,7 @@ export class DynamicList extends DataPoint {
     async _duplicateRecords(records) {
         let resIds;
         if (records.length) {
-            resIds = records.map((r) => r.resId);
+            resIds = unique(records.map((r) => r.resId));
         } else {
             resIds = await this.getResIds(true);
         }
@@ -221,7 +226,7 @@ export class DynamicList extends DataPoint {
     async _deleteRecords(records) {
         let resIds;
         if (records.length) {
-            resIds = records.map((r) => r.resId);
+            resIds = unique(records.map((r) => r.resId));
         } else {
             resIds = await this.getResIds(true);
             records = this.records.filter((r) => resIds.includes(r.resId));
@@ -281,7 +286,7 @@ export class DynamicList extends DataPoint {
             });
             return false;
         } else {
-            const resIds = validSelection.map((r) => r.resId);
+            const resIds = unique(validSelection.map((r) => r.resId));
             const context = this.context;
             try {
                 await this.model.orm.write(this.resModel, resIds, changes, { context });

@@ -22,12 +22,11 @@ let itemId;
 
 
 registry.category("web_tour.tours").add('google_analytics_view_item', {
-    test: true,
-    url: '/shop?search=Customizable Desk',
+    url: '/shop?search=Colored T-Shirt',
     steps: () => [
     {
-        content: "select customizable desk",
-        trigger: '.oe_product_cart a:contains("Customizable Desk")',
+        content: "select Colored T-Shirt",
+        trigger: '.oe_product_cart a:contains("Colored T-Shirt")',
         run: "click",
     },
     {
@@ -36,15 +35,12 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
         timeout: 25000,
         run: () => {
             itemId = document.body.getAttribute("view-event-id");
-            document.body.removeAttribute("view-event-id");
         }
     },
     {
-        trigger: 'body:not([view-event-id])',
-    },
-    {
         content: 'select another variant',
-        trigger: 'ul.js_add_cart_variants ul.list-inline li:has(label.active) + li:has(label) input',
+        trigger:
+            "ul.js_add_cart_variants ul.list-inline li:has(label.active) + li:has(label) input:not(:visible)",
         run: "click",
     },
     {
@@ -56,10 +52,9 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
 ]});
 
 registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
-    test: true,
-    url: '/shop?search=Acoustic Bloc Screens',
+    url: '/shop?search=Basic Shirt',
     steps: () => [
-    ...tourUtils.addToCart({productName: 'Acoustic Bloc Screens', search: false}),
+    ...tourUtils.addToCart({productName: 'Basic Shirt', search: false}),
     {
         trigger: "body[cart-event-id]",
     },

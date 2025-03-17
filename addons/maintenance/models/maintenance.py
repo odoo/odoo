@@ -134,7 +134,7 @@ class MaintenanceEquipment(models.Model):
     def _compute_display_name(self):
         for record in self:
             if record.serial_no:
-                record.display_name = record.name + '/' + record.serial_no
+                record.display_name = (record.name or '') + '/' + record.serial_no
             else:
                 record.display_name = record.name
 
@@ -160,6 +160,9 @@ class MaintenanceEquipment(models.Model):
 
     @api.depends('serial_no')
     def _compute_match_serial(self):
+        if 'stock.lot' not in self.env or not self.env['stock.lot'].has_access('read'):
+            self.match_serial = False
+            return
         matched_serial_data = self.env['stock.lot']._read_group(
             [('name', 'in', self.mapped('serial_no'))],
             ['name'],
@@ -202,9 +205,12 @@ class MaintenanceEquipment(models.Model):
 
     def action_open_matched_serial(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_production_lot_form")
-        action['context'] = {'search_default_name': self.serial_no}
-        return action
+        action = self.env.ref('stock.action_production_lot_form', raise_if_not_found=False)
+        if not action:
+            return True
+        action_dict = action._get_action_dict()
+        action_dict['context'] = {'search_default_name': self.serial_no}
+        return action_dict
 
 
 class MaintenanceRequest(models.Model):
@@ -339,11 +345,15 @@ class MaintenanceRequest(models.Model):
         # the stage (stage_id) of the Maintenance Request changes.
         if vals and 'kanban_state' not in vals and 'stage_id' in vals:
             vals['kanban_state'] = 'normal'
-        if 'stage_id' in vals and self.maintenance_type == 'preventive' and self.recurring_maintenance and self.env['maintenance.stage'].browse(vals['stage_id']).done:
-            schedule_date = self.schedule_date or fields.Datetime.now()
-            schedule_date += relativedelta(**{f"{self.repeat_unit}s": self.repeat_interval})
-            if self.repeat_type == 'forever' or schedule_date.date() <= self.repeat_until:
-                self.copy({'schedule_date': schedule_date, 'stage_id': self._default_stage().id})
+        now = fields.Datetime.now()
+        if 'stage_id' in vals and self.env['maintenance.stage'].browse(vals['stage_id']).done:
+            for request in self:
+                if request.maintenance_type != 'preventive' or not request.recurring_maintenance:
+                    continue
+                schedule_date = request.schedule_date or now
+                schedule_date += relativedelta(**{f"{request.repeat_unit}s": request.repeat_interval})
+                if request.repeat_type == 'forever' or schedule_date.date() <= request.repeat_until:
+                    request.copy({'schedule_date': schedule_date, 'stage_id': request._default_stage().id})
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()

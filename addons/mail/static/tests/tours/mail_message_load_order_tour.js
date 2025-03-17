@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { contains, scroll } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("mail_message_load_order_tour", {
-    test: true,
     steps: () => [
         {
             trigger: ".o-mail-DiscussSidebarChannel:contains(MyTestChannel)",
@@ -20,7 +19,8 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-MessageCard-jump",
+            content: "Click on invisible jump (should hover card to be visible)",
+            trigger: ".o-mail-MessageCard-jump:not(:visible)",
             run: "click",
         },
         {
@@ -28,7 +28,8 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
             // the thread service. Thus, at first load the message range
             // will be (31 - 60). This trigger ensures the next messages
             // are fetched after jumping to the message.
-            trigger: ".o-mail-Thread .o-mail-Message:first:not(:contains(31))",
+            trigger:
+                ".o-mail-Thread .o-mail-Message:first .o-mail-Message-textContent:not(:contains(31))",
             async run() {
                 await contains(".o-mail-Thread .o-mail-Message", { count: 31 });
                 await contains(".o-mail-Thread", { scroll: 0 });
@@ -50,7 +51,7 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
             // was (1 -31): 30 before (but none were found), 30 after
             // and the pinned message itself. This trigger ensures the
             // next messages are fetched after scrolling to the bottom.
-            trigger: ".o-mail-Thread .o-mail-Message:contains(17)",
+            trigger: ".o-mail-Thread .o-mail-Message .o-mail-Message-textContent:contains(17)",
             async run() {
                 await contains(".o-mail-Thread .o-mail-Message", { count: 60 });
                 // ensure 1 - 60  are loaded in order.

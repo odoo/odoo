@@ -235,9 +235,9 @@ class L10nHuEdiConnection:
                 })
             for message_xml in processing_result_xml.iterfind('api:technicalValidationMessages', namespaces=XML_NAMESPACES):
                 processing_result['technical_validation_messages'].append({
-                    'validation_result_code': message_xml.findtext('api:validationResultCode', namespaces=XML_NAMESPACES),
-                    'validation_error_code': message_xml.findtext('api:validationErrorCode', namespaces=XML_NAMESPACES),
-                    'message': message_xml.findtext('api:message', namespaces=XML_NAMESPACES),
+                    'validation_result_code': message_xml.findtext('common:validationResultCode', namespaces=XML_NAMESPACES),
+                    'validation_error_code': message_xml.findtext('common:validationErrorCode', namespaces=XML_NAMESPACES),
+                    'message': message_xml.findtext('common:message', namespaces=XML_NAMESPACES),
                 })
             if return_original_request:
                 try:

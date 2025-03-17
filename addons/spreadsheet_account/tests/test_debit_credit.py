@@ -255,6 +255,37 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             ],
         )
 
+    def test_company_not_in_env(self):
+        Account = self.env["account.account"].with_company(self.company_data["company"].id)
+        self.assertEqual(
+            Account.spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "codes": ["sp1234566"],  # only for company 1
+                        "company_id": self.company_data["company"].id,
+                        "include_unposted": True,
+                    },
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "codes": ["sp99887755"],  # only for company 2
+                        "company_id": self.company_data_2["company"].id,
+                        "include_unposted": True,
+                    },
+                ]
+            ),
+            [
+                {"credit": 0, "debit": 500.0},
+                {"credit": 0, "debit": 1500.0},
+            ],
+        )
+
     def test_do_not_count_future_years(self):
         self.env["account.move"].create(
             {
@@ -955,7 +986,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     ("company_id", "=", self.account_revenue_c1.company_ids.id),
                     ("move_id.state", "!=", "cancel"),
                 ],
-                "name": "Journal items for account prefix sp1234566",
+                "name": "Cell Audit",
             },
         )
 
@@ -971,6 +1002,10 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "include_unposted": True,
             }
         )
+        company = self.company_data['company']
+        payable_receivable_accounts = self.env['account.account'].with_company(company).search([
+            ('account_type', 'in', ['liability_payable', 'asset_receivable'])
+        ])
         self.assertEqual(
             action,
             {
@@ -979,7 +1014,23 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "view_mode": "list",
                 "views": [[False, "list"]],
                 "target": "current",
-                "domain": [(0, "=", 1)],
-                "name": "Journal items for account prefix ",
+                "domain": [
+                    "&",
+                    "&",
+                    "&",
+                    ("account_id", "in", payable_receivable_accounts.ids),
+                    "|",
+                    "&",
+                    ("account_id.include_initial_balance", "=", True),
+                    ("date", "<=", date(2022, 12, 31)),
+                    "&",
+                    "&",
+                    ("account_id.include_initial_balance", "=", False),
+                    ("date", ">=", date(2022, 1, 1)),
+                    ("date", "<=", date(2022, 12, 31)),
+                    ("company_id", "=", company.id),
+                    ("move_id.state", "!=", "cancel")
+                ],
+                "name": "Cell Audit",
             },
         )

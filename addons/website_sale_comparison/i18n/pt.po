@@ -1,30 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_comparison
-#
+# 
 # Translators:
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
-# Pedro Filipe <pedro2.10@hotmail.com>, 2022
-# Luiz Fernando <lfpsgs@outlook.com>, 2022
-# Manuela Silva <mmsrs@sky.com>, 2022
-# Pedro Castro Silva <pedrocs@exo.pt>, 2022
-# Nuno Silva <nuno.silva@arxi.pt>, 2022
-#
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2025
+# NumerSpiral HBG, 2025
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
+# Maitê Dietze, 2025
+# Wil Odoo, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: pt\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_sale_comparison
 #: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_8
@@ -74,7 +71,7 @@ msgstr ""
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
-msgstr ""
+msgstr "<strong>Preço:</strong>"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -147,7 +144,7 @@ msgstr ""
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
 msgid "Display Name"
-msgstr "Nome"
+msgstr "Nome a Exibir"
 
 #. module: website_sale_comparison
 #: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_duration
@@ -169,7 +166,12 @@ msgstr ""
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
 msgid "ID"
-msgstr "ID"
+msgstr "Id."
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "In accordion"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
@@ -187,10 +189,16 @@ msgid "None"
 msgstr "Nenhum(a)"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr "Outros"
+
+#. module: website_sale_comparison
 #. odoo-javascript
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 msgid "Product"
-msgstr "Produto"
+msgstr "Artigo"
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_attribute
@@ -206,12 +214,12 @@ msgstr ""
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Linha de Atributo do Modelo de Artigo"
 
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_product
 msgid "Product Variant"
-msgstr "Variante de Artigo"
+msgstr "Categoria do Artigo"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -252,12 +260,12 @@ msgid "Specification"
 msgstr ""
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "Especificações"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "Sem categoria"
@@ -283,8 +291,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "eCommerce Category"
 msgstr ""
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "ou"

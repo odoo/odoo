@@ -11,6 +11,7 @@ from datetime import timedelta
 from odoo import api, fields, models
 from odoo.modules.registry import Registry
 from odoo.osv import expression
+from odoo.sql_db import BaseCursor
 
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
@@ -27,6 +28,7 @@ MAX_RECURRENT_EVENT = 720
 def after_commit(func):
     @wraps(func)
     def wrapped(self, *args, **kwargs):
+        assert isinstance(self.env.cr, BaseCursor)
         dbname = self.env.cr.dbname
         context = self.env.context
         uid = self.env.uid
@@ -137,6 +139,11 @@ class MicrosoftSync(models.AbstractModel):
             record._microsoft_delete(record._get_organizer(), record.microsoft_id)
         for record in new_records:
             values = record._microsoft_values(self._get_microsoft_synced_fields())
+            sender_user = record._get_event_user_m()
+            # Prevent current user to synchronize new events of non-synchronized users, otherwise the event
+            # ownership will be lost in Outlook and it will block the future event sync for the original owner.
+            if record.user_id and record.user_id != self.env.user and sender_user == self.env.user:
+                continue
             if isinstance(values, dict):
                 record._microsoft_insert(values)
             else:

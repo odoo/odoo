@@ -1,34 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-#
+# 
 # Translators:
-# Luiz Fernando <lfpsgs@outlook.com>, 2022
-# Martin Trigaux, 2022
-# Manuela Silva <mmsrs@sky.com>, 2022
-# Nuno Silva <nuno.silva@arxi.pt>, 2022
-# Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2022
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
-# Marcelo Pereira <marcelo.pereira@arxi.pt>, 2022
-#
+# Rita Bastos, 2025
+# Maitê Dietze, 2025
+# Wil Odoo, 2025
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Marcelo Pereira <marcelo.pereira@arxi.pt>, 2022\n"
+"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
-"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: pt\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not show_availability\">Units</span>"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
+msgid "All available quantity selected"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "All warehouses"
 msgstr ""
 
 #. module: website_sale_stock
@@ -39,7 +46,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configurações"
+msgstr "Definições de Configuração"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -117,6 +124,12 @@ msgid "Out of Stock"
 msgstr ""
 
 #. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product/product.xml:0
+msgid "Out of stock"
+msgstr "Esgotado"
+
+#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
@@ -133,12 +146,12 @@ msgstr ""
 #: code:addons/website_sale_stock/models/product_product.py:0
 #: model:ir.model,name:website_sale_stock.model_product_template
 msgid "Product"
-msgstr "Produto"
+msgstr "Artigo"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
-msgstr "Variante de Artigo"
+msgstr "Categoria do Artigo"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -151,14 +164,20 @@ msgid "Regards,"
 msgstr ""
 
 #. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
+msgid "Requested quantity not available"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "Ordem de Vendas"
+msgstr "Ordem de Venda"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linhas da Ordem de Vendas"
+msgstr "Linhas da Ordem de Venda"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -184,8 +203,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry "
-"for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry"
+" for the inconvenience."
 msgstr ""
 "Alguns artigos ficaram indisponíveis e o seu carrinho foi atualizado. "
 "Pedimos desculpa pela inconveniência."
@@ -267,15 +286,22 @@ msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You ask for %s Units but only %s are available."
+msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
 msgstr ""
 
 #. module: website_sale_stock

@@ -18,10 +18,12 @@
             width: 0;
         }
     }
-    [class*="col-lg-"] {
-        padding: 8% 5%;
-        padding-top: 8vw; // A flex item cannot have % padding top and bottom (even if it works on chrome)
-        padding-bottom: 8vw; // Solution is vw units but we keep 8% as a fallback
+    > .container, > .container-fluid, > .o_container_small {
+        > .row > [class*="col-lg-"] {
+            padding: 8% 5%;
+            padding-top: 8vw; // A flex item cannot have % padding top and bottom (even if it works on chrome)
+            padding-bottom: 8vw; // Solution is vw units but we keep 8% as a fallback
+        }
     }
 
     img {

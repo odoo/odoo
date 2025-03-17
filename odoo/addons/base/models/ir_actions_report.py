@@ -7,10 +7,12 @@ from urllib.parse import urlparse
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning
+from odoo.service import security
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
-from odoo.http import request
+from odoo.http import request, root
+from odoo.tools.pdf import PdfFileWriter, PdfFileReader, PdfReadError
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
 import io
@@ -26,7 +28,6 @@ from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
-from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
@@ -34,11 +35,6 @@ from itertools import islice
 
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-
-try:
-    from PyPDF2.errors import PdfReadError
-except ImportError:
-    from PyPDF2.utils import PdfReadError
 
 _logger = logging.getLogger(__name__)
 
@@ -420,7 +416,8 @@ class IrActionsReport(models.Model):
                     'subst': False,
                     'body': Markup(lxml.html.tostring(node, encoding='unicode')),
                     'base_url': base_url,
-                    'report_xml_id': self.xml_id
+                    'report_xml_id': self.xml_id,
+                    'debug': self.env.context.get("debug"),
                 }, raise_if_not_found=False)
             bodies.append(body)
             if node.get('data-oe-model') == report_model:
@@ -443,13 +440,15 @@ class IrActionsReport(models.Model):
             'subst': True,
             'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
             'base_url': base_url,
-            'report_xml_id': self.xml_id
+            'report_xml_id': self.xml_id,
+            'debug': self.env.context.get("debug"),
         })
         footer = self.env['ir.qweb']._render(layout.id, {
             'subst': True,
             'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
             'base_url': base_url,
-            'report_xml_id': self.xml_id
+            'report_xml_id': self.xml_id,
+            'debug': self.env.context.get("debug"),
         })
 
         return bodies, res_ids, header, footer, specific_paperformat_args
@@ -532,12 +531,24 @@ class IrActionsReport(models.Model):
 
         files_command_args = []
         temporary_files = []
+        temp_session = None
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         if request and request.db:
+            # Create a temporary session which will not create device logs
+            temp_session = root.session_store.new()
+            temp_session.update({
+                **request.session,
+                'debug': '',
+                '_trace_disable': True,
+            })
+            if temp_session.uid:
+                temp_session.session_token = security.compute_session_token(temp_session, self.env)
+            root.session_store.save(temp_session)
+
             base_url = self._get_report_url()
             domain = urlparse(base_url).hostname
-            cookie = f'session_id={request.session.sid}; HttpOnly; domain={domain}; path=/;'
+            cookie = f'session_id={temp_session.sid}; HttpOnly; domain={domain}; path=/;'
             cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
             temporary_files.append(cookie_jar_file_path)
             with closing(os.fdopen(cookie_jar_file_fd, 'wb')) as cookie_jar_file:
@@ -607,6 +618,9 @@ class IrActionsReport(models.Model):
                     _logger.warning('wkhtmltopdf: %s' % err)
         except:
             raise
+        finally:
+            if temp_session:
+                root.session_store.delete(temp_session)
 
         with open(pdf_report_path, 'rb') as pdf_document:
             pdf_content = pdf_document.read()
@@ -834,6 +848,7 @@ class IrActionsReport(models.Model):
             # because the resources files are not loaded in time.
             # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
             additional_context = {'debug': False}
+            data.setdefault("debug", False)
 
             html = self.with_context(**additional_context)._render_qweb_html(report_ref, all_res_ids_wo_stream, data=data)[0]
 
@@ -951,7 +966,7 @@ class IrActionsReport(models.Model):
 
             # if res_id is false
             # we are unable to fetch the record, it won't be saved as we can't split the documents unambiguously
-            if not res_id:
+            if not res_id or not stream_data['stream']:
                 _logger.warning(
                     "These documents were not saved as an attachment because the template of %s doesn't "
                     "have any headers seperating different instances of it. If you want it saved,"

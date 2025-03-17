@@ -9,7 +9,7 @@ import {
 } from "../web_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import {registry} from "@web/core/registry";
+import { registry } from "@web/core/registry";
 
 /** Foo is dummy model to test `action.report` with domain of its field `value`. **/
 class Foo extends models.Model {
@@ -44,7 +44,7 @@ class IrActionsReport extends models.Model {
             // new record are initialized with value=False so domain of action 3 is satisfied
             validActionIds.push(3);
         }
-        return Promise.resolve(validActionIds);
+        return validActionIds;
     }
 }
 

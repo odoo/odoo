@@ -1,8 +1,8 @@
-import { expect, test } from "@odoo/hoot";
-import { click, getActiveElement, press, queryOne, waitFor } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { click, press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { setupEditor } from "./_helpers/editor";
 import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 
@@ -34,6 +34,7 @@ test("Can replace an image", async () => {
     expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
 });
 
+test.tags("focus required");
 test("Selection is collapsed after the image after replacing it", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
         return [
@@ -62,6 +63,7 @@ test("Selection is collapsed after the image after replacing it", async () => {
     expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe("<p>abc<img>[]def</p>");
 });
 
+test.tags("focus required");
 test("Can insert an image, and selection should be collapsed after it", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
         return [
@@ -98,10 +100,26 @@ test("press escape to close media dialog", async () => {
     await waitFor(".o-we-powerbox");
     await press("Enter");
     await animationFrame();
-    expect(getActiveElement()).toBe(queryOne(".modal .o_select_media_dialog .o_we_search"));
+    expect(".modal .o_select_media_dialog .o_we_search").toBeFocused();
 
     await press("escape");
     await animationFrame();
     expect(".modal .o_select_media_dialog").toHaveCount(0);
     expect(getContent(el)).toBe("<p>a[]bc</p>");
+});
+
+describe("Powerbox search keywords", () => {
+    test("Image and Icon are keywords for the Media command", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        insertText(editor, "/");
+        for (const word of ["image", "icon"]) {
+            insertText(editor, word);
+            await animationFrame();
+            expect(".active .o-we-command-name").toHaveText("Media");
+            // delete the keyword to try the next one
+            for (let i = 0; i < word.length; i++) {
+                press("backspace");
+            }
+        }
+    });
 });

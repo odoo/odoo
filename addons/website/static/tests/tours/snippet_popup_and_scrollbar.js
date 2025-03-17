@@ -40,7 +40,6 @@ const toggleBackdrop = function () {
 };
 
 registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

@@ -6,7 +6,6 @@ import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_p
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -129,7 +128,6 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -139,7 +137,7 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
             ProductScreen.addOrderline("Test Product A", "1"),
-            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.isRewardButtonHighlighted(true, true),
             ProductScreen.clickControlButton("Reward"),
             SelectionPopup.has("Free Product - Test Product A", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product - Test Product A", "-11.50", "1.00"),
@@ -148,7 +146,6 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -174,7 +171,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProductTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -183,15 +179,18 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
             ProductScreen.clickDisplayedProduct("Test Product A"),
             ProductScreen.clickDisplayedProduct("Test Product C"),
             PosLoyalty.orderTotalIs("130.00"),
-            PosLoyalty.isRewardButtonHighlighted(true),
-            ProductScreen.clickControlButton("Reward"),
+            PosLoyalty.isRewardButtonHighlighted(true, false),
+            {
+                content: `click Reward button`,
+                trigger: ProductScreen.controlButtonTrigger("Reward"),
+                run: "click",
+            },
             Dialog.cancel(),
             PosLoyalty.orderTotalIs("130.00"),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardProductDomainTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -209,7 +208,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -218,26 +216,26 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
 
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
-            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.isRewardButtonHighlighted(true, true),
             PosLoyalty.claimReward("Free Product - [Product A, Product B]"),
             SelectionPopup.has("Product A", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product", "-2", "1.00"),
-            PosLoyalty.isRewardButtonHighlighted(false),
+            PosLoyalty.isRewardButtonHighlighted(false, true),
 
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
-            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.isRewardButtonHighlighted(true, true),
             PosLoyalty.claimReward("Free Product - [Product A, Product B]"),
             SelectionPopup.has("Product B", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product", "-5", "1.00"),
-            PosLoyalty.isRewardButtonHighlighted(false),
+            PosLoyalty.isRewardButtonHighlighted(false, true),
 
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
-            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.isRewardButtonHighlighted(true, true),
             PosLoyalty.claimReward("Free Product - [Product A, Product B]"),
             SelectionPopup.has("Product B", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product", "-10", "2.00"),
-            PosLoyalty.isRewardButtonHighlighted(false),
+            PosLoyalty.isRewardButtonHighlighted(false, true),
         ].flat(),
 });

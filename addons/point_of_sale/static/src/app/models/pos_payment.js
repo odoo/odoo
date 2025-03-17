@@ -23,10 +23,12 @@ export class PosPayment extends Base {
 
     set_amount(value) {
         this.pos_order_id.assert_editable();
-        this.amount = roundDecimals(
-            parseFloat(value) || 0,
-            this.pos_order_id.currency.decimal_places
-        );
+        this.update({
+            amount: roundDecimals(
+                parseFloat(value) || 0,
+                this.pos_order_id.currency.decimal_places
+            ),
+        });
     }
 
     get_amount() {
@@ -38,7 +40,7 @@ export class PosPayment extends Base {
     }
 
     set_payment_status(value) {
-        this.payment_status = value;
+        this.update({ payment_status: value });
     }
 
     is_done() {

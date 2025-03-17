@@ -13,12 +13,7 @@ class HrEmployee(models.Model):
     @api.model
     def _load_pos_data_domain(self, data):
         config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
-        if len(config_id.basic_employee_ids) > 0:
-            return [
-                '&', ('company_id', '=', config_id.company_id.id),
-                '|', ('user_id', '=', self.env.uid), ('id', 'in', config_id.basic_employee_ids.ids + config_id.advanced_employee_ids.ids)]
-        else:
-            return [('company_id', '=', config_id.company_id.id)]
+        return config_id._employee_domain(config_id.current_user_id.id)
 
     @api.model
     def _load_pos_data_fields(self, config_id):

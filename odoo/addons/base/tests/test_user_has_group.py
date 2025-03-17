@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo import Command
 
 
@@ -52,6 +52,19 @@ class TestHasGroup(TransactionCase):
             self.test_user.has_group(self.group1),
             "the test user shoudl not belong to group1"
         )
+
+    def test_other_user(self):
+        internal_user = self.test_user.copy({'groups_id': self.grp_internal})
+        internal_user = internal_user.with_user(internal_user)
+        test_user = self.env['res.users'].with_user(self.test_user).browse(self.test_user.id)
+
+        test_user.has_group(self.group0)
+        with self.assertRaises(AccessError):
+            test_user.browse(internal_user.id).has_group(self.group0)
+        test_user.sudo().browse(internal_user.id).has_group(self.group0)
+
+        internal_user.has_group(self.group0)
+        internal_user.browse(test_user.id).has_group(self.group0)
 
     def test_portal_creation(self):
         """Here we check that portal user creation fails if it tries to create a user
@@ -164,7 +177,7 @@ class TestHasGroup(TransactionCase):
         """Contrarily to test_two_user_types, we simply add an implied_id to a group.
            This will trigger the addition of the relevant users to the relevant groups;
            if, say, this was done in SQL and thus bypassing the ORM, it would bypass the constraints
-           and thus give us a case uncovered by the aforementioned test.
+           and field recomputations, and thus give us a case uncovered by the aforementioned test.
         """
         grp_test = self.env["res.groups"].create(
             {"name": "test", "implied_ids": [Command.set([self.grp_internal.id])]})
@@ -175,8 +188,39 @@ class TestHasGroup(TransactionCase):
             'groups_id': [Command.set([grp_test.id])]
         })
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegex(ValidationError, "The user cannot have more than one user types"), self.env.cr.savepoint():
             grp_test.write({'implied_ids': [Command.link(self.grp_portal.id)]})
+
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_group_names",
+                "model_id": self.env.ref("base.model_res_users").id,
+                "state": "manual",
+                "field_description": "A computed field that depends on groups_id",
+                "compute": "for r in self: r['x_group_names'] = ', '.join(r.groups_id.mapped('name'))",
+                "depends": "groups_id",
+                "store": True,
+                "ttype": "char",
+            }
+        )
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_user_names",
+                "model_id": self.env.ref("base.model_res_groups").id,
+                "state": "manual",
+                "field_description": "A computed field that depends on users",
+                "compute": "for r in self: r['x_user_names'] = ', '.join(r.users.mapped('name'))",
+                "depends": "users",
+                "store": True,
+                "ttype": "char",
+            }
+        )
+
+        grp_additional = self.env["res.groups"].create({"name": "additional"})
+        grp_test.write({'implied_ids': [Command.link(grp_additional.id)]})
+
+        self.assertIn(grp_additional.name, test_user.x_group_names)
+        self.assertIn(test_user.name, grp_additional.x_user_names)
 
     def test_demote_user(self):
         """When a user is demoted to the status of portal/public,

@@ -45,7 +45,7 @@ class ResBank(models.Model):
                 return _("You cannot generate a QRIS QR code with a bank account that is not in Indonesia.")
             if currency.name not in ['IDR']:
                 return _("You cannot generate a QRIS QR code with a currency other than IDR")
-            if not (self.l10n_id_qris_api_key and self.l10n_id_qris_mid):
+            if not (self.sudo().l10n_id_qris_api_key and self.sudo().l10n_id_qris_mid):
                 return _("To use QRIS QR code, Please setup the QRIS API Key and Merchant ID on the bank's configuration")
             return None
 
@@ -91,6 +91,8 @@ class ResBank(models.Model):
                 "cliTrxAmount": int(amount)
             }
             response = _l10n_id_make_qris_request('show_qris.php', params)
+            if response.get("status") == "failed":
+                raise ValidationError(response.get("data"))
             data = response.get('data')
 
             # create a new transaction line while also converting the qris_request_date to UTC time

@@ -80,7 +80,7 @@ class WebsiteProfile(http.Controller):
 
     @http.route([
         '/profile/avatar/<int:user_id>',
-    ], type='http', auth="public", website=True, sitemap=False)
+    ], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def get_user_profile_avatar(self, user_id, field='avatar_256', width=0, height=0, crop=False, **post):
         if field not in ('image_128', 'image_256', 'avatar_128', 'avatar_256'):
             return werkzeug.exceptions.Forbidden()
@@ -94,7 +94,7 @@ class WebsiteProfile(http.Controller):
             field_name=field, width=int(width), height=int(height), crop=crop
         ).get_response()
 
-    @http.route('/profile/user/<int:user_id>', type='http', auth='public', website=True)
+    @http.route('/profile/user/<int:user_id>', type='http', auth='public', website=True, readonly=True)
     def view_user_profile(self, user_id, **post):
         user_sudo, denial_reason = self._check_user_profile_access(user_id)
         if denial_reason:
@@ -186,7 +186,7 @@ class WebsiteProfile(http.Controller):
         })
         return values
 
-    @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True)
+    @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True, readonly=True)
     def view_ranks_badges(self, **kwargs):
         values = self._prepare_ranks_badges_values(**kwargs)
         return request.render("website_profile.rank_badge_main", values)
@@ -208,7 +208,7 @@ class WebsiteProfile(http.Controller):
         return user_values
 
     @http.route(['/profile/users',
-                 '/profile/users/page/<int:page>'], type='http', auth="public", website=True, sitemap=True)
+                 '/profile/users/page/<int:page>'], type='http', auth="public", website=True, sitemap=True, readonly=True)
     def view_all_users_page(self, page=1, **kwargs):
         User = request.env['res.users']
         dom = [('karma', '>', 1), ('website_published', '=', True)]

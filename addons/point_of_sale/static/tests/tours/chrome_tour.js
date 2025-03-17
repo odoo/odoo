@@ -4,10 +4,11 @@ import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
+import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("ChromeTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -47,7 +48,10 @@ registry.category("web_tour.tours").add("ChromeTour", {
             TicketScreen.selectOrder("-0001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.productIsDisplayed("Desk Pad"),
-            ProductScreen.selectedOrderlineHas("Desk Pad", "1.0", "2.0"),
+            inLeftSide([
+                ...ProductScreen.clickLine("Desk Pad"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "1.0", "2.0"),
+            ]),
 
             // Select order 2, should be at Payment Screen
             Chrome.clickMenuOption("Orders"),
@@ -111,7 +115,6 @@ registry.category("web_tour.tours").add("ChromeTour", {
 });
 
 registry.category("web_tour.tours").add("OrderModificationAfterValidationError", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -131,5 +134,42 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 
             // Allow order changes after the error
             ProductScreen.clickDisplayedProduct("Test Product", true, "2.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("SearchMoreCustomer", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.inputCustomerSearchbar("1111"),
+            Utils.selectButton("Search more"),
+            ProductScreen.clickCustomer("BPartner"),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Close Register"),
+            Utils.selectButton("Close Register"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad", true, "1.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });

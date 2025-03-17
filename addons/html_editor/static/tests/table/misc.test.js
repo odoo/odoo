@@ -3,9 +3,10 @@ import { setupEditor } from "../_helpers/editor";
 import { click, queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setSelection } from "../_helpers/selection";
+import { execCommand } from "../_helpers/userCommands";
 
 function insertTable(editor, cols, rows) {
-    editor.dispatch("INSERT_TABLE", { cols, rows });
+    execCommand(editor, "insertTable", { cols, rows });
 }
 
 test("can insert a table", async () => {

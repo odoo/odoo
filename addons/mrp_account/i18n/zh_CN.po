@@ -6,6 +6,7 @@
 # Martin Trigaux, 2024
 # Chloe Wang, 2024
 # Wil Odoo, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr "<span class=\"o_stat_text\">制造</span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr "<span class=\"o_stat_text\">计价</span>"
+msgstr "<span class=\"o_stat_text\">估值</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -90,12 +91,12 @@ msgstr "<span>计量单位</span>"
 #. module: mrp_account
 #: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
 msgid "A single line cannot be both credit and debit."
-msgstr ""
+msgstr "借方和贷方不能同时在一行之中"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
 msgid "Account"
-msgstr "帐户"
+msgstr "账户"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__account_move_line_id
@@ -105,7 +106,7 @@ msgstr "会计分录资料行"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
-msgstr ""
+msgstr "在过账在制品账户分录时要创建的账户分录"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -120,7 +121,7 @@ msgstr "分析账户"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "分析分配"
+msgstr "分析分摊"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
@@ -197,12 +198,12 @@ msgstr "创建日期"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__credit
 msgid "Credit"
-msgstr "贷项"
+msgstr "贷方"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__date
@@ -212,7 +213,7 @@ msgstr "日期"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__debit
 msgid "Debit"
-msgstr "借项"
+msgstr "借方"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -291,13 +292,13 @@ msgstr "上次更新日期"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr "MO 概览报告"
+msgstr "MO 概览报表"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manual Entry"
-msgstr ""
+msgstr "手工分录"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -324,7 +325,7 @@ msgstr "制造订单计数"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr ""
+msgstr "制造中的产品 - %(orders_list)s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
@@ -334,29 +335,29 @@ msgstr "Mo"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
 msgid "Mo Analytic Account Line"
-msgstr "生产订单（MO）分析科目行"
+msgstr "制造订单（MO）分析科目行"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid ""
 "Please make sure the total credit amount equals the total debit amount."
-msgstr ""
+msgstr "请确保总借方金额等于总贷方金额。"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post Manufacturing WIP"
-msgstr ""
+msgstr "发布制造中的在制品"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post WIP"
-msgstr ""
+msgstr "发布在制品"
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
 msgid "Post WIP Accounting Entry"
-msgstr ""
+msgstr "发布 WIP 会计凭证"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -397,18 +398,18 @@ msgstr "参考号"
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
 msgid "Relevant WIP MOs"
-msgstr ""
+msgstr "相关制造订单在制品"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
 msgid "Reversal Date"
-msgstr "撤销日期"
+msgstr "冲销日期"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Reversal date must be after the posting date."
-msgstr ""
+msgstr "冲销日期必须在过账日期之后"
 
 #. module: mrp_account
 #. odoo-python
@@ -419,7 +420,7 @@ msgstr "撤销：%s"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
 msgid "Show Valuation"
-msgstr "显示计价"
+msgstr "显示估值"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
@@ -432,7 +433,7 @@ msgstr "库存移动"
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
-msgstr ""
+msgstr "此半成品基于制造订单。预计在创建半成品项时设置。"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
@@ -440,7 +441,7 @@ msgid ""
 "The expense is accounted for when the manufacturing order is marked as done."
 " If not set, it is the expense account of the final product that will be "
 "used instead."
-msgstr "当制造订单标记为完成时，将记入费用。如果未设置，则将使用最终产品的费用帐户。"
+msgstr "当制造订单标记为完成时，将记入费用。如果未设置，则将使用最终产品的费用账户。"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -470,19 +471,19 @@ msgstr "单位"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Component Value"
-msgstr ""
+msgstr "WIP - 组件值"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Overhead"
-msgstr ""
+msgstr "WIP - 顶部"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
 msgid "WIP MOs of %s"
-msgstr ""
+msgstr "WIP MOs of %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -492,12 +493,12 @@ msgstr "WIP 报告"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
 msgid "WIP accounting lines"
-msgstr ""
+msgstr "半成品会计资料行"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
 msgid "WIP accounting wizard"
-msgstr ""
+msgstr "半成品会计向导"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
@@ -512,7 +513,7 @@ msgstr "工作中心（WC）分析科目行"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP account move"
-msgstr ""
+msgstr "发布制造半成品会计分录向导"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter

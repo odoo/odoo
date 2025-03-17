@@ -1,5 +1,6 @@
 import datetime
 from freezegun import freeze_time
+from datetime import date
 from dateutil.relativedelta import relativedelta
 from psycopg2 import IntegrityError
 
@@ -636,6 +637,41 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 # The maximum value is 1 so this shouldn't change anything
                 allocation._update_accrual()
                 self.assertEqual(allocation.number_of_days, 0.5, 'There should be only 0.5 days allocated.')
+
+    def test_accrual_hours_with_max_carryover(self):
+        with freeze_time("2024-10-10"):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual plan - hours and max postpone',
+                'level_ids': [(0, 0, {
+                    'added_value_type': 'hour',
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'first_day': 31,
+                    'frequency': 'monthly',
+                    'action_with_unused_accruals': 'maximum',
+                    'postpone_max_days': 4,  # confusing name but is in hours when added_value_type == 'hour'
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'date_from': datetime.date(2025, 1, 1),
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 0)
+
+            hours_per_day = self.employee_emp.resource_calendar_id.hours_per_day
+            allocation_data = self.leave_type.get_allocation_data(self.employee_emp, "2025-12-02")[self.employee_emp][0][1]
+            self.assertAlmostEqual(allocation_data["remaining_leaves"], 11 / hours_per_day, 1, '11 hours accrued.')
+
+            allocation_data = self.leave_type.get_allocation_data(self.employee_emp, "2026-02-02")[self.employee_emp][0][1]
+            self.assertAlmostEqual(allocation_data["remaining_leaves"], 5 / hours_per_day, 1, '5 hours accrued.')
 
     def test_accrual_transition_immediately(self):
         with freeze_time("2017-12-5"):
@@ -1584,7 +1620,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             allocation.action_validate()
             allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 0, "Should accrue 0 days, days are added on 27th.")
+        self.assertAlmostEqual(allocation.number_of_days, 0.03, 2, "Should accrue 0.03 days, accrued_gain_time == start.")
 
         with freeze_time("2023-4-27"):
             allocation._update_accrual()
@@ -1596,7 +1632,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time("2024-04-26"):
             allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 0, "Allocations not lost on 1st of January, but on allocation date.")
+        self.assertAlmostEqual(allocation.number_of_days, 0.0, 2, "Allocations not lost on 1st of January, but on allocation date.")
 
         with freeze_time("2024-04-27"):
             allocation._update_accrual()
@@ -1982,7 +2018,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
         with freeze_time('2024-03-01'):
-            with Form(self.env['hr.leave.allocation']) as f:
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
                 f.date_from = '2024-01-01'
@@ -2169,6 +2205,48 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
             self.assertEqual(allocation.lastcall, datetime.date(2017, 12, 5))
 
+    def test_accrual_allocation_data_persists(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'accrued_gain_time': 'start',
+            'carryover_date': 'year_start',
+            'level_ids': [(0, 0, {
+                'start_count': 1,
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'daily',
+                'cap_accrued_time': True,
+                'maximum_leave': 10
+            })],
+        })
+
+        def get_remaining_leaves(*args):
+            return leave_type.get_allocation_data(self.employee_emp, datetime.date(*args))[self.employee_emp][0][1][
+                'remaining_leaves']
+
+        with freeze_time("2024-03-01"):
+            # Simulate creating an allocation from frontend interface
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = accrual_plan
+                f.employee_id = self.employee_emp
+                f.holiday_status_id = leave_type
+                f.date_from = '2024-02-01'
+                f.name = "Accrual allocation for employee"
+
+            allocation = f.record
+            allocation.action_validate()
+
+            first_result = get_remaining_leaves(2024, 2, 21)
+            self.assertEqual(get_remaining_leaves(2024, 2, 21), first_result, "Function return result should persist")
+
     def test_future_accural_time_with_leaves_taken_in_the_past(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
@@ -2191,13 +2269,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })],
         })
 
-        def get_reamining_leaves(*args):
+        def get_remaining_leaves(*args):
             return leave_type.get_allocation_data(self.employee_emp, datetime.date(*args))[self.employee_emp][0][1][
                 'remaining_leaves']
 
         with freeze_time("2024-03-01"):
             # Simulate creating an allocation from frontend interface
-            with Form(self.env['hr.leave.allocation']) as f:
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
                 f.employee_id = self.employee_emp
@@ -2207,7 +2285,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
             allocation = f.record
             allocation.action_validate()
-            self.assertEqual(get_reamining_leaves(2024, 3, 1), 10, "The cap is reached, no more leaves should be accrued")
+            self.assertEqual(get_remaining_leaves(2024, 3, 1), 10, "The cap is reached, no more leaves should be accrued")
 
             leave = self.env['hr.leave'].create({
                 'name': 'leave',
@@ -2217,10 +2295,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'request_date_to': '2024-03-01',
             })
             leave.action_validate()
-            self.assertEqual(get_reamining_leaves(2024, 3, 1), 5, "5 day should be deduced from the allocation")
-            self.assertEqual(get_reamining_leaves(2024, 3, 3), 7, "2 days should be added to the accrual allocation")
-            self.assertEqual(get_reamining_leaves(2024, 3, 3), 7, "Function return result should persist")
-            self.assertEqual(get_reamining_leaves(2024, 3, 10), 10, "Accrual allocation should be capped at 10")
+            self.assertEqual(get_remaining_leaves(2024, 3, 1), 5, "5 day should be deduced from the allocation")
+            self.assertEqual(get_remaining_leaves(2024, 3, 3), 7, "2 days should be added to the accrual allocation")
+            self.assertEqual(get_remaining_leaves(2024, 3, 10), 10, "Accrual allocation should be capped at 10")
 
             leave = self.env['hr.leave'].create({
                 'name': 'leave',
@@ -2230,8 +2307,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'request_date_to': '2024-03-08',
             })
             leave.action_validate()
-            self.assertEqual(get_reamining_leaves(2024, 3, 4), 3, "5 days should be deduced from the allocation and a new day should be accrued")
-            self.assertEqual(get_reamining_leaves(2024, 3, 11), 10, "Accrual allocation should be capped at 10")
+            self.assertEqual(get_remaining_leaves(2024, 3, 4), 3, "5 days should be deduced from the allocation and a new day should be accrued")
+            self.assertEqual(get_remaining_leaves(2024, 3, 11), 10, "Accrual allocation should be capped at 10")
 
     @freeze_time('2024-01-01')
     def test_validate_leaves_with_more_days_than_allocation(self):
@@ -2328,7 +2405,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             self.employee_hrmanager.resource_calendar_id = calendar_emp.id
 
-            with Form(self.env['hr.leave.allocation']) as f:
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
                 f.allocation_type = "accrual"
                 f.accrual_plan_id = accrual_plan
                 f.date_from = '2024-08-07'
@@ -2720,7 +2797,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2026-9-01'):
             allocation._update_accrual()
-        self.assertAlmostEqual(allocation.number_of_days, 6.7, 1)
+        self.assertAlmostEqual(allocation.number_of_days, 10.7, 1)
 
         with freeze_time('2027-1-01'):
             allocation._update_accrual()
@@ -3311,3 +3388,400 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2025-04-01'):
             allocation._update_accrual()
             self.assert_allocation_and_balance(allocation, 11, 5, "Only 5 days will carry over")
+
+    def test_carriedover_days_expiration_reset(self):
+        """
+        Description:
+
+        Assert that the number of expiring carry-over days and the expiration date of the carry-over days
+        are reset when the start date of the allocation is changed. This should result in the number of accrued days
+        being consistent when setting the allocation start date to some date, changing the start date to another date
+        and then changing the start date back to the first date.
+
+        Steps:
+
+        Create an accrual plan:
+        - Carryover date on allocation start date.
+        - Has 1 level:
+            * Start 0 days after allocation start date.
+            * Accrues 1 day monthly on 1st day of the month.
+            * Carryover policy all accrued time carried over.
+            * Carryover validity 1 month.
+
+        Note: The following dates are in mm/dd/YYYY
+        Create an allocation:
+            * Allocation type: accrual allocation.
+            * Accrual plan: use the one defined above.
+            * Set allocation start date 08/01/2023.
+
+            Assume that today is 09/25/2024
+
+            * Compute the number of accrued days on 09/25/2024 -> 2 days.
+
+            * Change allocation start date to 09/01/2023.
+              - Number of expiring carry-over days will reset to 0
+              - Expiration date of carry-over days will reset to False
+              - Compute the number of accrued days on 09/25/2024 -> 12 days.
+
+            * Change allocation start date back to 08/01/2023.
+              - Number of expiring carry-over days will reset to 0
+              - Expiration date of carry-over days will reset to False
+              - Compute the number of accrued days on 09/25/2024 -> 2 days.
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'carryover_date': 'allocation',
+            'level_ids': [(0, 0, {
+                'start_count': 0,
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+                'action_with_unused_accruals': 'all',
+                'accrual_validity': True,
+                'accrual_validity_type': 'month',
+                'accrual_validity_count': 1,
+            })]
+        })
+
+        with freeze_time('2023-08-01'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'date_from': '2023-08-01'
+            })
+
+        with freeze_time('2024-09-25'):
+            allocation._onchange_date_from()
+            self.assertEqual(allocation.number_of_days, 2)
+
+            allocation.date_from = '2023-09-01'
+            allocation._onchange_date_from()
+            self.assertEqual(allocation.number_of_days, 12)
+
+            allocation.date_from = '2023-08-01'
+            allocation._onchange_date_from()
+            self.assertEqual(allocation.number_of_days, 2)
+
+    def test_start_accrual_gain_time_immediately(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': '1.25 days each 1st of the month',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'start',
+            'level_ids':
+                [(0, 0, {
+                    'start_type': 'day',
+                    'start_count': 0,
+                    'added_value_type': 'day',
+                    'added_value': 1.25,
+                    'frequency': 'monthly',
+                    'cap_accrued_time': False,
+                    'action_with_unused_accruals': 'all',
+                })],
+        })
+
+        with freeze_time('2024-09-02'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+
+            allocation.action_validate()
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 1.21, 2, 'Days for the current month should be granted immediately')
+
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2024-09-13 08:00:00',
+                'request_date_to': '2024-09-13 17:00:00',
+            })
+            leave.action_validate()
+            remaining_leaves = self.leave_type.get_allocation_data(self.employee_emp, date(2024, 9, 14))[self.employee_emp][0][1]['remaining_leaves']
+            self.assertAlmostEqual(remaining_leaves, 0.21, 2, 'Leave should be deducted from accrued days')
+
+        with freeze_time("2024-10-01"):
+            allocation._update_accrual()
+            self.assertAlmostEqual(allocation.number_of_days, 2.46, 2, 'Days for the upcoming month should be granted on the 1st')
+
+    def test_set_accrual_allocation_to_zero_from_ui(self):
+        with freeze_time('2024-06-15'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': '2 days on the 1st of each month',
+                'accrued_gain_time': 'start',
+                'carryover_date': 'year_start',
+                'level_ids': [Command.create({
+                    'added_value_type': 'day',
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'added_value': 2,
+                    'frequency': 'monthly',
+                })],
+            })
+
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+
+            with Form(allocation) as f:
+                f.date_from = '2024-01-01'
+                f.number_of_days_display = 0
+            allocation.action_validate()
+
+            remaining_leaves = self.leave_type.get_allocation_data(self.employee_emp, date(2024, 7, 15))[self.employee_emp][0][1]['remaining_leaves']
+            self.assertAlmostEqual(remaining_leaves, 2, 2, "Only 2 days gained on 1st of July should be accrued")
+
+    def test_cache_invalidation_with_future_leaves(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': '1 days every last day of the month',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids':
+                [(0, 0, {
+                    'start_type': 'day',
+                    'start_count': 0,
+                    'added_value_type': 'day',
+                    'added_value': 1,
+                    'frequency': 'monthly',
+                    'cap_accrued_time': False,
+                    'action_with_unused_accruals': 'all',
+                    'first_day': 31,
+                })
+            ],
+        })
+
+        with freeze_time('2024-06-30'):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_validate()
+            allocation._update_accrual()
+
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2024-09-02',
+                'request_date_to': '2024-09-03',
+            })
+            leave.action_validate()
+
+        with freeze_time('2024-07-31'):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 1, 'Days should be allocated even when leave is taken in the future')
+
+    def test_accrual_days_left_under_carryover_maximum(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': '21 days per year, 28 days cap, 7 carryover max',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'start',
+            'level_ids':
+                [(0, 0, {
+                "accrued_gain_time": "start",
+                "action_with_unused_accruals": "maximum",
+                "added_value": 21,
+                "cap_accrued_time": True,
+                "first_day": 1,
+                "first_month": "jan",
+                "first_month_day": 1,
+                "frequency": "yearly",
+                "maximum_leave": 28,
+                "postpone_max_days": 7,
+                "start_count": 0,
+                "start_type": "day",
+                "yearly_day": 1,
+                "yearly_month": "jan"
+            })
+            ],
+        })
+
+        with freeze_time('2024-11-25'):
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = accrual_plan
+                f.date_from = '2024-01-01'
+                f.employee_id = self.employee_emp
+                f.holiday_status_id = self.leave_type
+                f.name = "Employee Allocation"
+
+            allocation = f.record
+            allocation.action_validate()
+
+            # take 15 days, left with 6 days on the alloc
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2024-10-07',
+                'request_date_to': '2024-10-25',
+            })
+            leave.action_validate()
+            data = self.leave_type.get_allocation_data(self.employee_emp, date(2025, 1, 15))
+            remaining_future = data[self.employee_emp][0][1]["remaining_leaves"]
+            self.assertEqual(remaining_future, 27)
+
+    def test_accrual_unused_accrual_reset_to_lost(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': '21 days per year, 28 days cap, 7 carryover max',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'start',
+        })
+
+        plan = self.env["hr.leave.accrual.level"].with_context(tracking_disable=True).create({
+            "accrual_plan_id" : accrual_plan.id,
+        })
+
+        with Form(plan) as f:
+            f.added_value = 21
+            f.frequency = 'yearly'
+            f.yearly_day_display = "1"
+            f.cap_accrued_time = True
+            f.maximum_leave = 28
+            f.start_count = 0
+            # Set a maximum carry-over
+            f.action_with_unused_accruals = 'maximum'
+            f.postpone_max_days = 7
+            # Set it back to 'lost'
+            f.action_with_unused_accruals = 'lost'
+
+        with freeze_time('2024-11-25'):
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = accrual_plan
+                f.date_from = '2024-01-01'
+                f.employee_id = self.employee_emp
+                f.holiday_status_id = self.leave_type
+                f.name = "Employee Allocation"
+
+            allocation = f.record
+            allocation.action_validate()
+
+            # take 15 days, left with 6 days on the alloc
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2024-10-07',
+                'request_date_to': '2024-10-25',
+            })
+            leave.action_validate()
+            data = self.leave_type.get_allocation_data(self.employee_emp, date(2025, 1, 15))
+            remaining_future = data[self.employee_emp][0][1]["remaining_leaves"]
+            self.assertEqual(remaining_future, 21)
+
+    def test_accrual_allocation_without_working_hours(self):
+        """
+        check that creating an accrual allocation for an employee without working hours doesn't raise a traceback error
+        """
+        with freeze_time("2017-12-5"):
+            employee_without_calendar = self.env['hr.employee'].create({
+                'name': 'employee without calendar',
+                'resource_calendar_id': False,
+            })
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'accrual plan',
+                'is_based_on_worked_time': True,
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'hour',
+                    'frequency': 'hourly',
+                })],
+            })
+            past_date = datetime.date.today() - relativedelta(days=1)
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'accrual allocation for employee without calendar',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': employee_without_calendar.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': past_date,
+            })
+            future_date = datetime.date.today() + relativedelta(days=1)
+            allocation._process_accrual_plans(date_to=future_date)
+
+    def test_accrual_allocation_with_virtual_future_leaves(self):
+        """ This test considers a case where the employee has an accrual plan with no carryover and
+        also has a virtual leave (leave that isn't validated). When we call the CRON to update the
+        time off based on the accrual allocation and ensure that it goes through successfully without
+        errors due to the pending virtual leaves. Example:
+        Accrual plan with no carryover that grants 8 days on Jan 1 of each year
+        - 8 days allocated on 2024-12-01 (to simulate initial 15day allocation)
+        - Request an unvalidated leave from 2025-01-03 to 2025-01-04 (lies after the carryover date)
+        - Run the CRON on 2025-01-05 to update the accrual allocation: (note how the CRON is run after the leave date)
+           1. The CRON would first make the allocation's number_of_days = 0 because of the carryover policy
+           2. Then it would add 8 days to the allocation's number_of_days
+        - Ensure that the CRON runs successfully without errors during (1) due to the pending virtual leave
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'hr',
+            'allocation_validation_type': 'hr',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan with no carryover',
+            'accrued_gain_time': 'start',
+            'carryover_date': 'year_start',
+            'level_ids': [Command.create({
+                'added_value': 8,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'lost',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+            })],
+        })
+
+        with freeze_time("2024-12-01"):
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'date_from': '2024-12-01',
+                'number_of_days': 8,
+                'allocation_type': 'accrual',
+                'nextcall': '2025-01-01',
+            })
+            allocation.action_validate()
+            # A virtual leave that is pending approval and will be taken after the carryover date
+            leave = self.env['hr.leave'].create({
+                'name': 'Virtual Leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-12-23',
+                'request_date_to': '2024-12-24',
+            })
+            self.assertNotEqual(leave.state, 'validate', "The leave request should not be in the 'validate' state")
+
+        # This is a case where
+        # - the allocation had a next call day of Jan 1 to reset the leaves as per the accrual plan
+        # - the future leave is to scheduled for Jan 3rd to 4th (future because it comes after the carryover date of accrual)
+        # - the CRON to update the accrual allocation is run on Jan 5th (after the nextcall and requested leave date)
+        with freeze_time("2025-01-05"):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 8, "The number of days should be updated successfully")

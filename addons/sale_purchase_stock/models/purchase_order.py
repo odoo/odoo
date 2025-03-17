@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import Command, api, models
 
 
 class PurchaseOrder(models.Model):
@@ -26,6 +26,8 @@ class PurchaseOrderLine(models.Model):
         res = super()._prepare_stock_moves(picking)
         for re in res:
             re['sale_line_id'] = self.sale_line_id.id
+            if self.sale_line_id.route_id:
+               re['route_ids'] = [Command.link(self.sale_line_id.route_id.id)]
             if self.order_id.dest_address_id:
                 # In a dropshipping context we do not need the description of the purchase order or it will be displayed
                 # in Delivery slip report and it may be confusing for the customer to see several times the same text (product name + description_picking).

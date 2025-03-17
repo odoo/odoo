@@ -10,7 +10,6 @@ import {
 
 
 registerWebsitePreviewTour('website_page_options', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
+from itertools import chain, starmap, zip_longest
 
-from odoo import SUPERUSER_ID, api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import is_html_empty
 
@@ -127,6 +127,37 @@ class SaleOrder(models.Model):
         ]
 
         self.sale_order_option_ids = option_lines_data
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        """Reload template for unsaved orders with unmodified lines & orders."""
+        if self._origin or not self.sale_order_template_id:
+            return
+
+        def line_eqv(line, t_line):
+            return line and t_line and (
+                line.product_id == t_line.product_id
+                and line.display_type == t_line.display_type
+                and line.product_uom == t_line.product_uom_id
+                and line.product_uom_qty == t_line.product_uom_qty
+            )
+
+        def option_eqv(option, t_option):
+            return option and t_option and all(
+                option[fname] == t_option[fname]
+                for fname in ['product_id', 'uom_id', 'quantity']
+            )
+
+        lines = self.order_line
+        options = self.sale_order_option_ids
+        t_lines = self.sale_order_template_id.sale_order_template_line_ids
+        t_options = self.sale_order_template_id.sale_order_template_option_ids
+
+        if all(chain(
+            starmap(line_eqv, zip_longest(lines, t_lines)),
+            starmap(option_eqv, zip_longest(options, t_options)),
+        )):
+            self._onchange_sale_order_template_id()
 
     #=== ACTION METHODS ===#
 

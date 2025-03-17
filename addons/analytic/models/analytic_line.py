@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from dateutil.relativedelta import relativedelta
 from lxml.builder import E
 
 from odoo import api, fields, models, _
+from odoo.tools import Query, SQL
 from odoo.exceptions import ValidationError
 from odoo.osv.expression import OR
 
@@ -77,6 +78,9 @@ class AnalyticPlanFields(models.AbstractModel):
     def _get_plan_domain(self, plan):
         return [('plan_id', 'child_of', plan.id)]
 
+    def _get_account_node_context(self, plan):
+        return {'default_plan_id': plan.id}
+
     @api.constrains(lambda self: self._get_plan_fnames())
     def _check_account_id(self):
         fnames = self._get_plan_fnames()
@@ -87,7 +91,7 @@ class AnalyticPlanFields(models.AbstractModel):
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         fields = super().fields_get(allfields, attributes)
-        if self.env['account.analytic.plan'].has_access('read'):
+        if not self._context.get("studio") and self.env['account.analytic.plan'].has_access('read'):
             project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
             for plan in project_plan + other_plans:
                 fname = plan._column_name()
@@ -101,7 +105,7 @@ class AnalyticPlanFields(models.AbstractModel):
         return self._patch_view(arch, view, view_type)
 
     def _patch_view(self, arch, view, view_type):
-        if self.env['account.analytic.plan'].has_access('read'):
+        if not self._context.get("studio") and self.env['account.analytic.plan'].has_access('read'):
             project_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
 
             # Find main account nodes
@@ -114,6 +118,7 @@ class AnalyticPlanFields(models.AbstractModel):
 
             # If there is a main node, append the ones for other plans
             if account_node is not None or account_filter_node is not None:
+                account_node.set('context', repr(self._get_account_node_context(project_plan)))
                 for plan in other_plans[::-1]:
                     fname = plan._column_name()
                     if account_node is not None:
@@ -121,7 +126,8 @@ class AnalyticPlanFields(models.AbstractModel):
                             'optional': 'show',
                             **account_node.attrib,
                             'name': fname,
-                            'domain': repr(self._get_plan_domain(plan))
+                            'domain': repr(self._get_plan_domain(plan)),
+                            'context': repr(self._get_account_node_context(plan)),
                         }))
                     if account_filter_node is not None:
                         account_filter_node.addnext(E.filter(name=fname, context=f"{{'group_by': '{fname}'}}"))
@@ -193,3 +199,9 @@ class AccountAnalyticLine(models.Model):
         [('other', 'Other')],
         default='other',
     )
+
+    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
+        if fname == 'date' and value == 'fiscal_start_year':
+            fiscalyear_date_range = self.env.company.compute_fiscalyear_dates(fields.Date.today())
+            value = fiscalyear_date_range['date_from'] - relativedelta(years=1)
+        return super()._condition_to_sql(alias, fname, operator, value, query)

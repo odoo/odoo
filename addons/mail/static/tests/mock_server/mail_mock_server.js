@@ -733,7 +733,7 @@ async function mail_message_update_content(request) {
             pinned_at: message.pinned_at,
             recipients: mailDataHelpers.Store.many(
                 this.env["res.partner"].browse(message.partner_ids),
-                makeKwArgs({ fields: ["name", "write_date"] })
+                makeKwArgs({ fields: ["avatar_128", "name"] })
             ),
         }).get_result()
     );
@@ -743,7 +743,7 @@ async function mail_message_update_content(request) {
     ).get_result();
 }
 
-registerRoute("/discuss/channel/:cid/partner/:pid/avatar_128", partnerAvatar128);
+registerRoute("/discuss/channel/<int:cid>/partner/<int:pid>/avatar_128", partnerAvatar128);
 /** @type {RouteCallback} */
 async function partnerAvatar128(request, { cid, pid }) {
     return [cid, pid];

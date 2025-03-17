@@ -13,6 +13,7 @@ declare module "models" {
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
+    import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
     import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
@@ -33,6 +34,7 @@ declare module "models" {
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
     export interface Persona extends PersonaClass {}
+    export interface ResGroups extends ResGroupsClass {}
     export interface Settings extends SettingsClass {}
     export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
@@ -54,6 +56,7 @@ declare module "models" {
         "MessageReactions": MessageReactions,
         "Notification": Notification,
         "Persona": Persona,
+        "res.groups": ResGroups,
         "Settings": Settings,
         "Store": Store,
         "Thread": Thread,

@@ -8,15 +8,7 @@ import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup"
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import {
-    Component,
-    onMounted,
-    useRef,
-    useState,
-    onWillStart,
-    useEffect,
-    useExternalListener,
-} from "@odoo/owl";
+import { Component, onMounted, useRef, useState, useEffect, useExternalListener } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
@@ -32,6 +24,7 @@ import { pick } from "@web/core/utils/objects";
 import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 
 function constrain(num, min, max) {
     return Math.min(Math.max(num, min), max);
@@ -96,6 +89,10 @@ export class FloorScreen extends Component {
             floorWidth: "100%",
             selectedTableIds: [],
             potentialLink: null,
+        });
+
+        this.doCreateTable = useTrackedAsync(async () => {
+            await this.createTable();
         });
         this.floorMapRef = useRef("floor-map-ref");
         this.floorScrollBox = useRef("floor-map-scroll");
@@ -236,8 +233,9 @@ export class FloorScreen extends Component {
         this.useResizeHook();
         onMounted(() => {
             this.pos.openOpeningControl();
+            this.pos.searchProductWord = "";
+            this.pos.unsetTable();
         });
-        onWillStart(this.onWillStart);
         useEffect(
             () => {
                 this.computeFloorSize();
@@ -353,13 +351,6 @@ export class FloorScreen extends Component {
         } else {
             this.state.floorHeight = `${positionV}px`;
             this.state.floorWidth = `${positionH}px`;
-        }
-    }
-    async onWillStart() {
-        this.pos.searchProductWord = "";
-        const table = this.pos.selectedTable;
-        if (table) {
-            await this.pos.unsetTable();
         }
     }
     get floorBackround() {
@@ -647,6 +638,7 @@ export class FloorScreen extends Component {
             },
         });
     }
+
     async createTable() {
         const newTable = await this._createTableHelper();
         if (newTable) {

@@ -4,6 +4,10 @@
 # 
 # Translators:
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,36 +30,39 @@ msgid ""
 "                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
+"\n"
+"                {{ (object.company_id.name + ': Meillä on ilo ilmoittaa, että tilauksenne nro ' + object.origin + ' on lähetetty.' if object.origin else object.company_id.name + ': Meillä on ilo ilmoittaa, että tilauksenne on lähetetty.') + (' Seurantaviitteesi on ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "Cancel"
-msgstr ""
+msgstr "Peruuta"
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Yritykset"
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Asetukset"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "Confirm"
-msgstr ""
+msgstr "Vahvista"
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_confirm_stock_sms
 msgid "Confirm Stock SMS"
-msgstr ""
+msgstr "Vahvista varastotekstiviesti"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Luonut"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_date
@@ -65,78 +72,78 @@ msgstr "Luotu"
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr ""
+msgstr "Toimitus: Lähetä tekstiviesti"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "Disable SMS"
-msgstr ""
+msgstr "Poista SMS käytöstä"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näyttönimi"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr ""
+msgstr "Varasto tekstiviestistä on tullut varoitus"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Viimeksi päivittänyt"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__pick_ids
 msgid "Pick"
-msgstr ""
+msgstr "Keräily"
 
 #. module: stock_sms
 #. odoo-python
 #: code:addons/stock_sms/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
 #: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Confirmation"
-msgstr ""
+msgstr "SMS-vahvistus"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 #: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Template"
-msgstr ""
+msgstr "SMS Malli"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
 msgid "SMS Validation with stock move"
-msgstr ""
+msgstr "Tekstiviestien varmistus varastosiirrolle"
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 msgid "SMS sent to the customer once the order is delivered."
-msgstr ""
+msgstr "Asiakkaalle lähetettävä tekstiviesti, kun tilaus on toimitettu."
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Siirto"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -144,3 +151,5 @@ msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
 "                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
+"Olet vahvistamassa tätä toimitustilausta tekstiviestillä.<br/>\n"
+"                Tämä ominaisuus voidaan helposti poistaa käytöstä Inventaarion asetuksista tai klikkaamalla \"Poista tekstiviesti käytöstä\".<br/>"

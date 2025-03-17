@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -39,6 +39,22 @@ test("navigate to sub channel", async () => {
     });
     await click(".o-mail-NotificationMessage a", { text: "New Thread" });
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
+});
+
+test("can manually unpin a sub-thread", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    // Open thread so this is pinned
+    await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await click("button[title='Threads']");
+    await click("button[aria-label='Create Thread']");
+    await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
+    await click("button[title='Unpin Thread']", {
+        parent: [".o-mail-DiscussSidebar-item", { text: "New Thread" }],
+    });
+    await contains(".o-mail-DiscussSidebar-item", { text: "New Thread", count: 0 });
 });
 
 test("open sub channel menu from notification", async () => {
@@ -140,4 +156,39 @@ test("'Thread' menu available in threads", async () => {
     await insertText(".o-mail-ActionPanel input[placeholder='Search by name']", "ThreadTwo");
     await click(".o-mail-ActionPanel button", { text: "Create" });
     await click(".o-mail-DiscussSidebar-item", { text: "ThreadTwo" });
+});
+
+test("mention suggestions in thread match channel restrictions", async () => {
+    const pyEnv = await startServer();
+    const groupId = pyEnv["res.groups"].create({ name: "testGroup" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        group_public_id: groupId,
+    });
+    pyEnv["discuss.channel"].create({
+        name: "Thread",
+        parent_channel_id: channelId,
+    });
+    pyEnv["res.users"].write(serverState.userId, { groups_id: [Command.link(groupId)] });
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { email: "p1@odoo.com", name: "p1" },
+        { email: "p2@odoo.com", name: "p2" },
+    ]);
+    pyEnv["res.users"].create([
+        { partner_id: partnerId_1, groups_id: [Command.link(groupId)] },
+        { partner_id: partnerId_2 },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebar-item.o-active:contains('General')");
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
+    await contains(".o-mail-Composer-suggestion", { text: "Mitchell Admin" });
+    await contains(".o-mail-Composer-suggestion", { text: "p1" });
+    await click(".o-mail-DiscussSidebar-item:contains('Thread')");
+    await contains(".o-mail-DiscussSidebar-item.o-active:contains('Thread')");
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
+    await contains(".o-mail-Composer-suggestion", { text: "Mitchell Admin" });
+    await contains(".o-mail-Composer-suggestion", { text: "p1" });
 });

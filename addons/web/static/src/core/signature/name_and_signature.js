@@ -23,6 +23,7 @@ export class NameAndSignature extends Component {
         signatureType: { type: String, optional: true },
         noInputName: { type: Boolean, optional: true },
         mode: { type: String, optional: true },
+        onSignatureChange: { type: Function, optional: true },
     };
     static defaultProps = {
         defaultFont: "",
@@ -30,6 +31,7 @@ export class NameAndSignature extends Component {
         fontColor: "DarkBlue",
         signatureType: "signature",
         noInputName: false,
+        onSignatureChange: () => {},
     };
 
     setup() {
@@ -77,6 +79,7 @@ export class NameAndSignature extends Component {
                     });
                     this.signaturePad.addEventListener("endStroke", () => {
                         this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+                        this.props.onSignatureChange(this.state.signMode);
                     });
                     this.resetSignature();
                     this.props.signature.getSignatureImage = () => this.signaturePad.toDataURL();
@@ -86,7 +89,7 @@ export class NameAndSignature extends Component {
                     }
                     if (this.props.signature.signatureImage) {
                         this.clear();
-                        this.signaturePad.fromDataURL(this.props.signature.signatureImage);
+                        this.fromDataURL(this.props.signature.signatureImage);
                     }
                 }
             },
@@ -118,6 +121,15 @@ export class NameAndSignature extends Component {
     clear() {
         this.signaturePad.clear();
         this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+    }
+
+    /**
+    * Loads a signature image from a base64 dataURL and updates the empty state.
+    */
+    async fromDataURL() {
+        await this.signaturePad.fromDataURL(...arguments);
+        this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+        this.props.onSignatureChange(this.state.signMode);
     }
 
     /**
@@ -207,6 +219,7 @@ export class NameAndSignature extends Component {
 
     onClickSignDrawClear() {
         this.clear();
+        this.props.onSignatureChange(this.state.signMode);
     }
 
     onClickSignLoad() {
@@ -254,6 +267,7 @@ export class NameAndSignature extends Component {
                 , img.height * ratio
             );
             this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+            this.props.onSignatureChange(this.state.signMode);
         };
         img.src = imgSrc;
         this.signaturePad._isEmpty = false;
@@ -308,6 +322,7 @@ export class NameAndSignature extends Component {
             // draw based on name
             this.drawCurrentName();
         }
+        this.props.onSignatureChange(this.state.signMode);
     }
 
     /**

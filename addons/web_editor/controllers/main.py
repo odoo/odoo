@@ -485,6 +485,15 @@ class Web_Editor(http.Controller):
         img = binary_to_image(image)
         width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)
+
+        if root.attrib.get("data-forced-size"):
+            # Adjusts the SVG height to ensure the image fits properly within
+            # the SVG (e.g. for "devices" shapes).
+            svgHeight = float(root.attrib.get("height"))
+            svgWidth = float(root.attrib.get("width"))
+            svgAspectRatio = svgWidth / svgHeight
+            height = str(float(width) / svgAspectRatio)
+
         root.attrib.update({'width': width, 'height': height})
         # Update default color palette on shape SVG.
         svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
@@ -512,3 +521,7 @@ class Web_Editor(http.Controller):
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
 
+    @http.route("/web_editor/field/translation/update", type="json", auth="user", website=True)
+    def update_field_translation(self, model, record_id, field_name, translations):
+        record = request.env[model].browse(record_id)
+        return record.web_update_field_translations(field_name, translations)

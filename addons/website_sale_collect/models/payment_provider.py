@@ -9,9 +9,7 @@ from odoo.addons.website_sale_collect import const
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
-    custom_mode = fields.Selection(
-        selection_add=[('on_site', "Pay on site")]
-    )
+    custom_mode = fields.Selection(selection_add=[('on_site', "Pay on site")])
 
     @api.model
     def _get_compatible_providers(
@@ -40,8 +38,7 @@ class PaymentProvider(models.Model):
         # Show on-site payment providers only if in-store delivery methods exist and the order
         # contains physical products.
         if order.carrier_id.delivery_type != 'in_store' or not any(
-            product.type == 'consu'
-            for product in order.order_line.product_id
+            product.type == 'consu' for product in order.order_line.product_id
         ):
             unfiltered_providers = compatible_providers
             compatible_providers = compatible_providers.filtered(

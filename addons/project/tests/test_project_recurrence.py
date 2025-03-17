@@ -107,24 +107,22 @@ class TestProjectRecurrence(TransactionCase):
             form.name = 'test recurring task'
             form.project_id = self.project_recurring
             form.recurring_task = True
-            form.repeat_interval = 5
+            form.repeat_interval = 1
             form.repeat_unit = 'month'
             form.repeat_type = 'until'
-            form.repeat_until = self.date_01_01 + relativedelta(months=1)
+            form.repeat_until = self.date_01_01 + relativedelta(months=1, days=1)
+            form.date_deadline = self.date_01_01
+            with form.child_ids.new() as subtask_form:
+                subtask_form.name = 'test subtask'
             task = form.save()
 
-        with freeze_time(self.date_01_01 + relativedelta(days=30)):
-            task.state = '1_done'
+        task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is before repeat_until, next occurrence should have been created")
 
-        with freeze_time(self.date_01_01 + relativedelta(days=32)):
-            task.state = '1_done'
-        self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is not the last task of the recurrence, next occurrence shouldn't have been created")
-
         last_recurring_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
-        with freeze_time(self.date_01_01 + relativedelta(days=32)):
-            last_recurring_task.state = '1_done'
+        last_recurring_task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is after repeat_until, next occurrence shouldn't have been created")
+        self.assertEqual(len(task.recurrence_id.task_ids.child_ids), 2, "2 subtasks should have been created")
 
     def test_recurring_settings_change(self):
         self.env['res.config.settings'] \

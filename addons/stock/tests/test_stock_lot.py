@@ -40,12 +40,12 @@ class TestLotSerial(TestStockCommon):
             'name': 'lot_product_b',
             'product_id': cls.productB.id,
         })
-        cls.StockQuantObj.create({
-            'product_id': cls.productB.id,
-            'location_id': cls.locationA.id,
-            'quantity': 1.0,
-            'lot_id': cls.lot_p_b.id
-        })
+        cls.env['stock.quant']._update_available_quantity(
+            cls.productB,
+            cls.locationA,
+            1.0,
+            lot_id=cls.lot_p_b,
+        )
 
     def test_single_location(self):
         self.assertEqual(self.lot_p_a.location_id, self.locationA)
@@ -90,6 +90,32 @@ class TestLotSerial(TestStockCommon):
         self.assertEqual(vals[1]['quantity'], 4)
         self.assertEqual(vals[2]['lot_name'], 'wxc')
         self.assertEqual(vals[2]['quantity'], 1, "default lot qty")
+
+    def test_lot_no_company(self):
+        """ check the lot created in a receipt should not have a company if the product is not
+        linked to a company"""
+        picking1 = self.env['stock.picking'].create({
+            'name': 'Picking 1',
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'move_ids': [Command.create({
+                'name': self.productB.name,
+                'location_id': self.supplier_location,
+                'location_dest_id': self.stock_location,
+                'product_id': self.productB.id,
+                'product_uom_qty': 1.0,
+            })]
+        })
+        picking1.action_confirm()
+        move = picking1.move_ids
+        move.move_line_ids.lot_name = 'sn_test'
+        move.picked = True
+        picking1._action_done()
+        self.assertEqual(move.state, 'done')
+        # there is a lot but without a company
+        self.assertTrue(move.move_line_ids.lot_id)
+        self.assertFalse(move.move_line_ids.lot_id.company_id)
 
     def test_lot_uniqueness(self):
         """ Checks that the same lot name cannot be inserted twice for the same company or 'no-company'.
@@ -171,3 +197,84 @@ class TestLotSerial(TestStockCommon):
         })
         self.assertRecordValues(delivery_picking.move_ids, [{'state': 'done', 'quantity': 5.0, 'picked': True}, {'state': 'done', 'quantity': 3.0, 'picked': True}])
         self.assertRecordValues(quant, [{'quantity': 7.0, 'reserved_quantity': 0.0}])
+
+    def test_location_lot_id_update_quant_qty(self):
+        """
+        Test that the location of a lot is updated when its linked quants change
+        """
+        # check that the serial number linked to productB is in location A
+        self.assertEqual(self.lot_p_b.location_id, self.locationA)
+        # Make a delivery move
+        starting_quant = self.lot_p_b.quant_ids
+        self.assertEqual(starting_quant.quantity, 1)
+        move = self.env["stock.move"].create({
+            'name': 'test_move',
+            'location_id': self.locationA.id,
+            'location_dest_id': self.customer_location,
+            'product_id': self.productB.id,
+            'product_uom_qty': 1.0,
+        })
+        move._action_confirm()
+        self.assertEqual(move.state, 'confirmed')
+        move._action_assign()
+        move.picked = True
+        move._action_done()
+        self.assertEqual(move.state, 'done')
+        # check that the quantity of starting quant is moved to a new quant
+        self.assertEqual(starting_quant.quantity, 0)
+        # check that the sn is in customer location
+        self.assertEqual(self.lot_p_b.location_id.id, self.customer_location)
+        # create a return
+        move = self.env['stock.move'].create({
+            'name': 'test_move',
+            'location_id': self.customer_location,
+            'location_dest_id': self.locationA.id,
+            'product_id': self.productB.id,
+            'lot_ids': self.lot_p_b,
+            'product_uom_qty': 1.0,
+        })
+        move._action_confirm()
+        move.picked = True
+        move._action_done()
+        self.assertEqual(move.state, 'done')
+        self.assertEqual(starting_quant.quantity, 1)
+        self.assertEqual(self.lot_p_b.location_id, self.locationA)
+
+    def test_lot_id_with_branch_company(self):
+        """Test that a lot can be created in branch company when
+        the product is limited to the parent company"""
+        branch_a = self.env['res.company'].create({
+            'name': 'Branch X',
+            'country_id': self.env.company.country_id.id,
+            'parent_id': self.env.company.id,
+        })
+        self.assertEqual(self.productB.tracking, 'serial')
+        self.productB.company_id = self.env.company
+        branch_a_warehouse = self.env['stock.warehouse'].search([('company_id', '=', branch_a.id)])
+        branch_receipt_type = self.env['stock.picking.type'].search([('company_id', '=', branch_a.id), ('code', '=', 'incoming')], limit=1)
+        # create a receipt and confirm it
+        picking1 = self.env['stock.picking'].create({
+            'name': 'Picking 1',
+            'location_id': self.supplier_location,
+            'location_dest_id': branch_a_warehouse.lot_stock_id.id,
+            'picking_type_id': branch_receipt_type.id,
+        })
+        move = self.env["stock.move"].with_company(branch_a).create({
+            'name': 'test_move',
+            'location_id': self.supplier_location,
+            'location_dest_id': branch_a_warehouse.lot_stock_id.id,
+            'product_id': self.productB.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking1.id,
+        })
+        picking1.with_company(branch_a).action_confirm()
+        move.move_line_ids.lot_name =  'sn_test'
+        move.picked = True
+        picking1.with_company(branch_a)._action_done()
+        self.assertTrue(move.move_line_ids.lot_id)
+        self.assertEqual(move.state, 'done')
+        sn_form = Form(self.env['stock.lot'].with_company(branch_a))
+        sn_form.name = 'sn_test_2'
+        sn_form.product_id = self.productB
+        sn = sn_form.save()
+        self.assertEqual(sn.company_id, branch_a)

@@ -1,11 +1,10 @@
 /** @odoo-module **/
-    
+
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('mailing_editor', {
     url: '/odoo',
-    test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
     run: "click",
@@ -21,9 +20,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
 }, {
     content: 'choose the theme "empty" to edit the mailing with snippets',
     trigger: '[name="body_arch"] :iframe #empty',
-    run() {
-        this.anchor.click();
-    }
+    run: "click",
 }, {
     content: 'wait for the editor to be rendered',
     trigger: '[name="body_arch"] :iframe .o_editable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',

@@ -1,6 +1,7 @@
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { barcodeService } from "@barcodes/barcode_service";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 import { EventBus, onWillDestroy, useComponent } from "@odoo/owl";
 
 const INPUT_KEYS = new Set(
@@ -189,7 +190,11 @@ class NumberBuffer extends EventBus {
         return (manualCapture = false) => {
             // Manual call to NumberBuffer.capture() should allow handling more than 2 items in the buffer.
             // This is useful in tour test that make very fast screen numpad presses (clicks).
-            if (manualCapture || (!manualCapture && this.eventsBuffer.length <= 2)) {
+            if (
+                manualCapture ||
+                session.test_mode ||
+                (!manualCapture && this.eventsBuffer.length <= 2)
+            ) {
                 // Check first the buffer if its contents are all valid
                 // number input.
                 for (const event of this.eventsBuffer) {

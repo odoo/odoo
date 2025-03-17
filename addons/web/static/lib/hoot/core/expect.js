@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { markRaw } from "@odoo/owl";
 import {
     formatXml,
     getActiveElement,
@@ -13,21 +14,24 @@ import {
     isNode,
     isNodeDisplayed,
     isNodeVisible,
-    queryAll,
     queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
-import { isFirefox, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { addInteractionListener, isFirefox, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
+    CASE_EVENT_TYPES,
+    ElementMap,
     HootError,
     Markup,
-    RawString,
     deepCopy,
     deepEqual,
     ensureArguments,
     ensureArray,
     formatHumanReadable,
+    isLabel,
     isNil,
     isOfType,
+    makeLabel,
+    makeLabelIcon,
     match,
     strictEqual,
 } from "../hoot_utils";
@@ -41,16 +45,28 @@ import { Test } from "./test";
  *
  * @typedef {import("../hoot_utils").ArgumentType} ArgumentType
  *
+ * @typedef {string | string[] | ((pass: boolean, raw: typeof String["raw"]) => string | string[])} AssertionMessage
+ *
+ * @typedef {InteractionType | "assertion" | "error" | "step"} CaseEventType
+ *
+ * @typedef {{ exact?: boolean }} ClassListOptions
+ *
+ * @typedef {{ exact?: boolean; inline?: boolean }} DOMStyleOptions
+ *
  * @typedef {{
  *  headless: boolean;
  * }} ExpectBuilderParams
  *
  * @typedef {{
- *  message?: string;
+ *  message?: AssertionMessage;
  * }} ExpectOptions
+ *
+ * @typedef {import("../hoot_utils").Label} Label
  *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
  * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
+ * @typedef {import("@web/../lib/hoot-dom/hoot_dom_utils").InteractionDetails} InteractionDetails
+ * @typedef {import("@web/../lib/hoot-dom/hoot_dom_utils").InteractionType} InteractionType
  * @typedef {import("@odoo/hoot-dom").QueryRectOptions} QueryRectOptions
  * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
@@ -62,19 +78,10 @@ import { Test } from "./test";
  * @typedef {{
  *  acceptedType: ArgumentType | ArgumentType[];
  *  failedDetails: () => any[];
- *  message: (pass: boolean) => string;
+ *  message: AssertionMessage;
  *  name: string;
  *  predicate: () => boolean;
  * }} MatcherSpecifications
- */
-
-/**
- * @template Async
- * @typedef {{
- *  not?: boolean;
- *  rejects?: Async;
- *  resolves?: Async;
- * }} Modifiers
  */
 
 /**
@@ -92,9 +99,10 @@ const {
     Error,
     Math: { floor: $floor },
     Object: { assign: $assign, fromEntries: $fromEntries, entries: $entries, keys: $keys },
+    parseFloat,
+    performance,
     Promise,
     TypeError,
-    performance,
 } = globalThis;
 /** @type {Performance["now"]} */
 const $now = performance.now.bind(performance);
@@ -102,6 +110,33 @@ const $now = performance.now.bind(performance);
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+/**
+ * @param {...unknown} args
+ */
+const detailsFromValues = (...args) =>
+    args.length > 1
+        ? [Markup.green(LABEL_EXPECTED, args[0]), Markup.red(LABEL_RECEIVED, args[1])]
+        : [Markup.red(LABEL_RECEIVED, args[0])];
+
+/**
+ * @param {...unknown} args
+ */
+const detailsFromValuesWithDiff = (...args) => [
+    ...detailsFromValues(...args),
+    Markup.diff(...args),
+];
+
+/**
+ * @param {Record<string, unknown>} valuesObject
+ */
+const detailsFromObject = (valuesObject) => {
+    const [expected, received] = Object.entries(valuesObject);
+    return [
+        Markup.green(expected[0] || LABEL_EXPECTED, expected[1]),
+        Markup.red(received[0] || LABEL_RECEIVED, received[1]),
+    ];
+};
 
 /**
  * @template T
@@ -132,23 +167,12 @@ const formatError = (error) => {
 
 /**
  * @param {string} message
- * @param {boolean} not
+ * @param {number} flags
  */
-const formatMessage = (message, not) =>
-    message.replace(R_NOT, (_, ifTrue, ifFalse) => (not ? ifFalse || "" : ifTrue || ""));
-
-/**
- * @param {string} stack
- */
-const formatStack = (stack) => {
-    let stackLines = String(stack)
-        .split(/\n/g)
-        .slice(isFirefox() ? 1 : 2); // remove `saveStack` (and ´Error´ in chrome)
-    if (stackLines.length > 10) {
-        stackLines = [...stackLines.slice(0, 10), `... ${stackLines.length - 10} more`];
-    }
-    return stackLines.map((v) => Markup.text(v.trim()));
-};
+const formatMessage = (message, flags) =>
+    message.replace(R_NOT, (_, ifTrue, ifFalse) =>
+        flags & FLAGS.not ? ifFalse || "" : ifTrue || ""
+    );
 
 /**
  * @param {Iterable<any> | Record<any, any>} object
@@ -164,36 +188,36 @@ const getLength = (object) => {
 };
 
 /**
+ * @param {number} depth amount of lines to remove from the stack
+ */
+const getStack = (depth) => {
+    const error = new Error();
+    if (!isFirefox()) {
+        // remove ´Error´ in chrome
+        depth++;
+    }
+    const lines = error.stack.split(R_LINE_RETURN).slice(depth + 1); // Remove `getStack`
+    const hidden = lines.splice(MAX_STACK_LENGTH);
+    if (hidden.length) {
+        lines.push(`… ${hidden.length} more`);
+    }
+    return lines.join("\n");
+};
+
+/**
  * @param {Node} node
  * @param {string[]} keys
  * @returns {Record<string, string>}
  */
 const getStyleValues = (node, keys) => {
     const nodeStyle = getStyle(node);
-    if (!nodeStyle) {
-        return {};
+    const styleValues = Object.create(null);
+    if (nodeStyle) {
+        for (const key of keys) {
+            styleValues[key] = nodeStyle.getPropertyValue(key) || nodeStyle[key];
+        }
     }
-    return $fromEntries(
-        keys.map((key) => [
-            key,
-            key.includes("-") ? nodeStyle.getPropertyValue(key) : nodeStyle[key],
-        ])
-    );
-};
-
-/** @type {StringConstructor["raw"]} */
-const h = (template, ...substitutions) =>
-    new RawString(String.raw(template, ...substitutions.map((s) => formatHumanReadable(s))));
-
-/**
- * @param {string} separator
- * @param {string[]} values
- */
-const hJoin = (separator, values) => {
-    const hValues = values.map(formatHumanReadable);
-    const last = hValues.pop();
-    const str = hValues.length ? [hValues.join(", "), last].join(` ${separator} `) : last;
-    return new RawString(str);
+    return styleValues;
 };
 
 /**
@@ -220,30 +244,40 @@ const includes = (object, item) => {
 };
 
 /**
- * @param {...unknown} args
+ * @template T
+ * @param {T[]} list
+ * @param {string} separator
+ * @param {string} [lastSeparator]
+ * @returns {(T | string)[]}
  */
-const detailsFromValues = (...args) =>
-    args.length > 1
-        ? [Markup.green(LABEL_EXPECTED, args[0]), Markup.red(LABEL_RECEIVED, args[1])]
-        : [Markup.red(LABEL_RECEIVED, args[0])];
+const listJoin = (list, separator, lastSeparator) => {
+    if (list.length <= 1) {
+        return list;
+    }
 
-/**
- * @param {...unknown} args
- */
-const detailsFromValuesWithDiff = (...args) => [
-    ...detailsFromValues(...args),
-    Markup.diff(...args),
-];
+    const rSeparator = isLabel(separator) ? separator : makeLabel(separator, null);
+    const rLastSeparator = lastSeparator
+        ? isLabel(lastSeparator)
+            ? lastSeparator
+            : makeLabel(lastSeparator, null)
+        : rSeparator;
 
-/**
- * @param {Record<string, unknown>} valuesObject
- */
-const detailsFromObject = (valuesObject) => {
-    const [expected, received] = Object.entries(valuesObject);
-    return [
-        Markup.green(expected[0] || LABEL_EXPECTED, expected[1]),
-        Markup.red(received[0] || LABEL_RECEIVED, received[1]),
-    ];
+    const result = [];
+    for (let i = 0; i < list.length; i++) {
+        if (i === list.length - 1) {
+            result.push(rLastSeparator);
+        } else if (i > 0) {
+            result.push(rSeparator);
+        }
+        result.push(list[i]);
+    }
+    return result;
+};
+
+/** @type {typeof makeLabel} */
+const makeLabelOrString = (...args) => {
+    const label = makeLabel(...args);
+    return label[1] === null ? label[0] : label;
 };
 
 /**
@@ -254,42 +288,28 @@ const matcherModifierError = (modifier, message) =>
     new HootError(`cannot use modifier "${modifier}": ${message}`);
 
 /**
- * @param {string} styleString
+ * @param {string | Record<string, any>} style
  * @returns {Record<string, string>}
  */
-const parseStyle = (styleString) =>
-    $fromEntries(styleString.split(";").map((prop) => prop.split(":").map((v) => v.trim())));
-
-/**
- * @template T
- * @param {Target} target
- * @param {(element: Element) => T} mapFn
- * @returns {[Element[], Map<Element, T>]}
- */
-const queryAndMap = (target, mapFn) => {
-    const elements = queryAll(target);
-    const map = new Map();
-    for (const el of elements) {
-        map.set(el, mapFn(el));
+const parseInlineStyle = (style) => {
+    const styleObject = Object.create(null);
+    if (typeof style === "string") {
+        for (const styleProperty of style.split(";")) {
+            const [key, value] = styleProperty.split(":");
+            if (key && value) {
+                styleObject[key.trim()] = value.trim();
+            }
+        }
+    } else {
+        for (const key in style) {
+            styleObject[key] = style[key];
+        }
     }
-    return [elements, map];
+    return styleObject;
 };
 
-/**
- * @param {unknown} value
- * @param {string | RegExp} matcher
- */
-const regexMatchOrStrictEqual = (value, matcher) =>
-    matcher instanceof RegExp ? matcher.test(value) : strictEqual(value, matcher);
-
-/**
- * @param {TestResult} result
- * @param {Assertion} assertion
- */
-const registerAssertion = (result, assertion) => {
-    result.assertions.push(assertion);
-    result.pass &&= assertion.pass;
-};
+/** @type {StringConstructor["raw"]} */
+const r = (template, ...substitutions) => makeLabel(String.raw(template, ...substitutions), null);
 
 /**
  * @param {number} value
@@ -305,10 +325,36 @@ const roundTo = (value, digits) => {
  */
 const scopeError = (method) => new HootError(`cannot call \`${method}()\` outside of a test`);
 
-const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/;
+/**
+ * @param {unknown} value
+ * @param {string | number | RegExp} matcher
+ */
+const valueMatches = (value, matcher) => {
+    if (matcher instanceof RegExp) {
+        return matcher.test(value);
+    }
+    if (typeof matcher === "number") {
+        value = parseFloat(value);
+    }
+    return strictEqual(value, matcher);
+};
 
+const ARROW_RIGHT = makeLabelIcon("fa fa-arrow-right text-sm");
+
+const R_LINE_RETURN = /\n+/g;
+const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/;
+const R_WHITE_SPACE = /\s+/g;
+
+const FLAGS = {
+    error: 0b1,
+    headless: 0b10,
+    not: 0b100,
+    rejects: 0b1000,
+    resolves: 0b10000,
+};
 const LABEL_EXPECTED = "Expected:";
 const LABEL_RECEIVED = "Received:";
+const MAX_STACK_LENGTH = 10;
 
 /** @type {Set<Matcher>} */
 const unconsumedMatchers = new Set();
@@ -330,118 +376,115 @@ export function makeExpect(params) {
     function afterTest(options) {
         const { test } = currentResult;
 
-        currentResult.duration = $now() - currentResult.ts;
+        removeInteractionListener?.();
+
+        currentResult.done();
+
+        const {
+            assertion: assertionCount = 0,
+            error: errorCount = 0,
+            query: queryCount = 0,
+        } = currentResult.counts;
 
         // Expect without matchers
         if (unconsumedMatchers.size) {
             let times;
             switch (unconsumedMatchers.size) {
                 case 1:
-                    times = "once";
+                    times = [r`once`];
                     break;
                 case 2:
-                    times = "twice";
+                    times = [r`twice`];
                     break;
                 default:
-                    times = `${unconsumedMatchers.size} times`;
+                    times = [unconsumedMatchers.size, r`times`];
             }
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "expect",
-                    message: `called ${times} without calling any matchers`,
-                    pass: false,
-                })
-            );
+            currentResult.registerEvent("assertion", {
+                label: "expect",
+                message: [r`called`, ...times, r`without calling any matchers`],
+                pass: false,
+            });
             unconsumedMatchers.clear();
         }
 
-        // Steps
-        if (currentResult.steps.length) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "step",
-                    message: `unverified steps`,
-                    pass: false,
-                    failedDetails: [Markup.red("Steps:", currentResult.steps)],
-                })
-            );
+        // Unverified steps
+        if (currentResult.currentSteps.length) {
+            currentResult.registerEvent("assertion", {
+                label: "step",
+                message: [r`unverified steps`],
+                pass: false,
+                failedDetails: [Markup.red("Steps:", currentResult.currentSteps)],
+            });
         }
 
-        // Assertions count
-        if (!currentResult.assertions.length) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "assertions",
-                    message: `expected at least one assertion, but none were run`,
-                    pass: false,
-                })
-            );
+        // Assertion & query event count
+        if (!(assertionCount + queryCount)) {
+            currentResult.registerEvent("assertion", {
+                label: "assertions",
+                message: [r`expected at least`, 1, r`assertion or query event, but none were run`],
+                pass: false,
+            });
         } else if (
             currentResult.expectedAssertions &&
-            currentResult.assertions.length !== currentResult.expectedAssertions
+            currentResult.expectedAssertions !== assertionCount
         ) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "assertions",
-                    message: `expected ${currentResult.expectedAssertions} assertions, but ${currentResult.assertions.length} were run`,
-                    pass: false,
-                })
-            );
+            currentResult.registerEvent("assertion", {
+                label: "assertions",
+                message: [
+                    r`expected`,
+                    currentResult.expectedAssertions,
+                    r`assertions, but`,
+                    assertionCount,
+                    r`were run`,
+                ],
+                pass: false,
+            });
         }
 
-        // Errors count
-        const errorCount = currentResult.caughtErrors;
-        if (currentResult.expectedErrors) {
-            if (currentResult.expectedErrors !== errorCount) {
-                registerAssertion(
-                    currentResult,
-                    new Assertion({
-                        label: "errors",
-                        message: `expected ${currentResult.expectedErrors} errors, but ${errorCount} were thrown`,
-                        pass: false,
-                    })
-                );
-            }
-        } else if (errorCount) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "errors",
-                    message: `${errorCount} unverified error(s)`,
-                    pass: false,
-                })
-            );
+        // Unverified errors
+        if (currentResult.currentErrors.length) {
+            currentResult.registerEvent("assertion", {
+                label: "errors",
+                message: [currentResult.currentErrors.length, r`unverified error(s)`],
+                pass: false,
+            });
+        }
+
+        // Error count
+        if (currentResult.expectedErrors && currentResult.expectedErrors !== errorCount) {
+            currentResult.registerEvent("assertion", {
+                label: "errors",
+                message: [
+                    r`expected`,
+                    currentResult.expectedErrors,
+                    r`errors, but`,
+                    errorCount,
+                    r`were thrown`,
+                ],
+                pass: false,
+            });
         }
 
         // "Todo" tag
         if (test?.config.todo) {
             if (currentResult.pass) {
-                registerAssertion(
-                    currentResult,
-                    new Assertion({
-                        label: "TODO",
-                        message: `all assertions passed: remove "todo" test modifier`,
-                        pass: false,
-                    })
-                );
+                currentResult.registerEvent("assertion", {
+                    label: "TODO",
+                    message: [r`all assertions passed: remove "todo" test modifier`],
+                    pass: false,
+                });
             } else {
                 currentResult.pass = true;
             }
         }
 
+        // Abort status
         if (options?.aborted) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "aborted",
-                    message: `test was aborted, results may not be relevant`,
-                    pass: false,
-                })
-            );
+            currentResult.registerEvent("assertion", {
+                label: "aborted",
+                message: [r`test was aborted, results may not be relevant`],
+                pass: false,
+            });
         }
 
         if (test) {
@@ -456,7 +499,7 @@ export function makeExpect(params) {
 
             /** @type {import("../hoot_utils").Reporting} */
             const report = {
-                assertions: currentResult.assertions.length,
+                assertions: assertionCount,
                 tests: 1,
             };
             if (!currentResult.pass) {
@@ -473,6 +516,7 @@ export function makeExpect(params) {
         const result = currentResult;
         if (!options?.debug) {
             currentResult = null;
+            currentResultInErrorState = false;
         }
 
         return result;
@@ -498,13 +542,19 @@ export function makeExpect(params) {
      */
     function beforeTest(test) {
         if (test) {
-            test.results.push(new TestResult(test));
+            test.results.push(new CaseResult(test, params.headless));
 
             // Must be retrieved from the list to be proxified
             currentResult = test.results.at(-1);
         } else {
-            currentResult = new TestResult();
+            currentResult = new CaseResult(null, params.headless);
         }
+        currentResultInErrorState = false;
+        const listenedEvents = ["query"];
+        if (!params.headless) {
+            listenedEvents.push("interaction", "server");
+        }
+        removeInteractionListener = addInteractionListener(listenedEvents, onInteraction);
     }
 
     /**
@@ -520,6 +570,33 @@ export function makeExpect(params) {
     }
 
     /**
+     * @param {Error} error
+     * @returns {boolean} `true` if the error can be ignored
+     */
+    function onError(error) {
+        if (!currentResult) {
+            return false;
+        }
+
+        currentResult.registerEvent("error", error);
+        currentResultInErrorState =
+            currentResult.expectedErrors < (currentResult.counts.error || 0);
+
+        return !currentResultInErrorState;
+    }
+
+    /**
+     * @param {CustomEvent<InteractionDetails>} event
+     */
+    function onInteraction({ detail, type }) {
+        if (!currentResult) {
+            return;
+        }
+
+        currentResult.registerEvent(type, detail);
+    }
+
+    /**
      * @param {any} value
      */
     function step(value) {
@@ -527,7 +604,7 @@ export function makeExpect(params) {
             throw scopeError("expect.step");
         }
 
-        currentResult.steps.push(deepCopy(value));
+        currentResult.registerEvent("step", value);
     }
 
     /**
@@ -545,8 +622,7 @@ export function makeExpect(params) {
         }
         ensureArguments(arguments, "any[]");
 
-        const actualErrors = currentResult.errors;
-        currentResult.errors = [];
+        const actualErrors = currentResult.consumeErrors();
         const pass =
             actualErrors.length === errors.length &&
             actualErrors.every(
@@ -556,26 +632,21 @@ export function makeExpect(params) {
 
         const message = pass
             ? errors.length
-                ? errors.map(formatHumanReadable).join(" -> ")
+                ? listJoin(errors, ARROW_RIGHT)
                 : "no errors"
-            : `expected the following errors`;
-        const assertion = new Assertion({
+            : "expected the following errors";
+        const assertion = {
             label: "verifyErrors",
             message,
             pass,
-        });
-
+        };
         if (!pass) {
             const fActual = actualErrors.map(formatError);
             const fExpected = errors.map(formatError);
-            const formattedStack = formatStack(new Error().stack);
-            assertion.failedDetails = [
-                ...detailsFromValuesWithDiff(fExpected, fActual),
-                Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
-            ];
+            assertion.failedDetails = detailsFromValuesWithDiff(fExpected, fActual);
+            assertion.stack = getStack(0);
         }
-
-        registerAssertion(currentResult, assertion);
+        currentResult.registerEvent("assertion", assertion);
     }
 
     /**
@@ -593,29 +664,23 @@ export function makeExpect(params) {
         }
         ensureArguments(arguments, "any[]");
 
-        const actualSteps = currentResult.steps;
-        currentResult.steps = [];
+        const actualSteps = currentResult.consumeSteps();
         const pass = deepEqual(actualSteps, steps);
         const message = pass
             ? steps.length
-                ? steps.map(formatHumanReadable).join(" -> ")
+                ? listJoin(steps, ARROW_RIGHT)
                 : "no steps"
-            : `expected the following steps`;
-        const assertion = new Assertion({
+            : "expected the following steps";
+        const assertion = {
             label: "verifySteps",
             message,
             pass,
-        });
-
+        };
         if (!pass) {
-            const formattedStack = formatStack(new Error().stack);
-            assertion.failedDetails = [
-                ...detailsFromValuesWithDiff(steps, actualSteps),
-                Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
-            ];
+            assertion.failedDetails = detailsFromValuesWithDiff(steps, actualSteps);
+            assertion.stack = getStack(0);
         }
-
-        registerAssertion(currentResult, assertion);
+        currentResult.registerEvent("assertion", assertion);
     }
 
     /**
@@ -629,7 +694,7 @@ export function makeExpect(params) {
      * @template [R=unknown]
      * @param {R} received
      * @example
-     *  expect([1, 2, 3]).toEqual(1, 2, 3);
+     *  expect([1, 2, 3]).toEqual([1, 2, 3]);
      */
     function expect(received) {
         if (arguments.length > 1) {
@@ -640,7 +705,15 @@ export function makeExpect(params) {
             throw scopeError("expect");
         }
 
-        return new Matcher(currentResult, received, {}, params.headless);
+        let flags = 0;
+        if (currentResultInErrorState) {
+            flags |= FLAGS.error;
+        }
+        if (params.headless) {
+            flags |= FLAGS.headless;
+        }
+
+        return new Matcher(currentResult, received, flags);
     }
 
     const enrichedExpect = $assign(expect, {
@@ -653,32 +726,111 @@ export function makeExpect(params) {
     const expectHooks = {
         after: afterTest,
         before: beforeTest,
+        error: onError,
     };
 
-    /** @type {TestResult | null} */
+    /** @type {CaseResult | null} */
     let currentResult = null;
+    let currentResultInErrorState = false;
+
+    let removeInteractionListener;
 
     return [enrichedExpect, expectHooks];
 }
 
-export class Assertion {
-    static nextId = 1;
+export class CaseResult {
+    duration = 0;
+    pass = true;
+    /** @type {Test | null} */
+    test = null;
+    ts = $floor($now());
 
-    id = Assertion.nextId++;
-    /** @type {[any, any][] | null} */
-    failedDetails = null;
-    label = "";
-    message = "";
-    /** @type {Modifiers<false>} */
-    modifiers = { not: false, rejects: false, resolves: false };
-    pass = false;
-    ts = $now();
+    /** @type {CaseEvent[]} */
+    events = [];
+    /** @type {Partial<Record<CaseEventType, number>>} */
+    counts = Object.create(null);
+
+    expectedAssertions = 0;
+    expectedErrors = 0;
+
+    currentErrors = [];
+    currentSteps = [];
 
     /**
-     * @param {Partial<Assertion>} values
+     * @param {Test | null} [test]
+     * @param {boolean} [headless]
      */
-    constructor(values) {
-        $assign(this, values);
+    constructor(test, headless) {
+        if (test) {
+            this.test = test;
+        }
+
+        this.headless = Boolean(headless);
+
+        markRaw(this);
+    }
+
+    consumeErrors() {
+        const errors = this.currentErrors;
+        this.currentErrors = [];
+        return errors;
+    }
+
+    consumeSteps() {
+        const steps = this.currentSteps;
+        this.currentSteps = [];
+        return steps;
+    }
+
+    /**
+     * @param {CaseEventType} type
+     */
+    getEvents(type) {
+        const nType = typeof type === "number" ? type : CASE_EVENT_TYPES[type].value;
+        return this.events.filter((event) => event.type & nType);
+    }
+
+    done() {
+        this.duration = $floor($now()) - this.ts;
+    }
+
+    /**
+     *
+     * @param {CaseEventType} type
+     * @param {any} value
+     */
+    registerEvent(type, value) {
+        let caseEvent;
+        this.counts[type] ||= 0;
+        this.counts[type]++;
+        switch (type) {
+            case "assertion": {
+                caseEvent = new Assertion(this.counts.assertion, value);
+                this.pass &&= caseEvent.pass;
+                break;
+            }
+            case "error": {
+                caseEvent = new CaseError(value);
+                this.currentErrors.push(value);
+                break;
+            }
+            case "step": {
+                if (!this.headless) {
+                    caseEvent = new Step(value);
+                }
+                this.currentSteps.push(deepCopy(value));
+                break;
+            }
+            default: {
+                if (!this.headless || type === "query") {
+                    caseEvent = new DOMCaseEvent(type, value);
+                }
+                break;
+            }
+        }
+        if (caseEvent) {
+            this.events.push(caseEvent);
+        }
     }
 }
 
@@ -690,40 +842,29 @@ export class Assertion {
 export class Matcher {
     /**
      * @private
+     * @type {number}
+     */
+    _flags = 0;
+    /**
+     * @private
      * @type {R}
      */
     _received = null;
     /**
      * @private
-     * @type {TestResult}
+     * @type {CaseResult}
      */
     _result;
-    /**
-     * @private
-     */
-    _headless = false;
-    /**
-     * @private
-     * @type {Modifiers<Async>}
-     */
-    _modifiers = {
-        not: false,
-        rejects: false,
-        resolves: false,
-    };
 
     /**
-     * @param {TestResult} result
+     * @param {CaseResult} result
      * @param {R} received
-     * @param {Modifiers<Async>} modifiers
-     * @param {boolean} headless
+     * @param {number} flags
      */
-    constructor(result, received, modifiers, headless) {
+    constructor(result, received, flags) {
+        this._flags = flags;
         this._result = result;
-
         this._received = received;
-        this._headless = headless;
-        this._modifiers = modifiers;
 
         unconsumedMatchers.add(this);
     }
@@ -743,10 +884,10 @@ export class Matcher {
      *  expect("foo").not.toBe("bar");
      */
     get not() {
-        if (this._modifiers.not) {
+        if (this.flags & FLAGS.not) {
             throw matcherModifierError("not", `matcher is already negated`);
         }
-        return this._clone({ not: true });
+        return this._clone(FLAGS.not);
     }
 
     /**
@@ -759,13 +900,13 @@ export class Matcher {
      *  await expect(Promise.reject("foo")).rejects.toBe("foo");
      */
     get rejects() {
-        if (this._modifiers.rejects || this._modifiers.resolves) {
+        if (this._flags & (FLAGS.rejects | FLAGS.resolves)) {
             throw matcherModifierError(
                 "rejects",
                 `matcher value has already been wrapped in a promise resolver`
             );
         }
-        return this._clone({ rejects: true });
+        return this._clone(FLAGS.rejects);
     }
 
     /**
@@ -778,13 +919,13 @@ export class Matcher {
      *  await expect(Promise.resolve("foo")).resolves.toBe("foo");
      */
     get resolves() {
-        if (this._modifiers.rejects || this._modifiers.resolves) {
+        if (this._flags & (FLAGS.rejects | FLAGS.resolves)) {
             throw matcherModifierError(
                 "resolves",
                 `matcher value has already been wrapped in a promise resolver`
             );
         }
-        return this._clone({ resolves: true });
+        return this._clone(FLAGS.resolves);
     }
 
     //-------------------------------------------------------------------------
@@ -810,11 +951,12 @@ export class Matcher {
             name: "toBe",
             acceptedType: "any",
             predicate: () => strictEqual(received, expected),
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass
-                    ? h`received value is[! not] strictly equal to ${received}`
-                    : h`expected values to be strictly equal`),
+                ((pass) =>
+                    pass
+                        ? [r`received value is[! not] strictly equal to`, received]
+                        : [r`expected values to be strictly equal`]),
             failedDetails: () => detailsFromValuesWithDiff(expected, received),
         }));
     }
@@ -842,11 +984,12 @@ export class Matcher {
                 name: "toBeCloseTo",
                 acceptedType: "number",
                 predicate: () => strictEqual(rounded, expected),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`received value is[! not] close to ${received}`
-                        : h`expected values to be close to the given value`),
+                    ((pass) =>
+                        pass
+                            ? [r`received value is[! not] close to`, received]
+                            : [r`expected values to be close to the given value`]),
                 failedDetails: () => detailsFromValuesWithDiff(expected, rounded),
             };
         });
@@ -876,9 +1019,10 @@ export class Matcher {
             name: "toBeEmpty",
             acceptedType: ["any"],
             predicate: () => isEmpty(received),
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass ? h`${received} is[! not] empty` : h`${received} should[! not] be empty`),
+                ((pass) =>
+                    pass ? [received, r`is[! not] empty`] : [received, r`should[! not] be empty`]),
             failedDetails: () => detailsFromValues(received),
         }));
     }
@@ -902,11 +1046,12 @@ export class Matcher {
             name: "toBeGreaterThan",
             acceptedType: "number",
             predicate: () => min < received,
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass
-                    ? h`${received} is[! not] strictly greater than ${min}`
-                    : h`expected value[! not] to be strictly greater`),
+                ((pass) =>
+                    pass
+                        ? [received, r`is[! not] strictly greater than`, min]
+                        : [r`expected value[! not] to be strictly greater`]),
             failedDetails: () =>
                 detailsFromObject({
                     "Minimum:": min,
@@ -934,11 +1079,12 @@ export class Matcher {
             name: "toBeInstanceOf",
             acceptedType: "any",
             predicate: () => received instanceof cls,
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass
-                    ? h`${received} is[! not] an instance of ${cls.name}`
-                    : h`expected value[! not] to be an instance of the given class`),
+                ((pass) =>
+                    pass
+                        ? [received, r`is[! not] an instance of`, cls]
+                        : [r`expected value[! not] to be an instance of the given class`]),
             failedDetails: () =>
                 detailsFromObject({
                     [LABEL_EXPECTED]: cls,
@@ -966,11 +1112,12 @@ export class Matcher {
             name: "toBeLessThan",
             acceptedType: "number",
             predicate: () => received < max,
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass
-                    ? h`${received} is[! not] strictly less than ${max}`
-                    : h`expected value[! not] to be strictly less`),
+                ((pass) =>
+                    pass
+                        ? [received, r`is[! not] strictly less than`, max]
+                        : [r`expected value[! not] to be strictly less`]),
             failedDetails: () =>
                 detailsFromObject({
                     "Maximum:": max,
@@ -998,11 +1145,12 @@ export class Matcher {
             name: "toBeOfType",
             acceptedType: "any",
             predicate: () => isOfType(received, type),
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass
-                    ? h`${received} is[! not] of type ${type}`
-                    : h`expected value to be of the given type`),
+                ((pass) =>
+                    pass
+                        ? [received, r`is[! not] of type`, type]
+                        : [r`expected value to be of the given type`]),
             failedDetails: () =>
                 detailsFromObject({
                     "Expected type:": type,
@@ -1040,11 +1188,12 @@ export class Matcher {
             name: "toBeWithin",
             acceptedType: "number",
             predicate: () => min <= received && received <= max,
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass
-                    ? h`${received} is[! not] between ${min} and ${max}`
-                    : h`expected value[! not] to be between given range`),
+                ((pass) =>
+                    pass
+                        ? [received, r`is[! not] between`, min, r`and`, max]
+                        : [r`expected value[! not] to be between given range`]),
             failedDetails: () => detailsFromValues(`${min} - ${max}`, received),
         }));
     }
@@ -1068,11 +1217,12 @@ export class Matcher {
             name: "toEqual",
             acceptedType: "any",
             predicate: () => deepEqual(received, expected),
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass
-                    ? h`received value is[! not] deeply equal to ${received}`
-                    : h`expected values to[! not] be deeply equal`),
+                ((pass) =>
+                    pass
+                        ? [r`received value is[! not] deeply equal to`, received]
+                        : [r`expected values to[! not] be deeply equal`]),
             failedDetails: () => detailsFromValuesWithDiff(expected, received),
         }));
     }
@@ -1104,11 +1254,12 @@ export class Matcher {
                 name: "toHaveLength",
                 acceptedType: ["string", "array", "object"],
                 predicate: () => strictEqual(receivedLength, length),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${received} has[! not] a length of ${length}`
-                        : h`expected value[! not] to have the given length`),
+                    ((pass) =>
+                        pass
+                            ? [received, r`has[! not] a length of`, length]
+                            : [r`expected value[! not] to have the given length`]),
                 failedDetails: () =>
                     detailsFromObject({
                         "Expected length:": length,
@@ -1147,11 +1298,12 @@ export class Matcher {
             name: "toInclude",
             acceptedType: ["string", "any[]", "object"],
             predicate: () => includes(received, item),
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass
-                    ? h`${received} [includes!does not include] ${item}`
-                    : h`expected object[! not] to include the given item`),
+                ((pass) =>
+                    pass
+                        ? [received, r`[includes!does not include]`, item]
+                        : [r`expected object[! not] to include the given item`]),
             failedDetails: () =>
                 detailsFromObject({
                     "Object:": received,
@@ -1179,11 +1331,12 @@ export class Matcher {
             name: "toMatch",
             acceptedType: "any",
             predicate: () => match(received, matcher),
-            message: (pass) =>
+            message:
                 options?.message ||
-                (pass
-                    ? h`${received} [matches!does not match] ${matcher}`
-                    : h`expected value[! not] to match the given matcher`),
+                ((pass) =>
+                    pass
+                        ? [received, r`[matches!does not match]`, matcher]
+                        : [r`expected value[! not] to match the given matcher`]),
             failedDetails: () =>
                 detailsFromObject({
                     "Matcher:": matcher,
@@ -1208,8 +1361,7 @@ export class Matcher {
         ensureArguments(arguments, "any", ["object", null]);
 
         return this._resolve((received) => {
-            const isAsync = this._modifiers.rejects || this._modifiers.resolves;
-            const name = received.name || "anonymous function";
+            const isAsync = this._flags & (FLAGS.rejects | FLAGS.resolves);
             let returnValue;
             if (isAsync) {
                 returnValue = received;
@@ -1224,13 +1376,20 @@ export class Matcher {
                 name: "toThrow",
                 acceptedType: ["function", "error"],
                 predicate: () => match(returnValue, matcher),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${name} did[! not] ${isAsync ? h`reject` : h`throw`} a matching value`
-                        : h`${name} ${
-                              isAsync ? h`rejected` : h`threw`
-                          } a value that did not match the given matcher`),
+                    ((pass) =>
+                        pass
+                            ? [
+                                  received,
+                                  r`did[! not] ${isAsync ? "reject" : "throw"} a matching value`,
+                              ]
+                            : [
+                                  received,
+                                  r`${
+                                      isAsync ? "rejected" : "threw"
+                                  } a value that did not match the given matcher`,
+                              ]),
                 failedDetails: () =>
                     detailsFromObject({
                         "Matcher:": matcher,
@@ -1261,15 +1420,18 @@ export class Matcher {
         const pseudo = ":" + prop;
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => el.matches?.(pseudo));
+            const elMap = new ElementMap(received, (el) => el.matches?.(pseudo));
             return {
                 name: "toBeChecked",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map.values(), Boolean),
-                message: (pass) =>
+                predicate: each(elMap.values(), Boolean),
+                message:
                     options?.message ||
-                    (pass ? h`${els} are[! not] ${prop}` : h`expected ${els}[! not] to be ${prop}`),
-                failedDetails: () => detailsFromValues([...map.values()]),
+                    ((pass) =>
+                        pass
+                            ? [elMap, r`are[! not] ${prop}`]
+                            : [r`expected`, elMap, r`[! not] to be ${prop}`]),
+                failedDetails: () => detailsFromValues(elMap.getValues()),
             };
         });
     }
@@ -1291,10 +1453,10 @@ export class Matcher {
         ensureArguments(arguments, ["object", null]);
 
         return this._resolve((received) => {
-            const elements = queryAll(received);
+            const elMap = new ElementMap(received);
             const displayed = [];
             const notDisplayed = [];
-            for (const el of elements) {
+            for (const [el] of elMap) {
                 if (isNodeDisplayed(el)) {
                     displayed.push(el);
                 } else {
@@ -1304,12 +1466,13 @@ export class Matcher {
             return {
                 name: "toBeDisplayed",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: () => elements.length && elements.length === displayed.length,
-                message: (pass) =>
+                predicate: () => elMap.size && elMap.size === displayed.length,
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${elements} are[! not] displayed`
-                        : h`expected ${elements}[! not] to be displayed`),
+                    ((pass) =>
+                        pass
+                            ? [elMap, r`are[! not] displayed`]
+                            : [r`expected`, elMap, r`[! not] to be displayed`]),
                 failedDetails: () =>
                     detailsFromObject({
                         "Displayed:": displayed,
@@ -1335,17 +1498,18 @@ export class Matcher {
         ensureArguments(arguments, ["object", null]);
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => el.matches?.(":enabled"));
+            const elMap = new ElementMap(received, (el) => el.matches?.(":enabled"));
             return {
                 name: "toBeEnabled",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map.values(), Boolean),
-                message: (pass) =>
+                predicate: each(elMap.values(), Boolean),
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${els} are [enabled!disabled]`
-                        : h`expected ${els} to be [enabled!disabled]`),
-                failedDetails: () => detailsFromValues(els),
+                    ((pass) =>
+                        pass
+                            ? [elMap, r`are [enabled!disabled]`]
+                            : [r`expected`, elMap, r`to be [enabled!disabled]`]),
+                failedDetails: () => detailsFromValues(elMap.getElements()),
             };
         });
     }
@@ -1361,18 +1525,21 @@ export class Matcher {
         ensureArguments(arguments, ["object", null]);
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => getActiveElement(el));
+            const elMap = new ElementMap(received, (el) => getActiveElement(el));
             return {
                 name: "toBeFocused",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map, ([el, activeEl]) => el === activeEl),
-                message: (pass) =>
+                predicate: each(elMap, ([el, activeEl]) => el === activeEl),
+                message:
                     options?.message ||
-                    (pass ? h`${els} are[! not] focused` : h`${els} should[! not] be focused`),
+                    ((pass) =>
+                        pass
+                            ? [elMap, r`are[! not] focused`]
+                            : [elMap, r`should[! not] be focused`]),
                 failedDetails: () =>
                     detailsFromObject({
-                        "Focused:": [...map.values()],
-                        [LABEL_RECEIVED]: els,
+                        "Focused:": elMap.getValues(),
+                        [LABEL_RECEIVED]: elMap.getElements(),
                     }),
             };
         });
@@ -1396,10 +1563,10 @@ export class Matcher {
         ensureArguments(arguments, ["object", null]);
 
         return this._resolve((received) => {
-            const elements = queryAll(received);
+            const elMap = new ElementMap(received);
             const visible = [];
             const hidden = [];
-            for (const el of elements) {
+            for (const [el] of elMap) {
                 if (isNodeVisible(el)) {
                     visible.push(el);
                 } else {
@@ -1409,12 +1576,13 @@ export class Matcher {
             return {
                 name: "toBeVisible",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: () => elements.length && elements.length === visible.length,
-                message: (pass) =>
+                predicate: () => elMap.size && elMap.size === visible.length,
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${elements} are [visible!hidden]`
-                        : h`expected ${elements} to be [visible!hidden]`),
+                    ((pass) =>
+                        pass
+                            ? [elMap, r`are [visible!hidden]`]
+                            : [r`expected`, elMap, r`to be [visible!hidden]`]),
                 failedDetails: () =>
                     detailsFromObject({
                         "Visible:": visible,
@@ -1442,28 +1610,39 @@ export class Matcher {
         ensureArguments(arguments, "string", ["string", "number", "regex", null], ["object", null]);
 
         const expectsValue = !isNil(value);
-        const values = ensureArray(value);
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => getNodeAttribute(el, attribute));
+            const elMap = new ElementMap(received, (el) => getNodeAttribute(el, attribute));
             return {
                 name: "toHaveAttribute",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map, ([el, elAttr]) =>
-                    expectsValue
-                        ? regexMatchOrStrictEqual(elAttr, value)
-                        : el.hasAttribute(attribute)
+                predicate: each(elMap, ([el, elAttr]) =>
+                    expectsValue ? valueMatches(elAttr, value) : el.hasAttribute(attribute)
                 ),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`attribute ${attribute} on ${els} ${
-                              expectsValue ? h`[matches!does not match] ${value}` : h`is[! not] set`
-                          }`
-                        : h`${els} do not have the correct attribute${
-                              expectsValue ? h` value` : h``
-                          }`),
-                failedDetails: () => detailsFromValuesWithDiff(values, [...map.values()]),
+                    ((pass) =>
+                        pass
+                            ? [
+                                  r`attribute`,
+                                  attribute,
+                                  r`on`,
+                                  elMap,
+                                  ...(expectsValue
+                                      ? [r`[matches!does not match]`, value]
+                                      : [r`is[! not] set`]),
+                              ]
+                            : [
+                                  elMap,
+                                  r`do not have the correct attribute${
+                                      expectsValue ? " value" : ""
+                                  }`,
+                              ]),
+
+                failedDetails: () =>
+                    elMap.getValues((val) =>
+                        detailsFromValuesWithDiff(expectsValue ? value : attribute, val)
+                    ),
             };
         });
     }
@@ -1472,9 +1651,9 @@ export class Matcher {
      * Expects the received {@link Target} to have the given class name(s).
      *
      * @param {string | string[]} className
-     * @param {ExpectOptions} [options]
+     * @param {ExpectOptions & ClassListOptions} [options]
      * @example
-     *  expect("button").toHaveClass("btn btn-primary");
+     *  expect("inline").toHaveClass("btn btn-primary");
      * @example
      *  expect("body").toHaveClass(["o_webclient", "o_dark"]);
      */
@@ -1484,25 +1663,35 @@ export class Matcher {
         ensureArguments(arguments, ["string", "string[]"], ["object", null]);
 
         const rawClassNames = ensureArray(className);
-        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(/\s+/g));
+        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(R_WHITE_SPACE)).sort();
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => [...el.classList]);
+            const elMap = new ElementMap(received, (el) => [...el.classList].sort());
             return {
                 name: "toHaveClass",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map.values(), (classes) =>
-                    classNames.every((cls) => classes.includes(cls))
+                predicate: each(elMap.values(), (classes) =>
+                    options?.exact
+                        ? deepEqual(classNames, classes)
+                        : classNames.every((cls) => classes.includes(cls))
                 ),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${els} [have!do not have] classes ${hJoin("and", classNames)}`
-                        : h`expected ${els} [to have all!not to have any] of the given class names`),
+                    ((pass) =>
+                        pass
+                            ? [
+                                  elMap,
+                                  r`[have!do not have] class${classNames.length === 1 ? "" : "es"}`,
+                                  ...listJoin(classNames, ",", "and"),
+                              ]
+                            : [
+                                  r`expected`,
+                                  elMap,
+                                  r`[to have all!not to have any] of the given class names`,
+                              ]),
                 failedDetails: () =>
-                    detailsFromValues(
-                        classNames.join(" "),
-                        [...map.values()].map((classes) => classes.join(" "))
+                    elMap.getValues((classes) =>
+                        detailsFromValues(classNames.join(" "), classes.join(" "))
                     ),
             };
         });
@@ -1527,25 +1716,28 @@ export class Matcher {
 
         ensureArguments(arguments, ["integer", null], ["object", null]);
 
-        if (isNil(amount)) {
-            amount = false;
-        }
-
+        const anyAmount = isNil(amount);
         return this._resolve((received) => {
-            const elements = queryAll(received);
+            const elMap = new ElementMap(received);
             return {
                 name: "toHaveCount",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: () =>
-                    amount === false ? elements.length > 0 : strictEqual(elements.length, amount),
-                message: (pass) =>
+                predicate: () => (anyAmount ? elMap.size > 0 : strictEqual(elMap.size, amount)),
+                message:
                     options?.message ||
-                    (pass
-                        ? h`there are[! not] ${amount} ${elements}`
-                        : h`there is an incorrect amount of ${elements}`),
+                    ((pass) =>
+                        pass
+                            ? [
+                                  r`there are[${anyAmount ? " some" : ""}! ${
+                                      anyAmount ? "no" : "not"
+                                  }]`,
+                                  ...(anyAmount ? [] : [amount]),
+                                  elMap,
+                              ]
+                            : [r`there is an incorrect amount of`, elMap]),
                 failedDetails: () => [
-                    ...detailsFromValues(amount === false ? "any" : amount, elements.length),
-                    Markup.red("Elements:", elements),
+                    ...detailsFromValues(anyAmount ? "any" : amount, elMap.size),
+                    Markup.red("Elements:", elMap.getElements()),
                 ],
             };
         });
@@ -1605,26 +1797,37 @@ export class Matcher {
         ensureArguments(arguments, "string", "any", ["object", null]);
 
         const expectsValue = !isNil(value);
-        const values = ensureArray(value);
-
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => el[property]);
+            const elMap = new ElementMap(received, (el) => el[property]);
             return {
                 name: "toHaveProperty",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map.values(), (elProp) =>
-                    expectsValue ? regexMatchOrStrictEqual(elProp, value) : isNil(elProp)
+                predicate: each(elMap, ([el, elProp]) =>
+                    expectsValue ? valueMatches(elProp, value) : property in el
                 ),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`property ${property} on ${els} ${
-                              expectsValue ? h`[matches!does not match] ${value}` : h`is[! not] set`
-                          }`
-                        : h`${els} do not have the correct property${
-                              expectsValue ? h` value` : h``
-                          }`),
-                failedDetails: () => detailsFromValuesWithDiff(values, [...map.values()]),
+                    ((pass) =>
+                        pass
+                            ? [
+                                  r`property`,
+                                  property,
+                                  r`on`,
+                                  elMap,
+                                  ...(expectsValue
+                                      ? [r`[matches!does not match]`, value]
+                                      : [r`is[! not] set`]),
+                              ]
+                            : [
+                                  elMap,
+                                  r`do not have the correct property${
+                                      expectsValue ? " value" : ""
+                                  }`,
+                              ]),
+                failedDetails: () =>
+                    elMap.getValues((val) =>
+                        detailsFromValuesWithDiff(expectsValue ? value : property, val)
+                    ),
             };
         });
     }
@@ -1662,22 +1865,23 @@ export class Matcher {
         const entries = $entries(refRect);
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => getNodeRect(el, options));
+            const elMap = new ElementMap(received, (el) => getNodeRect(el, options));
             return {
                 name: "toHaveRect",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map.values(), (elRect) =>
+                predicate: each(elMap.values(), (elRect) =>
                     entries.every(([key, value]) => strictEqual(elRect[key], value))
                 ),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${els} have the expected DOM rect of ${rect}`
-                        : h`expected ${els} to have the given DOM rect`),
+                    ((pass) =>
+                        pass
+                            ? [elMap, r`have the expected DOM rect of`, rect]
+                            : [r`expected`, elMap, r`to have the given DOM rect`]),
                 failedDetails: () =>
                     detailsFromValuesWithDiff(
                         rect,
-                        $fromEntries(entries.map(([key]) => [key, [...map.values()][0][key]]))
+                        $fromEntries(entries.map(([key]) => [key, elMap.first[key]]))
                     ),
             };
         });
@@ -1687,7 +1891,7 @@ export class Matcher {
      * Expects the received {@link Target} to match the given style properties.
      *
      * @param {string | Record<string, string | RegExp>} style
-     * @param {ExpectOptions} [options]
+     * @param {ExpectOptions & DOMStyleOptions} [options]
      * @example
      *  expect("button").toHaveStyle({ color: "red" });
      * @example
@@ -1698,29 +1902,42 @@ export class Matcher {
 
         ensureArguments(arguments, ["string", "object"], ["object", null]);
 
-        const styleDef = typeof style === "string" ? parseStyle(style) : style;
-        const entries = $entries(styleDef);
+        const styleDef = parseInlineStyle(style);
+        const styleKeys = $keys(styleDef).sort();
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => getStyleValues(el, $keys(styleDef)));
+            const elMap = new ElementMap(received, (el) =>
+                options?.inline
+                    ? parseInlineStyle(el.getAttribute("style"))
+                    : getStyleValues(el, $keys(styleDef))
+            );
             return {
                 name: "toHaveStyle",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map.values(), (elStyle) =>
-                    entries.every(([prop, value]) => regexMatchOrStrictEqual(elStyle[prop], value))
+                predicate: each(
+                    elMap.values(),
+                    (elStyle) =>
+                        styleKeys.every((key) => valueMatches(elStyle[key], styleDef[key])) &&
+                        (!options?.exact || deepEqual(styleKeys, $keys(elStyle)))
                 ),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${els} have the expected style values for ${hJoin(
-                              "and",
-                              $keys(styleDef)
-                          )}`
-                        : h`expected ${els} [to have all!not to have any] of the given style properties`),
+                    ((pass) =>
+                        pass
+                            ? [
+                                  elMap,
+                                  r`have the expected style values for`,
+                                  ...listJoin($keys(styleDef), ",", "and"),
+                              ]
+                            : [
+                                  r`expected`,
+                                  elMap,
+                                  r`[to have all!not to have any] of the given style properties`,
+                              ]),
                 failedDetails: () =>
                     detailsFromValuesWithDiff(
                         styleDef,
-                        $fromEntries(entries.map(([key]) => [key, [...map.values()][0][key]]))
+                        $fromEntries(styleKeys.map((key) => [key, elMap.first[key]]))
                     ),
             };
         });
@@ -1743,25 +1960,23 @@ export class Matcher {
 
         ensureArguments(arguments, ["string", "regex", null], ["object", null]);
 
-        const texts = ensureArray(text);
         const expectsText = !isNil(text);
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => getNodeText(el, options));
+            const elMap = new ElementMap(received, (el) => getNodeText(el, options));
             return {
                 name: "toHaveText",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map.values(), (elText) =>
-                    expectsText
-                        ? texts.every((text) => regexMatchOrStrictEqual(elText, text))
-                        : elText.length > 0
+                predicate: each(elMap.values(), (elText) =>
+                    expectsText ? valueMatches(elText, text) : elText.length > 0
                 ),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${els} [have!do not have] text ${text}`
-                        : h`expected ${els}[! not] to have the given text`),
-                failedDetails: () => detailsFromValuesWithDiff(texts, [...map.values()]),
+                    ((pass) =>
+                        pass
+                            ? [elMap, r`[have!do not have] text`, text]
+                            : [r`expected`, elMap, r`[! not] to have the given text`]),
+                failedDetails: () => elMap.getValues((val) => detailsFromValuesWithDiff(text, val)),
             };
         });
     }
@@ -1790,15 +2005,14 @@ export class Matcher {
             ["object", null]
         );
 
-        const values = ensureArray(value);
         const expectsValue = !isNil(value);
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => getNodeValue(el));
+            const elMap = new ElementMap(received, (el) => getNodeValue(el));
             return {
                 name: "toHaveValue",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map, ([el, elValue]) => {
+                predicate: each(elMap, ([el, elValue]) => {
                     if (isCheckable(el)) {
                         throw new HootError(
                             `cannot call \`toHaveValue()\` on a checkbox or radio input: use \`toBeChecked()\` instead`
@@ -1809,18 +2023,20 @@ export class Matcher {
                     }
                     if (isIterable(elValue)) {
                         if (isIterable(value)) {
-                            return deepEqual(elValue, values);
+                            return deepEqual(elValue, value);
                         }
                         elValue = el.value;
                     }
-                    return values.every((value) => regexMatchOrStrictEqual(elValue, value));
+                    return valueMatches(elValue, value);
                 }),
-                message: (pass) =>
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${els} [have!do not have] value ${value}`
-                        : h`expected ${els}[! not] to have the given value`),
-                failedDetails: () => detailsFromValuesWithDiff(values, [...map.values()]),
+                    ((pass) =>
+                        pass
+                            ? [elMap, r`[have!do not have] value`, value]
+                            : [r`expected`, elMap, r`[! not] to have the given value`]),
+                failedDetails: () =>
+                    elMap.getValues((val) => detailsFromValuesWithDiff(value, val)),
             };
         });
     }
@@ -1831,16 +2047,11 @@ export class Matcher {
 
     /**
      * @private
-     * @param {Modifiers} modifiers
+     * @param {number} flags
      */
-    _clone(modifiers) {
+    _clone(flags) {
         unconsumedMatchers.delete(this);
-        return new this.constructor(
-            this._result,
-            this._received,
-            { ...this._modifiers, ...modifiers },
-            this._headless
-        );
+        return new this.constructor(this._result, this._received, this._flags | flags);
     }
 
     /**
@@ -1850,19 +2061,24 @@ export class Matcher {
      */
     _resolve(specCallback) {
         unconsumedMatchers.delete(this);
-        if (this._modifiers.rejects || this._modifiers.resolves) {
+        const isAsync = this._flags & (FLAGS.rejects | FLAGS.resolves);
+        if (this._flags & FLAGS.error) {
+            // Prevent further assertions in error state
+            return isAsync ? new Promise(() => {}) : undefined;
+        }
+        if (isAsync) {
             return Promise.resolve(this._received).then(
                 /** @param {PromiseFulfilledResult<R>} reason */
                 (result) => {
-                    if (this._modifiers.rejects) {
-                        registerAssertion(
-                            this._result,
-                            new Assertion({
-                                label: "rejects",
-                                message: h`expected promise to reject, instead resolved with: ${result}`,
-                                pass: false,
-                            })
-                        );
+                    if (this._flags & FLAGS.rejects) {
+                        this._result.registerEvent("assertion", {
+                            label: "rejects",
+                            message: [
+                                r`expected promise to reject, instead resolved with:`,
+                                result,
+                            ],
+                            pass: false,
+                        });
                     } else {
                         this._received = result;
                         this._resolveFinalResult(specCallback);
@@ -1870,15 +2086,15 @@ export class Matcher {
                 },
                 /** @param {PromiseRejectedResult} reason */
                 (reason) => {
-                    if (this._modifiers.resolves) {
-                        registerAssertion(
-                            this._result,
-                            new Assertion({
-                                label: "resolves",
-                                message: h`expected promise to resolve, instead rejected with: ${reason}`,
-                                pass: false,
-                            })
-                        );
+                    if (this._flags & FLAGS.resolves) {
+                        this._result.registerEvent("assertion", {
+                            label: "resolves",
+                            message: [
+                                r`expected promise to resolve, instead rejected with:`,
+                                reason,
+                            ],
+                            pass: false,
+                        });
                     } else {
                         this._received = reason;
                         this._resolveFinalResult(specCallback);
@@ -1903,41 +2119,36 @@ export class Matcher {
         const types = ensureArray(acceptedType);
         if (!types.some((type) => isOfType(this._received, type))) {
             throw new TypeError(
-                h`expected received value to be of type ${hJoin("or", types)}, got ${
-                    this._received
-                }`
+                `expected received value to be of type ${listJoin(types, ",", "or").join(
+                    " "
+                )}, got ${formatHumanReadable(this._received)}`
             );
         }
 
-        const { not } = this._modifiers;
+        const not = this._flags & FLAGS.not;
         let pass = predicate();
         if (not) {
             pass = !pass;
         }
-
-        const assertion = new Assertion({
+        const assertion = {
             label: name,
-            message: formatMessage(message(pass), not),
-            modifiers: this._modifiers,
+            message,
+            flags: this._flags,
             pass,
-        });
+        };
         if (!pass) {
-            const formattedStack = formatStack(currentStack);
-            assertion.failedDetails = [
-                ...failedDetails(),
-                Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
-            ].filter(Boolean);
+            assertion.failedDetails = failedDetails().filter(Boolean);
+            assertion.stack = currentStack;
         }
-
-        registerAssertion(this._result, assertion);
+        this._result.registerEvent("assertion", assertion);
     }
 
     /**
      * @private
      */
     _saveStack() {
-        if (!this._headless) {
-            currentStack = new Error().stack;
+        if (!this._flags & FLAGS.headless) {
+            currentStack = getStack(1);
         }
     }
 
@@ -1957,46 +2168,149 @@ export class Matcher {
         }
 
         return this._resolve((received) => {
-            const [els, map] = queryAndMap(received, (el) => formatXml(el[property], options));
+            const elMap = new ElementMap(received, (el) =>
+                // Force HTML type here as it will be returned by outer/inner HTML
+                formatXml(el[property], { ...options, type: "html" })
+            );
             return {
                 name,
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(map.values(), (elHtml) =>
-                    regexMatchOrStrictEqual(elHtml, expected)
-                ),
-                message: (pass) =>
+                predicate: each(elMap.values(), (elHtml) => valueMatches(elHtml, expected)),
+                message:
                     options?.message ||
-                    (pass
-                        ? h`${property} of ${els} is[! not] equal to expected value`
-                        : h`expected ${property} of ${els} to match the given value`),
-                failedDetails: () => detailsFromValuesWithDiff(expected, [...map.values()]),
+                    ((pass) =>
+                        pass
+                            ? [property, r`of`, elMap, r`is[! not] equal to expected value`]
+                            : [r`expected`, property, r`of`, elMap, r`to match the given value`]),
+                failedDetails: () =>
+                    elMap.getValues((val) => detailsFromValuesWithDiff(expected, val)),
             };
         });
     }
 }
 
-export class TestResult {
-    /** @type {Assertion[]} */
-    assertions = [];
-    caughtErrors = 0;
-    duration = 0;
-    /** @type {Error[]} */
-    errors = [];
-    expectedAssertions = 0;
-    expectedErrors = 0;
-    pass = true;
-    /** @type {string[]} */
-    steps = [];
-    /** @type {Test | null} */
-    test = null;
-    ts = $now();
+//-----------------------------------------------------------------------------
+// Case events
+//-----------------------------------------------------------------------------
+
+export class CaseEvent {
+    label = "";
+    /** @type {(string | Label)[]} */
+    message = [];
+    ts = $floor($now());
+    /** @type {number} */
+    type;
+}
+
+export class Assertion extends CaseEvent {
+    type = CASE_EVENT_TYPES.assertion.value;
 
     /**
-     * @param {Test | null} [test]
+     * @param {number} number
+     * @param {Partial<Assertion & { message: AssertionMessage }>} values
      */
-    constructor(test) {
-        if (test) {
-            this.test = test;
+    constructor(number, values) {
+        super();
+
+        this.label = values.label;
+        /** @type {[any, any][] | null} */
+        this.failedDetails = values.failedDetails || null;
+        this.flags = values.flags || 0;
+        this.pass = values.pass || false;
+        this.number = number;
+        /** @type {string} */
+        this.stack = values.stack;
+
+        let { message } = values;
+        if (typeof message === "function") {
+            message = message(this.pass, r);
         }
+
+        const parts = $isArray(message) && !isLabel(message) ? message : [makeLabel(message, null)];
+        for (const part of parts) {
+            if (part instanceof ElementMap) {
+                if (typeof part.selector === "string") {
+                    this.message.push("elements matching", makeLabelOrString(part.selector));
+                } else {
+                    const elements = part.keys();
+                    this.message.push(
+                        "elements",
+                        makeLabelOrString(part.size === 1 ? elements.next().value : [...elements])
+                    );
+                }
+            } else if (isLabel(part)) {
+                if (part[1] === "icon") {
+                    this.message.push(part);
+                } else {
+                    this.message.push(
+                        makeLabelOrString(formatMessage(part[0], this.flags & FLAGS.not), part[1])
+                    );
+                }
+            } else if (typeof part === "string") {
+                this.message.push(makeLabelOrString(formatMessage(part, this.flags & FLAGS.not)));
+            } else {
+                this.message.push(makeLabelOrString(part));
+            }
+        }
+    }
+
+    /**
+     * @param {keyof typeof FLAGS} name
+     */
+    hasFlag(name) {
+        return this.flags & FLAGS[name];
+    }
+}
+
+export class DOMCaseEvent extends CaseEvent {
+    /**
+     * @param {InteractionType} type
+     * @param {InteractionDetails} details
+     */
+    constructor(type, [name, args, returnValue]) {
+        super();
+
+        this.type = CASE_EVENT_TYPES[type].value;
+        this.label = name;
+        for (let i = 0; i < args.length; i++) {
+            if (args[i] !== undefined && (i === 0 || typeof args[i] !== "object")) {
+                this.message.push(makeLabelOrString(args[i]));
+            }
+        }
+        if (returnValue && type === "query" && returnValue !== args[0]) {
+            this.message.push(ARROW_RIGHT, makeLabelOrString(returnValue));
+        }
+    }
+}
+
+export class CaseError extends CaseEvent {
+    type = CASE_EVENT_TYPES.error.value;
+
+    /**
+     * @param {Error} error
+     */
+    constructor(error) {
+        super();
+
+        /** @type {Error | null} */
+        this.cause = error.cause || null;
+        this.label = error.name;
+        this.message = error.message.split(R_WHITE_SPACE);
+        /** @type {string} */
+        this.stack = error.stack;
+    }
+}
+
+export class Step extends CaseEvent {
+    type = CASE_EVENT_TYPES.step.value;
+    label = "step";
+
+    /**
+     * @param {any} value
+     */
+    constructor(value) {
+        super();
+
+        this.message = [makeLabel(value)];
     }
 }

@@ -243,3 +243,20 @@ describe("range not collapsed", () => {
         });
     });
 });
+
+describe("empty link", () => {
+    test("should not remove empty link in uneditable zone", async () => {
+        await testEditor({
+            contentBefore: '<p contenteditable="false"><a href="exist"></a></p>',
+            contentAfter: '<p contenteditable="false"><a href="exist"></a></p>',
+        });
+    });
+    test("should not remove empty link in uneditable zone (2)", async () => {
+        await testEditor({
+            contentBefore:
+                '<p>[]<span contenteditable="false"><a contenteditable="true" href="exist"></a></span></p>',
+            contentAfter:
+                '<p>[]<span contenteditable="false"><a contenteditable="true" href="exist"></a></span></p>',
+        });
+    });
+});

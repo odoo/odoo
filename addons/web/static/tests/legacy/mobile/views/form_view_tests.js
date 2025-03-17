@@ -288,7 +288,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
 
             window.scrollTo({ top: 265, left: 0 });
             assert.strictEqual(window.scrollY, 265, "Should have scrolled 265 px vertically");
-            assert.strictEqual(window.screenLeft, 0, "Should be 0 px from left as it is");
+            assert.strictEqual(window.scrollX, 0, "Should be 0 px from left as it is");
 
             // click on m2o field
             await click(fixture, ".o_field_many2one input");
@@ -306,7 +306,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                 265,
                 "Should have scrolled back to 265 px vertically"
             );
-            assert.strictEqual(window.screenLeft, 0, "Should be 0 px from left as it is");
+            assert.strictEqual(window.scrollX, 0, "Should be 0 px from left as it is");
         }
     );
 

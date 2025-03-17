@@ -1106,13 +1106,14 @@ class TestDatePartNumber(TransactionCase):
         cls.lesson = cls.env["test_new_api.lesson"].create({"teacher_id": cls.person.id, "attendee_ids": [(4, cls.person.id)]})
 
     def test_basic_cases(self):
+        Person = self.env["test_new_api.person"].with_context(active_test=False)
         with self.assertQueries(["""
             SELECT "test_new_api_person"."id"
             FROM "test_new_api_person"
             WHERE date_part(%s, "test_new_api_person"."birthday") = %s
             ORDER BY "test_new_api_person"."id"
         """]):
-            result = self.env["test_new_api.person"].search([('birthday.month_number', '=', '2')])
+            result = Person.search([('birthday.month_number', '=', '2')])
             self.assertEqual(result, self.person)
 
         with self.assertQueries(["""
@@ -1121,7 +1122,7 @@ class TestDatePartNumber(TransactionCase):
             WHERE date_part(%s, "test_new_api_person"."birthday") = %s
             ORDER BY "test_new_api_person"."id"
         """]):
-            result = self.env["test_new_api.person"].search([('birthday.quarter_number', '=', '1')])
+            result = Person.search([('birthday.quarter_number', '=', '1')])
             self.assertEqual(result, self.person)
 
         with self.assertQueries(["""
@@ -1130,7 +1131,7 @@ class TestDatePartNumber(TransactionCase):
             WHERE date_part(%s, "test_new_api_person"."birthday") = %s
             ORDER BY "test_new_api_person"."id"
         """]):
-            result = self.env["test_new_api.person"].search([('birthday.iso_week_number', '=', '6')])
+            result = Person.search([('birthday.iso_week_number', '=', '6')])
             self.assertEqual(result, self.person)
 
     def test_many2one(self):

@@ -4712,7 +4712,7 @@ registry.sizing = SnippetOptionWidget.extend({
                 resize[0].forEach((val, key) => {
                     if (self.$target.hasClass(val)) {
                         current = key;
-                    } else if (resize[1][key] === cssPropertyValue) {
+                    } else if (parseInt(resize[1][key]) === cssPropertyValue) {
                         current = key;
                     }
                 });
@@ -4818,8 +4818,9 @@ registry.sizing = SnippetOptionWidget.extend({
                         // Find the first element behind the overlay.
                         const sameCoordinatesEls = self.ownerDocument
                             .elementsFromPoint(ev.pageX, ev.pageY);
+                        // Check toBeClickEl has native JS `click` function
                         const toBeClickedEl = sameCoordinatesEls
-                            .find(el => !el.closest("#oe_manipulators"));
+                            .find(el => !el.closest("#oe_manipulators") && typeof el.click === "function");
                         if (toBeClickedEl) {
                             toBeClickedEl.click();
                         }
@@ -6034,6 +6035,11 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         this._deactivateLinkTool = this._deactivateLinkTool.bind(this);
     },
 
+    destroy: function () {
+        this._clearListeners();
+        return this._super(...arguments);
+    },
+
     /**
      * @override
      */
@@ -6048,8 +6054,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @override
      */
     onBlur() {
-        this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
-        this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
+        this._clearListeners();
     },
 
     //--------------------------------------------------------------------------
@@ -6072,7 +6077,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setLink(previewMode, widgetValue, params) {
-        const parentEl = this.$target[0].parentNode;
+        const parentEl = this._searchSupportedParentLinkEl();
         if (parentEl.tagName !== 'A') {
             const wrapperEl = document.createElement('a');
             this.$target[0].after(wrapperEl);
@@ -6097,7 +6102,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setNewWindow(previewMode, widgetValue, params) {
-        const linkEl = this.$target[0].parentElement;
+        const linkEl = this._searchSupportedParentLinkEl();
         if (widgetValue) {
             linkEl.setAttribute('target', '_blank');
         } else {
@@ -6110,7 +6115,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setUrl(previewMode, widgetValue, params) {
-        const linkEl = this.$target[0].parentElement;
+        const linkEl = this._searchSupportedParentLinkEl();
         let url = widgetValue;
         if (!url) {
             // As long as there is no URL, the image is not considered a link.
@@ -6148,7 +6153,8 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @private
      */
     _activateLinkTool() {
-        if (this.$target[0].parentElement.tagName === 'A') {
+        const parentEl = this._searchSupportedParentLinkEl();
+        if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_url_opt')[0].focus();
         } else {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
@@ -6157,8 +6163,15 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     /**
      * @private
      */
+    _clearListeners() {
+        this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
+        this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
+    },
+    /**
+     * @private
+     */
     _deactivateLinkTool() {
-        const parentEl = this.$target[0].parentNode;
+        const parentEl = this._searchSupportedParentLinkEl();
         if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
@@ -6167,7 +6180,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState(methodName, params) {
-        const parentEl = this.$target[0].parentElement;
+        const parentEl = this._searchSupportedParentLinkEl();
         const linkEl = parentEl.tagName === 'A' ? parentEl : null;
         switch (methodName) {
             case 'setLink': {
@@ -6190,11 +6203,20 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'media_link_opt') {
             if (this.$target[0].matches('img')) {
-                return isImageSupportedForStyle(this.$target[0]);
+                return isImageSupportedForStyle(this.$target[0])
+                    && !this._searchSupportedParentLinkEl().matches("a[data-oe-xpath]");
             }
             return !this.$target[0].classList.contains('media_iframe_video');
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @returns {Element} The "closest" element that can be supported as a <a>.
+     */
+    _searchSupportedParentLinkEl() {
+        const parentEl = this.$target[0].parentElement;
+        return parentEl.matches("figure") ? parentEl.parentElement : parentEl;
     },
 });
 
@@ -6655,7 +6677,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         restoreCursor();
         this.trigger_up("enable_loading_effect");
         if (!widgetValue) {
-            this._onImageCropped();
+            await this._onImageCropped();
         }
         this.options.wysiwyg.odooEditor.historyUnpauseSteps();
     },
@@ -6670,21 +6692,26 @@ registry.ImageTools = ImageHandlerOption.extend({
         const document = this.$el[0].ownerDocument;
         const imageCropWrapperElement = document.createElement('div');
         document.body.append(imageCropWrapperElement);
+
+        // Attach the event listener before attaching the component
+        const cropperPromise = new Promise(resolve => {
+            this.$target.one("image_cropper_destroyed", async () => {
+                if (isGif(this._getImageMimetype(img))) {
+                    img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+                }
+                await this._reapplyCurrentShape();
+                resolve();
+            });
+        });
+
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
         });
 
-        await new Promise(resolve => {
-            this.$target.one('image_cropper_destroyed', async () => {
-                if (isGif(this._getImageMimetype(img))) {
-                    img.dataset[img.dataset.shape ? 'originalMimetype' : 'mimetype'] = 'image/png';
-                }
-                await this._reapplyCurrentShape();
-                resolve();
-            });
-        });
+        await cropperPromise;
+
         imageCropWrapperElement.remove();
         imageCropWrapper.destroy();
         this.trigger_up('enable_loading_effect');
@@ -6818,7 +6845,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         // Re-rendering the options after selecting a "cropping" shape.
         if (this.isImageCropped && previewMode === "reset") {
             delete this.isImageCropped;
-            this._onImageCropped();
+            await this._onImageCropped();
         }
 
         const saveData = previewMode === false;
@@ -8277,7 +8304,10 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             return src.searchParams.has(params.colorName);
         } else if (widgetName === 'main_color_opt') {
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
-            return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
+            return src.origin === window.location.origin && (
+                src.pathname.startsWith('/html_editor/shape/') ||
+                src.pathname.startsWith('/web_editor/shape/')
+            );
         }
         return this._super(...arguments);
     },
@@ -9447,7 +9477,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                     this.trigger_up('context_get', {
                         callback: ctx => context = ctx,
                     });
-                    if (this.$target[0].matches("[data-snippet=s_popup]")) {
+                    if (this.$target[0].matches(".s_popup")) {
                         // Do not "cleanForSave" the popup before copying the
                         // HTML, otherwise the popup will be saved invisible and
                         // therefore not visible in the "add snippet" dialog.
@@ -9580,7 +9610,7 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
      * @override
      */
     _computeVisibility(methodName, params) {
-        return this.$target.is("img[src^='/web_editor/shape/']");
+        return this.$target.is("img[src^='/html_editor/shape/'], img[src^='/web_editor/shape/']");
     },
 
     //--------------------------------------------------------------------------
@@ -9874,16 +9904,17 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
             : this.$target[0].querySelector(".carousel");
         carouselEl.classList.remove("slide");
         $(carouselEl).carousel(position);
-        for (const indicatorEl of this.$target[0].querySelectorAll(".carousel-indicators button")) {
-            indicatorEl.classList.remove("active");
-        }
-        this.$target[0].querySelector(`.carousel-indicators button[data-bs-slide-to="${position}"]`)
-                    .classList.add("active");
+        const indicatorEls = this.$target[0].querySelectorAll(".carousel-indicators > *");
+        indicatorEls.forEach((indicatorEl, i) => {
+            indicatorEl.classList.toggle("active", i === position);
+        });
         this.trigger_up("activate_snippet", {
             $snippet: $(this.$target[0].querySelector(".carousel-item.active img")),
             ifInactiveOptions: true,
         });
         carouselEl.classList.add("slide");
+        // Prevent the carousel from automatically sliding afterwards.
+        $(carouselEl).carousel("pause");
     },
 });
 

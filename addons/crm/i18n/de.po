@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2024
 # Martin Trigaux, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,6 +135,15 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                Install Extension"
+msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                Erweiterung installieren"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
 "<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
 "fa-fw fa-refresh\"/>"
 msgstr ""
@@ -187,8 +197,8 @@ msgstr "<span class=\"o_stat_text\"> Leads</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2 text-nowrap\"> at </span>"
-msgstr "<span class=\"oe_grey p-2 text-nowrap\"> zu </span>"
+msgid "<span class=\"oe_grey p-2 text-nowrap d-none d-sm-block\"> at </span>"
+msgstr "<span class=\"oe_grey p-2 text-nowrap d-none d-sm-block\"> zu </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -264,13 +274,13 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br>\n"
+"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interest in your products</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -282,15 +292,15 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
 "                            Welcome to <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            It's great to meet you! Now that you're on board, you'll discover what <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br>\n"
-"                            Feel free to reach out at any time!<br><br>\n"
-"                            Best,<br>\n"
+"                            It's great to meet you! Now that you're on board, you'll discover what <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br/>\n"
+"                            Feel free to reach out at any time!<br/><br/>\n"
+"                            Best,<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
@@ -304,8 +314,8 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br>\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
 "                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
@@ -335,13 +345,13 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Lead/Verkaufschance</span><br>\n"
+"                    <span style=\"font-size: 10px;\">Lead/Verkaufschance</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interesse an Ihren Produkten</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -353,15 +363,15 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
 "                            Willkommen bei <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            Schön, Sie kennenzulernen! Jetzt, wo Sie an Board sind, können Sie entdecken, was <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> alles zu bieten hat. Meine Name ist <t t-out=\"object.user_id.name or ''\">Marc Demo</t> und ich helfe Ihnen dabei, sich in Odoo zurechtzufinden. Könnten wir eine kurze Demo planen?<br>\n"
-"                            Sie können sich gerne jederzeit melden!<br><br>\n"
-"                            Viele Grüße<br>\n"
+"                            Schön, Sie kennenzulernen! Jetzt, wo Sie an Board sind, können Sie entdecken, was <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> alles zu bieten hat. Meine Name ist <t t-out=\"object.user_id.name or ''\">Marc Demo</t> und ich helfe Ihnen dabei, sich in Odoo zurechtzufinden. Könnten wir eine kurze Demo planen?<br/>\n"
+"                            Sie können sich gerne jederzeit melden!<br/><br/>\n"
+"                            Viele Grüße<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br>E-Mail: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                <br/>E-Mail: <t t-out=\"object.user_id.email or ''\">mark.brown23@beispiel.com</t>\n"
+"                                <br/>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
@@ -375,15 +385,15 @@ msgstr ""
 "    <!-- FUßZEILE -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br>\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
 "                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
-"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@ihrunternehmen.com</a>\n"
 "                </t>\n"
 "                <t t-if=\"object.company_id.website\">\n"
-"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.beispiel.com</a>\n"
 "                </t>\n"
 "            </div>\n"
 "        </td>\n"
@@ -489,6 +499,8 @@ msgid ""
 "Activities marked as Done on Leads will appear here, providing an overview "
 "of lead interactions."
 msgstr ""
+"Aktivitäten, die für Leads als „Erledigt“ markiert sind, werden hier "
+"angezeigt und bieten einen Überblick über die Interaktionen mit Leads."
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -866,6 +878,8 @@ msgid ""
 "Check the Stage Tracker of Leads to identify bottlenecks in your Sales "
 "process."
 msgstr ""
+"Überprüfen Sie die Phasenverfolgung der Leads, um Engpässe in Ihrem "
+"Verkaufsprozess zu identifizieren."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_leads
@@ -1450,7 +1464,7 @@ msgstr "E-Mail-CC:"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-Mail-Domain z. B. 'example.com' in 'odoo@example.com'"
+msgstr "E-Mail-Domain z. B. 'beispiel.com' in 'odoo@beispiel.com'"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -2234,7 +2248,7 @@ msgstr "Lassen Sie uns <b>eine Aktivität planen</b>."
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "Let's get to work!"
-msgstr ""
+msgstr "Lassen Sie uns loslegen!"
 
 #. module: crm
 #. odoo-javascript
@@ -2338,6 +2352,16 @@ msgstr "Niedrig"
 #: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
 msgid "Make Quote"
 msgstr "Angebot erstellen"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
+"messages, and get AI-powered transcripts of your conversations."
+msgstr ""
+"Tätigen und empfangen Sie Anrufe von Odoo aus mit dem Wählprogramm von "
+"Ringover. Verfolgen Sie Anrufe und SMS-Nachrichten und erhalten Sie KI-"
+"gestützte Transkripte Ihrer Unterhaltungen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2881,7 +2905,7 @@ msgstr "Verkaufschance"
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
 #: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
 msgid "Opportunity Count"
-msgstr ""
+msgstr "Anzahl Verkaufschancen"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -3269,6 +3293,11 @@ msgstr "Verantwortlicher Benutzer"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Restore"
 msgstr "Wiederherstellen"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Ringover VOIP Phone"
+msgstr "VOIP-Telefon von Ringover"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3659,7 +3688,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Die Bezeichnung des E-Mail-Alias, z. B. „Jobs“, falls Sie E-Mails für "
-"<jobs@example.odoo.com> erhalten möchten"
+"<jobs@beispiel.odoo.com> erhalten möchten"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -3820,7 +3849,7 @@ msgstr "Tipp: Verschwenden Sie keine Zeit mit der Erfassung von Kundendaten"
 #: model:digest.tip,name:crm.digest_tip_crm_6
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_6
 msgid "Tip: Identify Bottlenecks at a glance"
-msgstr ""
+msgstr "Tipp: Engpässe auf einen Blick erkennen"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
@@ -3838,7 +3867,7 @@ msgstr "Tipp: Die Gewinnrate von Verkaufschancen wird mit KI vorhergesagt"
 #: model:digest.tip,name:crm.digest_tip_crm_7
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
 msgid "Tip: Turn Sales Forecasting into Child's Play"
-msgstr ""
+msgstr "Tipp: Die Umsatzprognose wird zum Kinderspiel"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
@@ -3891,7 +3920,7 @@ msgid ""
 "assignment limit, false otherwise."
 msgstr ""
 "Wahr, wenn die Anzahl monatlicher Lead-Zuweisungen größer ist als das "
-"maximale Zuweisungslimit, sonst falsch."
+"maximale Zuweisungslimit, sonst Falsch."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -4044,6 +4073,8 @@ msgid ""
 "Use the CRM Forecast Kanban to easily define when Opportunities are expected"
 " to be won."
 msgstr ""
+"Verwenden Sie die Kanban-Ansicht zur CRM-Prognose, um auf einfache Weise zu "
+"definieren, wann mit dem Gewinn von Verkaufschancen zu rechnen ist."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper

@@ -83,6 +83,66 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertTrue(self.warehouse_1.manu_type_id.active)
         self.assertIn(manu_route, warehouse_1_stock_manager._get_all_routes())
 
+    def test_manufacturing_rule_other_dest(self):
+        """ Ensures that a manufacturing rule can define a destination the rule itself and have it
+            applied instead of the one from the operation type if location_dest_from_rule is set.
+        """
+        freezer_loc = self.env['stock.location'].create({
+            'name': 'Freezer',
+            'location_id': self.warehouse_1.view_location_id.id,
+        })
+        route = self.env['stock.route'].create({
+            'name': 'Manufacture then freeze',
+            'rule_ids': [
+                Command.create({
+                    'name': 'Freezer -> Stock',
+                    'action': 'pull',
+                    'procure_method': 'make_to_order',
+                    'picking_type_id': self.warehouse_1.int_type_id.id,
+                    'location_src_id': freezer_loc.id,
+                    'location_dest_id': self.warehouse_1.lot_stock_id.id,
+                    'location_dest_from_rule': True,
+                }),
+                Command.create({
+                    'name': 'Manufacture',
+                    'action': 'manufacture',
+                    'picking_type_id': self.warehouse_1.manu_type_id.id,
+                    'location_src_id': self.warehouse_1.lot_stock_id.id,
+                    'location_dest_id': freezer_loc.id,
+                    'location_dest_from_rule': True,
+                }),
+            ],
+        })
+        # Remove the classic Manufacture route if it exists and replace it by the new one
+        self.product_4.route_ids = [
+            Command.link(route.id),
+            Command.unlink(self.warehouse_1.manufacture_pull_id.id),
+        ]
+
+        # Create a procurement to resupply the Stock, taking from the Freezer.
+        pgroup = self.env['procurement.group'].create({'name': 'test-manu-to-freeze'})
+        self.env['procurement.group'].run([
+            pgroup.Procurement(
+                self.product_4,
+                5.0,
+                self.product_4.uom_id,
+                self.warehouse_1.lot_stock_id,
+                'test_other_dest',
+                'test_other_dest',
+                self.warehouse_1.company_id,
+                {
+                    'warehouse_id': self.warehouse_1,
+                    'group_id': pgroup,
+                }
+            )
+        ])
+
+        # Make sure the production is delivering the goods in the location set on the rule.
+        production = self.env['mrp.production'].search([('product_id', '=', self.product_4.id)])
+        self.assertEqual(len(production), 1)
+        self.assertEqual(production.picking_type_id.default_location_dest_id, self.warehouse_1.lot_stock_id)
+        self.assertEqual(production.location_dest_id, freezer_loc)
+
     def test_multi_warehouse_resupply(self):
         """ test a multi warehouse flow give a correct date delay
             product_6 is sold from warehouse_1, its component (product_4) is
@@ -565,3 +625,57 @@ class TestKitPicking(common.TestMrpCommon):
         self.assertRecordValues(scrap.move_ids, [
             {'product_id': component.id, 'quantity': 1, 'state': 'done'}
         ])
+
+    def test_kit_with_packaging_different_uom(self):
+        """
+        Test that a quantity packaging is correctly computed on a move line
+        when a kit is in a different uom than its components.
+        - Component(uom=Kg)
+        - Kit (uom=unit) -> Bom (1 dozen) -> Component (10 g)
+        - Packaging (qty=2 units of kit)
+        """
+        bom = self.bom_4
+        bom.type = 'phantom'
+        kit = bom.product_id
+        kit.is_storable = True
+        # product is in unit and bom in dozen
+        kit.uom_id = self.uom_unit
+        bom.product_uom_id = self.uom_dozen
+        bom.product_qty = 1
+        # create a packaging with 2 units
+        packaging = self.env['product.packaging'].create({
+            'name': 'Packaging',
+            'qty': 2,
+            'product_id': kit.id,
+        })
+        # component is in Kg but bom_line in gram
+        component = bom.bom_line_ids.product_id
+        component.uom_id = self.uom_kg
+        bom.bom_line_ids.product_uom_id = self.uom_gram
+        bom.bom_line_ids.product_qty = 10
+
+        # create a delivery with 20 units of kit
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        customer_location = self.env.ref('stock.stock_location_customers')
+        stock_location = warehouse.lot_stock_id
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'name': kit.name,
+                'product_id': kit.id,
+                'product_uom_qty': 24,
+                'product_uom': kit.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+                'product_packaging_id': packaging.id,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids.quantity = 20
+        delivery.move_ids.picked = True
+        delivery.button_validate()
+        self.assertTrue(delivery.state, 'done')
+        self.assertEqual(delivery.move_ids.move_line_ids.product_packaging_qty, 12)

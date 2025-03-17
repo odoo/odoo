@@ -5,7 +5,6 @@ import { redirect } from "@web/core/utils/urls";
 
 // This tour relies on data created on the Python test.
 registry.category("web_tour.tours").add('sale_signature', {
-    test: true,
     url: '/my/quotes',
     steps: () => [
     {
@@ -23,8 +22,11 @@ registry.category("web_tour.tours").add('sale_signature', {
         trigger: '.o_portal_sign_submit:enabled',
     },
     {
+        trigger: ".modal .o_web_sign_name_and_signature input:value(Joel Willis)"
+    },
+    {
         content: "click select style",
-        trigger: '.o_web_sign_auto_select_style button',
+        trigger: '.modal .o_web_sign_auto_select_style button',
         run: "click",
     },
     {
@@ -34,7 +36,7 @@ registry.category("web_tour.tours").add('sale_signature', {
     },
     {
         content: "click submit",
-        trigger: '.o_portal_sign_submit:enabled',
+        trigger: '.modal .o_portal_sign_submit:enabled',
         run: "click",
     },
     {

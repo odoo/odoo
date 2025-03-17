@@ -51,6 +51,12 @@ $o-color-extras-nesting-selector: '&' !default;
         $-yiq-threshold-met: alpha($color) > $yiq-min-opacity-threshold;
 
         $-yiq-color: if($text-color, $text-color, if($-yiq-threshold-met, color-contrast($color, $main-background: $background), null));
+
+        // Generate a pair of CSS variables for bg-* classes to then use them
+        // within the .badge design definition (see website.scss)
+        --bg-light: #{$color};
+        --color-light: #{$-yiq-color};
+
         background-color: $color#{if($important, ' !important', '')};
         color: $-yiq-color; // not important so that text utilities still work
 

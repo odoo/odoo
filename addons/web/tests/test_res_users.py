@@ -37,6 +37,12 @@ class TestResUsers(TransactionCase):
         jean_paul = self.users[1]
         user_ids = [id_ for id_, __ in ResUsers.with_user(jean_paul).name_search('Jean')]
         self.assertEqual(jean_paul.id, user_ids[0], "The current user, Jean-Paul, should be the first in the result")
+        claude = self.users[4]
+        user_ids = [id_ for id_, __ in ResUsers.with_user(claude).name_search('', limit=2)]
+        self.assertEqual(claude.id, user_ids[0], "The current user, Claude, should be the first in the result.")
+        self.assertNotEqual(claude.id, user_ids[1], "The current user, Claude, should not appear twice in the result")
+        user_ids = [id_ for id_, __ in ResUsers.with_user(claude).name_search('', limit=5)]
+        self.assertEqual(len(user_ids), len(set(user_ids)), "Some user(s), appear multiple times in the result")
 
     def test_change_password(self):
         '''

@@ -3,11 +3,10 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('website_profile_description', {
-    test: true,
     url: "/profile/users",
     steps: () => [{
         content: "Click on one user profile card",
-        trigger: "div[onclick]",
+        trigger: "div[onclick]:contains(\"test_user\")",
         run: "click",
     }, {
         content: "Edit profile",

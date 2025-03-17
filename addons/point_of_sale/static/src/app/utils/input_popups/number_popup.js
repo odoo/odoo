@@ -45,4 +45,8 @@ export class NumberPopup extends Component {
         this.props.getPayload(this.state.buffer);
         this.props.close();
     }
+
+    cancel() {
+        this.props.close();
+    }
 }

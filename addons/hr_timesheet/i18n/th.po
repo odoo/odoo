@@ -3,15 +3,16 @@
 # 	* hr_timesheet
 # 
 # Translators:
-# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,13 +53,13 @@ msgstr "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)"
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/components/time_hour_field/time_hour_field.js:0
 msgid "%(hours)sh"
-msgstr ""
+msgstr "%(hours)sชม."
 
 #. module: hr_timesheet
 #. odoo-javascript
 #: code:addons/hr_timesheet/static/src/components/time_hour_field/time_hour_field.js:0
 msgid "%(hours)sh%(minutes)s"
-msgstr ""
+msgstr "%(hours)sชม.%(minutes)s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -73,6 +74,8 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project "
 "'%(project_name)s' linked to the timesheet."
 msgstr ""
+"จำเป็นต้องมีแผนวิเคราะห์ '%(missing_plan_names)s' สำหรับโปรเจ็กต์ "
+"'%(project_name)s' ที่เชื่อมโยงกับตารางเวลา"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -532,12 +535,17 @@ msgstr "การกำหนด HTTP"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__has_department_manager_access
 msgid "Has Department Manager Access"
-msgstr ""
+msgstr "มีสิทธิ์เข้าถึงผู้จัดการแผนก"
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
 msgid "Hours / Minutes"
 msgstr "ชั่วโมง / นาที"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "ชั่วโมงตามงาน (รวมถึงงานย่อย)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__id
@@ -632,7 +640,7 @@ msgstr "เมนู"
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__message_partner_ids
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__message_partner_ids
 msgid "Message Partner"
-msgstr ""
+msgstr "ข้อความพาร์ทเนอร์"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__milestone_id
@@ -704,6 +712,12 @@ msgid "Ok"
 msgstr "ตกลง"
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
+msgid "Overtime"
+msgstr "ล่วงเวลา"
+
+#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
@@ -726,6 +740,7 @@ msgstr "หน่วยวัดสินค้า"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__progress
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
 msgid "Progress"
 msgstr "ความคืบหน้า"
@@ -865,8 +880,8 @@ msgstr "การตั้งค่า"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
-msgid "Sub-Task:"
-msgstr "งานย่อย:"
+msgid "Sub-Task of '"
+msgstr "งานย่อยของ '"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -878,6 +893,7 @@ msgstr "เวลาที่ใช้ไปของงานย่อย"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__task_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -908,6 +924,7 @@ msgid ""
 "The project, the task and the analytic accounts of the timesheet must belong"
 " to the same company."
 msgstr ""
+"โปรเจ็กต์ งาน และบัญชีวิเคราะห์ของตารางเวลาจะต้องเป็นของบริษัทเดียวกัน"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1241,6 +1258,8 @@ msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
 msgstr ""
+"ต้องสร้างตารางเวลาโดยมีบัญชีวิเคราะห์ที่ใช้งานอยู่เป็นอย่างน้อยตามที่กำหนดไว้ในแผน"
+" '%(plan_name)s'"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1261,6 +1280,9 @@ msgid ""
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
 msgstr ""
+"หากต้องการใช้ฟีเจอร์ตารางเวลาการทำงาน "
+"คุณต้องมีบัญชีวิเคราะห์สำหรับโปรเจ็กต์ของคุณ โปรดตั้งค่าบัญชีในแผน "
+"'%(plan_name)s' หรือปิดใช้งานฟีเจอร์ตารางเวลาการทำงาน"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1289,7 +1311,6 @@ msgstr "จำนวนวันที่ใช้ไปทั้งหมด"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited

@@ -8,7 +8,8 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
-
+from pprint import pformat
+import unittest.mock
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSBasicConfig(TestPoSCommon):
@@ -821,7 +822,20 @@ class TestPoSBasicConfig(TestPoSCommon):
         session = self.pos_session
         order_data = self.create_ui_order_data([(self.product3, 1)])
         amount_paid = order_data['amount_paid']
-        self.env['pos.order'].sync_from_ui([order_data])
+        with (
+            self.assertLogs('odoo.addons.point_of_sale.models.pos_order', level='DEBUG') as cm,
+            unittest.mock.patch('odoo.addons.point_of_sale.models.pos_order.randrange', return_value=1996)
+        ):
+            res = self.env['pos.order'].sync_from_ui([order_data])
+            # Basic check for logs on order synchronization
+            order_log_str = self.env['pos.order']._get_order_log_representation(order_data)
+            odoo_order_id = res['pos.order'][0]['id']
+            self.assertEqual(len(cm.output), 4)
+            self.assertEqual(cm.output[0], f"INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 started for PoS orders references: [{order_log_str}]")
+            self.assertTrue(cm.output[1].startswith(f'DEBUG:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 processing order {order_log_str} order full data: '))
+            self.assertEqual(cm.output[2], f'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 order {order_log_str} created pos.order #{odoo_order_id}')
+            self.assertEqual(cm.output[3], 'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 finished')
+            
         session.post_closing_cash_details(amount_paid)
         session.close_session_from_ui()
 
@@ -842,9 +856,8 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         def open_and_check(pos_data):
             self.config = pos_data['config']
-            self.open_new_session()
+            self.open_new_session(pos_data['amount_paid'])
             session = self.pos_session
-            session.set_opening_control(pos_data['amount_paid'], False)
             self.assertEqual(session.cash_register_balance_start, pos_data['amount_paid'])
 
         pos01_config = self.config
@@ -972,7 +985,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             # Check the credit note
             self.assertTrue(return_to_invoice.account_move, 'Invoice should be created.')
             self.assertEqual(return_to_invoice.account_move.move_type, 'out_refund', 'Invoice should be a credit note.')
-            self.assertEqual(return_to_invoice.account_move.invoice_date, new_session_date, 'Invoice date should be the same as the session it is created in.')
+            self.assertEqual(return_to_invoice.account_move.invoice_date, new_session_date.date(), 'Invoice date should be the same as the session it is created in.')
             self.assertRecordValues(return_to_invoice.account_move, [{
                 'amount_untaxed': 30,
                 'amount_tax': 0,
@@ -1188,3 +1201,19 @@ class TestPoSBasicConfig(TestPoSCommon):
         for i in session_account_move.line_ids:
             if i.product_id and expected_product_quantity.get(i.product_id):
                 self.assertEqual(i.quantity, expected_product_quantity.get(i.product_id), f"Unexpected quantity for {i.product_id.name}")
+
+    def test_pos_payment_method_copy(self):
+        """
+        Test POS payment method copy:
+            - Create two payment methods in which one of the payment method's journal type be cash
+            - Copy multiple payment methods
+            - Check the duplicated cash payment method journal should be empty
+        """
+        pm_1 = self.cash_pm1
+        pm_2 = self.bank_pm1
+        pm_3, pm_4 = (pm_1 + pm_2).copy()
+
+        self.assertTrue(pm_3)
+        self.assertFalse(pm_3.journal_id)
+        self.assertTrue(pm_4)
+        self.assertEqual(pm_4.journal_id.type, "bank")

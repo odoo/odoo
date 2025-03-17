@@ -51,7 +51,7 @@
                                 <span t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <span t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <br/>
-                                <span t-out="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
+                                <span t-out="o.partner_bank_id.partner_id.name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
                                 <span t-field="o.company_id.country_id.code"/>
                                 <span t-field="o.company_id.zip"/>
@@ -163,7 +163,7 @@
                                 <span t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <span t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <br/>
-                                <span t-out="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
+                                <span t-out="o.partner_bank_id.partner_id.name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
                                 <span t-field="o.company_id.country_id.code"/>
                                 <span t-field="o.company_id.zip"/>

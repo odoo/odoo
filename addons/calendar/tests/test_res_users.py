@@ -49,3 +49,34 @@ class TestResUsers(TransactionCase):
                     'Custom %s privacy from in vals must override the privacy %s from Default User Template.'
                     % (custom_privacy, privacy)
                 )
+
+    def test_avoid_res_users_settings_creation_portal(self):
+        """
+        This test ensures that 'res.users.settings' entries are not created for portal
+        and public users through the new 'calendar_default_privacy' field, since it is
+        not useful tracking these fields for non-internal users.
+        """
+        username_and_group = {
+            'PORTAL': 'base.group_portal',
+            'PUBLIC': 'base.group_public',
+        }
+
+        for username, group in username_and_group.items():
+            # Create user and impersonate it as sudo for triggering the compute.
+            user = self.env['res.users'].create({
+                'name': username,
+                'login': username,
+                'email': username + '@email.com',
+                'groups_id': [(6, 0, [self.env.ref(group).id])]
+            })
+            user.with_user(user).sudo()._compute_calendar_default_privacy()
+
+            # Ensure default privacy fallback and also that no 'res.users.settings' entry got created.
+            self.assertEqual(
+                user.calendar_default_privacy, 'public',
+                "Calendar default privacy of %s users must fallback to 'public'." % (username)
+            )
+            self.assertFalse(
+                user.sudo().res_users_settings_id,
+                "No res.users.settings record must be created for '%s' users." % (username)
+            )

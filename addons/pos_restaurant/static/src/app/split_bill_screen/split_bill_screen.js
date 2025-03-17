@@ -7,9 +7,7 @@ import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
     static components = { Orderline, OrderWidget };
-    static props = {
-        disallow: { type: Boolean, optional: true },
-    };
+    static props = {};
 
     setup() {
         this.pos = usePos();
@@ -46,7 +44,10 @@ export class SplitBillScreen extends Component {
             } else {
                 this.qtyTracker[line.uuid] += 1;
             }
-
+            // We need this split for decimal quantities (e.g. 0.5 kg)
+            if (this.qtyTracker[line.uuid] > line.get_quantity()) {
+                this.qtyTracker[line.uuid] = line.get_quantity();
+            }
             this.priceTracker[line.uuid] =
                 (line.get_price_with_tax() / line.qty) * this.qtyTracker[line.uuid];
         }
@@ -80,7 +81,24 @@ export class SplitBillScreen extends Component {
         return `${latestOrderName.slice(0, -1)}${nextChar}`;
     }
 
-    createSplittedOrder() {
+    // Meant to be overridden
+    async preSplitOrder(originalOrder, newOrder) {}
+    async postSplitOrder(originalOrder, newOrder) {}
+
+    // Calculates the sent quantities for both orders and adjusts for last_order_preparation_change.
+    _getSentQty(ogLine, newLine, orderedQty) {
+        const unorderedQty = ogLine.qty - orderedQty;
+
+        const delta = newLine.qty - unorderedQty;
+        const newQty = delta > 0 ? delta : 0;
+
+        return {
+            [ogLine.preparationKey]: orderedQty - newQty,
+            [newLine.preparationKey]: newQty,
+        };
+    }
+
+    async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
         this.pos.selectedTable = null;
@@ -90,7 +108,7 @@ export class SplitBillScreen extends Component {
         const newOrder = this.pos.createNewOrder();
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
-        newOrder.originalSplittedOrder = originalOrder;
+        await this.preSplitOrder(originalOrder, newOrder);
 
         // Create lines for the new order
         const lineToDel = [];
@@ -98,7 +116,7 @@ export class SplitBillScreen extends Component {
             if (this.qtyTracker[line.uuid]) {
                 const data = line.serialize();
                 delete data.uuid;
-                this.pos.models["pos.order.line"].create(
+                const newLine = this.pos.models["pos.order.line"].create(
                     {
                         ...data,
                         qty: this.qtyTracker[line.uuid],
@@ -108,10 +126,36 @@ export class SplitBillScreen extends Component {
                     true
                 );
 
+                const ordered =
+                    originalOrder.last_order_preparation_change.lines[line.preparationKey];
                 if (line.get_quantity() === this.qtyTracker[line.uuid]) {
+                    delete originalOrder.last_order_preparation_change.lines[line.preparationKey];
                     lineToDel.push(line);
+
+                    if (ordered) {
+                        const newOrdered = { ...ordered };
+                        newOrdered.uuid = newLine.uuid;
+                        newOrder.last_order_preparation_change.lines[newLine.preparationKey] =
+                            newOrdered;
+                    }
                 } else {
-                    line.update({ qty: line.get_quantity() - this.qtyTracker[line.uuid] });
+                    const newQty = line.get_quantity() - this.qtyTracker[line.uuid];
+                    line.update({ qty: newQty });
+
+                    if (ordered) {
+                        const orderedQty = ordered["quantity"];
+                        const newOrderedQty = orderedQty > newQty ? newQty : orderedQty;
+                        ordered["quantity"] = newOrderedQty;
+
+                        if (orderedQty > newQty) {
+                            const newOrdered = { ...ordered };
+
+                            newOrdered.uuid = newLine.uuid;
+                            newOrdered.quantity = orderedQty - newQty;
+                            newOrder.last_order_preparation_change.lines[newLine.preparationKey] =
+                                newOrdered;
+                        }
+                    }
                 }
             }
         }
@@ -120,18 +164,9 @@ export class SplitBillScreen extends Component {
             line.delete();
         }
 
-        // for the kitchen printer we assume that everything
-        // has already been sent to the kitchen before splitting
-        // the bill. So we save all changes both for the old
-        // order and for the new one. This is not entirely correct
-        // but avoids flooding the kitchen with unnecessary orders.
-        // Not sure what to do in this case.
-        if (this.pos.orderPreparationCategories.size) {
-            originalOrder.updateLastOrderChange();
-            newOrder.updateLastOrderChange();
-        }
-
-        originalOrder.customerCount -= 1;
+        await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
+        originalOrder.customer_count -= 1;
+        await this.postSplitOrder(originalOrder, newOrder);
         originalOrder.set_screen_data({ name: "ProductScreen" });
         this.pos.selectedOrderUuid = null;
         this.pos.set_order(newOrder);

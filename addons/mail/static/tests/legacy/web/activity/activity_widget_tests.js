@@ -36,7 +36,7 @@ test("list activity widget with no activity", async () => {
         session: { uid: serverState.userId },
     });
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -114,7 +114,7 @@ test("list activity widget with activities", async () => {
         serverData: { views },
     });
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -193,7 +193,7 @@ test("list activity widget with exception", async () => {
         serverData: { views },
     });
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -299,7 +299,7 @@ test("list activity widget: open dropdown", async () => {
         },
     });
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,

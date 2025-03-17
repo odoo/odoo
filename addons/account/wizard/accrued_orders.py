@@ -143,9 +143,10 @@ class AccruedExpenseRevenue(models.TransientModel):
         fnames = []
         total_balance = 0.0
         for order in orders:
-            if len(orders) == 1 and self.amount and order.order_line:
+            product_lines = order.order_line.filtered(lambda x: x.product_id)
+            if len(orders) == 1 and product_lines and self.amount and order.order_line:
                 total_balance = self.amount
-                order_line = order.order_line[0]
+                order_line = product_lines[0]
                 account = self._get_computed_account(order, order_line.product_id, is_purchase)
                 distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
                 values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'), analytic_distribution=distribution)
@@ -232,9 +233,11 @@ class AccruedExpenseRevenue(models.TransientModel):
         move_type = _('Expense') if is_purchase else _('Revenue')
         move_vals = {
             'ref': _('Accrued %(entry_type)s entry as of %(date)s', entry_type=move_type, date=format_date(self.env, self.date)),
+            'name': '/',
             'journal_id': self.journal_id.id,
             'date': self.date,
             'line_ids': move_lines,
+            'currency_id': orders.currency_id.id or self.company_id.currency_id.id,
         }
         return move_vals, orders_with_entries
 
@@ -243,12 +246,16 @@ class AccruedExpenseRevenue(models.TransientModel):
 
         if self.reversal_date <= self.date:
             raise UserError(_('Reversal date must be posterior to date.'))
+        orders = self.env[self._context['active_model']].with_company(self.company_id).browse(self._context['active_ids'])
+        if len({order.currency_id or order.company_id.currency_id for order in orders}) != 1:
+            raise UserError(_('Cannot create an accrual entry with orders in different currencies.'))
 
         move_vals, orders_with_entries = self._compute_move_vals()
         move = self.env['account.move'].create(move_vals)
         move._post()
         reverse_move = move._reverse_moves(default_values_list=[{
             'ref': _('Reversal of: %s', move.ref),
+            'name': '/',
             'date': self.reversal_date,
         }])
         reverse_move._post()

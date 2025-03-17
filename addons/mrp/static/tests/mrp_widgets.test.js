@@ -10,5 +10,5 @@ test("ensure the rendering is based on minutes and seconds", async () => {
     const fakeId = pyEnv["res.fake"].create({ duration: 150.5 });
     await start();
     await openFormView("res.fake", fakeId);
-    expect(document.querySelector(".o_field_mrp_timer").textContent).toBe("150:30");
+    expect(".o_field_mrp_timer").toHaveText("150:30");
 });

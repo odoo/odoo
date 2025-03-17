@@ -53,7 +53,7 @@
                         t-att-name="`${option[0]}-${option_index}`"
                         t-on-change="(ev) => this.setOptionValue(option[0], ev.target.value)"
                     >
-                        <option t-foreach="option[1].options" t-as="opt" t-key="opt_index" t-att-value="opt.value or opt" t-att-selected="opt.value ? opt.value === option[1].value : opt === option[1].value">
+                        <option t-foreach="option[1].options" t-as="opt" t-key="opt_index" t-att-value="opt.value or opt.value === '' ? opt.value : opt" t-att-selected="opt.value or opt.value === '' ? opt.value === option[1].value : opt === option[1].value">
                             <t t-esc="opt.label ? opt.label : opt" />
                         </option>
                     </select>

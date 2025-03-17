@@ -4,13 +4,15 @@ import { Deferred, on, setFrameRate } from "@odoo/hoot-dom";
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
 import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
-import { cleanupTime } from "@web/../lib/hoot-dom/helpers/time";
+import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
+    CASE_EVENT_TYPES,
     Callbacks,
     HootError,
     INCLUDE_LEVEL,
     Markup,
+    STORAGE,
     batch,
     createReporting,
     deepEqual,
@@ -19,8 +21,13 @@ import {
     formatTechnical,
     formatTime,
     getFuzzyScore,
+    isLabel,
     normalize,
+    storageGet,
+    storageSet,
+    stringify,
 } from "../hoot_utils";
+import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
@@ -28,12 +35,12 @@ import { cleanupNetwork } from "../mock/network";
 import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
-import { makeFixtureManager } from "./fixture";
-import { logLevels, logger } from "./logger";
+import { HootFixtureElement, makeFixtureManager } from "./fixture";
+import { LOG_LEVELS, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
-import { Tag } from "./tag";
+import { Tag, getTagSimilarities } from "./tag";
 import { Test, testError } from "./test";
-import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
+import { EXCLUDE_PREFIX, createUrlFromId, setParams } from "./url";
 
 /**
  * @typedef {{
@@ -88,7 +95,7 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 
 const {
     clearTimeout,
-    console: { groupEnd: $groupEnd, log: $log, table: $table },
+    console: { error: $error, groupEnd: $groupEnd, log: $log, table: $table },
     EventTarget,
     Map,
     Math: { floor: $floor },
@@ -130,9 +137,9 @@ const filterReady = (jobs) =>
  */
 const formatAssertions = (assertions) => {
     const lines = [];
-    for (let i = 0; i < assertions.length; i++) {
-        const { failedDetails, label, message } = assertions[i];
-        lines.push(`\n${i + 1}. [${label}] ${message}`);
+    for (const { failedDetails, label, message, number } of assertions) {
+        const formattedMessage = message.map((part) => (isLabel(part) ? part[0] : String(part)));
+        lines.push(`\n${number}. [${label}] ${formattedMessage.join(" ")}`);
         if (failedDetails) {
             for (let [key, value] of failedDetails) {
                 if (Markup.isMarkup(key)) {
@@ -176,7 +183,7 @@ const getDefaultPresets = () =>
         [
             "mobile",
             {
-                icon: "fa-mobile",
+                icon: "fa-mobile font-bold",
                 label: "Mobile",
                 platform: "android",
                 size: [375, 667],
@@ -185,8 +192,6 @@ const getDefaultPresets = () =>
             },
         ],
     ]);
-
-const noop = () => {};
 
 /**
  * @param {Event} ev
@@ -273,6 +278,11 @@ const warnUserEvent = (ev) => {
     removeEventListener(ev.type, warnUserEvent);
 };
 
+const WARNINGS = {
+    viewport: "Viewport size does not match the expected size for the current preset",
+    tagNames:
+        "The following tag names are very similar to each other and may be confusing for other developers:",
+};
 const RESIZE_OBSERVER_MESSAGE = "ResizeObserver loop completed with undelivered notifications";
 const handledErrors = new WeakSet();
 /** @type {string | null} */
@@ -308,6 +318,10 @@ export class Runner {
          * @type {Set<Test>}
          */
         done: new Set(),
+        /**
+         * List of IDs of tests that have failed (previously AND during this run).
+         */
+        failedIds: new Set(storageGet(STORAGE.failed)),
         /**
          * @type {Record<string, GlobalIssueReport>}
          */
@@ -384,10 +398,8 @@ export class Runner {
     _started = false;
     _startTime = 0;
 
-    /** @type {(reason?: any) => any} */
-    _rejectCurrent = noop;
-    /** @type {(value?: any) => any} */
-    _resolveCurrent = noop;
+    /** @type {null | (value?: any) => any} */
+    _resolveCurrent = null;
 
     /**
      * @param {typeof DEFAULT_CONFIG} [config]
@@ -398,13 +410,13 @@ export class Runner {
         this.fixture = makeFixtureManager(this);
         this.test = this._addConfigurators(this.addTest, false);
 
-        const initialConfig = { ...DEFAULT_CONFIG, ...config };
-        const reactiveConfig = reactive({ ...initialConfig, ...urlParams }, () => {
+        this.initialConfig = { ...DEFAULT_CONFIG, ...config };
+        const reactiveConfig = reactive({ ...this.initialConfig }, () => {
             setParams(
                 $fromEntries(
                     $entries(this.config).map(([key, value]) => [
                         key,
-                        deepEqual(value, initialConfig[key]) ? null : value,
+                        deepEqual(value, DEFAULT_CONFIG[key]) ? null : value,
                     ])
                 )
             );
@@ -546,21 +558,24 @@ export class Runner {
             );
         }
         const runFn = this.dry ? null : fn;
-        let test = markRaw(new Test(parentSuite, name, config, runFn));
+        let test = markRaw(new Test(parentSuite, name, config));
         const originalTest = this.tests.get(test.id);
         if (originalTest) {
             if (this.dry || originalTest.run) {
                 throw testError(
                     { name, parent: parentSuite },
-                    `a test with that name already exists in the suite "${parentSuite.name}"`
+                    `a test with that name already exists in the suite ${stringify(
+                        parentSuite.name
+                    )}`
                 );
             }
             test = originalTest;
-            test.setRunFn(runFn);
         } else {
             parentSuite.addJob(test);
             this.tests.set(test.id, test);
         }
+
+        test.setRunFn(runFn);
 
         this._applyTagModifiers(test);
 
@@ -703,13 +718,14 @@ export class Runner {
         const innerWidth = getViewPortWidth();
         const innerHeight = getViewPortHeight();
         const [width, height] = preset.size;
-        if (width !== innerWidth || height !== innerHeight) {
+        if (width === innerWidth && height === innerHeight) {
+            lastPresetWarn = null;
+            delete this.state.globalWarnings[WARNINGS.viewport];
+        } else {
             if (lastPresetWarn !== presetId) {
-                this._handleGlobalWarning(
-                    "viewport size does not match the expected size for the current preset"
-                );
+                this._handleGlobalWarning(WARNINGS.viewport);
                 logger.warn(
-                    `viewport size does not match the expected size for the "${preset.label}" preset`,
+                    WARNINGS.viewport,
                     `\n> expected:`,
                     width,
                     "x",
@@ -840,7 +856,7 @@ export class Runner {
         this.state.status = "running";
 
         /** @type {Runner["_handleError"]} */
-        const handleError = !this.config.notrycatch && this._handleError.bind(this);
+        const handleError = this._handleError.bind(this);
 
         /**
          * @param {Job} [job]
@@ -890,14 +906,17 @@ export class Runner {
                             await this._callbacks.call("after-suite", suite, handleError);
                         });
 
-                        suite.runCount++;
-                        if (suite.config.multi && suite.runCount < suite.config.multi) {
-                            suite.resetIndex();
-                        }
-                        suite.parent?.reporting.add({ suites: +1 });
-                        suite.callbacks.clear();
-
                         logger.logSuite(suite);
+
+                        suite.runCount++;
+                        if (suite.willRunAgain()) {
+                            suite.reset();
+                        } else {
+                            suite.cleanup();
+                        }
+                        if (suite.runCount < (suite.config.multi || 0)) {
+                            continue;
+                        }
                     }
                 }
                 job = nextJob(job);
@@ -938,7 +957,6 @@ export class Runner {
             const timeout = $floor(test.config.timeout || this.config.timeout);
             const timeoutPromise = new Promise((resolve, reject) => {
                 // Set abort signal
-                this._rejectCurrent = reject;
                 this._resolveCurrent = resolve;
 
                 if (timeout && !this.debug) {
@@ -956,8 +974,6 @@ export class Runner {
             // Run test
             await Promise.race([testPromise, timeoutPromise])
                 .catch((error) => {
-                    this._rejectCurrent = noop; // prevents loop
-
                     if (handleError) {
                         return handleError(error);
                     } else {
@@ -965,8 +981,7 @@ export class Runner {
                     }
                 })
                 .finally(() => {
-                    this._rejectCurrent = noop;
-                    this._resolveCurrent = noop;
+                    this._resolveCurrent = null;
 
                     if (timeoutId) {
                         clearTimeout(timeoutId);
@@ -985,13 +1000,19 @@ export class Runner {
 
             // Log test errors and increment counters
             this.expectHooks.after(this);
-            test.runCount++;
             if (lastResults.pass) {
                 logger.logTest(test);
+
+                if (this.state.failedIds.has(test.id)) {
+                    this.state.failedIds.delete(test.id);
+                    storageSet(STORAGE.failed, [...this.state.failedIds]);
+                }
             } else {
+                this._failed++;
+
                 const failReasons = [];
-                const failedAssertions = lastResults.assertions.filter(
-                    (assertion) => !assertion.pass
+                const failedAssertions = lastResults.events.filter(
+                    (event) => event.type & CASE_EVENT_TYPES.assertion.value && !event.pass
                 );
                 if (failedAssertions.length) {
                     const s = failedAssertions.length === 1 ? "" : "s";
@@ -1000,36 +1021,50 @@ export class Runner {
                         ...formatAssertions(failedAssertions)
                     );
                 }
-                if (lastResults.errors.length) {
-                    const s = lastResults.errors.length === 1 ? "" : "s";
+                if (lastResults.currentErrors.length) {
+                    const s = lastResults.currentErrors.length === 1 ? "" : "s";
                     failReasons.push(
                         `\nError${s} during test:`,
-                        ...lastResults.errors.map((e) => `\n${e.message}`)
+                        ...lastResults.currentErrors.map((error) => `\n${error.message}`)
                     );
                 }
-                logger.error([`Test "${test.fullName}" failed:`, ...failReasons].join("\n"));
+                logger.logGlobalError(
+                    [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n")
+                );
+
+                if (!this.aborted) {
+                    if (this._failed === 1) {
+                        // On first failed test: reset the "failed IDs" list
+                        this.state.failedIds.clear();
+                    }
+                    this.state.failedIds.add(test.id);
+                    storageSet(STORAGE.failed, [...this.state.failedIds]);
+                }
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
 
-            if (this.config.bail) {
-                if (!test.config.skip && !lastResults.pass) {
-                    this._failed++;
-                }
-                if (this._failed >= this.config.bail) {
-                    return this.stop();
-                }
-            }
             this._pushTest(test);
-            if (test.willRunAgain()) {
-                test.run = test.run.bind(test);
-            } else {
-                if (this.debug) {
-                    return new Promise(() => {});
-                }
-                test.setRunFn(null);
-                job = nextJob(job);
+            this.totalTime = formatTime($now() - this._startTime);
+            test.runCount++;
+
+            if (this.debug) {
+                return new Promise(() => {});
             }
+            if (this.config.bail && this._failed >= this.config.bail) {
+                return this.stop();
+            }
+
+            if (test.willRunAgain()) {
+                test.reset();
+            } else {
+                test.cleanup();
+            }
+            if (test.runCount < (test.config.multi || 0)) {
+                continue;
+            }
+
+            job = nextJob(job);
         }
 
         if (this.state.status === "done") {
@@ -1052,10 +1087,11 @@ export class Runner {
     async stop() {
         this._currentJobs = [];
         this.state.status = "done";
-        this.totalTime = formatTime($now() - this._startTime);
 
-        if (this._resolveCurrent !== noop) {
+        if (this._resolveCurrent) {
             this._resolveCurrent();
+
+            // `stop` will be called again after test has been resolved.
             return false;
         }
 
@@ -1067,11 +1103,23 @@ export class Runner {
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
+            const errorMessage = ["Some tests failed: see above for details"];
+            if (this.config.headless) {
+                const link = createUrlFromId(this.state.failedIds, "test");
+                // Tweak parameters to make debugging easier
+                link.searchParams.set("debug", "assets");
+                link.searchParams.set("loglevel", LOG_LEVELS.tests);
+                link.searchParams.delete("debugTest");
+                link.searchParams.delete("headless");
+                errorMessage.push(`Failed tests link: ${link.toString()}`);
+            }
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
                 `failed ${failed} tests (${passed} passed, total time: ${this.totalTime})`
             );
-            logger.error("test failed (see above for details)");
+            // Do not use logger to not apply the [HOOT] prefix and allow the CI
+            // to stop the test run browser.
+            $error(errorMessage.join("\n"));
         } else {
             // Use console.dir for this log to appear on runbot sub-builds page
             logger.logGlobal(
@@ -1191,8 +1239,8 @@ export class Runner {
      * @param {Job} job
      */
     _applyTagModifiers(job) {
-        let skip = false;
-        let ignoreSkip = false;
+        let shouldSkip = false;
+        let [ignoreSkip] = this._getExplicitIncludeStatus(job);
         for (const tag of job.tags) {
             this.tags.set(tag.name, tag);
             switch (tag.name) {
@@ -1206,8 +1254,10 @@ export class Runner {
                 // Falls through
                 case Tag.ONLY:
                     if (!this.dry) {
-                        logger.warn(
-                            `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
+                        logger.logGlobalWarning(
+                            `${stringify(job.fullName)} is marked as ${stringify(
+                                tag.name
+                            )}. This is not suitable for CI`
                         );
                     }
                     this._include(
@@ -1218,7 +1268,7 @@ export class Runner {
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
-                    skip = true;
+                    shouldSkip = true;
                     break;
                 case Tag.TODO:
                     job.config.todo = true;
@@ -1226,10 +1276,12 @@ export class Runner {
             }
         }
 
-        if (skip) {
+        if (shouldSkip) {
             if (ignoreSkip) {
-                logger.warn(
-                    `test "${job.fullName}" is explicitly included but marked as skipped: "skip" modifier has been ignored`
+                logger.logGlobalWarning(
+                    `${stringify(
+                        job.fullName
+                    )} is marked as skipped but explicitly included: "skip" modifier has been ignored`
                 );
             } else {
                 job.config.skip = true;
@@ -1489,7 +1541,7 @@ export class Runner {
                 mockUserAgent(preset.platform);
             }
             if (typeof preset.touch === "boolean") {
-                mockTouch(preset.touch);
+                this.beforeEach(() => mockTouch(preset.touch));
             }
             this.checkPresetForViewPort();
         }
@@ -1505,6 +1557,23 @@ export class Runner {
             this._checkUrlValidity("test", "tests", this.tests);
         }
 
+        // Cleanup invalid tests from storage
+        const failedIds = [...this.state.failedIds];
+        const existingFailed = failedIds.filter((id) => this.tests.has(id));
+        if (existingFailed.length !== failedIds.length) {
+            this.state.failedIds = new Set(existingFailed);
+            storageSet(STORAGE.failed, existingFailed);
+        }
+
+        // Check tags similarities
+        const similarities = getTagSimilarities();
+        if (similarities.length) {
+            this._handleGlobalWarning(
+                WARNINGS.tagNames + similarities.map((s) => `\n- ${s.map(stringify).join(" / ")}`)
+            );
+            logger.logGlobalWarning(WARNINGS.tagNames, similarities);
+        }
+
         this._populateState = true;
         this._currentJobs = this._prepareJobs(this.rootSuites);
         this._populateState = false;
@@ -1518,10 +1587,13 @@ export class Runner {
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
     _handleError(ev) {
-        const error = ensureError(ev);
-        if (this.config.notrycatch || handledErrors.has(error)) {
-            // Already handled
+        if (this.config.notrycatch) {
             return;
+        }
+        const error = ensureError(ev);
+        if (handledErrors.has(error)) {
+            // Already handled
+            return safePrevent(ev);
         }
         handledErrors.add(error);
 
@@ -1538,7 +1610,7 @@ export class Runner {
             return safePrevent(ev);
         }
 
-        if (this.state.currentTest) {
+        if (this.state.currentTest && !(error instanceof HootError)) {
             // Handle the error in the current test
             const handled = this._handleErrorInTest(ev, error);
             if (handled) {
@@ -1568,19 +1640,7 @@ export class Runner {
             }
         }
 
-        const { lastResults } = this.state.currentTest;
-        if (!lastResults) {
-            return false;
-        }
-
-        lastResults.errors.push(error);
-        lastResults.caughtErrors++;
-        if (lastResults.expectedErrors >= lastResults.caughtErrors) {
-            return true;
-        }
-
-        this._rejectCurrent(error);
-        return false;
+        return this.expectHooks.error(error);
     }
 
     /**
@@ -1644,32 +1704,38 @@ export class Runner {
                 (test) => !test.config.skip && !test.config.multi
             );
             if (activeSingleTests.length !== 1) {
-                logger.warn(`disabling debug mode: ${activeSingleTests.length} tests will be run`);
+                logger.logGlobalWarning(
+                    `disabling debug mode: ${activeSingleTests.length} tests will be run`
+                );
                 this.config.debugTest = false;
                 this.debug = false;
             }
         }
 
         // Register default hooks
+        this.beforeAll(() => {
+            document.head.appendChild(HootFixtureElement.styleElement);
+            return () => HootFixtureElement.styleElement.remove();
+        });
         this.afterAll(
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
             !this.debug && on(window, "pointerdown", warnUserEvent),
             !this.debug && on(window, "keydown", warnUserEvent)
         );
-        this.beforeEach(this.fixture.setup);
+        this.beforeEach(this.fixture.setup, setupTime);
         this.afterEach(
+            cleanupAnimations,
             cleanupWindow,
             cleanupNetwork,
             cleanupNavigator,
-            this.fixture.cleanup,
             cleanupDOM,
             cleanupTime,
             cleanupDate
         );
 
         if (this.debug) {
-            logger.level = logLevels.DEBUG;
+            logger.level = LOG_LEVELS.debug;
         }
         enableEventLogs(this.debug);
         setFrameRate(this.config.fps);

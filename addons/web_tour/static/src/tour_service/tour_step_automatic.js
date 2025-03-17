@@ -1,217 +1,177 @@
-import { browser } from "@web/core/browser/browser";
-import { _legacyIsVisible } from "@web/core/utils/ui";
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
-import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-import { callWithUnloadCheck } from "./tour_utils";
+import { callWithUnloadCheck, serializeChanges, serializeMutation } from "./tour_utils";
 import { TourHelpers } from "./tour_helpers";
 import { TourStep } from "./tour_step";
+import { getTag } from "@web/core/utils/xml";
+import { waitForStable } from "@web/core/macro";
 
 export class TourStepAutomatic extends TourStep {
-    triggerFound = false;
-    hasRun = false;
-    isBlocked = false;
-    running = false;
+    skipped = false;
+    error = "";
     constructor(data, tour, index) {
         super(data, tour);
         this.index = index;
         this.tourConfig = tourState.getCurrentConfig();
     }
 
-    get canContinue() {
-        this.isBlocked =
-            document.body.classList.contains("o_ui_blocked") ||
-            document.querySelector(".o_blockUI");
-        return !this.isBlocked;
-    }
-
-    /**
-     * @type {TourStepCompiler}
-     * @param {TourStep} step
-     * @param {object} options
-     * @returns {{trigger, action}[]}
-     */
-    compileToMacro(pointer) {
-        const debugMode = this.tourConfig.debug;
-
-        return [
-            {
-                action: () => {
-                    this.running = true;
-                    setupEventActions(document.createElement("div"));
-                    if (this.break && debugMode !== false) {
-                        // eslint-disable-next-line no-debugger
-                        debugger;
-                    }
-                },
-            },
-            {
-                action: async () => {
-                    if (debugMode === false) {
-                        console.log(this.describeMe);
-                    } else {
-                        console.groupCollapsed(this.describeMe);
-                        console.log(this.stringify);
-                        console.groupEnd();
-                    }
-                    this._timeout = browser.setTimeout(
-                        () => this.throwError(),
-                        (this.timeout || 10000) + this.tour.stepDelay
-                    );
-                    // This delay is important for making the current set of tour tests pass.
-                    // IMPROVEMENT: Find a way to remove this delay.
-                    await new Promise((resolve) => requestAnimationFrame(resolve));
-                    await new Promise((resolve) =>
-                        browser.setTimeout(resolve, this.tour.stepDelay)
-                    );
-                },
-            },
-            {
-                trigger: () => {
-                    if (!this.active) {
-                        this.run = () => {};
-                        return true;
-                    }
-                    const stepEl = this.findTrigger();
-                    if (!stepEl) {
-                        return false;
-                    }
-                    return this.canContinue && stepEl;
-                },
-                action: async (stepEl) => {
-                    clearTimeout(this._timeout);
-                    tourState.setCurrentIndex(this.index + 1);
-                    if (this.tour.showPointerDuration > 0 && stepEl !== true) {
-                        // Useful in watch mode.
-                        pointer.pointTo(stepEl, this);
-                        await new Promise((r) =>
-                            browser.setTimeout(r, this.tour.showPointerDuration)
-                        );
-                        pointer.hide();
-                    }
-
-                    // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-                    const actionHelper = new TourHelpers(stepEl);
-
-                    let result;
-                    if (typeof this.run === "function") {
-                        const willUnload = await callWithUnloadCheck(async () => {
-                            await this.tryToDoAction(() =>
-                                // `this.anchor` is expected in many `step.run`.
-                                this.run.call({ anchor: stepEl }, actionHelper)
-                            );
-                        });
-                        result = willUnload && "will unload";
-                    } else if (typeof this.run === "string") {
-                        for (const todo of this.run.split("&&")) {
-                            const m = String(todo)
-                                .trim()
-                                .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
-                            await this.tryToDoAction(() =>
-                                actionHelper[m.groups?.action](m.groups?.arguments)
-                            );
-                        }
-                    }
-                    return result;
-                },
-            },
-            {
-                action: async () => {
-                    if (this.pause && debugMode !== false) {
-                        const styles = [
-                            "background: black; color: white; font-size: 14px",
-                            "background: black; color: orange; font-size: 14px",
-                        ];
-                        console.log(
-                            `%cTour is paused. Use %cplay()%c to continue.`,
-                            styles[0],
-                            styles[1],
-                            styles[0]
-                        );
-                        await new Promise((resolve) => {
-                            window.play = () => {
-                                resolve();
-                                delete window.play;
-                            };
-                        });
-                    }
-                    this.running = false;
-                },
-            },
-        ];
+    async checkForUndeterminisms(initialElement, delay) {
+        if (delay <= 0 || !initialElement) {
+            return;
+        }
+        const tagName = initialElement.tagName?.toLowerCase();
+        if (["body", "html"].includes(tagName) || !tagName) {
+            return;
+        }
+        const snapshot = initialElement.cloneNode(true);
+        const mutations = await waitForStable(initialElement, delay);
+        let reason;
+        if (!hoot.isVisible(initialElement)) {
+            reason = `Initial element is no longer visible`;
+        } else if (!initialElement.isEqualNode(snapshot)) {
+            reason =
+                `Initial element has changed:\n` +
+                JSON.stringify(serializeChanges(snapshot, initialElement), null, 2);
+        } else if (mutations.length) {
+            const changes = [...new Set(mutations.map(serializeMutation))];
+            reason =
+                `Initial element has mutated ${mutations.length} times:\n` +
+                JSON.stringify(changes, null, 2);
+        }
+        if (reason) {
+            throw new Error(
+                `Potential non deterministic behavior found in ${delay}ms for trigger ${this.trigger}.\n${reason}`
+            );
+        }
     }
 
     get describeWhyIFailed() {
-        if (!this.triggerFound) {
-            return `The cause is that trigger (${this.trigger}) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`;
-        } else if (this.isBlocked) {
-            return "Element has been found but DOM is blocked by UI.";
-        } else if (!this.hasRun) {
-            return `Element has been found. The error seems to be with step.run.`;
-        }
-        return "";
-    }
-
-    get describeWhyIFailedDetailed() {
-        const offset = 3;
-        const start = Math.max(this.index - offset, 0);
-        const end = Math.min(this.index + offset, this.tour.steps.length - 1);
-        const result = [];
-        for (let i = start; i <= end; i++) {
-            const stepString = new TourStep(this.tour.steps[i]).stringify;
-            const text = [stepString];
-            if (i === this.index) {
-                const line = "-".repeat(10);
-                const failing_step = `${line} FAILED: ${this.describeMe} ${line}`;
-                text.unshift(failing_step);
-                text.push("-".repeat(failing_step.length));
+        const errors = [];
+        if (this.element) {
+            errors.push(`Element has been found.`);
+            if (this.isUIBlocked) {
+                errors.push("BUT: DOM is blocked by UI.");
             }
-            result.push(...text);
+            if (!this.elementIsInModal) {
+                errors.push(
+                    `BUT: It is not allowed to do action on an element that's below a modal.`
+                );
+            }
+            if (!this.elementIsEnabled) {
+                errors.push(
+                    `BUT: Element is not enabled. TIP: You can use :enable to wait the element is enabled before doing action on it.`
+                );
+            }
+            if (!this.parentFrameIsReady) {
+                errors.push(`BUT: parent frame is not ready ([is-ready='false']).`);
+            }
+        } else {
+            const checkElement = hoot.queryFirst(this.trigger);
+            if (checkElement) {
+                errors.push(`Element has been found.`);
+                errors.push(
+                    `BUT: Element is not visible. TIP: You can use :not(:visible) to force the search for an invisible element.`
+                );
+            } else {
+                errors.push(`Element (${this.trigger}) has not been found.`);
+            }
         }
-        return result.join("\n");
+        return errors;
     }
 
     /**
-     * @returns {HTMLElement}
+     * When return true, macro stops.
+     * @returns {Boolean}
+     */
+    async doAction() {
+        let result = false;
+        if (!this.skipped) {
+            // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
+            const actionHelper = new TourHelpers(this.element);
+
+            if (typeof this.run === "function") {
+                const willUnload = await callWithUnloadCheck(async () => {
+                    await this.run.call({ anchor: this.element }, actionHelper);
+                });
+                result = willUnload && "will unload";
+            } else if (typeof this.run === "string") {
+                for (const todo of this.run.split("&&")) {
+                    const m = String(todo)
+                        .trim()
+                        .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
+                    await actionHelper[m.groups?.action](m.groups?.arguments);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Each time it returns false, tour engine wait for a mutation
+     * to retry to find the trigger.
+     * @returns {(HTMLElement|Boolean)}
      */
     findTrigger() {
-        let nodes;
-        try {
-            nodes = hoot.queryAll(this.trigger);
-        } catch (error) {
-            this.throwError(`Trigger was not found : ${this.trigger} : ${error.message}`);
+        if (!this.active) {
+            this.skipped = true;
+            return true;
         }
-        const triggerEl = this.trigger.includes(":visible")
-            ? nodes.at(0)
-            : nodes.find(_legacyIsVisible);
-        this.triggerFound = !!triggerEl;
-        return triggerEl;
+        const visible = !/:(hidden|visible)\b/.test(this.trigger);
+        this.element = hoot.queryFirst(this.trigger, { visible });
+        if (this.element) {
+            return !this.isUIBlocked &&
+                this.elementIsEnabled &&
+                this.elementIsInModal &&
+                this.parentFrameIsReady
+                ? this.element
+                : false;
+        }
+        return false;
     }
 
-    /**
-     * @param {string} [error]
-     */
-    throwError(error = "") {
-        tourState.setCurrentTourOnError();
-        const tourConfig = tourState.getCurrentConfig();
-        // console.error notifies the test runner that the tour failed.
-        const errors = [`FAILED: ${this.describeMe}.`, this.describeWhyIFailed, error];
-        console.error(errors.filter(Boolean).join("\n"));
-        // The logged text shows the relative position of the failed step.
-        // Useful for finding the failed step.
-        console.dir(this.describeWhyIFailedDetailed);
-        if (tourConfig.debug !== false) {
-            // eslint-disable-next-line no-debugger
-            debugger;
-        }
+    get isUIBlocked() {
+        return (
+            document.body.classList.contains("o_lazy_js_waiting") ||
+            document.body.classList.contains("o_ui_blocked") ||
+            document.querySelector(".o_blockUI") ||
+            document.querySelector(".o_is_blocked")
+        );
     }
 
-    async tryToDoAction(action) {
-        try {
-            await action();
-            this.hasRun = true;
-        } catch (error) {
-            this.throwError(error.message);
+    get parentFrameIsReady() {
+        const parentFrame = hoot.getParentFrame(this.element);
+        return parentFrame && parentFrame.hasAttribute("is-ready")
+            ? parentFrame.getAttribute("is-ready") === "true"
+            : true;
+    }
+
+    get elementIsInModal() {
+        if (this.hasAction) {
+            const overlays = hoot.queryFirst(".popover, .o-we-command, .o_notification");
+            const modal = hoot.queryFirst(".modal:visible:not(.o_inactive_modal):last");
+            if (modal && !overlays && !this.trigger.startsWith("body")) {
+                return (
+                    modal.contains(hoot.getParentFrame(this.element)) ||
+                    modal.contains(this.element)
+                );
+            }
         }
+        return true;
+    }
+
+    get elementIsEnabled() {
+        const isTag = (array) => array.includes(getTag(this.element, true));
+        if (this.hasAction) {
+            if (isTag(["input", "textarea"])) {
+                return hoot.isEditable(this.element);
+            } else if (isTag(["button", "select"])) {
+                return !this.element.disabled;
+            }
+        }
+        return true;
+    }
+
+    get hasAction() {
+        return ["string", "function"].includes(typeof this.run) && !this.skipped;
     }
 }

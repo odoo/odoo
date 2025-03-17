@@ -3,6 +3,7 @@
 import json
 from ast import literal_eval
 from collections import defaultdict
+from odoo.osv import expression
 
 from odoo import models
 
@@ -96,7 +97,7 @@ class Project(models.Model):
         }
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
-        if section_name in ['other_revenues_aal', 'other_costs_aal']:
+        if section_name in ['other_revenues_aal', 'other_costs_aal', 'other_costs']:
             action = self.env["ir.actions.actions"]._for_xml_id("analytic.account_analytic_line_action_entries")
             action['domain'] = domain
             action['context'] = {
@@ -127,10 +128,14 @@ class Project(models.Model):
     def _get_domain_aal_with_no_move_line(self):
         """ this method is used in order to overwrite the domain in sale_timesheet module. Since the field 'project_id' is added to the "analytic line" model
         in the hr_timesheet module, we can't add the condition ('project_id', '=', False) here. """
-        return [('account_id', '=', self.account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
+        return [('account_id', '=', self.account_id.id), ('move_line_id', '=', False)]
 
     def _get_items_from_aal(self, with_action=True):
         domain = self._get_domain_aal_with_no_move_line()
+        domain = expression.AND([
+            domain,
+            [('category', 'not in', ['manufacturing_order', 'picking_entry'])]
+        ])
         aal_other_search = self.env['account.analytic.line'].sudo().search_read(domain, ['id', 'amount', 'currency_id'])
         if not aal_other_search:
             return {

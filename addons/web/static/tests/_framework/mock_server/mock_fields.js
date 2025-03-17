@@ -127,39 +127,32 @@ const makeFieldGenerator = (type, { groupOperator, requiredKeys = [] } = {}) => 
          *  ? MonetaryFieldDefinition : T extends RelationalFieldDefinition["type"]
          *  ? RelationalFieldDefinition : T extends SelectionFieldDefinition["type"]
          *  ? SelectionFieldDefinition : StandardFieldDefinition, "name">>
-         * } [fieldDefinition]
+         * } [attributes]
          */
-        [constructorFnName](fieldDefinition) {
+        [constructorFnName](attributes) {
             // Creates a pre-version of the field definition
-            const preDef = {
+            const field = {
                 ...defaultDef,
-                ...fieldDefinition,
+                ...attributes,
                 [FIELD_SYMBOL]: true,
             };
+
             for (const key of requiredKeys) {
-                if (!(key in preDef)) {
+                if (!(key in field)) {
                     throw new MockServerError(
                         `missing key "${key}" in ${type || "generic"} field definition`
                     );
                 }
             }
 
-            const toAssign = {};
-
             // Fill default values in definition based on given properties
-            if (isComputed(preDef)) {
+            if (isComputed(field)) {
                 // By default: computed fields are readonly and not stored
-                toAssign.readonly = fieldDefinition.readonly ?? true;
-                toAssign.store = fieldDefinition.store ?? false;
+                field.readonly = attributes.readonly ?? true;
+                field.store = attributes.store ?? false;
             }
 
-            // Remove aggregator for no-store expect related ones
-            if (!preDef.store && !preDef.related) {
-                toAssign.aggregator = fieldDefinition.aggregator ?? undefined;
-                toAssign.groupable = fieldDefinition.groupable ?? false;
-            }
-
-            return Object.assign(preDef, toAssign);
+            return field;
         },
     }[constructorFnName];
 };
@@ -218,7 +211,9 @@ export const One2many = makeFieldGenerator("one2many", {
     requiredKeys: ["relation"],
 });
 
-export const Properties = makeFieldGenerator("properties");
+export const Properties = makeFieldGenerator("properties", {
+    requiredKeys: ["definition_record", "definition_record_field"],
+});
 
 export const PropertiesDefinition = makeFieldGenerator("properties_definition");
 

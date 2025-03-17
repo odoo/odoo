@@ -252,6 +252,15 @@ class Website(models.Model):
     def _get_blocked_third_party_domains_list(self):
         return self.blocked_third_party_domains.split('\n')
 
+    def _get_blocked_iframe_containers_classes(self):
+        return {
+            's_map',
+            's_instagram_page',
+            'o_facebook_page',
+            'o_background_video',
+            'media_iframe_video',
+        }
+
     # self.env.uid for ir.rule groups on menu
     @tools.ormcache('self.env.uid', 'self.id', cache='templates')
     def _get_menu_ids(self):
@@ -415,7 +424,7 @@ class Website(models.Model):
         :param url: the url to check
         :return: True if the url has to be indexed, False otherwise
         """
-        return get_base_domain(url, True) == get_base_domain(self.domain, True)
+        return get_base_domain(url.lower(), True) == get_base_domain(self.domain.lower(), True)
 
     # ----------------------------------------------------------
     # Configurator
@@ -1526,9 +1535,9 @@ class Website(models.Model):
 
         for rule in router.iter_rules():
             if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
-                if rule.endpoint.func in sitemap_endpoint_done:
+                if rule.endpoint.func.__func__ in sitemap_endpoint_done:
                     continue
-                sitemap_endpoint_done.add(rule.endpoint.func)
+                sitemap_endpoint_done.add(rule.endpoint.func.__func__)
 
                 func = rule.endpoint.routing['sitemap']
                 if func is False:
@@ -1697,6 +1706,20 @@ class Website(models.Model):
     @tools.ormcache('self.id')
     def _get_cached_values(self):
         self.ensure_one()
+        # ir.http:_match is called by ir.http:_serve_db at a time when the
+        # environment hasn't been completely initialized (i.e. before the method
+        # ir.http:_authenticate is called by ir.http:_serve_ir_http), and its
+        # context language hasn't been checked against activated languages yet.
+
+        # Inside ir.http:_match, the http_routing module is trying to retrieve
+        # the default language via _get_default_lang, which is overridden by the
+        # website module and calls website._get_cached('default_lang_id'), which
+        # eventually calls this method.
+
+        # Here, we manually prefetch the needed fields only to avoid prefetching
+        # any translatable field, such as contact_us_button_url by website_sale,
+        # as translating to an invalid language would result in an error.
+        self.fetch(['user_id', 'company_id', 'default_lang_id', 'homepage_url'])
         return {
             'user_id': self.user_id.id,
             'company_id': self.company_id.id,

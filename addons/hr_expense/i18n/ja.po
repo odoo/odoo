@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Junko Augias, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,12 +105,12 @@ msgstr "2023-08-11"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "<b>Wasting time recording your receipts?</b> Let’s try a better way."
-msgstr ""
+msgstr "<b>領収書の記録に時間を消耗していますか?</b> もっと良い方法があります。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "<i class=\"oi oi-arrow-right\"/> Setup your alias domain"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/> エイリアスドメインを設定"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
@@ -151,7 +151,16 @@ msgstr "<span>支払済:</span>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span>The total amount doesn't match the original amount.</span>"
-msgstr ""
+msgstr "<span>合計金額が元の金額と一致しません。</span>"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
+"A default outstanding account must be defined in the settings for company-"
+"paid expenses. Or specify one in the Journal for the %(method)s payment "
+"method."
+msgstr "会社負担の経費の設定で、未消込勘定のデフォルト値を定義する必要があります。または、支払方法 %(method)s 用の仕訳帳で指定します。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -587,8 +596,8 @@ msgstr "従業員から支払われる経費のデフォルト会計仕訳帳。
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
-msgstr ""
+msgid "Default outstanding account for expenses paid by company."
+msgstr "会社負担の経費用のデフォルト未消込勘定。"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -692,11 +701,6 @@ msgid "Employee Expense Journal"
 msgstr "従業員経費仕訳帳"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_account_employee_expenses
 msgid "Employee Expenses"
@@ -780,6 +784,11 @@ msgid "Expense Manager"
 msgstr "経費マネジャー"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Expense Outstanding Account"
+msgstr "未払費用勘定"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense Refuse Reason Wizard"
 msgstr "費用否認理由ウィザード"
@@ -823,7 +832,7 @@ msgstr "経費報告分析"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr "未承認経費報告"
+msgstr "承認待ち経費報告"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
@@ -886,7 +895,7 @@ msgstr "経費報告否認"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr "経費レポートがドラフトに再設定されました"
+msgstr "経費レポートがドラフトにリセットされました"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -937,7 +946,7 @@ msgstr "経費報告"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr "未承認経費報告"
+msgstr "承認待ち経費報告"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1015,6 +1024,12 @@ msgid "Gifts to customers or vendors"
 msgstr "顧客または仕入先への贈答品"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "Go to settings"
+msgstr "管理設定に移動"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Group By"
@@ -1040,6 +1055,11 @@ msgstr "メッセージあり"
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "ホテル、飛行機チケット、タクシーなど"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
+msgid "Hr Expense Alias Domain"
+msgstr "人事経費エイリアスドメイン"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
@@ -1080,7 +1100,7 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "In Payment"
-msgstr "支払中"
+msgstr "支払処理中"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
@@ -1159,13 +1179,13 @@ msgstr "仕訳がドラフトにリセットされました"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Item"
-msgstr "仕訳項目"
+msgstr "仕訳明細"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Journal entries"
-msgstr "仕訳帳エントリ"
+msgstr "仕訳"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
@@ -1524,7 +1544,7 @@ msgstr "部分消込"
 #: model:ir.model,name:hr_expense.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Pay"
-msgstr "お支払い"
+msgstr "支払"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_method_line_id
@@ -1572,9 +1592,16 @@ msgstr "電話代、郵便料金など"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr "会計仕訳を生成するには、経費仕訳帳を指定して下さい。"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
 "Please specify if the expenses for this report were paid by the company, or "
 "the employee"
-msgstr ""
+msgstr "このレポートの経費が会社または従業員によって支払われた場合は、その旨を指定して下さい。"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1680,7 +1707,7 @@ msgstr "参照"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Refund employees via their payslips."
-msgstr ""
+msgstr "給与明細で従業員に払戻します。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1826,7 +1853,7 @@ msgstr "表"
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__show_commercial_partner_warning
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
 msgid "Show Commercial Partner Warning"
-msgstr ""
+msgstr "商業取引先警告を表示"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1839,12 +1866,6 @@ msgstr "次のアクションの日付が今日より前のすべてのレコー
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Show missing work email employees"
 msgstr "仕事用Eメールのない従業員を表示"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "会計仕訳作成の経費仕訳帳を指定"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
@@ -1988,8 +2009,8 @@ msgstr "チーム承認者"
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_outstanding_account_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_outstanding_account_id
 msgid ""
-"The account used to record the outstanding amount of the employee expenses."
-msgstr ""
+"The account used to record the outstanding amount of the company expenses."
+msgstr "会社経費の未払金額を記録する口座。"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -2028,14 +2049,6 @@ msgstr "仕訳は計上費用に設定する必要があります。"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
 msgstr "従業員に経費を支払う時に使用される仕訳帳"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
@@ -2467,7 +2480,7 @@ msgstr " 仕訳帳(%s)に手動支払方法を追加する必要があります�
 msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
-msgstr "次に進むには、データベースに費用計上可能なカテゴリが少なくとも1つある必要があります！"
+msgstr "次に進むには、データベースに経費計上可能なカテゴリが少なくとも1つある必要があります！"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

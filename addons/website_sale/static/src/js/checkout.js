@@ -50,8 +50,14 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         this._highlightAddressCard(newAddress);
         const selectedPartnerId = newAddress.dataset.partnerId;
         await this.updateAddress(addressType, selectedPartnerId);
-        if (addressType === 'delivery') {  // A delivery address is changed.
-            if (this.use_delivery_as_billing_toggle.checked) {
+        // A delivery address is changed.
+        if (addressType === 'delivery' || this.billingContainer.dataset.deliveryAddressDisabled) {
+            if (this.billingContainer.dataset.deliveryAddressDisabled) {
+                // If a delivery address is disabled in the settings, use a billing address as
+                // a delivery one.
+                await this.updateAddress('delivery', selectedPartnerId);
+            }
+            if (this.use_delivery_as_billing_toggle?.checked) {
                 await this._selectMatchingBillingAddress(selectedPartnerId);
             }
             // Update the available delivery methods.
@@ -336,6 +342,11 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const amountTotal = document.querySelectorAll(
             '#order_total .monetary_field, #amount_total_summary.monetary_field'
         );
+        // When no dm is set and a price span is hidden, hide the message and show the price span.
+        if (amountDelivery.classList.contains('d-none')) {
+            document.querySelector('#message_no_dm_set').classList.add('d-none');
+            amountDelivery.classList.remove('d-none');
+        }
         amountDelivery.innerHTML = result.amount_delivery;
         amountUntaxed.innerHTML = result.amount_untaxed;
         amountTax.innerHTML = result.amount_tax;
@@ -526,7 +537,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const billingAddressSelected = Boolean(
             this.el.querySelector('.card.bg-primary[data-address-type="billing"]')
         );
-        return billingAddressSelected || this.use_delivery_as_billing_toggle.checked;
+        return billingAddressSelected || this.use_delivery_as_billing_toggle?.checked;
     },
 
     /**

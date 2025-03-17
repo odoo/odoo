@@ -1,11 +1,36 @@
 /* eslint-env serviceworker */
 /* eslint-disable no-restricted-globals */
+
+async function openDiscussChannel(channelId, action) {
+    const discussURLRegexes = [
+        new RegExp("/odoo/discuss"),
+        new RegExp(`/odoo/\\d+/action-${action}`),
+        new RegExp(`/odoo/action-${action}`),
+    ];
+    let targetClient;
+    for (const client of await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+    })) {
+        if (!targetClient || discussURLRegexes.some((r) => r.test(new URL(client.url).pathname))) {
+            targetClient = client;
+        }
+    }
+    if (!targetClient) {
+        targetClient = await self.clients.openWindow(
+            `/odoo/action-${action}?active_id=discuss.channel_${channelId}`
+        );
+    }
+    await targetClient.focus();
+    targetClient.postMessage({ action: "OPEN_CHANNEL", data: { id: channelId } });
+}
+
 self.addEventListener("notificationclick", (event) => {
     event.notification.close();
     if (event.notification.data) {
         const { action, model, res_id } = event.notification.data;
         if (model === "discuss.channel") {
-            clients.openWindow(`/odoo/${res_id}/action-${action}`);
+            event.waitUntil(openDiscussChannel(res_id, action));
         } else {
             const modelPath = model.includes(".") ? model : `m-${model}`;
             clients.openWindow(`/odoo/${modelPath}/${res_id}`);

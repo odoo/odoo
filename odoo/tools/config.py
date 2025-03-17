@@ -171,7 +171,7 @@ class configmanager(object):
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
                          help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
-                         "A filter spec has the format: [-][tag][/module][:class][.method] "
+                         "A filter spec has the format: [-][tag][/module][:class][.method][[params]] "
                          "The '-' specifies if we want to include or exclude tests matching this spec. "
                          "The tag will match tags added on a class with a @tagged decorator "
                          "(all Test classes have 'standard' and 'at_install' tags "
@@ -181,6 +181,9 @@ class configmanager(object):
                          "If tag is omitted on exclude mode, its value is '*'. "
                          "The module, class, and method will respectively match the module name, test class name and test method name. "
                          "Example: --test-tags :TestClass.test_func,/test_module,external "
+                         "It is also possible to provide parameters to a test method that supports them"
+                         "Example: --test-tags /web.test_js[mail]"
+                         "If negated, a test-tag with parameter will negate the parameter when passing it to the test"
 
                          "Filtering and executing the tests happens twice: right "
                          "after each module installation/update and at the end "
@@ -313,6 +316,10 @@ class configmanager(object):
                          type="float")
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
+                         type="int")
+        group.add_option("--limit-time-worker-cron", dest="limit_time_worker_cron", my_default=0,
+                         help="Maximum time a cron thread/worker stays alive before it is restarted. "
+                              "Set to 0 to disable. (default: 0)",
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Try to enable the unaccent extension when creating new databases.")
@@ -475,7 +482,7 @@ class configmanager(object):
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_city_db', 'geoip_country_db', 'dev_mode',
-                'shell_interface',
+                'shell_interface', 'limit_time_worker_cron',
         ]
 
         for arg in keys:
@@ -701,7 +708,7 @@ class configmanager(object):
         for opt in sorted(self.options):
             if keys is not None and opt not in keys:
                 continue
-            if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update'):
+            if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update', 'demo'):
                 continue
             if opt in self.blacklist_for_save:
                 continue

@@ -40,7 +40,7 @@ class WebsiteEventController(http.Controller):
             'country': post.get('country'),
         }
 
-    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_event)
+    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_event, readonly=True)
     def events(self, page=1, **searches):
         if searches.get('tags', '[]').count(',') > 0 and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
@@ -146,7 +146,7 @@ class WebsiteEventController(http.Controller):
     # EVENT PAGE
     # ------------------------------------------------------------
 
-    @http.route(['''/event/<model("event.event"):event>/page/<path:page>'''], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event"):event>/page/<path:page>'''], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def event_page(self, event, page, **post):
         values = {
             'event': event,
@@ -171,7 +171,7 @@ class WebsiteEventController(http.Controller):
 
         return request.render(page, values)
 
-    @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=True)
+    @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=True, readonly=True)
     def event(self, event, **post):
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url
@@ -181,7 +181,7 @@ class WebsiteEventController(http.Controller):
             target_url += '?enable_editor=1'
         return request.redirect(target_url)
 
-    @http.route(['''/event/<model("event.event"):event>/register'''], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['''/event/<model("event.event"):event>/register'''], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def event_register(self, event, **post):
         values = self._prepare_event_register_values(event, **post)
         return request.render("website_event.event_description_full", values)
@@ -285,7 +285,7 @@ class WebsiteEventController(http.Controller):
         # goal is to use the answer to the first question of every 'type' (aka name / phone / email / company name)
         already_handled_fields_data = {}
         for key, value in form_details.items():
-            if not value:
+            if not value or '-' not in key:
                 continue
 
             key_values = key.split('-')
@@ -295,6 +295,9 @@ class WebsiteEventController(http.Controller):
                 if field_name not in registration_fields:
                     continue
                 registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
+                continue
+
+            if len(key_values) != 3:
                 continue
 
             registration_index, question_type, question_id = key_values
@@ -367,6 +370,8 @@ class WebsiteEventController(http.Controller):
             that we have enough seats for all selected tickets.
             If we don't, the user is instead redirected to page to register with a
             formatted error message. """
+        if not request.env['ir.http']._verify_request_recaptcha_token('website_event_registration'):
+            raise UserError(_('Suspicious activity detected by Google reCaptcha.'))
         registrations_data = self._process_attendees_form(event, post)
         registration_tickets = Counter(registration['event_ticket_id'] for registration in registrations_data)
         event_tickets = request.env['event.event.ticket'].browse(list(registration_tickets.keys()))

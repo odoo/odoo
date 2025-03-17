@@ -194,8 +194,9 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             form = self._instantiate_activity_schedule_wizard(employees)
             form.plan_id = self.plan_onboarding
             self.assertEqual(form.plan_summary,
-                             "<ul><li>To-Do: Plan training</li><li>To-Do: Training</li>"
-                             "<li>To-Do: Send feedback to the manager</li></ul>")
+                             "<ul>Manager <ul><li>To-Do: Plan training</li>"
+                             "</ul>Coach <ul><li>To-Do: Training</li>"
+                             "</ul>Employee <ul><li>To-Do: Send feedback to the manager</li></ul></ul>")
             self.assertFalse(form.has_error)
             wizard = form.save()
             wizard.action_schedule_plan()

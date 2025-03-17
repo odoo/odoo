@@ -9,7 +9,7 @@ import { session } from "@web/session";
 import { rpc } from "@web/core/network/rpc";
 import { get } from "@web/core/network/http_service";
 import { _t } from "@web/core/l10n/translation";
-import { renderToElement } from "@web/core/utils/render";
+import { renderToFragment } from "@web/core/utils/render";
 import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";
 import { attachComponent } from "@web_editor/js/core/owl_utils";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -692,7 +692,7 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
             Object.values(o).forEach((r) => {
                 r.content = $('<p>' + $(r.content).html() + '</p>').text().substring(0, 250);
             });
-            self.$('div.post_spam').empty().append(renderToElement('website_forum.spam_search_name', {
+            self.$('div.post_spam').empty().append(renderToFragment('website_forum.spam_search_name', {
                 posts: o,
             }));
         });

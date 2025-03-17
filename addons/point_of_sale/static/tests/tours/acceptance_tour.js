@@ -7,7 +7,6 @@ import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_scre
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_change", {
-    test: true,
     steps: () =>
         [
             waitForLoading(),
@@ -30,18 +29,20 @@ registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_ch
 });
 
 registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quantity", {
-    test: true,
     steps: () =>
         [
             waitForLoading(),
             Chrome.startPoS(),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
-            inLeftSide(Numpad.click(".")),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "0.0", "0.0"),
-            inLeftSide(Numpad.click("9")),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "0.9", "4.59"),
-            inLeftSide(Numpad.click("9")),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "0.99", "5.05"),
+            inLeftSide([
+                { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
+                Numpad.click("."),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0.0"),
+                Numpad.click("9"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0.9"),
+                Numpad.click("9"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0.99"),
+            ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash", true, { amount: "5.05" }),
             ProductScreen.finishOrder(),
@@ -49,7 +50,6 @@ registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quanti
 });
 
 registry.category("web_tour.tours").add("pos_basic_order_03_tax_position", {
-    test: true,
     steps: () =>
         [
             waitForLoading(),

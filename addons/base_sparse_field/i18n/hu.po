@@ -1,27 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_sparse_field
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
-# Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
-# krnkris, 2022
-# Tamás Németh <ntomasz81@gmail.com>, 2022
-#
+# Ákos Nagy <akos.nagy@oregional.hu>, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# Tamás Dombos, 2024
+# Martin Trigaux, 2024
+# krnkris, 2024
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_sparse_field
@@ -35,6 +35,7 @@ msgid "Boolean"
 msgstr "Logikai"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "A \"%s\" mező tároló rendszerének megváltoztatása nem megengedett."
@@ -82,22 +83,23 @@ msgstr "Lebegőpontos"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
-msgid "If set, this field will be stored in the sparse structure of the serialization field, instead of having its own database column. This cannot be changed after creation."
-msgstr "Ha beállított, ez a mező egy elszórt struktúrában lesz elmentve egy rendszertelen mezőben, nem pedig egy saját adatbázis oszlopban. Nem változtatható a létrehozást követően."
+msgid ""
+"If set, this field will be stored in the sparse structure of the "
+"serialization field, instead of having its own database column. This cannot "
+"be changed after creation."
+msgstr ""
+"Ha beállított, ez a mező egy elszórt struktúrában lesz elmentve egy "
+"rendszertelen mezőben, nem pedig egy saját adatbázis oszlopban. Nem "
+"változtatható a létrehozást követően."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
 msgstr "Egész szám"
-
-#. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
-msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
@@ -107,7 +109,7 @@ msgstr "Frissítette"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_date
 msgid "Last Updated on"
-msgstr "Frissítve "
+msgstr "Frissítve"
 
 #. module: base_sparse_field
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__one
@@ -120,6 +122,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "\"%s\" mező átnevezése nem megengedett"
@@ -135,8 +138,11 @@ msgid "Serialization Field"
 msgstr "Sorozatosító mező"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
-msgid "Serialization field %r not found for sparse field %s!"
+msgid ""
+"Serialization field \"%(serialization_field)s\" not found for sparse field "
+"%(sparse_field)s!"
 msgstr ""
 
 #. module: base_sparse_field

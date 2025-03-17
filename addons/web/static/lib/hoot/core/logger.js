@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { formatTime } from "../hoot_utils";
+import { formatTime, stringify } from "../hoot_utils";
 import { urlParams } from "./url";
 
 //-----------------------------------------------------------------------------
@@ -11,10 +11,12 @@ const {
     console: {
         debug: $debug,
         dir: $dir,
+        error: $error,
         groupCollapsed: $groupCollapsed,
         groupEnd: $groupEnd,
         log: $log,
         trace: $trace,
+        warn: $warn,
     },
 } = globalThis;
 
@@ -72,7 +74,7 @@ export function makeNetworkLogger(prefix, title) {
          * @param {() => any} getData
          */
         async logRequest(getData) {
-            if (logger.level < logLevels.DEBUG) {
+            if (logger.level < LOG_LEVELS.debug) {
                 return;
             }
             const color = `color: #66e`;
@@ -86,7 +88,7 @@ export function makeNetworkLogger(prefix, title) {
          * @param {() => any} getData
          */
         async logResponse(getData) {
-            if (logger.level < logLevels.DEBUG) {
+            if (logger.level < LOG_LEVELS.debug) {
                 return;
             }
             const color = `color: #f80`;
@@ -96,15 +98,15 @@ export function makeNetworkLogger(prefix, title) {
     };
 }
 
-export const logLevels = {
-    RUNNER: 0,
-    SUITES: 1,
-    TESTS: 2,
-    DEBUG: 3,
+export const LOG_LEVELS = {
+    runner: 0,
+    suites: 1,
+    tests: 2,
+    debug: 3,
 };
 
 export const logger = {
-    level: urlParams.loglevel ?? logLevels.RUNNER,
+    level: urlParams.loglevel ?? LOG_LEVELS.runner,
 
     // Standard console methods
 
@@ -139,7 +141,7 @@ export const logger = {
      * @param {...any} args
      */
     logDebug(...args) {
-        if (logger.level < logLevels.DEBUG) {
+        if (logger.level < LOG_LEVELS.debug) {
             return;
         }
         $debug(...styledArguments(args));
@@ -148,14 +150,14 @@ export const logger = {
      * @param {import("./test").Test} test
      */
     logTest(test) {
-        if (logger.level < logLevels.TESTS) {
+        if (logger.level < LOG_LEVELS.tests) {
             return;
         }
         const { fullName, lastResults } = test;
         $log(
             ...styledArguments([
-                `Test "${fullName}" passed`,
-                lastResults.assertions.length,
+                `Test ${stringify(fullName)} passed`,
+                lastResults.counts.assertion || 0,
                 `assertions (time: ${formatTime(lastResults.duration)})`,
             ])
         );
@@ -164,10 +166,10 @@ export const logger = {
      * @param {import("./suite").Suite} suite
      */
     logSuite(suite) {
-        if (logger.level < logLevels.SUITES) {
+        if (logger.level < LOG_LEVELS.suites) {
             return;
         }
-        const args = [`"${suite.fullName}" ended`];
+        const args = [`${stringify(suite.fullName)} ended`];
         const withArgs = [];
         if (suite.reporting.passed) {
             withArgs.push(suite.reporting.passed, "passed");
@@ -187,7 +189,7 @@ export const logger = {
      * @param {...any} args
      */
     logRun(...args) {
-        if (logger.level < logLevels.RUNNER) {
+        if (logger.level < LOG_LEVELS.runner) {
             return;
         }
         $log(...styledArguments(args));
@@ -197,5 +199,17 @@ export const logger = {
      */
     logGlobal(...args) {
         $dir(...unstyledArguments(args));
+    },
+    /**
+     * @param {...any} args
+     */
+    logGlobalError(...args) {
+        $error(...styledArguments(args));
+    },
+    /**
+     * @param {...any} args
+     */
+    logGlobalWarning(...args) {
+        $warn(...styledArguments(args));
     },
 };

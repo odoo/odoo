@@ -1,5 +1,14 @@
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, edit, queryAllProperties, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+import {
+    click,
+    edit,
+    manuallyDispatchProgrammaticEvent,
+    on,
+    queryAllProperties,
+    queryAllTexts,
+    queryFirst,
+    resize,
+} from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -13,8 +22,8 @@ import {
     mockService,
     models,
     mountView,
-    mountWithCleanup,
     mountWebClient,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -24,9 +33,9 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { pick } from "@web/core/utils/objects";
-import { WebClient } from "@web/webclient/webclient";
-import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { redirect } from "@web/core/utils/urls";
+import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
+import { WebClient } from "@web/webclient/webclient";
 
 const MOCK_IMAGE =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
@@ -421,14 +430,12 @@ test("settings views does not read existing id when coming back in breadcrumbs",
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -460,13 +467,13 @@ test("settings views does not read existing id when coming back in breadcrumbs",
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    expect(".o_field_boolean input").not.toHaveProperty("disabled");
+    expect(".o_field_boolean input").toHaveProperty("disabled", false);
     await click("button[name='4']");
     await animationFrame();
     expect(".breadcrumb").toHaveText("Settings");
     await click(".o_control_panel .breadcrumb-item a");
     await animationFrame();
-    expect(".o_field_boolean input").not.toHaveProperty("disabled");
+    expect(".o_field_boolean input").toHaveProperty("disabled", false);
     expect.verifySteps([
         "get_views", // initial setting action
         "onchange", // this is a setting view => new record transient record
@@ -487,13 +494,13 @@ test("resIds should contains only 1 id", async () => {
     serverState.multiLang = true;
 
     onRpc("get_installed", () => {
-        return Promise.resolve([
+        return [
             ["en_US", "English"],
             ["fr_BE", "French (Belgium)"],
-        ]);
+        ];
     });
     onRpc("get_field_translations", () => {
-        return Promise.resolve([
+        return [
             [
                 {
                     lang: "en_US",
@@ -510,7 +517,7 @@ test("resIds should contains only 1 id", async () => {
                 translation_type: "char",
                 translation_show_source: true,
             },
-        ]);
+        ];
     });
     onRpc("execute", ({ args }) => {
         expect(args[0].length).toBe(1);
@@ -550,7 +557,6 @@ test("settings views does not read existing id when reload", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
@@ -558,7 +564,6 @@ test("settings views does not read existing id when reload", async () => {
             name: "Other action",
             res_model: "task",
             target: "new",
-            type: "ir.actions.act_window",
             views: [["view_ref", "form"]],
         },
     ]);
@@ -619,14 +624,12 @@ test("settings views ask for confirmation when leaving if dirty", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [["view_ref", "form"]],
         },
     ]);
@@ -692,7 +695,7 @@ test("Auto save: don't save on closing tab/browser", async () => {
         message: "checkbox should be checked",
     });
 
-    window.dispatchEvent(new Event("beforeunload"));
+    manuallyDispatchProgrammaticEvent(window, "beforeunload");
     await animationFrame();
     expect.verifySteps([]);
 });
@@ -759,7 +762,6 @@ test("settings views does not write the id on the url", async () => {
             name: "Settings view",
             path: "settings",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
     ]);
@@ -787,7 +789,7 @@ test("settings views does not write the id on the url", async () => {
     await getService("action").doAction(1);
     await runAllTimers();
     expect(browser.location.pathname).toBe("/odoo/settings");
-    expect(".o_field_boolean input").not.toHaveProperty("disabled");
+    expect(".o_field_boolean input").toHaveProperty("disabled", false);
     await click(".o_field_boolean input");
     await animationFrame();
     expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
@@ -805,14 +807,12 @@ test("settings views can search when coming back in breadcrumbs", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -854,14 +854,12 @@ test("search for default label when label has empty string", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -899,20 +897,17 @@ test("search for default label when label has empty string", async () => {
 
 test("clicking on any button in setting should show discard warning if setting form is dirty", async () => {
     onRpc("has_group", () => true);
-    expect.assertions(11);
     defineActions([
         {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -937,11 +932,8 @@ test("clicking on any button in setting should show discard warning if setting f
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
 
-    onRpc("/web/dataset/call_button", async (request) => {
-        const {
-            params: { method },
-        } = await request.json();
-        expect(method).toBe("execute", { message: "execute method called" });
+    onRpc("/web/dataset/call_button/*/<string:method>", async (request, { method }) => {
+        expect.step(method);
     });
 
     await mountWithCleanup(WebClient);
@@ -980,13 +972,15 @@ test("clicking on any button in setting should show discard warning if setting f
 
     await clickSave();
     expect(".modal").toHaveCount(0, { message: "should not open a warning dialog" });
-    expect(".o_field_boolean input").not.toHaveProperty("disabled"); // Everything must stay in edit
+    expect(".o_field_boolean input").toHaveProperty("disabled", false); // Everything must stay in edit
 
     await click(".o_field_boolean input");
     await animationFrame();
     await click(".o_control_panel .o_form_button_cancel"); // Form Discard button
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "should not open a warning dialog" });
+
+    expect.verifySteps(["execute"]);
 });
 
 test("header field don't dirty settings", async () => {
@@ -998,14 +992,12 @@ test("header field don't dirty settings", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -1102,7 +1094,7 @@ test("click on save button which throws an error", async () => {
     });
     expect.verifySteps(["get_views", "onchange"]);
     expect(".o_form_button_save").toHaveCount(1);
-    expect(".o_form_button_save").not.toHaveProperty("disabled");
+    expect(".o_form_button_save").toHaveProperty("disabled", false);
 
     await click(".o_field_boolean input[type='checkbox']");
     await animationFrame();
@@ -1110,12 +1102,13 @@ test("click on save button which throws an error", async () => {
     await animationFrame();
     // error are caught asynchronously, so we have to wait for an extra animationFrame, for the error dialog to be mounted
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_error_dialog").toHaveCount(1);
 
     await click(".o_error_dialog .btn-close");
     await animationFrame();
     expect(".o_form_button_save").toHaveCount(1);
-    expect(".o_form_button_save").not.toHaveProperty("disabled");
+    expect(".o_form_button_save").toHaveProperty("disabled", false);
     expect.verifySteps(["web_save"]);
 });
 
@@ -1238,14 +1231,12 @@ test("clicking on a button with noSaveDialog will not show discard warning", asy
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -1370,6 +1361,7 @@ test("settings view shows a message if there are changes even if the save failed
     });
     await click(".o_control_panel .o_form_button_save");
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_control_panel .o_dirty_warning").toHaveCount(1, {
         message: "warning message should be shown",
     });
@@ -1385,21 +1377,18 @@ test("execute action from settings view with several actions in the breadcrumb",
             id: 1,
             name: "First action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[1, "list"]],
         },
         {
             id: 2,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[2, "form"]],
         },
         {
             id: 3,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[3, "list"]],
         },
     ]);
@@ -1482,14 +1471,12 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other Action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
         },
     ]);
@@ -1510,10 +1497,7 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
     Task._views.list = /* xml */ `<list/>`;
     Task._views.search = /* xml */ `<search/>`;
 
-    onRpc("/web/dataset/call_button", async (request) => {
-        const {
-            params: { method },
-        } = await request.json();
+    onRpc("/web/dataset/call_button/*/<string:method>", async (request, { method }) => {
         expect.step(method);
         return true;
     });
@@ -1551,7 +1535,6 @@ test("Discard button clean the settings view", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
     ]);
@@ -1773,10 +1756,8 @@ test("settings form doesn't autofocus", async () => {
     const onFocusIn = (ev) => {
         expect.step(`focusin: ${ev.target.outerHTML}`);
     };
-    document.addEventListener("focusin", onFocusIn);
-    after(() => {
-        document.removeEventListener("focusin", onFocusIn);
-    });
+
+    getFixture().addEventListener("focusin", onFocusIn);
 
     await mountView({
         type: "form",
@@ -1801,12 +1782,7 @@ test("settings form doesn't autofocus", async () => {
 });
 
 test("settings form keeps scrolling by app", async () => {
-    const target = getFixture();
-    const oldHeight = target.style.getPropertyValue("height");
-    target.style.setProperty("height", "200px");
-    after(() => {
-        target.style.setProperty("height", oldHeight);
-    });
+    await resize({ height: 200 });
 
     await mountView({
         type: "form",
@@ -1865,7 +1841,6 @@ test("server actions are called with the correct context", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
@@ -1918,8 +1893,7 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
             message: "we should download the correct data",
         });
 
-        const responseBody = new Blob([body.get("data")], { type: "text/plain" });
-        return new Response(responseBody, { status: 200 });
+        return new Blob([body.get("data")], { type: "text/plain" });
     });
 
     await mountView({
@@ -1954,22 +1928,16 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
 
     // Testing the download button in the field
     // We must avoid the browser to download the file effectively
-    const prom = new Deferred();
-    const downloadOnClick = (ev) => {
-        const target = ev.target;
-        if (target.tagName === "A" && "download" in target.attributes) {
+    const def = new Deferred();
+    const onDownloadClick = (ev) => {
+        if (ev.target.tagName === "A" && "download" in ev.target.attributes) {
             ev.preventDefault();
-            document.removeEventListener("click", downloadOnClick);
-            prom.resolve();
+            def.resolve();
         }
     };
-    document.addEventListener("click", downloadOnClick);
-    after(() => {
-        document.removeEventListener("click", downloadOnClick);
-    });
+    after(on(document, "click", onDownloadClick));
     await click(".fa-download");
-    await animationFrame();
-    await prom;
+    await def;
 
     await click(".o_field_binary .o_clear_file_button");
     await animationFrame();
@@ -1990,7 +1958,6 @@ test("Open settings from url, with app anchor", async () => {
             name: "Settings view",
             path: "settings",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
     ]);
@@ -2028,7 +1995,6 @@ test("Open settings from url, with setting id anchor", async () => {
             name: "Settings view",
             path: "settings",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
     ]);

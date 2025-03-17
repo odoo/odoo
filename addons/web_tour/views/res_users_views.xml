@@ -6,7 +6,7 @@
     <field name="inherit_id" ref="base.view_users_form"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='tz']" position="after">
-            <field name="tour_enabled"/>
+            <field name="tour_enabled" widget="boolean_toggle"/>
         </xpath>
     </field>
   </record>

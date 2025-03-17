@@ -30,6 +30,7 @@ from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
+from odoo.addons.web.controllers.session import Session
 from odoo.addons.website.tools import get_base_domain
 from odoo.tools.json import scriptsafe as json
 
@@ -128,7 +129,7 @@ class Website(Home):
 
         raise request.not_found()
 
-    @http.route('/website/force/<int:website_id>', type='http', auth="user", website=True, sitemap=False, multilang=False)
+    @http.route('/website/force/<int:website_id>', type='http', auth="user", website=True, sitemap=False, multilang=False, readonly=True)
     def website_force(self, website_id, path='/', isredir=False, **kw):
         """ To switch from a website to another, we need to force the website in
         session, AFTER landing on that website domain (if set) as this will be a
@@ -157,7 +158,7 @@ class Website(Home):
         website._force()
         return request.redirect(path)
 
-    @http.route(['/@/', '/@/<path:path>'], type='http', auth='public', website=True, sitemap=False, multilang=False)
+    @http.route(['/@/', '/@/<path:path>'], type='http', auth='public', website=True, sitemap=False, multilang=False, readonly=True)
     def client_action_redirect(self, path='', **kw):
         """ Redirect internal users to the backend preview of the requested path
         URL (client action iframe).
@@ -199,7 +200,7 @@ class Website(Home):
     # Business
     # ------------------------------------------------------
 
-    @http.route('/website/get_languages', type='json', auth="user", website=True)
+    @http.route('/website/get_languages', type='json', auth="user", website=True, readonly=True)
     def website_languages(self, **kwargs):
         return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in request.website.language_ids]
 
@@ -217,7 +218,7 @@ class Website(Home):
         redirect.set_cookie('frontend_lang', lang_code)
         return redirect
 
-    @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
+    @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True, readonly=True)
     def country_infos(self, country, **kw):
         fields = country.get_address_fields()
         return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
@@ -305,7 +306,7 @@ class Website(Home):
 
     # if not icon provided in DOM, browser tries to access /favicon.ico, eg when
     # opening an order pdf
-    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False, readonly=True)
     def favicon(self, **kw):
         website = request.website
         response = request.redirect(website.image_url(website, 'favicon'), code=301)
@@ -324,7 +325,7 @@ class Website(Home):
         if not qs or qs.lower() in '/website/info':
             yield {'loc': '/website/info'}
 
-    @http.route('/website/info', type='http', auth="public", website=True, sitemap=sitemap_website_info)
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=sitemap_website_info, readonly=True)
     def website_info(self, **kwargs):
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
@@ -356,7 +357,7 @@ class Website(Home):
             raise werkzeug.exceptions.NotFound()
         return request.redirect(url, local=False)
 
-    @http.route('/website/get_suggested_links', type='json', auth="user", website=True)
+    @http.route('/website/get_suggested_links', type='json', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):
         current_website = request.website
 
@@ -396,22 +397,25 @@ class Website(Home):
             ]
         }
 
-    @http.route('/website/save_session_layout_mode', type='json', auth='public', website=True)
+    @http.route('/website/save_session_layout_mode', type='json', auth='public', website=True, readonly=True)
     def save_session_layout_mode(self, layout_mode, view_id):
         assert layout_mode in ('grid', 'list'), "Invalid layout mode"
         request.session[f'website_{view_id}_layout_mode'] = layout_mode
 
-    @http.route('/website/snippet/filters', type='json', auth='public', website=True)
+    @http.route('/website/snippet/filters', type='json', auth='public', website=True, readonly=True)
     def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False, **custom_template_data):
         dynamic_filter = request.env['website.snippet.filter'].sudo().search(
             [('id', '=', filter_id)] + request.website.website_domain()
         )
         return dynamic_filter and dynamic_filter._render(template_key, limit, search_domain, with_sample, **custom_template_data) or []
 
-    @http.route('/website/snippet/options_filters', type='json', auth='user', website=True)
+    @http.route('/website/snippet/options_filters', type='json', auth='user', website=True, readonly=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.NotFound()
         domain = request.website.website_domain()
         if search_domain:
+            assert all(leaf[0] in request.env['website.snippet.filter']._fields for leaf in search_domain)
             domain = expression.AND([domain, search_domain])
         if model_name:
             domain = expression.AND([
@@ -423,7 +427,7 @@ class Website(Home):
         )
         return dynamic_filter
 
-    @http.route('/website/snippet/filter_templates', type='json', auth='public', website=True)
+    @http.route('/website/snippet/filter_templates', type='json', auth='public', website=True, readonly=True)
     def get_dynamic_snippet_templates(self, filter_name=False):
         domain = [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']]
         if filter_name:
@@ -443,7 +447,7 @@ class Website(Home):
             t['thumb'] = attribs.get('data-thumb')
         return templates
 
-    @http.route('/website/get_current_currency', type='json', auth="public", website=True)
+    @http.route('/website/get_current_currency', type='json', auth="public", website=True, readonly=True)
     def get_current_currency(self, **kwargs):
         return {
             'id': request.website.company_id.currency_id.id,
@@ -461,7 +465,7 @@ class Website(Home):
         order = order or 'name ASC'
         return 'is_published desc, %s, id desc' % order
 
-    @http.route('/website/snippet/autocomplete', type='json', auth='public', website=True)
+    @http.route('/website/snippet/autocomplete', type='json', auth='public', website=True, readonly=True)
     def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
         """
         Returns list of results according to the term and options
@@ -556,7 +560,7 @@ class Website(Home):
             'allowFuzzy': not post.get('noFuzzy'),
         }
 
-    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def pages_list(self, page=1, search='', **kw):
         options = self._get_page_search_options(**kw)
         step = 50
@@ -599,7 +603,7 @@ class Website(Home):
         '/website/search/page/<int:page>',
         '/website/search/<string:search_type>',
         '/website/search/<string:search_type>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=False)
+    ], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def hybrid_list(self, page=1, search='', search_type='all', **kw):
         if not search:
             return request.render("website.list_hybrid")
@@ -672,7 +676,7 @@ class Website(Home):
             return json.dumps({'view_id': page.get('view_id')})
         return json.dumps({'url': url})
 
-    @http.route('/website/get_new_page_templates', type='json', auth='user', website=True)
+    @http.route('/website/get_new_page_templates', type='json', auth='user', website=True, readonly=True)
     def get_new_page_templates(self, **kw):
         View = request.env['ir.ui.view']
         result = []
@@ -729,7 +733,11 @@ class Website(Home):
                 result.append(group)
         return result
 
-    @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
+    @http.route('/website/save_xml', type='json', auth='user', website=True)
+    def save_xml(self, view_id, arch):
+        request.env['ir.ui.view'].browse(view_id).with_context(lang=request.website.default_lang_id.code).arch = arch
+
+    @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
@@ -748,9 +756,40 @@ class Website(Home):
         view.with_context(website_id=None).reset_arch(mode)
         return True
 
-    @http.route(['/website/seo_suggest'], type='json', auth="user", website=True)
+    @http.route(['/website/seo_suggest'], type='json', auth="user", website=True, readonly=True)
     def seo_suggest(self, keywords=None, lang=None):
-        language = lang.split("_")
+        """
+        Suggests search keywords based on a given input using Google's
+        autocomplete API.
+
+        This method takes in a `keywords` string and an optional `lang`
+        parameter that defines the language and geographical region for
+        tailoring search suggestions. It sends a request to Google's
+        autocomplete service and returns the search suggestions in JSON format.
+
+        :param str keywords: the keyword string for which suggestions
+            are needed.
+        :param str lang: a string representing the language and geographical
+            location, formatted as:
+            - `language_territory@modifier`, where:
+                - `language`: 2-letter ISO language code (e.g., "en" for
+                  English).
+                - `territory`: Optional, 2-letter country code (e.g., "US" for
+                  United States).
+                - `modifier`: Optional, generally script variant (e.g.,
+                  "latin").
+            If `lang` is not provided or does not match the expected format, the
+            default language is set to English (`en`) and the territory to the
+            United States (`US`).
+
+        :returns: JSON list of strings
+            A list of suggested keywords returned by Google's autocomplete
+            service. If no suggestions are found or if there's an error (e.g.,
+            connection issues), an empty list is returned.
+        """
+        pattern = r'^([a-zA-Z]+)(?:_(\w+))?(?:@(\w+))?$'
+        match = re.match(pattern, lang)
+        language = [match.group(1), match.group(2) or ''] if match else ['en', 'US']
         url = "http://google.com/complete/search"
         try:
             req = requests.get(url, params={
@@ -762,33 +801,40 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
-    @http.route(['/website/get_seo_data'], type='json', auth="user", website=True)
+    @http.route(['/website/get_seo_data'], type='json', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
-            raise werkzeug.exceptions.Forbidden()
+            # Still ok if user can access the record anyway.
+            try:
+                record = request.env[res_model].browse(res_id)
+                record.check_access('write')
+            except AccessError:
+                raise werkzeug.exceptions.Forbidden()
 
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
-        if res_model == 'website.page':
-            fields.extend(['website_indexed', 'website_id'])
-
         res = {'can_edit_seo': True}
         record = request.env[res_model].browse(res_id)
+        if res_model == 'website.page':
+            fields.extend(['website_indexed', 'website_id'])
+            res["website_is_published"] = record.website_published
+
         try:
             request.website._check_user_can_modify(record)
         except AccessError:
             res['can_edit_seo'] = False
-        record = record.sudo()
+        if request.env.user.has_group('website.group_website_restricted_editor'):
+            record = record.sudo()
 
         res.update(record.read(fields)[0])
         res['has_social_default_image'] = request.website.has_social_default_image
 
         if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
-            res['seo_name_default'] = request.env['ir.http']._slugify(record.display_name)  # default slug, if seo_name become empty
+            res['seo_name_default'] = request.env['ir.http']._slugify(record.display_name or '')  # default slug, if seo_name become empty
             res['seo_name'] = record.seo_name and request.env['ir.http']._slugify(record.seo_name) or ''
 
         return res
 
-    @http.route(['/website/check_can_modify_any'], type='json', auth="user", website=True)
+    @http.route(['/website/check_can_modify_any'], type='json', auth="user", website=True, readonly=True)
     def check_can_modify_any(self, records):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
@@ -804,7 +850,7 @@ class Website(Home):
                 continue
         raise first_error
 
-    @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def google_console_search(self, key, **kwargs):
         if not request.website.google_search_console:
             logger.warning('Google Search Console not enable')
@@ -821,7 +867,7 @@ class Website(Home):
 
         return request.make_response("google-site-verification: %s" % request.website.google_search_console)
 
-    @http.route('/website/google_maps_api_key', type='json', auth='public', website=True)
+    @http.route('/website/google_maps_api_key', type='json', auth='public', website=True, readonly=True)
     def google_maps_api_key(self):
         return json.dumps({
             'google_maps_api_key': request.website.google_maps_api_key or ''
@@ -865,7 +911,7 @@ class Website(Home):
         domain = expression.AND([[("key", "in", keys)], request.website.website_domain()])
         return Model.search(domain).filter_duplicate()
 
-    @http.route(['/website/theme_customize_data_get'], type='json', auth='user', website=True)
+    @http.route(['/website/theme_customize_data_get'], type='json', auth='user', website=True, readonly=True)
     def theme_customize_data_get(self, keys, is_view_data):
         records = self._get_customize_data(keys, is_view_data)
         return records.filtered('active').mapped('key')
@@ -890,7 +936,7 @@ class Website(Home):
             records = self._get_customize_data(enable, is_view_data)
             records.filtered(lambda x: not x.active).write({'active': True})
 
-    @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True)
+    @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True, readonly=True)
     def theme_customize_bundle_reload(self):
         """
         Reloads asset bundles and returns their unique URLs.
@@ -1012,6 +1058,14 @@ class Website(Home):
         return request.redirect('/')
 
 
+class WebsiteSession(Session):
+
+    # Force auth='public', required for logout
+    @http.route(auth="public")
+    def logout(self, *args, **kw):
+        return super().logout(*args, **kw)
+
+
 class WebsiteBinary(Binary):
 
     # Backward compatibility routes
@@ -1023,7 +1077,7 @@ class WebsiteBinary(Binary):
         '/website/image/<xmlid>/<field>/<int:width>x<int:height>',
         '/website/image/<model>/<id>/<field>',
         '/website/image/<model>/<id>/<field>/<int:width>x<int:height>'
-    ], type='http', auth="public", website=False, multilang=False)
+    ], type='http', auth="public", website=False, multilang=False, readonly=True)
     def website_content_image(self, id=None, max_width=0, max_height=0, **kw):  # noqa: A002
         if max_width:
             kw['width'] = max_width

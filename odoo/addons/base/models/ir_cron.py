@@ -721,7 +721,7 @@ class ir_cron(models.Model):
         :return: a pair ``(cron, progress)``, where the progress has
             been injected inside the cron's context
         """
-        progress = self.env['ir.cron.progress'].create([{
+        progress = self.env['ir.cron.progress'].sudo().create([{
             'cron_id': self.id,
             'remaining': 0,
             'done': 0,
@@ -743,7 +743,7 @@ class ir_cron(models.Model):
             return
         if done < 0 or remaining < 0:
             raise ValueError("`done` and `remaining` must be positive integers.")
-        self.env['ir.cron.progress'].browse(progress_id).write({
+        self.env['ir.cron.progress'].sudo().browse(progress_id).write({
             'remaining': remaining,
             'done': done,
             'deactivate': deactivate,
@@ -761,7 +761,11 @@ class ir_cron_trigger(models.Model):
 
     @api.autovacuum
     def _gc_cron_triggers(self):
-        self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))]).unlink()
+        domain = [('call_at', '<', datetime.now() + relativedelta(weeks=-1))]
+        records = self.search(domain, limit=models.GC_UNLINK_LIMIT)
+        if len(records) >= models.GC_UNLINK_LIMIT:
+            self.env.ref('base.autovacuum_job')._trigger()
+        return records.unlink()
 
 
 class ir_cron_progress(models.Model):

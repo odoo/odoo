@@ -11,6 +11,7 @@
         <field name="phone">+2342011234567</field>
         <field name="email">info@demo-company.ng</field>
         <field name="website">www.demo-company.ng</field>
+        <field name="is_company" eval="True"/>
     </record>
 
     <record id="demo_company_ng" model="res.company">
@@ -37,5 +38,6 @@
         <value eval="[]"/>
         <value>ng</value>
         <value model="res.company" eval="obj().env.ref('l10n_ng.demo_company_ng')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>

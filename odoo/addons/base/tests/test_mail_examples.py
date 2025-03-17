@@ -193,7 +193,7 @@ QUOTE_OUTLOOK_HTML = """
          color: rgb(0, 0, 0);">
          <br>
       </div>
-      <div id="testing_id">
+         <div class="elementToProof" id="Signature">John</div>
          <div id="appendonsend"></div>
          <div style="font-family:Calibri,Helvetica,sans-serif; font-size:12pt; col=
             or:rgb(0,0,0)">
@@ -209,7 +209,6 @@ QUOTE_OUTLOOK_HTML = """
          <div>
             <div dir="ltr">Parent email body</div>
          </div>
-      </div>
    </body>
 </html>
 """
@@ -219,8 +218,13 @@ QUOTE_OUTLOOK_HTML_IN = [
     """<div id="mail_body">""",
 ]
 QUOTE_OUTLOOK_HTML_OUT = [
-    """<div id="testing_id" data-o-mail-quote-container="1">""",
-    """<div id="divRplyFwdMsg" dir="ltr" data-o-mail-quote="1">""",
+    """<div class="elementToProof" id="Signature" data-o-mail-quote-container="1" data-o-mail-quote="1">John</div>""",
+    """<div id="appendonsend" data-o-mail-quote-container="1" data-o-mail-quote="1"></div>""",  # quoted when empty in case there's a signature before
+    """<hr tabindex="-1" style="display:inline-block; width:98%" data-o-mail-quote="1">""",
+    """<div data-o-mail-quote-container="1" data-o-mail-quote="1">
+            <div dir="ltr" data-o-mail-quote="1">Parent email body</div>
+         </div>""",
+    """<div id="divRplyFwdMsg" dir="ltr" data-o-mail-quote-container="1" data-o-mail-quote="1">""",
 ]
 
 
@@ -357,14 +361,36 @@ TEXT_2_OUT = [u"""
 
 # MISC
 
-GMAIL_1 = u"""Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, without signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br><div>On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br><blockquote><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
+GMAIL_1 = u"""Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, with signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br>
+<div class="gmail_quote">
+<div dir="ltr" class="gmail_attr">On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br>
+<blockquote class="gmail_quote"><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
 <li>9.45 AM: summary</li><li>10 AM: meeting with Fabien to present our app</li></ul></div><div>Is everything ok for you?</div>
 <div><p>-- <br>Administrator</p></div>
 
 <div><p>Log in our portal at: <a href="http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo">http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo</a></p></div>
-</blockquote></div><br></div>"""
+</blockquote>
+<div><br clear="all"></div>
+<div><br></div>
+<span class="gmail_signature_prefix">-- </span><br>
+<div dir="ltr" class="gmail_signature">
+    <div dir="ltr">
+        This is a test signature
+        <div><br></div>
+        <div>123</div>
+    </div>
+</div>
+</div><br></div>"""
 
-GMAIL_1_IN = [u'Ok for me. I am replying directly in gmail, without signature.', '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">']
+GMAIL_1_IN = [
+    u'Ok for me. I am replying directly in gmail, with signature.',
+    '<div class="gmail_quote" data-o-mail-quote-container="1" data-o-mail-quote="1">',
+    '<div dir="ltr" class="gmail_attr" data-o-mail-quote="1">On Thu, Nov 8, 2012 at 5:29 PM',
+    '<blockquote class="gmail_quote" data-o-mail-quote-container="1" data-o-mail-quote="1" data-o-mail-quote-node="1">',
+    # blank spaces between signature and reply quote should be quoted too
+    '<div data-o-mail-quote="1"><br clear="all" data-o-mail-quote="1"></div>\n'
+    '<div data-o-mail-quote="1"><br data-o-mail-quote="1"></div>',
+]
 GMAIL_1_OUT = []
 
 HOTMAIL_1 = u"""<div>

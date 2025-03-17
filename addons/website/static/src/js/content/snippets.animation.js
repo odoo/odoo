@@ -449,6 +449,18 @@ var Animation = publicWidget.Widget.extend({
 
 var registry = publicWidget.registry;
 
+// FIXME temporary hack: during edit mode, the carousel crashes sometimes when
+// we hover option during a carousel cycle. This patches Bootstrap to prevent
+// the crash.
+const baseSelectorEngineFind = window.SelectorEngine.find;
+window.SelectorEngine.find = function (...args) {
+    try {
+        return baseSelectorEngineFind.call(this, ...args);
+    } catch {
+        return [document.createElement('div')];
+    }
+};
+
 registry.slider = publicWidget.Widget.extend({
     selector: '.carousel',
     disabledInEditableMode: false,
@@ -462,16 +474,29 @@ registry.slider = publicWidget.Widget.extend({
     start: function () {
         this.$('img').on('load.slider', () => this._computeHeights());
         this._computeHeights();
-        // Initialize carousel and pause if in edit mode.
-        this.$el.carousel(this.editableMode ? 'pause' : undefined);
         $(window).on('resize.slider', debounce(() => this._computeHeights(), 250));
-        if (this.editableMode) {
-            // Prevent carousel slide to be an history step.
-            this.$el.on("slide.bs.carousel.slider", () => {
-                this.options.wysiwyg.odooEditor.observerUnactive();
-            });
-            this.$el.on("slid.bs.carousel.slider", () => {
-                this.options.wysiwyg.odooEditor.observerActive();
+
+        // Initialize carousel and pause if in edit mode.
+        const options = this.editableMode ? {ride: false, pause: true} : undefined;
+        window.Carousel.getOrCreateInstance(this.el, options);
+
+        // Only for carousels having the `Carousel` and `CarouselItem` options
+        // (i.e. matching the `section > .carousel` selector).
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
+            this.controlEls = this.el.querySelectorAll(".carousel-control-prev, .carousel-control-next");
+            const indicatorEls = this.el.querySelectorAll(".carousel-indicators > *");
+            // Deactivate the carousel controls to handle the slides manually in
+            // edit mode (by the options).
+            this.options.wysiwyg.odooEditor.observerUnactive("disable_controls");
+            this.controlEls.forEach(controlEl => controlEl.removeAttribute("data-bs-slide"));
+            indicatorEls.forEach(indicatorEl => indicatorEl.removeAttribute("data-bs-slide-to"));
+            this.options.wysiwyg.odooEditor.observerActive("disable_controls");
+            // Redirect the clicks on the active slide, in order to start the
+            // carousel options.
+            this.__onControlClick = this._onControlClick.bind(this);
+            [...this.controlEls, ...indicatorEls].forEach(controlEl => {
+                controlEl.addEventListener("mousedown", this.__onControlClick);
             });
         }
         return this._super.apply(this, arguments);
@@ -481,16 +506,37 @@ registry.slider = publicWidget.Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        this.$('img').off('.slider');
-        this.$el.carousel('pause');
-        this.$el.removeData('bs.carousel');
+
+        window.Carousel.getOrCreateInstance(this.el).dispose();
+
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive("destroy");
         this.$(".carousel-item")
             .toArray()
             .forEach((el) => {
                 $(el).css("min-height", "");
             });
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("destroy");
+
         $(window).off('.slider');
-        this.$el.off('.slider');
+        this.$el.off('.slider'); // TODO remove in master
+        this.$('img').off('.slider');
+
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
+            // Restore the carousel controls.
+            const indicatorEls = this.el.querySelectorAll(".carousel-indicators > *");
+            this.options.wysiwyg.odooEditor.observerUnactive("restore_controls");
+            this.controlEls.forEach(controlEl => {
+                const direction = controlEl.classList.contains("carousel-control-prev") ?
+                    "prev" : "next";
+                controlEl.setAttribute("data-bs-slide", direction);
+            });
+            indicatorEls.forEach((indicatorEl, i) => indicatorEl.setAttribute("data-bs-slide-to", i));
+            this.options.wysiwyg.odooEditor.observerActive("restore_controls");
+            [...this.controlEls, ...indicatorEls].forEach(controlEl => {
+                controlEl.removeEventListener("mousedown", this.__onControlClick);
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -503,22 +549,20 @@ registry.slider = publicWidget.Widget.extend({
     _computeHeights: function () {
         var maxHeight = 0;
         var $items = this.$('.carousel-item');
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive("_computeHeights");
         $items.css('min-height', '');
         $items.toArray().forEach((el) => {
             var $item = $(el);
             var isActive = $item.hasClass('active');
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
             $item.addClass('active');
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive('_computeHeights');
             var height = $item.outerHeight();
             if (height > maxHeight) {
                 maxHeight = height;
             }
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
             $item.toggleClass('active', isActive);
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive('_computeHeights');
         });
         $items.css('min-height', maxHeight);
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("_computeHeights");
     },
 
     //--------------------------------------------------------------------------
@@ -530,6 +574,121 @@ registry.slider = publicWidget.Widget.extend({
      */
     _onContentChanged: function (ev) {
         this._computeHeights();
+    },
+    /**
+     * Redirects a carousel control click on the active slide.
+     *
+     * @private
+     */
+    _onControlClick() {
+        this.el.querySelector(".carousel-item.active").click();
+    },
+});
+
+const CAROUSEL_SLIDING_CLASS = "o_carousel_sliding";
+
+/**
+ * @param {HTMLElement} carouselEl
+ * @returns {Promise<void>}
+ */
+async function waitForCarouselToFinishSliding(carouselEl) {
+    if (!carouselEl.classList.contains(CAROUSEL_SLIDING_CLASS)) {
+        return;
+    }
+    return new Promise(resolve => {
+        carouselEl.addEventListener("slid.bs.carousel", () => resolve(), {once: true});
+    });
+}
+
+/**
+ * This class is used to fix carousel auto-slide behavior in Odoo 17.4 and up.
+ * It handles upgrade cases from lower versions.
+ * TODO find a way to get rid of this with an upgrade script?
+ */
+publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
+    // Only consider our known carousel snippets. A bootstrap carousel could
+    // have been added in an embed code snippet, or in any custom snippet. In
+    // that case, we consider that it should use the new default BS behavior,
+    // assuming the user / the developer of the custo should have updated the
+    // behavior as wanted themselves.
+    // Note: dynamic snippets are handled separately (TODO review).
+    selector: [
+        "[data-snippet='s_image_gallery'] .carousel",
+        "[data-snippet='s_carousel'] .carousel",
+        "[data-snippet='s_quotes_carousel'] .carousel",
+        "[data-snippet='s_quotes_carousel_minimal'] .carousel",
+        "[data-snippet='s_carousel_intro'] .carousel",
+        "#o-carousel-product.carousel", // TODO adapt the shop XML directly in master
+    ].join(", "),
+    disabledInEditableMode: false,
+    events: {
+        "slide.bs.carousel": "_onSlideCarousel",
+        "slid.bs.carousel": "_onSlidCarousel",
+    },
+    OLD_AUTO_SLIDING_SNIPPETS: ["s_image_gallery"],
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+
+        const hasInterval = ![undefined, "false", "0"].includes(this.el.dataset.bsInterval);
+        if (!hasInterval && this.el.dataset.bsRide) {
+            // A bsInterval of 0 (or false or undefined) is intended to not
+            // auto-slide. With current Bootstrap version, a value of 0 will
+            // mean auto-slide without any delay (very fast). To prevent this,
+            // we remove the bsRide.
+            delete this.el.dataset.bsRide;
+            await this._destroyCarouselInstance();
+            const options = this.editableMode ? {ride: false, pause: true} : undefined;
+            window.Carousel.getOrCreateInstance(this.el, options);
+        } else if (hasInterval && !this.el.dataset.bsRide) {
+            // Re-add bsRide on carousels that don't have it but still have
+            // a bsInterval. E.g. s_image_gallery must auto-slide on load,
+            // while others only auto-slide on mouseleave.
+            //
+            // In the case of s_image_gallery that has a bsRide = "true"
+            // instead of "carousel", it's better not to change the behavior and
+            // let the user update the snippet manually to avoid making changes
+            // that they don't expect.
+            const snippetName = this.el.closest("[data-snippet]")?.dataset.snippet;
+            this.el.dataset.bsRide = this.OLD_AUTO_SLIDING_SNIPPETS.includes(snippetName) ? "carousel" : "true";
+            await this._destroyCarouselInstance();
+            const options = this.editableMode ? {ride: false, pause: true} : undefined;
+            window.Carousel.getOrCreateInstance(this.el, options);
+        }
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.el.classList.remove(CAROUSEL_SLIDING_CLASS);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    async _destroyCarouselInstance() {
+        await waitForCarouselToFinishSliding(this.el); // Prevent traceback
+        window.Carousel.getInstance(this.el)?.dispose();
+    },
+    /**
+     * @private
+     */
+    _onSlideCarousel(ev) {
+        ev.currentTarget.classList.add(CAROUSEL_SLIDING_CLASS);
+    },
+    /**
+     * @private
+     */
+    _onSlidCarousel(ev) {
+        ev.currentTarget.classList.remove(CAROUSEL_SLIDING_CLASS);
     },
 });
 
@@ -681,7 +840,7 @@ const MobileYoutubeAutoplayMixin = {
         this.isYoutubeVideo = src.indexOf('youtube') >= 0;
         this.isMobileEnv = uiUtils.getSize() <= SIZES.LG && hasTouch();
 
-        if (this.isYoutubeVideo && this.isMobileEnv && !window.YT) {
+        if (this.isYoutubeVideo && this.isMobileEnv && !window.YT && !this.el.dataset.needCookiesApproval) {
             const oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
             promise = new Promise(resolve => {
                 window.onYouTubeIframeAPIReady = () => {
@@ -703,7 +862,7 @@ const MobileYoutubeAutoplayMixin = {
     _triggerAutoplay: function (iframeEl) {
         // YouTube does not allow to auto-play video in mobile devices, so we
         // have to play the video manually.
-        if (this.isMobileEnv && this.isYoutubeVideo) {
+        if (this.isMobileEnv && this.isYoutubeVideo && !this.el.dataset.needCookiesApproval) {
             new window.YT.Player(iframeEl, {
                 events: {
                     onReady: ev => ev.target.playVideo(),
@@ -1301,7 +1460,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      */
     start() {
         this.lastScroll = 0;
-        this.$scrollingElement = $().getScrollingElement();
+        this.$scrollingElement = this.findScrollingElement();
         this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
         this.$animatedElements = this.$('.o_animate');
 
@@ -1365,6 +1524,10 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.__onScrollWebsiteAnimate.cancel();
         this.$scrollingTarget[0].removeEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
         this.$scrollingElement[0].classList.remove('o_wanim_overflow_xy_hidden');
+    },
+
+    findScrollingElement() {
+        return $().getScrollingElement();
     },
 
     //--------------------------------------------------------------------------

@@ -14,8 +14,7 @@ from odoo.exceptions import UserError
 from .. import uninstall_hook
 
 
-class TestCloudStorageGoogle(TransactionCase):
-
+class TestCloudStorageGoogleCommon(TransactionCase):
     def setUp(self):
         if not service_account:
             self.skipTest('google.oauth2 is not installed')
@@ -41,6 +40,8 @@ class TestCloudStorageGoogle(TransactionCase):
         ICP.set_param('cloud_storage_google_bucket_name', self.bucket_name)
         ICP.set_param('cloud_storage_google_account_info', self.DUMMY_GOOGLE_ACCOUNT_INFO)
 
+
+class TestCloudStorageGoogle(TestCloudStorageGoogleCommon):
     def test_generate_signed_url(self):
         file_name = ' ¥®°²Æçéðπ⁉€∇⓵▲☑♂♥✓➔『にㄅ㊀中한︸🌈🌍👌😀.txt'
         attachment = self.env['ir.attachment'].create([{

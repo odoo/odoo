@@ -567,15 +567,18 @@ export class ControlPanel extends Component {
             parent_action_embedded_actions: this.state.embeddedInfos.embeddedActions,
             parent_action_id: action.parent_action_id[0] || action.parent_action_id,
         };
-        this.actionService.doActionButton({
-            type: action.python_method ? "object" : "action",
-            resId: this.env.searchModel?.globalContext.active_id,
-            name: action.python_method || action.action_id[0] || action.action_id,
-            resModel: action.parent_res_model,
-            context,
-            stackPosition: this.env.config.parentActionId ? "replaceCurrentAction" : "",
-            viewType: action.default_view_mode,
-        });
+        this.actionService.doActionButton(
+            {
+                type: action.python_method ? "object" : "action",
+                resId: this.env.searchModel?.globalContext.active_id,
+                name: action.python_method || action.action_id[0] || action.action_id,
+                resModel: action.parent_res_model,
+                context,
+                stackPosition: this.env.config.parentActionId ? "replaceCurrentAction" : "",
+                viewType: action.default_view_mode,
+            },
+            { isEmbeddedAction: true }
+        );
     }
 
     /**

@@ -2,6 +2,7 @@ import json
 from base64 import b64encode
 from contextlib import contextmanager
 from requests import Session, PreparedRequest, Response
+from unittest.mock import patch
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.exceptions import UserError
@@ -182,7 +183,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         move = self.create_move(self.valid_partner)
         move.action_post()
 
-        wizard = self.create_send_and_print(move, sending_methods=['email'])
+        wizard = self.create_send_and_print(move, sending_methods=['email', 'peppol'])
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
 
         # the ubl xml placeholder should be generated
@@ -192,33 +193,41 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'name': 'INV_2023_00001.pdf',
                 'placeholder': True,
             },
-            {
-                'mimetype': 'application/xml',
-                'name': 'INV_2023_00001_ubl_bis3.xml',
-                'placeholder': True,
-            },
         ])
 
-        # we don't want to email the xml file in addition to sending via peppol
         wizard.sending_methods = ['peppol']
         wizard.action_send_and_print()
         self.assertEqual(self._get_mail_message(move).preview, 'The document has been sent to the Peppol Access Point for processing')
 
-    def test_send_peppol_alerts(self):
-        # a warning should appear before sending invoices to an invalid partner
+    def test_send_peppol_alerts_not_valid_partner(self):
         move = self.create_move(self.invalid_partner)
         move.action_post()
+        wizard = self.env['account.move.send.wizard'].create({
+            'move_id': move.id,
+        })
+        self.assertEqual(self.invalid_partner.peppol_verification_state, 'not_valid')  # not on peppol at all
+        self.assertFalse('peppol' in wizard.sending_methods)  # peppol is not checked by default
+        self.assertTrue(wizard.sending_method_checkboxes['peppol']['readonly'])  # peppol is not possible to select
+        self.assertFalse(wizard.alerts)  # there is no alerts
 
-        wizard = self.create_send_and_print(move)
+    @patch('odoo.addons.account_peppol.models.res_partner.ResPartner._check_document_type_support', return_value=False)
+    def test_send_peppol_alerts_not_valid_format_partner(self, mocked_check):
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+        wizard = self.create_send_and_print(move, sending_methods=['peppol'])  # partner can't receive BIS3 so Peppol not checked by default, force it
+
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertTrue('peppol' in wizard.sending_methods)
+        self.assertEqual(self.valid_partner.peppol_verification_state, 'not_valid_format')  # on peppol but can't receive bis3
         self.assertTrue('account_peppol_warning_partner' in wizard.alerts)
-        self.assertTrue('account_peppol_demo_test_mode' in wizard.alerts)
 
-        # however, if there's already account_edi_ubl_cii_configure_partner, the warning should not appear
+    def test_send_peppol_alerts_invalid_partner(self):
+        """If there's already account_edi_ubl_cii_configure_partner, the warning should not appear."""
+        move = self.create_move(self.invalid_partner)
+        move.action_post()
         self.invalid_partner.peppol_endpoint = False
         wizard = self.create_send_and_print(move)
-        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        self.assertFalse('peppol' in wizard.sending_methods)  # by default peppol is not selected for non-valid partners
+        wizard.sending_method_checkboxes = {**wizard.sending_method_checkboxes, 'peppol': {'checked': True}}
         self.assertTrue('peppol' in wizard.sending_methods)
         self.assertTrue('account_edi_ubl_cii_configure_partner' in wizard.alerts)
         self.assertFalse('account_peppol_warning_partner' in wizard.alerts)
@@ -335,9 +344,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_endpoint': '3141592654',
             }])
 
-        new_partner.invoice_edi_format = False
-        self.assertFalse(new_partner.peppol_verification_state)
-
         # the participant exists on the network but cannot receive XRechnung
         new_partner.write({
             'invoice_edi_format': 'xrechnung',
@@ -363,7 +369,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'peppol_endpoint': '0477472701',
             'invoice_edi_format': 'ubl_bis3',
         })
-        new_partner.with_company(company_2).invoice_edi_format = False
+
         # partner is valid for company 1
         self.assertRecordValues(new_partner, [{
             'peppol_verification_state': 'valid',
@@ -373,6 +379,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'invoice_sending_method': 'peppol',
         }])
         # but not valid for company 2
+        new_partner.with_company(company_2).peppol_verification_state = False
         self.assertRecordValues(new_partner.with_company(company_2), [{
             'peppol_verification_state': False,
             'peppol_eas': '0208',
@@ -391,4 +398,15 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         # the cron is ran asynchronously and should be agnostic from the current self.env.company
         self.env.ref('account.ir_cron_account_move_send').with_company(company_2).method_direct_trigger()
         # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should fail to send
-        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'to_send'])
+        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'skipped'])
+
+    def test_available_peppol_sending_methods(self):
+        company_us = self.setup_other_company()['company']  # not a valid Peppol country
+        self.assertTrue('peppol' in self.valid_partner.with_company(self.env.company).available_peppol_sending_methods)
+        self.assertFalse('peppol' in self.valid_partner.with_company(company_us).available_peppol_sending_methods)
+
+    def test_available_peppol_edi_formats(self):
+        self.valid_partner.invoice_sending_method = 'peppol'
+        self.assertFalse('facturx' in self.valid_partner.available_peppol_edi_formats)
+        self.valid_partner.invoice_sending_method = 'email'
+        self.assertTrue('facturx' in self.valid_partner.available_peppol_edi_formats)

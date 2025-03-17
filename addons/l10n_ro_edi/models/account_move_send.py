@@ -7,7 +7,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _is_ro_edi_applicable(self, move):
         return all([
-            move._need_ubl_cii_xml('ro_edi') or move.ubl_cii_xml_id,
+            move._need_ubl_cii_xml('ciusro') or move.ubl_cii_xml_id,
             move.country_code == 'RO',
             not move.l10n_ro_edi_state,
         ])
@@ -67,7 +67,7 @@ class AccountMoveSend(models.AbstractModel):
                 invoice._l10n_ro_edi_send_invoice(xml_data)
                 active_document = invoice.l10n_ro_edi_document_ids.sorted()[0]
 
-                if active_document.state == 'invoice_sent_failed':
+                if active_document.state == 'invoice_sending_failed':
                     invoice_data['error'] = {
                         'error_title': _("Error when sending CIUS-RO E-Factura to the SPV"),
                         'errors': active_document.message.split('\n'),

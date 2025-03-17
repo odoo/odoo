@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Fernanda Alvarez, 2024
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -362,7 +362,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__currency_id
 msgid "Currency"
-msgstr "Divisa"
+msgstr "Moneda"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
@@ -490,7 +490,7 @@ msgstr "Línea de factura"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr "Corrección de valor de factura en la divisa de la factura"
+msgstr "Corrección de valor de factura en la moneda de la factura"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -535,11 +535,11 @@ msgstr "Vinculado a"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
-"El lote %(lot)s tiene una cantidad negativa en inventario. Corríjala"
-"                         antes de habilitar la valoración de lotes."
+"El lote %(lot)s tiene una cantidad negativa en existencias.\n"
+"Corrija esta cantidad antes de habilitar o deshabilitar la valoración del lote."
 
 #. module: stock_account
 #. odoo-python
@@ -550,7 +550,7 @@ msgstr "Valor del lote modificado manualmente (de %(old)s a %(new)s)"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Número de lote/serie "
+msgstr "Número de serie/lote"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__lot_id
@@ -636,6 +636,16 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
+"El producto %(product)s tiene cantidad en la ubicación valorada %(location)s sin ningún lote.\n"
+"Asigne lotes a todas las cantidades antes de habilitar la valoración de lotes."
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -645,7 +655,7 @@ msgstr "Categoría del producto"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de producto (línea de movimiento de inventario)"
+msgstr "Movimientos de producto (línea de movimiento de stock)"
 
 #. module: stock_account
 #. odoo-python
@@ -805,7 +815,7 @@ msgstr "Diario de existencias"
 #: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -869,7 +879,7 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
-"Campo técnico para mostrar de forma correcta la divisa seleccionada de la "
+"Campo técnico para mostrar de forma correcta la moneda seleccionada de la "
 "empresa que corresponde al valor total de las capas de valoración del "
 "producto"
 
@@ -948,6 +958,20 @@ msgid ""
 msgstr ""
 "Es necesario que configure las cuentas de inventario para usar la valoración"
 " automática."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
+msgstr ""
+"La valoración de existencias de un movimiento se basa en el tipo de "
+"ubicación de origen y destino. El movimiento ya está procesado, así que no "
+"puede modificar las ubicaciones para cambiar la lógica de valoración "
+"definida durante el procesamiento inicial."
 
 #. module: stock_account
 #. odoo-python
@@ -1107,7 +1131,7 @@ msgstr "Valoración"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__company_currency_id
 msgid "Valuation Currency"
-msgstr "Divisa de la valoración"
+msgstr "Moneda de la valoración"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids

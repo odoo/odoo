@@ -462,3 +462,39 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
 
         with self.assertRaises(ValidationError):
             mo.button_mark_done()
+
+    def test_bom_aal_generation(self):
+        """ This test ensure that when a project is set on a BOM, the aal are correctly generated when the workorder of
+        the MO is marked as done. New aal should NOT be generated when the MO is later on marked as done too. """
+
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
+
+        self.bom.project_id = self.project
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 1
+        mo_form.project_id = self.project
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.workorder_ids.button_finish()
+        bom_analytic_lines = mo.move_raw_ids.analytic_account_line_ids
+        self.assertEqual(len(bom_analytic_lines), 1)
+        self.assertEqual(bom_analytic_lines.category, 'manufacturing_order')
+        mo.button_mark_done()
+        self.assertEqual(bom_analytic_lines, mo.move_raw_ids.analytic_account_line_ids)
+
+    def test_category_analytic_line_mrp(self):
+        """ This test ensures that when a project is set on a manufacturing order, the aal's generated have the correct
+        'manufacturing order' category """
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 1
+        mo_form.project_id = self.project
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_mark_done()
+        self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.category, 'manufacturing_order')

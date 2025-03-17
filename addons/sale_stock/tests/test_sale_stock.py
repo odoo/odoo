@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 
+from odoo import Command
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import RedirectWarning, UserError
 from odoo.tests import Form, tagged
-from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -122,6 +122,16 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         and whatever other model there is in stock with "invoice on order" products
         """
         # let's cheat and put all our products to "invoice on order"
+        product_list = (
+                    self.company_data['product_order_no'],
+                    self.company_data['product_service_delivery'],
+                    self.company_data['product_service_order'],
+                    self.company_data['product_delivery_no'],
+                )
+
+        for product in product_list:
+            product.invoice_policy = 'order'
+
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
@@ -132,17 +142,10 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'product_uom_qty': 2,
                 'product_uom': p.uom_id.id,
                 'price_unit': p.list_price,
-                }) for p in (
-                    self.company_data['product_order_no'],
-                    self.company_data['product_service_delivery'],
-                    self.company_data['product_service_order'],
-                    self.company_data['product_delivery_no'],
-                )],
+                }) for p in product_list],
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
         })
-        for sol in self.so.order_line:
-            sol.product_id.invoice_policy = 'order'
         # confirm our standard so, check the picking
         self.so.order_line._compute_product_updatable()
         self.assertTrue(self.so.order_line.sorted()[0].product_updatable)
@@ -2076,3 +2079,90 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertTrue(delivery_2)
         self.assertEqual(delivery_2.move_ids.product_uom_qty, 3.0)
         self.assertEqual(so.order_line.qty_delivered, 5.0)
+
+    def test_warehouse_redirect_warnings(self):
+        """
+        Check that the correct warnings are raised when you try to confirm
+        a SO for a storable product without warehouse.
+        """
+        new_company = self.env['res.company'].create({'name': 'Company 2'})
+        # Warhouses are created for new companies in test mode but not IRL
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)], limit=1)
+        warehouse.active = False
+        storable_product = self.env['product.product'].create({
+            'name': 'Lovely Product',
+            'is_storable': True,
+        })
+        so = self.env['sale.order'].with_company(new_company).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': storable_product.name,
+                    'product_id': storable_product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': storable_product.uom_id.id,
+                }),
+            ],
+        })
+        # Since you dont have any warehouse for your company  you should raise a RedirectWarning
+        error_message = "Please create a warehouse for company Company 2."
+        with self.assertRaisesRegex(RedirectWarning, error_message), self.env.cr.savepoint():
+            so.with_company(new_company).action_confirm()
+        warehouse.active = True
+        # Since you have a warehouse which is not linked to the SO you should raise a UserError
+        error_message = "You must set a warehouse on your sale order to proceed."
+        with self.assertRaisesRegex(UserError, error_message), self.env.cr.savepoint():
+            so.with_company(new_company).action_confirm()
+        # check the flow with 2 available warehouses for that company
+        self.env['stock.warehouse'].create({'name': 'Warehouse 2', 'code': 'WH2', 'company_id': new_company.id})
+        # Since you have a warehouse which is not linked to the SO you should raise a UserError
+        error_message = "You must set a warehouse on your sale order to proceed."
+        with self.assertRaisesRegex(UserError, error_message), self.env.cr.savepoint():
+            so.with_company(new_company).action_confirm()
+
+    def test_package_with_moves_to_different_location_dest(self):
+        """
+        Create a two-step delivery with two products, and package both products together.
+        Ensure that the destination location is different for the two moves in the second
+        picking. check that the first picking can be validated.
+        """
+        # Set-up multi-step routes
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        warehouse = self.company_data['default_warehouse']
+        # Create two child locations.
+        parent_location = self.partner_a.property_stock_customer
+        child_location_1 = self.env['stock.location'].create({
+                'name': 'child_1',
+                'location_id': parent_location.id,
+        })
+        child_location_2 = self.env['stock.location'].create({
+                'name': 'child_2',
+                'location_id': parent_location.id,
+        })
+        # Enable 2-steps delivery
+        with Form(warehouse) as w:
+            w.delivery_steps = 'pick_ship'
+        delivery_route = warehouse.delivery_route_id
+        delivery_route.rule_ids[0].write({
+            'location_dest_id': delivery_route.rule_ids[1].location_src_id.id,
+        })
+        delivery_route.rule_ids[1].write({'action': 'pull'})
+        so = self._get_new_sale_order(product=self.product_a)
+        self.env['sale.order.line'].create({
+            'product_id': self.product_b.id,
+            'order_id': so.id,
+        })
+        self.assertEqual(len(so.order_line), 2)
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 2)
+        so.picking_ids[1].move_ids[0].location_dest_id = child_location_1
+        so.picking_ids[1].move_ids[1].location_dest_id = child_location_2
+        # Pack the moves of the first picking together.
+        package = so.picking_ids[0].action_put_in_pack()
+        # a new package is made and done quantities should be in same package
+        self.assertTrue(package)
+        so.picking_ids[0].button_validate()
+        self.assertEqual(so.picking_ids[0].state, 'done')
+        self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[0].location_dest_id, child_location_1)
+        self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[1].location_dest_id, child_location_2)

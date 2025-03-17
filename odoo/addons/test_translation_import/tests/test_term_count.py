@@ -397,8 +397,6 @@ class TestTranslationFlow(common.TransactionCase):
             'Scorecard description',
             'Scorecard chart',
             'Opportunities',
-            'Pipeline',
-            'Pipeline Analysis',
             'link label',
             'aa (\\"inside\\") bb',
             'with spaces',

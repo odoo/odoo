@@ -27,7 +27,7 @@ Odoo Web tours.
             'web/static/lib/hoot-dom/**/*',
         ],
         'web.assets_unit_tests': [
-            'web_tour/static/tests/**/*',
+            'web_tour/static/tests/*.test.js',
         ],
     },
     'auto_install': True,

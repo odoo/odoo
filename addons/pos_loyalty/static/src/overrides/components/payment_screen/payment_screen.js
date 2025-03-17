@@ -76,6 +76,12 @@ patch(PaymentScreen.prototype, {
      * @override
      */
     async _postPushOrderResolve(order, server_ids) {
+        for (const order_id of server_ids) {
+            await this._postProcessLoyalty(this.pos.models["pos.order"].get(order_id));
+        }
+        return super._postPushOrderResolve(order, server_ids);
+    },
+    async _postProcessLoyalty(order) {
         // Compile data for our function
         const ProgramModel = this.pos.models["loyalty.program"];
         const rewardLines = order._get_reward_lines();
@@ -91,6 +97,9 @@ patch(PaymentScreen.prototype, {
             ) {
                 agg[pe.coupon_id].partner_id = partner.id;
             }
+            if (program.program_type != "loyalty") {
+                agg[pe.coupon_id].expiration_date = program.date_to;
+            }
             return agg;
         }, {});
         for (const line of rewardLines) {
@@ -103,6 +112,9 @@ patch(PaymentScreen.prototype, {
                     coupon_id: couponId,
                     barcode: false,
                 };
+                if (reward.program_type != "loyalty") {
+                    couponData[couponId].expiration_date = reward.program_id.date_to;
+                }
             }
             if (!couponData[couponId].line_codes) {
                 couponData[couponId].line_codes = [];
@@ -170,13 +182,14 @@ patch(PaymentScreen.prototype, {
                     }
                 }
             }
-            const loyaltyPoints = await this.currentOrder.getLoyaltyPoints().map((item) => ({
-                order_id: this.currentOrder.id,
-                card_id: item.couponId,
-                spent: item.points.spent,
-                won: item.points.won,
-                total: item.points.total,
+
+            const loyaltyPoints = Object.keys(couponData).map((coupon_id) => ({
+                order_id: order.id,
+                card_id: coupon_id,
+                spent: couponData[coupon_id].points < 0 ? -couponData[coupon_id].points : 0,
+                won: couponData[coupon_id].points > 0 ? couponData[coupon_id].points : 0,
             }));
+
             const couponUpdates = payload.coupon_updates.map((item) => ({
                 id: item.id,
                 old_id: item.old_id,
@@ -203,6 +216,5 @@ patch(PaymentScreen.prototype, {
             }
             order.new_coupon_info = payload.new_coupon_info;
         }
-        return super._postPushOrderResolve(order, server_ids);
     },
 });

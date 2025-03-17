@@ -85,6 +85,16 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_parallax', login='admin')
 
     def test_11_snippet_popup_display_on_click(self):
+        # To make the tour reliable we need to wait a field using data-fill-with
+        # to be patched, the step however relies on the company field being
+        # filled with 'yourcompany', which is not the case without demo data.
+        admin = self.env.ref('base.user_admin')
+        admin.write({
+            'parent_id': self.env['res.partner'].create({
+                'is_company': True,
+                'name': 'yourcompany',
+            }).id
+        })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_display_on_click', login='admin')
 
     def test_12_snippet_images_wall(self):
@@ -107,6 +117,8 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image_gallery_thumbnail_update', login='admin')
 
     def test_dropdowns_and_header_hide_on_scroll(self):
+        admin_user = self.env['res.partner'].search([("email", "ilike", "admin")])
+        admin_user.name = "mitchell admin" # We need to force Admin user name for no-demo cases
         self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')
 
     def test_snippet_image(self):
@@ -115,3 +127,6 @@ class TestSnippets(HttpCase):
 
     def test_rating_snippet(self):
         self.start_tour(self.env["website"].get_client_action_url("/"), "snippet_rating", login="admin")
+
+    def test_custom_popup_snippet(self):
+        self.start_tour(self.env["website"].get_client_action_url("/"), "custom_popup_snippet", login="admin")

@@ -119,7 +119,6 @@ test("report actions can close modals and reload views", async () => {
             name: "Create a Partner",
             res_model: "partner",
             target: "new",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
     ]);
@@ -350,7 +349,8 @@ test("can use custom handlers for report actions", async () => {
     ]);
 });
 
-test.tags("desktop")("context is correctly passed to the client action report", async (assert) => {
+test.tags("desktop");
+test("context is correctly passed to the client action report", async (assert) => {
     patchWithCleanup(download, {
         _download: (options) => {
             expect.step(options.url);

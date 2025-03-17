@@ -5,7 +5,7 @@
             type="file"
             multiple="true"
             t-ref="uploadFileInput"
-            accept="application/pdf"
+            t-att-accept="props.allowedMIMETypes"
             class="o_input_file o_hidden"
             t-on-change.stop="onFileInputChange"
         />

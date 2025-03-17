@@ -1,81 +1,175 @@
 /** @odoo-module **/
 
 import "@website/snippets/s_website_form/000";  // force deps
-import { uniqueId } from "@web/core/utils/functions";
 import publicWidget from '@web/legacy/js/public/public_widget';
+import { renderToElement } from "@web/core/utils/render";
 import { session } from "@web/session";
-publicWidget.registry.s_website_form.include({
-    /**
-     * @override
-    */
-    start: function () {
-        const res = this._super(...arguments);
-        this.cleanTurnstile();
-        if (!this.isEditable && !this.el.querySelector(".s_turnstile") && session.turnstile_site_key) {
-            this.uniq = uniqueId("turnstile_");
-            this.el.classList.add(this.uniq);
 
-            const mode = new URLSearchParams(window.location.search).get("cf") == "show" ? "always" : "interaction-only";
-            const turnstileEl = document.createElement("div");
-            turnstileEl.className = "s_turnstile cf-turnstile float-end";
-            turnstileEl.dataset.action = "website_form";
-            turnstileEl.dataset.appearance = mode;
-            turnstileEl.dataset.responseFieldName = "turnstile_captcha";
-            turnstileEl.dataset.sitekey = session.turnstile_site_key;
-            turnstileEl.dataset.errorCallback = "throwTurnstileError";
-            turnstileEl.dataset.beforeInteractiveCallback = "turnstileBeforeInteractive";
-            turnstileEl.dataset.afterInteractiveCallback = "turnstileAfterInteractive";
+export const turnStile = {
+    addTurnstile: function (action) {
+        if (!this.isEditable) {
+            const mode = new URLSearchParams(window.location.search).get('cf') == 'show' ? 'always' : 'interaction-only';
+            const turnstileContainer = renderToElement("website_cf_turnstile.turnstile_container", {
+                action: action,
+                appearance: mode,
+                additionalClasses: "float-end",
+                beforeInteractiveGlobalCallback: "turnstileBecomeVisible",
+                errorGlobalCallback: "throwTurnstileErrorCode",
+                executeGlobalCallback: "turnstileSuccess",
+                sitekey: session.turnstile_site_key,
+                style: "display: none;",
+            });
+            let toInsert = $(turnstileContainer);
 
-            const script1El = document.createElement("script");
-            script1El.className = "s_turnstile";
-            script1El.textContent = `
-                // Rethrow the error, or we only will catch a "Script error" without any info
-                // because of the script api.js originating from a different domain.
-                function throwTurnstileError(code) {
-                    const error = new Error("Turnstile Error");
-                    error.code = code;
-                    throw error;
-                }
-                function turnstileBeforeInteractive() {
-                    const btnEl = document.querySelector('.${this.uniq} .s_website_form_send,.${this.uniq} .o_website_form_send');
-                    if (btnEl && !btnEl.classList.contains('disabled')) {
-                        btnEl.classList.add('disabled', 'cf_form_disabled');
-                    }
-                }
-                function turnstileAfterInteractive() {
-                    const btnEl = document.querySelector('.${this.uniq} .s_website_form_send,.${this.uniq} .o_website_form_send');
-                    if (btnEl && btnEl.classList.contains('cf_form_disabled')) {
-                        btnEl.classList.remove('disabled', 'cf_form_disabled');
-                    }
-                }
-            `;
+            // Rethrow the error, or we only will catch a "Script error" without any info
+            // because of the script api.js originating from a different domain.
+            globalThis.throwTurnstileErrorCode = function (code) {
+                const error = new Error("Turnstile Error");
+                error.code = code;
+                throw error;
+            };
+            // `this` is bound to the turnstile widget calling the callback
+            globalThis.turnstileSuccess = function () {
+                const turnstileContainer = this.wrapper.parentElement;
+                const form = turnstileContainer.parentElement;
+                const spinner = form.querySelector("i.turnstile-spinner");
+                const button = spinner.parentElement;
+                button.disabled = false;
+                button.classList.remove("disabled");
+                spinner.remove();
+            };
+            globalThis.turnstileBecomeVisible = function () {
+                const turnstileContainer = this.wrapper.parentElement;
+                turnstileContainer.style.display = "";
+            };
 
-            const script2El = document.createElement("script");
-            script2El.className = "s_turnstile";
-            script2El.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+            // on first load of the remote script, all turnstile containers are rendered
+            // if render=explicit is not set in the script url.
+            // For subsequent insertion of turnstile containers, we need to call turnstile.render on the container
+            // see `renderTurnstile`.
+            if (!window.turnstile?.render) {
+                const turnstileScript = renderToElement("website_cf_turnstile.turnstile_remote_script");
+                toInsert = toInsert.add($(turnstileScript));
+            }
 
-            const formSendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
-            formSendEl.parentNode.insertBefore(turnstileEl, formSendEl.nextSibling);
-            formSendEl.parentNode.insertBefore(script1El, formSendEl.nextSibling);
-            formSendEl.parentNode.insertBefore(script2El, formSendEl.nextSibling);
+            return toInsert;
         }
-        return res;
     },
 
     /**
      * Remove potential existing loaded script/token
-    */
+     */
     cleanTurnstile: function () {
-        const turnstileEls = this.el.querySelectorAll(".s_turnstile");
-        turnstileEls.forEach(element => element.remove());
+        if (this.$(".s_turnstile").length) {
+            this.$(".s_turnstile").remove();
+        }
     },
 
     /**
      * @override
      * Discard all library changes to reset the state of the Html.
-    */
+     */
     destroy: function () {
         this.cleanTurnstile();
         this._super(...arguments);
     },
+
+    /**
+     * Take the result of `addTurnstile` and render it if needed
+     */
+    renderTurnstile: function (turnstileNodes) {
+        turnstileNodes = turnstileNodes.toArray();
+        const turnstileContainer = turnstileNodes.filter((node) =>
+            node.classList.contains("s_turnstile_container")
+        )[0];
+        const turnstileScript = turnstileNodes.filter(
+            (node) => node.id === "s_turnstile_remote_script"
+        )[0];
+        // there should only be a remote script if it was loaded for the first time
+        if (turnstileScript) {
+            return;
+        }
+        if (
+            window.turnstile?.render &&
+            turnstileContainer &&
+            !turnstileContainer.querySelector("iframe")
+        ) {
+            window.turnstile.render(turnstileContainer);
+        }
+    },
+
+    _createSpinner() {
+        const spinner = document.createElement("i");
+        spinner.classList.add("fa", "fa-refresh", "fa-spin", "turnstile-spinner");
+        return spinner;
+    },
+
+    /**
+     * same as addSpinner but does not set innerText
+     */
+    addSpinnerNoMangle(button) {
+        const spinner = this._createSpinner();
+        spinner.classList.add("me-1");
+        button.disabled = true;
+        button.classList.add("disabled");
+        button.prepend(spinner);
+    },
+
+    addSpinner(button) {
+        const spinner = this._createSpinner();
+        // avoids double-spacing if the button already contains a space
+        button.innerText = " " + button.innerText;
+        button.disabled = true;
+        button.classList.add("disabled");
+        button.prepend(spinner);
+    },
+};
+
+const signupTurnStile = {
+    ...turnStile,
+
+    async willStart() {
+        this._super(...arguments);
+        if (!session.turnstile_site_key) {
+            return;
+        }
+        const button = this.el.querySelector('button[type="submit"]');
+        this.addSpinner(button);
+        this.cleanTurnstile();
+        const turnstileNodes = this.addTurnstile(this.action);
+        turnstileNodes?.insertBefore(button);
+        this.renderTurnstile(turnstileNodes);
+    },
+};
+
+publicWidget.registry.s_website_form.include({
+    ...turnStile,
+
+    /**
+     * @override
+     */
+    start: function () {
+        const res = this._super(...arguments);
+        if (session.turnstile_site_key) {
+            const button = this.el.querySelector(".s_website_form_send, .o_website_form_send");
+            this.addSpinner(button);
+            this.cleanTurnstile();
+            const turnstileNodes = this.addTurnstile("website_form");
+            turnstileNodes?.insertAfter(button);
+            this.renderTurnstile(turnstileNodes);
+        }
+        return res;
+    },
+});
+
+publicWidget.registry.turnstileCaptchaSignup = publicWidget.Widget.extend({
+    ...signupTurnStile,
+    selector: ".oe_signup_form",
+    action: "signup",
+});
+
+publicWidget.registry.turnstileCaptchaPasswordReset = publicWidget.Widget.extend({
+    ...signupTurnStile,
+    selector: ".oe_reset_password_form",
+    action: "password_reset",
 });

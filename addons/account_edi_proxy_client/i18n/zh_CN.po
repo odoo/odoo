@@ -5,20 +5,31 @@
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
+# kunqing shi, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-02-03 15:44+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: kunqing shi, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_edi_proxy_client
+#. odoo-python
+#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+msgid ""
+"A user already exists with theses credentials on our server. Please check "
+"your information."
+msgstr ""
+"A user already exists with theses credentials on our server. Please check "
+"your information."
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
@@ -38,7 +49,7 @@ msgstr "会计日记账"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__active
 msgid "Active"
-msgstr "已启用"
+msgstr "Active"
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_res_company
@@ -106,6 +117,16 @@ msgid "Id Client"
 msgstr "客户ID"
 
 #. module: account_edi_proxy_client
+#. odoo-python
+#: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
+#, python-format
+msgid ""
+"Invalid signature for request. This might be due to another connection to odoo Access Point server. It can occur if you have duplicated your database. \n"
+"\n"
+"If you are not sure how to fix this, please contact our support."
+msgstr ""
+
+#. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
@@ -143,7 +164,7 @@ msgstr "测试模式"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key_id
 msgid "The key to encrypt all the user's data"
-msgstr "加密所有用户数据的密钥"
+msgstr "The key to encrypt all the user's data"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,help:account_edi_proxy_client.field_account_edi_proxy_client_user__edi_identification
@@ -156,7 +177,9 @@ msgstr "标识该用户的唯一 ID，通常是增值税识别号"
 msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %(url)s. %(error_message)s"
-msgstr "该服务请求的网址返回错误。试图访问的网址是%(url)s。%(error_message)s"
+msgstr ""
+"The url that this service requested returned an error. The url it tried to "
+"contact was %(url)s. %(error_message)s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -164,14 +187,17 @@ msgstr "该服务请求的网址返回错误。试图访问的网址是%(url)s�
 msgid ""
 "The url that this service requested returned an error. The url it tried to "
 "contact was %s"
-msgstr "服务器错误，无法返回请求的数据。尝试访问的网址是%s"
+msgstr ""
+"The url that this service requested returned an error. The url it tried to "
+"contact was %s"
 
 #. module: account_edi_proxy_client
 #. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 msgid ""
 "The url that this service tried to contact does not exist. The url was “%s”"
-msgstr "这项服务尝试联络的网址不存在。该网址（URL）为：%s"
+msgstr ""
+"The url that this service tried to contact does not exist. The url was “%s”"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_company_proxy
@@ -181,7 +207,7 @@ msgstr "该公司已为此 EDI 类型创建了活动用户"
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_edi_identification
 msgid "This edi identification is already assigned to an active user"
-msgstr "此 EDI 已分配给活动用户"
+msgstr "This edi identification is already assigned to an active user"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client

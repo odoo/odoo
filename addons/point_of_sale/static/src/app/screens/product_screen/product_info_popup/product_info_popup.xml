@@ -30,7 +30,7 @@
             <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info.productInfo.suppliers.length > 0">
                 <h3 class="section-title">Replenishment</h3>
                 <div class="section-supplier-body">
-                    <t t-foreach="props.info.productInfo.suppliers" t-as="supplier" t-key="supplier.name">
+                    <t t-foreach="props.info.productInfo.suppliers" t-as="supplier" t-key="supplier.id">
                         <div class="d-flex flex-column flex-md-row gap-2">
                             <div>
                                 <span t-esc="supplier.name" class="table-name"/>:

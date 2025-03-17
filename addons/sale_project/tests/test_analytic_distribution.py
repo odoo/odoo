@@ -1,20 +1,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import TestSaleProjectCommon
+from odoo import Command
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
 
 @tagged('post_install', '-at_install')
 class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Creating analytic plans within tests could cause some registry issues
+        # hence we are creating them in the setupClass instead.
+        # This is because creating a plan creates fields and columns on models inheriting
+        # from the mixin.
+        # The registry is reset on class cleanup.
+        cls.plan_b = cls.env['account.analytic.plan'].create({'name': 'Q'})
+
     def test_project_transmits_analytic_plans_to_sol_distribution(self):
-        AnalyticPlan = self.env['account.analytic.plan']
         plan_a = self.analytic_plan
-        plan_b = AnalyticPlan.sudo().search([
-            ('parent_id', '=', False),
-            ('id', '!=', plan_a.id),
-        ], limit=1)
-        plan_b = plan_b or AnalyticPlan.create({'name': 'Q'})
+        plan_b = self.plan_b
         account_a, account_b = self.env['account.analytic.account'].create([{
             'name': 'account',
             'plan_id': plan.id,
@@ -68,4 +76,33 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
             sale_order_line.analytic_distribution,
             {str(self.project_global.account_id.id): 100},
             "The analytic distribution of the SOL should be set to the account of the project set on the product.",
+        )
+
+    def test_project_analytic_distribution_on_invoice_lines(self):
+        """
+        Test that Analytic Distribution applies from Project to Invoice Lines (excluding payable/receivable lines).
+        Steps:
+          1. Create a project.
+          2. Create an invoice with the project in context.
+          3. Add an invoice line.
+          4. Verify analytic distribution is applied.
+        """
+
+        invoice = self.env['account.move'].with_context({
+            'default_move_type': 'out_invoice',
+            'default_partner_id': self.project_global.partner_id.id,
+            'project_id': self.project_global.id
+        }).create({
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_delivery_manual1.id,
+                'quantity': 1,
+                'price_unit': 10,
+            })]
+        })
+
+        filtered_lines = invoice.line_ids.filtered(lambda l: l.analytic_distribution)
+        self.assertEqual(
+            len(filtered_lines),
+            1,
+            "Analytic distribution is not set on the payable/receivable lines"
         )

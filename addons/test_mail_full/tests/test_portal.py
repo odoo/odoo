@@ -6,6 +6,7 @@ from werkzeug.urls import url_parse, url_decode, url_encode, url_unparse
 import json
 
 from odoo import http
+from odoo.addons.auth_signup.models.res_partner import ResPartner
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
@@ -206,6 +207,17 @@ class TestPortalFlow(MailCommon, HttpCase):
             'subject': 'Your quotation "{{ object.name }}"',
         })
         cls._create_portal_user()
+
+        # The test relies on `record_access_url` to check the validity of mails being sent,
+        # however, when auth_signup is installed, a new token is generated each time the url
+        # is being requested.
+        # By removing the time-based hashing from this function we can ensure the stability of
+        # the url during the tests.
+        def patched_generate_signup_token(self, *_, **__):
+            self.ensure_one()
+            return str([self.id, self._get_login_date(), self.signup_type])
+        cls.classPatch(ResPartner, '_generate_signup_token', patched_generate_signup_token)
+
         for group_name, group_func, group_data in cls.record_portal.sudo()._notify_get_recipients_groups(
             cls.env['mail.message'], False
         ):

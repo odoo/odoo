@@ -76,6 +76,7 @@ class Action(Controller):
                         act['display_name'] = act['name']
                     # client actions don't have multi-record views, so we can't go further to the next controller
                     if act['type'] == 'ir.actions.client' and idx + 1 < len(actions) and action.get('action') == actions[idx + 1].get('action'):
+                        results.append({'error': 'Client actions don\'t have multi-record views'})
                         continue
                     if record_id:
                         # some actions may not have a res_model (e.g. a client action)

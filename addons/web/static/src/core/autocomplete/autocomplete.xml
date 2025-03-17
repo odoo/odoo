@@ -16,7 +16,7 @@
                 aria-haspopup="listbox"
                 t-model="state.value"
                 t-on-blur="onInputBlur"
-                t-on-click.stop="onInputClick"
+                t-on-click="onInputClick"
                 t-on-change="onInputChange"
                 t-on-input="onInput"
                 t-on-keydown="onInputKeydown"
@@ -54,7 +54,7 @@
                                     t-att-class="option.classList"
                                     t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
                                     t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
-                                    t-on-click="() => this.onOptionClick([source_index, option_index])"
+                                    t-on-click="() => this.onOptionClick(option)"
                                     t-on-pointerdown="() => this.ignoreBlur = true"
                                 >
                                     <a

@@ -18,6 +18,7 @@ import { ImportDataProgress } from "../src/import_data_progress/import_data_prog
 import { ImportAction } from "../src/import_action/import_action";
 import { ImportBlockUI } from "../src/import_block_ui";
 import { useEffect } from "@odoo/owl";
+import { redirect } from "@web/core/utils/urls";
 
 const serviceRegistry = registry.category("services");
 
@@ -94,6 +95,8 @@ async function executeImport(data, shouldWait = false) {
     }
     if (data[3].skip + 1 < (data[3].has_headers ? totalRows - 1 : totalRows)) {
         res.nextrow = data[3].skip + data[3].limit;
+    } else {
+        res.nextrow = 0;
     }
     if (shouldWait) {
         // make sure the progress bar is shown
@@ -268,7 +271,6 @@ async function createImportAction(customRouter = {}) {
 
 QUnit.module("Base Import Tests", (hooks) => {
     hooks.beforeEach(async () => {
-        target = getFixture();
         serverData = {
             actions: {
                 1: {
@@ -277,7 +279,7 @@ QUnit.module("Base Import Tests", (hooks) => {
                     target: "current",
                     type: "ir.actions.client",
                     params: {
-                        model: "partner",
+                        active_model: "partner",
                     },
                 },
             },
@@ -315,6 +317,11 @@ QUnit.module("Base Import Tests", (hooks) => {
     QUnit.test("Import view: UI before file upload", async function (assert) {
         const templateURL = "/myTemplateURL.xlsx";
 
+        patchWithCleanup(browser.location, {
+            origin: "http://example.com",
+        });
+        redirect("/odoo");
+
         await createImportAction({
             "partner/get_import_templates": (route, args) => {
                 assert.step(route);
@@ -330,6 +337,13 @@ QUnit.module("Base Import Tests", (hooks) => {
                 return Promise.resolve(11);
             },
         });
+
+        await nextTick(); // pushState is debounced
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/import?active_model=partner",
+            "the url contains the active_model"
+        );
 
         assert.containsOnce(target, ".o_import_action", "import view is displayed");
         assert.strictEqual(
@@ -1288,6 +1302,86 @@ QUnit.module("Base Import Tests", (hooks) => {
             await click(target.querySelector(".o_control_panel_main_buttons button:first-child"));
         }
     );
+
+    QUnit.test("Import view: batch import relational fields", async function (assert) {
+        let executeImportCount = 0;
+        registerFakeHTTPService();
+
+        patchWithCleanup(ImportAction.prototype, {
+            get isBatched() { // Make sure the UI displays the batched import options
+                return true;
+            },
+        });
+
+        await createImportAction({
+            "base_import.import/parse_preview": (route, args) => {
+                // Parse a file where all rows besides the first are used for relational data
+                return customParsePreview(args[1], {
+                    fields: [
+                        { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
+                        {
+                            id: "display_name",
+                            name: "display_name",
+                            string: "Display Name",
+                            fields: [],
+                            type: "id",
+                        },
+                        {
+                            id: "many2many_field",
+                            name: "many2many_field",
+                            string: "Many2Many",
+                            fields: [
+                                {
+                                    id: "id",
+                                    name: "id",
+                                    string: "External ID",
+                                    fields: [],
+                                    type: "id",
+                                },
+                            ],
+                            type: "id",
+                        },
+                    ],
+                    headers: ["id", "display_name", "many2many_field/id"],
+                    rowCount: 6,
+                    matches: {
+                        0: ["id"],
+                        1: ["display_name"],
+                        2: ["many2many_field", "id"],
+                    },
+                    preview: [
+                        ["1"],
+                        ["Record Name"],
+                        ["1", "2", "3", "4", "5"],
+                    ],
+                });
+            },
+            "base_import.import/execute_import": async (route, args) => {
+                ++executeImportCount;
+                const res = await executeImport(args);
+                // Import batch limit doesn't apply to relational fields, so set `nextrow`
+                // to 0 to indicate all rows were imported on first call
+                res.nextrow = 0;
+                return res;
+            },
+        });
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await editInput(target, ".o_control_panel_main_buttons input[type='file']", file);
+
+        // Set batch limit to 1
+        await editInput(target, "input#o_import_batch_limit", 1);
+
+        // Start test
+        await click(target.querySelector(".o_control_panel_main_buttons button:nth-child(2)"));
+
+        assert.strictEqual(
+            target.querySelector(".o_import_data_content .alert-info").textContent,
+            "Everything seems valid.",
+            "A message should indicate the import test was successful"
+        );
+        assert.strictEqual(executeImportCount, 1, "Execute import should finish in 1 step");
+    });
 
     QUnit.test("Import view: import errors with relational fields", async function (assert) {
         registerFakeHTTPService();

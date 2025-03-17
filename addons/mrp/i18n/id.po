@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Abe Manyo, 2024
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:54+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Abe Manyo, 2024\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +43,18 @@ msgstr ""
 #: code:addons/mrp/models/stock_rule.py:0
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
 msgstr " <br/><br/> Komponen akan diambil dari <b>%s</b>."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid ""
+" <br/><br/> The manufactured products will be moved towards "
+"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
+"destination."
+msgstr ""
+" <br/><br/> Produk yang dimanufaktur akan digerakkan ke "
+"<b>%(destination)s</b>, <br/> seperti yang ditentukan dari tujuan "
+"<b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -309,8 +321,8 @@ msgstr "<span class=\"col-6\">Menunggu</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr "<span class=\"fw-bold\">Untuk Diproduksi</span>"
+msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
+msgstr "<span class=\"fw-bold text-nowrap\">Untuk Membuat</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -836,11 +848,6 @@ msgid "Assembling"
 msgstr "Perakitan"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_ir_attachment
-msgid "Attachment"
-msgstr "Lampiran"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__message_attachment_count
@@ -1143,15 +1150,11 @@ msgstr ""
 "                order atau paket produk."
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "Blokir"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
-msgid "Block WC"
-msgstr "Block WC"
+msgstr "Blok"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
@@ -1194,7 +1197,7 @@ msgstr "Alasan Blokir"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
 msgid "Blocks"
-msgstr "Blokir"
+msgstr "Blok"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -1393,6 +1396,16 @@ msgstr "Ganti Kuantitas Produksi"
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Quantity To Produce"
 msgstr "Ganti Kuantitas Produksi"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid ""
+"Changing the product or variant will permanently reset all previously "
+"encoded variant-related data."
+msgstr ""
+"Mengubah produk atau varian akan secara permanen me-reset semua data terkait"
+" varian yang dienkode."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1699,12 +1712,6 @@ msgid "Costs"
 msgstr "Biaya"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-msgid "Could not display the selected spreadsheet"
-msgstr "Tidak dapat menampilkan spreadsheet yang dipilih"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_count
 msgid "Count of MO generated"
 msgstr "Jumlah MO yang dibuat"
@@ -1905,7 +1912,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
@@ -1996,13 +2002,13 @@ msgid ""
 "Defines if you can consume more or less components than the quantity defined on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
 "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
+"  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
 "Tentukan bila dapat mengonsumsi lebih banyak atau lebih sedikit komponen daripada kuantitas di BoM:\n"
 "  * Izinkan: diizinkan untuk semua user manufaktur.\n"
 "  * Izinkan dengan peringatan: diizinkan untuk semua user manufaktur dengan ringkasan perbedaan konsumsi saat menutup manufacturing order.\n"
-"  Mohon diingat pada kasus Konsumsi Manual komponen, dimana konsumsi didaftarkan eksklusif secara manual, peringatan konsumsi akan tetap diberikan saat diperlukan.\n"
+"  Mohon diingat pada kasus Konsumsi Highlight komponen, dimana konsumsi didaftarkan eksklusif secara manual, peringatan konsumsi akan tetap diberikan saat diperlukan.\n"
 "  * Blokir: hanya manajer yang dapat menutup manufacturing order saat konsumsi BoM tidak sesuai."
 
 #. module: mrp
@@ -2516,12 +2522,6 @@ msgid "Google Slide Link"
 msgstr "Link Google Slide"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-msgid "Google Slides Viewer"
-msgstr "Google Slides Viewer"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Group By"
 msgstr "Dikelompokkan berdasarkan"
@@ -2573,6 +2573,11 @@ msgstr "Has Routing Lines"
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
 msgid "Hidden"
 msgstr "Tersembuny"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
+msgid "Highlight Consumption"
+msgstr "Konsumsi Highlight"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -3237,7 +3242,6 @@ msgid "Manage Work Order Operations"
 msgstr "Kelola Operasi SPK"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
 msgid "Manual Consumption"
 msgstr "Konsumsi Manual"
@@ -3548,6 +3552,11 @@ msgstr "Jumlah Produksi Mrp"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Deadline Kegiatan Saya"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "My MOs"
+msgstr "MO Saya"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
@@ -5124,12 +5133,6 @@ msgid "Show backorder lines"
 msgstr "Tunjukkan baris backorder"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
-msgid "Slides viewer"
-msgstr "Slides viewer"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
 msgstr "Masukkan ke kalender pusat kerja setelah direncanakan"
@@ -6015,7 +6018,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "Tidak dapat memisah lebih dari yang kuantitas akan buat."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
 msgid "Unblock"
 msgstr "Buka Blokir"
 

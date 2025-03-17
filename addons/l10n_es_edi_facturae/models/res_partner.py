@@ -74,11 +74,3 @@ class Partner(models.Model):
                 partner.l10n_es_edi_facturae_residence_type = 'U'
             else:
                 partner.l10n_es_edi_facturae_residence_type = 'E'
-
-    def _get_suggested_invoice_edi_format(self):
-        # EXTENDS 'account'
-        res = super()._get_suggested_invoice_edi_format()
-        if self.country_code == 'ES' and self.company_id.currency_id.name == 'EUR':
-            return 'es_facturae'
-        else:
-            return res

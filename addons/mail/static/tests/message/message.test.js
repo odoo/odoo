@@ -4,6 +4,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     onRpcBefore,
     openDiscuss,
@@ -13,11 +14,10 @@ import {
     startServer,
     step,
     triggerHotkey,
-    hover,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { leave, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
-import { leave, press } from "@odoo/hoot-dom";
 import {
     Command,
     mockService,
@@ -52,7 +52,9 @@ test("Start edition on click edit", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Hello world" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "Hello world" });
+    await click("a[role='button']", { text: "cancel" });
+    await contains(".o-mail-Message .o-mail-Composer-input", { count: 0 });
 });
 
 test("Edit message (mobile)", async () => {
@@ -98,16 +100,16 @@ test("Editing message keeps the mentioned channels", async () => {
     await start();
     await openDiscuss(channelId1);
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion strong", { text: "#other" });
+    await click(".o-mail-Composer-suggestion strong", { text: "other" });
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o_channel_redirect", { count: 1, text: "#other" });
+    await contains(".o_channel_redirect", { count: 1, text: "other" });
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-content", { text: "#other bye (edited)" });
-    await click(".o_channel_redirect", { text: "#other" });
+    await contains(".o-mail-Message-content", { text: "other bye (edited)" });
+    await click(".o_channel_redirect", { text: "other" });
     await contains(".o-mail-Discuss-threadName", { value: "other" });
 });
 
@@ -167,7 +169,7 @@ test("Cursor is at end of composer input on edit", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
-    const textarea = $(".o-mail-Composer-input")[0];
+    const textarea = queryFirst(".o-mail-Composer-input");
     const contentLength = textarea.value.length;
     expect(textarea.selectionStart).toBe(contentLength);
     expect(textarea.selectionEnd).toBe(contentLength);
@@ -833,7 +835,7 @@ test("message comment of same author within 5min. should be squashed", async () 
     await contains(".o-mail-Message", {
         contains: [
             [".o-mail-Message-content", { text: "body2" }],
-            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "10:02" }],
+            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "10:02 AM" }],
         ],
     });
 });
@@ -992,11 +994,11 @@ test("Notification Sent", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
-    expect($(".o-mail-Message-notification i")[0]).toHaveClass("fa-envelope-o");
+    expect(".o-mail-Message-notification i:first").toHaveClass("fa-envelope-o");
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover i");
-    expect($(".o-mail-MessageNotificationPopover i")[0]).toHaveClass("fa-check");
+    expect(".o-mail-MessageNotificationPopover i:first").toHaveClass("fa-check");
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 });
 
@@ -1035,7 +1037,7 @@ test("Notification Error", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
-    expect($(".o-mail-Message-notification i")[0]).toHaveClass("fa-envelope");
+    expect(".o-mail-Message-notification i:first").toHaveClass("fa-envelope");
     await click(".o-mail-Message-notification").then(() => {});
     await openResendActionDef;
     await assertSteps(["do_action"]);
@@ -1355,7 +1357,7 @@ test("avatar card from author should be opened after clicking on their avatar", 
     await start();
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message-avatar");
-    expect($(".o-mail-Message-avatarContainer")[0]).toHaveClass("cursor-pointer");
+    expect(".o-mail-Message-avatarContainer:first").toHaveClass("cursor-pointer");
     await click(".o-mail-Message-avatar");
     await contains(".o_avatar_card");
     await contains(".o_card_user_infos > span", { text: "Partner_2" });
@@ -1471,7 +1473,7 @@ test("Channel should be opened after clicking on its mention", async () => {
     await openFormView("res.partner", partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion strong", { text: "#my-channel" });
+    await click(".o-mail-Composer-suggestion strong", { text: "my-channel" });
     await click(".o-mail-Composer-send:enabled");
     await click(".o_channel_redirect");
     await contains(".o-mail-ChatWindow .o-mail-Thread");
@@ -1949,9 +1951,9 @@ test("Copy Message Link", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message:eq(0) [title='Expand']");
-    await contains("[title='Copy Message Link']", { count: 0 });
+    await contains("[title='Copy Link']", { count: 0 });
     await click(".o-mail-Message:eq(1) [title='Expand']");
-    await click("[title='Copy Message Link']");
+    await click("[title='Copy Link']");
     await assertSteps([url(`/mail/message/${messageId_2}`)]);
     await press(["ctrl", "v"]);
     await click(".o-mail-Composer-send:enabled");

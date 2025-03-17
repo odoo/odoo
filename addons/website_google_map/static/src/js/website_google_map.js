@@ -88,7 +88,9 @@ function initialize_map() {
         if (odooPartnerData) { /* odoo_partner_data special variable should have been defined in google_map.xml */
             const markerPromises = [];
             for (var i = 0; i < odoo_partner_data.counter; i++) {
-                markerPromises.push(set_marker(odoo_partner_data.partners[i]));
+                const prom = set_marker(odoo_partner_data.partners[i])
+                    .catch(error => console.error(error));
+                markerPromises.push(prom);
             }
             await Promise.all(markerPromises);
             new MarkerClusterer(map, markers, options);

@@ -604,6 +604,68 @@ QUnit.module("MockServer", (hooks) => {
         }
     );
 
+    QUnit.test("performRPC: read_group datetime:day_of_week", async function (assert) {
+        data.models.bar.records = [
+            { foo: 11, datetime: "2025-02-17" }, // Monday
+            { foo: 22, datetime: "2025-02-18" }, // Tuesday
+            { foo: 33, datetime: "2025-02-19" }, // Wednesday
+            { foo: 44, datetime: "2025-02-20" }, // Thursday
+            { foo: 55, datetime: "2025-02-21" }, // Friday
+            { foo: 66, datetime: "2025-02-22" }, // Saturday
+            { foo: 77, datetime: "2025-02-23" }, // Sunday
+        ];
+        const server = new MockServer(data, {});
+        const response = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["foo:max"],
+                domain: [],
+                groupby: ["datetime:day_of_week"],
+            },
+        });
+        assert.deepEqual(
+            response.map((x) => x["datetime:day_of_week"]),
+            [0, 1, 2, 3, 4, 5, 6]
+        );
+        assert.deepEqual(
+            response.map((x) => x.foo),
+            [77, 11, 22, 33, 44, 55, 66]
+        );
+    });
+
+    QUnit.test("performRPC: read_group date:day_of_week", async function (assert) {
+        data.models.bar.records = [
+            { foo: 11, date: "2025-02-17" }, // Monday
+            { foo: 22, date: "2025-02-18" }, // Tuesday
+            { foo: 33, date: "2025-02-19" }, // Wednesday
+            { foo: 44, date: "2025-02-20" }, // Thursday
+            { foo: 55, date: "2025-02-21" }, // Friday
+            { foo: 66, date: "2025-02-22" }, // Saturday
+            { foo: 77, date: "2025-02-23" }, // Sunday
+        ];
+        const server = new MockServer(data, {});
+        const response = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["foo:max"],
+                domain: [],
+                groupby: ["date:day_of_week"],
+            },
+        });
+        assert.deepEqual(
+            response.map((x) => x["date:day_of_week"]),
+            [0, 1, 2, 3, 4, 5, 6]
+        );
+        assert.deepEqual(
+            response.map((x) => x.foo),
+            [77, 11, 22, 33, 44, 55, 66]
+        );
+    });
+
     QUnit.test("performRPC: read_group, group by datetime", async function (assert) {
         const server = new MockServer(data, {});
         let result = await server.performRPC("", {

@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("mail_activity_date_format", {
-    test: true,
     steps: () => [
         {
             trigger: "button:contains('Activities')",

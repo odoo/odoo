@@ -12,7 +12,7 @@ import { SwitchCompanyItem } from "@web/webclient/switch_company_menu/switch_com
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
-class CompanySelector {
+export class CompanySelector {
     constructor(companyService, dropdownState) {
         this.companyService = companyService;
         this.dropdownState = dropdownState;
@@ -139,11 +139,15 @@ export class SwitchCompanyMenu extends Component {
     static template = "web.SwitchCompanyMenu";
     static components = { Dropdown, DropdownItem, DropdownGroup, SwitchCompanyItem };
     static props = {};
+    static CompanySelector = CompanySelector;
 
     setup() {
         this.dropdown = useDropdownState();
         this.companyService = useService("company");
-        this.companySelector = useState(new CompanySelector(this.companyService, this.dropdown));
+
+        this.companySelector = useState(
+            new this.constructor.CompanySelector(this.companyService, this.dropdown)
+        );
         useChildSubEnv({ companySelector: this.companySelector });
 
         this.searchInputRef = useRef("inputRef");

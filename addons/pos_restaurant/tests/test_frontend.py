@@ -5,10 +5,10 @@ import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-
+from odoo import Command
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontend(TestPointOfSaleHttpCommon):
+class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -210,6 +210,9 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         pricelist = cls.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
         cls.pos_config.write({'pricelist_id': pricelist.id})
 
+
+class TestFrontend(TestFrontendCommon):
+
     def test_01_pos_restaurant(self):
         self.pos_user.write({
             'groups_id': [
@@ -261,11 +264,16 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         order_tips.sort()
         self.assertEqual(order_tips, [0.0, 0.4, 1.0, 1.0, 1.5])
 
+        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0004')], limit=1, order='id desc')
+        self.assertEqual(order4.customer_count, 2)
+
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour2')
 
     def test_07_split_bill_screen(self):
+        # disable kitchen printer to avoid printing errors
+        self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour3')
 
@@ -276,6 +284,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
     def test_09_combo_split_bill(self):
         setup_product_combo_items(self)
         self.office_combo.write({'lst_price': 40})
+        self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour4ProductCombo')
 
@@ -286,9 +295,10 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
         self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
 
-    def test_11_bill_screen_qrcode(self):
+    def test_11_bill_screen_qrcode_data(self):
         self.pos_config.write({'printer_ids': False})
         self.pos_config.company_id.point_of_sale_use_ticket_qr_code = True
+        self.pos_config.company_id.point_of_sale_ticket_portal_url_display_mode = 'qr_code_and_url'
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('BillScreenTour')
 
@@ -302,3 +312,190 @@ class TestFrontend(TestPointOfSaleHttpCommon):
     def test_13_category_check(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('CategLabelCheck')
+
+    def test_14_change_synced_order(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('OrderChange')
+
+    def test_13_crm_team(self):
+        if self.env['ir.module.module']._get('pos_sale').state != 'installed':
+            self.skipTest("'pos_sale' module is required")
+        sale_team = self.env['crm.team'].search([], limit=1)
+        self.pos_config.crm_team_id = sale_team
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('CrmTeamTour')
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(order.crm_team_id.id, sale_team.id)
+
+    def test_14_pos_payment_sync(self):
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        def assert_payment(lines_count, amount):
+            self.assertEqual(len(order.payment_ids), lines_count)
+            self.assertEqual(round(sum(payment.amount for payment in order.payment_ids), 2), amount)
+        self.start_pos_tour('PoSPaymentSyncTour1')
+        order = self.pos_config.current_session_id.order_ids
+        self.assertEqual(len(order), 1)
+        assert_payment(1, 2.2)
+        self.start_pos_tour('PoSPaymentSyncTour2')
+        assert_payment(1, 4.4)
+        self.start_pos_tour('PoSPaymentSyncTour3')
+        assert_payment(2, 6.6)
+
+    def test_preparation_printer_content(self):
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
+        self.main_pos_config.write({
+            'is_order_printer' : True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+        })
+
+        self.product_test = self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 10,
+            'pos_categ_ids': [(6, 0, [self.env['pos.category'].search([], limit=1).id])],
+            'taxes_id': False,
+        })
+
+        attribute = self.env['product.attribute'].create({
+            'name': 'Attribute 1',
+            'create_variant': 'no_variant',
+        })
+        attribute_value = self.env['product.attribute.value'].create({
+            'name': 'Value 1',
+            'attribute_id': attribute.id,
+        })
+        attribute_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Value 2',
+            'attribute_id': attribute.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.product_test.product_tmpl_id.id,
+            'attribute_id': attribute.id,
+            'value_ids': [(6, 0, [attribute_value.id, attribute_value_2.id])],
+        })
+
+        attribute_2 = self.env['product.attribute'].create({
+            'name': 'Attribute 1',
+            'create_variant': 'always',
+        })
+        attribute_2_value = self.env['product.attribute.value'].create({
+            'name': 'Value 1',
+            'attribute_id': attribute_2.id,
+        })
+        attribute_2_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Value 2',
+            'attribute_id': attribute_2.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.product_test.product_tmpl_id.id,
+            'attribute_id': attribute_2.id,
+            'value_ids': [(6, 0, [attribute_2_value.id, attribute_2_value_2.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
+
+    def test_transfer_table_last_preparation_change(self):
+        """This test will check if the last preparation change is correctly transferred to the new table with 6 possible cases:
+            - Transfer sent product on table with same product sent
+            - Transfer sent product on table with same product not sent
+            - Transfer sent product on table without the same product
+            - Transfer not sent product on table with same product not sent
+            - Transfer not sent product on table with same product sent
+            - Transfer not sent product on table without the same product"""
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
+        self.main_pos_config.write({
+            'is_order_printer' : True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+        })
+
+        self.product_test = self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 10,
+            'pos_categ_ids': [(6, 0, [self.env['pos.category'].search([], limit=1).id])],
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange1', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange2', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange3', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange4', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange5', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange6', login="pos_user")
+
+    def test_combo_preparation_receipt(self):
+        setup_product_combo_items(self)
+        pos_printer = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+        self.pos_config.write({
+            'is_order_printer' : True,
+            'printer_ids': [Command.set(pos_printer.ids)],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('ComboSortedPreparationReceiptTour')
+
+    def test_multiple_preparation_printer(self):
+        """This test make sure that no empty receipt are sent when using multiple printer with different categories
+           The tour will check that we tried did not try to print two receipt. We can achieve that by checking the content
+           of the error message. Because we do not have real printer an error message will be displayed, this will contain
+           all the receipt that failed to print. If it contains more than 1 it means that we tried to print a second receipt
+           and it should not be the case here. The only one we should see is 'Detailed Receipt'
+        """
+        pos_category_1 = self.env['pos.category'].create({'name': 'Category 1'})
+        pos_category_2 = self.env['pos.category'].create({'name': 'Category 2'})
+        printer_1 = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(pos_category_2.ids)],
+        })
+        printer_2 = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(pos_category_1.ids)],
+        })
+
+
+        self.main_pos_config.write({
+            'is_order_printer' : True,
+            'printer_ids': [Command.set([printer_1.id, printer_2.id])],
+        })
+
+        self.product_1 = self.env['product.product'].create({
+            'name': 'Product 1',
+            'available_in_pos': True,
+            'list_price': 10,
+            'pos_categ_ids': [(6, 0, [pos_category_1.id])],
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'MultiPreparationPrinter', login="pos_user")
+
+    def test_user_on_residual_order(self):
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('LeaveResidualOrder', login="pos_admin")
+        self.start_pos_tour('FinishResidualOrder', login="pos_user")
+        orders = self.env['pos.order'].search([])
+        self.assertEqual(orders[0].user_id.id, self.pos_user.id, "Pos user not registered on order")
+        self.assertEqual(orders[1].user_id.id, self.pos_admin.id, "Pos admin not registered on order")

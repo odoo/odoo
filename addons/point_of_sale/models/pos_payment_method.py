@@ -86,6 +86,9 @@ class PosPaymentMethod(models.Model):
         selection_options = self.env['res.partner.bank'].get_available_qr_methods_in_sequence()
         if len(selection_options) == 1:
             self.qr_code_method = selection_options[0][0]
+        # Unset the use_payment_terminal field when switching to a payment method that doesn't use it
+        if self.payment_method_type != 'terminal':
+            self.use_payment_terminal = None
 
     @api.onchange('use_payment_terminal')
     def _onchange_use_payment_terminal(self):
@@ -173,10 +176,13 @@ class PosPaymentMethod(models.Model):
 
     def copy_data(self, default=None):
         default = dict(default or {}, config_ids=[(5, 0, 0)])
-        if self.journal_id and self.journal_id.type == 'cash':
-            if ('journal_id' in default and default['journal_id'] == self.journal_id.id) or ('journal_id' not in default):
-                default.update({'journal_id': False})
-        return super().copy_data(default=default)
+        vals_list = super().copy_data(default=default)
+
+        for pm, vals in zip(self, vals_list):
+            if pm.journal_id and pm.journal_id.type == 'cash':
+                if ('journal_id' in default and default['journal_id'] == pm.journal_id.id) or ('journal_id' not in default):
+                    vals['journal_id'] = False
+        return vals_list
 
     @api.constrains('payment_method_type', 'journal_id', 'qr_code_method')
     def _check_payment_method(self):

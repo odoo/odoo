@@ -30,7 +30,7 @@ class Company(models.Model):
             ('model', '=', 'account.tax.group')])
         for company in self:
             # instantiate OSS taxes on the first branch with a TAX ID, default on root company
-            company = company.parent_ids.filtered(lambda c: c.vat)[-1:] or self.root_id
+            company = company.parent_ids.filtered(lambda c: c.vat)[-1:] or company.root_id
             invoice_repartition_lines, refund_repartition_lines = company._get_repartition_lines_oss()
             taxes = self.env['account.tax'].search([
                 *self.env['account.tax']._check_company_domain(company),
@@ -165,6 +165,12 @@ class Company(models.Model):
         if not country:
             country = self.account_fiscal_country_id
         chart_template = self.env['account.chart.template']._guess_chart_template(country)
+
+        # If that l10n module isn't installed, it means the company doesn't use any tax report for that country
+        # and thus hasn't nor need those tax report tag
+        is_coa_module_installed = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['installed']
+        if not is_coa_module_installed:
+            chart_template = None
 
         tag_for_country = EU_TAG_MAP.get(chart_template, {
             'invoice_base_tag': None,

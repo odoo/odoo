@@ -9,6 +9,18 @@ class PosOrder(models.Model):
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
     takeaway = fields.Boolean(string="Take Away", default=False)
 
+    def _get_open_order(self, order):
+        config_id = self.env['pos.session'].browse(order.get('session_id')).config_id
+        if not config_id.module_pos_restaurant:
+            return super()._get_open_order(order)
+
+        domain = []
+        if order.get('table_id', False) and order.get('state') == 'draft':
+            domain += ['|', ('uuid', '=', order.get('uuid')), ('table_id', '=', order.get('table_id')), ('state', '=', 'draft')]
+        else:
+            domain += [('uuid', '=', order.get('uuid'))]
+        return self.env["pos.order"].search(domain, limit=1)
+
     @api.model
     def remove_from_ui(self, server_ids):
         tables = self.env['pos.order'].search([('id', 'in', server_ids)]).table_id
@@ -39,36 +51,12 @@ class PosOrder(models.Model):
 
         return result
 
-    def _process_saved_order(self, draft):
-        order_id = super()._process_saved_order(draft)
-        if not self.env.context.get('cancel_table_notification'):
-            self.send_table_count_notification(self.table_id)
-        return order_id
-
     def send_table_count_notification(self, table_ids):
-        messages = []
-        a_config = []
-        for config in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
-            if config.current_session_id:
-                a_config.append(config)
-                draft_order_ids = self.search([
-                    ('table_id', 'in', table_ids.ids),
-                    ('state', '=', 'draft')
-                ]).ids
-                messages.append(
-                    (
-                        "SYNC_ORDERS",
-                        {
-                            'login_number': self.env.context.get('login_number', False),
-                            'order_ids': draft_order_ids,
-                        }
-                    )
-                )
-        if messages:
-            for config in a_config:
-                config._notify(*messages, private=False)
+         # Cannot remove the method in stable
+        pass
 
     def action_pos_order_cancel(self):
-        super().action_pos_order_cancel()
+        result = super().action_pos_order_cancel()
         if self.table_id:
             self.send_table_count_notification(self.table_id)
+        return result

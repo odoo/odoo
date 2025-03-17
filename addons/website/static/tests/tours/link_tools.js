@@ -8,7 +8,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
-import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { boundariesIn, setSelection, nodeSize } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const clickOnImgStep = {
     content: "Click somewhere else to save.",
@@ -17,10 +17,9 @@ const clickOnImgStep = {
 };
 
 registerWebsitePreviewTour('link_tools', {
-    test: true,
     url: '/',
     edition: true,
-    checkDelay: 200,
+    checkDelay: 50,
 }, () => [
     // 1. Create a new link from scratch.
     ...insertSnippet({
@@ -44,6 +43,13 @@ registerWebsitePreviewTour('link_tools', {
         run: 'edit odoo.com',
     },
     clickOnImgStep,
+    {
+        content: "Select the newly created link",
+        trigger: ':iframe #wrap .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+        run() {
+            setSelection(this.anchor, 0, this.anchor, nodeSize(this.anchor));
+        }
+    },
     // Remove the link.
     {
         content: "Click on the newly created link",
@@ -88,11 +94,6 @@ registerWebsitePreviewTour('link_tools', {
         run: 'edit odoo website_2',
     },
     {
-        content: "Click again on the link",
-        trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
-        run: "click",
-    },
-    {
         content: "Change content (editing the DOM) to odoo website",
         trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
         run: 'editor odoo website',
@@ -110,7 +111,7 @@ registerWebsitePreviewTour('link_tools', {
     {
         content: "Link tools, should be open, change the url",
         trigger: '#o_link_dialog_url_input',
-        run: "edit odoo.be && click body",
+        run: "edit odoo.be",
     },
 
     ...clickOnSave(),
@@ -156,7 +157,7 @@ registerWebsitePreviewTour('link_tools', {
     {
         content: "Set URL.",
         trigger: '.o_we_customize_panel we-input:contains("Your URL") input',
-        // TODO: remove && click 
+        // TODO: remove && click
         run: "edit odoo.com && click(we-title:contains(Your URL))",
     },
     {
@@ -234,7 +235,7 @@ registerWebsitePreviewTour('link_tools', {
             return helpers.drag_and_drop(".oe_menu_editor li:contains('Home') .fa-bars", {
                 position : {
                     top: 20,
-                }, 
+                },
                 relative: true,
             });
         },
@@ -308,8 +309,8 @@ registerWebsitePreviewTour('link_tools', {
         trigger: "#o_link_dialog_url_input",
         run() {
             // TODO: update the tour to use helpers.edit("https://odoo.com")
-            // To see what happens with edit, add `pause:true` to the previous step 
-            // and type yourself https://odoo.com in #o_link_dialog_url_input  
+            // To see what happens with edit, add `pause:true` to the previous step
+            // and type yourself https://odoo.com in #o_link_dialog_url_input
             // The label will be ohttps://
             this.anchor.value = "https://odoo.com";
             this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
@@ -378,9 +379,7 @@ registerWebsitePreviewTour('link_tools', {
     {
         content: "Edit link label",
         trigger: ":iframe .s_text_image p a",
-        run() {
-            // TODO: use run: "click", instead
-            this.anchor.click();
+        run: "click",
             // See SHOPS_STEP_DISABLED. TODO. These steps do not consistently
             // update the link for some reason... to investigate.
             /*
@@ -393,7 +392,6 @@ registerWebsitePreviewTour('link_tools', {
             // Trigger editor's '_onInput' handler, which leads to a history step.
             link.dispatchEvent(new InputEvent('input', {inputType: 'insertText', bubbles: true}));
             */
-        },
     },
     // See SHOPS_STEP_DISABLED. TODO.
     /*

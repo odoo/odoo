@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import tagged
+from odoo.tests import freeze_time, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
@@ -248,6 +248,40 @@ class TestItEdiExport(TestItEdi):
         })
         self.assertEqual(['l10n_it_edi_partner_address_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
 
+    def test_bill_refund_no_reconcile(self):
+        Move = self.env['account.move'].with_company(self.company)
+        purchase_tax = self.env['account.tax'].with_company(self.company).create({
+            'name': 'Tax 4%',
+            'amount': 4.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'invoice_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('+03', )),
+                self.RepartitionLine(100, 'tax', ('+5v', ))),
+            'refund_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('-03', )),
+                self.RepartitionLine(100, 'tax', False))
+        })
+        values = {
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'partner_bank_id': self.test_bank.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Product A",
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(purchase_tax.ids)],
+                })
+            ]
+        }
+
+        bill = Move.create({'move_type': 'in_invoice', **values})
+        credit_note = Move.create({'move_type': 'in_refund', **values})
+        (bill + credit_note).action_post()
+        credit_note.reversed_entry_id = bill
+        self._assert_export_invoice(credit_note, 'credit_note_refund_no_reconcile.xml')
+
     def test_invoice_negative_price(self):
         tax_10 = self.env['account.tax'].create({
             'name': '10% tax',
@@ -318,6 +352,44 @@ class TestItEdiExport(TestItEdi):
         with self.subTest('invoice_different_taxes'):
             self._assert_export_invoice(invoice, 'invoice_negative_price_different_taxes.xml')
 
+    def test_invoice_negative_price_2(self):
+        invoice = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'partner_bank_id': self.test_bank.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'void line',
+                    'quantity': 1,
+                    'price_unit': 0.0,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+                Command.create({
+                    'name': 'standard line 1',
+                    'quantity': 1,
+                    'price_unit': 150.00,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+                Command.create({
+                    'name': 'standard line 2',
+                    'quantity': 1,
+                    'price_unit': 100.00,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+                Command.create({
+                    'name': 'negative line',
+                    'price_unit': -200.0,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+
+        with self.subTest('invoice'):
+            self._assert_export_invoice(invoice, 'invoice_negative_price_2.xml')
+
     def test_invoice_more_decimal_price_unit(self):
         decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
         decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
@@ -345,6 +417,7 @@ class TestItEdiExport(TestItEdi):
         self.italian_partner_a.zip = False  # invalid configuration for partner -> proforma pdf
         invoice = self.env['account.move'].with_company(self.company).create({
             'partner_id': self.italian_partner_a.id,
+            'invoice_date': '2024-03-24',
             'move_type': 'out_invoice',
             'invoice_line_ids': [
                 Command.create({
@@ -461,3 +534,34 @@ class TestItEdiExport(TestItEdi):
         })
         invoice.action_post()
         self._assert_export_invoice(invoice, 'export_foreign_currency_global_discount.xml')
+
+    @freeze_time("2025-02-03")
+    def test_export_invoice_with_two_downpayments(self):
+        if self.env['ir.module.module']._get('sale').state != 'installed':
+            self.skipTest("sale module is not installed")
+
+        sale_order = self.env['sale.order'].with_company(self.company).create({
+            'partner_id': self.italian_partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.service_product.id, 'price_unit': 200.00}),
+            ],
+        })
+        sale_order.action_confirm()
+
+        for amount in (50, 100):
+            self.env['account.move'].with_company(self.company).browse(
+                self.env['sale.advance.payment.inv'].create([{
+                    'advance_payment_method': 'fixed',
+                    'fixed_amount': amount,
+                    'sale_order_ids': [Command.link(sale_order.id)],
+                }]).create_invoices()['res_id']
+            ).action_post()
+
+        invoice = self.env['account.move'].with_company(self.company).browse(
+            self.env['sale.advance.payment.inv'].create([{
+                'advance_payment_method': 'delivered',
+                'sale_order_ids': [Command.link(sale_order.id)],
+            }]).create_invoices()['res_id']
+        )
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'test_export_invoice_with_two_downpayments.xml')

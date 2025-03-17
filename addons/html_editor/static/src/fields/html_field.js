@@ -1,3 +1,5 @@
+import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
+import { stripVersion } from "@html_editor/html_migrations/html_migrations_utils";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import {
     COLLABORATION_PLUGINS,
@@ -11,7 +13,7 @@ import {
 } from "@html_editor/others/embedded_components/embedding_sets";
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, status, useRef, useState } from "@odoo/owl";
+import { Component, markup, status, useRef, useState } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -22,6 +24,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { HtmlViewer } from "./html_viewer";
 import { withSequence } from "@html_editor/utils/resource";
+import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 
 /**
  * Check whether the current value contains nodes that would break
@@ -44,6 +47,7 @@ export class HtmlField extends Component {
     static props = {
         ...standardFieldProps,
         isCollaborative: { type: Boolean, optional: true },
+        collaborativeTrigger: { type: String, optional: true },
         dynamicPlaceholder: { type: Boolean, optional: true, default: false },
         dynamicPlaceholderModelReferenceField: { type: String, optional: true },
         cssReadonlyAssetId: { type: String, optional: true },
@@ -62,6 +66,7 @@ export class HtmlField extends Component {
     };
 
     setup() {
+        this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.mutex = new Mutex();
 
         this.codeViewRef = useRef("codeView");
@@ -78,22 +83,19 @@ export class HtmlField extends Component {
         this.state = useState({
             key: 0,
             showCodeView: false,
-            containsComplexHTML: computeContainsComplexHTML(this.value),
+            containsComplexHTML: computeContainsComplexHTML(
+                this.props.record.data[this.props.name]
+            ),
         });
 
         useRecordObserver((record) => {
             // Reset Wysiwyg when we discard or onchange value
-            const newValue = record.data[this.props.name];
+            const newValue = fixInvalidHTML(record.data[this.props.name]);
             if (!this.isDirty) {
-                const value = normalizeHTML(
-                    newValue.toString(),
-                    this.clearElementToCompare.bind(this)
-                );
+                const value = normalizeHTML(newValue, this.clearElementToCompare.bind(this));
                 if (this.lastValue !== value) {
                     this.state.key++;
-                    this.state.containsComplexHTML = computeContainsComplexHTML(
-                        record.data[this.props.name]
-                    );
+                    this.state.containsComplexHTML = computeContainsComplexHTML(newValue);
                     this.lastValue = value;
                 }
             }
@@ -102,13 +104,21 @@ export class HtmlField extends Component {
             const value = record.data[this.props.dynamicPlaceholderModelReferenceField || "model"];
             // update Dynamic Placeholder reference model
             if (this.props.dynamicPlaceholder && this.editor) {
-                this.editor.shared.updateDphDefaultModel?.(value);
+                this.editor.shared.dynamicPlaceholder?.updateDphDefaultModel(value);
             }
         });
     }
 
     get value() {
-        return this.props.record.data[this.props.name];
+        const value = this.props.record.data[this.props.name];
+        const newVal = this.htmlUpgradeManager.processForUpgrade(fixInvalidHTML(value), {
+            containsComplexHTML: this.state.containsComplexHTML,
+            env: this.env,
+        });
+        if (instanceofMarkup(value)) {
+            return markup(newVal);
+        }
+        return newVal;
     }
 
     get displayReadonly() {
@@ -132,6 +142,7 @@ export class HtmlField extends Component {
         if (this.props.isCollaborative) {
             stripHistoryIds(element);
         }
+        stripVersion(element);
     }
 
     async updateValue(value) {
@@ -144,7 +155,7 @@ export class HtmlField extends Component {
     }
 
     async getEditorContent() {
-        await this.editor.shared.savePendingImages();
+        await this.editor.shared.media?.savePendingImages();
         return this.editor.getElContent();
     }
 
@@ -196,7 +207,7 @@ export class HtmlField extends Component {
         this.state.showCodeView = !this.state.showCodeView;
         if (!this.state.showCodeView && this.editor) {
             this.editor.editable.innerHTML = this.value;
-            this.editor.dispatch("ADD_STEP");
+            this.editor.shared.history.addStep();
         }
     }
 
@@ -214,6 +225,7 @@ export class HtmlField extends Component {
             collaboration: this.props.isCollaborative && {
                 busService: this.busService,
                 ormService: this.ormService,
+                collaborativeTrigger: this.props.collaborativeTrigger,
                 collaborationChannel: {
                     collaborationModelName: this.props.record.resModel,
                     collaborationFieldName: this.props.name,
@@ -234,9 +246,13 @@ export class HtmlField extends Component {
             ...this.props.editorConfig,
         };
 
+        if (!("baseContainer" in config)) {
+            config.baseContainer = "DIV";
+        }
+
         if (this.props.embeddedComponents) {
             // TODO @engagement: fill this array with default/base components
-            config.resources.embeddedComponents = [...MAIN_EMBEDDINGS];
+            config.resources.embedded_components = [...MAIN_EMBEDDINGS];
         }
 
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];
@@ -248,17 +264,21 @@ export class HtmlField extends Component {
         }
         if (this.props.codeview) {
             config.resources = {
-                toolbarCategory: withSequence(100, {
+                user_commands: [
+                    {
+                        id: "codeview",
+                        title: _t("Code view"),
+                        icon: "fa-code",
+                        run: this.toggleCodeView.bind(this),
+                    },
+                ],
+                toolbar_groups: withSequence(100, {
                     id: "codeview",
                 }),
-                toolbarItems: {
+                toolbar_items: {
                     id: "codeview",
-                    category: "codeview",
-                    title: _t("Code view"),
-                    icon: "fa-code",
-                    action: () => {
-                        this.toggleCodeView();
-                    },
+                    groupId: "codeview",
+                    commandId: "codeview",
                 },
             };
         }
@@ -270,6 +290,7 @@ export class HtmlField extends Component {
             value: this.value,
             cssAssetId: this.props.cssReadonlyAssetId,
             hasFullHtml: this.sandboxedPreview,
+            isFixedValue: true,
         };
         if (this.props.embeddedComponents) {
             config.embeddedComponents = [...READONLY_MAIN_EMBEDDINGS];
@@ -308,9 +329,13 @@ export const htmlField = {
         if ("disableFile" in options) {
             editorConfig.disableFile = Boolean(options.disableFile);
         }
+        if ("baseContainer" in options) {
+            editorConfig.baseContainer = options.baseContainer;
+        }
         return {
             editorConfig,
             isCollaborative: options.collaborative,
+            collaborativeTrigger: options.collaborative_trigger,
             dynamicPlaceholder: options.dynamic_placeholder,
             dynamicPlaceholderModelReferenceField:
                 options.dynamic_placeholder_model_reference_field,

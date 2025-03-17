@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-22 15:36+0000\n"
-"PO-Revision-Date: 2024-08-22 15:36+0000\n"
+"POT-Creation-Date: 2025-01-08 08:41+0000\n"
+"PO-Revision-Date: 2025-01-08 08:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,9 +20,7 @@ msgstr ""
 #: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 msgid ""
 "%(value)s is not a valid value for %(field)s.\n"
-"The document number must be entered with a dash (-) and a maximum of 5 "
-"characters for the first part and 8 for the second. The following are "
-"examples of valid numbers:\n"
+"The document number must be entered with a dash (-) and a maximum of 5 characters for the first part and 8 for the second. The following are examples of valid numbers:\n"
 "* 1-1\n"
 "* 0001-00000001\n"
 "* 00001-00000001"
@@ -180,15 +178,29 @@ msgstr ""
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid "<strong>Supplier: </strong>"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 msgid "<strong>VAT Cond: </strong>"
 msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_concept
 #: model:ir.model.fields,help:l10n_ar.field_account_move__l10n_ar_afip_concept
-#: model:ir.model.fields,help:l10n_ar.field_account_payment__l10n_ar_afip_concept
 msgid ""
-"A concept is suggested regarding the type of the products on the invoice. "
+"A concept is suggested regarding the type of the products on the invoice."
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+msgid ""
+"A required tax group could not be found (XML ID: %s).\n"
+"Please reload your chart template in order to reinstall the required tax group.\n"
+"\n"
+"Note: You might have to relink your existing taxes to this new tax group."
 msgstr ""
 
 #. module: l10n_ar
@@ -226,7 +238,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_concept
 #: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_afip_concept
-#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_afip_concept
 msgid "AFIP Concept"
 msgstr ""
 
@@ -249,7 +260,6 @@ msgstr ""
 #: model:ir.model,name:l10n_ar.model_l10n_ar_afip_responsibility_type
 #: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_afip_responsibility_type_id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,field_description:l10n_ar.field_res_company__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,field_description:l10n_ar.field_res_users__l10n_ar_afip_responsibility_type_id
@@ -269,14 +279,12 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_service_end
 #: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_afip_service_end
-#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_afip_service_end
 msgid "AFIP Service End Date"
 msgstr ""
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_service_start
 #: model:ir.model.fields,field_description:l10n_ar.field_account_move__l10n_ar_afip_service_start
-#: model:ir.model.fields,field_description:l10n_ar.field_account_payment__l10n_ar_afip_service_start
 msgid "AFIP Service Start Date"
 msgstr ""
 
@@ -323,6 +331,12 @@ msgstr ""
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
 msgid "Accounting Date: This Year"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_move.py:0
+msgid "Accounting Settings"
 msgstr ""
 
 #. module: l10n_ar
@@ -1032,7 +1046,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_account_move__l10n_ar_afip_responsibility_type_id
-#: model:ir.model.fields,help:l10n_ar.field_account_payment__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_company__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_partner__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_res_users__l10n_ar_afip_responsibility_type_id
@@ -1802,8 +1815,7 @@ msgstr ""
 #. module: l10n_ar
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
-msgid ""
-"Please configure the AFIP Responsibility for \"%s\" in order to continue"
+msgid "Please configure the AFIP Responsibility for \"%s\" in order to continue"
 msgstr ""
 
 #. module: l10n_ar
@@ -1882,8 +1894,8 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_ar.field_l10n_latam_document_type__purchase_aliquots
 msgid ""
 "Raise an error if a vendor bill is miss encoded. \"Not Zero\" means the VAT "
-"taxes are required for the invoices related to this document type, and those "
-"with \"Zero\" means that only \"VAT Not Applicable\" tax is allowed."
+"taxes are required for the invoices related to this document type, and those"
+" with \"Zero\" means that only \"VAT Not Applicable\" tax is allowed."
 msgstr ""
 
 #. module: l10n_ar
@@ -2012,8 +2024,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 msgid ""
-"The document number can not be changed for this journal, you can only modify "
-"the POS number if there is not posted (or posted before) invoices"
+"The document number can not be changed for this journal, you can only modify"
+" the POS number if there is not posted (or posted before) invoices"
 msgstr ""
 
 #. module: l10n_ar
@@ -2037,6 +2049,14 @@ msgid ""
 "The tax credit specified in this voucher may only be computed for purposes "
 "of the Tax Support and Inclusion Regime for Small Taxpayers of Law No. "
 "27,618."
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_tax_group.py:0
+msgid ""
+"The tax group '%s' can't be removed, since it is required in the Argentinian"
+" localization."
 msgstr ""
 
 #. module: l10n_ar

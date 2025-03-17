@@ -11,6 +11,7 @@
                     t-as="filter"
                     t-foreach="filters"
                     t-key="filter.id"
+                    showTitle="true"
                 />
             </t>
             <t t-set-slot="control-panel-navigation-additional" t-if="!state.activeDashboard?.isSample">
@@ -86,7 +87,7 @@
                         </div>
                         <t t-set="comp" t-value="dashboardButton"/>
                         <t t-if="comp">
-                            <t t-component="comp" t-props="{ onClick: () => this.editDashboard(dashboard.id) }"/>
+                            <t t-component="comp" t-props="{ dashboardId: dashboard.id, onClick: this.editDashboard.bind(this) }"/>
                         </t>
                     </li>
                 </ul>

@@ -3,7 +3,6 @@
 import { clickOnSave, insertSnippet, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('website_multi_edition', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

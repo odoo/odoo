@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
-"PO-Revision-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"PO-Revision-Date: 2025-01-27 13:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -844,7 +844,7 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "Combo products can't have attributes"
+msgid "Combo products can't have attributes."
 msgstr ""
 
 #. module: product
@@ -937,6 +937,14 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
 msgstr ""
 
 #. module: product
@@ -2242,6 +2250,12 @@ msgid ""
 msgstr ""
 
 #. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
 msgstr ""
@@ -3384,6 +3398,13 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"This product is part of a combo, so its type can't be changed to \"combo\"."
+msgstr ""
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 msgid ""
 "This rounding precision is higher than the Decimal Accuracy (%(digits)s digits).\n"
@@ -3486,6 +3507,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
 msgstr ""
 
 #. module: product

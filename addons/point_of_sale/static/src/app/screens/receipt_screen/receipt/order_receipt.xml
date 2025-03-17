@@ -4,7 +4,7 @@
         <div class="pos-receipt p-2">
             <t t-set="showTaxGroupLabels" t-value="doesAnyOrderlineHaveTaxLabel()"/>
             <ReceiptHeader data="props.data.headerData" />
-            <OrderWidget lines="props.data.orderlines" t-slot-scope="scope" generalNote="props.data.generalNote or ''" screenName="props.data.screenName">
+            <OrderWidget t-if="props.data.orderlines?.length" lines="props.data.orderlines" t-slot-scope="scope" generalNote="props.data.generalNote or ''" screenName="props.data.screenName">
                 <t t-set="line" t-value="scope.line"/>
                 <Orderline basic_receipt="props.basic_receipt" line="omit(scope.line, 'customerNote')" class="{ 'px-0': true }" showTaxGroupLabels="showTaxGroupLabels">
                     <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
@@ -14,43 +14,47 @@
                 </Orderline>
             </OrderWidget>
             <t t-if="!props.basic_receipt">
-                <div t-if="props.data.tax_details.length > 0" class="pos-receipt-taxes">
+                <t t-set="taxTotals" t-value="props.data.taxTotals"/>
+                <div t-if="taxTotals and taxTotals.has_tax_groups" class="pos-receipt-taxes">
                     <div class="text-center">--------------------------------</div>
-                    <div class="d-flex">
-                        <span t-if="showTaxGroupLabels" class="me-2" style="visibility: hidden;">A</span>
-                        <span class="fw-bolder">Untaxed Amount</span>
-                        <span t-esc="props.formatCurrency(props.data.total_without_tax)" class="ms-auto"/>
-                    </div>
+                    <t t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name">
+                        <div class="d-flex">
+                            <span t-if="showTaxGroupLabels" class="me-2" style="visibility: hidden;">A</span>
+                            <span class="fw-bolder text-nowrap mw-100" t-out="subtotal.name"/>
+                            <span t-esc="props.formatCurrency(subtotal.base_amount_currency)" class="ms-auto"/>
+                        </div>
 
-                    <div t-foreach="props.data.tax_details" t-as="tax" t-key="tax.id" class="d-flex">
-                        <t t-if="showTaxGroupLabels">
-                            <span t-if="tax.tax_group_id.pos_receipt_label" t-esc="tax.tax_group_id.pos_receipt_label" class="me-2"/>
-                            <span t-else="" class="me-2" style="visibility: hidden;">A</span>
-                        </t>
-                        <span>
-                            <span t-esc="tax.name"/>
-                            on
-                            <span t-esc="props.formatCurrency(tax.base)"/>
-                        </span>
-                        <span t-esc="props.formatCurrency(tax.amount)" class="ms-auto"/>
-                    </div>
+                        <div t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id" class="d-flex">
+                            <t t-if="showTaxGroupLabels">
+                                <span t-if="tax_group.group_label" t-out="tax_group.group_label" class="me-2"/>
+                                <span t-else="" class="me-2" style="visibility: hidden;">A</span>
+                            </t>
+                            <span>
+                                <span t-esc="tax_group.group_name"/>
+                                <t t-if="!taxTotals.same_tax_base">
+                                    on
+                                    <span t-esc="props.formatCurrency(tax_group.base_amount_currency)"/>
+                                </t>
+                            </span>
+                            <span t-esc="props.formatCurrency(tax_group.tax_amount_currency)" class="ms-auto"/>
+                        </div>
+                    </t>
                 </div>
 
-        <!-- Total -->
                 <div class="text-center">--------------------------------</div>
-                <div class="pos-receipt-amount">
-                    TOTAL
-                    <span t-esc="props.formatCurrency(props.data.amount_total)" class="pos-receipt-right-align"/>
+                <div class="pos-receipt-amount receipt-total">
+                    <t t-out="props.data.label_total"/>
+                    <span t-esc="props.formatCurrency(taxTotals.order_sign * taxTotals.order_total)" class="pos-receipt-right-align"/>
                 </div>
-                <t t-if="props.data.rounding_applied">
-                    <div class="pos-receipt-amount">
-                    Rounding
-                    <span t-esc='props.formatCurrency(props.data.rounding_applied)' class="pos-receipt-right-align"/>
+                <t t-if="props.data.show_rounding">
+                    <div class="pos-receipt-amount receipt-rounding">
+                        <t t-out="props.data.label_rounding"/>
+                        <span t-esc="props.formatCurrency(taxTotals.order_sign * taxTotals.order_rounding)" class="pos-receipt-right-align"/>
                     </div>
-                    <div class="pos-receipt-amount">
-                    To Pay
-                    <span t-esc='props.formatCurrency(props.data.amount_total + props.data.rounding_applied)' class="pos-receipt-right-align"/>
-                </div>
+                    <div class="pos-receipt-amount receipt-to-pay">
+                        To Pay
+                        <span t-esc="props.formatCurrency(taxTotals.order_sign * (taxTotals.order_total + taxTotals.order_rounding))" class="pos-receipt-right-align"/>
+                    </div>
                 </t>
 
                 <!-- Payment Lines -->
@@ -60,21 +64,24 @@
                     <span t-esc="props.formatCurrency(line.amount)" class="pos-receipt-right-align"/>
                 </div>
 
-                <div  t-if="props.data.change != 0" class="pos-receipt-amount receipt-change">
-                    CHANGE
-                    <span t-esc="props.formatCurrency(props.data.change)" class="pos-receipt-right-align"/>
+                <div t-if="props.data.show_change" class="pos-receipt-amount receipt-change">
+                    <t t-out="props.data.label_change"/>
+                    <span t-esc="props.formatCurrency(props.data.order_change)" class="pos-receipt-right-align"/>
                 </div>
 
                 <!-- Extra Payment Info -->
 
                 <t t-if="props.data.total_discount">
                     <div class="text-center">
-                        Discounts
+                        <t t-out="props.data.label_discounts"/>
                         <span t-esc="props.formatCurrency(props.data.total_discount)" class="pos-receipt-right-align"/>
                     </div>
                 </t>
 
                 <div class="before-footer" />
+
+                <!-- This prevents missing receipt elements in modules like `l10n_fr_pos_cert`, `l10n_co_pos`, etc. -->
+                <div class="pos-receipt-order-data" />
 
                 <div t-if="props.data.pos_qr_code">
                     <br/>
@@ -88,14 +95,14 @@
                 </div>
 
                 <div t-if="props.data.pos_qr_code">
-                    <div class="pos-receipt-order-data">
+                    <div class="unique-code pos-receipt-order-data">
                         Unique Code: <t t-esc="props.data.ticket_code"/>
                     </div>
                 </div>
 
                 <div t-if="['url', 'qr_code_and_url'].includes(props.data.headerData.company.point_of_sale_ticket_portal_url_display_mode) and props.data.pos_qr_code">
-                    <div class="pos-receipt-order-data" t-attf-class="{{ props.data.ticket_portal_url_display_mode === 'qr_code_and_url' ? 'mt-3' : '' }}">
-                        Portal URL: <t t-out="props.data.base_url"/>/pos/ticket
+                    <div class="portal-url pos-receipt-order-data" t-attf-class="{{ props.data.ticket_portal_url_display_mode === 'qr_code_and_url' ? 'mt-3' : '' }}">
+                        Portal URL: <t t-esc="getPortalURL()"/>
                     </div>
                 </div>
             </t>

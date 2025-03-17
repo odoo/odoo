@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_error_website', {
-    test: true,
     url: '/test_error_view',
     steps: () => [
     // RPC ERROR

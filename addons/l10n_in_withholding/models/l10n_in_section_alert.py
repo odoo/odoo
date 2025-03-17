@@ -32,7 +32,7 @@ class L10nInSectionAlert(models.Model):
     @api.depends('tax_source_type')
     def _compute_display_name(self):
         for record in self:
-            record.display_name = f"{record.tax_source_type.upper()} {record.name}"
+            record.display_name = f"{record.tax_source_type.upper()} {record.name or ''}" if record.tax_source_type else f"{record.name or ''}"
 
     def _get_warning_message(self):
         warning = ", ".join(self.mapped('name'))

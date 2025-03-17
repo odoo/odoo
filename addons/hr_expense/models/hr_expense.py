@@ -79,7 +79,7 @@ class HrExpense(models.Model):
     attachment_ids = fields.One2many(
         comodel_name='ir.attachment',
         inverse_name='res_id',
-        domain="[('res_model', '=', 'hr.expense')]",
+        domain=[('res_model', '=', 'hr.expense')],
         string="Attachments",
     )
     state = fields.Selection(
@@ -103,6 +103,7 @@ class HrExpense(models.Model):
         domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]",
         readonly=True,
         copy=False,
+        index=True,
     )
     approved_by = fields.Many2one(comodel_name='res.users', string="Approved By", related='sheet_id.user_id', tracking=False)
     approved_on = fields.Datetime(string="Approved On", related='sheet_id.approval_date')
@@ -920,6 +921,7 @@ class HrExpense(models.Model):
                 'balance': to_update['balance'],
                 'currency_id': base_line['currency_id'].id,
                 'partner_id': self.vendor_id.id,
+                'quantity': self.quantity,
             }
             move_lines.append(base_move_line)
 
@@ -949,6 +951,7 @@ class HrExpense(models.Model):
             'partner_id': self.vendor_id.id,
             'currency_id': self.currency_id.id,
             'payment_method_line_id': payment_method_line.id,
+            'company_id': self.company_id.id,
         }
         move_vals = {
             **self.sheet_id._prepare_move_vals(),
@@ -985,8 +988,8 @@ class HrExpense(models.Model):
         if self.product_id:
             account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
         else:
-            field = self.env['property.category']._fields['property_account_expense_categ_id']
-            account = field.get_company_dependent_fallback(self.env['property.category'])
+            field = self.env['product.category']._fields['property_account_expense_categ_id']
+            account = field.get_company_dependent_fallback(self.env['product.category'])
 
         if account:
             return account

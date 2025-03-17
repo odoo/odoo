@@ -29,29 +29,29 @@ const commonSteps = [
         run: "click",
     },
     {
-        trigger: "textarea#message_0",
+        trigger: ".modal textarea#message_0",
         run: "edit Step 1",
     },
     {
-        trigger: "button:contains(Save & New):enabled",
+        trigger: ".modal button:contains(Save & New):enabled",
         run: "click",
     },
     {
         trigger: 'tr:contains("Step 1")',
     },
     {
-        trigger: "textarea#message_0",
+        trigger: ".modal textarea#message_0",
         run: "edit Step 2",
     },
     {
-        trigger: "button:contains(Save & New):enabled",
+        trigger: ".modal button:contains(Save & New):enabled",
         run: "click",
     },
     {
         trigger: 'tr:contains("Step 2")',
     },
     {
-        trigger: "textarea#message_0",
+        trigger: ".modal textarea#message_0",
         run: "edit Step 3",
     },
 ];
@@ -60,18 +60,16 @@ const commonSteps = [
  * Simply create a few steps in order to check the sequences.
  */
 registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_tour", {
-    test: true,
     url: "/odoo",
     steps: () => [
         ...commonSteps,
         {
-            trigger: 'button:contains("Save & Close")',
+            trigger: ".modal button:contains(Save & Close)",
             run: "click",
         },
         {
             trigger: "body.o_web_client:not(.modal-open)",
         },
-        ...stepUtils.discardForm(),
     ],
 });
 
@@ -79,19 +77,18 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_tour
  * Same as above, with an extra drag&drop at the end.
  */
 registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with_move_tour", {
-    test: true,
     url: "/odoo",
     steps: () => [
         ...commonSteps,
         {
-            trigger: 'button:contains("Save & New")',
+            trigger: ".modal button:contains(Save & New)",
             run: "click",
         },
         {
             trigger: 'tr:contains("Step 3")',
         },
         {
-            trigger: "textarea#message_0",
+            trigger: ".modal textarea#message_0",
             run: "edit Step 4",
         },
         {
@@ -102,11 +99,11 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
             trigger: 'tr:contains("Step 4")',
         },
         {
-            trigger: "textarea#message_0",
+            trigger: ".modal textarea#message_0",
             run: "edit Step 5",
         },
         {
-            trigger: 'button:contains("Save & Close")',
+            trigger: ".modal button:contains(Save & Close)",
             run: "click",
         },
         {
@@ -121,11 +118,11 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
             run: "click",
         },
         {
-            trigger: "textarea#message_0",
+            trigger: ".modal textarea#message_0",
             run: "edit Step 6",
         },
         {
-            trigger: 'button:contains("Save & Close")',
+            trigger: ".modal button:contains(Save & Close)",
             run: "click",
         },
         {
@@ -134,6 +131,5 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         {
             trigger: 'tr:contains("Step 6")',
         },
-        ...stepUtils.discardForm(),
     ],
 });

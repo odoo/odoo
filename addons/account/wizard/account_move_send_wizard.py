@@ -58,7 +58,7 @@ class AccountMoveSendWizard(models.TransientModel):
     mail_lang = fields.Char(compute='_compute_mail_lang')
     mail_partner_ids = fields.Many2many(
         comodel_name='res.partner',
-        string="Recipients",
+        string="To",
         compute='_compute_mail_subject_body_partners',
         store=True,
         readonly=False,
@@ -127,7 +127,7 @@ class AccountMoveSendWizard(models.TransientModel):
         2. email,
         3. manual.
         """
-        methods = self.env['res.partner']._fields['invoice_sending_method'].selection
+        methods = self.env['ir.model.fields'].get_field_selection('res.partner', 'invoice_sending_method')
         for wizard in self:
             preferred_method = self._get_default_sending_method(wizard.move_id)
             need_fallback = not self._is_applicable_to_move(preferred_method, wizard.move_id)
@@ -158,6 +158,7 @@ class AccountMoveSendWizard(models.TransientModel):
                 for edi_key in self._get_default_extra_edis(wizard.move_id)
             }
 
+    @api.depends('move_id')
     def _compute_invoice_edi_format(self):
         for wizard in self:
             wizard.invoice_edi_format = self._get_default_invoice_edi_format(wizard.move_id)
@@ -167,6 +168,7 @@ class AccountMoveSendWizard(models.TransientModel):
         for wizard in self:
             wizard.pdf_report_id = self._get_default_pdf_report_id(wizard.move_id)
 
+    @api.depends('move_id')
     def _compute_display_pdf_report_id(self):
         # show pdf template menu if there are more than 1 template available and there is at least one move that needs a pdf
         available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
@@ -203,8 +205,13 @@ class AccountMoveSendWizard(models.TransientModel):
         for wizard in self:
             manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
             wizard.mail_attachments_widget = (
-                    self._get_default_mail_attachments_widget(wizard.move_id, wizard.mail_template_id, extra_edis=wizard.extra_edis or {})
-                    + manual_attachments_data
+                self._get_default_mail_attachments_widget(
+                    wizard.move_id,
+                    wizard.mail_template_id,
+                    extra_edis=wizard.extra_edis or {},
+                    pdf_report=wizard.pdf_report_id,
+                )
+                + manual_attachments_data
             )
 
     # -------------------------------------------------------------------------
@@ -237,8 +244,8 @@ class AccountMoveSendWizard(models.TransientModel):
             'invoice_edi_format': self.invoice_edi_format,
             'extra_edis': self.extra_edis or [],
             'pdf_report': self.pdf_report_id,
-            'author_user_id': self.env.user.partner_id.id,
-            'author_partner_id': self.env.user.id,
+            'author_user_id': self.env.user.id,
+            'author_partner_id': self.env.user.partner_id.id,
         }
         if self.sending_methods and 'email' in self.sending_methods:
             send_settings.update({

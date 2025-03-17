@@ -316,12 +316,14 @@ test("can be the UI active element", async () => {
     await makeDialogMockEnv();
     const parent = await mountWithCleanup(Parent);
     destroy(parent);
+    await Promise.resolve();
     expect(getService("ui").activeElement).toBe(document, {
         message: "UI owner should be reset to the default (document)",
     });
 });
 
-test.tags("mobile")("dialog can't be moved on small screen", async () => {
+test.tags("mobile");
+test("dialog can't be moved on small screen", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static components = { Dialog };
@@ -355,7 +357,8 @@ test.tags("mobile")("dialog can't be moved on small screen", async () => {
     });
 });
 
-test.tags("desktop")("dialog can be moved", async () => {
+test.tags("desktop");
+test("dialog can be moved", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];
@@ -385,7 +388,8 @@ test.tags("desktop")("dialog can be moved", async () => {
     });
 });
 
-test.tags("desktop")("dialog's position is reset on resize", async () => {
+test.tags("desktop");
+test("dialog's position is reset on resize", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];

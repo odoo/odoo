@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add("show_expense_receipt_tour", {
-    test: true,
     url: "/odoo",
     steps: () => [
         ...stepUtils.goToAppSteps("hr_expense.menu_hr_expense_root", "Go to the Expenses app"),
@@ -18,6 +17,10 @@ registry.category("web_tour.tours").add("show_expense_receipt_tour", {
             content: "Go to a report",
             trigger: '.o_data_row .o_data_cell[name="payment_state"]',
             run: "click",
+        },
+        {
+            content: "Wait chatter is loaded to avoid lost focus on the next step",
+            trigger: ".o-mail-Chatter:contains(the conversation is empty)",
         },
         {
             content: "Click on an expense line 2",

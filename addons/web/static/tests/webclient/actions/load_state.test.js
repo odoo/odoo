@@ -22,7 +22,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
-import { router, routerBus, startRouter } from "@web/core/browser/router";
+import { router, routerBus } from "@web/core/browser/router";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { _t } from "@web/core/l10n/translation";
@@ -54,17 +54,12 @@ function logHistoryInteractions() {
     });
 }
 
-/**
- * @param {{ env: import("@web/env").OdooEnv }} [options]
- */
-
 defineActions([
     {
         id: 1,
         xml_id: "action_1",
         name: "Partners Action 1",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
     {
@@ -77,8 +72,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -90,7 +83,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -103,7 +95,6 @@ defineActions([
         name: "Create a Partner",
         res_model: "partner",
         target: "new",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
     {
@@ -131,17 +122,9 @@ defineActions([
 ]);
 
 defineMenus([
-    {
-        id: "root",
-        name: "root",
-        appID: "root",
-        children: [
-            // id:0 is a hack to not load anything at webClient mount
-            { id: 0, children: [], name: "UglyHack", appID: 0, xmlid: "menu_0" },
-            { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" },
-            { id: 2, children: [], name: "App2", appID: 2, actionID: 1002, xmlid: "menu_2" },
-        ],
-    },
+    { id: 0 }, // prevents auto-loading the first action
+    { id: 1, actionID: 1001 },
+    { id: 2, actionID: 1002 },
 ]);
 
 class Partner extends models.Model {
@@ -208,7 +191,6 @@ beforeEach(() => {
         origin: "http://example.com",
     });
     redirect("/odoo");
-    startRouter();
 });
 
 describe(`new urls`, () => {
@@ -219,6 +201,7 @@ describe(`new urls`, () => {
         await mountWebClient();
         expect(`.test_client_action`).toHaveCount(1);
         expect(`.o_menu_brand`).toHaveText("App1");
+        expect(browser.sessionStorage.getItem("menu_id")).toBe("1");
         expect(browser.location.href).toBe("http://example.com/odoo/action-1001", {
             message: "url did not change",
         });
@@ -234,6 +217,7 @@ describe(`new urls`, () => {
         await mountWebClient();
         expect(`.test_client_action`).toHaveText("ClientAction_Id 2");
         expect(`.o_menu_brand`).toHaveText("App2");
+        expect(browser.sessionStorage.getItem("menu_id")).toBe("2");
         expect(browser.location.href).toBe("http://example.com/odoo/action-1002", {
             message: "url now points to the default action of the menu",
         });
@@ -247,6 +231,7 @@ describe(`new urls`, () => {
         await mountWebClient();
         expect(`.test_client_action`).toHaveText("ClientAction_Id 1");
         expect(`.o_menu_brand`).toHaveText("App2");
+        expect(browser.sessionStorage.getItem("menu_id")).toBe("2");
         expect(router.current).toEqual({
             action: 1001,
             actionStack: [
@@ -260,6 +245,24 @@ describe(`new urls`, () => {
             message: "menu is removed from url",
         });
         expect.verifySteps(["pushState http://example.com/odoo/action-1001"]);
+    });
+
+    test("menu fallback", async () => {
+        class ClientAction extends Component {
+            static template = xml`<div class="o_client_action_test">Hello World</div>`;
+            static path = "test";
+            static props = ["*"];
+        }
+        actionRegistry.add("HelloWorldTest", ClientAction);
+        browser.sessionStorage.setItem("menu_id", 2);
+        redirect("/odoo/test");
+        logHistoryInteractions();
+        await mountWebClient();
+
+        expect(`.o_menu_brand`).toHaveText("App2");
+        expect.verifySteps([
+            "Update the state without updating URL, nextState: actionStack,action",
+        ]);
     });
 
     test(`initial loading with action id`, async () => {
@@ -378,16 +381,19 @@ describe(`new urls`, () => {
     });
 
     test(`supports opening action in dialog`, async () => {
-        defineActions([
-            {
-                id: 1099,
-                xml_id: "wowl.client_action",
-                tag: "__test__client__action__",
-                target: "new",
-                type: "ir.actions.client",
-                params: { description: "xmlId" },
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 1099,
+                    xml_id: "wowl.client_action",
+                    tag: "__test__client__action__",
+                    target: "new",
+                    type: "ir.actions.client",
+                    params: { description: "xmlId" },
+                },
+            ],
+            { mode: "replace" }
+        );
         // FIXME this is super weird: we open an action in target new from the url?
         redirect("/odoo/action-wowl.client_action");
         logHistoryInteractions();
@@ -692,32 +698,6 @@ describe(`new urls`, () => {
     test(`properly load records with existing first APP`, async () => {
         // simulate a real scenario with a first app (e.g. Discuss), to ensure that we don't
         // fallback on that first app when only a model and res_id are given in the url
-        defineActions([
-            {
-                id: "root",
-                name: "root",
-                appID: "root",
-                children: [
-                    {
-                        id: 1,
-                        children: [],
-                        name: "App1",
-                        appID: 1,
-                        actionID: 1001,
-                        xmlid: "menu_1",
-                    },
-                    {
-                        id: 2,
-                        children: [],
-                        name: "App2",
-                        appID: 2,
-                        actionID: 1002,
-                        xmlid: "menu_2",
-                    },
-                ],
-            },
-        ]);
-
         redirect("/odoo/m-partner/2");
         logHistoryInteractions();
         stepAllNetworkCalls();
@@ -935,15 +915,7 @@ describe(`new urls`, () => {
     });
 
     test(`load state supports being given menu_id alone`, async () => {
-        defineMenus([
-            {
-                id: 666,
-                children: [],
-                name: "App1",
-                appID: 1,
-                actionID: 1,
-            },
-        ]);
+        defineMenus([{ id: 666, actionID: 1 }]);
 
         redirect("/odoo?menu_id=666");
         logHistoryInteractions();
@@ -971,7 +943,6 @@ describe(`new urls`, () => {
                 id: 999,
                 name: "Partner",
                 res_model: "partner",
-                type: "ir.actions.act_window",
                 views: [
                     [false, "list"],
                     [666, "form"],
@@ -1006,7 +977,6 @@ describe(`new urls`, () => {
                 id: 1000,
                 name: "Partner",
                 res_model: "partner",
-                type: "ir.actions.act_window",
                 views: [
                     [false, "list"],
                     [false, "form"],
@@ -1230,34 +1200,34 @@ describe(`new urls`, () => {
     });
 
     test(`initial loading with multiple path segments loads the breadcrumbs`, async () => {
-        defineActions([
-            {
-                id: 27,
-                xml_id: "action_27",
-                name: "Partners Action 27",
-                res_model: "partner",
-                mobile_view_mode: "kanban",
-                type: "ir.actions.act_window",
-                path: "partners",
-                views: [
-                    [false, "list"],
-                    [1, "kanban"],
-                    [false, "form"],
-                ],
-            },
-            {
-                id: 28,
-                xml_id: "action_28",
-                name: "Partners Action 28",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [
-                    [1, "kanban"],
-                    [2, "list"],
-                    [false, "form"],
-                ],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 27,
+                    xml_id: "action_27",
+                    name: "Partners Action 27",
+                    res_model: "partner",
+                    path: "partners",
+                    views: [
+                        [false, "list"],
+                        [1, "kanban"],
+                        [false, "form"],
+                    ],
+                },
+                {
+                    id: 28,
+                    xml_id: "action_28",
+                    name: "Partners Action 28",
+                    res_model: "partner",
+                    views: [
+                        [1, "kanban"],
+                        [2, "list"],
+                        [false, "form"],
+                    ],
+                },
+            ],
+            { mode: "replace" }
+        );
 
         redirect("/odoo/partners/2/action-28/1");
         logHistoryInteractions();
@@ -1291,7 +1261,7 @@ describe(`new urls`, () => {
         ]);
         expect(`.o-overlay-container .dropdown-menu a`).toHaveAttribute(
             "data-tooltip",
-            'Back to "Partners Action 27"'
+            "Back to “Partners Action 27”"
         );
         expect(queryAllAttributes(".o_breadcrumb li.breadcrumb-item a", "data-tooltip")).toEqual([
             'Back to "Second record" form',
@@ -1430,6 +1400,7 @@ describe(`new urls`, () => {
         expect.verifySteps([
             'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
             'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"active_model":"partner","active_id":1,"active_ids":[1]}}',
+            "get menu_id-null",
         ]);
     });
 });
@@ -1521,16 +1492,19 @@ describe(`legacy urls`, () => {
     });
 
     test(`supports opening action in dialog`, async () => {
-        defineActions([
-            {
-                id: 1099,
-                xml_id: "wowl.client_action",
-                tag: "__test__client__action__",
-                target: "new",
-                type: "ir.actions.client",
-                params: { description: "xmlId" },
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 1099,
+                    xml_id: "wowl.client_action",
+                    tag: "__test__client__action__",
+                    target: "new",
+                    type: "ir.actions.client",
+                    params: { description: "xmlId" },
+                },
+            ],
+            { mode: "replace" }
+        );
         redirect("/web#action=wowl.client_action");
 
         await mountWebClient();
@@ -1599,32 +1573,6 @@ describe(`legacy urls`, () => {
     test(`properly load records with existing first APP`, async () => {
         // simulate a real scenario with a first app (e.g. Discuss), to ensure that we don't
         // fallback on that first app when only a model and res_id are given in the url
-        defineActions([
-            {
-                id: "root",
-                name: "root",
-                appID: "root",
-                children: [
-                    {
-                        id: 1,
-                        children: [],
-                        name: "App1",
-                        appID: 1,
-                        actionID: 1001,
-                        xmlid: "menu_1",
-                    },
-                    {
-                        id: 2,
-                        children: [],
-                        name: "App2",
-                        appID: 2,
-                        actionID: 1002,
-                        xmlid: "menu_2",
-                    },
-                ],
-            },
-        ]);
-
         redirect("/web#id=2&model=partner");
         stepAllNetworkCalls();
 
@@ -1708,6 +1656,8 @@ describe(`legacy urls`, () => {
         onRpc("web_read", () => Promise.reject());
 
         await mountWebClient();
+
+        expect.verifyErrors([Error]);
         expect(`.o_form_view`).toHaveCount(0);
         expect(`.o_list_view`).toHaveCount(1); // Show the lazy loaded list view
 
@@ -1765,9 +1715,7 @@ describe(`legacy urls`, () => {
         defineMenus([
             {
                 id: 666,
-                children: [],
                 name: "App1",
-                appID: 1,
                 actionID: 1,
             },
         ]);
@@ -1790,18 +1738,20 @@ describe(`legacy urls`, () => {
     });
 
     test(`load state: in a form view, no id in initial state`, async () => {
-        defineActions([
-            {
-                id: 999,
-                name: "Partner",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [
-                    [false, "list"],
-                    [666, "form"],
-                ],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 999,
+                    name: "Partner",
+                    res_model: "partner",
+                    views: [
+                        [false, "list"],
+                        [666, "form"],
+                    ],
+                },
+            ],
+            { mode: "replace" }
+        );
 
         redirect("/web#action=999&view_type=form&id=");
         stepAllNetworkCalls();
@@ -1822,18 +1772,20 @@ describe(`legacy urls`, () => {
     test(`load state: in a form view, wrong id in the state`, async () => {
         expect.errors(1);
 
-        defineActions([
-            {
-                id: 1000,
-                name: "Partner",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [
-                    [false, "list"],
-                    [false, "form"],
-                ],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 1000,
+                    name: "Partner",
+                    res_model: "partner",
+                    views: [
+                        [false, "list"],
+                        [false, "form"],
+                    ],
+                },
+            ],
+            { mode: "replace" }
+        );
 
         redirect("/web#action=1000&view_type=form&id=999");
 

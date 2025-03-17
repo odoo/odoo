@@ -88,6 +88,13 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
             for account in self.accounts
         }
 
+        # Also set up different names for the accounts in various languages
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+        self.accounts[0].with_context({'lang': 'fr_FR'}).name = "Mon premier compte"
+        self.accounts[2].with_context({'lang': 'fr_FR'}).name = "Mon troisième compte"
+        self.accounts[2].with_context({'lang': 'nl_NL'}).name = "Mijn derde conto"
+
         # 2. Check that the merge wizard groups accounts 1 and 3 together, and accounts 2 and 4 together.
         wizard = self._create_account_merge_wizard(self.accounts)
         expected_wizard_line_vals = [
@@ -175,6 +182,10 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
         self.assertEqual(self.env['account.chart.template'].with_company(self.company_2).ref('test_account_3'), self.accounts[0])
         self.assertEqual(self.env['account.chart.template'].with_company(self.company_2).ref('test_account_4'), self.accounts[1])
 
+        # 8. Check that the name translations are merged correctly
+        self.assertRecordValues(self.accounts[0].with_context({'lang': 'fr_FR'}), [{'name': "Mon premier compte"}])
+        self.assertRecordValues(self.accounts[0].with_context({'lang': 'nl_NL'}), [{'name': "Mijn derde conto"}])
+
     def test_cannot_merge_same_company(self):
         """ Check that you cannot merge two accounts belonging to the same company. """
         self.accounts[1].account_type = 'asset_receivable'
@@ -260,3 +271,14 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
         ]
 
         self.assertRecordValues(wizard.wizard_line_ids, expected_wizard_line_vals)
+
+    def test_merge_accounts_company_dependent_related(self):
+        payable_accounts = self.env['account.account'].search([('name', '=', 'Account Payable')])
+        self.assertEqual(len(payable_accounts), 2)
+        wizard = self._create_account_merge_wizard(payable_accounts)
+        wizard.action_merge()
+        payable_accounts = self.env['account.account'].search([('name', '=', 'Account Payable')])
+        self.assertEqual(len(payable_accounts), 1)
+        for company in self.env.companies:
+            partner_payable_account = self.partner_a.with_company(company).property_account_payable_id.exists()
+            self.assertEqual(partner_payable_account, payable_accounts)

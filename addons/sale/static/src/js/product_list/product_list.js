@@ -20,6 +20,10 @@ export class ProductList extends Component {
         this.optionalProductsTitle = _t("Add optional products");
     }
 
+    get totalMessage() {
+        return _t("Total: %s", this.getFormattedTotal());
+    }
+
     /**
      * Return the total of the product in the list, in the currency of the `sale.order`.
      *

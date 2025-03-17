@@ -10,7 +10,7 @@ from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, cleanup_xml_node, float_is_zero
+from odoo.tools import float_compare, float_repr, cleanup_xml_node, float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -129,7 +129,7 @@ class AccountMove(models.Model):
         for move in others:
             move.l10n_it_edi_is_self_invoice = False
         if purchases:
-            it_tax_report_vj_lines = self.env['account.report.line'].search([
+            it_tax_report_vj_lines = self.env['account.report.line'].sudo().search([
                 ('report_id.country_id.code', '=', 'IT'),
                 ('code', '=like', 'VJ%')
             ])
@@ -187,6 +187,12 @@ class AccountMove(models.Model):
                 attachments = attachments - l10n_it_attachments
                 result = super(AccountMove, self.with_context(disable_onchange_name_predictive=True))._extend_with_attachments(l10n_it_attachments, new)
         return result or super()._extend_with_attachments(attachments, new)
+
+    def _get_fields_to_detach(self):
+        # EXTENDS account
+        fields_list = super()._get_fields_to_detach()
+        fields_list.append('l10n_it_edi_attachment_file')
+        return fields_list
 
     # -------------------------------------------------------------------------
     # Business actions
@@ -247,6 +253,37 @@ class AccountMove(models.Model):
             move.l10n_it_edi_state = False
         return super().button_draft()
 
+    def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
+        # EXTENDS 'account'
+        if filetype == 'fatturapa':
+            if fatturapa_attachment := self.l10n_it_edi_attachment_id:
+                return {
+                    'filename': fatturapa_attachment.name,
+                    'filetype': 'xml',
+                    'content': fatturapa_attachment.raw,
+                }
+        return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
+
+    def get_extra_print_items(self):
+        # EXTENDS 'account' - add possibility to download all FatturaPA XML files
+        print_items = super().get_extra_print_items()
+        if self.l10n_it_edi_attachment_id:
+            print_items.append({
+                'key': 'download_xml_fatturapa',
+                'description': _('XML FatturaPA'),
+                **self.action_invoice_download_fatturapa(),
+            })
+        return print_items
+
+    def action_invoice_download_fatturapa(self):
+        if invoices_with_fatturapa := self.filtered('l10n_it_edi_attachment_id'):
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/account/download_invoice_documents/{",".join(map(str, invoices_with_fatturapa.ids))}/fatturapa',
+                'target': 'download',
+            }
+        return False
+
     # -------------------------------------------------------------------------
     # Helpers
     # -------------------------------------------------------------------------
@@ -292,7 +329,7 @@ class AccountMove(models.Model):
 
             # Discount.
             discount_list = it_values['sconto_maggiorazione_list'] = []
-            delta_discount = base_line['discount_amount'] - base_line['discount_amount_before_dispatching']
+            delta_discount = base_line.get('discount_amount', 0.0) - base_line.get('discount_amount_before_dispatching', 0.0)
             if discount:
                 discount_list.append({
                     'tipo': 'SC' if discount > 0 else 'MG',
@@ -443,13 +480,14 @@ class AccountMove(models.Model):
         AccountTax = self.env['account.tax']
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
 
+        downpayment_lines = []
         # Prepare for '_dispatch_negative_lines'
         for base_line in base_lines:
             tax_details = base_line['tax_details']
             discount = base_line['discount']
             price_unit = base_line['price_unit']
             quantity = base_line['quantity']
-            price_subtotal = base_line['price_subtotal'] = tax_details['total_excluded_currency']
+            price_subtotal = base_line['price_subtotal'] = tax_details['raw_total_excluded_currency']
 
             if discount == 100.0:
                 gross_price_subtotal_before_discount = price_unit * quantity
@@ -467,12 +505,27 @@ class AccountMove(models.Model):
                 tax_data['_tax_amount'] = tax.amount
                 if tax.amount == -11.5:
                     tax_data['_tax_amount'] = -23.0
-                    tax_data['base_amount'] *= 0.5
-                    tax_data['base_amount_currency'] *= 0.5
+                    tax_data['raw_base_amount'] *= 0.5
+                    tax_data['raw_base_amount_currency'] *= 0.5
 
-        AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
+            if not is_downpayment:
+                # Negative lines linked to down payment should stay negative
+                line = base_line['record']
+                if line.price_subtotal < 0 and line._get_downpayment_lines():
+                    downpayment_lines.append(base_line)
+
+            if float_compare(quantity, 0, 2) < 0:
+                # Negative quantity is refused by SDI, so we invert quantity and price_unit to keep the price_subtotal
+                base_line.update({
+                    'quantity': -quantity,
+                    'price_unit': -price_unit,
+                })
+        for downpayment_line in downpayment_lines:
+            base_lines.remove(downpayment_line)
+
         dispatched_results = self.env['account.tax']._dispatch_negative_lines(base_lines)
-        base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines']
+        base_lines = dispatched_results['result_lines'] + dispatched_results['nulled_candidate_lines'] + dispatched_results['orphan_negative_lines'] + downpayment_lines
+        AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, self._l10n_it_edi_grouping_function_base_lines)
         self._l10n_it_edi_add_base_lines_xml_values(base_lines_aggregated_values, is_downpayment)
         base_lines = sorted(base_lines, key=lambda base_line: base_line['it_values']['numero_linea'])
@@ -546,6 +599,7 @@ class AccountMove(models.Model):
             'document_type': document_type,
             'payment_method': 'MP05',
             'downpayment_moves': downpayment_moves,
+            'reconciled_moves': self._get_reconciled_invoices(),
             'rc_refund': reverse_charge_refund,
             'conversion_rate': conversion_rate,
             'balance_multiplicator': -1 if self.is_inbound() else 1,
@@ -611,25 +665,21 @@ class AccountMove(models.Model):
             and self.amount_total <= 400
         )
 
-    def _l10n_it_edi_is_fee_statement(self):
+    def _l10n_it_edi_is_professional_fees(self):
         """
             This function returns a boolean value based on the comparison of the lines values with a product.
-            If the total value of the lines associated with services exceeds the total value of the lines associated with goods, the function assumes that the document is a fee statement.
-            This is particularly useful for documents that represent downpayments.
+            If one line has the tag for professional fee then we return True
         """
         self.ensure_one()
-        service_value = 0
-        good_or_conso_value = 0
-        for line in self.invoice_line_ids:
-            if line.display_type in ('line_note', 'line_section'):
-                continue
+        professional_fee_tag = self.env.ref('l10n_it_edi.l10n_it_edi_professional_fees_tag', raise_if_not_found=False)
+        if not professional_fee_tag:
+            return False
 
-            if line.product_id.type == "service":
-                service_value += line.price_total
-            else:
-                good_or_conso_value += line.price_total
-
-        return service_value > good_or_conso_value
+        return any(
+            professional_fee_tag.id in line.account_id.tag_ids.ids
+            for line in self.invoice_line_ids
+            if line.display_type not in ('line_note', 'line_section')
+        )
 
     def _l10n_it_edi_features_for_document_type_selection(self):
         """ Returns a dictionary of features to be compared with the TDxx FatturaPA
@@ -646,7 +696,7 @@ class AccountMove(models.Model):
             'downpayment': self._is_downpayment(),
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
-            'fee_statement': self._l10n_it_edi_is_fee_statement(),  # For downpayment
+            'professional_fees': self._l10n_it_edi_is_professional_fees(),
         }
 
     def _l10n_it_edi_document_type_mapping(self):
@@ -657,18 +707,19 @@ class AccountMove(models.Model):
                      'self_invoice': False,
                      'simplified': False,
                      'downpayment': False,
-                     'fee_statement': False},  # Needed because downpayment move will be set as TD01 otherwise
+                     'professional_fees': False},
             'TD02': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': True},
+                     'downpayment': True,
+                     'professional_fees': False},
             'TD03': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': False,
-                     'fee_statement': True},
+                     'downpayment': True,
+                     'professional_fees': True},
             'TD04': {'move_types': ['out_refund'],
                      'import_type': 'in_refund',
                      'self_invoice': False,
@@ -681,8 +732,8 @@ class AccountMove(models.Model):
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': True,
-                     'fee_statement': True},
+                     'downpayment': False,
+                     'professional_fees': True},
             'TD07': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
@@ -1352,7 +1403,7 @@ class AccountMove(models.Model):
                 message = _("The Origin Document Date cannot be in the future.")
                 errors['l10n_it_edi_move_future_origin_document_date'] = build_error(message=message, records=moves)
         if pa_moves := self.filtered(lambda move: len(move.commercial_partner_id.l10n_it_pa_index or '') == 7):
-            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type and move.l10n_it_cig and move.l10n_it_cup):
+            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type and (move.l10n_it_cig or move.l10n_it_cup)):
                 message = _("CIG/CUP fields of partner(s) are present, please fill out Origin Document Type field in the Electronic Invoicing tab.")
                 errors['move_missing_origin_document_field'] = build_error(message=message, records=moves)
         return errors

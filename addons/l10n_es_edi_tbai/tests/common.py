@@ -29,7 +29,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
         cls.company_data['company'].write({
             'name': 'EUS Company',
             'state_id': cls.env.ref('base.state_es_ss').id,
-            'vat': 'ES09760433S',
+            'vat': 'ESA12345674',
             'l10n_es_tbai_test_env': True,
         })
         cls._set_tax_agency('gipuzkoa')
@@ -121,7 +121,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
     def _get_invoice_send_wizard(cls, invoice):
         out_invoice_send_wizard = cls.env['account.move.send.wizard']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
+            .create({'sending_methods': []})
         return out_invoice_send_wizard
 
     @classmethod
@@ -130,7 +130,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
             'move_type': 'in_invoice',
             'invoice_date': date.today(),
             'partner_id': cls.partner_a.id,
-            'ref': "A reference",
+            'ref': "INV123",
             'invoice_line_ids': [(0, 0, {
                 'product_id': cls.product_a.id,
                 'price_unit': 1000.0,

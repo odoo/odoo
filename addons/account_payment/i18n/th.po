@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,12 +27,14 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
+"#%(number)s - งวดการผ่อนชำระ <strong>%(amount)s</strong> ครบกำหนดชำระวันที่ "
+"<strong class=\"text-primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
 #: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
 msgid "%s day(s) overdue"
-msgstr ""
+msgstr "เกินกำหนด %sวัน)"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -81,6 +84,11 @@ msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
 msgstr "<i class=\"fa fa-fw fa-check-circle\"/> อยู่ระหว่างการพิจารณา"
 
 #. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> การประมวลผลการชำระเงิน"
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
 msgstr "<span class=\"d-none d-md-inline\"> อยู่ระหว่างการพิจารณา</span>"
@@ -88,7 +96,7 @@ msgstr "<span class=\"d-none d-md-inline\"> อยู่ระหว่างก
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "<strong>Full Amount</strong><br/>"
-msgstr ""
+msgstr "<strong>จำนวนเต็ม</strong><br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -96,6 +104,8 @@ msgid ""
 "<strong>Installment</strong>\n"
 "                                        <br/>"
 msgstr ""
+"<strong>การผ่อนชำระ</strong>\n"
+"                                        <br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -112,7 +122,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "A discount will be applied if the customer pays before %s included."
-msgstr ""
+msgstr "ส่วนลดจะถูกนำมาใช้หากลูกค้าชำระเงินก่อน %s ที่รวมอยู่"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"A payment has already been made on this invoice, please make sure to not pay"
+" twice."
+msgstr "ใบแจ้งหนี้นี้ได้รับการชำระเงินเรียบร้อยแล้ว กรุณาอย่าชำระเงินซ้ำ"
 
 #. module: account_payment
 #. odoo-python
@@ -218,7 +235,7 @@ msgstr "แสดงชื่อ"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
 msgid "Display Open Installments"
-msgstr ""
+msgstr "แสดงการผ่อนชำระแบบเปิด"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -232,7 +249,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
 msgid "Early Payment Discount Information"
-msgstr ""
+msgstr "ข้อมูลส่วนลดการชำระเงินล่วงหน้า"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -262,7 +279,7 @@ msgstr "สร้างลิงก์การชำระเงิน"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
 msgid "Has Eligible Epd"
-msgstr ""
+msgstr "มี EPD ที่เข้าเกณฑ์"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
@@ -281,6 +298,7 @@ msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
 msgstr ""
+"เป็นไปไม่ได้ที่จะชำระใบแจ้งหนี้ที่ค้างชำระทั้งหมดหากใบแจ้งหนี้เหล่านั้นไม่ได้ใช้สกุลเงินเดียวกัน"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -321,7 +339,7 @@ msgstr "จำนวนใบแจ้งหนี้"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
 msgid "Invoices to pay"
-msgstr ""
+msgstr "ใบแจ้งหนี้ที่ต้องชำระ"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -351,7 +369,7 @@ msgstr "อนุญาตให้คืนเงินได้สูงสุ
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_link_wizard__form_inherit_account_payment
 msgid "Next Installments"
-msgstr ""
+msgstr "งวดถัดไป"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
@@ -389,19 +407,19 @@ msgstr "การชำระเงินออนไลน์"
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same company."
-msgstr ""
+msgstr "ใบแจ้งหนี้ที่เกินกำหนดชำระควรอยู่ในบริษัทเดียวกัน"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same currency."
-msgstr ""
+msgstr "ใบแจ้งหนี้ที่เกินกำหนดควรใช้สกุลเงินเดียวกัน"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same partner."
-msgstr ""
+msgstr "ใบแจ้งหนี้ที่เกินกำหนดชำระควรแชร์กับพาร์ทเนอร์รายเดียวกัน"
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
@@ -417,7 +435,7 @@ msgstr "จ่าย"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Pay Invoice"
-msgstr ""
+msgstr "ชำระใบแจ้งหนี้"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
@@ -438,7 +456,7 @@ msgstr "ชำระเงินตอนนี้"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_overdue_invoice
 msgid "Pay overdue"
-msgstr ""
+msgstr "ชำระหนี้เกินกำหนด"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
@@ -506,7 +524,7 @@ msgstr "การชำระเงิน"
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "Please log in to pay your overdue invoices"
-msgstr ""
+msgstr "กรุณาเข้าสู่ระบบเพื่อชำระใบแจ้งหนี้ที่ค้างชำระ"
 
 #. module: account_payment
 #. odoo-python
@@ -651,7 +669,7 @@ msgstr "เกิดข้อผิดพลาดในการดำเนิ
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "This invoice has already been paid."
-msgstr ""
+msgstr "ใบแจ้งหนี้นี้ได้รับการชำระเงินแล้ว"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
@@ -668,7 +686,7 @@ msgstr "ธุรกรรม"
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__none
 msgid "Unsupported"
-msgstr ""
+msgstr "ไม่ได้รับการรองรับ"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
@@ -715,13 +733,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
 msgid "due in %s day(s)"
-msgstr ""
+msgstr "ครบกำหนดใน %s วัน"
 
 #. module: account_payment
 #. odoo-javascript
 #: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
 msgid "due today"
-msgstr ""
+msgstr "ครบกำหนดวันนี้"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -731,4 +749,4 @@ msgstr "ได้ถูกนำไปใช้"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
-msgstr ""
+msgstr "เกินกำหนด"

@@ -75,6 +75,12 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
 
         this._startZoom();
 
+        // Triggered when selecting a variant of a product in a carousel element
+        window.addEventListener("hashchange", (ev) => {
+            this._applyHash();
+            this.triggerVariantChange(this.$el);
+        });
+
         // This allows conditional styling for the filmstrip
         const filmstripContainer = this.el.querySelector('.o_wsale_filmstip_container');
         const filmstripContainerWidth = filmstripContainer
@@ -180,7 +186,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         let attributeIds = [];
         inputs.forEach((element) => attributeIds.push(element.dataset.attributeValueId));
         if (attributeIds.length > 0) {
-            window.location.hash = `attribute_values=${attributeIds.join(',')}`;
+            // Avoid adding new entries in session history by replacing the current one
+            history.replaceState(null, '', '#attribute_values=' + attributeIds.join(','));
         }
     },
     /**

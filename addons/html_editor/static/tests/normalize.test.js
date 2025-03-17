@@ -5,6 +5,6 @@ test("should remove empty class attribute", async () => {
     // content after is compared after cleaning up DOM
     await testEditor({
         contentBefore: '<div class=""></div>',
-        contentAfter: "<div></div>",
+        contentAfter: "<div><br></div>",
     });
 });

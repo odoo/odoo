@@ -1,4 +1,5 @@
 import { rpc } from "@web/core/network/rpc";
+import { Deferred } from "@web/core/utils/concurrency";
 import { browser } from "@web/core/browser/browser";
 
 export const STREAM_TYPE = Object.freeze({
@@ -110,10 +111,9 @@ export class Peer {
         this.dataChannel = dataChannel;
         this.hasPriority = hasPriority;
         this.connectRetryDelay = connectRetryDelay;
-        this.ready = new Promise((resolve) => {
-            this.dataChannel.addEventListener("open", resolve);
-        });
+        this.ready = new Deferred();
     }
+
     disconnect() {
         if (this.connection) {
             const RTCRtpSenders = this.connection.getSenders();
@@ -132,6 +132,7 @@ export class Peer {
                 }
             }
         }
+        this.ready.resolve?.();
         this.connection?.close();
         this.connection = undefined;
         this.dataChannel?.close();
@@ -228,6 +229,9 @@ export class PeerToPeer extends EventTarget {
         [LOG_LEVEL.WARN]: () => {},
         [LOG_LEVEL.ERROR]: () => {},
     };
+    get isActive() {
+        return Boolean(this.selfId !== undefined && this.channelId !== undefined);
+    }
     /**
      * @param {object} [options]
      * @param {String} [options.notificationRoute] the route used to communicate with the odoo server
@@ -240,7 +244,7 @@ export class PeerToPeer extends EventTarget {
      */
     constructor({
         notificationRoute = DEFAULT_NOTIFICATION_ROUTE,
-        logLevel = LOG_LEVEL.NONE,
+        logLevel = LOG_LEVEL.WARN,
         batchDelay = DEFAULT_BUS_BATCH_DELAY,
         antiGlare = true,
         enableStreaming = true,
@@ -281,6 +285,8 @@ export class PeerToPeer extends EventTarget {
         this.removeALlPeers();
         this.selfId = undefined;
         this.channelId = undefined;
+        this._isPendingNotify = false;
+        this._notificationsToSend.clear();
         this._localInfo = Object.assign(this._localInfo, {
             isSelfMuted: false,
             isRaisingHand: false,
@@ -416,7 +422,7 @@ export class PeerToPeer extends EventTarget {
         });
         const proms = [];
         for (const peer of this.peers.values()) {
-            proms.push(this._updateRemote(peer, streamType));
+            proms.push(peer.ready.then(() => this._updateRemote(peer, streamType)));
         }
         await Promise.all(proms);
     }
@@ -549,6 +555,9 @@ export class PeerToPeer extends EventTarget {
                     return;
                 }
                 peer.isBuildingAnswer = false;
+                if (!this.isActive) {
+                    return;
+                }
                 this._emitLog(id, `sending answer`, LOG_LEVEL.DEBUG);
                 await this._busNotify(INTERNAL_EVENT.ANSWER, {
                     payload: {
@@ -627,6 +636,7 @@ export class PeerToPeer extends EventTarget {
      * @param {string} reason
      */
     _recover(id, reason = "") {
+        this._emitLog(id, `connection recovery candidate: ${reason}`, LOG_LEVEL.WARN);
         if (this._recoverTimeouts.get(id)) {
             return;
         }
@@ -642,15 +652,16 @@ export class PeerToPeer extends EventTarget {
             browser.setTimeout(async () => {
                 const peer = this.peers.get(id);
                 this._recoverTimeouts.delete(id);
-                if (
-                    !peer?.connection ||
-                    !this.channelId ||
+                const connectionSuccess =
+                    peer.connection.connectionState === "connected" ||
+                    peer.connection.connectionState === "completed";
+                const iceSuccess =
                     peer.connection.iceConnectionState === "connected" ||
-                    peer.connection.iceConnectionState === "completed"
-                ) {
+                    peer.connection.iceConnectionState === "completed";
+                if (!peer?.connection || !this.channelId || (connectionSuccess && iceSuccess)) {
                     return;
                 }
-                this._emitLog(id, `attempting to recover connection: ${reason}`, LOG_LEVEL.WARN);
+                this._emitLog(id, `attempting to recover connection: ${reason}`, LOG_LEVEL.ERROR);
                 this._busNotify(INTERNAL_EVENT.DISCONNECT, { targets: [peer.id] });
                 this.removePeer(peer.id);
                 this.addPeer(peer.id, { connectRetryDelay: delay });
@@ -663,6 +674,10 @@ export class PeerToPeer extends EventTarget {
         }
         this._isPendingNotify = true;
         await new Promise((resolve) => setTimeout(resolve, this._batchDelay));
+        if (!this.isActive) {
+            this._isPendingNotify = false;
+            return;
+        }
         const ids = [];
         const notifications = [];
         this._notificationsToSend.forEach((notification, id) => {
@@ -764,9 +779,16 @@ export class PeerToPeer extends EventTarget {
             dataChannel,
             hasPriority: id > this.selfId,
         });
+        this._emitUpdate({
+            name: UPDATE_EVENT.CONNECTION_CHANGE,
+            payload: { id, peer, state: "searching for network" },
+        });
         this.peers.set(id, peer);
         peerConnection.addEventListener("icecandidate", async (event) => {
             if (!event.candidate) {
+                return;
+            }
+            if (!this.isActive) {
                 return;
             }
             await this._busNotify(INTERNAL_EVENT.ICE_CANDIDATE, {
@@ -777,10 +799,6 @@ export class PeerToPeer extends EventTarget {
             });
         });
         peerConnection.addEventListener("iceconnectionstatechange", async () => {
-            this._emitUpdate({
-                name: UPDATE_EVENT.CONNECTION_CHANGE,
-                payload: { id, peer, state: peerConnection.iceConnectionState },
-            });
             switch (peerConnection.iceConnectionState) {
                 case "closed":
                     this.removePeer(id);
@@ -799,6 +817,19 @@ export class PeerToPeer extends EventTarget {
             );
         });
         peerConnection.addEventListener("connectionstatechange", async () => {
+            this._emitUpdate({
+                name: UPDATE_EVENT.CONNECTION_CHANGE,
+                payload: { id, peer, state: peerConnection.connectionState },
+            });
+            switch (peerConnection.connectionState) {
+                case "closed":
+                    this.removePeer(id);
+                    break;
+                case "failed":
+                case "disconnected":
+                    this._recover(peer.id, 1000, "connection disconnected");
+                    break;
+            }
             this._emitLog(
                 id,
                 `connection state change: ${peerConnection.connectionState}`,
@@ -818,6 +849,9 @@ export class PeerToPeer extends EventTarget {
                 return;
             }
             peer.isBuildingOffer = false;
+            if (!this.isActive) {
+                return;
+            }
             await this._busNotify(INTERNAL_EVENT.OFFER, {
                 payload: {
                     sdp: peerConnection.localDescription,
@@ -826,7 +860,14 @@ export class PeerToPeer extends EventTarget {
             });
         });
         peerConnection.addEventListener("track", ({ transceiver, track }) => {
+            if (!peer?.id || !this.peers.has(peer.id)) {
+                return;
+            }
             const streamType = peer.getTransceiverStreamType(transceiver);
+            if (!streamType) {
+                this._recover(id, "received track for unknown transceiver");
+                return;
+            }
             peer.medias[streamType].track = track;
             this._emitUpdate({
                 name: UPDATE_EVENT.TRACK,
@@ -846,6 +887,7 @@ export class PeerToPeer extends EventTarget {
                 // can be closed by the time the event is emitted
                 return;
             }
+            peer.ready.resolve();
             dataChannel.send(
                 JSON.stringify({
                     event: INTERNAL_EVENT.INFO,

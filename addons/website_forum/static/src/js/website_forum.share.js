@@ -40,6 +40,30 @@ const ForumShare = publicWidget.Widget.extend({
         }
         return def;
     },
+    /**
+    * @override
+    * TODO remove me in master. This has been introduced as a stable fix to not
+    * remove the document body at the `destroy()` of the `ForumShare` public
+    * widget.
+    *
+    * Background: The `ForumShare` public widget is initially attached to the document
+    * body upon instantiation, which means its root element (`this.$el`) is set
+    * to the document body. Normally, when a widget is destroyed, its root
+    * element is removed which, in this case, would result in the document body
+    * removal.
+    *
+    * To prevent this, the fix assigns `null` to the root element before
+    * invoking the `destroy()` method, ensuring that the document body remains
+    * intact.
+    */
+    destroy: function () {
+        this.setElement(null);
+        const socialModalEl = document.querySelector("body #oe_social_share_modal");
+        if (socialModalEl) {
+            socialModalEl.remove();
+        }
+        this._super();
+    },
 });
 
 publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({

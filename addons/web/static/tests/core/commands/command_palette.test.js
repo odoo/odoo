@@ -1110,26 +1110,24 @@ test("multi level command", async () => {
     expect(".o_command_palette_footer").toHaveCount(0);
 });
 
-test.tags("desktop")(
-    "command palette dialog can be rendered and closed on outside click",
-    async () => {
-        await mountWithCleanup(MainComponentsContainer);
+test.tags("desktop");
+test("command palette dialog can be rendered and closed on outside click", async () => {
+    await mountWithCleanup(MainComponentsContainer);
 
-        const config = {
-            providers: [],
-        };
-        getService("dialog").add(CommandPalette, {
-            config,
-        });
-        await animationFrame();
-        expect(".o_command_palette").toHaveCount(1);
+    const config = {
+        providers: [],
+    };
+    getService("dialog").add(CommandPalette, {
+        config,
+    });
+    await animationFrame();
+    expect(".o_command_palette").toHaveCount(1);
 
-        // Close on outside click
-        await contains(getFixture()).click();
-        await animationFrame();
-        expect(".o_command_palette").toHaveCount(0);
-    }
-);
+    // Close on outside click
+    await contains(getFixture()).click();
+    await animationFrame();
+    expect(".o_command_palette").toHaveCount(0);
+});
 
 test("navigate in the command palette with the arrows", async () => {
     expect.assertions(6);

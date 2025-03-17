@@ -151,7 +151,7 @@ class SaleOrderLine(models.Model):
         remaining.free_qty_today = False
         remaining.qty_available_today = False
 
-    @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
+    @api.depends('product_id', 'route_id', 'warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
         """ Verify the route of the product based on the warehouse
             set 'is_available' at True if the product availability in stock does
@@ -165,7 +165,7 @@ class SaleOrderLine(models.Model):
             product_routes = line.route_id or (product.route_ids + product.categ_id.total_route_ids)
 
             # Check MTO
-            mto_route = line.order_id.warehouse_id.mto_pull_id.route_id
+            mto_route = line.warehouse_id.mto_pull_id.route_id
             if not mto_route:
                 try:
                     mto_route = self.env['stock.warehouse']._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), create=False)
@@ -227,7 +227,7 @@ class SaleOrderLine(models.Model):
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
-            lines._action_launch_stock_rule(previous_product_uom_qty)
+            lines._action_launch_stock_rule(previous_product_uom_qty=previous_product_uom_qty)
         return res
 
     @api.depends('move_ids')
@@ -299,8 +299,8 @@ class SaleOrderLine(models.Model):
                            If False, consider the moves that were created through the initial rule of the delivery route,
                            to support the new push mechanism.
         """
-        outgoing_moves = self.env['stock.move']
-        incoming_moves = self.env['stock.move']
+        outgoing_moves_ids = set()
+        incoming_moves_ids = set()
 
         moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id)
         if moves and not strict:
@@ -319,11 +319,11 @@ class SaleOrderLine(models.Model):
             if (strict and move.location_dest_id._is_outgoing()) or \
                (not strict and move.rule_id.id in triggering_rule_ids and (move.location_final_id or move.location_dest_id)._is_outgoing()):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
-                    outgoing_moves |= move
+                    outgoing_moves_ids.add(move.id)
             elif move.location_id._is_outgoing() and move.to_refund:
-                incoming_moves |= move
+                incoming_moves_ids.add(move.id)
 
-        return outgoing_moves, incoming_moves
+        return self.env['stock.move'].browse(outgoing_moves_ids), self.env['stock.move'].browse(incoming_moves_ids)
 
     def _get_procurement_group(self):
         return self.order_id.procurement_group_id

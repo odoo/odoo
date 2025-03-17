@@ -3,15 +3,16 @@
 # 	* hr_attendance
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-02-10 13:23+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,6 +128,12 @@ msgid "Action Needed"
 msgstr "Wymagane działanie"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Active Employees"
+msgstr "Aktywni pracownicy"
+
+#. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
@@ -205,6 +212,12 @@ msgstr "Zaaprobowane"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_overtime_validation__by_manager
 msgid "Approved by Manager"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Archived Employees"
 msgstr ""
 
 #. module: hr_attendance
@@ -418,7 +431,7 @@ msgstr "Przed"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_browser
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Browser"
-msgstr ""
+msgstr "Przeglądarka"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -746,7 +759,7 @@ msgstr "Błąd: nie można znaleźć odpowiedniego pracownika."
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Errors"
-msgstr ""
+msgstr "Błędy"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
@@ -802,7 +815,7 @@ msgstr "Obserwatorzy (partnerzy)"
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "From %s"
-msgstr ""
+msgstr "Od %s"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__front
@@ -940,6 +953,12 @@ msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Install"
+msgstr "Instaluj"
+
+#. module: hr_attendance
+#. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Invalid request"
 msgstr "Nieprawidłowy wniosek"
@@ -1029,7 +1048,7 @@ msgstr "Załaduj dane próbne"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Localisation"
-msgstr ""
+msgstr "Lokalizacja"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1115,7 +1134,7 @@ msgstr "Tryb"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Modes"
-msgstr ""
+msgstr "TRyby"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
@@ -1189,6 +1208,11 @@ msgstr "Logo Odoo"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_officer
 msgid "Officer: Manage attendances"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.open_kiosk_url
+msgid "Open Kiosk Url"
 msgstr ""
 
 #. module: hr_attendance

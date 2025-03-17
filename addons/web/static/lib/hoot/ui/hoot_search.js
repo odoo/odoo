@@ -9,9 +9,13 @@ import { Test } from "../core/test";
 import { EXCLUDE_PREFIX, refresh } from "../core/url";
 import {
     INCLUDE_LEVEL,
+    STORAGE,
     debounce,
     lookup,
     normalize,
+    storageGet,
+    storageSet,
+    stringify,
     title,
     useWindowListener,
 } from "../hoot_utils";
@@ -34,7 +38,6 @@ import { HootTagButton } from "./hoot_tag_button";
 
 const {
     Boolean,
-    localStorage,
     Object: { entries: $entries, values: $values },
 } = globalThis;
 
@@ -70,12 +73,12 @@ const templateIncludeWidget = (tagName) => /* xml */ `
 
     <${tagName}
         class="flex items-center gap-1 cursor-pointer select-none"
-        t-on-click="() => this.toggleInclude(category, job.id)"
+        t-on-click.stop="() => this.toggleInclude(category, job.id)"
     >
         <div
             class="hoot-include-widget h-5 p-px flex items-center relative border rounded-full"
             t-att-class="{
-                'border-muted': readonly,
+                'border-gray': readonly,
                 'border-primary': !readonly,
                 'opacity-50': readonly,
             }"
@@ -116,7 +119,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
                 t-att-title="job.fullName"
             >
                 <t t-foreach="getShortPath(job.path)" t-as="suite" t-key="suite.id">
-                    <span class="text-muted px-1" t-esc="suite.name" />
+                    <span class="text-gray px-1" t-esc="suite.name" />
                     <span class="font-normal">/</span>
                 </t>
                 <t t-set="isSet" t-value="job.id in runnerState.includeSpecs[category]" />
@@ -124,9 +127,9 @@ const templateIncludeWidget = (tagName) => /* xml */ `
                     class="truncate px-1"
                     t-att-class="{
                         'font-extrabold': isSet,
-                        'text-pass': includeStatus gt 0,
-                        'text-fail': includeStatus lt 0,
-                        'text-muted': !isSet and hasIncludeValue,
+                        'text-emerald': includeStatus gt 0,
+                        'text-rose': includeStatus lt 0,
+                        'text-gray': !isSet and hasIncludeValue,
                         'text-primary': !isSet and !hasIncludeValue,
                         'italic': hasIncludeValue ? includeStatus lte 0 : includeStatus lt 0,
                     }"
@@ -137,11 +140,10 @@ const templateIncludeWidget = (tagName) => /* xml */ `
     </${tagName}>
 `;
 
-const EMPTY_SUITE = new Suite(null, "...", []);
+const EMPTY_SUITE = new Suite(null, "…", []);
 const SECRET_SEQUENCE = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
 const R_QUERY_CONTENT = new RegExp(`^\\s*${EXCLUDE_PREFIX}?\\s*(.*)\\s*$`);
 const RESULT_LIMIT = 5;
-const STORAGE_KEY = "hoot-latest-searches";
 
 // Template parts, because 16 levels of indent is a bit much
 
@@ -167,7 +169,7 @@ const TEMPLATE_FILTERS_AND_CATEGORIES = /* xml */ `
             </button>
         </t>
         <t t-else="">
-            <em class="text-muted ms-1">
+            <em class="text-gray ms-1">
                 Start typing to show filters...
             </em>
         </t>
@@ -213,14 +215,14 @@ const TEMPLATE_SEARCH_DASHBOARD = /* xml */ `
                         <button
                             class="w-full px-2 hover:bg-gray-300 dark:hover:bg-gray-700"
                             type="button"
-                            t-on-click="() => this.setQuery(text)"
+                            t-on-click.stop="() => this.setQuery(text)"
                             t-esc="text"
                         />
                     </li>
                 </t>
             </ul>
         </div>
-        <div class="flex flex-col sm:px-4 border-muted sm:border-x">
+        <div class="flex flex-col sm:px-4 border-gray sm:border-x">
             <h4 class="text-primary font-bold flex items-center mb-2">
                 <span class="w-full">
                     Available suites
@@ -262,7 +264,7 @@ export class HootSearch extends Component {
     static template = xml`
         <t t-set="hasIncludeValue" t-value="getHasIncludeValue()" />
         <t t-set="isRunning" t-value="runnerState.status === 'running'" />
-        <search class="HootSearch flex-1" t-ref="root" t-on-keydown="onKeyDown">
+        <search class="${HootSearch.name} flex-1" t-ref="root" t-on-keydown="onKeyDown">
             <form class="relative" t-on-submit.prevent="refresh">
                 <div class="hoot-search-bar flex border rounded items-center bg-base px-1 gap-1 w-full transition-colors">
                     <t t-foreach="getCategoryCounts()" t-as="count" t-key="count.category">
@@ -274,10 +276,10 @@ export class HootSearch extends Component {
                             <span class="bg-btn px-1 transition-colors" t-esc="count.category" />
                             <span class="mx-1 flex gap-1">
                                 <t t-if="count.include">
-                                    <span class="text-pass" t-esc="count.include" />
+                                    <span class="text-emerald" t-esc="count.include" />
                                 </t>
                                 <t t-if="count.exclude">
-                                    <span class="text-fail" t-esc="count.exclude" />
+                                    <span class="text-rose" t-esc="count.exclude" />
                                 </t>
                             </span>
                         </button>
@@ -307,7 +309,7 @@ export class HootSearch extends Component {
                             t-att-disabled="isRunning"
                             t-on-change="toggleRegExp"
                         />
-                        <i class="fa fa-asterisk text-muted transition-colors" />
+                        <i class="fa fa-asterisk text-gray transition-colors" />
                     </label>
                     <label
                         class="hoot-search-icon p-1"
@@ -321,11 +323,11 @@ export class HootSearch extends Component {
                             t-att-disabled="isRunning"
                             t-on-change="toggleDebug"
                         />
-                        <i class="fa fa-bug text-muted transition-colors" />
+                        <i class="fa fa-bug text-gray transition-colors" />
                     </label>
                 </div>
                 <t t-if="state.showDropdown">
-                    <div class="hoot-search-dropdown flex flex-col animate-slide-down bg-base text-base absolute mt-1 p-3 shadow rounded shadow z-2">
+                    <div class="hoot-dropdown-lg flex flex-col animate-slide-down bg-base text-base absolute mt-1 p-3 shadow rounded z-2">
                         <t t-if="state.empty">
                             ${TEMPLATE_SEARCH_DASHBOARD}
                         </t>
@@ -349,7 +351,7 @@ export class HootSearch extends Component {
 
     get wrappedQuery() {
         const query = this.state.query.trim();
-        return this.useRegExp ? query : `"${query}"`;
+        return this.useRegExp ? query : stringify(query);
     }
 
     updateSuggestions = debounce(() => {
@@ -387,7 +389,15 @@ export class HootSearch extends Component {
         });
         this.runnerState = useState(runner.state);
 
-        useWindowListener("click", (ev) => this.onWindowClick(ev));
+        useWindowListener(
+            "click",
+            (ev) => {
+                if (this.runnerState.status !== "running") {
+                    this.state.showDropdown = ev.composedPath().includes(this.rootRef.el);
+                }
+            },
+            { capture: true }
+        );
     }
 
     /**
@@ -465,11 +475,7 @@ export class HootSearch extends Component {
     }
 
     getLatestSearches() {
-        const strSearchItems = localStorage.getItem(STORAGE_KEY);
-        if (!strSearchItems) {
-            return [];
-        }
-        return JSON.parse(strSearchItems);
+        return storageGet(STORAGE.searches) || [];
     }
 
     /**
@@ -540,7 +546,7 @@ export class HootSearch extends Component {
                 this.searchInputRef.el,
                 ...this.rootRef.el.querySelectorAll("input[type=radio]:checked:enabled"),
             ];
-            let nextIndex = elements.indexOf(getActiveElement()) + inc;
+            let nextIndex = elements.indexOf(getActiveElement(document)) + inc;
             if (nextIndex >= elements.length) {
                 nextIndex = 0;
             } else if (nextIndex < -1) {
@@ -581,21 +587,19 @@ export class HootSearch extends Component {
     }
 
     onSearchInputChange() {
-        if (this.state.query) {
-            const latestSearches = this.getLatestSearches();
-            latestSearches.unshift(this.state.query);
-            localStorage.setItem(
-                STORAGE_KEY,
-                JSON.stringify([...new Set(latestSearches)].slice(0, 5))
-            );
+        if (!this.state.query) {
+            return;
         }
+        const latestSearches = this.getLatestSearches();
+        latestSearches.unshift(this.state.query);
+        storageSet(STORAGE.searches, [...new Set(latestSearches)].slice(0, 5));
     }
 
     /**
-     * @param {InputEvent} ev
+     * @param {InputEvent & { currentTarget: HTMLInputElement }} ev
      */
     onSearchInputInput(ev) {
-        this.state.query = ev.target.value;
+        this.state.query = ev.currentTarget.value;
         this.state.empty = !this.hasFilters();
 
         this.env.ui.resultsPage = 0;
@@ -605,12 +609,12 @@ export class HootSearch extends Component {
     }
 
     /**
-     * @param {KeyboardEvent} ev
+     * @param {KeyboardEvent & { currentTarget: HTMLInputElement }} ev
      */
     onSearchInputKeyDown(ev) {
         switch (ev.key) {
             case "Backspace": {
-                if (ev.target.selectionStart === 0 && ev.target.selectionEnd === 0) {
+                if (ev.currentTarget.selectionStart === 0 && ev.currentTarget.selectionEnd === 0) {
                     this.uncheckLastCategory();
                     this.state.empty = !this.hasFilters();
                 }
@@ -626,15 +630,6 @@ export class HootSearch extends Component {
 
         if (this.config.fun) {
             this.verifySecretSequenceStep(ev);
-        }
-    }
-
-    /**
-     * @param {PointerEvent} ev
-     */
-    onWindowClick(ev) {
-        if (this.runnerState.status !== "running") {
-            this.state.showDropdown = ev.composedPath().includes(this.rootRef.el);
         }
     }
 
@@ -774,8 +769,8 @@ export class HootSearch extends Component {
                 test.status = Test.PASSED;
                 for (const result of test.results) {
                     result.pass = true;
-                    result.errors = [];
-                    for (const assertion of result.assertions) {
+                    result.currentErrors = [];
+                    for (const assertion of result.getEvents("assertion")) {
                         assertion.pass = true;
                     }
                 }

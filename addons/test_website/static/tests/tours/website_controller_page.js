@@ -9,7 +9,6 @@ function assertEqual(actual, expected) {
 }
 
 registerWebsitePreviewTour('website_controller_page_listing_layout', {
-    test: true,
     url: '/model/exposed-model',
     edition: true,
 }, () => [
@@ -59,12 +58,11 @@ registerWebsitePreviewTour('website_controller_page_listing_layout', {
 ]);
 
 registerWebsitePreviewTour('website_controller_page_default_page_check', {
-    test: true,
     url: '/model/exposed-model',
 }, () => [
     {
         content: "records are listed in list mode by default",
-        trigger: ':iframe .o_website_list',
+        trigger: '[is-ready=true]:iframe .o_website_list',
         run() {
             const iframeDocument = document.querySelector('.o_website_preview .o_iframe').contentDocument;
             // list option is selected by default in the switch

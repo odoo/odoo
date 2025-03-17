@@ -11,7 +11,7 @@
     Add support for the Declaration of Intent (Dichiarazione di Intento) to the Italian localization.
     """,
     'category': 'Accounting/Localizations',
-    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/italy.html',
+    'website': 'https://www.odoo.com/documentation/18.0/applications/finance/fiscal_localizations/italy.html',
     'data': [
         'security/ir.model.access.csv',
         'data/invoice_it_template.xml',

@@ -3,16 +3,17 @@
 # 	* hr_timesheet
 # 
 # Translators:
-# Wil Odoo, 2024
-# Chloe Wang, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
+# Chloe Wang, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,7 +74,7 @@ msgstr "%(name)s的时间表"
 msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project "
 "'%(project_name)s' linked to the timesheet."
-msgstr ""
+msgstr "缺漏 “%(missing_plan_names)s”。已连接至工时表的项目 “%(project_name)s”，需要此分析计划。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -366,7 +367,7 @@ msgstr "创建日期"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -420,7 +421,7 @@ msgstr "删除员工"
 msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
-msgstr "通过将服务链接到销售订单项目，在达到里程碑时自动交付服务。"
+msgstr "通过将服务链接到销售订单行，在达到里程碑时自动交付服务。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
@@ -504,7 +505,7 @@ msgstr "员工工时单"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
 msgid "Encoding Method"
-msgstr "编码方法"
+msgstr "计时方法"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -532,6 +533,11 @@ msgstr "拥有部门经理访问权限"
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
 msgid "Hours / Minutes"
 msgstr "小时/分钟"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "总花费工时，按任务划分（包括子任务）"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__id
@@ -626,7 +632,7 @@ msgstr "菜单"
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__message_partner_ids
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__message_partner_ids
 msgid "Message Partner"
-msgstr ""
+msgstr "向合作伙伴发送信息"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__milestone_id
@@ -698,6 +704,12 @@ msgid "Ok"
 msgstr "确定"
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
+msgid "Overtime"
+msgstr "延时"
+
+#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
@@ -720,6 +732,7 @@ msgstr "产品计量单位"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__progress
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
 msgid "Progress"
 msgstr "进度"
@@ -775,7 +788,7 @@ msgstr "按Shift+相应的热键，瞬间记录您的工时表，为您的项目
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
 msgid "Reporting"
-msgstr "报告"
+msgstr "报表"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -855,8 +868,8 @@ msgstr "设置"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
-msgid "Sub-Task:"
-msgstr "子任务："
+msgid "Sub-Task of '"
+msgstr "以下项目的子任务："
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -868,6 +881,7 @@ msgstr "子任务耗时"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__task_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -897,7 +911,7 @@ msgstr "一个公司的内部项目应该在该公司。"
 msgid ""
 "The project, the task and the analytic accounts of the timesheet must belong"
 " to the same company."
-msgstr ""
+msgstr "工时单的项目、任务和分析账户必须属于同一公司。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -987,7 +1001,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Encoding"
-msgstr "时间编码"
+msgstr "工时规则"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
@@ -1106,7 +1120,7 @@ msgstr "工时表编码单元"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
 msgid "Timesheet Report"
-msgstr "工时单报告"
+msgstr "工时单报表"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_time
@@ -1179,7 +1193,7 @@ msgstr "工时表分析"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr "工时表分析报告"
+msgstr "工时表分析报表"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1221,7 +1235,7 @@ msgstr "必须使用所选公司的在职员工创建工时表。"
 msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
-msgstr ""
+msgstr "在创建工时单时时，必须至少在计划“%(plan_name)s”中定义一个活动分析账户。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1241,7 +1255,7 @@ msgid ""
 "To use the timesheets feature, you need an analytic account for your "
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
-msgstr ""
+msgstr "要使用工时单功能，您需要一个项目分析账户。请在计划%(plan_name)s中设置一个，或关闭时间表功能。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1270,7 +1284,6 @@ msgstr "花费总天数"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -1316,7 +1329,7 @@ msgstr ""
 "        @user 将任务指派给某个用户\n"
 "        ! 为任务设置高优先级\n"
 "\n"
-"        确保格式和顺序正确 例如，改进配置屏幕，5h #feature #v16 @Mitchell !"
+"        确保格式和顺序正确 例如：改进配置屏幕，5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1368,8 +1381,8 @@ msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>\n"
 "                            Please switch to another account, or reactivate the current one to timesheet on the project."
 msgstr ""
-"你不可为此项目记录工时表，因为它连结至非运作的分析帐户。<br/>\n"
-"                            请切换至另一帐户，或重新启动此帐户，以在项目中记录工时表。"
+"你不可为此项目记录工时表，因为它连结至非运作的分析账户。<br/>\n"
+"                            请切换至另一账户，或重新启动此账户，以在项目中记录工时表。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1377,13 +1390,13 @@ msgid ""
 "You cannot log timesheets on this project since it is linked to an inactive "
 "analytic account.<br/> Please change this account, or reactivate the current"
 " one to timesheet on the project."
-msgstr "您不可为此专桉记录工时表，因为它连结至非运作的分析帐户。<br/>请更改此帐户设定，或重新启动此帐户，以在项目中记录工时表。"
+msgstr "您不可为此专桉记录工时表，因为它连结至非运作的分析账户。<br/>请更改此账户设定，或重新启动此账户，以在项目中记录工时表。"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "You cannot set an archived employee on existing timesheets."
-msgstr "您不能在现有工时单上设置存档员工。"
+msgstr "您不能在现有工时单上设置归档员工。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

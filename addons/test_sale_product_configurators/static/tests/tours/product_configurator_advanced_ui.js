@@ -9,13 +9,12 @@ let optionVariantImage;
 
 registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour', {
     url: '/odoo',
-    test: true,
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),
         ...tourUtils.selectCustomer("Tajine Saucisse"),
         {
-            trigger: ".o_field_widget[name=partner_shipping_id] .o_external_button", // Wait for onchange_partner_id
+            trigger: ".o_field_widget[name=partner_shipping_id] .o_external_button:not(:visible)", // Wait for onchange_partner_id
         },
         ...tourUtils.addProduct("Customizable Desk (TEST)"),
         ...configuratorTourUtils.selectAndSetCustomAttribute("Customizable Desk", "Legs", "Custom", "Custom 1"),

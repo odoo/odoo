@@ -11,6 +11,7 @@
         <field name="phone">+97423245875</field>
         <field name="email">qatarcompany@example.com</field>
         <field name="website">www.qaexample.com</field>
+        <field name="is_company" eval="True"/>
     </record>
 
     <record id="demo_company_qa" model="res.company">
@@ -31,5 +32,6 @@
         <value eval="[]"/>
         <value>qa</value>
         <value model="res.company" eval="obj().env.ref('l10n_qa.demo_company_qa')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>

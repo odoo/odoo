@@ -31,7 +31,7 @@ class ProductReplenish(models.TransientModel):
     def _compute_date_planned(self):
         super()._compute_date_planned()
         for rec in self:
-            if rec.route_id.name == 'Buy':
+            if 'buy' in rec.route_id.rule_ids.mapped('action'):
                 rec.date_planned = rec._get_date_planned(rec.route_id, supplier=rec.supplier_id, show_vendor=rec.show_vendor)
 
     def _prepare_run_values(self):
@@ -71,7 +71,7 @@ class ProductReplenish(models.TransientModel):
 
     def _get_date_planned(self, route_id, **kwargs):
         date = super()._get_date_planned(route_id, **kwargs)
-        if route_id.name != 'Buy':
+        if 'buy' not in route_id.rule_ids.mapped('action'):
             return date
 
         supplier = kwargs.get('supplier')

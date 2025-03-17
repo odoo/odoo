@@ -4,15 +4,24 @@
 # 
 # Translators:
 # Siim Raasuke, 2024
+# Algo Kärp <algokarp@gmail.com>, 2024
+# Triine Aavik <triine@avalah.ee>, 2024
+# Egon Raamat <egon@avalah.ee>, 2024
+# Mihkel avalah, 2024
+# Leaanika Randmets, 2024
+# Martin Aavastik <martin@avalah.ee>, 2024
+# Anna, 2024
+# Birgit Vijar, 2024
 # Stevin Lilla, 2024
+# JanaAvalah, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
+"Last-Translator: JanaAvalah, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,17 +121,28 @@ msgid ""
 "<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
 "probability\" aria-label=\"Switch to automatic probability\"/>"
 msgstr ""
+"<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
+"probability\" aria-label=\"Switch to automatic probability\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
 msgid ""
 "<i class=\"fa fa-star me-1\" aria-label=\"Opportunities\" role=\"img\" "
 "title=\"Opportunities\"/>"
+msgstr ""
+"<i class=\"fa fa-star me-1\" aria-label=\"Opportunities\" role=\"img\" "
+"title=\"Opportunities\"/>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                Install Extension"
 msgstr ""
 
 #. module: crm
@@ -131,6 +151,8 @@ msgid ""
 "<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
 "fa-fw fa-refresh\"/>"
 msgstr ""
+"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
+"fa-fw fa-refresh\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -139,6 +161,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer email will also be updated.\" "
+"invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -147,6 +172,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -173,7 +201,7 @@ msgstr "<span class=\"o_stat_text\"> Müügivihjed</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2 text-nowrap\"> at </span>"
+msgid "<span class=\"oe_grey p-2 text-nowrap d-none d-sm-block\"> at </span>"
 msgstr ""
 
 #. module: crm
@@ -182,11 +210,13 @@ msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
+"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\">  </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2\"> %</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey p-2\">%</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -196,7 +226,7 @@ msgstr "<span class=\"oe_inline\"> (maksimum) </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span class=\"oe_inline\"> / </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline\"> / </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -248,13 +278,13 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br>\n"
+"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interest in your products</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -266,15 +296,15 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
 "                            Welcome to <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            It's great to meet you! Now that you're on board, you'll discover what <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br>\n"
-"                            Feel free to reach out at any time!<br><br>\n"
-"                            Best,<br>\n"
+"                            It's great to meet you! Now that you're on board, you'll discover what <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> and I'll help you get the most out of Odoo. Could we plan a quick demo soon?<br/>\n"
+"                            Feel free to reach out at any time!<br/><br/>\n"
+"                            Best,<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                <br/>Email: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
@@ -288,8 +318,8 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br>\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
 "                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
@@ -319,13 +349,13 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Teie vihje/võimalus</span><br>\n"
+"                    <span style=\"font-size: 10px;\">Teie vihje/võimalus</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Huvi Teie toodete vastu</span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -337,15 +367,15 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Tere <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+"                            Tere <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
 "                            Tere tulemast <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
-"                            Tore sinuga kohtuda! Nüüd, kui olete pardal, saate avastada mida ettevõttel <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> on pakkuda. Minu nimi on <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ja ma aitan Teil Odoo'st kõige rohkem kasu saada. Kas me võiksime varsti planeerida kiire demo?<br>\n"
-"                            Võite minuga julgesti ühendust võtta!<br><br>\n"
-"                            Tervitades,,<br>\n"
+"                            Tore sinuga kohtuda! Nüüd, kui olete pardal, saate avastada mida ettevõttel <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> on pakkuda. Minu nimi on <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ja ma aitan Teil Odoo'st kõige rohkem kasu saada. Kas me võiksime varsti planeerida kiire demo?<br/>\n"
+"                            Võite minuga julgesti ühendust võtta!<br/><br/>\n"
+"                            Tervitades,,<br/>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br>E-mail: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
-"                                <br>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                <br/>E-mail: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
@@ -359,8 +389,8 @@ msgstr ""
 "    <!-- JALUS -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
-"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br>\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
 "                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
@@ -410,13 +440,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A new lead has been created and is not assigned to any team."
-msgstr ""
+msgstr "Loodi uus müügivihje mis pole määratud ühelegi meeskonnale."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A new lead has been created for the team \"%(team_name)s\"."
-msgstr ""
+msgstr "Uus müügivihje on loodud meeskonnale \"%(team_name)s\"."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -471,6 +501,8 @@ msgid ""
 "Activities marked as Done on Leads will appear here, providing an overview "
 "of lead interactions."
 msgstr ""
+"Tegevused mis on märgitud kui 'müügivihjel tehtud' on nähtavad siin. On näha"
+" ülevaade müügivihjete tegevustest."
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -525,6 +557,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Demo Preparation Process\", \"Qualification\", ...)"
 msgstr ""
+"Tegevusplaane kasutatakse hulga tegevuste määramiseks vaid mõne klikiga\n"
+"                    (nt \"Edenemise raport\", \"Stand-up koosolekud\", ...)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -638,6 +672,9 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"Kuvatakse <b>vaikimisi esimest müügimeeskonda,</b>\n"
+" sest kasutaja ei kuulu veel ühtegi meeskonda.\n"
+"                                         Müügitoruga töötamiseks <a name=\"%d\" type=\"action\" tabindex=\"-1\">liitu müügimeeskonnaga.</a>"
 
 #. module: crm
 #. odoo-python
@@ -646,6 +683,9 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
+"Kuvatakse <b>vaikimisi esimest müügimeeskonda,</b>\n"
+" sest kasutaja ei kuulu veel ühtegi meeskonda.\n"
+"                                         Müügitoruga töötamiseks liitu müügimeeskonnaga."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -1094,7 +1134,7 @@ msgstr "Loo müügivihje"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.mail_activity_plan_action_lead
 msgid "Create a Lead Activity Plan"
-msgstr ""
+msgstr "Loo müügivihjete tegevusplaan"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -1712,6 +1752,8 @@ msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
 msgstr ""
+"Kui see on märgitud, sunnib see müüjat värskendama uuendatud võimalusi, "
+"isegi kui need on juba määratud."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -2080,7 +2122,7 @@ msgstr "Müügivihjed(30 päeva)"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_day_count
 msgid "Leads (last 24h)"
-msgstr ""
+msgstr "Müügivihjed (viimased 24 tundi)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2097,6 +2139,9 @@ msgid ""
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
+"Leads Analysis allows you to check different CRM related information like "
+"the treatment delays or number of leads per state. You can sort out your "
+"leads analysis by different groups to get accurate grained analysis."
 
 #. module: crm
 #. odoo-python
@@ -2169,7 +2214,7 @@ msgstr "<b>Planeerimine tegevuse!</b>"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "Let's get to work!"
-msgstr ""
+msgstr "Hakkame tööle!"
 
 #. module: crm
 #. odoo-javascript
@@ -2271,6 +2316,13 @@ msgstr "Madal"
 #: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
 msgid "Make Quote"
 msgstr "Tee hinnapakkumine"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
+"messages, and get AI-powered transcripts of your conversations."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2806,7 +2858,7 @@ msgstr "Müügivõimalus"
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
 #: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
 msgid "Opportunity Count"
-msgstr ""
+msgstr "Müügivõimaluste arv"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -3190,6 +3242,11 @@ msgid "Restore"
 msgstr "Taasta"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Ringover VOIP Phone"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
 msgid "Rule-Based Assignment"
 msgstr "Reeglijärgne määramine"
@@ -3197,7 +3254,7 @@ msgstr "Reeglijärgne määramine"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Running"
-msgstr "Pidev"
+msgstr "Töös"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_sms_error
@@ -3289,6 +3346,8 @@ msgstr "Otsi müügivõimalusi"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Select at least two Leads/Opportunities from the list to merge them."
 msgstr ""
+"Vali nimekirjast vähemalt kaks müügivihjet või müügivõimalust, et need "
+"ühendada."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3719,7 +3778,7 @@ msgstr "Nõuanne: ärge raisake aega klientide andmete salvestamiseks"
 #: model:digest.tip,name:crm.digest_tip_crm_6
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_6
 msgid "Tip: Identify Bottlenecks at a glance"
-msgstr ""
+msgstr "Vihje: Tuvasta pudelikaelu kiiresti"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
@@ -3737,7 +3796,7 @@ msgstr "Vihje: Müügivõimaluste võidumäärad on ennustatud AI abil"
 #: model:digest.tip,name:crm.digest_tip_crm_7
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
 msgid "Tip: Turn Sales Forecasting into Child's Play"
-msgstr ""
+msgstr "Nõuanne: Tee müügiprognoosimine lihtsaks"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
@@ -3937,6 +3996,8 @@ msgid ""
 "Use the CRM Forecast Kanban to easily define when Opportunities are expected"
 " to be won."
 msgstr ""
+"Kasutage CRM prognoosi kanban, et lihtsamini määrata kuna müügivõimalused "
+"võiksid olla võidetud."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4098,6 +4159,9 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
+"You will be able to plan meetings and phone calls from\n"
+"                    opportunities, convert them into quotations, attach related\n"
+"                    documents, track all discussions, and much more."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4169,7 +4233,7 @@ msgstr "genereeritakse müügivõimalused müügitorusse?<br>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "lost"
-msgstr ""
+msgstr "kadunud"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
@@ -4185,6 +4249,7 @@ msgstr "testida e-posti lüüsi."
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
 msgstr ""
+"oma CRM-ile. Seda e-posti aadressi saavad muuta müügimeeskonna liikmed."
 
 #. module: crm
 #. odoo-python

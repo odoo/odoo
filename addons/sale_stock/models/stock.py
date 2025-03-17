@@ -34,7 +34,7 @@ class StockMove(models.Model):
 
     def _get_source_document(self):
         res = super()._get_source_document()
-        return self.sale_line_id.order_id or res
+        return self.sudo().sale_line_id.order_id or res
 
     def _get_sale_order_lines(self):
         """ Return all possible sale order lines for one stock move. """
@@ -124,7 +124,7 @@ class StockPicking(models.Model):
             # Creates new SO line only when pickings linked to a sale order and
             # for moves with qty. done and not already linked to a SO line.
             if not sale_order \
-                or (move.location_dest_id.usage != 'customer' and not (move.location_id.usage == 'customer' and move.to_refund)) \
+                or (move.location_dest_id.usage not in ['customer', 'transit'] and not (move.location_id.usage == 'customer' and move.to_refund)) \
                 or move.sale_line_id \
                 or not move.picked:
                 continue

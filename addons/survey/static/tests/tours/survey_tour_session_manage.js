@@ -135,7 +135,6 @@ const checkAnswersCount = (chartData, expectedCount) => {
  */
 registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     url: "/odoo",
-    test: true,
     steps: () => [].concat(accessSurveysteps, [{
     trigger: 'button[name="action_open_session_manager"]',
     run: "click",
@@ -251,7 +250,7 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
             {value: 0, type: "regular"},
         ]);
         nextScreen();
-    }, 
+    },
 },
 {
     trigger: "h1:contains(  Scored Simple Choice)",
@@ -365,6 +364,6 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     trigger:".o_survey_session_close:has(i.fa-close)",
     run: "click",
 }, {
-    // check that we can start another session
-    trigger: 'button[name="action_start_session"]',
+    content: "A final thank you message is displayed (the session is closed)",
+    trigger: 'h1:contains("Thank you!")',
 }])});

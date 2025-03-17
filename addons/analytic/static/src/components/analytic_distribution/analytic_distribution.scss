@@ -1,6 +1,6 @@
 .o_field_analytic_distribution {
 
-    height: 0px;
+    height: auto;
 
     .analytic_distribution_placeholder {
         height: 1.5em;
@@ -48,6 +48,7 @@
         max-height: 50vh;
         // this ensures that analytic distribution widget does not cover "new model" or "search more" modals
         z-index: $zindex-modal - 1;
+        white-space: nowrap;
         cursor: default;
 
         .o_input {

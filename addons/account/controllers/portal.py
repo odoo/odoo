@@ -57,7 +57,7 @@ class PortalAccount(CustomerPortal):
         return [
             ('state', 'not in', ('cancel', 'draft')),
             ('move_type', 'in', ('out_invoice', 'out_receipt')),
-            ('payment_state', 'not in', ('in_payment', 'paid')),
+            ('payment_state', 'not in', ('in_payment', 'paid', 'reversed', 'blocked', 'invoicing_legacy')),
             ('invoice_date_due', '<', fields.Date.today()),
             ('partner_id', '=', partner_id or request.env.user.partner_id.id),
         ]
@@ -136,7 +136,7 @@ class PortalAccount(CustomerPortal):
             'page_name': 'invoice',
             'pager': {  # vals to define the pager.
                 "url": url,
-                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
                 "total": AccountInvoice.search_count(domain) if AccountInvoice.has_access('read') else 0,
                 "page": page,
                 "step": self._items_per_page,
@@ -172,7 +172,10 @@ class PortalAccount(CustomerPortal):
         elif report_type in ('html', 'pdf', 'text'):
             has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_id)
             request.update_context(proforma_invoice=not has_generated_invoice)
-            return self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
+            # Use the template set on the related partner if there is.
+            # This is not perfect as the invoice can still have been computed with another template, but it's a slight fix/imp for stable.
+            pdf_report_name = invoice_sudo.partner_id.invoice_template_pdf_report_id.report_name or 'account.account_invoices'
+            return self._show_report(model=invoice_sudo, report_type=report_type, report_ref=pdf_report_name, download=download)
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
         return request.render("account.portal_invoice_page", values)

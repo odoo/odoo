@@ -1269,7 +1269,7 @@ class Lead(models.Model):
         else:
             help_title = _('Create an opportunity to start playing with your pipeline.')
         alias_domain = [
-            ('company_id', '=', self.env.company.id),
+            ('company_id', 'in', [self.env.company.id, False]),
             ('alias_id.alias_name', '!=', False),
             ('alias_id.alias_name', '!=', ''),
             ('alias_id.alias_model_id.model', '=', 'crm.lead'),
@@ -1281,7 +1281,7 @@ class Lead(models.Model):
         alias_record = alias_records[0] if alias_records else None
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             sub_title = Markup(_('Use the <i>New</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
-                'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (alias_record.display_name, alias_record.display_name),
+                'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (alias_record.alias_email, alias_record.alias_email),
             }
         return super().get_empty_list_help(
             f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
@@ -1486,17 +1486,18 @@ class Lead(models.Model):
         :param opportunities: see ``_merge_dependences``
         """
         self.ensure_one()
-        for opportunity in opportunities:
-            for message in opportunity.message_ids:
-                if message.subject:
-                    subject = _("From %(source_name)s: %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
+        # sudo usage: because we want to go through all messages, whatever the real ACLs
+        # current user has on them
+        for opportunity_su in opportunities.sudo():
+            for message_su in opportunity_su.message_ids:
+                if message_su.subject:
+                    subject = _("From %(source_name)s: %(source_subject)s", source_name=opportunity_su.name, source_subject=message_su.subject)
                 else:
-                    subject = _("From %(source_name)s", source_name=opportunity.name)
-                message.sudo().write({
+                    subject = _("From %(source_name)s", source_name=opportunity_su.name)
+                message_su.write({
                     'res_id': self.id,
                     'subject': subject,
                 })
-
         opportunities.activity_ids.write({
             'res_id': self.id,
         })

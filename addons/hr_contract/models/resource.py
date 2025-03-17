@@ -30,7 +30,7 @@ class ResourceCalendar(models.Model):
 
     def _compute_contracts_count(self):
         count_data = self.env['hr.contract']._read_group(
-            [('resource_calendar_id', 'in', self.ids)],
+            [('resource_calendar_id', 'in', self.ids), ('employee_id', '!=', False)],
             ['resource_calendar_id'],
             ['__count'])
         mapped_counts = {resource_calendar.id: count for resource_calendar, count in count_data}
@@ -40,5 +40,5 @@ class ResourceCalendar(models.Model):
     def action_open_contracts(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("hr_contract.action_hr_contract")
-        action.update({'domain': [('resource_calendar_id', '=', self.id)]})
+        action.update({'domain': [('resource_calendar_id', '=', self.id), ('employee_id', '!=', False)]})
         return action

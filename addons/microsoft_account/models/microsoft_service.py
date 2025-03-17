@@ -92,7 +92,8 @@ class MicrosoftService(models.AbstractModel):
         state = {
             'd': self.env.cr.dbname,
             's': service,
-            'f': from_url
+            'f': from_url,
+            'u': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
         }
 
         get_param = self.env['ir.config_parameter'].sudo().get_param

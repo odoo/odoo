@@ -5,11 +5,10 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('purchase_matrix_tour', {
     url: "/odoo",
-    test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     run: "click",
-}, 
+},
 {
     trigger: ".o_purchase_order",
 },
@@ -33,12 +32,21 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
     run: "click",
 }, {
-    trigger: '.o_matrix_input_table',
+    trigger: '.modal .o_matrix_input_table',
     run: function () {
         // fill the whole matrix with 1's
         [...document.querySelectorAll(".o_matrix_input")].forEach((el) => el.value = 1);
     }
-}, {
+},
+{
+    trigger: ".modal .o_matrix_input_table .o_matrix_input:eq(0)",
+    run: "edit 0",
+},
+{
+    trigger: ".modal .o_matrix_input_table .o_matrix_input:eq(8)",
+    run: "edit 0",
+},
+{
     trigger: ".modal button:contains(Confirm)",
     run: 'click'
 }, {
@@ -47,7 +55,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 },
 // Open the matrix through the pencil button next to the product in line edit mode.
 {
-    trigger: ".o_form_status_indicator_buttons.invisible", // wait for save to be finished
+    trigger: ".o_form_status_indicator_buttons:not(:visible)", // wait for save to be finished
 },
 {
     trigger: '.o_field_pol_product_many2one',
@@ -60,13 +68,13 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     run: function () {
         // update some of the matrix values.
         [...document.querySelectorAll(".o_matrix_input")]
-            .slice(8, 16)
+            .slice(9, 16)
             .forEach((el) => (el.value = 4));
     } // set the qty to 4 for half of the matrix products.
 }, {
     trigger: ".modal button:contains(Confirm)",
     run: 'click' // apply the matrix
-}, 
+},
 {
     trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
 },
@@ -76,7 +84,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 },
 // Ensures the matrix is opened with the values, when adding the same product.
 {
-    trigger: '.o_form_status_indicator_buttons.invisible',
+    trigger: ".o_form_status_indicator_buttons:not(:visible)",
 },
 {
     trigger: 'a:contains("Add a product")',

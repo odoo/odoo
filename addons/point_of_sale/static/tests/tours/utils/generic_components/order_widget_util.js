@@ -29,6 +29,7 @@ export function hasLine({
     comboParent,
     discount,
     oldPrice,
+    priceNoDiscount,
 } = {}) {
     let trigger = `.order-container .orderline${withClass}`;
     if (withoutClass) {
@@ -57,6 +58,9 @@ export function hasLine({
     }
     if (oldPrice) {
         trigger += `:has(.info-list .price-per-unit s:contains("${oldPrice}"))`;
+    }
+    if (priceNoDiscount) {
+        trigger += `:has(.info-list:contains("${priceNoDiscount}"))`;
     }
     const args = JSON.stringify(arguments[0]);
     return [
@@ -96,5 +100,17 @@ export function hasTax(amount) {
     return {
         content: `order total tax is '${amount}'`,
         trigger: `.order-summary .tax:contains("${amount}")`,
+    };
+}
+
+export function hasNoTax() {
+    return {
+        content: "order has not tax",
+        trigger: ".order-summary",
+        run: function () {
+            if (document.querySelector(".tax-info")) {
+                throw new Error("A tax has been found in the order screen.");
+            }
+        },
     };
 }

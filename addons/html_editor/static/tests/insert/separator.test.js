@@ -1,9 +1,10 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
+import { execCommand } from "../_helpers/userCommands";
 
 async function insertSeparator(editor) {
-    editor.dispatch("INSERT_SEPARATOR");
+    execCommand(editor, "insertSeparator");
 }
 
 describe("insert separator", () => {
@@ -63,7 +64,7 @@ describe("insert separator", () => {
         const separator = editor.document.createElement("hr");
         div.append(separator);
         el.append(div);
-        editor.dispatch("ADD_STEP");
+        editor.shared.history.addStep();
         expect(getContent(el)).toBe(
             `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p><div><hr contenteditable="false"></div>`
         );

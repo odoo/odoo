@@ -9,6 +9,7 @@ export class QuantityButtons extends Component {
         setQuantity: Function,
         isMinusButtonDisabled: { type: Boolean, optional: true },
         isPlusButtonDisabled: { type: Boolean, optional: true },
+        btnClasses: { type: String, optional: true },
     };
 
     /**

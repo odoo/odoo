@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError
 
 class Product(models.Model):
     _inherit = 'product.product'
+    _mail_post_access = 'read'
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name='product.ribbon')
     website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)

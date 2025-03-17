@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoot_dom_utils";
-import { Deferred, waitUntil } from "./time";
+import { waitUntil } from "./time";
 
 /**
  * @typedef {number | [number, number] | {
@@ -69,10 +69,7 @@ import { Deferred, waitUntil } from "./time";
  *  raw?: boolean;
  * }} QueryTextOptions
  *
- * @typedef {{
- *  message?: string | () => string;
- *  timeout?: number;
- * }} WaitOptions
+ * @typedef {import("./time").WaitOptions} WaitOptions
  */
 
 /**
@@ -370,82 +367,6 @@ const matchFilter = (filter, nodes, index) => {
 };
 
 /**
- * @param {string} query
- * @param {number} width
- * @param {number} height
- */
-const matchesQuery = (query, width, height) =>
-    query
-        .toLowerCase()
-        .split(/\s*,\s*/)
-        .some((orPart) =>
-            orPart
-                .split(/\s*\band\b\s*/)
-                .every((andPart) => matchesQueryPart(andPart, width, height))
-        );
-
-/**
- * @param {string} query
- * @param {number} width
- * @param {number} height
- */
-const matchesQueryPart = (query, width, height) => {
-    const [, key, value] = query.match(/\(\s*([\w-]+)\s*:\s*(.+)\s*\)/) || [];
-    let result = false;
-    if (key) {
-        switch (key) {
-            case "display-mode": {
-                result = value === mockedMatchMedia.DISPLAY_MODE;
-                break;
-            }
-            case "max-height": {
-                result = height <= $parseFloat(value);
-                break;
-            }
-            case "max-width": {
-                result = width <= $parseFloat(value);
-                break;
-            }
-            case "min-height": {
-                result = height >= $parseFloat(value);
-                break;
-            }
-            case "min-width": {
-                result = width >= $parseFloat(value);
-                break;
-            }
-            case "orientation": {
-                result = value === "landscape" ? width > height : width < height;
-                break;
-            }
-            case "pointer": {
-                switch (value) {
-                    case "coarse": {
-                        result = globalThis.ontouchstart !== undefined;
-                        break;
-                    }
-                    case "fine": {
-                        result = globalThis.ontouchstart === undefined;
-                        break;
-                    }
-                }
-                break;
-            }
-            case "prefers-color-scheme": {
-                result = value === mockedMatchMedia.COLOR_SCHEME;
-                break;
-            }
-            case "prefers-reduced-motion": {
-                result = value === mockedMatchMedia.REDUCED_MOTION;
-                break;
-            }
-        }
-    }
-
-    return query.startsWith("not") ? !result : result;
-};
-
-/**
  * @template T
  * @param {T} value
  * @param {(keyof T)[]} propsA
@@ -626,16 +547,20 @@ const parseSelector = (selector) => {
  * @param {"html" | "xml"} type
  */
 const parseXml = (xmlString, type) => {
-    const document = parser.parseFromString(`<templates>${xmlString}</templates>`, `text/${type}`);
+    const wrapperTag = type === "html" ? "body" : "templates";
+    const document = parser.parseFromString(
+        `<${wrapperTag}>${xmlString}</${wrapperTag}>`,
+        `text/${type}`
+    );
     if (document.getElementsByTagName("parsererror").length) {
-        const trimmed = xmlString.length > 80 ? xmlString.slice(0, 80) + "..." : xmlString;
+        const trimmed = xmlString.length > 80 ? xmlString.slice(0, 80) + "…" : xmlString;
         throw new HootDomError(
             `error while parsing ${trimmed}: ${getNodeText(
                 document.getElementsByTagName("parsererror")[0]
             )}`
         );
     }
-    return document.documentElement.childNodes;
+    return document.getElementsByTagName(wrapperTag)[0].childNodes;
 };
 
 /**
@@ -863,7 +788,6 @@ customPseudoClasses
             return node.shadowRoot || false;
         };
     })
-    .set("text", makePatternBasedPseudoClass("text", getNodeText))
     .set("value", makePatternBasedPseudoClass("value", getNodeValue))
     .set("visible", () => {
         return function visible(node) {
@@ -907,10 +831,6 @@ export function defineRootNode(node) {
 
 export function getCurrentDimensions() {
     return currentDimensions;
-}
-
-export function getDefaultRootNode() {
-    return getDefaultRoot();
 }
 
 /**
@@ -1005,25 +925,6 @@ export function getNodeText(node, options) {
 }
 
 /**
- * Returns the parent `<iframe>` of a given node (if any).
- *
- * @param {Node} node
- * @returns {HTMLIFrameElement | null}
- */
-export function getParentFrame(node) {
-    const nodeDocument = node.ownerDocument;
-    const view = nodeDocument.defaultView;
-    if (view !== view.parent) {
-        for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
-            if (iframe.contentDocument === nodeDocument) {
-                return iframe;
-            }
-        }
-    }
-    return null;
-}
-
-/**
  * @template {Node} T
  * @param {T} node
  * @returns {T extends Element ? CSSStyleDeclaration : null}
@@ -1076,29 +977,31 @@ export function isEmpty(value) {
 }
 
 /**
- * Returns whether the given target is an {@link EventTarget}.
+ * Returns whether the given object is an {@link EventTarget}.
  *
  * @template T
- * @param {T} target
+ * @param {T} object
  * @returns {T extends EventTarget ? true : false}
  * @example
  *  isEventTarget(window); // true
  * @example
  *  isEventTarget(new App()); // false
  */
-export function isEventTarget(target) {
-    return target && typeof target.addEventListener === "function";
+export function isEventTarget(object) {
+    return object && typeof object.addEventListener === "function";
 }
 
 /**
  * Returns whether the given object is a {@link Node} object.
+ * Note that it is independant from the {@link Node} class itself to support
+ * cross-window checks.
  *
  * @template T
  * @param {T} object
  * @returns {T extends Node ? true : false}
  */
 export function isNode(object) {
-    return typeof object === "object" && Boolean(object?.nodeType);
+    return object && typeof object.nodeType === "number" && typeof object.nodeName === "string";
 }
 
 /**
@@ -1203,37 +1106,6 @@ export function isNodeVisible(node) {
 }
 
 /**
- * @type {typeof matchMedia}
- */
-export function mockedMatchMedia(query) {
-    let onchange = null;
-    return {
-        addEventListener: (type, callback) => window.addEventListener("resize", callback),
-        get matches() {
-            return matchesQuery(query, window.innerWidth, window.innerHeight);
-        },
-        media: query,
-        get onchange() {
-            return onchange;
-        },
-        set onchange(value) {
-            value ||= null;
-            if (value) {
-                window.addEventListener("resize", value);
-            } else {
-                window.removeEventListener("resize", onchange);
-            }
-            onchange = value;
-        },
-        removeEventListener: (type, callback) => window.removeEventListener("resize", callback),
-    };
-}
-
-mockedMatchMedia.COLOR_SCHEME = "light";
-mockedMatchMedia.DISPLAY_MODE = "browser";
-mockedMatchMedia.REDUCED_MOTION = "reduce";
-
-/**
  * @param {Dimensions} dimensions
  * @returns {[number, number]}
  */
@@ -1321,19 +1193,45 @@ export function formatXml(value, options) {
 }
 
 /**
- * Returns the active element in the given document (or in the owner document of
- * the given node).
+ * Returns the active element in the given document. Further checks are performed
+ * in the following cases:
+ * - the given node is an iframe (checks in its content document);
+ * - the given node has a shadow root (checks in that shadow root document);
+ * - the given node is the body of an iframe (checks in the parent document).
  *
  * @param {Node} [node]
  */
 export function getActiveElement(node) {
-    const { activeElement } = getDocument(node);
-    if (activeElement.contentDocument) {
-        return getActiveElement(activeElement.contentDocument);
+    const document = getDocument(node);
+    const window = getWindow(node);
+    const { activeElement } = document;
+    const { contentDocument, shadowRoot } = activeElement;
+
+    if (contentDocument && contentDocument.activeElement !== contentDocument.body) {
+        // Active element is an "iframe" element (with an active element other than its own body):
+        if (contentDocument.activeElement === contentDocument.body) {
+            // Active element is the body of the iframe:
+            // -> returns that element
+            return contentDocument.activeElement
+        } else {
+            // Active element is something else than the body:
+            // -> get the active element inside the iframe document
+            return getActiveElement(contentDocument);
+        }
     }
-    if (activeElement.shadowRoot) {
-        return activeElement.shadowRoot.activeElement;
+
+    if (shadowRoot) {
+        // Active element has a shadow root:
+        // -> get the active element inside its root
+        return shadowRoot.activeElement;
     }
+
+    if (activeElement === document.body && window !== window.parent) {
+        // Active element is the body of an iframe:
+        // -> get the active element of its parent frame (recursively)
+        return getActiveElement(window.parent.document);
+    }
+
     return activeElement;
 }
 
@@ -1348,7 +1246,7 @@ export function getActiveElement(node) {
  *  getFocusableElements();
  */
 export function getFocusableElements(options) {
-    const parent = options?.root || getDefaultRoot();
+    const parent = queryOne(options?.root || getDefaultRoot());
     if (typeof parent.querySelectorAll !== "function") {
         return [];
     }
@@ -1379,10 +1277,32 @@ export function getFocusableElements(options) {
  *  getPreviousFocusableElement();
  */
 export function getNextFocusableElement(options) {
-    const parent = options?.root || getDefaultRoot();
-    const focusableEls = getFocusableElements(parent, options);
+    const parent = queryOne(options?.root || getDefaultRoot());
+    const focusableEls = getFocusableElements({ ...options, parent });
     const index = focusableEls.indexOf(getActiveElement(parent));
     return focusableEls[index + 1] || null;
+}
+
+/**
+ * Returns the parent `<iframe>` of a given node (if any).
+ *
+ * @param {Node} node
+ * @returns {HTMLIFrameElement | null}
+ */
+export function getParentFrame(node) {
+    const document = getDocument(node);
+    if (!document) {
+        return null;
+    }
+    const view = document.defaultView;
+    if (view !== view.parent) {
+        for (const iframe of view.parent.document.getElementsByTagName("iframe")) {
+            if (iframe.contentWindow === view) {
+                return iframe;
+            }
+        }
+    }
+    return null;
 }
 
 /**
@@ -1396,8 +1316,8 @@ export function getNextFocusableElement(options) {
  *  getPreviousFocusableElement();
  */
 export function getPreviousFocusableElement(options) {
-    const parent = options?.root || getDefaultRoot();
-    const focusableEls = getFocusableElements(parent, options);
+    const parent = queryOne(options?.root || getDefaultRoot());
+    const focusableEls = getFocusableElements({ ...options, parent });
     const index = focusableEls.indexOf(getActiveElement(parent));
     return index < 0 ? focusableEls.at(-1) : focusableEls[index - 1] || null;
 }
@@ -1871,7 +1791,7 @@ export function queryValue(target, options) {
  * @see {@link waitUntil}
  * @param {Target} target
  * @param {QueryOptions & WaitOptions} [options]
- * @returns {Deferred<Element>}
+ * @returns {Promise<Element>}
  * @example
  *  const button = await waitFor(`button`);
  *  button.click();

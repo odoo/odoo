@@ -219,9 +219,59 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      */
     _computeSnippetTemplates(html) {
         const $html = $(html);
+
+        // TODO Remove in master. This patches the snippet move selectors.
+        const oldSelector = ".s_showcase .row:not(.s_col_no_resize) > div";
+        let optionEl = $html[0].querySelector(`[data-js="SnippetMove"][data-selector*="${oldSelector}"]`);
+        if (optionEl) {
+            const newSelector = oldSelector.replace(".row", ".row .row");
+            optionEl.dataset.selector = optionEl.dataset.selector.replace(oldSelector, newSelector);
+        }
+        const oldExclude = ".s_showcase .row > div";
+        optionEl = $html[0].querySelector(`[data-js="SnippetMove"][data-exclude*="${oldExclude}"]`);
+        if (optionEl) {
+            const newExclude = oldExclude.replace(".row", ".row .row");
+            optionEl.dataset.exclude = optionEl.dataset.exclude.replace(oldExclude, newExclude);
+        }
+
+        // TODO remove in master: changing the `data-apply-to` attribute of the
+        // grid spacing option so it is not applied on inner rows.
+        const gridSpacingOptionEls = html.querySelectorAll('[data-css-property="row-gap"], [data-css-property="column-gap"]');
+        gridSpacingOptionEls.forEach(gridSpacingOptionEl => gridSpacingOptionEl.dataset.applyTo = ".row.o_grid_mode");
+
+        // TODO remove in master and adapt XML.
+        const contentAdditionEl = html.querySelector("#so_content_addition");
+        if (contentAdditionEl) {
+            // Necessary to be able to drop "inner blocks" next to an image link.
+            contentAdditionEl.dataset.dropNear += ", div:not(.o_grid_item_image) > a";
+            // TODO remove in master
+            // The class is added again here even though it has already been
+            // added by the "searchbar_input_snippet_options" template. We are
+            // doing it again because it was mistakenly translated into Dutch.
+            contentAdditionEl.dataset.selector += ", .s_searchbar_input";
+            contentAdditionEl.dataset.dropNear += ", .s_searchbar_input";
+        }
+        // TODO remove in master
+        const snippetSaveOptionEl = html.querySelector("[data-js='SnippetSave']")[0];
+        if (snippetSaveOptionEl) {
+            snippetSaveOptionEl.dataset.selector += ", .s_searchbar_input";
+        }
+
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
         const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
+
+        // TODO remove in master: adds back the "Layout" and "Content Width"
+        // options on some carousels.
+        const layoutOptionEl = html.querySelector('[data-js="layout_column"][data-selector="section"]');
+        const containerWidthOptionEl = html.querySelector('[data-js="ContainerWidth"][data-selector="section"]');
+        if (layoutOptionEl) {
+            layoutOptionEl.dataset.selector += ", section.s_carousel_wrapper .carousel-item";
+        }
+        if (containerWidthOptionEl) {
+            containerWidthOptionEl.dataset.selector += ", .s_carousel .carousel-item";
+        }
+
         return super._computeSnippetTemplates(html);
     }
     /**

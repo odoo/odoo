@@ -1,15 +1,16 @@
 import { expect, test } from "@odoo/hoot";
-import { setupEditor } from "./_helpers/editor";
-import { getActiveElement, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
+import { press, queryAll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { insertText } from "./_helpers/user_actions";
-import { getContent } from "./_helpers/selection";
-import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
 import { loadLanguages } from "@web/core/l10n/translation";
+import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
+import { setupEditor } from "./_helpers/editor";
+import { getContent } from "./_helpers/selection";
+import { insertText } from "./_helpers/user_actions";
 
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { DEFAULT_ALTERNATIVES_MODES } from "../src/main/chatgpt/chatgpt_alternatives_dialog";
+import { execCommand } from "./_helpers/userCommands";
 
 const PROMPT_DIALOG_TITLE = "Generate Text with AI";
 const ALTERNATIVES_DIALOG_TITLE = "AI Copywriter";
@@ -231,9 +232,9 @@ test("insert the response from ChatGPT translate dialog", async () => {
     loadLanguages.installedLanguages = false;
 
     // Expect to undo and redo the inserted text.
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe(`<p>[Hello]</p>`);
-    editor.dispatch("HISTORY_REDO");
+    execCommand(editor, "historyRedo");
     expect(getContent(el)).toBe(`<p>Bonjour[]</p>`);
 });
 
@@ -297,7 +298,7 @@ test("press escape to close ChatGPT dialog", async () => {
     // Expect the ChatGPT Prompt Dialog to be open.
     const promptDialogHeaderSelector = `.o_dialog .modal-header:contains("${PROMPT_DIALOG_TITLE}")`;
     await waitFor(promptDialogHeaderSelector);
-    expect(getActiveElement()).toBe(queryOne('.modal [name="promptInput"]'));
+    expect('.modal [name="promptInput"]').toBeFocused();
 
     await press("escape");
     await animationFrame();
@@ -317,4 +318,22 @@ test("AI is an alias to ChatGPT command in the Powerbox", async () => {
     insertText(editor, "ai");
     await animationFrame();
     expect(".active .o-we-command-name").toHaveText("ChatGPT");
+});
+
+test("pressing control + enter should send the prompt only once", async () => {
+    const { editor } = await setupEditor("<p>[]<br></p>", {
+        config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
+    });
+
+    onRpc("/html_editor/generate_text", () => `Hey there!`);
+
+    // Select ChatGPT in the Powerbox.
+    await openFromPowerbox(editor);
+    contains(".o_dialog textarea").edit("Write something");
+    await animationFrame();
+
+    // Pressing control + enter.
+    contains(".o_dialog textarea").press(["control", "Enter"]);
+    await waitFor(".o-chatgpt-message");
+    expect(".o-chatgpt-message").toHaveCount(2); // user message + response.
 });

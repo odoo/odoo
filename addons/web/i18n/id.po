@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2024
 # Ryanto The <ry.the77@gmail.com>, 2024
-# Wil Odoo, 2024
-# Abe Manyo, 2024
+# Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-02-10 13:24+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Abe Manyo, 2024\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +28,12 @@ msgstr ""
 #: code:addons/web/static/src/core/expression_editor/expression_editor.xml:0
 msgid "# Code editor"
 msgstr "# Code editor"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/export.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr "%(property_string)s (%(parent_name)s)"
 
 #. module: web
 #. odoo-javascript
@@ -1275,6 +1281,18 @@ msgid "Back"
 msgstr "Kembali"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s”"
+msgstr "Kembali ke “%s”"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s” form"
+msgstr "Kembali ke formulir “%s”"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Background"
 msgstr "Latar Belakang"
@@ -1319,6 +1337,12 @@ msgstr "Bagan Bilah"
 #: code:addons/web/static/src/core/barcode/barcode_dialog.xml:0
 msgid "Barcode Scanner"
 msgstr "Barcode Scanner"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/barcode/barcode_video_scanner.js:0
+msgid "Barcode Video Scanner could not be mounted properly."
+msgstr "Barcode Video Scanner tidak dapat dipasang dengan tepat."
 
 #. module: web
 #: model:ir.model,name:web.model_base
@@ -1977,7 +2001,6 @@ msgstr "Copyright © 2004"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 msgid "Could not display the selected image"
 msgstr "Tidak dapat menampilkan gambar yang dipilih"
@@ -1990,9 +2013,9 @@ msgstr "Tidak dapat menampilkan pdf yang dipilih"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
-msgid "Could not display the specified image url."
-msgstr "Tidak dapat menampilkan hasil url gambar."
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+msgid "Could not display the selected spreadsheet"
+msgstr "Tidak dapat menampilkan spreadsheet yang dipilih"
 
 #. module: web
 #. odoo-javascript
@@ -2148,6 +2171,12 @@ msgstr "DVD"
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Data"
 msgstr "Data"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/debug_items.js:0
+msgid "Data: %(model)s(%(id)s)"
+msgstr "Data: %(model)s(%(id)s)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2465,6 +2494,16 @@ msgstr "Tampilkan atau sembunyikan waktu di value datetime."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/char/char_field.js:0
+msgid ""
+"Displays the value of the selected field as a textual hint. If the selected "
+"field is empty, the static placeholder attribute is displayed instead."
+msgstr ""
+"Tampilkan value field terpilih sebagai hint teks. Bila field terpilih "
+"kosong, atribut placeholder statik akan ditampilkan."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.js:0
 msgid "Do you really want to cancel the upload of %s?"
 msgstr "Apakah anda ingin membatalkan unggahan %s? "
@@ -2573,8 +2612,8 @@ msgstr "Gandakan"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Dynamic placeholder"
-msgstr "Placeholder dinamik"
+msgid "Dynamic Placeholder"
+msgstr "Placeholder Dinamis"
 
 #. module: web
 #. odoo-javascript
@@ -2662,15 +2701,6 @@ msgstr "Aktifkan line break"
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Enable profiling"
 msgstr "Aktifkan profiling"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid ""
-"Enable this option to allow the input to display a dynamic placeholder."
-msgstr ""
-"Aktifkan opsi ini untuk mengizinkan input untuk menampilkan placeholder "
-"dinamik."
 
 #. module: web
 #. odoo-javascript
@@ -3118,6 +3148,13 @@ msgstr "Pergi ke URL"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
+msgid "Google Slide Viewer"
+msgstr "Google Slide Viewer"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 msgid "Green"
 msgstr "Hijau"
@@ -3280,6 +3317,19 @@ msgstr "Jika TRUE, url akan digunakan apa adanya, tanpa ditambahkan awalan."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
+msgid ""
+"If checked, clicking on the tag will open the form that allows to directly "
+"edit it. Note that if a color field is also set, the tag edition will "
+"prevail. So, the color picker will not be displayed on click on the tag."
+msgstr ""
+"Bila dicentang, mengeklik pada tag akan membuka formulir yang memungkinkan "
+"edit langsung. Ingat bila field warna juga ditetapkan, tag edition akan "
+"berlaku. Dengan kata lain, pemilih warna tidak akan ditampilkan bila tag "
+"diklik."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.js:0
 #: code:addons/web/static/src/views/fields/boolean_toggle/boolean_toggle_field.js:0
 #: code:addons/web/static/src/views/fields/priority/priority_field.js:0
@@ -3288,16 +3338,6 @@ msgid ""
 "If checked, the record will be saved immediately when the field is modified."
 msgstr ""
 "Bila diperiksa, record akan langsung disimpan saat field dimodifikasi."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
-msgid ""
-"If checked, users will be able to edit tag related records by clicking on "
-"the tags."
-msgstr ""
-"Bila dicentang, user akan dapat mengedit tag terkait record dengan mengeklik"
-" pada tag."
 
 #. module: web
 #. odoo-javascript
@@ -3438,6 +3478,12 @@ msgid "Invalid data"
 msgstr "Data tidak valid"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Invalid default search filter name for %s"
+msgstr "Nama filter pencarian default tidak valid untuk %s"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Invalid domain"
@@ -3492,6 +3538,12 @@ msgstr "Model tidak valid: %s"
 #: code:addons/web/static/src/core/tree_editor/tree_editor_autocomplete.js:0
 msgid "Invalid record ID: %s"
 msgstr "ID record tidak valid: %s"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Invalid view type '%(view_type)s' for action id=%(action)s"
+msgstr "Tipe view '%(view_type)s' tidak valid untuk action id=2"
 
 #. module: web
 #. odoo-javascript
@@ -3885,6 +3937,12 @@ msgstr "Load data demo"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+msgid "Load everything anyway."
+msgstr "Tetap muat semuanya."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 msgid "Load more"
 msgstr "Muat lebih"
@@ -4040,6 +4098,12 @@ msgstr "Cocokkan"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+msgid "Max value"
+msgstr "Value Maks"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 msgid "Max value field"
 msgstr "Field value maksimum"
@@ -4147,6 +4211,12 @@ msgid "Missing Record"
 msgstr "Dokumen Hilang"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Missing record id"
+msgstr "Missing record id"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 msgid "Mobile support"
@@ -4183,12 +4253,6 @@ msgstr "Field model"
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Model field:"
 msgstr "Model field:"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Model reference field"
-msgstr "Field referensi model"
 
 #. module: web
 #. odoo-javascript
@@ -4256,6 +4320,12 @@ msgstr "Selengkapnya"
 #: code:addons/web/static/src/webclient/navbar/navbar.xml:0
 msgid "More Menu"
 msgstr "Lebih Banyak Menu"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "More..."
+msgstr "Lebih..."
 
 #. module: web
 #. odoo-javascript
@@ -4539,7 +4609,7 @@ msgstr "Tidak ada perangkat yang ditemukan"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji match your search"
+msgid "No emoji matches your search"
 msgstr "Tidak ada emoji yang cocok dengan pencarian Anda"
 
 #. module: web
@@ -5094,12 +5164,6 @@ msgstr "Pengaturan pivot"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Placeholder field"
-msgstr "Field placeholder"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 msgid "Please be patient."
 msgstr "Mohon sabar."
@@ -5642,18 +5706,6 @@ msgstr "Jalankan Click Everywhere"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
-msgid "Run QUnit Mobile Tests (legacy)"
-msgstr "Jalankan QUnit Mobile Test (legacy)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
-msgid "Run QUnit Tests (legacy)"
-msgstr "Jalankan QUnit Test (legacy)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #: code:addons/web/static/src/webclient/debug/debug_items.js:0
 msgid "Run Unit Tests"
 msgstr "Jalankan Unit Test"
@@ -5810,6 +5862,12 @@ msgstr "Cari Lebih..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "Search emoji"
+msgstr "Cari emoji"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
 msgstr "Cari command..."
@@ -5819,12 +5877,6 @@ msgstr "Cari command..."
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 msgid "Search for a menu..."
 msgstr "Cari menu..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "Search for an emoji"
-msgstr "Cari emoji"
 
 #. module: web
 #. odoo-javascript
@@ -6195,8 +6247,8 @@ msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
 msgstr ""
-"Terjadi kesalahan... bila Anda betul-betul stuck, bagikan laporan ini dengan"
-" layanan bantuan Anda"
+"Terjadi kesalahan... bila Anda tidak dapat melanjutkan, bagikan laporan ini "
+"dengan layanan bantuan"
 
 #. module: web
 #. odoo-javascript
@@ -6259,6 +6311,12 @@ msgstr "Statue of Liberty"
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Status"
 msgstr "Status"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "Statusbar"
+msgstr "Statusbar"
 
 #. module: web
 #. odoo-javascript
@@ -6552,6 +6610,16 @@ msgstr ""
 "console browser atau log server untuk detail"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr ""
+"Terdapat terlalu banyak data. Grafik hanya menunjukkan sampel. Gunakan "
+"filter untuk menyaring cakupan."
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 msgid ""
@@ -6707,6 +6775,18 @@ msgstr "Titania"
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Title"
 msgstr "Judul"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "To next categories"
+msgstr "Ke kategori berikutnya"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "To previous categories"
+msgstr "Ke kategori sebelumnya"
 
 #. module: web
 #. odoo-javascript
@@ -6973,6 +7053,12 @@ msgstr "Perubahan yang belum disimpan"
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 msgid "Unselect All"
 msgstr "Batalkan Memilih Semua"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Unsupported server action"
+msgstr "Action server tidak didukung"
 
 #. module: web
 #. odoo-javascript
@@ -7475,7 +7561,7 @@ msgstr ""
 
 #. module: web
 #. odoo-python
-#: code:addons/web/controllers/home.py:0
+#: code:addons/web/controllers/json.py:0
 msgid "You need export permissions to use the /json route"
 msgstr "Anda harus mengekspor izin untuk menggunakan rute /json"
 
@@ -7777,7 +7863,7 @@ msgstr "alien monster"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 msgid "all"
-msgstr "seperti bukan orang"
+msgstr "semua"
 
 #. module: web
 #. odoo-javascript

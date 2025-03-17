@@ -11,9 +11,9 @@ import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_scre
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import { registry } from "@web/core/registry";
+import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("FloorScreenTour", {
-    test: true,
     steps: () =>
         [
             // check floors if they contain their corresponding tables
@@ -162,20 +162,15 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             // Check that tables are unlinked automatically when the order is done
             FloorScreen.clickTable("5"),
             Chrome.isTabActive("4 & 5"),
-            ProductScreen.selectedOrderlineHas("Coca-Cola", "1.0"),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             FloorScreen.goTo("5"),
             Chrome.isTabActive("4 & 5"),
-            ProductScreen.selectedOrderlineHas("Coca-Cola", "1.0"),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
             Utils.negateStep(FloorScreen.isChildTable("5")),
 

@@ -335,34 +335,41 @@ class ChatbotScriptStep(models.Model):
             # sudo: res.users - visitor can access operator of their channel
             # sudo: res.lang - visitor can access their own lang
             human_operator = discuss_channel.livechat_channel_id.sudo()._get_operator(
-                lang=discuss_channel.livechat_visitor_id.sudo().lang_id.code if hasattr(discuss_channel, "livechat_visitor_id") else None,
-                country_id=discuss_channel.country_id.id
+                lang=self.env.context.get("lang"), country_id=discuss_channel.country_id.id
             )
 
         # handle edge case where we found yourself as available operator -> don't do anything
         # it will act as if no-one is available (which is fine)
         if human_operator and human_operator != self.env.user:
-            discuss_channel.sudo().add_members(
-                human_operator.partner_id.ids,
-                open_chat_window=True,
-                post_joined_message=False)
-
-            # rename the channel to include the operator's name
-            discuss_channel.sudo().name = ' '.join([
-                self.env.user.display_name if not self.env.user._is_public() else discuss_channel.anonymous_name,
-                human_operator.livechat_username if human_operator.livechat_username else human_operator.name
-            ])
-
             if self.message:
                 # first post the message of the step (if we have one)
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
-            # then post a small custom 'Operator has joined' notification
-            discuss_channel._chatbot_post_message(
-                self.chatbot_script_id,
-                Markup('<div class="o_mail_notification">%s</div>')
-                % _('%s has joined', human_operator.livechat_username or human_operator.partner_id.name))
+            # next, add the human_operator to the channel and post a "Operator joined the channel" notification
+            discuss_channel.with_user(human_operator).sudo().add_members(human_operator.partner_id.ids, open_chat_window=True)
 
+            # finally, rename the channel to include the operator's name
+            discuss_channel.sudo().name = ' '.join([
+                self.env.user.display_name if not self.env.user._is_public() else discuss_channel.anonymous_name,
+                human_operator.livechat_username if human_operator.livechat_username else human_operator.name
+            ])
+            step_message = next((
+                # sudo - chatbot.message.id: visitor can access chat bot messages.
+                m.mail_message_id for m in discuss_channel.sudo().chatbot_message_ids
+                if m.script_step_id == self
+                and m.mail_message_id.author_id == self.chatbot_script_id.operator_partner_id
+            ), self.env["mail.message"])
+            discuss_channel._bus_send_store(
+                Store(
+                    "ChatbotStep",
+                    {
+                        "id": (self.id, step_message.id),
+                        "scriptStep": self.id,
+                        "message": step_message.id,
+                        "operatorFound": True,
+                    },
+                )
+            )
             discuss_channel._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
 
@@ -372,7 +379,7 @@ class ChatbotScriptStep(models.Model):
         if fields is None:
             fields = ["answer_ids", "message", "type"]
         for step in self:
-            data = self._read_format(
+            data = step._read_format(
                 [f for f in fields if f not in {"answer_ids", "message", "type"}], load=False
             )[0]
             if "answer_ids" in fields:

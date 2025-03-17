@@ -14,9 +14,13 @@ from .test_common import TestHttpBase
 
 @tagged('post_install', '-at_install')
 class TestHttpModels(TestHttpBase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.jackoneill = new_test_user(cls.env, 'jackoneill', context={'lang': 'en_US'})
+
     def setUp(self):
         super().setUp()
-        self.jackoneill = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
         self.authenticate('jackoneill', 'jackoneill')
 
     def test_models0_galaxy_ok(self):

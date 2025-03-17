@@ -28,7 +28,10 @@ class ResourceResource(models.Model):
 
         for resource in self:
             employee = resource.employee_id
+            if not employee:
+                resource.avatar_128 = False
+                continue
             if is_hr_user:
-                resource.avatar_128 = employee and employee[0].avatar_128
+                resource.avatar_128 = employee[0].avatar_128
             else:
                 resource.avatar_128 = avatar_per_employee_id[employee[0].id]

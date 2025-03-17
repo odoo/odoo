@@ -5,11 +5,10 @@ import { registry } from "@web/core/registry";
 /**
  * This tour test that a log note isn't considered
  * as a course review. And also that a member can
- * add only one review.
+ * add only one review and react to them.
  */
 registry.category("web_tour.tours").add("course_reviews", {
     url: "/slides",
-    test: true,
     steps: () => [
         {
             trigger: "a:contains(Basics of Gardening - Test)",
@@ -20,7 +19,8 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Chatter-content:not(:has(.o-mail-Message-content))",
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter-content:not(:has(.o-mail-Message-content))",
         },
         {
             // If it fails here, it means the log note is considered as a review
@@ -28,11 +28,11 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: ".modal div.o_portal_chatter_composer_body textarea",
+            trigger: ".modal.modal_shown.show div.o_portal_chatter_composer_body textarea",
             run: "edit Great course!",
         },
         {
-            trigger: ".modal button.o_portal_chatter_composer_btn",
+            trigger: ".modal.modal_shown.show button.o_portal_chatter_composer_btn",
             run: "click",
         },
         {
@@ -46,6 +46,29 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             trigger: "div.o_portal_chatter_composer_body textarea:value(Great course!)",
+            run: "edit Mid course!",
+        },
+        {
+            trigger: ".modal.modal_shown.show button.o_portal_chatter_composer_btn",
+            run: "click",
+        },
+        {
+            content: "Reload page (fetch message)",
+            trigger: "#chatterRoot:shadow .o-mail-Chatter",
+            run() {
+                location.reload();
+            },
+        },
+        {
+            trigger: "a[id=review-tab]",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-textContent:contains(Mid course!)",
+            run: "hover && click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message [title='Add a Reaction']",
         },
     ],
 });

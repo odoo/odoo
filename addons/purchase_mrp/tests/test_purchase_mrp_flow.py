@@ -1187,3 +1187,91 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             })],
         })
         self.assertTrue(bom)
+
+    def test_kit_price_without_rounding(self):
+        warehouse = self.warehouse
+        buy_route = warehouse.buy_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time'
+        })
+
+        prod, compo = self.env['product.product'].create([{
+        'name': name,
+        'type': 'consu',
+        'categ_id': avco_category.id,
+        'route_ids': [(4, route_id)],
+        } for name, route_id in [('product a', manufacture_route.id), ('component a', buy_route.id)]])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': prod.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': compo.id,
+                'product_qty': 12,
+            })]
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        partner = self.env['res.partner'].create({'name': 'Testy'})
+        po_form.partner_id = partner
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = prod
+            pol_form.product_qty = 1
+            pol_form.price_unit = 100
+            pol_form.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.button_validate()
+        move = receipt.move_ids[0]
+        # the price unit for 1 unit of the kit is 100
+        # calculating the unit cost per component: 100 / 12 = 8.33333333333
+        # total cost for 12 components: 8.33 * 12 = 99.96
+        # however, due to rounding differences, the expected value is 100
+        svl_val = self.env['stock.valuation.layer'].search([('stock_move_id', '=', move.id)]).value
+        self.assertEqual(svl_val, 100)
+
+    def test_valuation_by_lot_component_in_kit(self):
+        """
+        Test that a product can be valuated by lot when it is a component of a kit
+        """
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time'
+        })
+        self.component_a.categ_id = avco_category
+        self.component_a.is_storable = True
+        self.component_a.lot_valuated = True
+        lot_a = self.env['stock.lot'].create({
+            'name': 'lot_a',
+            'product_id': self.component_a.id,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.kit_1.id,
+                'product_uom': self.kit_1.uom_id.id,
+                'price_unit': 60.0,
+                'product_qty': 2,
+            })],
+        })
+        po.button_confirm()
+        self.assertEqual(po.state, 'purchase')
+        self.assertEqual(self.component_a.standard_price, 0)
+        picking = po.picking_ids
+        move_line = picking.move_line_ids.filtered(lambda m:m.product_id == self.component_a)
+        move_line.lot_id = lot_a
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        # The standard price of the component is updated to $10 because the kit cost
+        # is $60, there are 6 units of different components used in this BoM, and since
+        # the cost_share is equal, 60/6 = $10.
+        self.assertEqual(self.component_a.standard_price, 10)
+        self.assertEqual(lot_a.standard_price, 10)
+        self.assertEqual(lot_a.quantity_svl, 4)
+        self.assertEqual(lot_a.value_svl, 40)

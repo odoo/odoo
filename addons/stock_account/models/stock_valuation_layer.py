@@ -5,6 +5,8 @@ from odoo import _, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 
+from itertools import chain
+from odoo.tools import groupby, OrderedSet
 from collections import defaultdict
 
 
@@ -65,6 +67,8 @@ class StockValuationLayer(models.Model):
     def _validate_accounting_entries(self):
         am_vals = []
         aml_to_reconcile = defaultdict(set)
+        move_ids = OrderedSet()
+        svl_move_list = defaultdict(int) 
         for svl in self:
             if not svl.with_company(svl.company_id).product_id.valuation == 'real_time':
                 continue
@@ -73,16 +77,27 @@ class StockValuationLayer(models.Model):
             move = svl.stock_move_id
             if not move:
                 move = svl.stock_valuation_layer_id.stock_move_id
-            am_vals += move.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+            move_ids.add(move.id)
+            svl_move_list[svl.id] = move.id
+        
+        moves = self.env['stock.move'].browse(move_ids)
+        move_directions = moves._get_move_directions()
+        for svl in self:
+            linked_move = moves.browse(svl_move_list[svl.id])
+            if linked_move:
+                am_vals += linked_move.with_context(move_directions=move_directions).with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
-        for svl in self:
-            move = svl.stock_move_id
-            product = svl.product_id
-            if svl.company_id.anglo_saxon_accounting:
-                move._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
-            for aml in (move | move.origin_returned_move_id)._get_all_related_aml():
+        products_svl = groupby(self, lambda svl: (svl.product_id, svl.company_id.anglo_saxon_accounting))
+        for (product, anglo_saxon_accounting), svls in products_svl:
+            svls = self.browse(svl.id for svl in svls)
+            moves = svls.stock_move_id
+            if anglo_saxon_accounting:
+                moves._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
+            moves = (moves | moves.origin_returned_move_id).with_prefetch(chain(moves._prefetch_ids, moves.origin_returned_move_id._prefetch_ids))
+            for aml in moves._get_all_related_aml():
                 if aml.reconciled or aml.move_id.state != "posted" or not aml.account_id.reconcile:
                     continue
                 aml_to_reconcile[(product, aml.account_id)].add(aml.id)
@@ -249,12 +264,14 @@ class StockValuationLayer(models.Model):
                     'debit': abs(value),
                     'credit': 0,
                     'product_id': product.id,
+                    'quantity': 0,
                 }), (0, 0, {
                     'name': name,
                     'account_id': credit_account_id,
                     'debit': 0,
                     'credit': abs(value),
                     'product_id': product.id,
+                    'quantity': 0,
                 })],
             }
             am_vals_list.append(move_vals)
@@ -262,3 +279,7 @@ class StockValuationLayer(models.Model):
         account_moves = self.env['account.move'].sudo().create(am_vals_list)
         if account_moves:
             account_moves._post()
+
+    def _should_impact_price_unit_receipt_value(self):
+        self.ensure_one()
+        return True

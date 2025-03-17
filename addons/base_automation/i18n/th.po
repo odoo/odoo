@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 12:50+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +127,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value'\">to</span>\n"
 "                                                        <span invisible=\"evaluation_type != 'equation'\">as</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value'\">ถึง</span>\n"
+"                                                        <span invisible=\"evaluation_type != 'equation'\">เป็น</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -495,8 +498,9 @@ msgstr "หากมี ต้องปฏิบัติตามเงื่�
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
 "If present, this condition must be satisfied before the update of the "
-"record."
-msgstr "หากมี จะต้องเป็นไปตามเงื่อนไขนี้ก่อนที่จะอัปเดตบันทึก"
+"record. Not checked on record creation."
+msgstr ""
+"หากมี เงื่อนไขนี้ต้องเป็นไปตามก่อนอัปเดตบันทึก ไม่ใช่ตรวจสอบเมื่อสร้างบันทึก"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -744,6 +748,11 @@ msgid ""
 " inactivity or remind yourself to follow-up on tasks when a specific tag is "
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
+"ส่งอีเมลเมื่อวัตถุเปลี่ยนสถานะ "
+"เก็บถาวรบันทึกหลังจากที่ไม่ได้ใช้งานเป็นเวลาหนึ่งเดือน "
+"หรือเตือนตัวเองให้ติดตามงานเมื่อมีการเพิ่มแท็กเฉพาะ "
+"<br>ด้วยกฎการทำงานอัตโนมัติ "
+"คุณสามารถทำให้เวิร์กโฟลว์ใดก็ตามทำงานอัตโนมัติได้"
 
 #. module: base_automation
 #. odoo-javascript
@@ -865,7 +874,7 @@ msgstr "เงื่อนไขการกำหนดเวลา"
 #: model:digest.tip,name:base_automation.digest_tip_base_automation_0
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid "Tip: Automate everything with Automation Rules"
-msgstr ""
+msgstr "เคล็ดลับ: ทำให้ทุกอย่างเป็นอัตโนมัติด้วยกฎอัตโนมัติ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger

@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 from xmlrpc.client import MAXINT
 
 from odoo.tools import create_index, SQL
+from odoo.tools.misc import str2bool
 
 
 class AccountBankStatementLine(models.Model):
@@ -258,6 +259,7 @@ class AccountBankStatementLine(models.Model):
                 company2children[journal.company_id].ids,
                 extra_clause,
             ))
+            pending_items = self
             for st_line_id, amount, is_anchor, balance_start, state in self._cr.fetchall():
                 if is_anchor:
                     current_running_balance = balance_start
@@ -265,6 +267,10 @@ class AccountBankStatementLine(models.Model):
                     current_running_balance += amount
                 if record_by_id.get(st_line_id):
                     record_by_id[st_line_id].running_balance = current_running_balance
+                    pending_items -= record_by_id[st_line_id]
+            # Lines manually deleted from the form view still require to have a value set here, as the field is computed and non-stored.
+            for item in pending_items:
+                item.running_balance = item.running_balance
 
     @api.depends('date', 'sequence')
     def _compute_internal_index(self):
@@ -485,6 +491,9 @@ class AccountBankStatementLine(models.Model):
 
     def _find_or_create_bank_account(self):
         self.ensure_one()
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")):
+            return self.env['res.partner.bank']
+
         # There is a sql constraint on res.partner.bank ensuring an unique pair <partner, account number>.
         # Since it's not dependent of the company, we need to search on others company too to avoid the creation
         # of an extra res.partner.bank raising an error coming from this constraint.
@@ -500,7 +509,7 @@ class AccountBankStatementLine(models.Model):
                 'partner_id': self.partner_id.id,
                 'journal_id': None,
             })
-        return bank_account.filtered(lambda x: x.company_id in (False, self.company_id))
+        return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id))
 
     def _get_default_amls_matching_domain(self):
         self.ensure_one()
@@ -512,7 +521,7 @@ class AccountBankStatementLine(models.Model):
             # Base domain.
             ('display_type', 'not in', ('line_section', 'line_note')),
             ('parent_state', '=', 'posted'),
-            ('company_id', 'child_of', self.company_id.root_id.id),
+            ('company_id', 'child_of', self.company_id.id),  # allow to match invoices from same or children companies to be consistant with what's shown in the interface
             # Reconciliation domain.
             ('reconciled', '=', False),
             # Domain to use the account_move_line__unreconciled_index
@@ -719,7 +728,7 @@ class AccountBankStatementLine(models.Model):
             st_line_vals_to_write = {}
 
             if 'line_ids' in changed_fields:
-                liquidity_lines, suspense_lines, _other_lines = st_line._seek_for_lines()
+                liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
                 company_currency = st_line.journal_id.company_id.currency_id
                 journal_currency = st_line.journal_id.currency_id if st_line.journal_id.currency_id != company_currency\
                     else False
@@ -773,7 +782,7 @@ class AccountBankStatementLine(models.Model):
                             'foreign_currency_id': False,
                         })
 
-                    else:
+                    elif not other_lines:
 
                         # Update the statement line regarding the foreign currency of the suspense line.
 
@@ -787,7 +796,7 @@ class AccountBankStatementLine(models.Model):
                     'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,
                 })
 
-            move.write(move._cleanup_write_orm_values(move, move_vals_to_write))
+            move.with_context(skip_readonly_check=True).write(move._cleanup_write_orm_values(move, move_vals_to_write))
             st_line.write(move._cleanup_write_orm_values(st_line, st_line_vals_to_write))
 
     def _synchronize_to_moves(self, changed_fields):

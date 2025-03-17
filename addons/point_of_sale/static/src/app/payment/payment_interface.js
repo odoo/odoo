@@ -38,6 +38,16 @@ export class PaymentInterface {
     }
 
     /**
+     * This getter determines if send_payment_request
+     * is called automatically upon selecting the payment method.
+     * Overriding this to false allows manual input of an amount
+     * before sending the request to the terminal.
+     */
+    get fast_payments() {
+        return true;
+    }
+
+    /**
      * Called when a user clicks the "Send" button in the
      * interface. This should initiate a payment request and return a
      * Promise that resolves when the final status of the payment line

@@ -3,15 +3,19 @@
 # 	* hr_attendance
 # 
 # Translators:
-# Wil Odoo, 2024
+# Jiří Podhorecký <jirka.p@volny.cz>, 2024
+# Marta Wacławek, 2024
+# Wil Odoo, 2025
+# Stanislav Kurinec, 2025
+# Vojtěch Olšan, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-02-10 13:23+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Vojtěch Olšan, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,23 +33,25 @@ msgstr "Čas \"Odhlášení\" nesmí být dříve než čas \"Přihlášení\"."
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "%(worked_hours)s (%(check_in)s-%(check_out)s)"
-msgstr ""
+msgstr "%(worked_hours)s (%(check_in)s-%(check_out)s)"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "'Documentation'"
-msgstr ""
+msgstr "'Dokumentace'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
 msgid "<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Period\" role=\"img\" "
+"title=\"Period\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Installation Manual"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Instalační manuál"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -53,6 +59,8 @@ msgid ""
 "<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-"
 "label=\"Available\" title=\"Available\"/>"
 msgstr ""
+"<span class=\"fa fa-circle text-success me-1\" role=\"img\" aria-"
+"label=\"Available\" title=\"Available\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -60,6 +68,8 @@ msgid ""
 "<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -74,12 +84,12 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Tolerance</span>"
-msgstr ""
+msgstr "<span class=\"me-2\">Tolerance</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"ms-2\">Hours</span>"
-msgstr ""
+msgstr "<span class=\"ms-2\">Hodiny</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -88,6 +98,9 @@ msgid ""
 "                                <br/>\n"
 "                                <br/>"
 msgstr ""
+"<span class=\"ms-2\">Minut</span>\n"
+"                                <br/>\n"
+"                                <br/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -97,6 +110,9 @@ msgid ""
 "                            This Month\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Tento měsíc\n"
+"                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -112,7 +128,7 @@ msgstr "<span> Minut</span>"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span> seconds</span>"
-msgstr ""
+msgstr "<span> sekundy</span>"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__absence_management
@@ -125,6 +141,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction
 msgid "Action Needed"
 msgstr "Vyžadována akce"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Active Employees"
+msgstr " Aktivní zaměstnanci"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -155,7 +177,7 @@ msgstr "Vše"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.js:0
 msgid "All departments"
-msgstr ""
+msgstr "Všechna oddělení"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -194,7 +216,7 @@ msgstr "Schválit"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Approve Extra Hours"
-msgstr ""
+msgstr "Achválit hodiny navíc"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__approved
@@ -205,7 +227,13 @@ msgstr "Schváleno"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_overtime_validation__by_manager
 msgid "Approved by Manager"
-msgstr ""
+msgstr "Schváleno manažerem"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Archived Employees"
+msgstr "Archivovaní zaměstnanci"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -312,7 +340,7 @@ msgstr "Docházka"
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #: code:addons/hr_attendance/models/res_users.py:0
 msgid "Attendances This Month"
-msgstr ""
+msgstr "Docházky tento měsíc"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -418,7 +446,7 @@ msgstr "Před"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_browser
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Browser"
-msgstr ""
+msgstr "Prohlížeč"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -650,7 +678,7 @@ msgstr "Definujte způsob, jakým bude uživatel aplikací identifikován."
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Departement"
-msgstr ""
+msgstr "Oddělení"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
@@ -799,7 +827,7 @@ msgstr "Odběratelé (partneři)"
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "From %s"
-msgstr ""
+msgstr "Od %s"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__front
@@ -936,6 +964,12 @@ msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+msgid "Install"
+msgstr "Instalovat"
+
+#. module: hr_attendance
+#. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Invalid request"
 msgstr "Neplatný požadavek"
@@ -1020,7 +1054,7 @@ msgstr "nahrát demo data"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "Load sample data"
-msgstr ""
+msgstr "Načíst vzorová data"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -1185,6 +1219,11 @@ msgstr "Odoo Logo"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_officer
 msgid "Officer: Manage attendances"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.server,name:hr_attendance.open_kiosk_url
+msgid "Open Kiosk Url"
 msgstr ""
 
 #. module: hr_attendance
@@ -1587,7 +1626,7 @@ msgstr "Odpracovaná doba"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours this month"
-msgstr ""
+msgstr "Odpracované hodiny tento měsíc"
 
 #. module: hr_attendance
 #. odoo-javascript

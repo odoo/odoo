@@ -1,5 +1,4 @@
-/** @odoo-module **/
-
+import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 import { useSubEnv } from '@odoo/owl';
 import {
@@ -29,6 +28,11 @@ patch(ProductConfiguratorDialog.prototype, {
             this.createProductUrl = '/website_sale/product_configurator/create_product';
             this.updateCombinationUrl = '/website_sale/product_configurator/update_combination';
             this.getOptionalProductsUrl = '/website_sale/product_configurator/get_optional_products';
+            // To be translated, the title must be repeated here. Indeed, only
+            // translations of "frontend modules" are fetched in the context of
+            // website. The original definition of the title is in "sale", which
+            // is not a frontend module.
+            this.title = _t("Configure your product");
         }
 
         useSubEnv({
@@ -44,5 +48,14 @@ patch(ProductConfiguratorDialog.prototype, {
      */
     canBeSold() {
         return this.state.products.every(p => p.can_be_sold);
+    },
+
+    /**
+     * Check whether to show the "shop" buttons in the dialog footer.
+     *
+     * @return {Boolean} - Whether to show the "shop" buttons in the dialog footer.
+     */
+    showShopButtons() {
+        return this.props.isFrontend && !this.props.edit;
     },
 });

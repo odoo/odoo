@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:54+0000\n"
+"POT-Creation-Date: 2025-02-10 13:22+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,15 @@ msgstr ""
 #: code:addons/mrp/models/stock_rule.py:0
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
 msgstr " <br/><br/> Komponenty budou převzaty z <b>%s</b>."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid ""
+" <br/><br/> The manufactured products will be moved towards "
+"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
+"destination."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -103,7 +113,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(product_name)s (new) %(number_of_boms)s"
-msgstr ""
+msgstr "%(product_name)s (nové) %(number_of_boms)s"
 
 #. module: mrp
 #. odoo-python
@@ -299,8 +309,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr ""
+msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
+msgstr "<span class=\"fw-bold text-nowrap\">K výrobě</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -820,11 +830,6 @@ msgid "Assembling"
 msgstr "Montáž"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_ir_attachment
-msgid "Attachment"
-msgstr "Příloha"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__message_attachment_count
@@ -1120,15 +1125,11 @@ msgstr ""
 "                příkazu nebo balíčku produktů."
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
 msgstr "Blok"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
-msgid "Block WC"
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
@@ -1150,7 +1151,7 @@ msgstr "Blokováno"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__blocked_by_workorder_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Blocked By"
-msgstr "Blokováno uživatelem"
+msgstr "Následuje po"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__blocked_time
@@ -1368,6 +1369,14 @@ msgstr "Změna vyráběného množství"
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Quantity To Produce"
 msgstr "Změnit množství, které chcete vytvořit"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid ""
+"Changing the product or variant will permanently reset all previously "
+"encoded variant-related data."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1669,12 +1678,6 @@ msgid "Costs"
 msgstr "Náklady"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-msgid "Could not display the selected spreadsheet"
-msgstr "Vybranou tabulku se nepodařilo zobrazit"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_count
 msgid "Count of MO generated"
 msgstr "Počet vygenerovaných výrobních příkazů"
@@ -1870,7 +1873,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
-#: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
@@ -1952,7 +1954,7 @@ msgid ""
 "Defines if you can consume more or less components than the quantity defined on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
 "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
+"  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
 
@@ -2467,12 +2469,6 @@ msgid "Google Slide Link"
 msgstr "Odkaz Google Slidu"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-msgid "Google Slides Viewer"
-msgstr "Prohlížeč prezentací Google"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Group By"
 msgstr "Seskupit podle"
@@ -2524,6 +2520,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
 msgid "Hidden"
 msgstr "Skrytý"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
+msgid "Highlight Consumption"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -3169,7 +3170,6 @@ msgid "Manage Work Order Operations"
 msgstr "Spravujte operace výrobních příkazů"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
 msgid "Manual Consumption"
 msgstr "Manuální spotřeba"
@@ -3479,6 +3479,11 @@ msgstr "Počet produkce Mrp"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Termín mé aktivity"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "My MOs"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
@@ -5041,12 +5046,6 @@ msgid "Show backorder lines"
 msgstr ""
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
-msgid "Slides viewer"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
 msgstr "Zařazení do kalendáře pracovního střediska po naplánování"
@@ -5897,7 +5896,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
 msgid "Unblock"
 msgstr "Odblokovat"
 
@@ -6451,6 +6451,8 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "            Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"Pracovní příkazy jsou operace, které je třeba provést v rámci výrobní zakázky.\n"
+"            Operace se definují v kusovníku nebo se přidávají přímo do výrobního příkazu."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban

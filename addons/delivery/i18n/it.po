@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# pezzin <christian.pezzin@gmail.com>, 2024
 # Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-27 13:03+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -33,6 +34,8 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"Spedizione gratuita"
 
 #. module: delivery
 #. odoo-python
@@ -88,7 +91,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description</strong>"
-msgstr ""
+msgstr "<strong>Descrizione spedizione</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -204,14 +207,14 @@ msgstr "Seleziona un punto di raccolta"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
 msgstr "Seleziona questa sede"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.js:0
 msgid "Closed"
 msgstr "Chiuso"
 
@@ -576,13 +579,13 @@ msgstr "Ultimo aggiornamento il"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
 msgstr "Vista elenco"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
 msgstr "Caricamento..."
 
@@ -603,7 +606,7 @@ msgstr "Gestisci i codici postali di consegna"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
 msgstr "Vista mappa"
 
@@ -662,7 +665,7 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "No result"
 msgstr "Nessun risultato"
 
@@ -674,8 +677,8 @@ msgstr "Non disponibile per l'ordine corrente"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location/location.xml:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location/location.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Opening hours"
 msgstr "Ore di apertura"
 
@@ -917,7 +920,7 @@ msgstr "Spedizione gratuita, l'importo dell'ordine è superiore a %.2f."
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
 msgstr "Si è verificato un errore durante il caricamento della mappa"
 
@@ -1043,9 +1046,9 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Your postal code"
-msgstr ""
+msgstr "Il tuo codice postale"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

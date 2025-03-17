@@ -89,26 +89,26 @@
           <t t-if="orders" t-call="portal.portal_table">
               <thead>
                   <tr class="active">
-                      <th>
+                      <th id="order_name_header">
                           <span class='d-none d-md-inline'>Purchase Order #</span>
                           <span class='d-block d-md-none'>Ref.</span>
                       </th>
-                      <th class="text-end">
+                      <th id="order_confirmation_header" class="text-end">
                           <span class='d-none d-md-inline'>Confirmation Date</span>
                           <span class='d-block d-md-none'>Confirmation</span>
                       </th>
-                      <th class="text-center"/>
-                      <th class="text-end">Total</th>
+                      <th id="order_badge_header" class="text-center"/>
+                      <th id="order_total_header" class="text-end">Total</th>
                   </tr>
               </thead>
               <t t-foreach="orders" t-as="order">
                   <tr>
-                      <td><a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a></td>
-                      <td class="text-end">
+                      <td id="order_name"><a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a></td>
+                      <td id="order_confirmation" class="text-end">
                           <span t-field="order.date_approve" t-options="{'widget': 'date'}"/>&amp;nbsp;
                           <span class='d-none d-md-inline' t-field="order.date_approve" t-options="{'time_only': True}"/>
                       </td>
-                      <td class="text-center">
+                      <td id="order_badge" class="text-center">
                           <span t-if="order.invoice_status == 'to invoice'" class="badge rounded-pill text-bg-info">
                               <i class="fa fa-fw fa-file-text" role="img" aria-label="Waiting for Bill" title="Waiting for Bill"></i><span class="d-none d-md-inline"> Waiting for Bill</span>
                           </span>
@@ -119,7 +119,7 @@
                               <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="d-none d-md-inline"> Done</span>
                           </span>
                       </td>
-                      <td class="text-end"><span t-field="order.amount_total"/></td>
+                      <td id="order_total" class="text-end"><span t-field="order.amount_total"/></td>
                   </tr>
               </t>
           </t>
@@ -160,7 +160,7 @@
                               <ul class="nav flex-column bs-sidenav"></ul>
                           </div>
                           <div t-if="order.user_id">
-                              <h6 class="small text-muted">Purchase Representative</h6>
+                              <h6 class="small text-muted">Buyer</h6>
                                 <t t-call="portal.portal_my_contact">
                                     <t t-set="_contactAvatar" t-value="image_data_uri(order.user_id.avatar_128)"/>
                                     <t t-set="_contactName" t-value="order.user_id.name"/>
@@ -170,7 +170,7 @@
                           </div>
 
                           <div>
-                            <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary"
+                            <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary invisible"
                             data-bs-toggle="modal" data-bs-target="#portal_connect_software_modal">
                                 Connect with your software!
                             </button>
@@ -369,7 +369,7 @@
                                         />
                                     </td>
                                     <td t-if="display_price_and_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.taxes_id))"/>
+                                        <span t-out="', '.join(map(lambda x: (x.name), line.taxes_id))"/>
                                     </td>
                                     <td t-if="display_price_and_taxes" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                         <div t-field="line.discount" class="text-end"/>

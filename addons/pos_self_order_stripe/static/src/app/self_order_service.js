@@ -16,7 +16,7 @@ patch(SelfOrder.prototype, {
                 this.env,
                 stripePaymentMethod,
                 this.access_token,
-                this.pos_config_id,
+                this.config,
                 this.handleStripeError.bind(this),
                 this.handleReaderConnection.bind(this)
             );

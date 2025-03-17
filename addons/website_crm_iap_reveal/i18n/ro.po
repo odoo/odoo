@@ -1,34 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_crm_iap_reveal
-#
+# 
 # Translators:
-# sharkutz <sharkutz4life@yahoo.com>, 2022
-# Cozmin Candea <office@terrabit.ro>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Claudia Baisan, 2023
-#
+# Larisa Pop, 2024
+# Lyall Kindmurr, 2024
+# Corina Calin, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Claudia Baisan, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
-msgid "1 credit is consumed per visitor matching the website traffic conditions and whose company can be identified.<br/>"
-msgstr "Se consumă 1 credit per vizitator care corespunde condițiilor de trafic ale site-ului și a cărui companie poate fi identificată.<br/>"
+msgid ""
+"1 credit is consumed per visitor matching the website traffic conditions and"
+" whose company can be identified.<br/>"
+msgstr ""
+"Se consumă 1 credit per vizitator care corespunde condițiilor de trafic ale "
+"site-ului și a cărui companie poate fi identificată.<br/>"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -58,12 +59,13 @@ msgstr "Reguli Generare Piste CRM"
 #. module: website_crm_iap_reveal
 #: model:ir.model,name:website_crm_iap_reveal.model_crm_reveal_view
 msgid "CRM Reveal View"
-msgstr ""
+msgstr "Vizualizare revelatoare CRM"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__lead_for
 msgid "Choose whether to track companies only or companies and their contacts"
-msgstr "Alegeți dacă urmăriți numai companiile sau companiile și contactele acestora"
+msgstr ""
+"Alegeți dacă urmăriți numai companiile sau companiile și contactele acestora"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_for__companies
@@ -73,7 +75,7 @@ msgstr "Companii"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_for__people
 msgid "Companies and their Contacts"
-msgstr "Companiile și contactele acestora"
+msgstr "Companii și contactele acestora"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__company_size_min
@@ -83,7 +85,7 @@ msgstr "Marimea companiei"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__company_size_max
 msgid "Company Size Max"
-msgstr "Dimensiunea companiei Max"
+msgstr "Maxim dimensiune companie"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -107,8 +109,11 @@ msgstr "Creați o regulă de conversie"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.actions.act_window,help:website_crm_iap_reveal.crm_reveal_rule_action
-msgid "Create rules to generate B2B leads/opportunities from your website visitors."
-msgstr "Creați reguli pentru a genera piste / oportunități B2B de la vizitatorii site-ului dvs. web."
+msgid ""
+"Create rules to generate B2B leads/opportunities from your website visitors."
+msgstr ""
+"Creați reguli pentru a genera piste / oportunități B2B de la vizitatorii "
+"site-ului dvs. web."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__create_uid
@@ -119,7 +124,7 @@ msgstr "Creat de"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_for
@@ -133,9 +138,10 @@ msgid "Display Name"
 msgstr "Nume afișat"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 msgid "Enter Valid Regex."
-msgstr ""
+msgstr "Introduceți Regex valid."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__contact_filter_type
@@ -173,11 +179,6 @@ msgid "High"
 msgstr "Ridicat"
 
 #. module: website_crm_iap_reveal
-#: model:ir.model,name:website_crm_iap_reveal.model_iap_account
-msgid "IAP Account"
-msgstr ""
-
-#. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_iap_credits
 msgid "IAP Credits"
 msgstr "Credite IAP"
@@ -198,12 +199,6 @@ msgstr "Adresă IP"
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Industries"
 msgstr "Industrii"
-
-#. module: website_crm_iap_reveal
-#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule____last_update
-#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view____last_update
-msgid "Last Modified on"
-msgstr "Ultima modificare la"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__write_uid
@@ -230,7 +225,7 @@ msgstr "Data Pistă"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_lead_opportunity_form
 msgid "Lead Generation Information"
-msgstr ""
+msgstr "Informații privind generarea de lead-uri"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_rule_id
@@ -242,29 +237,24 @@ msgstr "Regulă Generare Pistă"
 #: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_view_action
 #: model:ir.ui.menu,name:website_crm_iap_reveal.crm_reveal_view_menu_action
 msgid "Lead Generation Views"
-msgstr ""
-
-#. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-msgid "Lead Generation requires a GeoIP resolver which could not be found on your system. Please consult https://pypi.org/project/GeoIP/."
-msgstr ""
+msgstr "Vizualizări privind generarea de lead-uri"
 
 #. module: website_crm_iap_reveal
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
-#: model:ir.cron,cron_name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
-#: model:ir.cron,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
-msgstr ""
+msgstr "Lead Generation: Generarea de lead-uri/oportunități"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model,name:website_crm_iap_reveal.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Pista/Oportunitate"
+msgstr "Pistă/Oportunitate"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Leave empty to always match. Odoo will not create lead if no match"
 msgstr ""
+"Lăsați gol pentru a se potrivi întotdeauna. Odoo nu va crea lead dacă nu "
+"există nicio potrivire"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__0
@@ -273,8 +263,12 @@ msgstr "Scăzut"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
-msgid "Make sure you know if you have to be GDPR compliant for storing personal data."
+msgid ""
+"Make sure you know if you have to be GDPR compliant for storing personal "
+"data."
 msgstr ""
+"Asigurați-vă că știți dacă trebuie să vă conformați GDPR pentru stocarea "
+"datelor cu caracter personal."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.constraint,message:website_crm_iap_reveal.constraint_crm_reveal_rule_limit_extra_contacts
@@ -285,11 +279,6 @@ msgstr "Maxim 5 contacte sunt permise"
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__1
 msgid "Medium"
 msgstr "Mediu"
-
-#. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-msgid "Missing Library"
-msgstr "Biblioteca lipsă"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__not_found
@@ -309,17 +298,25 @@ msgstr "Număr de piste generate"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__opportunity_count
 msgid "Number of Generated Opportunity"
-msgstr ""
+msgstr "Numărul de oportunități generate"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__country_ids
-msgid "Only visitors of following countries will be converted into leads/opportunities (using GeoIP)."
+msgid ""
+"Only visitors of following countries will be converted into "
+"leads/opportunities (using GeoIP)."
 msgstr ""
+"Numai vizitatorii din următoarele țări vor fi transformați în clienți "
+"potențiali/oportunități (utilizând GeoIP)."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__state_ids
-msgid "Only visitors of following states will be converted into leads/opportunities."
+msgid ""
+"Only visitors of following states will be converted into "
+"leads/opportunities."
 msgstr ""
+"Numai vizitatorii din următoarele state vor fi transformați în clienți "
+"potențiali/oportunități."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_type__opportunity
@@ -329,14 +326,15 @@ msgstr "Oportunitate"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Opportunity Data"
-msgstr ""
+msgstr "Date privind oportunitatea"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Opportunity Generation Conditions"
-msgstr ""
+msgstr "Condiții de generare a oportunităților"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 msgid "Opportunity created by Odoo Lead Generation"
 msgstr "Oportunitate creată de Instrumentul de generare pistă Odoo"
@@ -358,13 +356,19 @@ msgstr "Prioritate"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__regex_url
-msgid "Regex to track website pages. Leave empty to track the entire website, or / to target the homepage. Example: /page* to track all the pages which begin with /page"
+msgid ""
+"Regex to track website pages. Leave empty to track the entire website, or / "
+"to target the homepage. Example: /page* to track all the pages which begin "
+"with /page"
 msgstr ""
+"Regex pentru a urmări paginile site-ului. Lăsați gol pentru a urmări "
+"întregul site web sau / pentru a viza pagina de pornire. Exemplu: /page* "
+"pentru a urmări toate paginile care încep cu /page"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__website_id
 msgid "Restrict Lead generation to this website."
-msgstr ""
+msgstr "Restricționați generarea de lead-uri pentru acest site."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__contact_filter_type__role
@@ -384,7 +388,7 @@ msgstr "Numele regulii"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__team_id
 msgid "Sales Team"
-msgstr "Echipa de vânzări"
+msgstr "Echipă de vânzări"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__user_id
@@ -394,7 +398,7 @@ msgstr "Agent de vânzări"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_view_search
 msgid "Search CRM Reveal Rule"
-msgstr ""
+msgstr "Căutare CRM Reveal Rule"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__seniority_id
@@ -410,7 +414,7 @@ msgstr "Secvență"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__reveal_state
 msgid "State"
-msgstr "Stare"
+msgstr "Județ"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__state_ids
@@ -429,13 +433,24 @@ msgstr "Etichete"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__extra_contacts
-msgid "This is the number of contacts to track if their role/seniority match your criteria. Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact."
+msgid ""
+"This is the number of contacts to track if their role/seniority match your "
+"criteria. Their details will show up in the history thread of generated "
+"leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
+"Acesta este numărul de contacte care trebuie urmărite dacă "
+"rolul/senioritatea lor corespund criteriilor dvs. Detaliile acestora vor "
+"apărea în istoricul clienților potențiali/oportunităților generate. Se "
+"consumă un credit pentru fiecare contact urmărit."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__suffix
-msgid "This will be appended in name of generated lead so you can identify lead/opportunity is generated with this rule"
+msgid ""
+"This will be appended in name of generated lead so you can identify "
+"lead/opportunity is generated with this rule"
 msgstr ""
+"Acesta va fi adăugat în numele lead-ului generat, astfel încât să puteți "
+"identifica lead-ul/oportunitatea generată cu această regulă"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__to_process
@@ -450,17 +465,21 @@ msgstr "Tip"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__regex_url
 msgid "URL Expression"
-msgstr ""
+msgstr "Expresie URL"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Up to"
-msgstr ""
+msgstr "Până la"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__sequence
-msgid "Used to order the rules with same URL and countries. Rules with a lower sequence number will be processed first."
+msgid ""
+"Used to order the rules with same URL and countries. Rules with a lower "
+"sequence number will be processed first."
 msgstr ""
+"Utilizat pentru a ordona normele cu același URL și aceleași țări. Regulile "
+"cu un număr de ordine mai mic vor fi procesate primele."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__3
@@ -471,12 +490,12 @@ msgstr "Foarte ridicată"
 #: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_rule_action
 #: model:ir.ui.menu,name:website_crm_iap_reveal.crm_reveal_rule_menu_action
 msgid "Visits to Leads Rules"
-msgstr ""
+msgstr "Reguli de transformare a vizitelor în clienți potențiali"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__website_id
 msgid "Website"
-msgstr "Pagină web"
+msgstr "Site web"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -487,6 +506,7 @@ msgstr "Condițiile de trafic ale site-ului web"
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "additional credit(s) are consumed if the company matches this rule."
 msgstr ""
+"se consumă credit(e) suplimentar(e) dacă firma corespunde acestei reguli."
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form

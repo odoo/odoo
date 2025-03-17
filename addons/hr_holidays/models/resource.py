@@ -40,7 +40,7 @@ class CalendarLeaves(models.Model):
             ]
             for date in time_domain_dict
         ])
-        return expression.AND([domain, [('state', '!=', 'refuse')]])
+        return expression.AND([domain, [('state', 'not in', ['refuse', 'cancel'])]])
 
     def _get_time_domain_dict(self):
         return [{
@@ -77,6 +77,9 @@ class CalendarLeaves(models.Model):
             try:
                 leave.write({'state': state})
                 leave._check_validity()
+                if leave.state == 'validate':
+                    # recreate the resource leave that were removed by writing state to draft
+                    leave.sudo()._create_resource_leave()
             except ValidationError:
                 leave.action_refuse()
                 message = _("Due to a change in global time offs, this leave no longer has the required amount of available allocation and has been set to refused. Please review this leave.")

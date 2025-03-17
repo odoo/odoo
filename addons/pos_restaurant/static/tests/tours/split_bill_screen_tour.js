@@ -15,7 +15,6 @@ import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("SplitBillScreenTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -45,6 +44,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             // click pay to split, go back to check the lines
             SplitBillScreen.clickPay(),
             Chrome.activeTableOrOrderIs("2B"),
+            ProductScreen.totalAmountIs("8.0"),
             ProductScreen.clickOrderline("Water", "3.0"),
             ProductScreen.clickOrderline("Coca-Cola", "1.0"),
 
@@ -82,7 +82,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 });
 
 registry.category("web_tour.tours").add("SplitBillScreenTour2", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -93,6 +92,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             ProductScreen.addOrderline("Coca-Cola", "1", "2.0"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
+            Chrome.isSynced(),
             ProductScreen.clickControlButton("Split"),
 
             SplitBillScreen.clickOrderline("Water"),
@@ -110,13 +110,12 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             Chrome.clickMenuOption("Orders"),
             TicketScreen.selectOrder("-0001"),
             TicketScreen.loadSelectedOrder(),
-            Order.hasLine({ productName: "Minute Maid", quantity: "1.0", withClass: ".selected" }),
+            Order.hasLine({ productName: "Minute Maid", quantity: "1.0" }),
             ProductScreen.totalAmountIs("2.00"),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("SplitBillScreenTour3", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -135,14 +134,15 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 
             // click pay to split, and pay
             SplitBillScreen.clickPay(),
+            ProductScreen.totalAmountIs("2.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order
-
-            ProductScreen.selectedOrderlineHas("Water", "1.0"),
+            ProductScreen.isShown(),
+            ProductScreen.orderLineHas("Water", "1.0"),
             ProductScreen.clickPayButton(true),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -152,7 +152,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 });
 
 registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -192,14 +191,16 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
 
             ...SplitBillScreen.subtotalIs("53.80"),
             ...SplitBillScreen.clickPay(),
+            ProductScreen.totalAmountIs("53.80"),
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
             ...ReceiptScreen.clickContinueOrder(),
 
-            // Check if there is still Minute Maid in the order
+            // Check if there is still water in the order
+            ...ProductScreen.isShown(),
             // now we check that all the lines that remained in the order are correct
-            ...ProductScreen.selectedOrderlineHas("Minute Maid", "1.0"),
+            ...ProductScreen.orderLineHas("Minute Maid", "1.0"),
             ...ProductScreen.clickOrderline("Office Combo"),
             ...ProductScreen.clickOrderline("Combo Product 2"),
             ...ProductScreen.selectedOrderlineHas("Combo Product 2", "1.0", "6.67", "Office Combo"),

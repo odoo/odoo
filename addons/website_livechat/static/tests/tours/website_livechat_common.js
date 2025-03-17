@@ -107,7 +107,7 @@ export const close = [
     },
     {
         content: "Check that the button is not displayed anymore",
-        trigger: ".o-livechat-root:shadow .o-mail-ChatHub",
+        trigger: ".o-livechat-root:shadow .o-mail-ChatHub:not(:visible)",
         run() {
             if (this.anchor.querySelectorAll(".o-livechat-livechatButton").length) {
                 console.error(`There should have no .o-livechat-livechatButton...`);

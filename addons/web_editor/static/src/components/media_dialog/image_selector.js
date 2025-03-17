@@ -89,6 +89,7 @@ export class ImageSelector extends FileSelector {
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(',');
+        this.isImageField = !!(this.props.media && this.props.media.closest("[data-oe-type=image]")) || !!this.env.addFieldImage;
     }
 
     get canLoadMore() {
@@ -124,7 +125,9 @@ export class ImageSelector extends FileSelector {
         const domain = super.attachmentsDomain;
         domain.push(['mimetype', 'in', IMAGE_MIMETYPES]);
         if (!this.props.useMediaLibrary) {
-            domain.push('|', ['url', '=', false], '!', ['url', '=ilike', '/web_editor/shape/%']);
+            domain.push("|", ["url", "=", false],
+                "!", "|", ["url", "=ilike", "/html_editor/shape/%"], ["url", "=ilike", "/web_editor/shape/%"],
+            );
         }
         domain.push('!', ['name', '=like', '%.crop']);
         domain.push('|', ['type', '=', 'binary'], '!', ['url', '=like', '/%/static/%']);
@@ -180,6 +183,23 @@ export class ImageSelector extends FileSelector {
                     resolve();
                 };
                 imageEl.onload = () => {
+                    const urlPathname = new URL(url, window.location.href).pathname;
+                    const imageExtension = IMAGE_EXTENSIONS.find(format => urlPathname.endsWith(format));
+                    if (this.isImageField && imageExtension === ".webp") {
+                        // Do not allow the user to replace an image field by a
+                        // webp CORS protected image as we are not currently
+                        // able to manage the report creation if such images are
+                        // in there (as the equivalent jpeg can not be
+                        // generated). It also causes a problem for resize
+                        // operations as 'libwep' can not be used.
+                        this.notificationService.add(_t(
+                            "You can not replace a field by this image. If you want to use this image, first save it on your computer and then upload it here."
+                        ), {
+                            title: _t("Error"),
+                            sticky: true,
+                        });
+                        return resolve();
+                    }
                     super.uploadUrl(url).then(resolve);
                 };
                 imageEl.src = url;
@@ -207,6 +227,17 @@ export class ImageSelector extends FileSelector {
 
     async fetchAttachments(limit, offset) {
         const attachments = await super.fetchAttachments(limit, offset);
+        if (this.isImageField) {
+            // The image is a field; mark the attachments if they are linked to
+            // a webp CORS protected image. Indeed, in this case, they should
+            // not be selectable on the media dialog (due to a problem of image
+            // resize and report creation).
+            for (const attachment of attachments) {
+                if (attachment.mimetype === "image/webp" && await weUtils.isSrcCorsProtected(attachment.image_src)) {
+                    attachment.unselectable = true;
+                }
+            }
+        }
         // Color-substitution for dynamic SVG attachment
         const primaryColors = {};
         for (let color = 1; color <= 5; color++) {
@@ -216,7 +247,9 @@ export class ImageSelector extends FileSelector {
             if (attachment.image_src.startsWith('/')) {
                 const newURL = new URL(attachment.image_src, window.location.origin);
                 // Set the main colors of dynamic SVGs to o-color-1~5
-                if (attachment.image_src.startsWith('/web_editor/shape/')) {
+                if (attachment.image_src.startsWith('/html_editor/shape/') ||
+                    attachment.image_src.startsWith('/web_editor/shape/')
+                ) {
                     newURL.searchParams.forEach((value, key) => {
                         const match = key.match(/^c([1-5])$/);
                         if (match) {
@@ -297,6 +330,15 @@ export class ImageSelector extends FileSelector {
     }
 
     async onClickAttachment(attachment) {
+        if (attachment.unselectable) {
+            this.notificationService.add(_t(
+                "You can not replace a field by this image. If you want to use this image, first save it on your computer and then upload it here."
+            ), {
+                title: _t("Error"),
+                sticky: true,
+            });
+            return;
+        }
         this.selectAttachment(attachment);
         if (!this.props.multiSelect) {
             await this.props.save();
@@ -328,7 +370,10 @@ export class ImageSelector extends FileSelector {
         }
         const selected = selectedMedia.filter(media => media.mediaType === 'attachment').concat(savedMedia).map(attachment => {
             // Color-customize dynamic SVGs with the theme colors
-            if (attachment.image_src && attachment.image_src.startsWith('/web_editor/shape/')) {
+            if (attachment.image_src && (
+                attachment.image_src.startsWith('/html_editor/shape/') ||
+                attachment.image_src.startsWith('/web_editor/shape/')
+            )) {
                 const colorCustomizedURL = new URL(attachment.image_src, window.location.origin);
                 colorCustomizedURL.searchParams.forEach((value, key) => {
                     const match = key.match(/^c([1-5])$/);
@@ -384,7 +429,8 @@ export class ImageSelector extends FileSelector {
         const mediaUrl = imgEl.src;
         try {
             const response = await fetch(mediaUrl);
-            if (response.headers.get('content-type') === 'image/svg+xml') {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.startsWith("image/svg+xml")) {
                 let svg = await response.text();
                 const dynamicColors = {};
                 const combinedColorsRegex = new RegExp(Object.values(weUtils.DEFAULT_PALETTE).join('|'), 'gi');

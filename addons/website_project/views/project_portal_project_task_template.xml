@@ -24,7 +24,7 @@
                         <h2 class="text-center">Thank you for contacting us, our team will get right on it!</h2>
                         <div class="text-center">
                             <a class="btn btn-primary" t-attf-href="/my/task/#{task.id}"
-                                t-if="task.id and request.session.uid and task.project_id.id and task.project_privacy_visibility != 'followers'">
+                                t-if="task and task.id and request.session.uid and task.project_id.id and task.project_privacy_visibility != 'followers'">
                                 View Task
                             </a>
                             <a class="btn btn-primary" href='/'>Go to the Homepage</a>

@@ -98,7 +98,10 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         self.purchase_order.order_line.qty_received = 5
         # set currency != company currency
         self.purchase_order.currency_id = self.other_currency
-        self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
+        moves = self.env['account.move'].search(self.wizard.create_entries()['domain'])
+        for move in moves:
+            self.assertEqual(move.currency_id, self.purchase_order.currency_id)
+        self.assertRecordValues(moves.line_ids, [
             # reverse move lines
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 5000 / 2, 'amount_currency': -5000},
             {'account_id': self.alt_exp_account.id, 'debit': 0, 'credit': 1000 / 2, 'amount_currency': -1000},

@@ -18,15 +18,6 @@ $-seen-urls: ();
 }
 
 :root {
-    // The color behind the boxed layout is forced by Odoo. The box background
-    // color uses the `$body-bg` variable.
-    // grep: BOXED_BODY_BG_ODOO
-    @if o-website-value('layout') != 'full' {
-        $-boxed-layout-body-bg: o-color('body');
-        --#{$variable-prefix}body-bg-rgb: #{to-rgb($-boxed-layout-body-bg)};
-        --#{$variable-prefix}body-bg: #{$-boxed-layout-body-bg};
-    }
-
     // Border color
     // Let borders color adapt according to body and CCs. Also, set a fallback
     // value for browsers that don't support the color-mix function (used by
@@ -190,6 +181,15 @@ $-seen-urls: ();
     }
 };
 
+body {
+    // The color behind the boxed layout is forced by Odoo. The box background
+    // color uses the `$body-bg` variable.
+    // grep: BOXED_BODY_BG_ODOO
+    @if o-website-value('layout') != 'full' {
+        background-color: o-color('body');
+    }
+}
+
 #wrapwrap {
     @if o-website-value('body-image') {
         @include body-image-bg-style();
@@ -346,13 +346,24 @@ $-seen-urls: ();
     }
 }
 
+.navbar-light .o_navbar_mobile {
+    @include o-add-gradient('menu-gradient');
+}
+
 // TODO this should be reviewed. While it allowed to choose a color for the
 // navbar text, there is no :hover effect, the active item is not visible and
 // the selector is probably too specific and should rather be about extending
 // bootstrap if possible.
-#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled {
+#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
     .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge {
-        color: o-website-value('header-text-color') !important;
+        $header-text-color: o-website-value('header-text-color');
+        // Check if the value is wrapped in quotes (initially it wasn't, and it
+        // didn't work) because we don't want the text color of the navbar to
+        // change once the fix is applied for users who tried the option when it
+        // wasn't working.
+        color: if(str-index(inspect($header-text-color), '"') == 1 or str-index(inspect($header-text-color), "'") == 1,
+            o-color($header-text-color),
+            $header-text-color) !important;
     }
 }
 
@@ -1332,12 +1343,22 @@ $-transition-duration: 200ms;
 .navbar .o_extra_menu_items > .show {
     > li {
         + li {
-            border-top: 1px solid map-get($grays, '200');
+            border-top: $border-width solid $border-color;
         }
         > a.dropdown-toggle {
-            background-color: map-get($grays, '200');
-            color: inherit; // Useful when the toggle is active
+            background-color: $body-tertiary-bg;
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+
+            &.active {
+                color: inherit !important;
+            }
+        }
+        > .dropdown-menu {
+            border-radius: 0;
+
+            .dropdown-item {
+                padding-left: $dropdown-item-padding-x + map-get($spacers, 2);
+            }
         }
         > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
             position: static;
@@ -1442,6 +1463,20 @@ header {
     // Prevent the color of the header to impact the color of the nav.
     &.o_header_is_scrolled, &.o_transitioning.o_header_affixed {
         background-color: transparent !important;
+    }
+    // When the page starts scrolling with the "standard" header, there’s a
+    // brief moment where the header has a "translate: transform" applied
+    // without being "affixed" yet. This causes the "off-canvas mobile" navbar
+    // to temporarily increase the page size, creating sometimes a scrolling bug
+    // that prevents further scrolling (e.g. "checkout shop" page on mobile
+    // device). To prevent this bug, we add a "display: none" to the "off-canvas
+    // mobile" navbar so it no longer affects the page dimensions. TODO: Check
+    // if this code can be removed once the "#wrapwrap" element is permanently
+    // removed.
+    &.o_transformed_not_affixed {
+        .o_navbar_mobile {
+            display: none;
+        }
     }
 }
 
@@ -1801,6 +1836,12 @@ span.list-inline-item.o_add_language:last-child {
     #o_footer_scrolltop_wrapper {
         position: relative;
         z-index: 1;
+
+        &:last-child {
+            height: 3rem !important;
+            margin-top: -3rem;
+            margin-bottom: 1rem;
+        }
     }
     #o_footer_scrolltop {
         $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
@@ -1945,6 +1986,16 @@ $ribbon-padding: 100px;
     height: 0px;
 }
 
+// Search results
+.o_search_result_item_detail {
+    flex: 1;
+    word-break: normal !important;
+
+    button:disabled {
+        color: inherit;
+    }
+}
+
 .o_cookies_bar_toggle {
     inset-inline-end: 1rem;
     inset-block-end: var(--cookies-bar-toggle-inset-block-end, 1rem);
@@ -2050,8 +2101,20 @@ input[value*="data-oe-translation-source-sha"] {
     visibility: visible;
 }
 .o_wanim_overflow_xy_hidden {
-    overflow-x: hidden !important;
-
+    // "overflow-x: clip" is added to the "body" and not to "html" because if
+    // it's added to "html", when a popup opens, the page scrolls to the top.
+    > body {
+        // We use clip instead of hidden to prevent scroll animations to an
+        // anchor from stopping working.
+        overflow-x: clip !important;
+        // For supporting browsers not updated since around 2021-2022.
+        @supports not (overflow-x: clip) {
+            overflow-x: hidden !important;
+        }
+        // Create a new formatting context. Without this, elements inside <body>
+        // may still overflow (e.g. animated elements in Firefox).
+        display: flow-root;
+    }
     &.o_rtl, .o_rtl {
         // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
         // left-overflowing animations on RTL web pages. Note: using overflow on

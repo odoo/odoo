@@ -17,3 +17,6 @@ class ProductTemplate(models.Model):
     def _onchange_type_event_booth(self):
         if self.service_tracking == 'event_booth':
             self.invoice_policy = 'order'
+
+    def _service_tracking_blacklist(self):
+        return super()._service_tracking_blacklist() + ['event_booth']

@@ -106,6 +106,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'tax_exigibility': 'on_invoice',
             'price_include_override': 'tax_included',
             'include_base_amount': True,
+            'l10n_hu_tax_type': 'VAT',
             'invoice_repartition_line_ids': [
                 Command.create({'repartition_type': 'base'}),
                 Command.create({
@@ -132,9 +133,45 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'l10n_hu_edi_signature_key': 'some_key',
             'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
         })
+    
+    def _create_simple_move(self, move_type='out_invoice', currency=None):
+        journal = self.company_data['default_journal_sale'] if move_type in self.env['account.move'].get_sale_types() else self.company_data['default_journal_purchase']
 
-    def create_invoice_simple(self):
+        return self.env['account.move'].create({
+            'move_type': move_type,
+            'journal_id': journal.id,
+            'currency_id': (currency or self.env.ref('base.HUF')).id,
+            'partner_id': self.partner_company.id,
+            'invoice_date': self.today,
+            'delivery_date': self.today,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 10000.0,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
+                })
+            ]
+        })
+
+    def create_invoice_simple(self, currency=None):
         """ Create a really basic invoice - just one line. """
+        return self._create_simple_move(move_type='out_invoice', currency=currency)
+    
+    def create_bill_simple(self, currency=None):
+        """ Create a really basic bill - just one line. """
+        return self._create_simple_move(move_type='in_invoice', currency=currency)
+    
+    def create_credit_note_simple(self, currency=None):
+        """ Create a really basic credit note - just one line. """
+        return self._create_simple_move(move_type='out_refund', currency=currency)
+    
+    def create_refund_simple(self, currency=None):
+        """ Create a really basic bill refund - just one line. """
+        return self._create_simple_move(move_type='in_refund', currency=currency)
+
+    def create_invoice_simple_discount(self):
+        """ Create a really basic invoice with a discount - just one line. """
         return self.env['account.move'].create({
             'move_type': 'out_invoice',
             'journal_id': self.company_data['default_journal_sale'].id,
@@ -147,8 +184,38 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'product_id': self.product_a.id,
                     'price_unit': 10000.0,
                     'quantity': 1,
+                    'discount': 20,
                     'tax_ids': [Command.set(self.tax_vat.ids)],
                 })
+            ]
+        })
+
+    def create_invoice_tax_price_include(self):
+        """ Create an invoice with :
+            * one line using a tax with price included
+            * one line using a tax with price included and a discount
+        """
+        return self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'currency_id': self.env.ref('base.HUF').id,
+            'partner_id': self.partner_company.id,
+            'invoice_date': self.today,
+            'delivery_date': self.today,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.00,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(self.tax_price_include.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.00,
+                    'quantity': 1,
+                    'discount': 20,
+                    'tax_ids': [Command.set(self.tax_price_include.ids)],
+                }),
             ]
         })
 
@@ -219,7 +286,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'price_unit': 10.00,
                     'quantity': 3,
                     'discount': 20,
-                    'tax_ids': [Command.set((self.tax_vat | self.tax_price_include).ids)],
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
                 }),
                 Command.create({
                     'product_id': self.product_b.id,
@@ -258,7 +325,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'price_unit': 10.00,
                     'quantity': 3,
                     'discount': 20,
-                    'tax_ids': [Command.set((self.tax_vat | self.tax_price_include).ids)],
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
                 }),
                 Command.create({
                     'product_id': self.product_b.id,
@@ -292,7 +359,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         """ Create an invoice, send it, and create a cancellation wizard for it. """
         invoice = self.create_invoice_simple()
         invoice.action_post()
-        send_and_print = self.create_send_and_print(invoice)
+        send_and_print = self.create_send_and_print(invoice, sending_methods=[])
         self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
         self.assertFalse(invoice._l10n_hu_edi_check_invoices())
         send_and_print.action_send_and_print()

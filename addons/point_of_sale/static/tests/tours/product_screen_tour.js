@@ -7,11 +7,17 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import { back, inLeftSide, selectButton } from "@point_of_sale/../tests/tours/utils/common";
+import {
+    back,
+    inLeftSide,
+    selectButton,
+    scan_barcode,
+    negateStep,
+} from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -24,37 +30,44 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "3.0", "15.30"),
 
             // Check effects of clicking numpad buttons
-            ProductScreen.clickOrderline("Letter Tray", "1"),
-            ProductScreen.selectedOrderlineHas("Letter Tray", "1.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Letter Tray", "0.0", "0.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "3", "15.30"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "0.0", "0.0"),
-            ProductScreen.clickNumpad("1"),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "1.0", "5.1"),
-            ProductScreen.clickNumpad("2"),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "12.0", "61.2"),
-            ProductScreen.clickNumpad("3"),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "123.0", "627.3"),
-            ProductScreen.clickNumpad(".", "5"),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "123.5", "629.85"),
-            ProductScreen.clickNumpad("Price"),
-            ProductScreen.modeIsActive("Price"),
-            ProductScreen.clickNumpad("1"),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "123.5", "123.5"),
-            ProductScreen.clickNumpad("1", "."),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "123.5", "1,358.5"),
-            ProductScreen.clickNumpad("%"),
-            ProductScreen.modeIsActive("%"),
-            ProductScreen.clickNumpad("5", "."),
-            ProductScreen.selectedOrderlineHas("Desk Organizer", "123.5", "1,290.58"),
-            ProductScreen.clickNumpad("Qty"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.orderIsEmpty(),
-
+            inLeftSide([
+                ...ProductScreen.clickLine("Letter Tray"),
+                ...ProductScreen.selectedOrderlineHasDirect("Letter Tray", "1.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Letter Tray", "0.0", "0.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "3.0", "15.30"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0.0", "0.0"),
+                Numpad.click("1"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "1.0", "5.10"),
+                Numpad.click("2"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "12.0", "61.2"),
+                Numpad.click("3"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.0", "627.3"),
+                ...[".", "5"].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.5", "629.85"),
+            ]),
+            // Check effects of numpad on product card quantity
+            ProductScreen.productCardQtyIs("Desk Organizer", "123.5"),
+            inLeftSide([
+                // Re-select the order line after switching to the product screen
+                { ...ProductScreen.clickLine("Desk Organizer", "123.5")[0], isActive: ["mobile"] },
+                Numpad.click("Price"),
+                Numpad.isActive("Price"),
+                Numpad.click("1"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.5", "123.5"),
+                ...["1", "."].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.5", "1,358.5"),
+                Numpad.click("%"),
+                Numpad.isActive("%"),
+                ...["5", "."].map(Numpad.click),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.5", "1,290.58"),
+                Numpad.click("Qty"),
+                Numpad.isActive("Qty"),
+                ...["⌫", "⌫"].map(Numpad.click),
+                ...Order.doesNotHaveLine(),
+            ]),
             // Check different subcategories
             ProductScreen.clickSubcategory("Desk test"),
             ProductScreen.productIsDisplayed("Desk Pad"),
@@ -67,20 +80,22 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             // Add two orderlines and update quantity
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             ProductScreen.clickDisplayedProduct("Wall Shelf Unit"),
-            ProductScreen.clickOrderline("Whiteboard Pen", "1.0"),
-            ProductScreen.clickNumpad("2"),
-            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "2.0"),
-            ProductScreen.clickOrderline("Wall Shelf Unit", "1.0"),
-            ProductScreen.clickNumpad("2"),
-            ProductScreen.selectedOrderlineHas("Wall Shelf Unit", "2.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Wall Shelf Unit", "0.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "2.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "0.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.orderIsEmpty(),
+            inLeftSide([
+                ...ProductScreen.clickLine("Whiteboard Pen"),
+                Numpad.click("2"),
+                ...ProductScreen.selectedOrderlineHasDirect("Whiteboard Pen", "2.0"),
+                ...ProductScreen.clickLine("Wall Shelf Unit"),
+                Numpad.click("2"),
+                ...ProductScreen.selectedOrderlineHasDirect("Wall Shelf Unit", "2.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Wall Shelf Unit", "0.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Whiteboard Pen", "2.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Whiteboard Pen", "0.0"),
+                Numpad.click("⌫"),
+                ...Order.doesNotHaveLine(),
+            ]),
 
             // Add multiple orderlines then delete each of them until empty
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
@@ -88,48 +103,77 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             ProductScreen.clickDisplayedProduct("Small Shelf"),
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
             ProductScreen.clickDisplayedProduct("Monitor Stand"),
-            ProductScreen.clickOrderline("Whiteboard Pen", "1.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "0.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Monitor Stand", "1.0"),
-            ProductScreen.clickOrderline("Wall Shelf Unit", "1.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Wall Shelf Unit", "0.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Monitor Stand", "1.0"),
-            ProductScreen.clickOrderline("Small Shelf", "1.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Small Shelf", "0.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Monitor Stand", "1.0"),
-            ProductScreen.clickOrderline("Magnetic Board", "1.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", "0.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Monitor Stand", "1.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.selectedOrderlineHas("Monitor Stand", "0.0"),
-            ProductScreen.clickNumpad("⌫"),
-            ProductScreen.orderIsEmpty(),
+            inLeftSide([
+                ...ProductScreen.clickLine("Whiteboard Pen"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Whiteboard Pen", "0.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Monitor Stand", "1.0"),
+                ...ProductScreen.clickLine("Wall Shelf Unit"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Wall Shelf Unit", "0.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Monitor Stand", "1.0"),
+                ...ProductScreen.clickLine("Small Shelf"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Small Shelf", "0.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Monitor Stand", "1.0"),
+                ...ProductScreen.clickLine("Magnetic Board"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Magnetic Board", "0.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Monitor Stand", "1.0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Monitor Stand", "0.0"),
+                Numpad.click("⌫"),
+                ...Order.doesNotHaveLine(),
+            ]),
 
             // Test OrderlineCustomerNoteButton
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
-            ProductScreen.addCustomerNote("Test customer note"),
-            inLeftSide(
-                Order.hasLine({
+            inLeftSide([
+                { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
+                ...ProductScreen.addCustomerNote("Test customer note"),
+                ...Order.hasLine({
                     productName: "Desk Organizer",
                     quantity: "1.0",
                     customerNote: "Test customer note",
                     withClass: ".selected",
-                })
-            ),
+                }),
+            ]),
             ProductScreen.isShown(),
+
+            // Test Cancel Order from Actions
+            ProductScreen.clickReview(),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.orderIsEmpty(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("FloatingOrderTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.orderIsEmpty(),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
+            ProductScreen.productCardQtyIs("Desk Organizer", "2.0"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0", "5.28"),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "2.0", "10.56"),
+            ProductScreen.selectFloatingOrder(0),
+            ProductScreen.productCardQtyIs("Desk Organizer", "2.0"),
+            ProductScreen.isShown(),
+            ProductScreen.selectFloatingOrder(1),
+            ProductScreen.productCardQtyIs("Letter Tray", "2.0"),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("FiscalPositionNoTax", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -148,7 +192,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionIncl", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -170,7 +213,6 @@ registry.category("web_tour.tours").add("FiscalPositionIncl", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionExcl", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -189,7 +231,6 @@ registry.category("web_tour.tours").add("FiscalPositionExcl", {
 });
 
 registry.category("web_tour.tours").add("CashClosingDetails", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -213,7 +254,6 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
 });
 
 registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -227,30 +267,44 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
 });
 
 registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
-            ProductScreen.scan_barcode("0100100"),
+            scan_barcode("0100100"),
             ProductScreen.selectedOrderlineHas("Test Product 1", "1.0", "80.0"),
 
-            ProductScreen.scan_barcode("0100201"),
+            scan_barcode("0100201"),
             ProductScreen.selectedOrderlineHas("Test Product 2 (White)", "1.0", "100.0"),
 
-            ProductScreen.scan_barcode("0100202"),
+            scan_barcode("0100202"),
             ProductScreen.selectedOrderlineHas("Test Product 2 (Red)", "1.0", "120.0"),
 
-            ProductScreen.scan_barcode("0100300"),
+            scan_barcode("0100300"),
             ProductScreen.selectedOrderlineHas("Test Product 3", "1.0", "50.0"),
             Chrome.endTour(),
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("multiPricelistRulesTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "1.0", "200.0"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "2.0", "200.0"), // 100.0 * 2
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "3.0", "150.0"), // 50.0 * 3
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("MultiProductOptionsTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -260,14 +314,13 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductConfiguratorPopup.isOptionShown("Value 1"),
             ProductConfiguratorPopup.isOptionShown("Value 2"),
-            Dialog.confirm("Ok"),
+            Dialog.confirm("Add"),
 
             Chrome.endTour(),
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("TranslateProductNameTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -279,21 +332,40 @@ registry.category("web_tour.tours").add("TranslateProductNameTour", {
 });
 
 registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product"),
-            ProductScreen.clickNumpad("5"),
-            ProductScreen.selectedOrderlineHas("Test Product", "5,00", "7.267,65"),
+            inLeftSide([
+                Numpad.click("5"),
+                ...ProductScreen.selectedOrderlineHasDirect("Test Product", "5,00", "7.267,65"),
+            ]),
             Chrome.endTour(),
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("SearchProducts", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("chair"),
+            ProductScreen.clickDisplayedProduct("Test chair 1"),
+            ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.clickDisplayedProduct("Test sofa"),
+            ProductScreen.searchProduct("CHAIR"),
+            ProductScreen.clickDisplayedProduct("Test chair 1"),
+            ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.clickDisplayedProduct("Test sofa"),
+            ProductScreen.searchProduct("clémentine"),
+            ProductScreen.clickDisplayedProduct("clémentine"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("CheckProductInformation", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -313,13 +385,11 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
             },
             {
                 trigger: ".section-product-info-title:not(:contains('On hand:'))",
-                run: () => {},
             },
         ].flat(),
 });
 
 registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -329,7 +399,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             PartnerList.checkContactValues(
                 "John Doe",
                 "1 street of astreet",
-                "1234567890",
+                "9898989899",
                 "0987654321",
                 "john@doe.com"
             ),
@@ -345,9 +415,131 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             ProductScreenPartnerList.searchCustomerValueAndClear("26432685463"),
             ProductScreenPartnerList.searchCustomerValueAndClear("Acity"),
             ProductScreenPartnerList.searchCustomerValueAndClear("United States"),
-            ProductScreenPartnerList.searchCustomerValueAndClear("1234567890"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("9898989899"),
             ProductScreenPartnerList.searchCustomerValueAndClear("0987654321"),
             ProductScreen.clickPartnerButton(),
             PartnerList.searchCustomerValue("john@doe.com"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosCategoriesOrder", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                trigger: '.category-button:eq(0) > span:contains("AAA")',
+            },
+            {
+                trigger: '.category-button:eq(1) > span:contains("AAB")',
+            },
+            {
+                trigger: '.category-button:eq(2) > span:contains("AAC")',
+            },
+            {
+                trigger: '.category-button:eq(1) > span:contains("AAB")',
+                run: "click",
+            },
+            ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
+            {
+                trigger: '.category-button:eq(2) > span:contains("AAX")',
+            },
+            {
+                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                run: "click",
+            },
+            {
+                trigger: '.category-button:eq(3) > span:contains("AAY")',
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("AutofillCashCount", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Expensive"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
+            Chrome.clickMenuOption("Close Register"),
+            {
+                trigger: ".fa-clone.btn-secondary",
+                run: "click",
+            },
+            ProductScreen.cashDifferenceIs(0),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductSearchTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("Test Product"),
+            ProductScreen.productIsDisplayed("Apple").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("Apple"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.searchProduct("Test Produt"), // typo to test the fuzzy search
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.searchProduct("1234567890123"),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.searchProduct("1234567890124"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("TESTPROD1"),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.searchProduct("TESTPROD2"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductCardUoMPrecision", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("Leather"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("1"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.1",
+                }),
+            ]),
+            ProductScreen.clickDisplayedProduct("Configurable Chair", false),
+            ProductConfiguratorPopup.pickRadio("wool"),
+            Chrome.clickBtn("Add"),
+            inLeftSide([
+                Numpad.click("."),
+                Numpad.click("7"),
+                ...Order.hasLine({
+                    productName: "Configurable Chair",
+                    quantity: "0.7",
+                }),
+            ]),
+            ProductScreen.productCardQtyIs("Configurable Chair", "0.8"),
+            {
+                content:
+                    "Check the cart button if it shows the quantity in correct format/precision",
+                isActive: ["mobile"],
+                trigger: ".review-button:contains('0.8')",
+            },
         ].flat(),
 });

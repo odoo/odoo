@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('project_task_activities_split', {
-    test: true,
     url: '/odoo',
     steps: () => [
         {
@@ -17,7 +16,6 @@ registry.category("web_tour.tours").add('project_task_activities_split', {
         }, {
             content: 'Task "New Task!" is listed in the activity view',
             trigger: '.o_activity_record .d-block:contains("New Task!")',
-            run: "click",
         }, {
             content: 'Task "New Sub-Task!" is listed in the activity view',
             trigger: '.o_activity_record .d-block:contains("New Sub-Task!")',

@@ -21,7 +21,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 3;
@@ -74,6 +74,7 @@ export class Thread extends Component {
             isReplyingTo: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
+            scrollTop: null,
         });
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
@@ -96,6 +97,34 @@ export class Thread extends Component {
          * scrollable (in other cases).
          */
         this.scrollableRef = this.props.scrollRef ?? this.root;
+        useRefListener(
+            this.scrollableRef,
+            "scrollend",
+            () => (this.state.scrollTop = this.scrollableRef.el.scrollTop)
+        );
+        useEffect(
+            (loadNewer, mountedAndLoaded, unreadSynced) => {
+                if (
+                    loadNewer ||
+                    unreadSynced || // just marked as unread (local and server state are synced)
+                    !mountedAndLoaded ||
+                    !this.props.thread.selfMember ||
+                    !this.scrollableRef.el
+                ) {
+                    return;
+                }
+                const el = this.scrollableRef.el;
+                if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1) {
+                    this.props.thread.selfMember.hideUnreadBanner = true;
+                }
+            },
+            () => [
+                this.props.thread.loadNewer,
+                this.state.mountedAndLoaded,
+                this.props.thread.selfMember?.unreadSynced,
+                this.state.scrollTop,
+            ]
+        );
         this.loadOlderState = useVisible(
             "load-older",
             async () => {
@@ -122,23 +151,7 @@ export class Thread extends Component {
         this.setupScroll();
         useEffect(
             () => {
-                if (!this.viewportEl || !this.jumpPresentRef.el) {
-                    return;
-                }
-                const width = this.viewportEl.clientWidth;
-                const height = this.viewportEl.clientHeight;
-                const computedStyle = window.getComputedStyle(this.viewportEl);
-                const ps = parseInt(computedStyle.getPropertyValue("padding-left"));
-                const pe = parseInt(computedStyle.getPropertyValue("padding-right"));
-                const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
-                const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
-                this.jumpPresentRef.el.style.transform = `translate(${
-                    this.env.inChatter ? 22 : width - ps - pe - 22
-                }px, ${
-                    this.env.inChatter && !this.env.inChatter.aside
-                        ? 0
-                        : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
-                }px)`;
+                this.computeJumpPresentPosition();
             },
             () => [this.jumpPresentRef.el, this.viewportEl]
         );
@@ -230,6 +243,26 @@ export class Thread extends Component {
                 toRaw(nextProps.thread).fetchNewMessages();
             }
         });
+    }
+
+    computeJumpPresentPosition() {
+        if (!this.viewportEl || !this.jumpPresentRef.el) {
+            return;
+        }
+        const width = this.viewportEl.clientWidth;
+        const height = this.viewportEl.clientHeight;
+        const computedStyle = window.getComputedStyle(this.viewportEl);
+        const ps = parseInt(computedStyle.getPropertyValue("padding-left"));
+        const pe = parseInt(computedStyle.getPropertyValue("padding-right"));
+        const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
+        const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
+        this.jumpPresentRef.el.style.transform = `translate(${
+            this.env.inChatter ? 22 : width - ps - pe - 22
+        }px, ${
+            this.env.inChatter && !this.env.inChatter.aside
+                ? 0
+                : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
+        }px)`;
     }
 
     /**
@@ -389,6 +422,7 @@ export class Thread extends Component {
             } else if (snapshot && messagesAtBottom) {
                 setScroll(snapshot.scrollTop);
             } else if (
+                !this.scrollingToHighlight &&
                 !this.env.messageHighlight?.highlightedMessageId &&
                 thread.scrollTop !== undefined
             ) {
@@ -429,7 +463,10 @@ export class Thread extends Component {
         useChildSubEnv({
             onImageLoaded: applyScroll,
         });
-        const observer = new ResizeObserver(applyScroll);
+        const observer = new ResizeObserver(() => {
+            this.computeJumpPresentPosition();
+            applyScroll();
+        });
         useEffect(
             (el, mountedAndLoaded) => {
                 if (el && mountedAndLoaded) {
@@ -467,8 +504,8 @@ export class Thread extends Component {
     }
 
     get newMessageBannerText() {
-        if (this.props.thread.selfMember?.localMessageUnreadCounter > 1) {
-            return _t("%s new messages", this.props.thread.selfMember.localMessageUnreadCounter);
+        if (this.props.thread.selfMember?.totalUnreadMessageCounter > 1) {
+            return _t("%s new messages", this.props.thread.selfMember.totalUnreadMessageCounter);
         }
         return _t("1 new message");
     }
@@ -508,6 +545,7 @@ export class Thread extends Component {
         this.props.thread.loadNewer = false;
         this.props.thread.scrollTop = "bottom";
         this.state.showJumpPresent = false;
+        this.scrollingToHighlight = false;
     }
 
     async onClickUnreadMessagesBanner() {

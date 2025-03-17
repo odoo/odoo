@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('shop_buy_product', {
-    test: true,
     url: '/shop',
     steps: () => [
         ...tourUtils.searchProduct("Storage Box"),
@@ -20,6 +19,7 @@ registry.category("web_tour.tours").add('shop_buy_product', {
         },
         tourUtils.goToCart(),
         tourUtils.goToCheckout(),
+        tourUtils.confirmOrder(),
         ...tourUtils.payWithTransfer(true),
     ]
 });

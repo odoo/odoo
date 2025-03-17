@@ -192,6 +192,13 @@ export function receiptTotalIs(amount) {
         },
     ];
 }
+export function receiptChangeIs(amount) {
+    return [
+        {
+            trigger: `.receipt-screen .receipt-change:contains("${amount}")`,
+        },
+    ];
+}
 export function back() {
     return {
         isActive: ["mobile"],
@@ -204,7 +211,6 @@ export function nthColumnContains(nRow, nCol, string) {
     return [
         {
             trigger: `.ticket-screen .order-row:nth-last-child(${nRow}) > .col:nth-child(${nCol}):contains("${string}")`,
-            run: () => {},
         },
     ];
 }

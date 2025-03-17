@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { session } from "@web/session";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { _t } from "@web/core/l10n/translation";
 import { isVisible } from "@web/core/utils/ui";
@@ -12,6 +13,7 @@ import {
     useState,
     useRef,
 } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 import { deduceURLfromText } from "@web_editor/js/editor/odoo-editor/src/utils/sanitize";
 
 const { getDeepRange, getInSelection, EMAIL_REGEX, PHONE_REGEX } = OdooEditorLib;
@@ -47,12 +49,15 @@ export class Link extends Component {
         // all btn-* classes anyway.
     ];
     setup() {
+        this.orm = useService("orm");
         this.state = useState({});
         // We need to wait for the `onMounted` changes to be done before
         // accessing `this.$el`.
         this.mountedPromise = new Promise(resolve => this.mountedResolve = resolve);
 
-        onWillStart(() => this._updateState(this.props));
+        onWillStart(async () => {
+            await this._updateState(this.props);
+        });
         let started = false;
         onMounted(async () => {
             if (started) {
@@ -87,12 +92,7 @@ export class Link extends Component {
             await this.start();
             this.mountedResolve();
         });
-        onWillUpdateProps(async (newProps) => {
-            await this.mountedPromise;
-            this._updateState(newProps);
-            this.state.url = newProps.link.getAttribute('href') || '';
-            this._setUrl({ shouldFocus: newProps.shouldFocusUrl });
-        });
+        onWillUpdateProps(this.willUpdateProps);
     }
     /**
      * @override
@@ -104,6 +104,12 @@ export class Link extends Component {
 
         this.$el[0].querySelector('#o_link_dialog_label_input').value = this.state.originalText;
         this._setUrl({ shouldFocus: this.props.shouldFocusUrl });
+    }
+    async willUpdateProps(newProps) {
+        await this.mountedPromise;
+        await this._updateState(newProps);
+        this.state.url = newProps.link.getAttribute("href") || "";
+        this._setUrl({ shouldFocus: newProps.shouldFocusUrl });
     }
 
     //--------------------------------------------------------------------------
@@ -233,11 +239,16 @@ export class Link extends Component {
      * @private
      */
     _correctLink(url) {
-        if (url.indexOf('tel:') === 0) {
-            url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
-        } else if (url && !url.startsWith('mailto:') && url.indexOf('://') === -1
-                    && url[0] !== '/' && url[0] !== '#' && url.slice(0, 2) !== '${') {
-            url = 'http://' + url;
+        if (
+            url &&
+            !url.startsWith("tel:") &&
+            !url.startsWith("mailto:") &&
+            !url.includes("://") &&
+            !url.startsWith("/") &&
+            !url.startsWith("#") &&
+            !url.startsWith("${")
+        ) {
+            url = "http://" + url;
         }
         return url;
     }
@@ -247,6 +258,10 @@ export class Link extends Component {
             // Text begins with a known protocol, accept it as valid URL.
             return text;
         } else {
+            const match = text.match(PHONE_REGEX);
+            if (match) {
+                return ("tel:" + match[0]).replace(/\s+/g, "");
+            }
             return deduceURLfromText(text, this.linkEl) || '';
         }
     }
@@ -258,6 +273,37 @@ export class Link extends Component {
      * @returns {boolean}
      */
     _doStripDomain() {}
+    /**
+     * Checks if the given URL is using the domain where the content being
+     * edited is reachable, i.e. if this URL should be stripped of its domain
+     * part and converted to a relative URL if put as a link in the content.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isAbsoluteURLInCurrentDomain(url) {
+        // First check if it is a relative URL: if it is, we don't want to check
+        // further as we will always leave those untouched.
+        let hasProtocol;
+        try {
+            hasProtocol = !!(new URL(url).protocol);
+        } catch {
+            hasProtocol = false;
+        }
+        if (!hasProtocol) {
+            return false;
+        }
+
+        const urlObj = new URL(url, window.location.origin);
+        return urlObj.origin === window.location.origin
+            // Chosen heuristic to detect someone trying to enter a link using
+            // its Odoo instance domain. We just suppose it should be a relative
+            // URL (if unexpected behavior, the user can just not enter its Odoo
+            // instance domain but its real domain, or opt-out from the domain
+            // stripping). Mentioning an .odoo.com domain, especially its own
+            // one, is always a bad practice anyway.
+            || new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`).test(urlObj.origin);
+    }
     /**
      * Get the link's data (url, content and styles).
      *
@@ -293,11 +339,16 @@ export class Link extends Component {
         var isNewWindow = this._isNewWindow(url);
         var doStripDomain = this._doStripDomain();
         let urlWithoutDomain = this.state.url;
-        if (this.state.url.indexOf(location.origin) === 0) {
-            urlWithoutDomain = this.state.url.slice(location.origin.length);
+        if (this._isAbsoluteURLInCurrentDomain(this.state.url)) {
+            const urlObj = new URL(this.state.url, window.location.origin);
+            // Not necessarily equal to window.location.origin
+            // (see _isAbsoluteURLInCurrentDomain)
+            urlWithoutDomain = this.state.url.replace(urlObj.origin, '');
             if (doStripDomain) {
                 this.state.url = urlWithoutDomain;
             }
+        } else if (this._isAbsoluteURLInCurrentDomain(url) && !doStripDomain) {
+            this.state.url = url;
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
@@ -305,10 +356,10 @@ export class Link extends Component {
         let isDocument = false;
         let directDownload = true;
         if (urlWithoutDomain && urlWithoutDomain.startsWith("/web/content/")) {
-            isDocument = true;
+            isDocument = !this.isLastAttachmentUrl;
             directDownload = urlWithoutDomain.includes("&download=true");
-        } 
-        
+        }
+
         return {
             content: content,
             url: this._correctLink(this.state.url),
@@ -319,11 +370,11 @@ export class Link extends Component {
             customBorderWidth: customBorderWidth,
             customBorderStyle: customBorderStyle,
             oldAttributes: this.state.oldAttributes,
-            isNewWindow: isNewWindow,
+            isNewWindow: isDocument || isNewWindow,
             doStripDomain: doStripDomain,
             isImage,
             isDocument,
-            directDownload,
+            directDownload: directDownload && isDocument,
         };
     }
     /**
@@ -506,6 +557,8 @@ export class Link extends Component {
      * @private
      */
     async _updateState(props) {
+        // TODO In master move to link_tools.
+        this.initialIsNewWindowFromProps = props.initialIsNewWindow;
         this.initialNewWindow = props.initialIsNewWindow;
 
         this.state.className = "";
@@ -559,6 +612,7 @@ export class Link extends Component {
 
         if (this.linkEl) {
             this.initialNewWindow = this.initialNewWindow || this.linkEl.target === '_blank';
+            await this._determineAttachmentType(this.linkEl.pathname);
         }
 
         const classesToKeep = [
@@ -579,6 +633,28 @@ export class Link extends Component {
         // 'o_submit' class will force anchor to be handled as a button in linkdialog.
         if (/(?:s_website_form_send|o_submit)/.test(this.state.className)) {
             this.state.isButton = true;
+        }
+    }
+    /**
+     * If the current link is an attachment: stores the attachment id in
+     * lastAttachmentId, and if not yet known fetches the type of the
+     * attachment and stores true in isLastAttachmentUrl if its type is URL.
+     */
+    async _determineAttachmentType(pathname) {
+        if (pathname?.startsWith("/web/content/")) {
+            const attachmentId = parseInt(pathname.substr("/web/content/".length));
+            if (this.lastAttachmentId === attachmentId) {
+                return;
+            }
+            this.lastAttachmentId = attachmentId;
+            // Find out about attachment type.
+            try {
+                const fetched = await this.orm.read("ir.attachment", [attachmentId], ["type"]);
+                this.isLastAttachmentUrl = fetched[0].type === "url";
+            } catch {
+                // Not a reachable attachment
+                this.isLastAttachmentUrl = undefined;
+            }
         }
     }
     /**
@@ -645,16 +721,22 @@ export class Link extends Component {
      */
     _onURLInput() {
         var $linkUrlInput = this.$el.find('#o_link_dialog_url_input');
-        let value = $linkUrlInput.val();
+        const value = $linkUrlInput.val() || '';
         let isLink = !EMAIL_REGEX.test(value) && !PHONE_REGEX.test(value);
         this._getIsNewWindowFormRow().toggleClass('d-none', !isLink);
-        this.$el.find('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
+        this.$el.find('.o_strip_domain')
+            .toggleClass('d-none', !this._isAbsoluteURLInCurrentDomain(value));
     }
     /**
      * @private
      */
     _onURLInputChange() {
         this._adaptPreview();
+        // Make sure that if an entered URL is for an attachment, its related
+        // fields visibility ultimately gets applied.
+        this._determineAttachmentType(this.state.url).then(() => {
+            this.__onURLInput();
+        });
     }
 }
 

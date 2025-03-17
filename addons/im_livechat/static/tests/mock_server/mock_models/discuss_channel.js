@@ -36,7 +36,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                     // livechat_username ignored for simplicity
                     channelInfo.operator = mailDataHelpers.Store.one(
                         ResPartner.browse(channel.livechat_operator_id),
-                        makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
+                        makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
                     );
                 } else {
                     channelInfo.operator = false;

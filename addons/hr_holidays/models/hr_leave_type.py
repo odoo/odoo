@@ -105,13 +105,13 @@ class HolidaysType(models.Model):
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative Cap',
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
-    max_allowed_negative = fields.Integer(string="Amount in Negative",
+    max_allowed_negative = fields.Integer(string="Maximum Excess Amount",
         help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
 
     _sql_constraints = [(
         'check_negative',
         'CHECK(NOT allows_negative OR max_allowed_negative > 0)',
-        'The negative amount must be greater than 0. If you want to set 0, disable the negative cap instead.'
+        'The maximum excess amount should be greater than 0. If you want to set 0, disable the negative cap instead.'
     )]
 
     @api.model
@@ -212,6 +212,11 @@ class HolidaysType(models.Model):
                 leave_type.has_valid_allocation = bool(allocations)
             else:
                 leave_type.has_valid_allocation = True
+
+    def _load_records_write(self, values):
+        if 'requires_allocation' in values and self.requires_allocation == values['requires_allocation']:
+            values.pop('requires_allocation')
+        return super()._load_records_write(values)
 
     @api.constrains('requires_allocation')
     def check_allocation_requirement_edit_validity(self):
@@ -593,11 +598,11 @@ class HolidaysType(models.Model):
         for allocation in allocations:
             expiration_date = allocation.date_to
 
-            accrual_plan_level = allocation._get_current_accrual_plan_level_id(target_date)[0]
+            accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
             carryover_policy = accrual_plan_level.action_with_unused_accruals if accrual_plan_level else False
             carryover_date = False
             if carryover_policy in ['maximum', 'lost']:
-                carryover_date = allocation._get_carryover_date(target_date)
+                carryover_date = allocation.sudo()._get_carryover_date(target_date)
                 # If carry over date == target date, then add 1 year to carry over date.
                 # Rational: for example if carry over date = 01/01 this year and target date = 01/01 this year,
                 # then any accrued days on 01/01 this year will have their carry over date 01/01 next year
@@ -620,7 +625,7 @@ class HolidaysType(models.Model):
                 if expiration_date and expiration_date == closest_expiration_date:
                     expiring_leaves_count += remaining_leaves[allocation]['virtual_remaining_leaves']
                 elif carryover_date and carryover_date == closest_expiration_date:
-                    accrual_plan_level = allocation._get_current_accrual_plan_level_id(target_date)[0]
+                    accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(target_date)[0]
                     expiring_leaves_count += max(0, remaining_leaves[allocation]['virtual_remaining_leaves'] - accrual_plan_level.postpone_max_days)
             if expiring_leaves_count != 0:
                 return closest_expiration_date, expiring_leaves_count

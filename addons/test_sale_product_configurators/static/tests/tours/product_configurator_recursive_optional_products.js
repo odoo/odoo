@@ -7,7 +7,6 @@ import tourUtils from "@sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('sale_product_configurator_recursive_optional_products_tour', {
     url: '/odoo',
-    test: true,
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),
@@ -16,7 +15,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_recursive_opt
         configuratorTourUtils.addOptionalProduct("Conference Chair"),
         configuratorTourUtils.addOptionalProduct("Chair floor protection"),
         {
-            trigger: 'button:contains(Confirm)',
+            trigger: ".modal button:contains(Confirm)",
             run: "click",
         },
         ...stepUtils.discardForm(),

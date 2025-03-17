@@ -15,7 +15,6 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
  */
 registerWebsitePreviewTour('full_screen_web_editor', {
     url: '/slides',
-    test: true,
 }, () => [
     stepUtils.waitIframeIsReady(),
     {
@@ -24,7 +23,7 @@ registerWebsitePreviewTour('full_screen_web_editor', {
     run: "click",
 }, {
     // click on a slide to open the fullscreen view
-    trigger: ':iframe a.o_wslides_js_slides_list_slide_link:contains("Home Gardening")',
+    trigger: ':iframe a.o_wslides_js_slides_list_slide_link:contains("Home Gardening")[href*="fullscreen=1"]',
     run: "click",
 }, {
     // check we land on the fullscreen view

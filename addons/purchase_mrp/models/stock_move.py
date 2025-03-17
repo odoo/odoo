@@ -26,7 +26,6 @@ class StockMove(models.Model):
         if line.currency_id != self.company_id.currency_id:
             kit_price_unit = line.currency_id._convert(kit_price_unit, self.company_id.currency_id, self.company_id, fields.Date.context_today(self), round=False)
         cost_share = self.bom_line_id._get_cost_share()
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         uom_factor = 1.0
         kit_product = bom.product_id or bom.product_tmpl_id
 
@@ -36,7 +35,11 @@ class StockMove(models.Model):
         # Convert uom from bom_line_uom to product_uom for bom_line
         uom_factor = bom_line.product_id.uom_id._compute_quantity(uom_factor, bom_line.product_uom_id)
 
-        return {self.env['stock.lot']: float_round(kit_price_unit * cost_share * uom_factor * bom.product_qty / bom_line.product_qty, precision_digits=price_unit_prec)}
+        price_unit = kit_price_unit * cost_share * uom_factor * bom.product_qty / bom_line.product_qty
+        if self.product_id.lot_valuated:
+            return {lot: price_unit for lot in self.lot_ids}
+        else:
+            return {self.env['stock.lot']: price_unit}
 
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total, valuation_total_qty = super()._get_valuation_price_and_qty(related_aml, to_curr)

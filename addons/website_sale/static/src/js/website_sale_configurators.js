@@ -9,7 +9,7 @@ import { ProductCombo } from "@sale/js/models/product_combo";
 import {
     ProductConfiguratorDialog
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
-import { serializeComboItem } from '@sale/js/sale_utils';
+import { serializeComboItem, getSelectedCustomPtav } from '@sale/js/sale_utils';
 import { WebsiteSale } from '@website_sale/js/website_sale';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
@@ -32,6 +32,26 @@ WebsiteSale.include({
             }
         );
         if (combos.length) {
+            const selectedComboItems = combos
+                .map(combo => new ProductCombo(combo))
+                .map(combo => combo.selectedComboItem)
+                .filter(Boolean);
+            // If the combo product is already fully configured (i.e. a combo item has been selected
+            // for each combo choice), then it can be added to the cart without opening the combo
+            // configurator.
+            if (selectedComboItems.length === combos.length) {
+                const extraPrice = selectedComboItems.reduce(
+                    (price, item) => price + item.totalExtraPrice, 0
+                );
+                const comboProductData = {
+                    quantity: remainingData.quantity,
+                    price: remainingData.price + extraPrice,
+                };
+                return this.addComboProductToCart(
+                    comboProductData, selectedComboItems, remainingData, {}
+                );
+            }
+            // If some combo choices need to be configured, open the combo configurator.
             return this._openComboConfigurator(combos, remainingData);
         }
         if (this.isBuyNow) {
@@ -70,7 +90,10 @@ WebsiteSale.include({
             soDate: serializeDateTime(DateTime.now()),
             edit: false,
             isFrontend: true,
-            options: { isMainProductConfigurable: !isOnProductPage },
+            options: {
+                isMainProductConfigurable: !isOnProductPage,
+                showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
+            },
             save: async (mainProduct, optionalProducts, options) => {
                 this._trackProducts([mainProduct, ...optionalProducts]);
 
@@ -99,27 +122,35 @@ WebsiteSale.include({
             date: serializeDateTime(DateTime.now()),
             edit: false,
             isFrontend: true,
-            save: async (comboProductData, selectedComboItems, options) => {
-                this._trackProducts([{
-                    'id': this.rootProduct.product_id,
-                    'display_name': remainingData.display_name,
-                    'category_name': remainingData.category_name,
-                    'currency_name': remainingData.currency_name,
-                    'price': comboProductData.price,
-                    'quantity': comboProductData.quantity,
-                }]);
-
-                const values = await rpc('/website_sale/combo_configurator/update_cart', {
-                    combo_product_id: this.rootProduct.product_id,
-                    quantity: comboProductData.quantity,
-                    selected_combo_items: selectedComboItems.map(serializeComboItem),
-                    ...this._getAdditionalRpcParams(),
-                });
-                this._onConfigured(options, values);
+            options: {
+                showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
             },
+            save: (comboProductData, selectedComboItems, options) =>
+                this.addComboProductToCart(
+                    comboProductData, selectedComboItems, remainingData, options
+                ),
             discard: () => {},
             ...this._getAdditionalDialogProps(),
         });
+    },
+
+    async addComboProductToCart(comboProductData, selectedComboItems, remainingData, options) {
+        this._trackProducts([{
+            'id': this.rootProduct.product_id,
+            'display_name': remainingData.display_name,
+            'category_name': remainingData.category_name,
+            'currency_name': remainingData.currency_name,
+            'price': comboProductData.price,
+            'quantity': comboProductData.quantity,
+        }]);
+
+        const values = await rpc('/website_sale/combo_configurator/update_cart', {
+            combo_product_id: this.rootProduct.product_id,
+            quantity: comboProductData.quantity,
+            selected_combo_items: selectedComboItems.map(serializeComboItem),
+            ...this._getAdditionalRpcParams(),
+        });
+        this._onConfigured(options, values);
     },
 
     _onConfigured(options, values) {
@@ -173,10 +204,7 @@ WebsiteSale.include({
         // Custom attributes.
         serializedProduct.product_custom_attribute_values = [];
         for (const ptal of product.attribute_lines) {
-            const selectedPtavIds = new Set(ptal.selected_attribute_value_ids);
-            const selectedCustomPtav = ptal.attribute_values.find(
-                ptav => ptav.is_custom && selectedPtavIds.has(ptav.id)
-            );
+            const selectedCustomPtav = getSelectedCustomPtav(ptal);
             if (selectedCustomPtav) {
                 serializedProduct.product_custom_attribute_values.push({
                     custom_product_template_attribute_value_id: selectedCustomPtav.id,

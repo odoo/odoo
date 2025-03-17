@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,8 @@ msgid ""
 "<span class=\"o_stat_value\">New</span>\n"
 "                                <span class=\"o_stat_text\">Vehicle</span>"
 msgstr ""
+"<span class=\"o_stat_value\">Nouveau</span>\n"
+"                                <span class=\"o_stat_text\">Véhicule</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
@@ -715,7 +718,7 @@ msgstr "Conducteur actuel"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
 msgid "Current state of the vehicle"
-msgstr "Status actuel du véhicule"
+msgstr "État actuel du véhicule"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__daily
@@ -811,7 +814,7 @@ msgstr "Nom d'affichage"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__done
 msgid "Done"
-msgstr "Fait"
+msgstr "Terminé"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_17
@@ -1142,7 +1145,7 @@ msgstr "A un message"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__has_open_contract
 msgid "Has Open Contract"
-msgstr ""
+msgstr "A un contrat ouvert"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_24
@@ -1432,12 +1435,12 @@ msgstr "MODÈLES"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__template_id
 msgid "Mail Template"
-msgstr "Modèle d'email"
+msgstr "Modèle d'e-mail"
 
 #. module: fleet
 #: model:ir.actions.server,name:fleet.action_fleet_vehicle_send_mail
 msgid "Mail to Driver"
-msgstr "Email au conducteur"
+msgstr "E-mail au conducteur"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -1873,7 +1876,7 @@ msgstr "Remplacement de la pompe de direction assistée"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__power_unit
 msgid "Power Unit"
-msgstr ""
+msgstr "Unité de puissance"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__power
@@ -2056,7 +2059,7 @@ msgstr "Envoyer l'e-mail"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_send_mail
 msgid "Send mails to Drivers"
-msgstr "Envoyer des emails aux conducteurs"
+msgstr "Envoyer des e-mails aux conducteurs"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
@@ -2100,12 +2103,12 @@ msgstr "Types d'intervention"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_activity
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Services"
-msgstr "Interventions"
+msgstr "Services"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_graph
 msgid "Services Costs Per Month"
-msgstr "Coûts des interventions par mois"
+msgstr "Coûts des services par mois"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_services
@@ -2113,12 +2116,12 @@ msgstr "Coûts des interventions par mois"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
 msgid "Services Logs"
-msgstr "Historique des interventions"
+msgstr "Historique des services"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
-msgstr "Interventions associées aux véhicules"
+msgstr "Services associés aux véhicules"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_config_settings_action
@@ -2338,8 +2341,8 @@ msgid ""
 "Track all the services done on your vehicle.\n"
 "            Services can be of many types: occasional repair, fixed maintenance, etc."
 msgstr ""
-"Suivez toutes les interventions réalisées sur votre véhicule.\n"
-"Les interventions peuvent être de plusieurs types : réparation occasionnelle, maintenance fixe, etc."
+"Suivez toutes les services réalisés pour votre véhicule.\n"
+"Les services peuvent être de plusieurs types : réparation occasionnelle, maintenance fixe, etc."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook
@@ -2487,7 +2490,7 @@ msgstr "Type de véhicule"
 #. odoo-python
 #: code:addons/fleet/wizard/fleet_vehicle_send_mail.py:0
 msgid "Vehicle: Mass mail drivers"
-msgstr "Véhicule : Email en masse aux conducteurs"
+msgstr "Véhicule : E-mail en masse aux conducteurs"
 
 #. module: fleet
 #. odoo-python
@@ -2657,7 +2660,7 @@ msgstr "par ex. Tesla"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__power_unit__power
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__power
 msgid "kW"
-msgstr ""
+msgstr "kW"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__kilometers
@@ -2682,4 +2685,4 @@ msgstr "afficher les relevés kilométriques de ce vehicule"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the services logs for this vehicle"
-msgstr "montrer l'historique des interventions pour ce véhicule"
+msgstr "montrer l'historique des services pour ce véhicule"

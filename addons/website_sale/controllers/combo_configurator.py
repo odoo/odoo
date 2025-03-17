@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo import _
+from odoo.exceptions import UserError
 from odoo.http import request, route
+from odoo.tools.image import image_data_uri
 
 from odoo.addons.sale.controllers.combo_configurator import SaleComboConfiguratorController
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -14,20 +16,9 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         auth='public',
         website=True,
     )
-    def website_sale_combo_configurator_get_data(self, product_tmpl_id, *args, **kwargs):
+    def website_sale_combo_configurator_get_data(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
-        data = super().sale_combo_configurator_get_data(product_tmpl_id, *args, **kwargs)
-        product_template = request.env['product.template'].browse(product_tmpl_id)
-        currency = request.env['res.currency'].browse(kwargs['currency_id'])
-
-        if request.is_frontend:
-            data.update({
-                'price': self._apply_taxes_to_price(data['price'], product_template, currency),
-                # The following fields are needed for tracking.
-                'category_name': product_template.categ_id.name,
-                'currency_name': currency.name,
-            })
-        return data
+        return super().sale_combo_configurator_get_data(*args, **kwargs)
 
     @route(
         route='/website_sale/combo_configurator/get_price',
@@ -35,18 +26,12 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         auth='public',
         website=True,
     )
-    def website_sale_combo_configurator_get_price(self, product_tmpl_id, *args, **kwargs):
+    def website_sale_combo_configurator_get_price(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
-        price = super().sale_combo_configurator_get_price(product_tmpl_id, *args, **kwargs)
-        product_template = request.env['product.template'].browse(product_tmpl_id)
-        currency = request.env['res.currency'].browse(kwargs['currency_id'])
-
-        if request.is_frontend:
-            return self._apply_taxes_to_price(price, product_template, currency)
-        return price
+        return super().sale_combo_configurator_get_price(*args, **kwargs)
 
     @route(
-        '/website_sale/combo_configurator/update_cart',
+        route='/website_sale/combo_configurator/update_cart',
         type='json',
         auth='public',
         methods=['POST'],
@@ -81,6 +66,7 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
             for combo_item in selected_combo_items:
                 item_values = order_sudo._cart_update(
                     product_id=combo_item['product_id'],
+                    line_id=False,
                     set_qty=quantity,
                     product_custom_attribute_values=combo_item['product_custom_attribute_values'],
                     no_variant_attribute_value_ids=[
@@ -92,8 +78,36 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
                 )
                 line_ids.append(item_values['line_id'])
 
+        # The price of a combo product (and thus whether it can be added to the cart) can only be
+        # computed after creating all of its combo item lines.
+        combo_product_line = request.env['sale.order.line'].browse(values['line_id'])
+        if (
+            combo_product_line
+            and sum(combo_product_line._get_lines_with_price().mapped('price_unit')) == 0
+            and combo_product_line.order_id.website_id.prevent_zero_price_sale
+        ):
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
         values['notification_info'] = self._get_cart_notification_information(order_sudo, line_ids)
         values['cart_quantity'] = order_sudo.cart_quantity
         request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity
 
         return values
+
+    def _get_combo_item_data(
+        self, combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs
+    ):
+        data = super()._get_combo_item_data(
+            combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs
+        )
+        # To sell a product type 'combo', one doesn't need to publish all combo choices. This causes
+        # an issue when public users access the image of each choice via the /web/image route. To
+        # bypass this access check, we send the raw image URL if the product is inaccessible to the
+        # current user.
+        if (
+            not combo_item.product_id.sudo(False).has_access('read')
+            and combo_item.product_id.image_128
+        ):
+            data['product']['image_src'] = image_data_uri(combo_item.product_id.image_128)
+        return data

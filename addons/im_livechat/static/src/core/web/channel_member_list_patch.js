@@ -3,6 +3,6 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ChannelMemberList.prototype, {
     canOpenChatWith(member) {
-        return super.canOpenChatWith(member) && !member.persona.is_public;
+        return super.canOpenChatWith(member) && !member.persona.is_public && !member.is_bot;
     },
 });

@@ -13,6 +13,7 @@ from weakref import WeakSet
 from odoo import http
 from odoo.api import Environment
 from odoo.tests import common, new_test_user
+from odoo.tools import mute_logger
 from .common import WebsocketCase
 from .. import websocket as websocket_module
 from ..models.bus import dispatch
@@ -258,7 +259,9 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertNotEqual(websocket._session.uid, user_session.uid)
             serve_forever_called_event.set()
 
-        with patch.object(WebsocketConnectionHandler, '_serve_forever', side_effect=serve_forever) as mock:
+        with patch.object(
+            WebsocketConnectionHandler, '_serve_forever', side_effect=serve_forever
+        ) as mock, mute_logger('odoo.addons.bus.websocket'):
             ws = self.websocket_connect(
                 cookie=f'session_id={user_session.sid};',
                 origin="http://example.com"

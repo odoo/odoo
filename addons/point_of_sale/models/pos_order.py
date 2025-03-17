@@ -5,16 +5,18 @@ from datetime import datetime
 from markupsafe import Markup
 from itertools import groupby
 from collections import defaultdict
-from uuid import uuid4
+from random import randrange
+from pprint import pformat
 
 import psycopg2
 import pytz
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, Command
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
 import base64
+
 
 _logger = logging.getLogger(__name__)
 
@@ -25,51 +27,29 @@ class PosOrder(models.Model):
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
 
-    @api.model
-    def _amount_line_tax(self, line, fiscal_position_id):
-        taxes = line.tax_ids.filtered_domain(self.env['account.tax']._check_company_domain(line.order_id.company_id))
-        taxes = fiscal_position_id.map_tax(taxes)
-        price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-        taxes = taxes.compute_all(price, line.order_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
-        return sum(tax.get('amount', 0.0) for tax in taxes)
-
-    # This deals with orders that belong to a closed session. In order
-    # to recover from this situation we create a new rescue session,
-    # making it obvious that something went wrong.
-    # A new, separate, rescue session is preferred for every such recovery,
-    # to avoid adding unrelated orders to live sessions.
+    # This function deals with orders that belong to a closed session. It attempts to find
+    # any open session that can be used to capture the order. If no open session is found,
+    # an error is raised, asking the user to open a session.
     def _get_valid_session(self, order):
         PosSession = self.env['pos.session']
         closed_session = PosSession.browse(order['session_id'])
 
-        _logger.warning('session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
+        _logger.warning('Session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
                         closed_session.name,
                         closed_session.id,
                         order['name'],
                         order['amount_total'])
-        rescue_session = PosSession.search([
+
+        open_session = PosSession.search([
             ('state', 'not in', ('closed', 'closing_control')),
-            ('rescue', '=', True),
-            ('config_id', '=', closed_session.config_id.id),
+            ('config_id', '=', closed_session.config_id.id)
         ], limit=1)
-        if rescue_session:
-            _logger.warning('reusing recovery session %s for saving order %s', rescue_session.name, order['name'])
-            rescue_session.write({'state': 'opened'})
-            return rescue_session
 
-        _logger.warning('attempting to create recovery session for saving order %s', order['name'])
-        new_session = PosSession.create({
-            'config_id': closed_session.config_id.id,
-            'name': _('(RESCUE FOR %(session)s)', session=closed_session.name),
-            'rescue': True,  # avoid conflict with live sessions
-        })
-        # bypass opening_control (necessary when using cash control)
-        new_session.action_pos_session_open()
-        if new_session.config_id.cash_control and new_session.rescue:
-            last_session = self.env['pos.session'].search([('config_id', '=', new_session.config_id.id), ('id', '!=', new_session.id)], limit=1)
-            new_session.cash_register_balance_start = last_session.cash_register_balance_end_real
+        if open_session:
+            _logger.warning('Using open session %s for saving order %s', open_session.name, order['name'])
+            return open_session
 
-        return new_session
+        raise UserError(_('No open session available. Please open a new session to capture the order.'))
 
     @api.depends('sequence_number', 'session_id')
     def _compute_tracking_number(self):
@@ -113,14 +93,17 @@ class PosOrder(models.Model):
             })
             pos_order = pos_order.with_company(pos_order.company_id)
         else:
-            pos_order = self.env['pos.order'].browse(order.get('id'))
+            pos_order = existing_order
 
-            # Save line before to avoid exception if a line is deleted
+            # Save lines and payments before to avoid exception if a line is deleted
             # when vals change the state to 'paid'
-            if order.get('lines'):
-                pos_order.write({'lines': order.get('lines')})
-                order['lines'] = []
+            for field in ['lines', 'payment_ids']:
+                if order.get(field):
+                    pos_order.write({field: order.get(field)})
+                    order[field] = []
 
+            del order['uuid']
+            del order['access_token']
             pos_order.write(order)
 
         pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
@@ -130,15 +113,11 @@ class PosOrder(models.Model):
 
     def _prepare_combo_line_uuids(self, order_vals):
         acc = {}
-        for line in order_vals['lines']:
-            if line[0] not in [0, 1]:
-                continue
+        lines = [line[2] for line in order_vals['lines'] if line[0] in [0, 1]]
 
-            line = line[2]
-
-            if line.get('combo_line_ids'):
-                filtered_lines = list(filter(lambda l: l[2].get('id') and l[2].get('id') in line.get('combo_line_ids'), order_vals['lines']))
-                acc[line['uuid']] = [l[2]['uuid'] for l in filtered_lines]
+        for line in lines:
+            if combo_line_ids := line.get('combo_line_ids'):
+                acc[line['uuid']] = [l['uuid'] for l in lines if l.get('id') in combo_line_ids]
 
             line['combo_line_ids'] = False
             line['combo_parent_id'] = False
@@ -193,7 +172,7 @@ class PosOrder(models.Model):
         prec_acc = order.currency_id.decimal_places
 
         # Recompute amount paid because we don't trust the client
-        order.amount_paid = sum(order.payment_ids.mapped('amount'))
+        order.with_context(backend_recomputation=True).write({'amount_paid': sum(order.payment_ids.mapped('amount'))})
 
         if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
             cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
@@ -208,6 +187,7 @@ class PosOrder(models.Model):
                 'is_change': True,
             }
             order.add_payment(return_payment_vals)
+            order._compute_prices()
 
     def _prepare_tax_base_line_values(self):
         """ Convert pos order lines into dictionaries that would be used to compute taxes later.
@@ -277,11 +257,11 @@ class PosOrder(models.Model):
         help="Employee who uses the cash register.",
         default=lambda self: self.env.uid,
     )
-    amount_difference = fields.Float(string='Difference', digits=0, readonly=True)
-    amount_tax = fields.Float(string='Taxes', digits=0, readonly=True, required=True)
-    amount_total = fields.Float(string='Total', digits=0, readonly=True, required=True)
-    amount_paid = fields.Float(string='Paid', digits=0, required=True)
-    amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
+    amount_difference = fields.Monetary(string='Difference', readonly=True)
+    amount_tax = fields.Monetary(string='Taxes', readonly=True, required=True)
+    amount_total = fields.Monetary(string='Total', readonly=True, required=True)
+    amount_paid = fields.Monetary(string='Paid', required=True)
+    amount_return = fields.Monetary(string='Returned', required=True, readonly=True)
     margin = fields.Monetary(string="Margin", compute='_compute_margin')
     margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
     is_total_cost_computed = fields.Boolean(compute='_compute_is_total_cost_computed',
@@ -327,13 +307,13 @@ class PosOrder(models.Model):
     shipping_date = fields.Date('Shipping Date')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
-    tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
+    tip_amount = fields.Monetary(string='Tip Amount', readonly=True)
     refund_orders_count = fields.Integer('Number of Refund Orders', compute='_compute_refund_related_fields', help="Number of orders where items from this order were refunded")
     refunded_order_id = fields.Many2one('pos.order', compute='_compute_refund_related_fields', help="Order from which items were refunded in this order")
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
     tracking_number = fields.Char(string="Order Number", compute='_compute_tracking_number', search='_search_tracking_number')
-    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
+    uuid = fields.Char(string='Uuid', readonly=True, copy=False)
     email = fields.Char(string='Email', compute="_compute_contact_details", readonly=False, store=True)
     mobile = fields.Char(string='Mobile', compute="_compute_contact_details", readonly=False, store=True)
     is_edited = fields.Boolean(string='Edited', compute='_compute_is_edited')
@@ -432,38 +412,35 @@ class PosOrder(models.Model):
         self._compute_prices()
 
     def _compute_prices(self):
+        AccountTax = self.env['account.tax']
         for order in self:
             if not order.currency_id:
                 raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
-            currency = order.currency_id
             order.amount_paid = sum(payment.amount for payment in order.payment_ids)
-            order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
-            order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
-            order.amount_total = order.amount_tax + currency.round(sum(line.price_subtotal for line in order.lines))
+            order.amount_return = -sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
+
+            base_lines = order.lines._prepare_tax_base_line_values()
+            AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
+            AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
+
+            cash_rounding = None
+            if (
+                order.config_id.cash_rounding
+                and not order.config_id.only_round_cash_method
+                and order.config_id.rounding_method
+            ):
+                cash_rounding = order.config_id.rounding_method
+
+            tax_totals = AccountTax._get_tax_totals_summary(
+                base_lines=base_lines,
+                currency=order.currency_id,
+                company=order.company_id,
+                cash_rounding=cash_rounding,
+            )
+            refund_factor = -1 if (order.amount_total < 0.0) else 1
+            order.amount_tax = refund_factor * tax_totals['tax_amount_currency']
+            order.amount_total = refund_factor * tax_totals['total_amount_currency']
             order.amount_difference = order.amount_paid - order.amount_total
-
-    def _compute_batch_amount_all(self):
-        """
-        Does essentially the same thing as `_onchange_amount_all` but only for actually existing records
-        It is intended as a helper method , not as a business one
-        Practical to be used for migrations
-        """
-        amounts = {order_id: {'paid': 0, 'return': 0, 'taxed': 0, 'taxes': 0} for order_id in self.ids}
-        for pos_order, amount in self.env['pos.payment']._read_group([('pos_order_id', 'in', self.ids)], ['pos_order_id'], ['amount:sum']):
-            amounts[pos_order.id]['paid'] = amount
-        for pos_order, amount in self.env['pos.payment']._read_group(['&', ('pos_order_id', 'in', self.ids), ('amount', '<', 0)], ['pos_order_id'], ['amount:sum']):
-            amounts[pos_order.id]['return'] = amount
-        for order, price_subtotal, price_subtotal_incl in self.env['pos.order.line']._read_group([('order_id', 'in', self.ids)], ['order_id'], ['price_subtotal:sum', 'price_subtotal_incl:sum']):
-            amounts[order.id]['taxed'] = price_subtotal_incl
-            amounts[order.id]['taxes'] = price_subtotal_incl - price_subtotal
-
-        for order in self:
-            order.write({
-                'amount_paid': amounts[order.id]['paid'],
-                'amount_return': amounts[order.id]['return'],
-                'amount_tax': order.currency_id.round(amounts[order.id]['taxes']),
-                'amount_total': order.currency_id.round(amounts[order.id]['taxed'])
-            })
 
     @api.depends('lines.is_edited', 'has_deleted_line')
     def _compute_is_edited(self):
@@ -510,8 +487,8 @@ class PosOrder(models.Model):
         res = super().write(vals)
         for order in self:
             if vals.get('payment_ids'):
-                order._compute_prices()
-                totally_paid_or_more = float_compare(order.amount_paid, order.amount_total, precision_rounding=order.currency_id.rounding)
+                order.with_context(backend_recomputation=True)._compute_prices()
+                totally_paid_or_more = float_compare(order.amount_paid, self._get_rounded_amount(order.amount_total), precision_rounding=order.currency_id.rounding)
                 if totally_paid_or_more < 0 and order.state in ['paid', 'done', 'invoiced']:
                     raise UserError(_('The paid amount is different from the total amount of the order.'))
                 elif totally_paid_or_more > 0 and order.state == 'paid':
@@ -663,61 +640,49 @@ class PosOrder(models.Model):
 
     def _create_invoice(self, move_vals):
         self.ensure_one()
-        new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type']).create(move_vals)
-        message = _("This invoice has been created from the point of sale session: %s",
-            self._get_html_link())
+        invoice = self.env['account.move'].sudo()\
+            .with_company(self.company_id)\
+            .with_context(default_move_type=move_vals['move_type'], linked_to_pos=True)\
+            .create(move_vals)
 
-        new_move.message_post(body=message)
         if self.config_id.cash_rounding:
-            with self.env['account.move']._check_balanced({'records': new_move}):
-                rounding_applied = float_round(self.amount_paid - self.amount_total,
-                                            precision_rounding=new_move.currency_id.rounding)
-                rounding_line = new_move.line_ids.filtered(lambda line: line.display_type == 'rounding')
-                if rounding_line and rounding_line.debit > 0:
-                    rounding_line_difference = rounding_line.debit + rounding_applied
-                elif rounding_line and rounding_line.credit > 0:
-                    rounding_line_difference = -rounding_line.credit + rounding_applied
+            line_ids_commands = []
+            rate = invoice.invoice_currency_rate
+            sign = invoice.direction_sign
+            amount_paid = (-1 if self.amount_total < 0.0 else 1) * self.amount_paid
+            difference_currency = sign * (amount_paid - invoice.amount_total)
+            difference_balance = invoice.company_currency_id.round(difference_currency / rate) if rate else 0.0
+            if not self.currency_id.is_zero(difference_currency):
+                rounding_line = invoice.line_ids.filtered(lambda line: line.display_type == 'rounding' and not line.tax_line_id)
+                if rounding_line:
+                    line_ids_commands.append(Command.update(rounding_line.id, {
+                        'amount_currency': rounding_line.amount_currency + difference_currency,
+                        'balance': rounding_line.balance + difference_balance,
+                    }))
                 else:
-                    rounding_line_difference = rounding_applied
-                if rounding_applied:
-                    if rounding_applied > 0.0:
-                        account_id = new_move.invoice_cash_rounding_id.loss_account_id.id
+                    if difference_currency > 0.0:
+                        account = invoice.invoice_cash_rounding_id.loss_account_id
                     else:
-                        account_id = new_move.invoice_cash_rounding_id.profit_account_id.id
-                    if rounding_line:
-                        if rounding_line_difference:
-                            rounding_line.with_context(skip_invoice_sync=True).write({
-                                'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
-                                'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
-                                'account_id': account_id,
-                                'price_unit': rounding_applied,
-                            })
-
-                    else:
-                        self.env['account.move.line'].sudo().with_context(skip_invoice_sync=True).create({
-                            'balance': -rounding_applied,
-                            'quantity': 1.0,
-                            'partner_id': new_move.partner_id.id,
-                            'move_id': new_move.id,
-                            'currency_id': new_move.currency_id.id,
-                            'company_id': new_move.company_id.id,
-                            'company_currency_id': new_move.company_id.currency_id.id,
-                            'display_type': 'rounding',
-                            'sequence': 9999,
-                            'name': self.config_id.rounding_method.name,
-                            'account_id': account_id,
-                        })
-                else:
-                    if rounding_line:
-                        rounding_line.with_context(skip_invoice_sync=True).unlink()
-                if rounding_line_difference:
-                    existing_terms_line = new_move.line_ids.filtered(
-                        lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
-                    existing_terms_line_new_val = float_round(
-                        existing_terms_line.balance + rounding_line_difference,
-                        precision_rounding=new_move.currency_id.rounding)
-                    existing_terms_line.with_context(skip_invoice_sync=True).balance = existing_terms_line_new_val
-        return new_move
+                        account = invoice.invoice_cash_rounding_id.profit_account_id
+                    line_ids_commands.append(Command.create({
+                        'name': invoice.invoice_cash_rounding_id.name,
+                        'amount_currency': difference_currency,
+                        'balance': difference_balance,
+                        'currency_id': invoice.currency_id.id,
+                        'display_type': 'rounding',
+                        'account_id': account.id,
+                    }))
+                existing_terms_line = invoice.line_ids\
+                    .filtered(lambda line: line.display_type == 'payment_term')\
+                    .sorted(lambda line: -abs(line.amount_currency))[:1]
+                line_ids_commands.append(Command.update(existing_terms_line.id, {
+                    'amount_currency': existing_terms_line.amount_currency - difference_currency,
+                    'balance': existing_terms_line.balance - difference_balance,
+                }))
+                with self.env['account.move']._check_balanced({'records': invoice}):
+                    invoice.with_context(skip_invoice_sync=True).line_ids = line_ids_commands
+        invoice.message_post(body=_("This invoice has been created from the point of sale session: %s", self._get_html_link()))
+        return invoice
 
     def action_pos_order_paid(self):
         self.ensure_one()
@@ -757,9 +722,11 @@ class PosOrder(models.Model):
         for orderline in self.lines:
             if orderline.refunded_orderline_id and orderline.refunded_orderline_id.order_id.account_move:
                 pos_refunded_invoice_ids.append(orderline.refunded_orderline_id.order_id.account_move.id)
+
         vals = {
             'invoice_origin': self.name,
             'pos_refunded_invoice_ids': pos_refunded_invoice_ids,
+            'pos_order_ids': self.ids,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
@@ -771,9 +738,7 @@ class PosOrder(models.Model):
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': self._prepare_invoice_lines(),
             'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
-            'invoice_cash_rounding_id': self.config_id.rounding_method.id
-            if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
-            else False
+            'invoice_cash_rounding_id': self.config_id.rounding_method.id,
         }
         if self.refunded_order_id.account_move:
             vals['ref'] = _('Reversal of: %s', self.refunded_order_id.account_move.name)
@@ -818,6 +783,8 @@ class PosOrder(models.Model):
             balance = company_currency.round(amount_currency * rate)
             aml_vals_list_per_nature['product'].append({
                 'name': order_line.full_product_name,
+                'product_id': order_line.product_id.id,
+                'quantity': order_line.qty * sign,
                 'account_id': base_line_vals['account_id'].id,
                 'partner_id': base_line_vals['partner_id'].id,
                 'currency_id': base_line_vals['currency_id'].id,
@@ -951,6 +918,9 @@ class PosOrder(models.Model):
         for line in lines_to_reconcile.values():
             line.filtered(lambda l: not l.reconciled).reconcile()
 
+    def _get_open_order(self, order):
+        return self.env["pos.order"].search([('uuid', '=', order.get('uuid'))], limit=1)
+
     def action_pos_order_invoice(self):
         if len(self.company_id) > 1:
             raise UserError(_("You cannot invoice orders belonging to different companies."))
@@ -958,6 +928,9 @@ class PosOrder(models.Model):
         if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing and self.session_id.state != 'closed':
             self._create_order_picking()
         return self._generate_pos_order_invoice()
+
+    def _get_invoice_post_context(self):
+        return {"skip_invoice_sync": True}
 
     def _generate_pos_order_invoice(self):
         moves = self.env['account.move']
@@ -974,8 +947,8 @@ class PosOrder(models.Model):
             move_vals = order._prepare_invoice_vals()
             new_move = order._create_invoice(move_vals)
 
-            order.write({'account_move': new_move.id, 'state': 'invoiced'})
-            new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
+            order.state = 'invoiced'
+            new_move.sudo().with_company(order.company_id).with_context(**order._get_invoice_post_context())._post()
 
             moves += new_move
             payment_moves = order._apply_invoice_payments(order.session_id.state == 'closed')
@@ -998,7 +971,6 @@ class PosOrder(models.Model):
             'res_model': 'account.move',
             'context': "{'move_type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
             'res_id': moves and moves.ids[0] or False,
         }
@@ -1006,6 +978,9 @@ class PosOrder(models.Model):
     def action_pos_order_cancel(self):
         cancellable_orders = self.filtered(lambda order: order.state == 'draft')
         cancellable_orders.write({'state': 'cancel'})
+        return {
+            'pos.order': cancellable_orders.read(self._load_pos_data_fields(self.config_id.ids[0]), load=False)
+        }
 
     def _apply_invoice_payments(self, is_reverse=False):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).with_company(self.company_id).property_account_receivable_id
@@ -1013,9 +988,19 @@ class PosOrder(models.Model):
         if receivable_account.reconcile:
             invoice_receivables = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
             if invoice_receivables:
-                payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account and line.partner_id)
+                credit_line_ids = payment_moves._context.get('credit_line_ids', None)
+                payment_receivables = payment_moves.mapped('line_ids').filtered(
+                    lambda line: (
+                        (credit_line_ids and line.id in credit_line_ids) or
+                        (not credit_line_ids and line.account_id == receivable_account and line.partner_id)
+                    )
+                )
                 (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
         return payment_moves
+
+    @staticmethod
+    def _get_order_log_representation(order):
+        return dict((k, order.get(k)) for k in ("name", "uuid"))
 
     @api.model
     def sync_from_ui(self, orders):
@@ -1031,17 +1016,28 @@ class PosOrder(models.Model):
         :type draft: bool.
         :Returns: list -- list of db-ids for the created and updated orders.
         """
+        sync_token = randrange(100_000_000)  # Use to differentiate 2 parallels calls to this function in the logs
+        _logger.info("PoS synchronisation #%d started for PoS orders references: %s", sync_token, [self._get_order_log_representation(order) for order in orders])
         order_ids = []
-        session_ids = set({order.get('session_id') for order in orders})
         for order in orders:
+            order_log_name = self._get_order_log_representation(order)
+            _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
+
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
 
-            existing_order = self.env['pos.order'].search([('uuid', '=', order.get('uuid'))])
+            existing_order = self._get_open_order(order)
             if existing_order and existing_order.state == 'draft':
                 order_ids.append(self._process_order(order, existing_order))
+                _logger.info("PoS synchronisation #%d order %s updated pos.order #%d", sync_token, order_log_name, order_ids[-1])
             elif not existing_order:
                 order_ids.append(self._process_order(order, False))
+                _logger.info("PoS synchronisation #%d order %s created pos.order #%d", sync_token, order_log_name, order_ids[-1])
+            else:
+                # In theory, this situation is unintended
+                # In practice it can happen when "Tip later" option is used
+                order_ids.append(existing_order.id)
+                _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
@@ -1049,16 +1045,24 @@ class PosOrder(models.Model):
 
         for order in pos_order_ids:
             order._ensure_access_token()
+            if not self.env.context.get('preparation'):
+                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('login_number', 0))
 
+        _logger.info("PoS synchronisation #%d finished", sync_token)
+        return pos_order_ids.read_pos_data(orders, config_id)
+
+    def read_pos_data(self, data, config_id):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
-        is_rescue_session = any(order.get('session_id') not in session_ids for order in orders)
+        session_ids = set({order.get('session_id') for order in data})
+        is_new_session = any(order.get('session_id') not in session_ids for order in data)
+
         return {
-            'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.session': pos_order_ids.session_id._load_pos_data({})['data'] if config_id and is_rescue_session else [],
-            'pos.payment': pos_order_ids.payment_ids.read(pos_order_ids.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.order.line': pos_order_ids.lines.read(pos_order_ids.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.session': self.session_id._load_pos_data({})['data'] if config_id and is_new_session else [],
+            'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
 
     @api.model
@@ -1288,9 +1292,9 @@ class PosOrderLine(models.Model):
         store=True, readonly=False)
     price_unit = fields.Float(string='Unit Price', digits=0)
     qty = fields.Float('Quantity', digits='Product Unit of Measure', default=1)
-    price_subtotal = fields.Float(string='Tax Excl.', digits=0,
+    price_subtotal = fields.Monetary(string='Tax Excl.',
         readonly=True, required=True)
-    price_subtotal_incl = fields.Float(string='Tax Incl.', digits=0,
+    price_subtotal_incl = fields.Monetary(string='Tax Incl.',
         readonly=True, required=True)
     price_extra = fields.Float(string="Price extra")
     price_type = fields.Selection([
@@ -1314,7 +1318,7 @@ class PosOrderLine(models.Model):
     refund_orderline_ids = fields.One2many('pos.order.line', 'refunded_orderline_id', 'Refund Order Lines', help='Orderlines in this field are the lines that refunded this orderline.')
     refunded_orderline_id = fields.Many2one('pos.order.line', 'Refunded Order Line', help='If this orderline is a refund, then the refunded orderline is specified in this field.')
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
-    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
+    uuid = fields.Char(string='Uuid', readonly=True, copy=False)
     note = fields.Char('Product Note')
 
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent') # FIXME rename to parent_line_id
@@ -1371,9 +1375,10 @@ class PosOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('order_id') and not vals.get('name'):
+            order = self.env['pos.order'].browse(vals['order_id']) if vals.get('order_id') else False
+            if order and order.exists() and not vals.get('name'):
                 # set name based on the sequence specified on the config
-                config = self.env['pos.order'].browse(vals['order_id']).session_id.config_id
+                config = order.session_id.config_id
                 if config.sequence_line_id:
                     vals['name'] = config.sequence_line_id._next()
             if not vals.get('name'):
@@ -1396,18 +1401,28 @@ class PosOrderLine(models.Model):
 
     @api.model
     def get_existing_lots(self, company_id, product_id):
+        """
+        Return the lots that are still available in the given company.
+        The lot is available if its quantity in the corresponding stock_quant and pos stock location is > 0.
+        """
         self.check_access('read')
-        existing_lots_sudo = self.sudo().env['stock.lot'].search([
+        pos_config = self.env['pos.config'].browse(self._context.get('config_id'))
+        if not pos_config:
+            raise UserError(_('No PoS configuration found'))
+
+        src_loc = pos_config.picking_type_id.default_location_src_id
+        src_loc_quants = self.sudo().env['stock.quant'].search([
             '|',
             ('company_id', '=', False),
             ('company_id', '=', company_id),
             ('product_id', '=', product_id),
+            ('location_id', 'in', src_loc.child_internal_location_ids.ids),
         ])
+        available_lots = src_loc_quants.\
+            filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0).\
+            mapped('lot_id')
 
-        if existing_lots_sudo and existing_lots_sudo[0].product_id.tracking == 'serial':
-            existing_lots_sudo = existing_lots_sudo.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) >= 0)
-
-        return existing_lots_sudo.read(['id', 'name'])
+        return available_lots.read(['id', 'name', 'product_qty'])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_order_state(self):
@@ -1509,7 +1524,7 @@ class PosOrderLine(models.Model):
             group_id = line._get_procurement_group()
             if not group_id:
                 group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
-                line.order_id.procurement_group_id = group_id
+                line.order_id.with_context(backend_recomputation=True).write({'procurement_group_id': group_id})
 
             values = line._prepare_procurement_values(group_id=group_id)
             product_qty = line.qty
@@ -1570,8 +1585,53 @@ class PosOrderLine(models.Model):
     @api.depends('price_subtotal', 'total_cost')
     def _compute_margin(self):
         for line in self:
-            line.margin = line.price_subtotal - line.total_cost
-            line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) and line.margin / line.price_subtotal or 0
+            if line.product_id.type == 'combo':
+                line.margin = 0
+                line.margin_percent = 0
+            else:
+                line.margin = line.price_subtotal - line.total_cost
+                line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) and line.margin / line.price_subtotal or 0
+
+    def _prepare_base_line_for_taxes_computation(self):
+        self.ensure_one()
+        commercial_partner = self.order_id.partner_id.commercial_partner_id
+        fiscal_position = self.order_id.fiscal_position_id
+        line = self.with_company(self.order_id.company_id)
+        account = line.product_id._get_product_accounts()['income'] or self.order_id.config_id.journal_id.default_account_id
+        if not account:
+            raise UserError(_(
+                "Please define income account for this product: '%(product)s' (id:%(id)d).",
+                product=line.product_id.name, id=line.product_id.id,
+            ))
+
+        if fiscal_position:
+            account = fiscal_position.map_account(account)
+
+        is_refund_order = line.order_id.amount_total < 0.0
+        is_refund_line = line.qty * line.price_unit < 0
+
+        product_name = line.product_id \
+            .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang) \
+            .get_product_multiline_description_sale()
+
+        return {
+            **self.env['account.tax']._prepare_base_line_for_taxes_computation(
+                line,
+                partner_id=commercial_partner,
+                currency_id=self.order_id.currency_id,
+                rate=self.order_id.currency_rate,
+                product_id=line.product_id,
+                tax_ids=line.tax_ids_after_fiscal_position,
+                price_unit=line.price_unit,
+                quantity=line.qty * (-1 if is_refund_order else 1),
+                discount=line.discount,
+                account_id=account,
+                is_refund=is_refund_line,
+                sign=1 if is_refund_order else -1,
+            ),
+            'uom_id': line.product_uom_id,
+            'name': product_name,
+        }
 
     def _prepare_tax_base_line_values(self):
         """ Convert pos order lines into dictionaries that would be used to compute taxes later.
@@ -1579,54 +1639,13 @@ class PosOrderLine(models.Model):
         :param sign: An optional parameter to force the sign of amounts.
         :return: A list of python dictionaries (see '_prepare_base_line_for_taxes_computation' in account.tax).
         """
-        base_line_vals_list = []
-        for line in self:
-            commercial_partner = self.order_id.partner_id.commercial_partner_id
-            fiscal_position = self.order_id.fiscal_position_id
-            line = line.with_company(self.order_id.company_id)
-            account = line.product_id._get_product_accounts()['income'] or self.order_id.config_id.journal_id.default_account_id
-            if not account:
-                raise UserError(_(
-                    "Please define income account for this product: '%(product)s' (id:%(id)d).",
-                    product=line.product_id.name, id=line.product_id.id,
-                ))
-
-            if fiscal_position:
-                account = fiscal_position.map_account(account)
-
-            is_refund_order = line.order_id.amount_total < 0.0
-            is_refund_line = line.qty * line.price_unit < 0
-
-            product_name = line.product_id\
-                .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
-                .get_product_multiline_description_sale()
-
-            base_line_vals_list.append(
-                {
-                    **self.env['account.tax']._prepare_base_line_for_taxes_computation(
-                        line,
-                        partner_id=commercial_partner,
-                        currency_id=self.order_id.currency_id,
-                        product_id=line.product_id,
-                        tax_ids=line.tax_ids_after_fiscal_position,
-                        price_unit=line.price_unit,
-                        quantity=line.qty * (-1 if is_refund_order else 1),
-                        discount=line.discount,
-                        account_id=account,
-                        is_refund=is_refund_line,
-                        sign=1 if is_refund_order else -1,
-                    ),
-                    'uom_id': line.product_uom_id,
-                    'name': product_name,
-                }
-            )
-        return base_line_vals_list
+        return [line._prepare_base_line_for_taxes_computation() for line in self]
 
     def unlink(self):
         for line in self:
             if line.order_id.config_id.order_edit_tracking:
                 line.order_id.has_deleted_line = True
-                body = _("%s: Deleted line", line.full_product_name)
+                body = _("%(product_name)s: Deleted line (quantity: %(qty)s)", product_name=line.full_product_name, qty=line.qty)
                 line.order_id._post_chatter_message(body)
         res = super().unlink()
         return res
@@ -1673,4 +1692,4 @@ class AccountCashRounding(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'rounding', 'rounding_method']
+        return ['id', 'name', 'rounding', 'rounding_method', 'strategy']

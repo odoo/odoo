@@ -6,9 +6,9 @@ import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_u
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
 import { registry } from "@web/core/registry";
+import { negate } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("PosHrTour", {
-    test: true,
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),
@@ -87,7 +87,6 @@ registry.category("web_tour.tours").add("PosHrTour", {
 });
 
 registry.category("web_tour.tours").add("CashierStayLogged", {
-    test: true,
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),
@@ -110,7 +109,6 @@ registry.category("web_tour.tours").add("CashierStayLogged", {
 });
 
 registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
-    test: true,
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),
@@ -121,5 +119,21 @@ registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
             ProductScreen.clickInfoProduct("product_a"),
             Dialog.confirm("Ok"),
             Dialog.isNot(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CashierCannotClose", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuButton(),
+            {
+                trigger: negate(".close-button"),
+            },
+            PosHr.cashierNameIs("Test Employee 3"),
         ].flat(),
 });

@@ -27,7 +27,12 @@ import {
     useState,
 } from "@odoo/owl";
 import { LinkTools } from '@web_editor/js/wysiwyg/widgets/link_tools';
-import { touching, closest, addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import {
+    touching,
+    closest,
+    addLoadingEffect as addButtonLoadingEffect,
+    isVisible,
+} from "@web/core/utils/ui";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { RPCError } from "@web/core/network/rpc";
@@ -352,9 +357,12 @@ var SnippetEditor = publicWidget.Widget.extend({
     /**
      * DOMElements have a default name which appears in the overlay when they
      * are being edited. This method retrieves this name; it can be defined
-     * directly in the DOM thanks to the `data-name` attribute.
+     * directly in the DOM thanks to the `data-translated-name` or `data-name` attribute.
      */
     getName: function () {
+        if (this.$target.data('translated-name') !== undefined) {
+            return this.$target.data('translated-name');
+        }
         if (this.$target.data('name') !== undefined) {
             return this.$target.data('name');
         }
@@ -436,11 +444,11 @@ var SnippetEditor = publicWidget.Widget.extend({
         // unit tested.
         let parent = this.$target[0].parentElement;
         let nextSibling = this.$target[0].nextElementSibling;
-        while (nextSibling && nextSibling.matches('.o_snippet_invisible')) {
+        while (nextSibling && !isVisible(nextSibling)) {
             nextSibling = nextSibling.nextElementSibling;
         }
         let previousSibling = this.$target[0].previousElementSibling;
-        while (previousSibling && previousSibling.matches('.o_snippet_invisible')) {
+        while (previousSibling && !isVisible(previousSibling)) {
             previousSibling = previousSibling.previousElementSibling;
         }
         if ($(parent).is('.o_editable:not(body)')) {
@@ -486,13 +494,26 @@ var SnippetEditor = publicWidget.Widget.extend({
         if ($parent.closest(':data("snippet-editor")').length) {
             const isEmptyAndRemovable = ($el, editor) => {
                 editor = editor || $el.data('snippet-editor');
-                const isEmpty = $el.text().trim() === ''
+
+                // Consider a <figure> element as empty if it only contains a
+                // <figcaption> element (e.g., when its image has just been
+                // removed).
+                const isEmptyFigureEl = $el[0].matches("figure")
+                    && $el[0].children.length === 1
+                    && $el[0].children[0].matches("figcaption");
+
+                const isEmpty = isEmptyFigureEl || ($el.text().trim() === ''
                     && $el.children().toArray().every(el => {
                         // Consider layout-only elements (like bg-shapes) as empty
                         return el.matches(this.layoutElementsSelector);
-                    });
-                return isEmpty && !$el.hasClass('oe_structure')
-                    && !$el.parent().hasClass('carousel-item')
+                    }));
+                const notRemovableSelector =
+                    `.oe_structure,
+                    .carousel-item,
+                    .carousel-item > .container,
+                    .carousel-item > .container-fluid,
+                    .carousel-item > .o_container_small`;
+                return isEmpty && !$el[0].matches(notRemovableSelector)
                     && (!editor || editor.isTargetParentEditable)
                     && !isUnremovable($el[0]);
             };
@@ -747,15 +768,18 @@ var SnippetEditor = publicWidget.Widget.extend({
         this.selectorLockWithin = new Set();
         const selectorExcludeAncestor = new Set();
 
-        var $element = this.$target.parent();
-        while ($element.length) {
-            var parentEditor = $element.data('snippet-editor');
-            if (parentEditor) {
-                this._customize$Elements = this._customize$Elements
-                    .concat(parentEditor._customize$Elements);
-                break;
+        if (this.options.allowParentsEditors) {
+            // TODO Should not rely on .data('snippet-editor') but ask parents
+            var $element = this.$target.parent();
+            while ($element.length) {
+                var parentEditor = $element.data('snippet-editor');
+                if (parentEditor) {
+                    this._customize$Elements = this._customize$Elements
+                        .concat(parentEditor._customize$Elements);
+                    break;
+                }
+                $element = $element.parent();
             }
-            $element = $element.parent();
         }
 
         var $optionsSection = $(renderToElement('web_editor.customize_block_options_section', {
@@ -1928,6 +1952,7 @@ class SnippetsMenu extends Component {
             // text will load it). The colorpalette itself will do the actual
             // waiting of the loading completion.
             this.options.wysiwyg.getColorpickerTemplate();
+            this.options.wysiwyg.toolbarEl.classList.add("d-none");
         });
 
         onMounted(async () => {
@@ -1987,6 +2012,10 @@ class SnippetsMenu extends Component {
 
         useBus(this.props.bus, "CLEAN_FOR_SAVE", ({ detail }) => {
             detail.proms.push(this.cleanForSave());
+        });
+
+        useBus(this.props.bus, "UPDATE_SCROLLING_ELEMENT", ({ detail }) => {
+            this.draggableComponent?.update({ scrollingElement: detail.scrollingElement });
         });
     }
     /**
@@ -2054,7 +2083,6 @@ class SnippetsMenu extends Component {
 
         const toolbarEl = this._toolbarWrapperEl.firstChild;
         toolbarEl.classList.remove('oe-floating');
-        this.options.wysiwyg.toolbarEl.classList.add('d-none');
         this.options.wysiwyg.setupToolbar(toolbarEl);
         this._addToolbar();
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
@@ -2208,7 +2236,7 @@ class SnippetsMenu extends Component {
             // Note: we cannot listen to keyup in .o_default_snippet_text
             // elements via delegation because keyup only bubbles from focusable
             // elements which contenteditable are not.
-            const selection = this.ownerDocument.getSelection();
+            const selection = this.$body[0].ownerDocument.getSelection();
             if (!selection.rangeCount) {
                 return;
             }
@@ -2794,7 +2822,7 @@ class SnippetsMenu extends Component {
                 return false;
             });
             // Insert an invisible snippet in its "parentEl" element.
-            const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant) => {
+            const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant, parents) => {
                 const editor = await this._createSnippetEditor($(invisibleSnippetEl), true);
                 return {
                     editor,
@@ -2805,6 +2833,7 @@ class SnippetsMenu extends Component {
                     invisibleSnippetEl,
                     isVisible: editor.isTargetVisible(),
                     children: [],
+                    parents: isDescendant ? parents : null,
                 };
             };
             // Insert all the invisible snippets contained in "snippetEls" as
@@ -2816,15 +2845,15 @@ class SnippetsMenu extends Component {
             //     └ descendantInvisibleSnippet
             //          └ descendantOfDescendantInvisibleSnippet
             //               └ etc...
-            const createInvisibleElements = (snippetEls, isDescendant) => {
+            const createInvisibleElements = (snippetEls, isDescendant, parents) => {
                 return Promise.all((snippetEls).map(async (snippetEl) => {
                     const descendantSnippetEls = descendantPerSnippet.get(snippetEl);
                     // An element is considered as "RootParent" if it has one or
                     // more invisible descendants but is not a descendant.
                     const invisibleElement = await createInvisibleElement(snippetEl,
-                        !isDescendant && !!descendantSnippetEls, isDescendant);
+                        !isDescendant && !!descendantSnippetEls, isDescendant, parents);
                     if (descendantSnippetEls) {
-                        invisibleElement.children = await createInvisibleElements(descendantSnippetEls, true);
+                        invisibleElement.children = await createInvisibleElements(descendantSnippetEls, true, invisibleElement);
                     }
                     return invisibleElement;
                 }));
@@ -2872,6 +2901,15 @@ class SnippetsMenu extends Component {
             // we create editors for invisible elements when translating them,
             // we only want to toggle their visibility when the related sidebar
             // buttons are clicked).
+            const translationEditors = this.snippetEditors.filter(editor => {
+                return this._allowInTranslationMode(editor.$target);
+            });
+            // Before returning, we need to clean editors if their snippets are
+            // allowed in the translation mode.
+            for (const editor of translationEditors) {
+                await editor.cleanForSave();
+                editor.destroy();
+            }
             return;
         }
         const exec = previewMode
@@ -3094,6 +3132,13 @@ class SnippetsMenu extends Component {
         exclude += `${exclude && ', '}.o_snippet_not_selectable`;
 
         let filterFunc = function () {
+            if (forDrop) {
+                // Prevents blocks from being dropped into an image field.
+                const selfOrParentEl = isChildren ? this.parentNode : this;
+                if (selfOrParentEl.closest("[data-oe-type=image]")) {
+                    return false;
+                }
+            }
             // Exclude what it is asked to exclude.
             if ($(this).is(exclude)) {
                 return false;
@@ -3186,6 +3231,11 @@ class SnippetsMenu extends Component {
         var self = this;
         var $html = $(html);
 
+        // TODO: Remove in master and add it in template s_website_form
+        const websiteFormEditorOptionsEl = $html.find('[data-js="WebsiteFormEditor"]')[0];
+        if (websiteFormEditorOptionsEl) {
+            websiteFormEditorOptionsEl.dataset.dropExcludeAncestor = "form";
+        }
         this.templateOptions = [];
         var selectors = [];
         var $styles = $html.find('[data-selector]');
@@ -3376,7 +3426,8 @@ class SnippetsMenu extends Component {
         }
 
         var def;
-        if (this._allowParentsEditors($snippet)) {
+        const allowParentsEditors = this._allowParentsEditors($snippet);
+        if (allowParentsEditors) {
             var $parent = globalSelector.closest($snippet.parent());
             if ($parent.length) {
                 def = this._createSnippetEditor($parent);
@@ -3394,7 +3445,13 @@ class SnippetsMenu extends Component {
             }
 
             let editableArea = self.getEditableArea();
-            snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea), self.options);
+            snippetEditor = new SnippetEditor(
+                parentEditor || self,
+                $snippet,
+                self.templateOptions,
+                $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea),
+                Object.assign({}, self.options, {allowParentsEditors: allowParentsEditors})
+            );
             self.snippetEditors.push(snippetEditor);
             // Keep parent below its child inside the DOM as its `o_handle`
             // needs to be (visually) on top of the child ones.
@@ -3575,7 +3632,7 @@ class SnippetsMenu extends Component {
         if (!$scrollingElement[0]) {
             $scrollingElement = $(this.ownerDocument).find('.o_editable');
         }
-        const oNotebook = this.ownerDocument.querySelector(".o_notebook:not(.o_fullscreen_ancestor)");
+        const oNotebook = this.ownerDocument.querySelector(".o_notebook");
         if (oNotebook) {
             $scrollingElement = $(oNotebook);
         }
@@ -3627,7 +3684,7 @@ class SnippetsMenu extends Component {
                 $toInsert = $baseBody.clone();
                 isSnippetGroup = $toInsert[0].matches(".s_snippet_group");
                 // Color-customize dynamic SVGs in dropped snippets with current theme colors.
-                [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
+                [...$toInsert.find('img[src^="/html_editor/shape/"], img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
                     const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
                     colorCustomizedURL.searchParams.forEach((value, key) => {
                         const match = key.match(/^c([1-5])$/);
@@ -4292,7 +4349,7 @@ class SnippetsMenu extends Component {
      * @param {Event} ev - a touch event
      */
     _onTouchEvent(ev) {
-        if (ev.touches.length > 1) {
+        if (ev.touches.length > 1 || ev.changedTouches.length < 1) {
             // Ignore multi-touch events.
             return;
         }
@@ -4363,15 +4420,30 @@ class SnippetsMenu extends Component {
      * @param {Event} ev
      */
     async onInvisibleEntryClick(invisibleEntry) {
-        const $snippet = $(invisibleEntry.snippetEl);
-        const isVisible = await this._execWithLoadingEffect(async () => {
-            const editor = await this._createSnippetEditor($snippet, true);
-            const show = editor.toggleTargetVisibility();
-            this._disableUndroppableSnippets();
-            return show;
-        }, true);
-        invisibleEntry.isVisible = isVisible;
-        return this._activateSnippet(isVisible ? $snippet : false);
+        const toggleVisibility = async (snippetEl) => {
+            const isVisible = await this._execWithLoadingEffect(async () => {
+                const editor = await this._createSnippetEditor($(snippetEl));
+                const show = editor.toggleTargetVisibility();
+                this._disableUndroppableSnippets();
+                return show;
+            }, true);
+            invisibleEntry.isVisible = isVisible;
+            this._activateSnippet(isVisible ? $(snippetEl) : false);
+        };
+
+        // Toggle all its descendants to invisible (Hide)
+        if (invisibleEntry.isVisible) {
+            invisibleEntry.children.forEach((child) => {
+                if (child.isVisible) {
+                    this.onInvisibleEntryClick(child);
+                }
+            });
+        } else if (invisibleEntry.parents && !invisibleEntry.parents.isVisible) {
+            // Toggle all its parents to visible (show)
+            this.onInvisibleEntryClick(invisibleEntry.parents);
+        }
+
+        await toggleVisibility(invisibleEntry.snippetEl);
     }
     /**
      * @private
@@ -4793,6 +4865,20 @@ class SnippetsMenu extends Component {
             // This is async but using the main editor mutex, currently locked.
             this._updateInvisibleDOM();
 
+            // Updating options upon changing preview mode to avoid ghost overlay
+            const enabledInvisibleOverrideEl =
+                this.options.wysiwyg.lastElement &&
+                this.options.wysiwyg.lastElement.closest(
+                    ".o_snippet_mobile_invisible, .o_snippet_desktop_invisible"
+                );
+            const needDeactivate = enabledInvisibleOverrideEl && enabledInvisibleOverrideEl.dataset.invisible === "1";
+
+            if (needDeactivate) {
+                return new Promise((resolve) => {
+                    this._activateSnippet(false);
+                    resolve();
+                });
+            }
             return this._snippetOptionUpdate();
         }, false);
     }
@@ -5103,7 +5189,7 @@ class SnippetsMenu extends Component {
                         });
                     },
                     deleteCustomSnippet: (snippetKey) => {
-                        this._deleteCustomSnippet(snippetKey, false);
+                        return this._deleteCustomSnippet(snippetKey, false);
                     },
                     renameCustomSnippet: (snippetKey, newName) => {
                         this._renameCustomSnippet(snippetKey, newName, false);
@@ -5210,20 +5296,26 @@ class SnippetsMenu extends Component {
     async _deleteCustomSnippet(snippetKey, withMutex = true) {
         const snippet = this.snippets.get(snippetKey);
         const message = _t("Are you sure you want to delete the block %s?", snippet.displayName);
-        this.dialog.add(ConfirmationDialog, {
-            body: message,
-            confirm: async () => {
-                await this.orm.call("ir.ui.view", "delete_snippet", [], {
-                    'view_id': snippet.id,
-                    'template_key': this.options.snippets,
-                });
-                this.invalidateSnippetCache = true;
-                this.snippets.delete(snippetKey);
-                await this._loadSnippetsTemplates(withMutex);
-            },
-            cancel: () => null,
-            confirmLabel: _t("Yes"),
-            cancelLabel: _t("No"),
+        return new Promise(resolve => {
+            this.dialog.add(ConfirmationDialog, {
+                body: message,
+                confirm: async () => {
+                    await this.orm.call("ir.ui.view", "delete_snippet", [], {
+                        'view_id': snippet.id,
+                        'template_key': this.options.snippets,
+                    });
+                    this.invalidateSnippetCache = true;
+                    this.snippets.delete(snippetKey);
+                    await this._loadSnippetsTemplates(withMutex);
+                    resolve();
+                },
+                cancel: () => {
+                    resolve();
+                    return null;
+                },
+                confirmLabel: _t("Yes"),
+                cancelLabel: _t("No"),
+            });
         });
     }
     /**

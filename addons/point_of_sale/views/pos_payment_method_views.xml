@@ -18,7 +18,7 @@
                         <group>
                             <field name="split_transactions"/>
                             <field name="journal_id" required="not split_transactions" placeholder="Leave empty to use the receivable account of customer" />
-                            <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" placeholder="Leave empty to use the default account from the company setting" />
+                            <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" required="type == 'bank'" placeholder="Leave empty to use the default account from the company setting" />
                             <field name="receivable_account_id" groups="account.group_account_readonly" invisible="split_transactions" placeholder="Leave empty to use the default account from the company setting" />
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                         </group>

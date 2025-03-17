@@ -44,7 +44,7 @@
                 <div name="right-upper-side" class="col-4">
                     <div class="row">
                         <div name="right-upper-side" class="col-12">
-                            <div class="row border border-4 border-dark">
+                            <div class="row border border-4 border-dark" style="max-width: 100%;">
                                 <div class="col-12 text-center">
                                     <h6 style="color: black;">
                                         <strong>
@@ -162,11 +162,11 @@
             <attribute name="t-options">{"widget": "float", "precision": 2}</attribute>
         </xpath>
 
-        <th name="th_priceunit" t-attf-class="text-end text-nowrap {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
+        <xpath expr="//th[@name='th_discount']" position="after">
             <th name="th_discount_currency" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                 <span>Disc.</span>
             </th>
-        </th>
+        </xpath>
 
         <td name="td_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
             <td name="td_discount_currency" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" position="after">
@@ -247,7 +247,7 @@
             </t>
             <t t-if="subtotal_amounts['vat_amount'] != 0.0">
                 <tr>
-                    <td t-out="'VAT %s' % subtotal_amounts['vat_percent']"/>
+                    <td>VAT <t t-esc="subtotal_amounts['vat_percent']"/></td>
                     <td class="text-end" t-out="subtotal_amounts['vat_amount']"
                         t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/></tr>
             </t>

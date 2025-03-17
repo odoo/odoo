@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from unittest.mock import patch, PropertyMock
 
 from odoo import fields
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import new_test_user, tagged
@@ -50,6 +51,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["mail.guest"],
             [
                 {
+                    "avatar_128_access_token": limited_field_access_token(guest, "avatar_128"),
                     "id": guest.id,
                     "im_status": "offline",
                     "name": "Visitor",
@@ -62,6 +64,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             self._filter_partners_fields(
                 {
                     "active": True,
+                    "avatar_128_access_token": limited_field_access_token(
+                        operator.partner_id, "avatar_128"
+                    ),
                     "country": False,
                     "id": operator.partner_id.id,
                     "is_public": False,
@@ -70,6 +75,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
                 {
                     "active": False,
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.partner_root, "avatar_128"
+                    ),
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "isInternalUser": True,
@@ -108,6 +116,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             self._filter_partners_fields(
                 {
                     "active": True,
+                    "avatar_128_access_token": limited_field_access_token(
+                        test_user.partner_id, "avatar_128"
+                    ),
                     "country": {
                         "code": "BE",
                         "id": belgium.id,
@@ -119,12 +130,16 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_public": False,
                     "name": "Roger",
                     "notification_preference": "email",
+                    "signature": str(test_user.signature),
                     "userId": test_user.id,
                     "user_livechat_username": False,
                     "write_date": fields.Datetime.to_string(test_user.write_date),
                 },
                 {
                     "active": True,
+                    "avatar_128_access_token": limited_field_access_token(
+                        operator.partner_id, "avatar_128"
+                    ),
                     "country": False,
                     "id": operator.partner_id.id,
                     "is_public": False,
@@ -133,6 +148,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
                 {
                     "active": False,
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.partner_root, "avatar_128"
+                    ),
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
@@ -201,6 +219,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             self._filter_partners_fields(
                 {
                     "active": True,
+                    "avatar_128_access_token": limited_field_access_token(
+                        operator.partner_id, "avatar_128"
+                    ),
                     "country": False,
                     "id": operator.partner_id.id,
                     "isAdmin": False,
@@ -208,12 +229,16 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_public": False,
                     "name": "Michel",
                     "notification_preference": "email",
+                    "signature": str(operator.signature),
                     "userId": operator.id,
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.partner_id.write_date),
                 },
                 {
                     "active": False,
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.partner_root, "avatar_128"
+                    ),
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
@@ -354,3 +379,20 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         }})
         self.assertEqual(len(init_messaging_result["discuss.channel"]), 1)
         self.assertEqual(init_messaging_result["discuss.channel"][0]["id"], active_livechat.id)
+
+    def test_livechat_manager_can_invite_anyone(self):
+        channel = self.env["discuss.channel"].create(
+            {
+                "channel_type": "livechat",
+                "livechat_operator_id": self.operators[2].partner_id.id,
+                "name": "test",
+            }
+        )
+        other_member = channel.with_user(self.operators[0]).add_members(
+            partner_ids=self.operators[1].partner_id.ids
+        )
+        self.assertEqual(other_member.partner_id, self.operators[1].partner_id)
+        self_member = channel.with_user(self.operators[0]).add_members(
+            partner_ids=self.operators[0].partner_id.ids
+        )
+        self.assertEqual(self_member.partner_id, self.operators[0].partner_id)

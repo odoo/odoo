@@ -25,7 +25,7 @@ class NavigationItem {
             this.target = el;
         }
 
-        const focus = (ev) => this.focus(ev);
+        const focus = () => this.focus(true);
         const onMouseEnter = (ev) => this.onMouseEnter(ev);
 
         this.target.addEventListener("focus", focus);
@@ -41,12 +41,12 @@ class NavigationItem {
         this.target.click();
     }
 
-    focus(event = undefined) {
+    focus(skipRealFocus = false) {
         scrollTo(this.target);
         this.setActiveItem(this.index, this);
         this.target.classList.add(ACTIVE_ELEMENT_CLASS);
 
-        if (!event && !this.options.virtualFocus) {
+        if (!skipRealFocus && !this.options.virtualFocus) {
             focusElement(this.target);
         }
     }
@@ -56,7 +56,7 @@ class NavigationItem {
     }
 
     onMouseEnter() {
-        this.focus();
+        this.focus(true);
         this.options.onMouseEnter?.(this);
     }
 }

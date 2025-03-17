@@ -4,18 +4,20 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
 # Tiffany Chang, 2024
 # 226408 台北 <226408@so8d.com>, 2024
-# Chloe Wang, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
+# Chill Liao <chill421@qq.com>, 2024
+# Wil Odoo, 2024
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,19 +81,19 @@ msgstr "%(item_name)s：结束日期（%(end_date)s）应在开始日期（%(sta
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s 在 %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(pricelist)s的%(percentage)s%% 折扣"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% 销售价格折扣"
 
 #. module: product
 #. odoo-python
@@ -125,13 +127,13 @@ msgstr "（例如：产品描述、电子书、法律声明......）。"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s 额外费用"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s回扣"
 
 #. module: product
 #. odoo-python
@@ -147,6 +149,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- 立即： 只要为产品创建了产品变体，所有产品变体的产品变体都会马上创建。\n"
+"        - 动态：只有当该产品变体被加入销售订单时，该产品变体才会自动创建。\n"
+"        - 从不：即使设定了产品变体，相关产品变体也不会创建。\n"
+"        注意：一旦有相关产品变体已被创建，则此产品变体创建模式将不可改变。"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -181,7 +187,7 @@ msgstr "160X80cm，大桌腿."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
 msgid "2 x 7 with price"
-msgstr "2 x 7已含价"
+msgstr "2 x 7 含价格"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_6
@@ -196,12 +202,12 @@ msgstr "4 x 12"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
 msgid "4 x 12 with price"
-msgstr "4 x 12已含价"
+msgstr "4 x 12 含价格"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
 msgid "4 x 7 with price"
-msgstr "4 x 7已含价"
+msgstr "4 x 7 含价格"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -220,7 +226,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"货币\" title=\"货币\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"币别\" title=\"币别\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -319,25 +325,25 @@ msgstr "一个条码只能分配给一种包装 。"
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "组合选择不能包含重复的产品。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "组合选择不能包含“组合”类型的产品。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "组合选择必须包含至少 1 个产品。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "组合产品必须包含至少 1 个组合选项。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -360,8 +366,8 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
-"价格是一组销售价格或规则，用于根据产品、产品类别、日期和订购计数计算销售订单明细行的价格。\n"
-"            这是处理几个价格，季节性折扣等的完美工具。"
+"价格是一组销售价格或计算销售订单明细价格的规则，基于产品、产品类别、订单日期和订购数量。 \n"
+"这是处理多种定价、季节性折扣等的完美工具。"
 
 #. module: product
 #. odoo-python
@@ -373,7 +379,7 @@ msgstr "已经有产品使用该条码"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "可销售组合产品只能包含可销售产品。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -416,12 +422,12 @@ msgstr "所需操作"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Active"
-msgstr "已启用"
+msgstr "有效"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr "已启用的产品"
+msgstr "有效的产品"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
@@ -467,7 +473,7 @@ msgstr "添加产品"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "将产品添加到价格表报表"
 
 #. module: product
 #. odoo-javascript
@@ -482,22 +488,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"使用右上角的“添加产品”按钮添加产品​​\n"
+"将它们纳入报表中。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "添加到所有产品"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "添加到现有产品"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "添加到产品"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -599,7 +607,7 @@ msgstr "应用于"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
@@ -630,7 +638,7 @@ msgstr "附件"
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件计数"
+msgstr "附件数量"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__local_url
@@ -761,7 +769,7 @@ msgstr "黑色"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "Bye-bye, record!"
-msgstr "再见，唱片！"
+msgstr "再见，记录！"
 
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
@@ -887,8 +895,8 @@ msgstr "组合价格"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "Combo products can't have attributes"
-msgstr ""
+msgid "Combo products can't have attributes."
+msgstr "产品组合不可有属性。"
 
 #. module: product
 #. odoo-python
@@ -896,7 +904,7 @@ msgstr ""
 msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
-msgstr ""
+msgstr "组合允许从每个类别的一系列选择中选择一种产品。"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -983,6 +991,14 @@ msgid "Contained quantity"
 msgstr "包含的数量"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr "仅同类别的计量单位可以互相转换。根据比例进行转换。"
+
+#. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
 msgstr "左转角桌子"
@@ -1003,7 +1019,7 @@ msgstr "成本"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr "成本币种"
+msgstr "成本币别"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -1018,7 +1034,7 @@ msgstr "国家/地区组"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr "创建新价目表"
+msgstr "创建新价格表"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -1117,7 +1133,7 @@ msgstr "立方米"
 #: model:ir.model.fields,field_description:product.field_product_template__currency_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: product
 #: model:product.attribute.value,name:product.fabric_attribute_custom
@@ -1163,7 +1179,7 @@ msgstr "默认额外价格"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "默认额外价格已更改"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1184,7 +1200,7 @@ msgstr "采购订单中使用的默认计量单位。它必须与默认的计量
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr "定义一个新标记"
+msgstr "定义一个新标签"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1361,7 +1377,7 @@ msgstr "时长"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr "染色剂"
+msgstr "DYMO®标签"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -1413,7 +1429,7 @@ msgstr "人类工程学"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "导出文件时出错。请再试一次。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1469,7 +1485,7 @@ msgstr "Fabric"
 #: model:ir.model.fields,field_description:product.field_product_product__is_favorite
 #: model:ir.model.fields,field_description:product.field_product_template__is_favorite
 msgid "Favorite"
-msgstr "收藏夹"
+msgstr "已收藏"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1557,7 +1573,7 @@ msgstr "4人用现代办公工作站"
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
 msgid "Free text"
-msgstr "自由文本"
+msgstr "自定义文本"
 
 #. module: product
 #: model:product.template,name:product.product_product_furniture_product_template
@@ -1594,7 +1610,7 @@ msgstr "显示产品列表时，给出序列号"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Gold Member Pricelist"
-msgstr "金牌会员价目表"
+msgstr "金牌会员价格表"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
@@ -1720,7 +1736,7 @@ msgstr "如果没有设置，供应商的价格将应用于所有产品的产品
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "如果未选中，可隐藏该属性而无需删除。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -1809,7 +1825,7 @@ msgstr "供应商价格表的导入模板"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Inactive"
-msgstr "未启用的"
+msgstr "无效的"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__index_content
@@ -1829,7 +1845,7 @@ msgstr "即时"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Notes"
-msgstr "内部凭单"
+msgstr "内部说明"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__default_code
@@ -1880,7 +1896,7 @@ msgstr "是产品变体"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__public
 msgid "Is public document"
-msgstr "公共文档"
+msgstr "是公开文件"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
@@ -2025,7 +2041,7 @@ msgstr "毛利"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Markup"
-msgstr ""
+msgstr "加价"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2066,7 +2082,7 @@ msgstr "Mime类型"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min Qty"
-msgstr ""
+msgstr "最小数量"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2096,7 +2112,7 @@ msgstr "监控标准"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox"
-msgstr ""
+msgstr "多个复选框"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
@@ -2168,7 +2184,7 @@ msgstr "下一活动类型"
 msgid ""
 "No product to print, if the product is archived please unarchive it before "
 "printing its label."
-msgstr "没有要打印的产品，如果产品已存档，请在打印标签前取消存档."
+msgstr "没有要打印的产品，如果产品已归档，请在打印标签前取消归档."
 
 #. module: product
 #. odoo-javascript
@@ -2180,7 +2196,7 @@ msgstr "没有产品可以找到。"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "报表中未找到产品"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2261,7 +2277,7 @@ msgstr "黑色办公椅子"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "办公室组合"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2288,6 +2304,12 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr "对于产品%(product)s，您无法将属性转换为%(attribute_src)s属性%(attribute_dest)s。"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
+msgstr "哎呀！ '%(fileName)s' 文件格式不允许上传。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2327,7 +2349,7 @@ msgstr "包装"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
-msgstr "上级品类"
+msgstr "上级类别"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
@@ -2378,7 +2400,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "请先选择一些产品。"
 
 #. module: product
 #. odoo-python
@@ -2491,13 +2513,13 @@ msgstr "价格表名称"
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "Pricelist Report"
-msgstr "价目表报告"
+msgstr "价格表报表"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "价格表报表预览"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2627,12 +2649,12 @@ msgstr "产品类别"
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "产品组合"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr ""
+msgstr "产品组合项目"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
@@ -2643,7 +2665,7 @@ msgstr "产品计数"
 #. module: product
 #: model:res.groups,name:product.group_product_manager
 msgid "Product Creation"
-msgstr ""
+msgstr "产品创建"
 
 #. module: product
 #: model:ir.model,name:product.model_product_document
@@ -2678,27 +2700,27 @@ msgstr "产品标签 4x7 (PDF)"
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr "产品标签报告"
+msgstr "产品标签报表"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
 msgid "Product Label Report 2x7"
-msgstr "产品标签报告 2x7"
+msgstr "产品标签报表 2x7"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
 msgid "Product Label Report 4x12"
-msgstr "产品标签报告 4x12"
+msgstr "产品标签报表 4x12"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
 msgid "Product Label Report 4x12 No Price"
-msgstr "产品标签报告 4x12 无价格"
+msgstr "产品标签报表 4x12 无价格"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
 msgid "Product Label Report 4x7"
-msgstr "产品标签报告 4x7"
+msgstr "产品标签报表 4x7"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -2915,7 +2937,7 @@ msgstr "采购说明"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase Unit"
-msgstr ""
+msgstr "采购单位"
 
 #. module: product
 #. odoo-javascript
@@ -2938,7 +2960,7 @@ msgstr "数量"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "数量（%s）"
 
 #. module: product
 #. odoo-javascript
@@ -3009,7 +3031,7 @@ msgstr "资源字段"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_id
 msgid "Resource ID"
-msgstr "模型标识"
+msgstr "资源ID"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_model
@@ -3036,7 +3058,7 @@ msgstr "餐馆开销"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Round off to"
-msgstr ""
+msgstr "舍入至"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__rows
@@ -3140,7 +3162,7 @@ msgstr "尺寸"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "特定属性产品价格表"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3251,7 +3273,7 @@ msgstr "标签"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr "标记用于搜索给定主题的产品。"
+msgstr "标签用于根据特定主题搜索产品。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__template_value_ids
@@ -3334,6 +3356,7 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
+"该组合中产品的最低价格。该值将用于按比例分配该组合相对于组合产品中其他组合的价格。这种启发式方法确保用户在组合中选择任何产品时，价格始终相同。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3362,7 +3385,7 @@ msgstr "该价格采购产品"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "The product template is archived so no combination is possible."
-msgstr "产品模板已经存档，所以无法合并。"
+msgstr "产品模板已经归档，所以无法合并。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -3446,12 +3469,22 @@ msgstr "这价格表将会被使用,取代默认值,用之出售给当前伙伴"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"This product is part of a combo, so its type can't be changed to \"combo\"."
+msgstr "该产品是组合商品的一部分，因此其类型不能更改为 “组合”。"
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 msgid ""
 "This rounding precision is higher than the Decimal Accuracy (%(digits)s digits).\n"
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %(min_precision)s and 1."
 msgstr ""
+"此舍入精确度高于小数精确度（%(digits)s位数）。 \n"
+"这可能会导致计算不一致。 \n"
+"请设定一个介乎%(min_precision)s与 1 之间的精确度。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3505,7 +3538,7 @@ msgstr "单位"
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "Unable to find report template for %s format"
-msgstr "无法找到%s格式的报告模板"
+msgstr "无法找到%s格式的报表模板"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -3551,25 +3584,31 @@ msgid "Units of Measure"
 msgstr "计量单位"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "计量单位类别"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "更新额外价格"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "更新产品属性值"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "更新产品额外价格"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "更新现有产品的额外价格"
 
 #. module: product
 #. odoo-javascript
@@ -3628,7 +3667,7 @@ msgstr "有效产品属性明细行"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr "有效"
+msgstr "有效期"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -3681,7 +3720,7 @@ msgstr "变体计数"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "变体创建"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -3802,7 +3841,7 @@ msgstr "虚拟室内设计"
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Visible to all"
-msgstr "所有人可见"
+msgstr "对所有人可见"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
@@ -3886,13 +3925,13 @@ msgstr "写入日期"
 msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
-msgstr ""
+msgstr "您即将向%(product_count)s个产品添加值“%(attribute_value)s”。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "您即将更新%s产品的额外价格。"
 
 #. module: product
 #. odoo-python
@@ -3900,7 +3939,7 @@ msgstr ""
 msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
-msgstr "您正在取消价目表功能。所有已启用的价目表都会被存档。"
+msgstr "您正在取消价格表功能。所有有效的价格表都会被存档。"
 
 #. module: product
 #. odoo-python
@@ -3925,21 +3964,21 @@ msgstr "您可以通过设置负折扣来应用加价。"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
 msgid "You can apply a mark-up on the cost"
-msgstr ""
+msgstr "您可以在成本之上加价"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
-msgstr "您可以为客户分配价目表，也可以在创建新的销售报价时选择一个。"
+msgstr "您可以为客户分配价格表，也可以在创建新的销售报价时选择一个。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_document__type
 msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
-msgstr "您可以从本地上传文件，也可以复制/粘贴链接。"
+msgstr "你可以从电脑上传文件，或者复制/粘贴文件的分享链接。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
@@ -3960,14 +3999,14 @@ msgstr "您无法在目录中编辑此产品。"
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
-msgstr ""
+msgstr "您无法存档此属性，因为仍有产品链接到它"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
-msgstr "您不能将主要价目表分配为PriceList项目中的其他价格表"
+msgstr "您不能将主要价格表分配为PriceList项目中的其他价格表"
 
 #. module: product
 #. odoo-python
@@ -4015,7 +4054,7 @@ msgstr "不能创建递归的类别."
 msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
-msgstr "您不能将“账户”的小数精度定义为大于公司主要货币的舍入因子"
+msgstr "您不能将“账户”的小数精度定义为大于公司主要币别的舍入因子"
 
 #. module: product
 #. odoo-python
@@ -4026,6 +4065,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"你不可删除以下价格表：\n"
+"（%(pricelists)s）\n"
+"它们用于其他价格表之中：\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -4050,6 +4093,8 @@ msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
 msgstr ""
+"不可删除值 %(value)s，因为该值已被用于以下产品：\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python
@@ -4142,7 +4187,7 @@ msgstr "csv"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_view_kanban
 msgid "days"
-msgstr "天数"
+msgstr "天"
 
 #. module: product
 #. odoo-python
@@ -4195,7 +4240,7 @@ msgstr "加价"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
 msgid "on"
-msgstr "开启"
+msgstr "在"
 
 #. module: product
 #. odoo-javascript

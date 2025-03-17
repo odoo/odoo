@@ -1,4 +1,4 @@
-import { defineResourceModels } from "@resource/../tests/resource_test_helpers";
+import { defineResourceMailModels } from "./resource_mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import {
@@ -12,7 +12,7 @@ import {
 
 describe.current.tags("desktop");
 const data = {};
-defineResourceModels();
+defineResourceMailModels();
 beforeEach(async () => {
     /* 1. Create data
         3 type of records tested:
@@ -144,12 +144,10 @@ test("many2one_avatar_resource widget in kanban view", async () => {
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
-    expect(queryFirst(".o_avatar_card_buttons button").textContent).toBe("Send message");
+    expect(".o_avatar_card_buttons button:first").toHaveText("Send message");
     await click(".o_avatar_card_buttons button");
     await contains(".o-mail-ChatWindow");
     expect(
-        queryFirst(
-            ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
-        ).textContent
-    ).toBe("Pierre");
+        ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate:first"
+    ).toHaveText("Pierre");
 });

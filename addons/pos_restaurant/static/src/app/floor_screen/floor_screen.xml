@@ -15,8 +15,8 @@
                             <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-esc="changeCount"/>
                         </button>
                     </t>
-                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" >
-                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" title="Add Floor" t-on-click="addFloor"/>
+                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" >
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" title="Add Floor" />
                     </button>
                 </div>
                 <!-- Right Side Div -->
@@ -73,9 +73,14 @@
                             <i class="fa fa-trash fa-fw" role="img" aria-label="Delete" title="Delete"/>
                         </button>
                     </div>
-                    <button t-attf-class="btn btn-outline-secondary btn-lg d-flex align-items-center justify-content-center gap-2 lh-lg " t-on-click.stop="createTable">
-                        <i class="fa fa-plus-circle" role="img" aria-label="Add Table" title="Add Table"/>
-                        <t t-if="!ui.isSmall">Table</t>
+                    <button t-attf-class="btn btn-outline-secondary btn-lg d-flex align-items-center justify-content-center gap-2 lh-lg" t-on-click.stop="doCreateTable.call" t-att-disabled="doCreateTable.status === 'loading'">
+                        <t t-if="doCreateTable.status === 'loading'">
+                            <i class="fa fa-spinner fa-spin icon-button" role="img" aria-label="Loading" title="Loading"></i>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-plus-circle" role="img" aria-label="Add Table" title="Add Table"/>
+                            <t t-if="!ui.isSmall">Table</t>
+                        </t>
                     </button>
                     <button t-attf-class="btn btn-primary btn-lg" t-on-click.stop="closeEditMode">
                         <t t-if="!ui.isSmall">Save</t>
@@ -145,7 +150,7 @@
                                     <t t-set="data" t-value="getChangeCount(table)"/>
                                     <div
                                         t-if="data.changes > 0 || data.skip > 0"
-                                        t-esc="data.changes > 0 ? data.changes : data.skip"
+                                        t-esc="this.env.utils.formatProductQty(data.changes > 0 ? data.changes : data.skip, false)"
                                         t-att-class="{
                                             'text-bg-danger': data.changes,
                                             'text-bg-info'  : !data.changes and data.skip,

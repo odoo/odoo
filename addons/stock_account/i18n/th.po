@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,13 +44,14 @@ msgstr " [ลงบัญชีเมื่อวันที่ %s]"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " lot/serial number cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr "ต้นทุนหมายเลขล็อต/ซีเรียลอัพเดตจาก %(previous)s เป็น %(new_cost)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s"
 msgstr ""
+"%(user)s เปลี่ยนต้นทุนจาก %(previous)s เป็น %(new_price)s - %(record)s"
 
 #. module: stock_account
 #. odoo-python
@@ -58,6 +60,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
 "%(reason)s"
 msgstr ""
+"%(user)sเปลี่ยนแปลงมูลค่าสต็อกจาก %(previous)s เป็น %(new_value)s- %(product)s\n"
+"%(reason)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -446,6 +450,7 @@ msgstr "ไอดี"
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr ""
+"หากทำเครื่องหมายไว้ การประเมินราคาจะระบุเฉพาะตามหมายเลขล็อต/หมายเลขซีเรียล"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -522,15 +527,15 @@ msgstr "ที่เชื่อมโยงกับ"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
-"Lot %(lot)s has a negative quantity in stock. Correct this"
-"                         quantity before enabling lot valuation"
+"Lot %(lot)s has a negative quantity in stock.\n"
+"Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot value manually modified (from %(old)s to %(new)s)"
-msgstr ""
+msgstr "มูลค่าล็อตถูกปรับเปลี่ยนด้วยตนเอง (จาก %(old)s เป็น %(new)s)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
@@ -554,6 +559,7 @@ msgstr ""
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
 msgstr ""
+"หมายเลขล็อต/ซีเรียลเป็นสิ่งจำเป็นสำหรับผลิตภัณฑ์ที่ประเมินมูลค่าตามล็อต"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -616,6 +622,14 @@ msgstr "ขาออก"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "สินค้า"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+"Please assign lots to all your quantities before enabling lot valuation."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -741,7 +755,7 @@ msgstr "ประเมินราคาใหม่"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Select an existing lot/serial number to be reevaluated"
-msgstr ""
+msgstr "เลือกล็อต/หมายเลขซีเรียลที่มีอยู่เพื่อประเมินใหม่"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -921,7 +935,20 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
+msgstr "ควรตั้งค่าบัญชีสต็อกเพื่อใช้การประเมินมูลค่าอัตโนมัติ"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
 msgstr ""
+"การประเมินมูลค่าสต็อกของการย้ายนั้นขึ้นอยู่กับประเภทของสถานที่ต้นทางและปลายทาง"
+" เนื่องจากการย้ายนั้นได้รับการดำเนินการแล้ว "
+"คุณจึงไม่สามารถแก้ไขสถานที่ในลักษณะที่เปลี่ยนตรรกะการประเมินมูลค่าที่กำหนดไว้ในระหว่างการประมวลผลเริ่มต้นได้"
 
 #. module: stock_account
 #. odoo-python
@@ -951,6 +978,8 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for"
 " all lots/SN. Do you want to proceed ? "
 msgstr ""
+"การดำเนินการนี้อาจนำไปสู่การสูญเสียข้อมูล "
+"การประเมินค่าจะเหมือนกันสำหรับล็อต/SN ทั้งหมด คุณต้องการดำเนินการต่อหรือไม่?"
 
 #. module: stock_account
 #. odoo-python
@@ -959,6 +988,8 @@ msgid ""
 "This product is valuated by lot/serial number. Changing the cost will update"
 " the cost of every lot/serial number in stock."
 msgstr ""
+"สินค้านี้ประเมินราคาตามหมายเลขล็อต/ซีเรียล "
+"การเปลี่ยนแปลงราคาจะอัปเดตราคาของแต่ละล็อต/ซีเรียลนัมเบอร์ในสต็อก"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -1139,6 +1170,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"มูลค่าของล็อต (คำนวณอัตโนมัติใน AVCO)\n"
+"        ใช้ในการประเมินมูลค่าผลิตภัณฑ์เมื่อไม่ทราบต้นทุนการซื้อ (เช่น การปรับสินค้าคงคลัง)\n"
+"        ใช้ในการคำนวณมาร์จิ้นในการสั่งซื้อสินค้า"
 
 #. module: stock_account
 #. odoo-python
@@ -1184,7 +1218,7 @@ msgstr "โปรแกรมแบบจำลอง เพื่อประ�
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr ""
+msgstr "คุณไม่สามารถปรับค่าของเลเยอร์ที่มีปริมาณเป็นศูนย์ได้"
 
 #. module: stock_account
 #. odoo-python
@@ -1199,6 +1233,7 @@ msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
 msgstr ""
+"คุณไม่สามารถเปลี่ยนวิธีการคิดต้นทุนของผลิตภัณฑ์ที่ประเมินค่าโดยหมายเลขล็อต/หมายเลขซีเรียลได้"
 
 #. module: stock_account
 #. odoo-python
@@ -1207,6 +1242,7 @@ msgid ""
 "You cannot change the product category of a product valuated by lot/serial "
 "number."
 msgstr ""
+"คุณไม่สามารถเปลี่ยนประเภทผลิตภัณฑ์ของผลิตภัณฑ์ที่ประเมินค่าโดยหมายเลขล็อต/หมายเลขซีเรียลได้"
 
 #. module: stock_account
 #. odoo-python

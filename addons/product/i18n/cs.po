@@ -3,17 +3,20 @@
 # 	* product
 # 
 # Translators:
-# Jiří Podhorecký <jirka.p@volny.cz>, 2024
-# Wil Odoo, 2024
 # Tiffany Chang, 2024
+# Wil Odoo, 2025
+# Aleš Fiala <f.ales1@seznam.cz>, 2025
+# Jiří Podhorecký <jirka.p@volny.cz>, 2025
+# Vojtěch Olšan, 2025
+# Radim Bílý, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tiffany Chang, 2024\n"
+"Last-Translator: Radim Bílý, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,6 +134,7 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
+"- Čárový kód \"%(barcode)s\" je již přiřazen k produktům: %(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -594,6 +598,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Lze zobrazit maximálně množství %s současně. Odeberte vybrané množství a "
+"přidejte další."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -838,12 +844,12 @@ msgstr "Kombinace indikátorů"
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__combo
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Combo"
-msgstr ""
+msgstr "Kombinace"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "Combo Choice"
-msgstr ""
+msgstr "Kombinovaná nabídka"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_combo_action
@@ -851,23 +857,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__combo_ids
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_tree
 msgid "Combo Choices"
-msgstr ""
+msgstr "Kombinované nabídky"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
 msgid "Combo Item"
-msgstr ""
+msgstr "Položka kombinace"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
 msgid "Combo Price"
-msgstr ""
+msgstr "Cena kombinace"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "Combo products can't have attributes"
-msgstr ""
+msgid "Combo products can't have attributes."
+msgstr "Kombinované produkty nemohou mít atributy."
 
 #. module: product
 #. odoo-python
@@ -960,6 +966,16 @@ msgstr "Obsažené množství by mělo být kladné."
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
 msgstr "Obsahuje množství"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Převod mezi měrnými jednotkami lze uskutečnit pouze pokud patří do stejné "
+"kategorie. Převod bude proveden na základě vzájemných poměrů."
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -1762,12 +1778,12 @@ msgstr "Výška obrazu"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_src
 msgid "Image Src"
-msgstr "Zdr. obrázku"
+msgstr "Image Src"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_width
 msgid "Image Width"
-msgstr "Šířka obrázku"
+msgstr "Image Width"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -2187,7 +2203,7 @@ msgstr "Ceník dodavatele nebyl nalezen"
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "No, keep it"
-msgstr ""
+msgstr "Ne, ponechat"
 
 #. module: product
 #. odoo-python
@@ -2276,6 +2292,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
+"Na produktu %(product)s nemůžete přiřadit hodnotu %(value)s k atributu "
+"%(attribute)s, protože se neshodují."
 
 #. module: product
 #. odoo-python
@@ -2283,6 +2301,14 @@ msgstr ""
 msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
+msgstr ""
+"Na produktu %(product)s nemůžete atribut %(attribute_src)s převést na "
+"atribut %(attribute_dest)s."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
+msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
 msgstr ""
 
 #. module: product
@@ -2621,12 +2647,12 @@ msgstr "Produktová kategorie"
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "Kombinovaný produkt"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr ""
+msgstr "Položka kombinovaného produktu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
@@ -2938,7 +2964,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "Množství již existuje (%s)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -3279,6 +3305,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
 msgstr ""
+"Atribut %(attribute)s musí mít pro produkt %(product)s alespoň jednu "
+"hodnotu."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3403,6 +3431,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"Hodnota %(value)s není definována pro atribut %(attribute)s na produktu "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -3461,12 +3491,22 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"This product is part of a combo, so its type can't be changed to \"combo\"."
+msgstr ""
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 msgid ""
 "This rounding precision is higher than the Decimal Accuracy (%(digits)s digits).\n"
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %(min_precision)s and 1."
 msgstr ""
+"Tato přesnost zaokrouhlení je vyšší než přesnost desetinných míst (%(digits)s číslic).\n"
+"To může způsobit nesrovnalosti ve výpočtech.\n"
+"Nastavte prosím přesnost mezi %(min_precision)s a 1. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3568,6 +3608,12 @@ msgstr "Jednotky"
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "Měrné jednotky"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "Kategorie MJ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -3998,6 +4044,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Režim vytváření variant atributu %(attribute)s nemůžete měnit, protože se "
+"používá v následujících produktech: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -4014,6 +4062,8 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"Produkt nelze změnit na hodnotu %(value)s nastavenou na produktu "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -4022,6 +4072,8 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"Hodnotu nelze změnit na hodnotu %(value)s nastavenou na produktu "
+"%(product)s."
 
 #. module: product
 #. odoo-python
@@ -4062,6 +4114,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Nemůžete smazat atribut %(attribute)s, protože se používá v následujících produktech:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -4086,6 +4140,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
+"Tento atribut %(attribute)s nelze přesunout z produktu %(product_src)s k "
+"produktu %(product_dest)s."
 
 #. module: product
 #. odoo-python

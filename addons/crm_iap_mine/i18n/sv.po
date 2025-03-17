@@ -1,0 +1,820 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* crm_iap_mine
+# 
+# Translators:
+# Robin Calvin, 2024
+# Simon S, 2024
+# Haojun Zou <apollo_zhj@msn.com>, 2024
+# 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2024
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2024
+# Leif Persson <leifpz54@gmail.com>, 2024
+# Kristoffer Grundström <lovaren@gmail.com>, 2024
+# Zou Haojun <haojunzou84@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
+# Lasse L, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+msgid ""
+"%(credit_count)d credits will be consumed to find %(company_count)d "
+"companies."
+msgstr ""
+"%(credit_count)d krediter kommer att förbrukas för att "
+"hitta%(company_count)d företag."
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "<b>Contacts</b>"
+msgstr "<b>Kontakter</b>"
+
+#. module: crm_iap_mine
+#: model:mail.template,body_html:crm_iap_mine.lead_generation_no_credits
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Dear,</p>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
+"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
+"    <p>Best regards,</p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
+msgstr ""
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
+msgstr "<span class=\"col-md-6\">Extra kontakter per företag</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"o_stat_text\">Leads</span>"
+msgstr "<span class=\"o_stat_text\">Leads</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "<span class=\"o_stat_text\">Opportunities</span>"
+msgstr "<span class=\"o_stat_text\">Möjligheter</span>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid ""
+"<span invisible=\"error_type != 'no_result'\">Your request did not return "
+"any result (no credits were used). Try removing some filters.</span>"
+msgstr ""
+"<span invisible=\"error_type != 'no_result'\">Din begäran gav inget resultat"
+" (inga krediter användes). Försök att ta bort några filter.</span>"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
+msgid "Automobiles & Components"
+msgstr "Bilar & komponenter"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__available_state_ids
+msgid "Available State"
+msgstr "Tillgänglig stat"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_69_157
+msgid "Banks & Insurance"
+msgstr "Banker & försäkringar"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Buy credits."
+msgstr "Köp krediter."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_1
+msgid "CEO"
+msgstr "VD OCH KONCERNCHEF"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry
+msgid "CRM IAP Lead Industry"
+msgstr "CRM IAP Affärsmöjlighet Industri"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
+msgid "CRM Lead Mining Request"
+msgstr "CRM Affärsmöjlighets Förfrågan"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_162
+msgid "Capital Goods"
+msgstr "Kapitalvaror"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__color
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__color
+msgid "Color Index"
+msgstr "Färgindex"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_163
+msgid "Commercial & Professional Services"
+msgstr "Kommersiella och professionella tjänster"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_2
+msgid "Communications"
+msgstr "Kommunikation"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__companies
+msgid "Companies"
+msgstr "Företag"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__search_type__people
+msgid "Companies and their Contacts"
+msgstr "Företag och deras kontaktpersoner"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_max
+msgid "Company Size Max"
+msgstr "Företags Maxstorlek"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_167
+msgid "Construction Materials"
+msgstr "Konstruktionsmaterial"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_3
+msgid "Consulting"
+msgstr "Konsulting"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_30_155
+msgid "Consumer Discretionary"
+msgstr "Diskretionära konsumentvaror"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_239
+msgid "Consumer Durables & Apparel"
+msgstr "Sällanköpsvaror & kläder"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_150_151
+msgid "Consumer Services"
+msgstr "Konsumenttjänster"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_33
+msgid "Consumer Staples"
+msgstr "Dagligvaror"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__country_ids
+msgid "Countries"
+msgstr "Länder"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+msgid "Create a Lead Mining Request"
+msgstr "Skapa en begäran om lead mining"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__create_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_4
+msgid "Customer Service"
+msgstr "Kundtjänst"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Default Tags"
+msgstr "Standardetiketter"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
+msgid "Diversified Financials & Financial Services"
+msgstr "Diversifierad finansverksamhet & finansiella tjänster"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Done"
+msgstr "Klar"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__draft
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Draft"
+msgstr "Utkast"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_5
+msgid "Education"
+msgstr "Utbildning"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Email"
+msgstr "E-post"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_138_156
+msgid "Energy & Utilities "
+msgstr "Energi & verktyg"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_6
+msgid "Engineering"
+msgstr "Ingenjörskonst"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__error
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Error"
+msgstr "Fel"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__error_type
+msgid "Error Type"
+msgstr "Typ av fel"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_filter_type
+msgid "Filter on"
+msgstr "Filter på"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__filter_on_size
+msgid "Filter on Size"
+msgstr "Filter på storlek"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_7
+msgid "Finance"
+msgstr "Ekonomi"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_153_154
+msgid "Food, Beverage & Tobacco"
+msgstr "Livsmedel, dryck och tobak"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_8
+msgid "Founder"
+msgstr "Grundare"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "From"
+msgstr "Från"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_case_kanban_view_leads
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_lead_view_tree_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_lead_view_tree_opportunity
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.view_crm_lead_kanban
+msgid "Generate Leads"
+msgstr "Skapa kundämne"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+msgid "Generate new leads based on their country, industry, size, etc."
+msgstr "Generera nya kundämnen baserat på land, bransch, storlek, etc."
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
+msgid "Generated Lead / Opportunity"
+msgstr "Skapa kundämne / Affärsmöjlighet"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Group By"
+msgstr "Grupp Av"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_160
+msgid "Health Care Equipment & Services"
+msgstr "Utrustning och tjänster för hälso- och sjukvård"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_9
+msgid "Health Professional"
+msgstr "Hälso- och sjukvårdspersonal"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_helpers
+msgid "Helper methods for crm_iap_mine modules"
+msgstr "Hjälpmetoder för crm_iap_mine-moduler"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "How many leads would you like?"
+msgstr "Hur många leads skulle du vilja ha?"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
+msgid "Human Resources"
+msgstr "Personalavdelning"
+
+#. module: crm_iap_mine
+#: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
+#: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
+msgid "IAP Lead Generation Notification"
+msgstr "Meddelande om IAP Lead Generation"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_168
+msgid "Independent Power and Renewable Electricity Producers"
+msgstr "Oberoende kraftproducenter och producenter av förnybar el"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__industry_ids
+msgid "Industries"
+msgstr "Branscher"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__name
+msgid "Industry"
+msgstr "Bransch"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_industry_name_uniq
+msgid "Industry name already exists!"
+msgstr "Branschnamnet finns redan!"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_11
+msgid "Information Technology"
+msgstr "Informationsteknik"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__credits
+msgid "Insufficient Credits"
+msgstr "Otillräckliga krediter"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_uid
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__write_date
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
+msgid "Lead Contacts Credits"
+msgstr "Huvudkontakter Krediter"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_credits
+msgid "Lead Credits"
+msgstr "Huvudkrediter"
+
+#. module: crm_iap_mine
+#: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
+msgid "Lead Generation"
+msgstr "Kundämnesgenerering"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Lead Mining Request"
+msgstr "Skapa kundämne"
+
+#. module: crm_iap_mine
+#: model:ir.actions.act_window,name:crm_iap_mine.crm_iap_lead_mining_request_action
+#: model:ir.ui.menu,name:crm_iap_mine.crm_iap_lead_mining_request_menu_action
+msgid "Lead Mining Requests"
+msgstr "Skapa kundämnen"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_total_credits
+msgid "Lead Total Credits"
+msgstr "Huvudroll Total Credits"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Kundämne/Möjlighet"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Leads"
+msgstr "Kundämnen"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
+msgid "Legal"
+msgstr "Rättslig"
+
+#. module: crm_iap_mine
+#. odoo-javascript
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+msgid ""
+"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgstr ""
+"Letar du efter fler möjligheter? Testa verktyget <b>Lead Generation</b>."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
+msgid "Marketing"
+msgstr "Marknadsföring"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_148
+msgid "Materials"
+msgstr "Material"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_86
+msgid "Media"
+msgstr "Media"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__name
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Name"
+msgstr "Namn"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_seniority_name_uniq
+msgid "Name already exists!"
+msgstr "Namnet finns redan!"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_lead.py:0
+msgid "Need help reaching your target?"
+msgstr "Behöver du hjälp med att nå ditt mål?"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+msgid "New"
+msgstr "Ny"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__no_result
+msgid "No Result"
+msgstr "Inget resultat"
+
+#. module: crm_iap_mine
+#. odoo-javascript
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+msgid "Now, just let the magic happen!"
+msgstr "Låt magin ta vid!"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__contact_number
+msgid "Number of Contacts"
+msgstr "Antalet kontakter"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_count
+msgid "Number of Generated Leads"
+msgstr "Antalet skapade kundämnen"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_number
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_tree
+msgid "Number of Leads"
+msgstr "Antalet kundämnen"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
+msgid "Operations"
+msgstr "Operationer"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__opportunity
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Opportunities"
+msgstr "Möjligheter"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+msgid "Opportunity created by Odoo Lead Generation"
+msgstr "Möjlighet skapad av Odoo Lead Generation"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__role_ids
+msgid "Other Roles"
+msgstr "Övriga roller"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_15
+msgid "Owner"
+msgstr "Ägare"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_role
+msgid "People Role"
+msgstr "Människor Roll"
+
+#. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_seniority
+msgid "People Seniority"
+msgstr "Människor Senioritet"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_161
+msgid "Pharmaceuticals, Biotechnology & Life Sciences"
+msgstr "Läkemedel, bioteknik och biovetenskap"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Pick States..."
+msgstr "Välj stater..."
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__preferred_role_id
+msgid "Preferred Role"
+msgstr "Rekommenderad roll"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_16
+msgid "President"
+msgstr "Ordförande"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_17
+msgid "Product"
+msgstr "Produkt"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_18
+msgid "Public Relations"
+msgstr "Public Relations"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_114
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_19
+msgid "Real Estate"
+msgstr "Fastigheter"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_20
+msgid "Recruiting"
+msgstr "Rekrytering"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__name
+msgid "Request Number"
+msgstr "Begäran nummer"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_21
+msgid "Research"
+msgstr "Forskning"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_152
+msgid "Retailing"
+msgstr "Detaljhandel"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Retry"
+msgstr "Försök igen"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__reveal_ids
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__reveal_id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__reveal_id
+msgid "Reveal"
+msgstr "Avslöja"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__role
+msgid "Role"
+msgstr "Roll"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__name
+msgid "Role Name"
+msgstr "Namn på roll"
+
+#. module: crm_iap_mine
+#: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_role_name_uniq
+msgid "Role name already exists!"
+msgstr "Rollnamnet finns redan!"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_22
+msgid "Sale"
+msgstr "Försäljning"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__team_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Sales Team"
+msgstr "Säljlag"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__user_id
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Salesperson"
+msgstr "Säljare"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__seniority_id
+#: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__contact_filter_type__seniority
+msgid "Seniority"
+msgstr "Senioritet"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_min
+msgid "Size"
+msgstr "Storlek"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_165
+msgid "Software & Services"
+msgstr "Programvara & tjänster"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state_ids
+msgid "States"
+msgstr "Lägen"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__state
+msgid "Status"
+msgstr "Status"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "Submit"
+msgstr "Skicka"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__tag_ids
+msgid "Tags"
+msgstr "Etiketter"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__search_type
+msgid "Target"
+msgstr "Mål"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_166
+msgid "Technology Hardware & Equipment"
+msgstr "Teknik Hårdvara & utrustning"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_149
+msgid "Telecommunication Services"
+msgstr "Telekommunikationstjänster"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+msgid "This makes a total of %d credits for this request."
+msgstr "Detta ger totalt %d krediter för denna begäran."
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_136
+msgid "Transportation"
+msgstr "Transport"
+
+#. module: crm_iap_mine
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_type
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
+msgid "Type"
+msgstr "Typ"
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+msgid ""
+"Up to %(credit_count)d additional credits will be consumed to identify "
+"%(contact_count)d contacts per company."
+msgstr ""
+"Upp till %(credit_count)d ytterligare krediter kommer att förbrukas för att "
+"identifiera %(contact_count)d kontakter per företag."
+
+#. module: crm_iap_mine
+#. odoo-javascript
+#: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
+msgid "Which Industry do you want to target?"
+msgstr "Vilken bransch vill du rikta in dig på?"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "You do not have enough credits to submit this request."
+msgstr "Du har inte tillräckligt med poäng för att skicka in denna begäran."
+
+#. module: crm_iap_mine
+#. odoo-python
+#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
+msgid "Your request could not be executed: %s"
+msgstr "Din begäran kunde inte utföras: %s"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_1
+msgid "director"
+msgstr "direktör"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "employees"
+msgstr "anställda"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_2
+msgid "executive"
+msgstr "verkställande"
+
+#. module: crm_iap_mine
+#: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_3
+msgid "manager"
+msgstr "chef"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
+msgid "to"
+msgstr "till"

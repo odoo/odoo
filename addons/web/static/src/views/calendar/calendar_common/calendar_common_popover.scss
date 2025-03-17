@@ -6,14 +6,6 @@ $o-cw-popup-avatar-size: 16px;
     z-index: $zindex-modal - 1;
     font-size: $font-size-base;
 
-    .role-container span {
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 100%;
-    }
-
     .card-header,
     .card-header .popover-header {
         font-size: 1.05em;
@@ -48,6 +40,10 @@ $o-cw-popup-avatar-size: 16px;
     .list-group-item {
         padding: 0.5rem 1rem;
         border: none;
+    }
+
+    .o_cw_popover_field .o_field_widget {
+        @include o-text-overflow(block);
     }
 
     .o_cw_popover_fields_secondary {

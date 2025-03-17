@@ -3,18 +3,19 @@
 # 	* pos_hr
 # 
 # Translators:
-# Manon Rondou, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Tiffany Chang, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,12 +52,8 @@ msgstr "Geavanceerde rechten"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-msgid "All Employees"
-msgstr "Alle werknemers"
-
-#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "All employees"
+msgid "All Employees"
 msgstr "Alle werknemers"
 
 #. module: pos_hr
@@ -77,7 +74,7 @@ msgid ""
 "associated with any employee."
 msgstr ""
 "Kan geen rapport per werknemer genereren! Aangezien de geselecteerde sessie "
-"geen bestellingen heeft die aan een werknemer zijn gekoppeld."
+"geen orders heeft die aan een werknemer zijn gekoppeld."
 
 #. module: pos_hr
 #. odoo-javascript
@@ -119,7 +116,7 @@ msgstr "Gesloten register"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -147,6 +144,11 @@ msgstr "Negeren"
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
 msgid "Employee"
 msgstr "Werknemer"
+
+#. module: pos_hr
+#: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
+msgid "Employee Sales Details"
+msgstr "Werknemer verkoopdetails"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -211,11 +213,6 @@ msgid "No Cashiers"
 msgstr "Geen kassières"
 
 #. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "No employee"
-msgstr "Geen werknemer"
-
-#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Open Register"
@@ -232,6 +229,12 @@ msgstr "Register geopend"
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
 msgid "Opening"
 msgstr "Opening"
+
+#. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/pos_session.py:0
+msgid "Others"
+msgstr "Andere"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -299,12 +302,8 @@ msgid "Product Variant"
 msgstr "Productvariant"
 
 #. module: pos_hr
-#: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
-msgid "Sales Details"
-msgstr "Verkoopdetails"
-
-#. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Select Employee(s)"
 msgstr "Selecteer werknemer(s)"
 

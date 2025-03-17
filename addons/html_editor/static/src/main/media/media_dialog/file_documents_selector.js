@@ -1,3 +1,8 @@
+/**
+ * This file is no longer used, and is kept for compatibility (stable policy).
+ * To be removed in master.
+ */
+
 import { DocumentSelector } from "@html_editor/main/media/media_dialog/document_selector";
 
 /**
@@ -31,7 +36,9 @@ export class FileDocumentsSelector extends DocumentSelector {
             "!",
             ["url", "=like", "/%/static/%"],
             "!",
-            ["url", "=ilike", "/html_editor/shape/%"]
+            "|",
+            ["url", "=ilike", "/html_editor/shape/%"],
+            ["url", "=ilike", "/web_editor/shape/%"]
         );
         domain.push("!", ["name", "=like", "%.crop"]);
         return domain;

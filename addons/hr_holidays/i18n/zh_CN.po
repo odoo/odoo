@@ -3,17 +3,18 @@
 # 	* hr_holidays
 # 
 # Translators:
+# 何彬 <vnsoft.he@gmail.com>, 2024
 # Raymond Yu <cl_yu@hotmail.com>, 2024
 # Wil Odoo, 2024
-# Chloe Wang, 2024
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,7 +100,7 @@ msgstr "%(leave_type)s：%(duration)s（%(start)s）"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "%(name)s (%(duration)s %(request_unit)s(s))"
-msgstr ""
+msgstr "%(name)s（%(duration)s %(request_unit)s）"
 
 #. module: hr_holidays
 #. odoo-python
@@ -117,13 +118,13 @@ msgstr "%(name)s (%(duration)s 小时(s))"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g days)"
-msgstr ""
+msgstr "%(name)s (剩余%(time)g / 总计%(maximum)g 天)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g hours)"
-msgstr ""
+msgstr "%(name)s (剩余%(time)g ，总计 %(maximum)g 小时)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -197,7 +198,7 @@ msgstr "(有效期至"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "- Valid for"
-msgstr ""
+msgstr "- 有效期为"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -274,6 +275,9 @@ msgid ""
 "                            Back On\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            回到正轨\n"
+"                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -465,17 +469,17 @@ msgstr "应计休假: 更新休假次数"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity
 msgid "Accrual Validity"
-msgstr ""
+msgstr "累计有效期"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid "Accrual Validity Count"
-msgstr ""
+msgstr "累计有效数"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "Accrual Validity Type"
-msgstr ""
+msgstr "累计有效类型"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
@@ -485,7 +489,7 @@ msgstr "应计"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accrual_count
 msgid "Accruals count"
-msgstr "应计计数"
+msgstr "应计数量"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrued_gain_time
@@ -503,18 +507,18 @@ msgstr "所需操作"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__active
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__active
 msgid "Active"
-msgstr "已启用"
+msgstr "有效"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Active Allocations"
-msgstr "启用分配"
+msgstr "有效分配"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__active_employee
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__active_employee
 msgid "Active Employee"
-msgstr "在职雇员"
+msgstr "在职员工"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -700,15 +704,9 @@ msgstr "分配类别"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
-msgstr "分配的状态必须为 “待批准” 或 “第二次批准”，才能生效。"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr "必须确认分配（“待批准”），才能进行批准。"
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
+msgstr "必须确认 “待批准” 或验证一次 “第二次批准” 才能批准分配。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -783,11 +781,6 @@ msgstr "已累计"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Amount"
 msgstr "金额"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
-msgid "Amount in Negative"
-msgstr "负数"
 
 #. module: hr_holidays
 #. odoo-python
@@ -875,7 +868,7 @@ msgstr "四月"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_search
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -929,7 +922,7 @@ msgstr "附加文件"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_attachment_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件计数"
+msgstr "附件数量"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__attachment_ids
@@ -964,7 +957,7 @@ msgstr "可用"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__remaining_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__remaining_leaves
 msgid "Available Time Off Days"
-msgstr ""
+msgstr "可用休假天数"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -983,13 +976,13 @@ msgstr "离开"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Back On"
-msgstr ""
+msgstr "复工日"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/persona_model_patch.js:0
 msgid "Back on %s"
-msgstr ""
+msgstr "复工日%s"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_balance
@@ -1140,12 +1133,12 @@ msgstr "帽子"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
 msgid "Carried over days expiration date"
-msgstr ""
+msgstr "到期日期顺延天数"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Validity"
-msgstr ""
+msgstr "结转有效期"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -1190,7 +1183,7 @@ msgstr "结转月"
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_employee.py:0
+#: code:addons/hr_holidays/models/hr_employee_base.py:0
 msgid ""
 "Changing this working schedule results in the affected employee(s) not "
 "having enough leaves allocated to accomodate for their leaves already taken "
@@ -1316,7 +1309,7 @@ msgstr "国家/地区代码"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__icon_id
 msgid "Cover Image"
-msgstr "封面图像"
+msgstr "封面图片"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -1632,7 +1625,7 @@ msgstr "员工"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__active_employee
 msgid "Employee Active"
-msgstr "员工激活"
+msgstr "在职员工"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_company_id
@@ -1653,7 +1646,7 @@ msgstr "员工标签"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Employee accrue"
-msgstr "雇员累计"
+msgstr "员工累计"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__emp
@@ -1867,7 +1860,7 @@ msgstr "人力资源部批准"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Time Off Summary Report By Employee"
-msgstr "员工休假总结报告"
+msgstr "员工休假总结报表"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
@@ -1911,7 +1904,7 @@ msgstr "假期状况"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
 msgid "Holidays Summary Report"
-msgstr "员工休假摘要报告"
+msgstr "员工休假摘要报表"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_from
@@ -2017,14 +2010,14 @@ msgstr "如果勾选，用户申请的天数可能会超过分配的天数，余
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "如设置为未启用，不需删除就可以隐藏。"
+msgstr "如设置为无效，不需删除就可以隐藏。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__active
 msgid ""
 "If the active field is set to false, it will allow you to hide the time off "
 "type without removing it."
-msgstr "如果启用字段设置为false，则允许您隐藏时间类型而不删除它。"
+msgstr "如果有效字段设置为false，则允许您隐藏时间类型而不删除它。"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -2221,7 +2214,7 @@ msgstr "经理批准"
 #: model:ir.model,name:hr_holidays.model_hr_leave_mandatory_day
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_mandatory_day_view_search
 msgid "Mandatory Day"
-msgstr "必修日"
+msgstr "强制工作日"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2229,7 +2222,7 @@ msgstr "必修日"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_mandatory_day_action
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_mandatory_day_menu_configuration
 msgid "Mandatory Days"
-msgstr "必修日"
+msgstr "强制工作日"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__mar
@@ -2257,6 +2250,11 @@ msgstr "休假总数："
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
 msgid "Maximum Allowed"
 msgstr "最大允许"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
+msgid "Maximum Excess Amount"
+msgstr "最大超量"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -2318,7 +2316,7 @@ msgstr "里程碑式的过渡"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
 msgid "Milestone cap"
-msgstr ""
+msgstr "里程碑上限"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -2384,7 +2382,7 @@ msgstr "我的部门"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "My Requests"
-msgstr "我的请求"
+msgstr "我的申请"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -2668,6 +2666,14 @@ msgstr "仅"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr "只有%s的休假审批人、休假主管/负责人或管理员才能批准或拒绝分配申请。"
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "只有人事经理可以重置拒绝的休假。"
@@ -2700,20 +2706,20 @@ msgstr "只有管理人员才能修改已取消的假期。"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "只有休假经理可以批准自己的请求。"
+msgid "Only a time off Administrator can approve their own requests."
+msgstr "只有休假管理员才能批准自己的申请。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
-msgstr "只有休假主管/主管/经理才可以批准或拒绝请假的要求。"
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
+msgstr "只有休假主管/负责人或管理员才能批准或拒绝分配申请。"
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_employee.py:0
+#: code:addons/hr_holidays/models/hr_employee_base.py:0
 msgid "Operation not supported"
 msgstr "不支持的操作"
 
@@ -2744,7 +2750,7 @@ msgstr "带薪休假"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
 msgid "Parental Leaves"
-msgstr "上级假期"
+msgstr "产假"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2900,12 +2906,12 @@ msgstr "剩余的休假"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report
 msgid "Reporting"
-msgstr "报告"
+msgstr "报表"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Allocation"
-msgstr "请求分配"
+msgstr "分配假期"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
@@ -2920,7 +2926,7 @@ msgstr "请假开始日期"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Time off"
-msgstr "请求休假"
+msgstr "休假申请"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_type
@@ -3292,7 +3298,7 @@ msgstr "支持性文件"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__request_unit
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__request_unit
 msgid "Take Time Off in"
-msgstr "领取休假在"
+msgstr "休假最小单位"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3386,9 +3392,9 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_type_check_negative
 msgid ""
-"The negative amount must be greater than 0. If you want to set 0, disable "
-"the negative cap instead."
-msgstr "负值必须大于 0。 如果要设置 0，请禁用负值上限。"
+"The maximum excess amount should be greater than 0. If you want to set 0, "
+"disable the negative cap instead."
+msgstr "最大超额金额应大于 0。如果要设置 0，请禁用负上限。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
@@ -3461,6 +3467,14 @@ msgstr "休假已取消：%s"
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr "类别的最小序列為休假要求的默认值"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr "休假时间上没有员工设置。请确保您登录在正确的公司。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3629,7 +3643,7 @@ msgid ""
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
 "休假主管时间为员工分配休假天数（例如带薪休假）。<br>\n"
-"               员工向休假主管要求休假分配（例如，休养日）。"
+"               员工向休假主管要求休假分配（例如：休养日）。"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3679,7 +3693,7 @@ msgstr "休假摘要"
 #: model:ir.model,name:hr_holidays.model_hr_leave_employee_type_report
 #: model:ir.model,name:hr_holidays.model_hr_leave_report
 msgid "Time Off Summary / Report"
-msgstr "摘要 / 报告"
+msgstr "摘要 / 报表"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
@@ -3750,7 +3764,7 @@ msgstr "已休假"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_holidays_by_employee_and_type_report
 msgid "Time off Analysis by Employee and Time Off Type"
-msgstr "按雇员和休假类型分析休假时间"
+msgstr "按员工和休假类型分析休假时间"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_graph
@@ -3804,7 +3818,7 @@ msgstr "时区"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Title"
-msgstr "称谓"
+msgstr "标题"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__stop_datetime
@@ -4023,7 +4037,7 @@ msgstr "验证类型"
 msgid ""
 "Validity End date has been updated because Employee no longer works in the "
 "company"
-msgstr "有效期结束日期已更新，因为员工已不再在公司工作"
+msgstr "有效期（止）已更新，因为员工已不在公司工作"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4035,12 +4049,12 @@ msgstr "有效期"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Validity Start"
-msgstr "有效期开始"
+msgstr "有效期（起）"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Validity Stop"
-msgstr "有效性停止"
+msgstr "有效期（止）"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -4286,6 +4300,14 @@ msgstr "您必须是%s的经理才能批准此休假"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr "您必须是%s的休假审批人或休假管理员，才能验证此分配申请。"
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
@@ -4360,8 +4382,8 @@ msgstr "在分配开始日期之后"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
-msgid "all - Valid for"
-msgstr ""
+msgid "all"
+msgstr "所有"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4422,7 +4444,7 @@ msgstr "天"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "days"
-msgstr "天数"
+msgstr "天"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4438,14 +4460,14 @@ msgstr "天）"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "e.g. Extra recuperation, Company unavailability, ..."
-msgstr ""
+msgstr "例如：额外休养、公司无法提供的服务等, ..."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "e.g. Time Off type (From validity start to validity end / no limit)"
-msgstr "例如：休息时间类型（从有效期开始到有效期结束/无限制）"
+msgstr "例如：休息时间类型（起止日期/无限制）"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4457,7 +4479,7 @@ msgstr "从 %(date_from)s 到 %(date_to)s - %(state)s"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "hour(s)"
-msgstr ""
+msgstr "小时"
 
 #. module: hr_holidays
 #. odoo-javascript

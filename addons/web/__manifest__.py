@@ -443,16 +443,13 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
 
-            'web/static/lib/jquery/jquery.js',
-
             'web/static/lib/hoot/**/*',
             'web/static/lib/hoot-dom/**/*',
             ('remove', 'web/static/lib/hoot/ui/hoot_style.css'),
             ('remove', 'web/static/lib/hoot/tests/**/*'),
 
-            # Odoo mocks
-            # ! must be loaded before other @web assets
-            'web/static/tests/_framework/mock_module_loader.js',
+            # Applied here to allow libs above to be loaded normally
+            'web/static/tests/_framework/hoot_module_loader.js',
 
             # Assets for features to test (views, services, fields, ...)
             # Typically includes most files in 'web.web.assets_backend'
@@ -466,7 +463,6 @@ This module provides the core of the Odoo Web Client.
         'web.assets_unit_tests': [
             'web/static/tests/**/*',
 
-            ('remove', 'web/static/tests/_framework/mock_module_loader.js'),
             ('remove', 'web/static/tests/tours/**/*'),
             ('remove', 'web/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
         ],
@@ -481,7 +477,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/legacy_tests/helpers/**/*',
             ('remove', 'web/static/tests/legacy/legacy_tests/helpers/test_utils_tests.js'),
 
-            'web/static/lib/jquery/jquery.js',
+            ('include', 'web._assets_jquery'),
 
             'web/static/lib/fullcalendar/core/index.global.js',
             'web/static/lib/fullcalendar/interaction/index.global.js',

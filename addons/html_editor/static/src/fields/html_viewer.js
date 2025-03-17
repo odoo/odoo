@@ -1,6 +1,6 @@
 import {
-    App,
     Component,
+    markup,
     onMounted,
     onWillStart,
     onWillUnmount,
@@ -11,6 +11,8 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
+import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 
 export class HtmlViewer extends Component {
@@ -23,6 +25,7 @@ export class HtmlViewer extends Component {
     };
 
     setup() {
+        this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.iframeRef = useRef("iframe");
 
         this.state = useState({
@@ -96,12 +99,24 @@ export class HtmlViewer extends Component {
 
     /**
      * Allows overrides to process the value used in the Html Viewer.
+     * Typically, if the value comes from the html_field, it is already fixed
+     * (invalid and obsolete elements were replaced). If used as a standalone,
+     * the HtmlViewer has to handle invalid nodes and html upgrades.
      *
-     * @param { Markup } value
-     * @returns { Markup }
+     * @param { string | Markup } value
+     * @returns { string | Markup }
      */
     formatValue(value) {
-        return value;
+        if (this.props.config.isFixedValue) {
+            return value;
+        }
+        const newVal = this.htmlUpgradeManager.processForUpgrade(fixInvalidHTML(value), {
+            env: this.env,
+        });
+        if (instanceofMarkup(value)) {
+            return markup(newVal);
+        }
+        return newVal;
     }
 
     /**
@@ -162,10 +177,10 @@ export class HtmlViewer extends Component {
     // Embedded Components
     //--------------------------------------------------------------------------
 
-    destroyComponent({ app, host }) {
+    destroyComponent({ root, host }) {
         const { getEditableDescendants } = this.getEmbedding(host);
         const editableDescendants = getEditableDescendants?.(host) || {};
-        app.destroy();
+        root.destroy();
         this.components.delete(arguments[0]);
         host.append(...Object.values(editableDescendants));
     }
@@ -205,8 +220,6 @@ export class HtmlViewer extends Component {
 
     mountComponent(host, { Component, getEditableDescendants, getProps, name }) {
         const props = getProps?.(host) || {};
-        const mainApp = this.__owl__.app;
-        const { dev, translateFn, getRawTemplate } = mainApp;
         // TODO ABD TODO @phoenix: check if there is too much info in the htmlViewer env.
         // i.e.: env has X because of parent component,
         // embedded component descendant sometimes uses X from env which is set conditionally:
@@ -221,31 +234,25 @@ export class HtmlViewer extends Component {
             env,
             props,
         });
-        const app = new App(Component, {
-            test: dev,
-            env,
-            translateFn,
-            getTemplate: getRawTemplate,
+        const root = this.__owl__.app.createRoot(Component, {
             props,
+            env,
         });
-        app.rawTemplates = mainApp.rawTemplates;
-        // Can't copy compiled templates because they have a reference to the main app
-        // app.templates = mainApp.templates;
-        const promise = app.mount(host);
+        const promise = root.mount(host);
         // Don't show mounting errors as they will happen often when the host
         // is disconnected from the DOM because of a patch
         promise.catch();
-        // Patch mount fiber to hook into the exact call stack where app is
+        // Patch mount fiber to hook into the exact call stack where root is
         // mounted (but before). This will remove host children synchronously
-        // just before adding the app rendered html.
-        const fiber = Array.from(app.scheduler.tasks)[0];
+        // just before adding the root rendered html.
+        const fiber = root.node.fiber;
         const fiberComplete = fiber.complete;
         fiber.complete = function () {
             host.replaceChildren();
             fiberComplete.call(this);
         };
         const info = {
-            app,
+            root,
             host,
         };
         this.components.add(info);

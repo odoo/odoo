@@ -3,16 +3,19 @@
 # 	* hr
 # 
 # Translators:
+# Chill Liao <chill421@qq.com>, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
 # Wil Odoo, 2024
-# Chloe Wang, 2024
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-02-10 13:23+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,11 +72,6 @@ msgstr "1 电话"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 天/年, 包含<br>您选择的 6 。"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -296,7 +294,7 @@ msgstr "激活远程工作，让员工指定他们的工作地点。"
 #: model:ir.model.fields,field_description:hr.field_hr_job__active
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__active
 msgid "Active"
-msgstr "已启用"
+msgstr "有效"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_ids
@@ -428,7 +426,7 @@ msgstr "高级员工出席控制"
 #: model:ir.model.fields,field_description:hr.field_mail_group__alias_contact
 #: model:ir.model.fields,field_description:hr.field_maintenance_equipment_category__alias_contact
 msgid "Alias Contact Security"
-msgstr "安全联系人别名"
+msgstr "别名授权于"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -483,7 +481,7 @@ msgstr "存档"
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -520,7 +518,7 @@ msgstr "指派"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件计数"
+msgstr "附件数量"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -530,7 +528,7 @@ msgstr "出勤"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Attendance/Point of Sale"
-msgstr "考勤/销售点"
+msgstr "考勤/POS"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -562,6 +560,11 @@ msgstr "自主权"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Available"
 msgstr "可用"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_activity_plan_view_form
+msgid "Available for all Departments"
+msgstr "所有部门可用"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
@@ -623,6 +626,11 @@ msgstr "徽标 ID"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account"
+msgstr "银行账户"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
 msgstr "银行账户"
 
 #. module: hr
@@ -968,7 +976,7 @@ msgstr "创建日期"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
@@ -1074,7 +1082,7 @@ msgstr "部门名称"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 msgid "Department Organization"
-msgstr "部门组织"
+msgstr "组织架构"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_department_kanban_action
@@ -1168,7 +1176,13 @@ msgstr "显示名称"
 msgid ""
 "Display remote work settings for each employee and dedicated reports. "
 "Presence icons will be updated with remote work location."
-msgstr "显示每位员工的远程工作设置和专用报告。存在图标将更新为远程工作位置。"
+msgstr "显示每位员工远程工作设置和专用报告。出勤状态图标将更新为远程工作地点。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Divorced"
+msgstr "离异"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
@@ -1320,7 +1334,7 @@ msgstr "员工类型"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Employee Update Rights"
-msgstr "员工更新权利"
+msgstr "员工资料"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
@@ -1331,7 +1345,7 @@ msgstr "支付工资的员工银行账户"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
 msgid "Employee's Bank Account Number"
-msgstr "员工的银行帐号"
+msgstr "员工的银行账号"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
@@ -1380,7 +1394,7 @@ msgstr "员工"
 #: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
 #: model:ir.model.fields,field_description:hr.field_res_users__employees_count
 msgid "Employees Count"
-msgstr "员工计数"
+msgstr "员工数量"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
@@ -1627,19 +1641,19 @@ msgstr "首页"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work
 msgid "Home-Work Distance"
-msgstr "家和公司之间的距离"
+msgstr "通勤距离"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
-msgstr "家和公司之间的距离（公里）"
+msgstr "通勤距离（公里）"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work_unit
 #: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work_unit
 msgid "Home-Work Distance unit"
-msgstr "家和公司之间的距离（单位）"
+msgstr "通勤距离（单位）"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -1743,7 +1757,7 @@ msgstr "如果勾选此项， 某些消息将出现发送错误。"
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "如设置为未启用，不需删除就可以隐藏。"
+msgstr "如设置为无效，不需删除就可以隐藏。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
@@ -1789,7 +1803,7 @@ msgstr "导入员工模板"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
 msgid "Interim"
-msgstr "实习"
+msgstr "临时实习"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
@@ -1801,7 +1815,7 @@ msgstr "实习"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_flexible
 msgid "Is Flexible"
-msgstr ""
+msgstr "灵活可变"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -1815,7 +1829,7 @@ msgstr "是关注者"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_fully_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_fully_flexible
 msgid "Is Fully Flexible"
-msgstr ""
+msgstr "完全灵活"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
@@ -1954,6 +1968,12 @@ msgid "Lead the entire sales cycle"
 msgstr "引领整个销售循环"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Legal Cohabitant"
+msgstr "合法同居者"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
 msgstr "让我们创建一个工作职位。"
@@ -2026,11 +2046,6 @@ msgid "Manager of employee %s is not set."
 msgstr "未设置%s员工经理。"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "马克-迪莫"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2041,6 +2056,12 @@ msgstr "婚姻状况"
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
 msgstr "营销及社区经理"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Married"
+msgstr "已婚"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -2121,7 +2142,7 @@ msgstr "我的部门"
 #. odoo-javascript
 #: code:addons/hr/static/src/user_menu/my_profile.js:0
 msgid "My Profile"
-msgstr "我的资料"
+msgstr "我的设置"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -2245,12 +2266,12 @@ msgstr "不可用"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
 msgid "Note"
-msgstr "注释"
+msgstr "备注"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__notes
 msgid "Notes"
-msgstr "凭单"
+msgstr "备注"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
@@ -2393,7 +2414,7 @@ msgid ""
 "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if"
 " enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
-msgstr "用于在考勤应用程序的Kiosk模式中签入/签出的密码（如果在配置中启用），以及用于在销售点应用程序中改变出纳员。"
+msgstr "用在考勤自助模式中签到/签退的密码（如果在配置中启用），以及用于在POS中改变出纳员。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -2520,7 +2541,7 @@ msgstr "计划"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plans_count
 msgid "Plans Count"
-msgstr "计划计数"
+msgstr "计划数量"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2552,12 +2573,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Condition"
-msgstr ""
+msgstr "出勤条件"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Display"
-msgstr ""
+msgstr "出勤显示"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2619,7 +2640,7 @@ msgstr "国家"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
 #: model:ir.model.fields,field_description:hr.field_res_users__private_email
 msgid "Private Email"
-msgstr "私人电邮"
+msgstr "私人电子邮箱"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2789,7 +2810,7 @@ msgstr "远程工作"
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reporting"
-msgstr "报告"
+msgstr "报表"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__requirements
@@ -2912,7 +2933,7 @@ msgstr "序列"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
-msgstr "设置默认公司计划以管理员工的工作时间"
+msgstr "设置公司员工默认的工作时间"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -2943,6 +2964,12 @@ msgid "Show employees"
 msgstr "显示员工"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Single"
+msgstr "单身"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
 msgstr "技能管理"
@@ -2957,11 +2984,6 @@ msgstr "社会保险号"
 #: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
 msgstr "社会保障号"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "软件开发人员"
 
 #. module: hr
 #. odoo-python
@@ -3026,7 +3048,7 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_statutaire
 msgid "Statutory"
-msgstr ""
+msgstr "法定就业"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3058,6 +3080,8 @@ msgid ""
 "Structure Employees per department and have an overview of e.g.\n"
 "                    expenses, timesheets, time off, recruitment, etc."
 msgstr ""
+"概览各部门员工结构，例如\n"
+"                    费用、工时表、休假、招聘等"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_student
@@ -3117,8 +3141,10 @@ msgstr "临时"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "The Badge ID must be a sequence of digits."
-msgstr "徽标 ID 必须是一串数字。"
+msgid ""
+"The Badge ID must be alphanumeric without any accents and no longer than 18 "
+"characters."
+msgstr "徽标ID必须为字母数字，不含重音，长度不超过 18 个字符。"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -3223,7 +3249,7 @@ msgstr "%(employee)s的工作许可在%(date)s到期。"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "毕业论文"
 
 #. module: hr
 #. odoo-python
@@ -3247,18 +3273,18 @@ msgstr "该字段用于定义员工在哪个时区工作。"
 msgid ""
 "This report gives you an overview of your employees based on the measures of"
 " your choice."
-msgstr ""
+msgstr "这份报告根据您选择的指标为您提供员工的概览"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
-msgstr ""
+msgstr "这个设置块用于管理前端设计"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Those responsible types are limited to Employee plans."
-msgstr "这些责任类型仅限于雇员计划。"
+msgstr "这些责任类型仅限于员工计划。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -3271,7 +3297,7 @@ msgstr "时区"
 #: model:digest.tip,name:hr.digest_tip_hr_0
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid "Tip: Where's Bryan?"
-msgstr ""
+msgstr "提示：布赖恩在哪？"
 
 #. module: hr
 #. odoo-python
@@ -3453,6 +3479,12 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr "员工是活动用户部门的成员还是其子部门之一的成员。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Widower"
+msgstr "丧偶"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -3675,7 +3707,7 @@ msgstr "部门"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
-msgstr ""
+msgstr "例如：远大2号楼等"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3691,7 +3723,7 @@ msgstr "例如：销售经理"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Summarize the position in one or two lines..."
-msgstr ""
+msgstr "例如：请用一到两句话概括这个职位。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form

@@ -20,11 +20,11 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _is_latam_check_payment(self, check_subtype=False):
         if check_subtype == 'move_check':
-            codes = ['in_third_party_checks', 'out_third_party_checks']
+            codes = ['in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks']
         elif check_subtype == 'new_check':
             codes = ['new_third_party_checks', 'own_checks']
         else:
-            codes = ['in_third_party_checks', 'out_third_party_checks', 'new_third_party_checks', 'own_checks']
+            codes = ['in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks', 'new_third_party_checks', 'own_checks']
         return self.payment_method_code in codes
 
     def _create_payment_vals_from_wizard(self, batch_result):

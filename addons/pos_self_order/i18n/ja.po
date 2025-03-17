@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Junko Augias, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-02-10 13:24+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,7 +141,7 @@ msgstr "利用可能終了時間:"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Available"
 msgstr "処理可能"
@@ -253,7 +253,7 @@ msgstr "コンボ"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
 msgid "Combo reference"
-msgstr ""
+msgstr "コンボ参照"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
@@ -276,7 +276,7 @@ msgstr "次へ進む"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Continue with table"
-msgstr ""
+msgstr "テーブルで継続:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -680,7 +680,7 @@ msgstr "プロダクトが見つかりません"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Not available"
 msgstr "利用不可"
 
@@ -742,7 +742,7 @@ msgstr "在庫切れ"
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Pay"
-msgstr "お支払い"
+msgstr "支払"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_pay_after
@@ -778,6 +778,12 @@ msgstr "カウンタで受取る"
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
 msgid "Pickup zone"
 msgstr "受取ゾーン"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+msgid "Please wait until the price is loaded"
+msgstr "価格がアップロードされるまでお待ち下さい。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -958,7 +964,7 @@ msgstr "セキュリティトークン"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Select a table"
-msgstr ""
+msgstr "テーブルを選択"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -1023,11 +1029,11 @@ msgstr "セルフテイクアウト"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 msgid "Self-Order"
-msgstr ""
+msgstr "セルフオーダ"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Self-ordering:"
 msgstr "セルフオーダ:"
 
@@ -1168,6 +1174,12 @@ msgstr "プロダクトはこの時間まで利用可能です。"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "The user must be a POS user"
 msgstr "ユーザはPOSユーザである必要があります"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+msgid "This combination does not exist."
+msgstr "この組み合わせは存在しません。"
 
 #. module: pos_self_order
 #. odoo-javascript

@@ -13,6 +13,7 @@ export class WorkcenterDashboardGraphField extends JournalDashboardGraphField{
         const loadBarColor = this.data[0].is_sample_data ? hexToRGBA(color19, 0.1) : color19;
         const excessBarColor = this.data[0].is_sample_data ? hexToRGBA(color13, 0.1) : color13;
         const maxLoadLineColor = this.data[0].is_sample_data ? hexToRGBA(color10, 0.1) : hexToRGBA(color10, 0.5);
+        const darkColorOnHover = this.data[0].is_sample_data ? loadBarColor : darkenColor(loadBarColor, 0.1);
         return {
             type: 'scatter',
             data: {
@@ -40,7 +41,7 @@ export class WorkcenterDashboardGraphField extends JournalDashboardGraphField{
                         borderWidth: 0,
                         stack: 'mainStack',
                         hoverBackgroundColor: function(ctx, options) {
-                            return (ctx.parsed._stacks.y[2] !== 0) ? excessBarColor :  darkenColor(loadBarColor, 0.1);
+                            return (ctx.parsed._stacks.y[2] !== 0) ? excessBarColor :  darkColorOnHover;
                         },
                     },
                     {

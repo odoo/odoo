@@ -1,11 +1,12 @@
 /** @odoo-module */
 
-import { describe, expect, mountOnFixture, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, reactive, useState, xml } from "@odoo/owl";
-import { parseUrl } from "../local_helpers";
+import { mountForTest, parseUrl } from "../local_helpers";
 
+import { logger } from "../../core/logger";
 import { HootTechnicalValue } from "../../ui/hoot_technical_value";
 
 const mountTechnicalValue = async (defaultValue) => {
@@ -26,7 +27,7 @@ const mountTechnicalValue = async (defaultValue) => {
         }
     }
 
-    await mountOnFixture(TechnicalValueParent);
+    await mountForTest(TechnicalValueParent);
 
     return updateValue;
 };
@@ -37,29 +38,36 @@ describe(parseUrl(import.meta.url), () => {
         expect(".hoot-string").toHaveText(`"oui"`);
 
         await updateValue(`"stringified"`);
-        expect(".hoot-string").toHaveText(`""stringified""`);
+        expect(".hoot-string").toHaveText(`'"stringified"'`);
 
         await updateValue(3);
-        expect(".hoot-number").toHaveText(`3`);
+        expect(".hoot-integer").toHaveText(`3`);
 
         await updateValue(undefined);
         expect(".hoot-undefined").toHaveText(`undefined`);
 
         await updateValue(null);
-        expect(".hoot-object").toHaveText(`null`); // null is not a number
+        expect(".hoot-null").toHaveText(`null`);
     });
 
     test("technical value with objects", async () => {
+        const logDebug = logger.debug;
+        logger.debug = expect.step;
+        after(() => (logger.debug = logDebug));
+
         const updateValue = await mountTechnicalValue({});
         expect(".hoot-technical").toHaveText(`Object(0)`);
 
         await updateValue([1, 2, "3"]);
+
         expect(".hoot-technical").toHaveText(`Array(3)`);
+        expect.verifySteps([]);
 
         await click(".hoot-object");
         await animationFrame();
 
         expect(".hoot-technical").toHaveText(`Array(3)[\n1\n,\n2\n,\n"3"\n,\n]`);
+        expect.verifySteps([[1, 2, "3"]]);
 
         await updateValue({ a: true });
         expect(".hoot-technical").toHaveText(`Object(1)`);
@@ -83,6 +91,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(".hoot-technical:first").toHaveText(
             `Object(2){\na\n:\ntrue\n,\nsub\n:\nObject(1)\n}`
         );
+        expect.verifySteps([]);
 
         await click(".hoot-object:last");
         await animationFrame();
@@ -90,6 +99,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(".hoot-technical:first").toHaveText(
             `Object(2){\na\n:\ntrue\n,\nsub\n:\nObject(1){\nkey\n:\n"oui"\n,\n}\n}`
         );
+        expect.verifySteps([{ key: "oui" }]);
     });
 
     test("technical value with special cases", async () => {

@@ -33,6 +33,19 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
         constraints.update({
             'bis3_de_supplier_telephone_required': self._check_required_fields(vals['supplier'], ['phone', 'mobile']),
             'bis3_de_supplier_electronic_mail_required': self._check_required_fields(vals['supplier'], 'email'),
+            'bis3_de_buyer_reference_required': self._check_required_fields(vals['customer'], 'ref'),
         })
 
         return constraints
+
+    def _get_partner_party_vals(self, partner, role):
+        # EXTENDS account.edi.xml.ubl_bis3
+        vals = super()._get_partner_party_vals(partner, role)
+
+        if not vals.get('endpoint_id') and partner.email:
+            vals.update({
+                'endpoint_id': partner.email,
+                'endpoint_id_attrs': {'schemeID': 'EM'},
+            })
+
+        return vals

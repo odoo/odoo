@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "<strong>Error:</strong> The currency is missing or invalid."
-msgstr "<strong>错误：</strong> 货币遗失或无效。"
+msgstr "<strong>错误：</strong> 币别遗失或无效。"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -48,7 +49,7 @@ msgstr "必须指定付款方式。"
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid ""
 "A validation payment cannot be used for a Point of Sale online payment."
-msgstr "验证付款不能用于销售点在线付款。"
+msgstr "验证付款不能用于POS在线付款。"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -62,7 +63,7 @@ msgid ""
 "All payment providers configured for an online payment method must use the "
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
-msgstr "所有配置为在线支付方式的支付提供商必须使用与销售日志相同的货币，如果未设置公司货币，则使用 POS 配置中的货币。"
+msgstr "所有配置为在线支付方式的支付提供商必须使用与销售日志相同的币别，如果未设置公司币别，则使用 POS 配置中的币别。"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
@@ -221,7 +222,7 @@ msgstr "支付提供商"
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "支付交易"
+msgstr "付款交易"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
@@ -246,7 +247,7 @@ msgstr "POS支付方式"
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "销售点支付"
+msgstr "POS支付"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_pos_session
@@ -274,7 +275,7 @@ msgstr "扫描二维码付款"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan to pay"
-msgstr ""
+msgstr "扫码支付"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -305,12 +306,12 @@ msgstr "POS 会话未开启。"
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
 msgid "The Point of Sale order linked to the payment transaction"
-msgstr "与付款交易相关联的销售点订单"
+msgstr "与付款交易相关联的POS订单"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
 msgid "The Point of Sale order linked to this payment"
-msgstr "与该付款关联的销售点订单"
+msgstr "与该付款关联的POS订单"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -328,7 +329,7 @@ msgstr "支付金额已更改。请刷新页面。"
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The currency is invalid."
-msgstr "货币无效。"
+msgstr "币别无效。"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -432,7 +433,7 @@ msgstr "服务器出现问题。无法检索订单在线支付状态。您确定
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid ""
 "There is no online payment method configured for this Point of Sale order."
-msgstr "此销售点订单未配置在线支付方式。"
+msgstr "此POS订单未配置在线支付方式。"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -456,7 +457,7 @@ msgstr "待付款"
 msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
-msgstr "要在 POS 配置中使用在线支付方法，必须至少有一个已发布的支付提供商支持该 POS 配置的货币。"
+msgstr "要在 POS 配置中使用在线支付方法，必须至少有一个已发布的支付提供商支持该 POS 配置的币别。"
 
 #. module: pos_online_payment
 #. odoo-python

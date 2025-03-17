@@ -2,7 +2,7 @@
 <odoo>
     <record id="base.partner_demo_company_id" model="res.partner" forcecreate="1">
         <field name="name">ID Company</field>
-        <field name="vat"/>
+        <field name="vat">1234567890123456</field>
         <field name="street">AE</field>
         <field name="city">Moncongloe</field>
         <field name="country_id" ref="base.id"/>
@@ -11,6 +11,7 @@
         <field name="phone">+62 812-345-678</field>
         <field name="email">info@company.idexample.com</field>
         <field name="website">www.idexample.com</field>
+        <field name="is_company" eval="True"/>
     </record>
 
     <record id="base.demo_company_id" model="res.company" forcecreate="1">

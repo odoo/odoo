@@ -327,8 +327,11 @@ class MailComposer(models.TransientModel):
                 composer.email_from = self.env.user.email_formatted
             # removing template or void from -> fallback on current user as default
             elif not composer.template_id or not composer.email_from:
-                composer.email_from = self.env.user.email_formatted
-                updated_author_id = self.env.user.partner_id.id
+                if self.env.context.get('default_email_from'):
+                    composer.email_from = self.env.context['default_email_from']
+                else:
+                    composer.email_from = self.env.user.email_formatted
+                    updated_author_id = self.env.user.partner_id.id
 
             # Update author. When being in rendered mode: link with rendered
             # email_from or fallback on current user if email does not match.
@@ -911,6 +914,17 @@ class MailComposer(models.TransientModel):
 
         if email_mode:
             mail_values_all = self._process_mail_values_state(mail_values_all)
+            # based on previous values, compute message ID / references
+            for res_id, mail_values in mail_values_all.items():
+                # generate message_id directly; instead of letting mail_message create
+                # method doing it. Then use it to craft references, allowing to keep
+                # a trace of message_id even when email providers override it.
+                # Note that if 'auto_delete' is set and if 'auto_delete_keep_log' is False,
+                # mail.message is removed and parent finding based on messageID
+                # may be broken, tough life
+                message_id = self.env['mail.message']._get_message_id(mail_values)
+                mail_values['message_id'] = message_id
+                mail_values['references'] = message_id
         return mail_values_all
 
     def _prepare_mail_values_static(self):
@@ -1077,7 +1091,8 @@ class MailComposer(models.TransientModel):
             ]
             # email_mode: prepare processed attachments as commands for mail.mail
             if email_mode:
-                mail_values['attachment_ids'] = record._process_attachments_for_post(
+                process_record = record if hasattr(record, "_process_attachments_for_post") else record.env["mail.thread"]
+                mail_values['attachment_ids'] = process_record._process_attachments_for_post(
                     decoded_attachments,
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
@@ -1208,14 +1223,6 @@ class MailComposer(models.TransientModel):
 
         for record_id, mail_values in mail_values_dict.items():
             recipients = recipients_info[record_id]
-            # when having more than 1 recipient: we cannot really decide when a single
-            # email is linked to several to -> skip that part. Mass mailing should
-            # anyway always have a single recipient per record as this is default behavior.
-            if len(recipients['mail_to']) > 1:
-                continue
-
-            mail_to = recipients['mail_to'][0] if recipients['mail_to'] else ''
-            mail_to_normalized = recipients['mail_to_normalized'][0] if recipients['mail_to_normalized'] else ''
 
             # prevent sending to blocked addresses that were included by mistake
             # blacklisted or optout or duplicate -> cancel
@@ -1224,31 +1231,35 @@ class MailComposer(models.TransientModel):
                 mail_values['failure_type'] = 'mail_bl'
                 # Do not post the mail into the recipient's chatter
                 mail_values['is_notification'] = False
-            elif optout_emails and mail_to in optout_emails:
-                mail_values['state'] = 'cancel'
-                mail_values['failure_type'] = 'mail_optout'
-            elif mail_to in done_emails:
-                mail_values['state'] = 'cancel'
-                mail_values['failure_type'] = 'mail_dup'
-            # void of falsy values -> error
-            elif not mail_to:
+            # void or falsy values -> error
+            elif not any(recipients['mail_to']):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_missing'
-            elif not mail_to_normalized:
+            elif not any(recipients['mail_to_normalized']):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
-            elif mail_to in sent_emails_mapping:
-                # If the number of attachments on the mail exactly matches the number of attachments on the composer
-                # we assume the attachments are copies of the ones attached to the composer and thus are the same
-                if len(self.attachment_ids) == len(mail_values.get('attachment_ids', [])) and\
-                   any(sent_mail.get('subject') == mail_values.get('subject') and
-                       sent_mail.get('body') == mail_values.get('body') for sent_mail in sent_emails_mapping[mail_to]):
-                    mail_values['state'] = 'cancel'
-                    mail_values['failure_type'] = 'mail_dup'
-                else:
-                    sent_emails_mapping[mail_to].append(mail_values)
+            elif optout_emails and all(
+                mail_to in optout_emails for mail_to in recipients['mail_to_normalized']
+            ):
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_optout'
+            elif done_emails and all(
+                mail_to in done_emails for mail_to in recipients['mail_to_normalized']
+            ):
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_dup'
+            elif (len(self.attachment_ids) == len(mail_values.get('attachment_ids', []))
+                  and all(mail_to in sent_emails_mapping
+                          for mail_to in recipients['mail_to_normalized'])
+                  and any(sent_mail.get('subject') == mail_values.get('subject')
+                          and sent_mail.get('body') == mail_values.get('body')
+                          for mail_to in recipients['mail_to_normalized']
+                          for sent_mail in sent_emails_mapping[mail_to])):
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_dup'
             else:
-                sent_emails_mapping[mail_to] = [mail_values]
+                for mail_to in recipients['mail_to_normalized']:
+                    sent_emails_mapping.setdefault(mail_to, []).append(mail_values)
 
         done_emails += sent_emails_mapping.keys()
 

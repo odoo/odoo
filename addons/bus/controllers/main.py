@@ -11,3 +11,8 @@ class BusController(Controller):
         return request.make_response(json.dumps(
             request.env['ir.model']._get_model_definitions(json.loads(model_names_to_fetch)),
         ))
+
+    @route("/bus/get_autovacuum_info", type="json", auth="public")
+    def get_autovacuum_info(self):
+        # sudo - ir.cron: lastcall and nextcall of the autovacuum is not sensitive
+        return request.env.ref("base.autovacuum_job").sudo().read(["lastcall", "nextcall"])[0]

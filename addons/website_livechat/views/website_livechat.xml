@@ -9,7 +9,7 @@
             <xpath expr="//head">
                 <t t-if="not no_livechat and website and website.channel_id">
                     <script>
-                        <t t-call="im_livechat.loader">
+                        <t t-call="im_livechat.loader" t-nocache="Should be up-to-date with available operators">
                             <t t-set="info" t-value="website._get_livechat_channel_info()"/>
                         </t>
                     </script>
@@ -101,7 +101,7 @@
                             <h3>The Team</h3>
                             <t t-foreach="team" t-as="user">
                                 <div class="d-flex mt-3">
-                                    <img t-att-src="image_data_uri(user.avatar_128)" class="o_image_64_cover rounded o_livechat_operator_avatar" t-att-alt="user.livechat_username or user.name"/>
+                                    <img t-att-src="image_data_uri(user.avatar_128)" class="o_image_64_cover rounded me-2" t-att-alt="user.livechat_username or user.name"/>
                                     <div class="flex-grow-1">
                                         <h5>
                                             <t t-if="user.livechat_username">
@@ -128,7 +128,7 @@
                                                     </div>
                                                 </t>
                                                 <t t-else="">
-                                                    <div class="col-lg-12 ps-0 pe-0 o_livechat_no_rating">Not rated yet</div>
+                                                    <div class="col-lg-12 ps-0 pe-0 opacity-50">Not rated yet</div>
                                                 </t>
                                             </div>
                                         </div>

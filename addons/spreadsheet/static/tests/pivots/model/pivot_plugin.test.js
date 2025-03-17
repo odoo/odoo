@@ -1,18 +1,25 @@
-import { Deferred } from "@web/core/utils/concurrency";
-import { animationFrame } from "@odoo/hoot-mock";
-import {
-    MockServer,
-    makeServerError,
-    patchTranslations,
-    serverState,
-} from "@web/../tests/web_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     defineSpreadsheetActions,
     defineSpreadsheetModels,
     getBasicServerData,
 } from "@spreadsheet/../tests/helpers/data";
+import {
+    makeServerError,
+    onRpc,
+    patchTranslations,
+    patchWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
+import { Deferred } from "@web/core/utils/concurrency";
 
+import {
+    addGlobalFilter,
+    setCellContent,
+    updatePivot,
+    updatePivotMeasureDisplay,
+} from "@spreadsheet/../tests/helpers/commands";
 import {
     getCell,
     getCellContent,
@@ -21,17 +28,12 @@ import {
     getEvaluatedCell,
     getFormattedValueGrid,
 } from "@spreadsheet/../tests/helpers/getters";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import {
-    addGlobalFilter,
-    setCellContent,
-    updatePivot,
-    updatePivotMeasureDisplay,
-} from "@spreadsheet/../tests/helpers/commands";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 import { user } from "@web/core/user";
+import { localization } from "@web/core/l10n/localization";
 
 import { Model } from "@odoo/o-spreadsheet";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
@@ -198,6 +200,37 @@ test("Renaming a pivot does not retrigger RPCs", async () => {
     expect.verifySteps([]);
 });
 
+test("Renaming a pivot with a matching global filter does not retrigger RPCs", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: function (route, { model, method, kwargs }) {
+            switch (method) {
+                case "read_group":
+                    expect.step("read_group");
+                    break;
+            }
+        },
+    });
+    expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
+    await addGlobalFilter(
+        model,
+        {
+            id: "42",
+            type: "relation",
+            label: "test",
+            defaultValue: [41],
+            modelName: undefined,
+            rangeType: undefined,
+        },
+        {
+            pivot: { [pivotId]: { chain: "product_id", type: "many2one" } },
+        }
+    );
+    expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
+    updatePivot(model, pivotId, { name: "name" });
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
 test("Undo/Redo for RENAME_PIVOT", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     expect(model.getters.getPivotName(pivotId)).toBe("Partner Pivot");
@@ -342,6 +375,53 @@ test("user context is combined with pivot context to fetch data", async function
     expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
 });
 
+test("Context is purged from PivotView related keys", async function (assert) {
+    const spreadsheetData = {
+        sheets: [
+            {
+                id: "sheet1",
+                cells: {
+                    A1: { content: `=ODOO.PIVOT(1, "probability")` },
+                },
+            },
+        ],
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [{ fieldName: "foo" }],
+                rows: [{ fieldName: "bar" }],
+                domain: [],
+                measures: [{ fieldName: "probability" }],
+                model: "partner",
+                context: {
+                    pivot_measures: ["__count"],
+                    // inverse row and col group bys
+                    pivot_row_groupby: ["test"],
+                    pivot_column_groupby: ["check"],
+                    dummyKey: "true",
+                },
+            },
+        },
+    };
+
+    const model = await createModelWithDataSource({
+        spreadsheetData,
+        mockRPC: function (route, { model, method, kwargs }) {
+            if (model === "partner" && method === "read_group") {
+                expect.step(`pop`);
+                const hasBadKeys = [
+                    "pivot_measures",
+                    "pivot_row_groupby",
+                    "pivot_column_groupby",
+                ].some((val) => val in (kwargs.context || {}));
+                expect(hasBadKeys).not.toBe(true);
+            }
+        },
+    });
+    await waitForDataLoaded(model);
+    expect.verifySteps(["pop", "pop", "pop", "pop"]);
+});
+
 test("fetch metadata only once per model", async function () {
     const spreadsheetData = {
         sheets: [
@@ -388,6 +468,28 @@ test("fetch metadata only once per model", async function () {
     expect.verifySteps(["partner/fields_get"]);
 });
 
+test("An error is displayed if the pivot has invalid model", async function () {
+    const { model, env, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: async function (route, { model, method, kwargs }) {
+            if (model === "unknown" && method === "fields_get") {
+                throw makeServerError({ code: 404 });
+            }
+        },
+    });
+    const pivot = model.getters.getPivotCoreDefinition(pivotId);
+    env.model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...pivot,
+            model: "unknown",
+        },
+    });
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+});
+
 test("don't fetch pivot data if no formula use it", async function () {
     const spreadsheetData = {
         pivots: {
@@ -422,6 +524,22 @@ test("don't fetch pivot data if no formula use it", async function () {
         "partner/read_group",
     ]);
     expect(getCellValue(model, "A1")).toBe(131);
+});
+
+test("An error is displayed if the pivot has invalid field", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const pivot = model.getters.getPivotCoreDefinition(pivotId);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...pivot,
+            columns: [{ fieldName: "unknown" }],
+        },
+    });
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`Field unknown does not exist`);
 });
 
 test("evaluates only once when two pivots are loading", async function () {
@@ -514,31 +632,21 @@ test("display loading while data is not fully available", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
-        spreadsheetData,
-        mockRPC: async function (route, args, performRPC) {
-            const { model, method, kwargs } = args;
-            const result = MockServer.current.callOrm(args);
-            if (model === "partner" && method === "fields_get") {
-                expect.step(`${model}/${method}`);
-                await metadataPromise;
-            }
-            if (
-                model === "partner" &&
-                method === "read_group" &&
-                kwargs.groupby[0] === "product_id"
-            ) {
-                expect.step(`${model}/${method}`);
-                await dataPromise;
-            }
-            if (model === "product" && method === "read") {
-                expect(false).toBe(true, {
-                    message: "should not be called because data is put in cache",
-                });
-            }
-            return result;
-        },
+    onRpc(async ({ kwargs, model, method, parent }) => {
+        if (model === "partner" && method === "fields_get") {
+            expect.step(`${model}/${method}`);
+            await metadataPromise;
+        }
+        if (model === "partner" && method === "read_group" && kwargs.groupby[0] === "product_id") {
+            expect.step(`${model}/${method}`);
+            await dataPromise;
+        }
+        if (model === "product" && method === "read") {
+            throw new Error("should not be called because data is put in cache");
+        }
+        return parent();
     });
+    const model = await createModelWithDataSource({ spreadsheetData });
     expect(getCellValue(model, "A1")).toBe("Loading...");
     expect(getCellValue(model, "A2")).toBe("Loading...");
     expect(getCellValue(model, "A3")).toBe("Loading...");
@@ -1027,6 +1135,84 @@ test("PIVOT day are correctly formatted at evaluation", async function () {
     expect(getEvaluatedCell(model, "B3").formattedValue).toBe("10.00");
 });
 
+test("PIVOT day_of_week with same user and spreadsheet week start", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+            <pivot>
+                <field name="date" interval="day" type="row"/>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+        mockRPC: function (route, { method, kwargs }) {
+            if (method === "read_group" && kwargs.groupby?.includes("date:day_of_week")) {
+                return [
+                    {
+                        "date:day_of_week": 2, // 2 days after the user week start (Monday + 2 = Wednesday)
+                        __domain: [["date.day_of_week", "=", 2]],
+                        __count: 1,
+                        probability_avg_id: 11,
+                    },
+                ];
+            }
+        },
+    });
+    patchWithCleanup(localization, {
+        weekStart: 1, // Monday
+    });
+    model.dispatch("UPDATE_LOCALE", {
+        locale: {
+            ...model.getters.getLocale(),
+            weekStart: 1, // Monday
+        },
+    });
+    updatePivot(model, pivotId, {
+        rows: [{ fieldName: "date", granularity: "day_of_week" }],
+    });
+    setCellContent(model, "B1", '=PIVOT.HEADER(1, "date:day_of_week", 3)');
+    setCellContent(model, "B2", '=PIVOT.VALUE(1, "probability:avg", "date:day_of_week", 3)');
+    await animationFrame();
+    expect(getEvaluatedCell(model, "B1").value).toBe("Wednesday");
+    expect(getEvaluatedCell(model, "B2").value).toBe(11);
+});
+
+test("PIVOT day_of_week with user week start and spreadsheet week start different", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+            <pivot>
+                <field name="date" interval="day" type="row"/>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+        mockRPC: function (route, { method, kwargs }) {
+            if (method === "read_group" && kwargs.groupby?.includes("date:day_of_week")) {
+                return [
+                    {
+                        "date:day_of_week": 1, // 2 days after the user week start (Tuesday + 1 = Wednesday)
+                        __domain: [["date.day_of_week", "=", 1]],
+                        __count: 1,
+                        probability_avg_id: 11,
+                    },
+                ];
+            }
+        },
+    });
+    patchWithCleanup(localization, {
+        weekStart: 2, // Tuesday
+    });
+    model.dispatch("UPDATE_LOCALE", {
+        locale: {
+            ...model.getters.getLocale(),
+            weekStart: 6, // Saturday
+        },
+    });
+    updatePivot(model, pivotId, {
+        rows: [{ fieldName: "date", granularity: "day_of_week" }],
+    });
+    setCellContent(model, "B1", '=PIVOT.HEADER(1, "date:day_of_week", 5)');
+    setCellContent(model, "B2", '=PIVOT.VALUE(1, "probability:avg", "date:day_of_week", 5)');
+    await animationFrame();
+    expect(getEvaluatedCell(model, "B1").value).toBe("Wednesday");
+    expect(getEvaluatedCell(model, "B2").value).toBe(11);
+});
+
 test("PIVOT iso_week_number are correctly formatted at evaluation", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
@@ -1303,6 +1489,34 @@ test("field matching is removed when filter is deleted", async function () {
     model.dispatch("REQUEST_REDO");
     expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toBe(undefined);
     expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([]);
+});
+
+test("ignore sorted column if not part of measures", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [],
+                domain: [],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
+                model: "partner",
+                rows: [{ fieldName: "bar" }],
+                sortedColumn: {
+                    measure: "foo",
+                    order: "asc",
+                    groupId: [[], [1]],
+                },
+                name: "A pivot",
+                context: {},
+                fieldMatching: {},
+                formulaId: "1",
+            },
+        },
+    };
+    const model = await createModelWithDataSource({ spreadsheetData });
+    setCellContent(model, "A1", "=PIVOT(1)");
+    await waitForDataLoaded(model);
+    expect(model.getters.getPivot(1).definition.sortedColumn).toBe(undefined);
 });
 
 test("Load pivot spreadsheet with models that cannot be accessed", async function () {
@@ -1594,6 +1808,48 @@ test("changing measure aggregates", async () => {
     });
     await animationFrame();
     expect.verifySteps(["foo_sum_id:sum(foo)"]);
+});
+
+test("Manipulating a computed measure does not trigger a RPC", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        mockRPC: async function (route, args) {
+            if (args.method === "read_group") {
+                expect.step(args.kwargs.fields.join());
+            }
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    expect.verifySteps(["probability_avg_id:avg(probability)"]);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            measures: [
+                { id: "probability:avg", fieldName: "probability", aggregator: "avg" },
+                {
+                    id: "probability*2",
+                    fieldName: "probability*2",
+                    aggregator: "avg",
+                    computedBy: { sheetId, formula: "=probability*2" },
+                },
+            ],
+        },
+    });
+    await animationFrame();
+    expect.verifySteps([]);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            measures: [{ id: "probability:avg", fieldName: "probability", aggregator: "avg" }],
+        },
+    });
+    await animationFrame();
+    expect.verifySteps([]);
 });
 
 test("many2one measures are aggregated with count_distinct by default", async () => {

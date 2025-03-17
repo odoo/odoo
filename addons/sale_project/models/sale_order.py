@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
     show_task_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user', export_string_translation=False)
     closed_task_count = fields.Integer(compute='_compute_tasks_ids', export_string_translation=False)
     completed_task_percentage = fields.Float(compute="_compute_completed_task_percentage", export_string_translation=False)
-    project_id = fields.Many2one('project.project', domain=[('allow_billable', '=', True)], help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.")
+    project_id = fields.Many2one('project.project', domain=[('allow_billable', '=', True)], copy=False, help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.")
     project_account_id = fields.Many2one('account.analytic.account', related='project_id.account_id')
 
     def _compute_milestone_count(self):
@@ -71,7 +71,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         tasks_per_so = self.env['project.task']._read_group(
-            domain=['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            domain=self._tasks_ids_domain(),
             groupby=['sale_order_id', 'state'],
             aggregates=['id:recordset', '__count']
         )
@@ -141,7 +141,19 @@ class SaleOrder(models.Model):
         form_view_id = self.env.ref('project.view_task_form2').id
         kanban_view_id = self.env.ref('project.view_task_kanban_inherit_view_default_project').id
 
-        action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
+        project_ids = self.tasks_ids.project_id
+        if len(project_ids) > 1:
+            action = self.env['ir.actions.actions']._for_xml_id('project.action_view_task')
+            action['domain'] = AND([ast.literal_eval(action['domain']), self._tasks_ids_domain()])
+            action['context'] = {}
+        else:
+            # Load top bar if all the tasks linked to the SO belong to the same project
+            action = self.env['ir.actions.actions'].with_context({'active_id': project_ids.id})._for_xml_id('project.act_project_project_2_project_task_all')
+            action['context'] = {
+                'active_id': project_ids.id,
+                'search_default_sale_order_id': self.id,
+            }
+
         if self.tasks_count > 1:  # cross project kanban task
             for idx, (view_id, view_type) in enumerate(action['views']):
                 if view_type == 'kanban':
@@ -157,15 +169,17 @@ class SaleOrder(models.Model):
         default_line = next((sol for sol in self.order_line if sol.product_id.type == 'service'), self.env['sale.order.line'])
         default_project_id = default_line.project_id.id or self.project_ids[:1].id or self.tasks_ids.project_id[:1].id
 
-        action['context'] = {
+        action['context'].update({
             'default_sale_order_id': self.id,
             'default_sale_line_id': default_line.id,
             'default_partner_id': self.partner_id.id,
             'default_project_id': default_project_id,
             'default_user_ids': [self.env.uid],
-        }
-        action['domain'] = AND([ast.literal_eval(action['domain']), [('id', 'in', self.tasks_ids.ids)]])
+        })
         return action
+
+    def _tasks_ids_domain(self):
+        return ['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)]
 
     def action_create_project(self):
         self.ensure_one()
@@ -272,25 +286,6 @@ class SaleOrder(models.Model):
             # Remove sale line field reference from all projects
             self.env['project.project'].sudo().search([('sale_line_id.order_id', 'in', self.ids)]).sale_line_id = False
         return res
-
-    def _prepare_analytic_account_data(self, prefix=None):
-        """ Prepare SO analytic account creation values.
-
-        :return: `account.analytic.account` creation values
-        :rtype: dict
-        """
-        self.ensure_one()
-        name = self.name
-        if prefix:
-            name = prefix + ": " + self.name
-        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
-        return {
-            'name': name,
-            'code': self.client_order_ref,
-            'company_id': self.company_id.id,
-            'plan_id': project_plan.id,
-            'partner_id': self.partner_id.id,
-        }
 
     def _compute_completed_task_percentage(self):
         for so in self:

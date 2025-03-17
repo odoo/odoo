@@ -248,6 +248,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 // Offcanvas attributes to ignore.
                 const offcanvasClasses = ["show"];
                 const offcanvasAttributes = ["aria-modal", "aria-hidden", "role", "style"];
+                // Carousel attributes to ignore.
+                const carouselSlidingClasses = ["carousel-item-start", "carousel-item-end",
+                    "carousel-item-next", "carousel-item-prev", "active", "o_carousel_sliding"];
+                const carouselIndicatorAttributes = ["aria-current"];
 
                 return filteredRecords.filter(record => {
                     if (record.type === "attributes") {
@@ -274,6 +278,19 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                                 }
                             } else if (record.target.matches(".offcanvas")
                                     && offcanvasAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+                        }
+
+                        // Do not record some carousel attributes changes.
+                        if (record.target.closest(":not(section) > .carousel")) {
+                            if (record.target.matches(".carousel, .carousel-item, .carousel-indicators > *")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, carouselSlidingClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".carousel-indicators > *")
+                                    && carouselIndicatorAttributes.includes(record.attributeName)) {
                                 return false;
                             }
                         }
@@ -930,6 +947,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @returns {Promise}
      */
     async _saveViewBlocks() {
+        this._restoreCarousels();
         await super._saveViewBlocks(...arguments);
         if (this.isDirty()) {
             return this._restoreMegaMenus();
@@ -967,7 +985,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.__savedCovers[resModel].push(resID);
 
         const imageEl = el.querySelector('.o_record_cover_image');
-        let cssBgImage = imageEl.style.backgroundImage;
+        let cssBgImage = getComputedStyle(imageEl)["backgroundImage"];
         if (imageEl.classList.contains("o_b64_image_to_save")) {
             imageEl.classList.remove("o_b64_image_to_save");
             const groups = cssBgImage.match(/url\("data:(?<mimetype>.*);base64,(?<imageData>.*)"\)/)?.groups;
@@ -1092,6 +1110,27 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         });
     }
     /**
+     * Restores all the carousels so their first slide is the active one.
+     *
+     * @private
+     */
+    _restoreCarousels() {
+        this.$editable[0].querySelectorAll(".carousel").forEach(carouselEl => {
+            // Set the first slide as the active one.
+            carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
+                itemEl.classList.remove("next", "prev", "left", "right");
+                itemEl.classList.toggle("active", i === 0);
+            });
+            carouselEl.querySelectorAll(".carousel-indicators > *").forEach((indicatorEl, i) => {
+                indicatorEl.classList.toggle("active", i === 0);
+                indicatorEl.removeAttribute("aria-current");
+                if (i === 0) {
+                    indicatorEl.setAttribute("aria-current", "true");
+                }
+            });
+        });
+    }
+    /**
      * @override
      */
     _getRecordInfo(editable) {
@@ -1145,25 +1184,24 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const isDirty = this._isDirty();
         let callback = () => {
             this.leaveEditMode({ forceLeave: true });
-            const canPublish = this.websiteService.currentWebsite.metadata.canPublish;
-            if (
-                isDirty &&
-                (!canPublish ||
-                    (canPublish && this.websiteService.currentWebsite.metadata.isPublished)) &&
-                this.websiteService.currentWebsite.metadata.canOptimizeSeo
-            ) {
+            if (isDirty) {
                 const {
                     mainObject: { id, model },
+                    canPublish,
                 } = this.websiteService.currentWebsite.metadata;
                 rpc("/website/get_seo_data", {
                     res_id: id,
                     res_model: model,
                 }).then(
-                    (seo_data) =>
+                    (seo_data) => {
+                        if (!(seo_data.website_is_published && canPublish)) {
+                            return;
+                        }
                         checkAndNotifySEO(seo_data, OptimizeSEODialog, {
                             notification: this.notificationService,
                             dialog: this.dialogs,
-                        }),
+                        });
+                    },
                     (error) => {
                         throw error;
                     }

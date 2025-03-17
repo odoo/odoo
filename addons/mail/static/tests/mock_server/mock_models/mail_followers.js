@@ -27,10 +27,10 @@ export class MailFollowers extends models.ServerModel {
         }
         const followers = MailFollowers.browse(ids);
         for (const follower of followers) {
-            const [data] = this.read(
+            const [data] = this._read_format(
                 follower.id,
                 Object.keys(fields).filter((field) => !["partner", "thread"].includes(field)),
-                makeKwArgs({ load: false })
+                false
             );
             if ("partner" in fields) {
                 data.partner = mailDataHelpers.Store.one(

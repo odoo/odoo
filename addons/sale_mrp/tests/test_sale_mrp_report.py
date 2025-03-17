@@ -82,6 +82,16 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
             'is_storable': True,
             'route_ids': [Command.set((mto_route + manufacturing_route).ids)]
         })
+
+        product.bom_ids = [Command.create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': product.uom_id.id,
+            'bom_line_ids': [Command.create({
+                'product_id': self.product_by_lot.id,
+                'product_qty': 1,
+            })]
+        })]
         warehouse = self.warehouse
         # make 2 so: so_1 can be fulfilled and so_2 requires a replenishment
         self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 10.0)
@@ -111,18 +121,18 @@ class TestSaleMrpInvoices(AccountTestInvoicingCommon):
         (so_1 | so_2).action_confirm()
         report_lines = self.env['stock.forecasted_product_product'].with_context(warehouse=warehouse.id).get_report_values(docids=product.ids)['docs']['lines']
         self.assertEqual(len(report_lines), 3)
-        so_1_line = next(filter(lambda line: line.get('document_out') and line['document_out'].get('id') == so_1.id, report_lines))
+        so_1_line = report_lines[0]
         self.assertEqual(
             [so_1_line['quantity'], so_1_line['move_out']['id'], so_1_line['replenishment_filled']],
             [8.0, so_1.picking_ids.move_ids.id, True]
         )
-        so_2_line = next(filter(lambda line: line.get('document_out') and line['document_out'].get('id') == so_2.id and not line.get('document_in'), report_lines))
+        so_2_line = report_lines[1]
         self.assertEqual(
             [so_2_line['quantity'], so_2_line['move_out']['id'], so_2_line['replenishment_filled']],
-            [2.0, so_2.picking_ids.move_ids.id, True]
+            [7.0, so_2.picking_ids.move_ids.id, True]
         )
-        replenisment_line = next(filter(lambda line: line.get('document_in'), report_lines))
+        replenisment_line = report_lines[2]
         self.assertEqual(
-            [replenisment_line['document_in']['_name'], replenisment_line['document_out']['id'], replenisment_line['quantity'], replenisment_line['move_out']['id'], replenisment_line['replenishment_filled']],
-            ["mrp.production", so_2.id, 5.0, so_2.picking_ids.move_ids.id, True]
+            [replenisment_line['document_in'], replenisment_line['document_out'], replenisment_line['quantity'], replenisment_line['move_out'], replenisment_line['replenishment_filled']],
+            [False, False, 10.0, None, True]
         )

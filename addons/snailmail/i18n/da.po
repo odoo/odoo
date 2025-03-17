@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
-"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail
@@ -39,7 +40,14 @@ msgstr "Adresse"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_group_model_patch.js:0
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr ""
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending a letter with Snailmail."
 msgstr "Der skete en fejl under afsendelse af et brev via Post."
 
@@ -124,7 +132,7 @@ msgstr "Aflys notifikation i fejl"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Annulleret"
 
 #. module: snailmail
@@ -143,7 +151,6 @@ msgid "Close"
 msgstr "Luk"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "Farve"
@@ -232,7 +239,7 @@ msgstr "FORMAT_ERROR"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/core_ui/snailmail_error.js:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 msgid "Failed letter"
 msgstr "Fejlslagen brev"
@@ -322,12 +329,6 @@ msgstr "Besked"
 #: model:ir.model,name:snailmail.model_mail_notification
 msgid "Message Notifications"
 msgstr "Beskednotifikationer"
-
-#. module: snailmail
-#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
-#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
-msgstr "Meddelelsestype: e-mail for e-mail, underretning til system besked, kommentar til andre meddelelser såsom brugernes svar"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -424,6 +425,11 @@ msgid "Send Now"
 msgstr "Send nu"
 
 #. module: snailmail
+#: model:iap.service,description:snailmail.iap_service_snailmail
+msgid "Send your customer invoices and follow-up reports by post, worldwide."
+msgstr ""
+
+#. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
@@ -448,9 +454,25 @@ msgid "Snailmail"
 msgstr "Almindelig post"
 
 #. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+msgid "Snailmail Color"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
+msgid "Snailmail Cover Readonly"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
 msgstr "Post Kreditfejl"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
@@ -512,11 +534,16 @@ msgid "Snailmail: process letters queue"
 msgstr "Postbrev: behandling breve kø"
 
 #. module: snailmail
+#: model:iap.service,unit_name:snailmail.iap_service_snailmail
+msgid "Stamps"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "State"
-msgstr "Stat"
+msgstr "Status"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -559,8 +586,12 @@ msgstr "Modtager adressen er ikke komplet"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists."
-msgstr "Vedhæftelsen til brevet kunne ikke sendes. Tjek venligst, at dets indhold, og kontakt support hvis problemet bliver ved."
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
+msgstr ""
+"Vedhæftelsen til brevet kunne ikke sendes. Tjek venligst, at dets indhold, "
+"og kontakt support hvis problemet bliver ved."
 
 #. module: snailmail
 #. odoo-python
@@ -571,13 +602,19 @@ msgstr "Partnerens land er ikke dækket af almen post."
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "The country to which you want to send the letter is not supported by our service."
-msgstr "Landet hvortil du vil sende brevet er ikke understøttet af vores tjeneste."
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
+msgstr ""
+"Landet hvortil du vil sende brevet er ikke understøttet af vores tjeneste."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "The customer address is not complete. Update the address here and re-send the letter."
-msgstr "Kunde adressen er ikke komplet. Opdater adressen her og send brevet igen."
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
+msgstr ""
+"Kunde adressen er ikke komplet. Opdater adressen her og send brevet igen."
 
 #. module: snailmail
 #. odoo-python
@@ -588,8 +625,11 @@ msgstr "Dokumentet blev allerede afsendt korrekt.<br>Sporings ID'et er %s"
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "The letter could not be sent due to insufficient credits on your IAP account."
-msgstr "Brevet kunne ikke afsendes grundet utilstrækkelig kredit på din IAP konto."
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
+msgstr ""
+"Brevet kunne ikke afsendes grundet utilstrækkelig kredit på din IAP konto."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -618,6 +658,26 @@ msgid "Update address of partner"
 msgstr "Opdater partners adresse"
 
 #. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
+msgid ""
+"Used to categorize message generator\n"
+"'email': generated by an incoming email e.g. mailgateway\n"
+"'comment': generated by user input e.g. through discuss or composer\n"
+"'email_outgoing': generated by a mailing\n"
+"'notification': generated by system e.g. tracking messages\n"
+"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'user_notification': generated for a specific recipient"
+msgstr ""
+"Bruges til at kategorisere meddelelsesgenerator\n"
+"'e-mail': genereret af en indgående e-mail, f.eks. mailgateway\n"
+"'comment': genereret af brugerinput, f.eks. gennem diskutere eller komponist\n"
+"'email_outgoing': genereret af en mailing\n"
+"'notification': genereret af systemet f.eks. sporingsmeddelelser\n"
+"'auto_comment': genereret af automatiseret notifikationsmekanisme, f.eks. anerkendelse\n"
+"'user_notification': genereret til en bestemt modtager"
+
+#. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
@@ -631,14 +691,23 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "You don't have an IAP account registered for this service.<br>Please go to <a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
-msgstr "Du har ikke en IAP konto registreret for denne service. <br>Gå venligst til <a href=%s target=\"new\">iap.odoo.com</a> for at gøre krav på dine gratis kredit."
+msgid ""
+"You don't have an IAP account registered for this service.<br>Please go to "
+"<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
+msgstr ""
+"Du har ikke en IAP konto registreret for denne service. <br>Gå venligst til "
+"<a href=%s target=\"new\">iap.odoo.com</a> for at gøre krav på dine gratis "
+"kredit."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "You don't have enough credits to perform this operation.<br>Please go to your <a href=%s target=\"new\">iap account</a>."
-msgstr "Du har ikke tilstrækkelig kredit til at udføre denne operation. <br>Vær venlig at gå til din <a href=%s target=\"new\">IAP konto </a>"
+msgid ""
+"You don't have enough credits to perform this operation.<br>Please go to "
+"your <a href=%s target=\"new\">iap account</a>."
+msgstr ""
+"Du har ikke tilstrækkelig kredit til at udføre denne operation. <br>Vær "
+"venlig at gå til din <a href=%s target=\"new\">IAP konto </a>"
 
 #. module: snailmail
 #. odoo-javascript

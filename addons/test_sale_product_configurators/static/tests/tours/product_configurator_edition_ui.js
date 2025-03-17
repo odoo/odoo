@@ -7,7 +7,6 @@ import tourUtils from "@sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('sale_product_configurator_edition_tour', {
     url: '/odoo',
-    test: true,
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),
@@ -40,7 +39,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
             run: "edit nice custom value && click .modal-body",
         },
         {
-            trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) label[style="background-color:#000000"] input',
+            trigger:
+                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) label[style="background-color:#000000"] input:not(:visible)',
             run: "click",
         },
         {

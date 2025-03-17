@@ -12,11 +12,10 @@ import {
 
 registerWebsitePreviewTour('snippet_translation', {
     url: '/',
-    test: true,
 }, () => [
     {
         content: "Wait for website preview and check language",
-        trigger: ":iframe body #wrapwrap",
+        trigger: ":iframe html:has(body:contains(welcome to your)):has(.o_top_fixed_element)",
         run: () => {
             if (localization.code !== "fu_GB") {
                 console.error("the user language is not properly set");
@@ -38,17 +37,34 @@ registerWebsitePreviewTour('snippet_translation', {
 ]);
 registerWebsitePreviewTour('snippet_translation_changing_lang', {
     url: '/',
-    test: true,
 }, () => [
     {
-        content: "Change language to Parseltongue",
+        content: "Open dropdown language selector",
         trigger: ':iframe .js_language_selector button',
         run: "click",
     },
     {
-        content: "Change the language to English",
-        trigger: ':iframe .js_language_selector .js_change_lang[data-url_code="en"]',
+        content: "Select the language to Parseltongue",
+        trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=pa_GB]",
         run: "click",
+    },
+    {
+        content: "Wait the language has changed.",
+        trigger: ":iframe header.o_top_fixed_element nav li:contains(parseltongue)",
+    },
+    {
+        content: "Open dropdown language selector",
+        trigger: ':iframe .js_language_selector button',
+        run: "click",
+    },
+    {
+        content: "Select the language to English",
+        trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=en]",
+        run: "click",
+    },
+    {
+        content: "Wait the language has changed.",
+        trigger: ":iframe nav li:contains(english)",
     },
     {
         content: "Open Edit dropdown",

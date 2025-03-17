@@ -292,11 +292,11 @@
                             <field name="product_description_variants" invisible="product_description_variants in (False, '')" readonly="state != 'draft'"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row g-0 d-flex">
-                                <div invisible="state == 'draft'" class="o_row flex-grow-0">
-                                    <field name="qty_producing" class="text-start" readonly="state == 'cancel' or (state == 'done' and is_locked)"/>
+                                <div invisible="state == 'draft'" class="o_row flex-grow-1">
+                                    <field name="qty_producing" class="text-start text-truncate" readonly="state == 'cancel' or (state == 'done' and is_locked)"/>
                                     /
                                 </div>
-                                <field name="product_qty" class="oe_inline text-start" invisible="state not in ('draft', 'done')" readonly="state != 'draft'"/>
+                                <field name="product_qty" class="oe_inline text-start text-truncate" invisible="state not in ('draft', 'done')" readonly="state != 'draft'"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
                                     context="{'default_mo_id': id}" class="oe_link oe_inline" style="margin: 0px; padding: 0px;" invisible="state in ('draft', 'done', 'cancel') or not id">
                                     <field name="product_qty" class="oe_inline" readonly="state != 'draft'"/>
@@ -304,8 +304,8 @@
                                 <label for="product_uom_id" string="" class="oe_inline"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
-                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state != 'draft'"/>
-                                <span class='fw-bold'>To Produce</span>
+                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state != 'draft'" class="flex-grow-0" style="width:auto!important"/>
+                                <span class='fw-bold text-nowrap'>To Produce</span>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="forecasted_issue"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not forecasted_issue" class="text-danger"/>
                             </div>
@@ -449,6 +449,8 @@
                                     <!-- TODO put forecast back -->
                                     <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="Forecast" widget="forecast_widget" optional="hide"/>
                                     <field name="quantity" string="Quantity"
+                                        decoration-success="not is_done and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) == 0)"
+                                        decoration-warning="not is_done and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &gt; 0.0001)"
                                         column_invisible="parent.state == 'draft'"
                                         decoration-info="manual_consumption"
                                         decoration-bf="manual_consumption"
@@ -489,7 +491,7 @@
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                     </control>
-                                    <field name="product_id" context="{'default_is_storable': True}" domain="[('id', '!=', parent.product_id)]" required="1" readonly="state == 'done'"/>
+                                    <field name="product_id" context="{'default_is_storable': True}" domain="[('id', '!=', parent.product_id)]" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)"/>
                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="product_uom_category_id" column_invisible="True"/>
@@ -640,6 +642,7 @@
                     <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                     <field name="workcenter_id" string="Work Center" filter_domain="[('workorder_ids.workcenter_id', 'ilike', self)]"/>
                     <field name="origin"/>
+                    <field name="picking_type_id"/>
                     <filter string="To Do" name="todo" domain="[('state', 'in', ('draft', 'confirmed', 'progress', 'to_close'))]"
                         help="Manufacturing Orders which are in confirmed state."/>
                     <filter string="Unbuilt" name="filter_unbuilt" domain="[('unbuild_ids.state', '=', 'done')]"/>
@@ -668,6 +671,8 @@
                         domain="['|', ('delay_alert_date', '!=', False), ('is_delayed', '=', True)]"/>
                     <filter string="Components Available" name="available" domain="[('components_availability_state', '=', 'available')]"/>
                     <filter string="Late Availability" name="late" domain="[('components_availability_state', '=', 'late')]"/>
+                    <separator/>
+                    <filter string="My MOs" name="my_mos" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"

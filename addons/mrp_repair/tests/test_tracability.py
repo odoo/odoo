@@ -260,7 +260,6 @@ class TestRepairTraceability(TestMrpCommon):
         """
         stock_location = self.env.ref('stock.stock_location_stock')
         scrap_location = self.env['stock.location'].search([('company_id', '=', self.env.company.id), ('scrap_location', '=', True)], limit=1)
-        internal_type = self.env.ref('stock.picking_type_internal')
 
         finished = self.bom_4.product_id
         component = self.bom_4.bom_line_ids.product_id
@@ -308,7 +307,6 @@ class TestRepairTraceability(TestMrpCommon):
             'product_id': component.id,
             'product_uom_qty': 1,
             'product_uom': component.uom_id.id,
-            'picking_id': internal_type.id,
             'location_id': scrap_location.id,
             'location_dest_id': stock_location.id,
         })
@@ -332,3 +330,18 @@ class TestRepairTraceability(TestMrpCommon):
         self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
             {'product_id': component.id, 'lot_id': sn_lot.id, 'quantity': 1.0, 'state': 'done'},
         ])
+
+    def test_repair_with_consumable_kit(self):
+        """Test that a consumable kit can be repaired."""
+        self.assertEqual(self.bom_2.type, 'phantom')
+        kit_product = self.bom_2.product_id
+        kit_product.type = 'consu'
+        self.assertEqual(kit_product.type, 'consu')
+        ro = self.env['repair.order'].create({
+            'product_id': kit_product.id,
+            'picking_type_id': self.warehouse_1.repair_type_id.id,
+        })
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+        self.assertEqual(ro.state, 'done')

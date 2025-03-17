@@ -135,8 +135,23 @@ class AccountPartialReconcile(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         partials = super().create(vals_list)
+        self._pay_matched_payment(partials)
         self._update_matching_number(partials.debit_move_id + partials.credit_move_id)
         return partials
+
+    @api.model
+    def _pay_matched_payment(self, partials):
+        for partial in partials:
+            matched_payments = (partial.credit_move_id | partial.debit_move_id).move_id.matched_payment_ids
+            to_check_payments = matched_payments.filtered(lambda payment: not payment.outstanding_account_id and payment.state == 'in_process')
+            for payment in to_check_payments:
+                if payment.payment_type == 'inbound':
+                    amount = partial.debit_amount_currency
+                else:
+                    amount = -partial.credit_amount_currency
+                if not payment.currency_id.compare_amounts(payment.amount_signed, amount):
+                    payment.state = 'paid'
+                    break
 
     @api.model
     def _update_matching_number(self, amls):

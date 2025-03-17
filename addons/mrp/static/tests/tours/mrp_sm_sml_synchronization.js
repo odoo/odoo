@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from '@web_tour/tour_service/tour_utils';
 
 registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_sml_synchronization', {
-    test: true,
     steps: () => [
         {
             trigger: ".btn-primary[name=action_confirm]",
@@ -23,8 +21,7 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             run: "click",
         },
         {
-            trigger: ".o_list_number:contains('5')",
-            run: "click",
+            trigger: ".modal .o_list_number:contains(5)",
         },
         {
             content: "Click Save",
@@ -160,6 +157,9 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             trigger: ".modal .modal-footer .o_form_button_save",
             run: "click",
         },
-        ...stepUtils.saveForm(),
+        {
+            content: "wait for save completion",
+            trigger: ".o_form_readonly, .o_form_saved",
+        },
     ]
 });

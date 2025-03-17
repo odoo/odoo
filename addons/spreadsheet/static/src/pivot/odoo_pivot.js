@@ -18,6 +18,7 @@ const { pivotTimeAdapter, toString, areDomainArgsFieldsValid, toNormalizedPivotV
  * @typedef {import("@odoo/o-spreadsheet").PivotMeasure} PivotMeasure
  * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
  * @typedef {import("@odoo/o-spreadsheet").PivotDimension} PivotDimension
+ * @typedef {import("@odoo/o-spreadsheet").PivotCoreMeasure} PivotCoreMeasure
  * @typedef {import("@spreadsheet").WebPivotModelParams} WebPivotModelParams
  * @typedef {import("@spreadsheet").OdooPivot<OdooPivotRuntimeDefinition>} IPivot
  * @typedef {import("@spreadsheet").OdooFields} OdooFields
@@ -67,7 +68,13 @@ export class OdooPivot {
         this.odooDataProvider = services.odooDataProvider;
 
         /** @protected @type {Object} */
-        this.context = omit(definition.context, ...Object.keys(user.context));
+        this.context = omit(
+            definition.context,
+            ...Object.keys(user.context),
+            "pivot_measures",
+            "pivot_row_groupby",
+            "pivot_column_groupby"
+        );
 
         /** @protected */
         this.domainWithGlobalFilters = this.coreDefinition.domain;
@@ -78,7 +85,6 @@ export class OdooPivot {
      */
     onDefinitionChange(nextDefinition) {
         this.context = omit(nextDefinition.context, ...Object.keys(user.context));
-        this.domainWithGlobalFilters = nextDefinition.domain;
         const actualDefinition = this.coreDefinition;
         this.coreDefinition = nextDefinition;
         if (
@@ -94,7 +100,12 @@ export class OdooPivot {
                 // Nothing change for the table structure, no need to reload the data
                 return;
             }
-            if (this.isMeasuresTheSameForData(actualDefinition.measures, nextDefinition.measures)) {
+            if (
+                !this.isMeasuresChangesRequireRPC(
+                    actualDefinition.measures,
+                    nextDefinition.measures
+                )
+            ) {
                 this.coreDefinition = nextDefinition;
                 const runtimeDefinition = new OdooPivotRuntimeDefinition(
                     this.coreDefinition,
@@ -107,21 +118,35 @@ export class OdooPivot {
         this.load({ reload: true });
     }
 
-    isMeasuresTheSameForData(actualMeasures, nextMeasures) {
-        if (actualMeasures.length !== nextMeasures.length) {
-            return false;
+    /**
+     * Check if the measures changes require a reload of the data
+     *
+     * A measure change requires a reload of the data if:
+     * - a new non-computed measure is added
+     * - a non-computed measure is removed
+     * - a non-computed measure has its fieldName or aggregator changed
+     *
+     * @param {PivotCoreMeasure[]} actualMeasures
+     * @param {PivotCoreMeasure[]} nextMeasures
+     * @returns {boolean}
+     */
+    isMeasuresChangesRequireRPC(actualMeasures, nextMeasures) {
+        const nonComputedActualMeasures = actualMeasures.filter((m) => !m.computedBy);
+        const nonComputedNextMeasures = nextMeasures.filter((m) => !m.computedBy);
+        if (nonComputedActualMeasures.length !== nonComputedNextMeasures.length) {
+            return true;
         }
-        for (const measure of actualMeasures) {
-            const updatedMeasure = nextMeasures.find((m) => m.id === measure.id);
+        for (const measure of nonComputedActualMeasures) {
+            const updatedMeasure = nonComputedNextMeasures.find((m) => m.id === measure.id);
             if (
                 !updatedMeasure ||
                 updatedMeasure.fieldName !== measure.fieldName ||
                 updatedMeasure.aggregator !== measure.aggregator
             ) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     async loadMetadata() {
@@ -169,6 +194,7 @@ export class OdooPivot {
             {
                 orm: this.odooDataProvider.orm,
                 serverData: this.odooDataProvider.serverData,
+                getters: this.getters,
             }
         );
         return { model, definition };
@@ -417,6 +443,10 @@ export class OdooPivot {
         return this.loader.lastUpdate;
     }
 
+    isModelValid() {
+        return this.loader.isModelValid();
+    }
+
     isValid() {
         return this.loader.isValid();
     }
@@ -474,6 +504,15 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
         this._model = definition.model;
         /** @type {SortedColumn} */
         this._sortedColumn = definition.sortedColumn;
+
+        // Ensure that the sorted column is a measure
+        // and if not, drop it.
+        // This situation can happen because of a bug in a previous version
+        const measureNames = definition.measures.map((field) => field.fieldName);
+        if (definition.sortedColumn && !measureNames.includes(definition.sortedColumn.measure)) {
+            this._sortedColumn = undefined;
+        }
+
         for (const dimension of this.columns.concat(this.rows)) {
             if (
                 (dimension.type === "date" || dimension.type === "datetime") &&

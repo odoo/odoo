@@ -299,7 +299,8 @@ test("domain field: handle false domain as []", async function () {
     expect(".o_field_widget[name='foo'] .text-warning").toHaveCount(0);
 });
 
-test.tags("desktop")("basic domain field: show the selection", async function () {
+test.tags("desktop");
+test("basic domain field: show the selection", async function () {
     Partner._records[0].foo = "[]";
     PartnerType._views = {
         list: `<list><field name="name" /></list>`,
@@ -336,7 +337,8 @@ test.tags("desktop")("basic domain field: show the selection", async function ()
     await contains(".modal .o_list_view .o_data_row .o_data_cell[data-tooltip='gold']").click();
 });
 
-test.tags("desktop")("field context is propagated when opening selection", async function () {
+test.tags("desktop");
+test("field context is propagated when opening selection", async function () {
     Partner._records[0].foo = "[]";
     PartnerType._views = {
         list: `<list><field name="name" /></list>`,
@@ -686,7 +688,8 @@ test("domain field without model", async function () {
     expect.verifySteps(["partner"]);
 });
 
-test.tags("desktop")("domain field in kanban view", async function () {
+test.tags("desktop");
+test("domain field in kanban view", async function () {
     Partner._records[0].foo = "[]";
     PartnerType._views = {
         list: `<list><field name="name" /></list>`,

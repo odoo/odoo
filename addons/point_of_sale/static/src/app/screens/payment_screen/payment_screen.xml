@@ -149,7 +149,7 @@
                         t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                         <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
                             <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
-                            <span class="payment-name" t-esc="paymentMethod.name" />
+                            <span class="payment-name" t-esc="pos.getPaymentMethodDisplayText(paymentMethod, currentOrder)" />
                         </div>
                     </div>
                 </t>

@@ -84,6 +84,22 @@ class StockMoveLine(models.Model):
         aggregated_properties['line_key'] += f'_{bom.id if bom else ""}'
         return aggregated_properties
 
+    def _compute_product_packaging_qty(self):
+        kit_lines = self.filtered(lambda move_line: move_line.move_id.bom_line_id.bom_id.type == 'phantom')
+        for move_line in kit_lines:
+            move = move_line.move_id
+            bom_line = move.bom_line_id
+
+            # Convert the move line quantity to the product's move uom
+            qty_move_uom = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.move_id.product_uom)
+            # Convert the product's move uom to the bom line's uom
+            qty_bom_uom = move.product_uom._compute_quantity(qty_move_uom, bom_line.product_uom_id)
+            # calculate the bom's kit qty in kit product uom qty
+            bom_qty_product_uom = bom_line.bom_id.product_uom_id._compute_quantity(bom_line.bom_id.product_qty, move_line.move_id.bom_line_id.bom_id.product_id.uom_id)
+            # calculate the quantity needed of packging
+            move_line.product_packaging_qty = (qty_bom_uom / (bom_line.product_qty / bom_qty_product_uom)) / move_line.move_id.product_packaging_id.qty
+        super(StockMoveLine, self - kit_lines)._compute_product_packaging_qty()
+
     @api.model
     def _compute_packaging_qtys(self, aggregated_move_lines):
         non_kit_ml = {}
@@ -331,9 +347,9 @@ class StockMove(models.Model):
                 move.display_import_lot = False
                 move.display_assign_serial = False
 
-    @api.onchange('product_uom_qty')
+    @api.onchange('product_uom_qty', 'product_uom')
     def _onchange_product_uom_qty(self):
-        if self.raw_material_production_id and self.has_tracking == 'none':
+        if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
             new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
             self.quantity = new_qty
@@ -399,6 +415,8 @@ class StockMove(models.Model):
                     values['location_dest_id'] = mo.production_location_id.id
                     if not values.get('location_id'):
                         values['location_id'] = mo.location_src_id.id
+                    if mo.state in ['progress', 'to_close'] and mo.qty_producing > 0:
+                        values['picked'] = True
                     continue
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id
@@ -479,6 +497,13 @@ class StockMove(models.Model):
         merge_into = merge_into and merge_into.action_explode()
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
+
+    def _action_done(self, cancel_backorder=False):
+        # explode kit moves that avoided the action_explode of any confirmation process
+        moves_to_explode = self.filtered(lambda m: m.product_id.is_kits and m.state not in ('draft', 'cancel'))
+        exploded_moves = moves_to_explode.action_explode()
+        moves = (self - moves_to_explode) | exploded_moves
+        return super(StockMove, moves)._action_done(cancel_backorder)
 
     def _should_bypass_reservation(self, forced_location=False):
         return super()._should_bypass_reservation(forced_location) or self.product_id.is_kits
@@ -625,6 +650,12 @@ class StockMove(models.Model):
         if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
             return True
         return False
+
+    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
+        vals = super()._prepare_move_line_vals(quantity, reserved_quant)
+        if self.production_id.product_tracking == 'lot' and self.product_id == self.production_id.product_id:
+            vals['lot_id'] = self.production_id.lot_producing_id.id
+        return vals
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()

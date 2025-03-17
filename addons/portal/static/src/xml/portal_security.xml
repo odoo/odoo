@@ -21,6 +21,18 @@
                 and complete, <strong>it will be the only way to
                 identify the key once created</strong>.
             </p>
+            <h3 class="fw-bold">
+                Give a duration for the key's validity
+            </h3>
+            <select name="duration" class="form-control">
+                <option t-foreach="duration_selection" t-as="duration" t-key="duration[0]"
+                    t-att-id="`duration_${duration[0]}`"
+                    t-esc="duration[1]"
+                    t-att-value="duration[0]"/>
+            </select>
+            <p>
+                The key will be deleted once this period has elapsed.
+            </p>
         </form>
     </t>
     <t t-name="portal.keyshow">
@@ -37,22 +49,5 @@
                 to your user account, it is very important to store it securely.
             </p>
         </div>
-    </t>
-    <!-- Popup's view !-->
-    <t t-name="portal.revoke_all_devices_popup_template">
-        <section>
-            <div>
-                You are about to log out from all devices that currently have access to this user's account.
-            </div><br/>
-            <form action="/my/security" method="post" class="oe_reset_password_form" >
-                <div class="mb-3">
-                    <label for="current">Type in your password to confirm :</label>
-                    <input type="password" t-attf-class="form-control form-control-sm"
-                            id="current" name="password"
-                            autocomplete="current-password" required="required"/>
-                </div>
-                <input type="hidden" name="op" value="revoke"/>
-            </form>
-        </section>
     </t>
 </templates>

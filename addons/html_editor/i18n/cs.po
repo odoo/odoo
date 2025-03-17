@@ -6,16 +6,16 @@
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # Tiffany Chang, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
-# Wil Odoo, 2024
 # Tereza Mokrá, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-02-10 13:23+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Tereza Mokrá, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,6 +158,12 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "Add a download box"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
 msgid "Add a link"
 msgstr "Přidat odkaz"
@@ -167,6 +173,12 @@ msgstr "Přidat odkaz"
 #: code:addons/html_editor/static/src/main/emoji_plugin.js:0
 msgid "Add an emoji"
 msgstr "Přidat emoji"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
+msgid "Add headings in this field to fill the Table of Content"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -255,6 +267,7 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 msgid "Background Color"
 msgstr "Barva pozadí"
 
@@ -328,6 +341,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.xml:0
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_dialog.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -357,7 +371,14 @@ msgstr "Vymazat"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/backend/excalidraw/excalidraw.xml:0
+msgid "Click here to update the source"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
 msgid "Close"
 msgstr "Zavřít"
 
@@ -372,6 +393,32 @@ msgstr "Kód"
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Code view"
 msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
+msgid ""
+"Collaborative Links require joining, while Embed Links directly show the "
+"drawing."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/column_plugin.js:0
+msgid "Columnize"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.js:0
+msgid "Comparison"
+msgstr "Porovnání"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.js:0
+msgid "Content"
+msgstr "Obsah"
 
 #. module: html_editor
 #. odoo-javascript
@@ -395,6 +442,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/column_plugin.js:0
 msgid "Convert into 4 columns"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/column_plugin.js:0
+msgid "Convert into columns"
 msgstr ""
 
 #. module: html_editor
@@ -460,16 +513,9 @@ msgstr "Dailymotion"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Default"
 msgstr "Výchozí"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Default + Rounded"
-msgstr "Výchozí + zaokrouhlit"
 
 #. module: html_editor
 #. odoo-javascript
@@ -491,9 +537,11 @@ msgstr "Popis"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 #: code:addons/html_editor/static/src/main/media/image_crop.xml:0
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 #: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.xml:0
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
 msgid "Discard"
 msgstr "Zrušit"
 
@@ -507,13 +555,20 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/media_dialog/file_media_dialog.js:0
 msgid "Documents"
 msgstr "Dokumenty"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin.js:0
+msgid "Drawing Board"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid "Dynamic Placeholder"
 msgstr "Dynamický zástupce"
 
@@ -552,6 +607,12 @@ msgstr "Vložit obrázek"
 #: code:addons/html_editor/static/src/main/youtube_plugin.js:0
 msgid "Embed Youtube Video"
 msgstr "Vložit Youtube video"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
+msgid "Embed a video"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -609,6 +670,12 @@ msgstr "Prodloužit ke vzdálenější straně"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
+msgid "File"
+msgstr "Soubor"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
 msgid "File has been uploaded"
 msgstr "Soubor byl aktualizován"
@@ -633,12 +700,6 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Flat"
-msgstr "Paušál"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_crop.js:0
 msgid "Flexible"
 msgstr "Flexibilní"
@@ -658,6 +719,7 @@ msgstr "Převrátit svisle"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 msgid "Font Color"
 msgstr "Barva písma"
 
@@ -725,24 +787,6 @@ msgstr "Nadpis 1"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Header 1 Display 1"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/font_plugin.js:0
-msgid "Header 1 Display 2"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/font_plugin.js:0
-msgid "Header 1 Display 3"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/font_plugin.js:0
-msgid "Header 1 Display 4"
 msgstr ""
 
 #. module: html_editor
@@ -837,9 +881,27 @@ msgstr "Skrýt tlačítko sdílení"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
+msgid "Highlight the structure (headings) of this field"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.js:0
+msgid "History"
+msgstr "Historie"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Html"
 msgstr "Html"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
+msgid "Icon"
+msgstr "Ikona"
 
 #. module: html_editor
 #. odoo-javascript
@@ -926,7 +988,37 @@ msgstr "Vložit"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
+msgid "Insert Drawing"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog.xml:0
+msgid "Insert Video"
+msgstr "Vložit video"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_plugin.js:0
+msgid "Insert a Video"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a danger banner"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
+msgid "Insert a drawing board"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid "Insert a field"
 msgstr ""
 
@@ -934,6 +1026,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/dom_plugin.js:0
 msgid "Insert a horizontal rule separator"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/star_plugin.js:0
+msgid "Insert a rating"
 msgstr ""
 
 #. module: html_editor
@@ -950,15 +1048,21 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a success banner"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_ui_plugin.js:0
 msgid "Insert a table"
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Insert a video"
-msgstr "Vložit video"
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a warning banner"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -968,15 +1072,9 @@ msgstr "Vložit výše"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/banner_plugin.js:0
-msgid "Insert an danger banner"
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin.js:0
+msgid "Insert an Excalidraw Board"
 msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Insert an image"
-msgstr "Vložit obrázek"
 
 #. module: html_editor
 #. odoo-javascript
@@ -986,21 +1084,15 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/banner_plugin.js:0
-msgid "Insert an success banner"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/banner_plugin.js:0
-msgid "Insert an warning banner"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Insert below"
 msgstr "Vložit níže"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
+msgid "Insert image or icon"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1037,12 +1129,6 @@ msgstr "Velký"
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_alternatives_dialog.js:0
 msgid "Lengthen"
 msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/font_plugin.js:0
-msgid "Light"
-msgstr "Světlo"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1100,7 +1186,7 @@ msgstr "Smyčka"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid "Marketing Tools"
 msgstr "Marketingové nástroje"
 
@@ -1120,6 +1206,18 @@ msgstr "Médium"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Medium section heading"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
+msgid "Missing File"
+msgstr "Chybí soubor"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
+msgid "More options"
 msgstr ""
 
 #. module: html_editor
@@ -1172,6 +1270,12 @@ msgstr "Nebyly nalezeny žádné dokumenty."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "No history"
+msgstr "Žádná historie"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
 msgid "No images found."
 msgstr "Nebyly nalezeny žádné obrázky."
@@ -1202,9 +1306,25 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.js:0
+msgid ""
+"Oops, the file %s could not be found. Please replace this file box by a new "
+"one to re-upload the file."
+msgstr ""
+"Jejda, soubor %s nebyl nalezen. Chcete-li soubor znovu nahrát, nahraďte toto"
+" pole souboru novým."
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Open in a new tab"
 msgstr "Otevřít na nové kartě"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
+msgid "Open in new Window"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1228,6 +1348,12 @@ msgstr "Obrys"
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Outline + Rounded"
 msgstr "Obrys + zaoblený"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/font/font_plugin.js:0
+msgid "Paragraph"
+msgstr "Odstavec"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1347,6 +1473,12 @@ msgstr "Obnovit obrázek"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/table/table_menu.js:0
+msgid "Reset Size"
+msgstr "Obnovit velikost"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Resize Default"
 msgstr "Změnit výchozí velikost"
@@ -1368,6 +1500,12 @@ msgstr "Změna velikosti poloviny"
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Resize Quarter"
 msgstr "Změnit velikost čtvrtletí"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
+msgid "Restore history"
+msgstr "Obnovit historii"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1479,7 +1617,6 @@ msgstr "Velikost"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Small"
 msgstr "Malý"
@@ -1497,6 +1634,19 @@ msgid "Solid"
 msgstr "Pevný"
 
 #. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
+msgid "Something went wrong!"
+msgstr "Něco se pokazilo!"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
+msgid ""
+"Sorry, we could not find your drawing, please verify that the URL is valid."
+msgstr ""
+
+#. module: html_editor
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Sorry, we could not generate a response. Please try again later."
@@ -1506,6 +1656,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Sorry, your prompt is too long. Try to say it in fewer words."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/star_plugin.js:0
+msgid "Stars"
 msgstr ""
 
 #. module: html_editor
@@ -1540,9 +1696,21 @@ msgstr "Tabulka"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
+msgid "Table Of Content"
+msgstr "Obsah"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Text"
 msgstr "Text"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
+msgid "The Excalidraw URL is not valid."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1719,9 +1887,22 @@ msgstr "URL"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Upload File"
+msgstr "Nahrát soubor"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/document_selector.js:0
 msgid "Upload a document"
 msgstr "Nahrát dokument"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
+msgid "Upload a file"
+msgstr "Nahrát soubor"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1743,15 +1924,21 @@ msgstr "Formát nahraného obrázku není podporován. Zkuste s: %s"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Video"
-msgstr "Video"
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_plugin.js:0
+msgid "Video Link"
+msgstr "Video odkaz"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Video code"
 msgstr "Video kód"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/video/video.xml:0
+msgid "Video player"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1811,7 +1998,7 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid ""
 "You need to select a model before opening the dynamic placeholder selector."
 msgstr ""
@@ -1827,6 +2014,12 @@ msgstr "Chcete-li vytvořit přílohu, musíte zadat buď data, nebo adresu URL.
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "Youku"
 msgstr "Youku"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/video/video.xml:0
+msgid "Your browser does not support iframe."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1884,9 +2077,33 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "document"
+msgstr "dokument"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
+msgid "e.g. https://link.excalidraw.com/..."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "file"
+msgstr "soubor"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "media-library"
 msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "or"
+msgstr "nebo"
 
 #. module: html_editor
 #. odoo-javascript

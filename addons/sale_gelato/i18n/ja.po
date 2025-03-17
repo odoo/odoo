@@ -1,0 +1,373 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_gelato
+# 
+# Translators:
+# Wil Odoo, 2025
+# Junko Augias, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 13:24+0000\n"
+"PO-Revision-Date: 2025-02-09 01:00+0000\n"
+"Last-Translator: Junko Augias, 2025\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_gelato
+#: model:mail.template,body_html:sale_gelato.order_status_update
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        We are glad to inform you that your order is in transit.\n"
+"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            Your tracking number is <a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            Your tracking numbers are:\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-as=\"tracking_url\">\n"
+"                                    <a t-attf-href=\"{{tracking_url}}\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                    <!-- Order delivered body -->\n"
+"                    <t t-if=\"ctx.get('order_delivered')\">\n"
+"                        We are glad to inform you that your order has been delivered.\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    Thank you,\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-container=\"1\">\n"
+"                        <br/>\n"
+"                        <t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様、<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        ご注文の品が発送されましたのでお知らせいたします。                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            追跡番号: <a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                            <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            追跡番号:\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-as=\"tracking_url\">\n"
+"                                    <a t-attf-href=\"{{tracking_url}}\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                    <!-- Order delivered body -->\n"
+"                    <t t-if=\"ctx.get('order_delivered')\">\n"
+"                        ご注文の品が配送されましたのでお知らせいたします。\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    ありがとうございました。\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-container=\"1\">\n"
+"                        <br/>\n"
+"                        <t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid ""
+"<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
+"                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
+msgstr ""
+"<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
+"                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+msgid "API Key"
+msgstr "APIキー"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/utils.py:0
+msgid "Could not establish the connection to the Gelato API."
+msgstr "Gelato APIへの接続を確立できませんでした。"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/product_template.py:0
+msgid "Could not synchronize with Gelato"
+msgstr "Gelatoと同期できませんでした。"
+
+#. module: sale_gelato
+#: model:delivery.carrier,name:sale_gelato.express_delivery
+#: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__express
+msgid "Express Delivery"
+msgstr "エクスプレス配送"
+
+#. module: sale_gelato
+#: model:product.template,name:sale_gelato.express_delivery_product_product_template
+msgid "Express Delivery (Gelato)"
+msgstr "エクスプレス配送 (Gelato)"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__module_sale_gelato
+#: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Gelato"
+msgstr "Gelato"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_api_key
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_api_key
+msgid "Gelato API Key"
+msgstr "Gelato APIキー"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_image_ids
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_image_ids
+msgid "Gelato Print Images"
+msgstr "Gelato印刷画像"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_product_uid
+msgid "Gelato Product UID"
+msgstr "GelatoプロダクトUID"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_product_uid
+msgid "Gelato Product Uid"
+msgstr "GelatoプロダクトUid"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__gelato_shipping_service_type
+msgid "Gelato Shipping Service Type"
+msgstr "Gelato配送サービスタイプ"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_template_ref
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_template_ref
+msgid "Gelato Template Reference"
+msgstr "Gelatoテンプレート参照番号"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_webhook_secret
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_webhook_secret
+msgid "Gelato Webhook Secret"
+msgstr "Gelato Webhookシークレット"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/controlers/main.py:0
+msgid ""
+"Gelato could not proceed with the fulfillment of order %(order_reference)s: "
+"%(gelato_message)s"
+msgstr "ジェラートは、オーダ %(order_reference)sを処理できませんでした: %(gelato_message)s"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/controlers/main.py:0
+msgid "Gelato has returned order %(reference)s."
+msgstr "Gelatoがオーダ %(reference)s を返しました。"
+
+#. module: sale_gelato
+#: model:mail.template,name:sale_gelato.order_status_update
+msgid "Gelato: Order status update"
+msgstr "Gelato: オーダステータスアップデート"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
+msgid "Is Gelato"
+msgstr "Gelato"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+msgid "Manage Delivery Methods"
+msgstr "配送方法の管理"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_missing_images
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_missing_images
+msgid "Missing Print Images"
+msgstr "不明な印刷画像"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/product_template.py:0
+msgid "Missing product variants and images have been successfully created."
+msgstr "プロダクトのバリアントと画像が正常に作成されました。"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr "Gelatoのオンデマンド印刷サービスでオーダする"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Print Images"
+msgstr "画像を印刷"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/product_document.py:0
+msgid "Print images must be set on products before they can be ordered."
+msgstr "画像を印刷が、プロダクトに設定されていなければオーダできません。"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_product_template
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_product_document
+msgid "Product Document"
+msgstr "プロダクトドキュメント"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Product UID"
+msgstr "プロダクトUID"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_product_product
+msgid "Product Variant"
+msgstr "プロダクトバリアント"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "プロバイダ"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_sale_order
+msgid "Sales Order"
+msgstr "販売オーダ"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "販売オーダ明細"
+
+#. module: sale_gelato
+#: model:mail.template,description:sale_gelato.order_status_update
+msgid "Sent to the customer when Gelato updates the status of an order"
+msgstr "Gelatoオーダのステータスを更新した際に顧客に送信されます"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "配送方法"
+
+#. module: sale_gelato
+#: model:delivery.carrier,name:sale_gelato.standard_delivery
+#: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__normal
+msgid "Standard Delivery"
+msgstr "通常配送"
+
+#. module: sale_gelato
+#: model:product.template,name:sale_gelato.standard_delivery_product_product_template
+msgid "Standard Delivery (Gelato)"
+msgstr "通常配送 (Gelato)"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/product_template.py:0
+msgid "Successfully synchronized with Gelato"
+msgstr "Gelatoと正常に同期しました"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Synchronize"
+msgstr "同期"
+
+#. module: sale_gelato
+#: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_template_ref
+#: model:ir.model.fields,help:sale_gelato.field_product_template__gelato_template_ref
+msgid "Synchronize to fetch variants from Gelato"
+msgstr "同期してGelatoからバリアントを取得"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Template Reference"
+msgstr "テンプレート参照番号"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/delivery_carrier.py:0
+msgid "The delivery method is not available for this order."
+msgstr "このオーダ用に配送方法は利用できません。"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/delivery_carrier.py:0
+msgid "The following required address fields are missing: %s"
+msgstr "以下の必須入力項目が入力されていません: %s"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "The order has been successfully passed on Gelato."
+msgstr "オーダはGelatoに正常に引き継がれました。"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid ""
+"The order with reference %(order_reference)s was not sent to Gelato.\n"
+"Reason: %(error_message)s"
+msgstr ""
+"オーダ参照番号 %(order_reference)s はGelatoに送信されませんでした。\n"
+"理由: %(error_message)s"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+msgid "Webhook Secret"
+msgstr "Webhookシークレット"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid ""
+"You cannot mix Gelato products with non-Gelato products in the same order."
+msgstr "同じオーダでGelatoプロダクトとジェラート以外のプロダクトを混在させることはできません。"
+
+#. module: sale_gelato
+#: model:mail.template,subject:sale_gelato.order_status_update
+msgid "{{ object.reference }}"
+msgstr "{{ object.reference }}"

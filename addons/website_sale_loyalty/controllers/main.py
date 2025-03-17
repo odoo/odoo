@@ -14,6 +14,8 @@ class WebsiteSale(main.WebsiteSale):
     @route()
     def pricelist(self, promo, **post):
         order = request.website.sale_get_order()
+        if not order:
+            return request.redirect('/shop')
         coupon_status = order._try_apply_code(promo)
         if coupon_status.get('not_found'):
             return super().pricelist(promo, **post)
@@ -125,6 +127,15 @@ class WebsiteSale(main.WebsiteSale):
         if 'error' in reward_status:
             request.session['error_promo_code'] = reward_status['error']
             return False
+        order._update_programs_and_rewards()
+        if order.carrier_id.free_over and not reward.program_id.is_payment_program:
+            # update shiping cost if it's `free_over` and reward isn't eWallet or gift card
+            # will call `_update_programs_and_rewards` again, updating applied eWallet/gift cards
+            res = order.carrier_id.rate_shipment(order)
+            if res.get('success'):
+                order.set_delivery_line(order.carrier_id, res['price'])
+            else:
+                order._remove_delivery_line()
         return True
 
     @route()

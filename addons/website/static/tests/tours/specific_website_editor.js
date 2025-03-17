@@ -7,7 +7,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("generic_website_editor", {
-    test: true,
     edition: true,
 }, () => [{
     trigger: ':iframe body:not([data-hello="world"])',
@@ -19,7 +18,6 @@ registerWebsitePreviewTour("generic_website_editor", {
 // mode. Unfortunately this breaks the page and therefore the test fails for
 // unknown reason.
 registry.category("web_tour.tours").add('specific_website_editor', {
-    test: true,
     steps: () => [
     ...clickOnEditAndWaitEditMode(),
 {

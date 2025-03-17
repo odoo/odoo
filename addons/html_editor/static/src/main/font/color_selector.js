@@ -37,6 +37,9 @@ export class ColorSelector extends Component {
         type: String, // either foreground or background
         getUsedCustomColors: Function,
         getSelectedColors: Function,
+        applyColor: Function,
+        applyColorPreview: Function,
+        applyColorResetPreview: Function,
         focusEditable: Function,
         ...toolbarButtonProps,
     };
@@ -45,7 +48,7 @@ export class ColorSelector extends Component {
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
         this.dropdown = useDropdownState({
-            onClose: () => this.props.dispatch("COLOR_RESET_PREVIEW"),
+            onClose: () => this.props.applyColorResetPreview(),
         });
 
         this.mode = this.props.type === "foreground" ? "color" : "backgroundColor";
@@ -73,7 +76,7 @@ export class ColorSelector extends Component {
 
     applyColor(color) {
         this.currentCustomColor.color = color;
-        this.props.dispatch("APPLY_COLOR", { color: color || "", mode: this.mode });
+        this.props.applyColor({ color: color || "", mode: this.mode });
         this.props.focusEditable();
     }
 
@@ -88,7 +91,7 @@ export class ColorSelector extends Component {
 
     onColorPreview(ev) {
         const color = ev.hex ? ev.hex : this.processColorFromEvent(ev);
-        this.props.dispatch("COLOR_PREVIEW", { color: color || "", mode: this.mode });
+        this.props.applyColorPreview({ color: color || "", mode: this.mode });
     }
 
     onColorHover(ev) {
@@ -102,7 +105,7 @@ export class ColorSelector extends Component {
         if (ev.target.tagName !== "BUTTON") {
             return;
         }
-        this.props.dispatch("COLOR_RESET_PREVIEW");
+        this.props.applyColorResetPreview();
     }
 
     getCurrentGradientColor() {

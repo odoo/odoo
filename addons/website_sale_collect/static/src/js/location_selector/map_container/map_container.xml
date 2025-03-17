@@ -5,14 +5,14 @@
         <button id="submit_location_large" position="attributes">
             <attribute
                 name="t-att-disabled"
-                add="!selectedLocation?.additional_data?.in_store_stock?.in_stock"
+                add="!(selectedLocation?.additional_data?.in_store_stock?.in_stock ?? true)"
                 separator=" || "
             />
         </button>
         <button id="submit_location_medium" position="attributes">
             <attribute
                 name="t-att-disabled"
-                add="!selectedLocation?.additional_data?.in_store_stock?.in_stock"
+                add="!(selectedLocation?.additional_data?.in_store_stock?.in_stock ?? true)"
                 separator=" || "
             />
         </button>

@@ -1,20 +1,19 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { describe, dryRun, globals, start, stop } from "@odoo/hoot";
-import { Deferred, watchKeys, watchListeners } from "@odoo/hoot-mock";
+import { Deferred } from "@odoo/hoot-dom";
+import { watchKeys, watchListeners } from "@odoo/hoot-mock";
 import { whenReady } from "@odoo/owl";
 
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
-import { TEST_SUFFIX } from "./mock_module_loader";
 import { mockSessionFactory } from "./mock_session.hoot";
 import { makeTemplateFactory } from "./mock_templates.hoot";
 import { mockUserFactory } from "./mock_user.hoot";
 
 /**
- * @typedef {typeof loader} ModuleLoader
- *
  * @typedef {{
+ *  addonsKey: string;
  *  filter?: (path: string) => boolean;
  *  moduleNames: string[];
  * }} ModuleSet
@@ -32,38 +31,38 @@ const { define, loader } = odoo;
 //-----------------------------------------------------------------------------
 
 /**
+ * @param {Record<any, any>} object
+ */
+const clearObject = (object) => {
+    for (const key in object) {
+        delete object[key];
+    }
+};
+
+/**
+ * @param {string} fileSuffix
  * @param {string[]} entryPoints
  * @param {Set<string>} additionalAddons
  */
-const defineModuleSet = async (entryPoints, additionalAddons) => {
-    for (const name of entryPoints) {
-        if (additionalAddons.has("*")) {
-            break;
-        }
-        if (moduleSetParams[name]?.addons) {
-            for (const additionalAddon of moduleSetParams[name].addons) {
-                additionalAddons.add(additionalAddon);
-            }
-        }
-    }
-
+const defineModuleSet = async (fileSuffix, entryPoints, additionalAddons) => {
     /** @type {ModuleSet} */
     const moduleSet = {};
     if (additionalAddons.has("*")) {
         // Use all addons
-        moduleSet.moduleNames = sortedModuleNames.filter((name) => !name.endsWith(TEST_SUFFIX));
+        moduleSet.addonsKey = "*";
+        moduleSet.moduleNames = sortedModuleNames.filter((name) => !name.endsWith(fileSuffix));
     } else {
         // Use subset of addons
         for (const entryPoint of entryPoints) {
             additionalAddons.add(getAddonName(entryPoint));
         }
         const addons = await fetchDependencies(additionalAddons);
-        if (addons.has("spreadsheet")) {
-            /**
-             * spreadsheet addons defines a module that does not starts with `@spreadsheet` but `@odoo` (`@odoo/o-spreadsheet)
-             * To ensure that this module is loaded, we have to include `odoo` in the dependencies
-             */
-            addons.add("odoo");
+        for (const addon in AUTO_INCLUDED_ADDONS) {
+            if (addons.has(addon)) {
+                for (const toInclude of AUTO_INCLUDED_ADDONS[addon]) {
+                    addons.add(toInclude);
+                }
+            }
         }
         const filter = (path) => addons.has(getAddonName(path));
 
@@ -72,10 +71,11 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
         if (!moduleNamesCache.has(joinedAddons)) {
             moduleNamesCache.set(
                 joinedAddons,
-                sortedModuleNames.filter((name) => !name.endsWith(TEST_SUFFIX) && filter(name))
+                sortedModuleNames.filter((name) => !name.endsWith(fileSuffix) && filter(name))
             );
         }
 
+        moduleSet.addonsKey = joinedAddons;
         moduleSet.filter = filter;
         moduleSet.moduleNames = moduleNamesCache.get(joinedAddons);
     }
@@ -84,10 +84,11 @@ const defineModuleSet = async (entryPoints, additionalAddons) => {
 };
 
 /**
+ * @param {string} fileSuffix
  * @param {string[]} entryPoints
  */
-const describeDrySuite = async (entryPoints) => {
-    const moduleSet = await defineModuleSet(entryPoints, new Set(["*"]));
+const describeDrySuite = async (fileSuffix, entryPoints) => {
+    const moduleSet = await defineModuleSet(fileSuffix, entryPoints, new Set(["*"]));
     const moduleSetLoader = new ModuleSetLoader(moduleSet);
 
     moduleSetLoader.setup();
@@ -95,10 +96,19 @@ const describeDrySuite = async (entryPoints) => {
     for (const entryPoint of entryPoints) {
         // Run test factory
         describe(getSuitePath(entryPoint), () => {
-            currentModule = entryPoint;
             // Load entry point module
-            moduleSetLoader.startModule(entryPoint + TEST_SUFFIX);
-            currentModule = null;
+            const fullModuleName = entryPoint + fileSuffix;
+            const module = moduleSetLoader.startModule(fullModuleName);
+
+            // Check exports (shouldn't have any)
+            const exports = Object.keys(module || {});
+            if (exports.length) {
+                throw new Error(
+                    `Test files cannot have exports, found the following exported member(s) in module ${fullModuleName}:${exports
+                        .map((name) => `\n - ${name}`)
+                        .join("")}`
+                );
+            }
         });
     }
 
@@ -119,7 +129,7 @@ const fetchDependencies = async (addons) => {
     }
     if (addonsToFetch.length) {
         if (!dependencyBatch.length) {
-            dependencyBatchPromise = new Promise(setTimeout).then(() => {
+            dependencyBatchPromise = Deferred.resolve().then(() => {
                 const module_names = [...new Set(dependencyBatch)];
                 dependencyBatch = [];
                 return orm("ir.module.module.dependency", "all_dependencies", [], { module_names });
@@ -257,97 +267,6 @@ const resolveAddonDependencies = (dependencies) => {
     Object.assign(dependencies, solved);
 };
 
-const runTests = async () => {
-    // Sort modules to accelerate loading time
-    /** @type {Record<string, Deferred>} */
-    const defs = {};
-    /** @type {Map<string, string[]>} */
-    const nonLoaded = new Map();
-    /** @type {string[]} */
-    const testModuleNames = [];
-    for (const [name, { deps }] of loader.factories) {
-        // Register test module
-        if (name.endsWith(TEST_SUFFIX)) {
-            const baseName = name.slice(0, -TEST_SUFFIX.length);
-            testModuleNames.push(baseName);
-        }
-
-        // Register module dependencies
-        nonLoaded.set(name, deps);
-        const [modDef, ...depDefs] = [name, ...deps].map((dep) => (defs[dep] ||= new Deferred()));
-        Promise.all(depDefs).then(() => {
-            sortedModuleNames.push(name);
-            modDef.resolve();
-            nonLoaded.delete(name);
-        });
-    }
-
-    let timeout;
-    await Promise.race([
-        Promise.all(Object.values(defs)),
-        new Promise((resolve, reject) => {
-            timeout = setTimeout(
-                () =>
-                    reject(
-                        [
-                            `Missing dependencies:`,
-                            ...new Set(
-                                [...nonLoaded].flatMap(([name, deps]) =>
-                                    deps.filter((d) => !sortedModuleNames.includes(d))
-                                )
-                            ),
-                        ].join("\n")
-                    ),
-                1000
-            );
-        }),
-    ]);
-    clearTimeout(timeout);
-
-    // Dry run
-    const [{ suites }] = await Promise.all([
-        dryRun(() => describeDrySuite(testModuleNames)),
-        whenReady(),
-    ]);
-
-    // Run all test files
-    const suitePaths = suites.map((s) => s.fullName);
-    for (const moduleName of testModuleNames) {
-        if (suitePaths.includes(getSuitePath(moduleName))) {
-            const moduleSet = await defineModuleSet([moduleName], new Set());
-            const moduleSetLoader = new ModuleSetLoader(moduleSet);
-
-            const suite = describe(getSuitePath(moduleName), () => {
-                const fullName = moduleName + TEST_SUFFIX;
-                moduleSetLoader.setup();
-                moduleSetLoader.startModule(fullName);
-                const module = moduleSetLoader.modules.get(fullName);
-                const exports = Object.keys(module);
-                if (exports.length) {
-                    throw new Error(
-                        `Test files cannot have exports, found the following exported member(s) in module ${fullName}:${exports
-                            .map((name) => `\n - ${name}`)
-                            .join("")}`
-                    );
-                }
-            });
-
-            // Run recently added tests
-            const running = await start(suite);
-
-            moduleSetLoader.cleanup();
-            __gcAndLogMemory(suite.fullName, suite.reporting.tests);
-
-            if (!running) {
-                break;
-            }
-        }
-    }
-
-    await stop();
-    __gcAndLogMemory("tests done");
-};
-
 /**
  * This method tries to manually run the garbage collector (if exposed) and logs
  * the current heap size (if available). It is meant to be called right after a
@@ -362,7 +281,7 @@ const runTests = async () => {
  * @param {string} label
  * @param {number} [testCount]
  */
-const __gcAndLogMemory = (label, testCount) => {
+const __gcAndLogMemory = async (label, testCount) => {
     if (typeof window.gc !== "function") {
         return;
     }
@@ -375,7 +294,7 @@ const __gcAndLogMemory = (label, testCount) => {
     textarea.remove();
 
     // Run garbage collection
-    window.gc();
+    await window.gc({ type: "major", execution: "async" });
 
     // Log memory usage
     const logs = [
@@ -393,7 +312,7 @@ const __gcAndLogMemory = (label, testCount) => {
     console.log(...logs);
 };
 
-/** @extends {ModuleLoader} */
+/** @extends {OdooModuleLoader} */
 class ModuleSetLoader extends loader.constructor {
     cleanups = [];
 
@@ -409,10 +328,6 @@ class ModuleSetLoader extends loader.constructor {
 
         odoo.define = this.define.bind(this);
         odoo.loader = this;
-    }
-
-    get templateModule() {
-        return this.modules.get("@web/core/templates");
     }
 
     /**
@@ -434,11 +349,6 @@ class ModuleSetLoader extends loader.constructor {
     }
 
     cleanup() {
-        if (this.templateModule) {
-            this.templateModule.setUrlFilters([]);
-            this.templateModule.clearProcessedTemplates();
-        }
-
         odoo.define = define;
         odoo.loader = loader;
 
@@ -465,16 +375,14 @@ class ModuleSetLoader extends loader.constructor {
     }
 
     setup() {
-        const { filter, moduleNames } = this.moduleSet;
-
         this.cleanups.push(
-            watchKeys(window.odoo, WHITE_LISTED_KEYS),
-            watchKeys(window, WHITE_LISTED_KEYS),
+            watchKeys(window.odoo),
+            watchKeys(window, ALLOWED_GLOBAL_KEYS),
             watchListeners()
         );
 
         // Load module set modules (without entry point)
-        for (const name of moduleNames) {
+        for (const name of this.moduleSet.moduleNames) {
             const mockFactory = findMockFactory(name);
             if (mockFactory) {
                 // Use mock
@@ -488,12 +396,6 @@ class ModuleSetLoader extends loader.constructor {
                 this.startModule(name);
             }
         }
-
-        // If templates module is available: set URL filter to filter out static
-        // templates.
-        if (filter) {
-            this.templateModule?.setUrlFilters([filter]);
-        }
     }
 
     /**
@@ -502,13 +404,34 @@ class ModuleSetLoader extends loader.constructor {
      */
     startModule(name) {
         if (this.canAddModule(name)) {
-            super.startModule(...arguments);
-        } else {
-            this.jobs.delete(name);
+            return super.startModule(...arguments);
         }
+        this.jobs.delete(name);
+        return null;
     }
 }
 
+const ALLOWED_GLOBAL_KEYS = [
+    "ace", // Ace editor
+    "Chart", // Chart.js
+    "FullCalendar", // Full Calendar
+    "L", // Leaflet
+    "lamejs", // LameJS
+    "luxon", // Luxon
+    "odoo",
+    "owl",
+];
+const AUTO_INCLUDED_ADDONS = {
+    /**
+     * spreadsheet addons defines a module that does not starts with `@spreadsheet` but `@odoo` (`@odoo/o-spreadsheet)
+     * To ensure that this module is loaded, we have to include `odoo` in the dependencies
+     */
+    spreadsheet: ["odoo"],
+    /**
+     * Add all view types by default
+     */
+    web_enterprise: ["web_gantt", "web_grid", "web_map"],
+};
 const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
@@ -527,53 +450,32 @@ const MODULE_MOCKS_BY_REGEX = new Map([
 ]);
 const R_DEFAULT_MODULE = /^@odoo\/(owl|hoot)/;
 const R_PATH_ADDON = /^[@/]?(\w+)/;
-const WHITE_LISTED_KEYS = [
-    "ace", // Ace editor
-    "Chart", // Chart.js
-    "L", // Leaflet
-    "lamejs", // LameJS
-];
+const TEMPLATE_MODULE_NAME = "@web/core/templates";
 
 /** @type {Record<string, string[]} */
 const dependencies = {};
 /** @type {Record<string, Deferred} */
 const dependencyCache = {};
+/** @type {Record<string, Promise<Response>} */
+const globalFetchCache = Object.create(null);
 /** @type {Set<string>} */
 const modelsToFetch = new Set();
 /** @type {Map<string, string[]>} */
 const moduleNamesCache = new Map();
-/** @type {Record<string, ModuleSetParams>} */
-const moduleSetParams = {};
 /** @type {Map<string, Record<string, any>>} */
 const serverModelCache = new Map();
 /** @type {string[]} */
 const sortedModuleNames = [];
 
-/** @type {string | null} */
-let currentModule = null;
 /** @type {string[]} */
 let dependencyBatch = [];
 /** @type {Promise<Record<string, string[]>> | null} */
 let dependencyBatchPromise = null;
 let nextRpcId = 1e9;
 
-// Invoke tests after the module loader finished loading.
-setTimeout(runTests);
-
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-
-/**
- * @param {ModuleSetParams} params
- */
-export function configureModuleSet(params) {
-    if (!currentModule) {
-        return;
-    }
-    moduleSetParams[currentModule] ||= {};
-    Object.assign(moduleSetParams[currentModule], params);
-}
 
 export function clearServerModelCache() {
     serverModelCache.clear();
@@ -614,10 +516,124 @@ export async function fetchModelDefinitions(modelNames) {
 }
 
 /**
+ * @param {string | URL} input
+ * @param {RequestInit} [init]
+ */
+export function globalCachedFetch(input, init) {
+    if (init?.method && init.method.toLowerCase() !== "get") {
+        throw new Error(`cannot use a global cached fetch with HTTP method "${init.method}"`);
+    }
+    const key = String(input);
+    if (!(key in globalFetchCache)) {
+        globalFetchCache[key] = realFetch(input, init).catch((reason) => {
+            delete globalFetchCache[key];
+            throw reason;
+        });
+    }
+    return globalFetchCache[key].then((response) => response.clone());
+}
+
+/**
  * @param {string} modelName
  */
 export function registerModelToFetch(modelName) {
     if (!serverModelCache.has(modelName)) {
         modelsToFetch.add(modelName);
     }
+}
+
+/**
+ * @param {{ fileSuffix?: string }} [options]
+ */
+export async function runTests(options) {
+    const { fileSuffix = "" } = options || {};
+    // Find dependency issues
+    const errors = loader.findErrors(loader.factories.keys());
+    delete errors.unloaded; // Only a few modules have been loaded yet => irrelevant
+    if (Object.keys(errors).length) {
+        return loader.reportErrors(errors);
+    }
+
+    // Sort modules to accelerate loading time
+    /** @type {Record<string, Deferred>} */
+    const defs = {};
+    /** @type {string[]} */
+    const testModuleNames = [];
+    for (const [name, { deps }] of loader.factories) {
+        // Register test module
+        if (name.endsWith(fileSuffix)) {
+            const baseName = name.slice(0, -fileSuffix.length);
+            testModuleNames.push(baseName);
+        }
+
+        // Register module dependencies
+        const [modDef, ...depDefs] = [name, ...deps].map((dep) => (defs[dep] ||= new Deferred()));
+        Promise.all(depDefs).then(() => {
+            sortedModuleNames.push(name);
+            modDef.resolve();
+        });
+    }
+
+    await Promise.all(Object.values(defs));
+
+    // Dry run
+    const [{ suites }] = await Promise.all([
+        dryRun(() => describeDrySuite(fileSuffix, testModuleNames)),
+        whenReady(),
+    ]);
+
+    // Run all test files
+    const filteredSuitePaths = new Set(suites.map((s) => s.fullName));
+    let currentAddonsKey = "";
+    for (const moduleName of testModuleNames) {
+        const suitePath = getSuitePath(moduleName);
+        if (!filteredSuitePaths.has(suitePath)) {
+            continue;
+        }
+
+        const moduleSet = await defineModuleSet(fileSuffix, [moduleName], new Set());
+        const moduleSetLoader = new ModuleSetLoader(moduleSet);
+
+        if (currentAddonsKey !== moduleSet.addonsKey) {
+            if (moduleSetLoader.modules.has(TEMPLATE_MODULE_NAME)) {
+                // If templates module is available: set URL filter to filter out
+                // static templates and cleanup current processed templates.
+                const templateModule = moduleSetLoader.modules.get(TEMPLATE_MODULE_NAME);
+                templateModule.setUrlFilters(moduleSet.filter ? [moduleSet.filter] : []);
+                templateModule.clearProcessedTemplates();
+            }
+            currentAddonsKey = moduleSet.addonsKey;
+        }
+
+        const suite = describe(suitePath, () => {
+            moduleSetLoader.setup();
+            moduleSetLoader.startModule(moduleName + fileSuffix);
+        });
+
+        // Run recently added tests
+        const running = await start(suite);
+
+        moduleSetLoader.cleanup();
+        await __gcAndLogMemory(suite.fullName, suite.reporting.tests);
+
+        if (!running) {
+            break;
+        }
+    }
+
+    await stop();
+
+    // Perform final cleanups
+    moduleNamesCache.clear();
+    serverModelCache.clear();
+    clearObject(dependencies);
+    clearObject(dependencyCache);
+    clearObject(globalFetchCache);
+    const templateModule = loader.modules.get(TEMPLATE_MODULE_NAME);
+    if (templateModule) {
+        templateModule.setUrlFilters([]);
+        templateModule.clearProcessedTemplates();
+    }
+
+    await __gcAndLogMemory("tests done");
 }

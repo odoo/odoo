@@ -14,7 +14,7 @@ import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/p
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/generic_components/numpad/numpad";
-import { floatIsZero, roundPrecision as round_pr } from "@web/core/utils/numbers";
+import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/errors/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
@@ -111,6 +111,19 @@ export class PaymentScreen extends Component {
         return this.currentOrder.get_selected_paymentline();
     }
     async addNewPaymentLine(paymentMethod) {
+        if (
+            paymentMethod.type === "pay_later" &&
+            (!this.currentOrder.to_invoice ||
+                this.pos.models["ir.module.module"].find((m) => m.name === "pos_settle_due")
+                    ?.state !== "installed")
+        ) {
+            this.notification.add(
+                _t(
+                    "To ensure due balance follow-up, generate an invoice or download the accounting application. "
+                ),
+                { autocloseDelay: 7000, title: _t("Warning") }
+            );
+        }
         if (this.pos.paymentTerminalInProgress && paymentMethod.use_payment_terminal) {
             this.dialog.add(AlertDialog, {
                 title: _t("Error"),
@@ -121,12 +134,15 @@ export class PaymentScreen extends Component {
 
         // original function: click_paymentmethods
         const result = this.currentOrder.add_paymentline(paymentMethod);
-        if (!this.currentOrder.check_paymentlines_rounding()) {
-            this._display_popup_error_paymentlines_rounding();
+        if (!this.check_cash_rounding_has_been_well_applied()) {
+            return;
         }
         if (result) {
             this.numberBuffer.reset();
-            if (paymentMethod.use_payment_terminal) {
+            if (
+                paymentMethod.use_payment_terminal &&
+                (paymentMethod.payment_terminal?.fast_payments ?? true)
+            ) {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
             }
@@ -224,7 +240,10 @@ export class PaymentScreen extends Component {
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.
-        if (["waiting", "waitingCard", "timeout"].includes(line.get_payment_status())) {
+        if (
+            ["waiting", "waitingCard", "timeout"].includes(line.get_payment_status()) &&
+            line.payment_method_id.payment_terminal
+        ) {
             line.set_payment_status("waitingCancel");
             line.payment_method_id.payment_terminal
                 .send_payment_cancel(this.currentOrder, uuid)
@@ -244,18 +263,28 @@ export class PaymentScreen extends Component {
     }
     async validateOrder(isForceValidate) {
         this.numberBuffer.capture();
-        if (this.pos.config.cash_rounding) {
-            if (!this.currentOrder.check_paymentlines_rounding()) {
-                this._display_popup_error_paymentlines_rounding();
-                return;
-            }
+        if (!this.check_cash_rounding_has_been_well_applied()) {
+            return;
+        }
+        const linesToRemove = this.currentOrder.lines.filter((line) => {
+            const rounding = line.product_id.uom_id.rounding;
+            const decimals = Math.max(0, Math.ceil(-Math.log10(rounding)));
+            return floatIsZero(line.qty, decimals);
+        });
+        for (const line of linesToRemove) {
+            this.currentOrder.removeOrderline(line);
         }
         if (await this._isOrderValid(isForceValidate)) {
             // remove pending payments before finalizing the validation
+            const toRemove = [];
             for (const line of this.paymentLines) {
-                if (!line.is_done()) {
-                    this.currentOrder.remove_paymentline(line);
+                if (!line.is_done() || line.amount === 0) {
+                    toRemove.push(line);
                 }
+            }
+
+            for (const line of toRemove) {
+                this.currentOrder.remove_paymentline(line);
             }
             await this._finalizeValidation();
         }
@@ -312,12 +341,9 @@ export class PaymentScreen extends Component {
         }
 
         // 3. Post process.
-        if (
-            syncOrderResult &&
-            syncOrderResult.length > 0 &&
-            this.currentOrder.wait_for_push_order()
-        ) {
-            await this.postPushOrderResolve(syncOrderResult.map((res) => res.id));
+        const postPushOrders = syncOrderResult.filter((order) => order.wait_for_push_order());
+        if (postPushOrders.length > 0) {
+            await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
         }
 
         await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
@@ -350,13 +376,12 @@ export class PaymentScreen extends Component {
                 this.pos.printReceipt(this.currentOrder);
 
                 if (this.pos.config.iface_print_skip_screen) {
-                    this.currentOrder.uiState.screen_data["value"] = "";
+                    this.currentOrder.set_screen_data({ name: "" });
                     this.currentOrder.uiState.locked = true;
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextScreen = "ProductScreen";
-
                     if (switchScreen) {
-                        this.pos.add_new_order();
+                        this.selectNextOrder();
                     }
                 }
             }
@@ -366,6 +391,13 @@ export class PaymentScreen extends Component {
 
         if (switchScreen) {
             this.pos.showScreen(nextScreen);
+        }
+    }
+    selectNextOrder() {
+        if (this.currentOrder.originalSplittedOrder) {
+            this.pos.selectedOrderUuid = this.currentOrder.originalSplittedOrder.uuid;
+        } else {
+            this.pos.add_new_order();
         }
     }
     /**
@@ -451,7 +483,10 @@ export class PaymentScreen extends Component {
         }
 
         if (
-            this.currentOrder.get_total_with_tax() != 0 &&
+            !floatIsZero(
+                this.currentOrder.get_total_with_tax(),
+                this.pos.currency.decimal_places
+            ) &&
             this.currentOrder.payment_ids.length === 0
         ) {
             this.notification.add(_t("Select a payment method to validate the order."));
@@ -459,17 +494,6 @@ export class PaymentScreen extends Component {
         }
 
         if (!this.currentOrder.is_paid() || this.invoicing) {
-            return false;
-        }
-
-        if (this.currentOrder.has_not_valid_rounding() && this.pos.config.cash_rounding) {
-            var line = this.currentOrder.has_not_valid_rounding();
-            this.dialog.add(AlertDialog, {
-                title: _t("Incorrect rounding"),
-                body: _t(
-                    "You have to round your payments lines." + line.amount + " is not rounded."
-                ),
-            });
             return false;
         }
 
@@ -564,6 +588,7 @@ export class PaymentScreen extends Component {
         );
         if (isCancelSuccessful) {
             line.set_payment_status("retry");
+            this.pos.paymentTerminalInProgress = false;
         } else {
             line.set_payment_status("waitingCard");
         }
@@ -585,48 +610,44 @@ export class PaymentScreen extends Component {
         line.set_payment_status("done");
     }
 
-    _display_popup_error_paymentlines_rounding() {
-        if (this.pos.config.cash_rounding) {
-            const orderlines = this.paymentLines;
-            const cash_rounding = this.pos.config.rounding_method.rounding;
-            const default_rounding = this.pos.currency.rounding;
-            for (var id in orderlines) {
-                var line = orderlines[id];
-                var diff = round_pr(
-                    round_pr(line.amount, cash_rounding) - round_pr(line.amount, default_rounding),
-                    default_rounding
-                );
-
-                if (
-                    diff &&
-                    (line.payment_method_id.is_cash_count ||
-                        !this.pos.config.only_round_cash_method)
-                ) {
-                    const upper_amount = round_pr(
-                        round_pr(line.amount, default_rounding) + cash_rounding / 2,
-                        cash_rounding
-                    );
-                    const lower_amount = round_pr(
-                        round_pr(line.amount, default_rounding) - cash_rounding / 2,
-                        cash_rounding
-                    );
-                    this.dialog.add(AlertDialog, {
-                        title: _t("Rounding error in payment lines"),
-                        body: sprintf(
-                            _t(
-                                "The amount of your payment lines must be rounded to validate the transaction.\n" +
-                                    "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
-                            ),
-                            cash_rounding.toFixed(this.pos.currency.decimal_places),
-                            lower_amount.toFixed(this.pos.currency.decimal_places),
-                            upper_amount.toFixed(this.pos.currency.decimal_places),
-                            line.amount.toFixed(this.pos.currency.decimal_places)
-                        ),
-                    });
-                    return;
-                }
-            }
+    check_cash_rounding_has_been_well_applied() {
+        const cashRounding = this.pos.config.rounding_method;
+        if (!cashRounding) {
+            return true;
         }
+
+        const order = this.pos.get_order();
+        const currency = this.pos.currency;
+        for (const payment of order.payment_ids) {
+            if (!payment.payment_method_id.is_cash_count) {
+                continue;
+            }
+
+            const amountPaid = payment.get_amount();
+            const expectedAmountPaid = roundPrecision(
+                amountPaid,
+                cashRounding.rounding,
+                cashRounding.rounding_method
+            );
+            if (floatIsZero(expectedAmountPaid - amountPaid, currency.decimal_places)) {
+                continue;
+            }
+
+            this.dialog.add(AlertDialog, {
+                title: _t("Rounding error in payment lines"),
+                body: sprintf(
+                    _t(
+                        "The amount of your payment lines must be rounded to validate the transaction.\n" +
+                            "The rounding precision is %s so you should set %s as payment amount instead of %s."
+                    ),
+                    cashRounding.rounding.toFixed(this.pos.currency.decimal_places),
+                    expectedAmountPaid.toFixed(this.pos.currency.decimal_places),
+                    amountPaid.toFixed(this.pos.currency.decimal_places)
+                ),
+            });
+            return false;
+        }
+        return true;
     }
 }
 

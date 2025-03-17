@@ -70,9 +70,24 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             ('res_id', 'in', records.ids)
         ])
 
+        traces_info = []
+        for trace in traces:
+            record = records.filtered(lambda r: r.id == trace.res_id)
+            if record:
+                traces_info.append(
+                    f'Trace: doc {trace.res_id} on {trace.sms_number} - status {trace.trace_status} (rec {record.id})'
+                )
+            else:
+                traces_info.append(
+                    f'Trace: doc {trace.res_id} on {trace.sms_number} - status {trace.trace_status}'
+                )
+        debug_info = '\n'.join(traces_info)
         self.assertTrue(all(s.model == records._name for s in traces))
         # self.assertTrue(all(s.utm_campaign_id == mailing.campaign_id for s in traces))
-        self.assertEqual(set(s.res_id for s in traces), set(records.ids))
+        self.assertEqual(
+            {s.res_id for s in traces}, set(records.ids),
+            f'Should find one trace / record. Found\n{debug_info}'
+        )
 
         # check each trace
         if not sms_links_info:
@@ -89,7 +104,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
                 lambda t: t.sms_number == number and t.trace_status == status and (t.res_id == record.id if record else True)
             )
             self.assertTrue(len(trace) == 1,
-                            'SMS: found %s notification for number %s, (status: %s) (1 expected)' % (len(trace), number, status))
+                            'SMS: found %s notification for number %s, (status: %s) (1 expected)\n%s' % (len(trace), number, status, debug_info))
             self.assertTrue(bool(trace.sms_id_int))
 
             if check_sms:

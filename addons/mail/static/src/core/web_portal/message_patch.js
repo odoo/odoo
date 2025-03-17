@@ -18,6 +18,7 @@ patch(Message.prototype, {
      * @param {HTMLElement} bodyEl
      */
     prepareMessageBody(bodyEl) {
+        super.prepareMessageBody(...arguments);
         Array.from(bodyEl.querySelectorAll(".o-mail-read-more-less")).forEach((el) => el.remove());
         this.insertReadMoreLess(bodyEl);
     },
@@ -127,7 +128,8 @@ patch(Message.prototype, {
             const index = this.state.lastReadMoreIndex++;
             // Insert link just before the first node
             const readMoreLessEl = document.createElement("a");
-            readMoreLessEl.className = "o-mail-read-more-less d-block";
+            readMoreLessEl.style.display = "block";
+            readMoreLessEl.className = "o-mail-read-more-less";
             readMoreLessEl.href = "#";
             readMoreLessEl.textContent = _t("Read More");
             group[0].parentNode.insertBefore(readMoreLessEl, group[0]);

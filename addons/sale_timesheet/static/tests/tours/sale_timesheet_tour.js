@@ -8,7 +8,6 @@ import { markup } from "@odoo/owl";
 import { queryText } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
-    test: true,
     url: '/odoo',
     steps: () => [
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
@@ -215,9 +214,9 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select Project main menu',
     run: "click",
 }, {
-    trigger: '.o_kanban_record:contains("Project for Freeman") .o_dropdown_kanban .dropdown-toggle',
     content: 'Open the project dropdown',
-    run: "click",
+    trigger: ".o_kanban_record:contains(Project for Freeman)",
+    run: "hover && click .o_kanban_record:contains(Project for Freeman) .o_dropdown_kanban .dropdown-toggle",
 }, {
     trigger: '.dropdown-menu a:contains("Settings")',
     content: 'Start editing the project',

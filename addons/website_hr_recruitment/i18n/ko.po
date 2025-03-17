@@ -3,8 +3,9 @@
 # 	* website_hr_recruitment
 # 
 # Translators:
-# Wil Odoo, 2024
-# Daye Jeong, 2024
+# Daye Jeong, 2025
+# Wil Odoo, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,13 +210,13 @@ msgstr "<span class=\"text-muted small\">이력서 파일 또는 링크드인 �
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "A clickable label for the toggle. Contains text for the false state."
-msgstr ""
+msgstr "토글의 클릭 가능한 레이블로, 거짓 상태일 때 텍스트를 표시합니다. "
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "A clickable label for the toggle. Contains text for the true state."
-msgstr ""
+msgstr "토글에 대한 클릭 가능한 레이블로, 참 상태일 때 텍스트를 표시합니다."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -283,7 +284,7 @@ msgstr "지원자"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Application Info"
-msgstr ""
+msgstr "지원 정보"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -634,6 +635,12 @@ msgid ""
 msgstr "엔터프라이즈 프로세스를 사용하여 시간 낭비를 최소화하며, 각 직책에 맞는 실질적인 책임과 자율성을 부여합니다."
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.xml:0
+msgid "Not Published"
+msgstr "게시 안됨"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Offices Filter"
 msgstr "사무실 필터"
@@ -696,11 +703,13 @@ msgid "Products"
 msgstr "제품"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_search_view_inherit
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_tree_inherit_website
 msgid "Published"
-msgstr "게시 됨"
+msgstr "게시 완료"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__published_date
@@ -832,12 +841,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "ToggleLabeled"
-msgstr ""
+msgstr "ToggleLabeled"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
 msgid "Tracker URL"
-msgstr ""
+msgstr "추적 URL"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -874,7 +883,7 @@ msgstr ""
 msgid ""
 "We found a recent application with a similar name, email, phone number. You "
 "can continue if it's not a mistake."
-msgstr ""
+msgstr "이름, 이메일, 전화번호가 유사한 최근 신청서를 발견했습니다. 오류가 아니라면 계속 진행하실 수 있습니다."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -883,6 +892,7 @@ msgid ""
 "We've found a previous closed application in our system within the last 6 "
 "months. Please consider before applying in order not to duplicate efforts."
 msgstr ""
+"최근 6개월 이내에 시스템에서 이전에 마감된 지원서를 확인했습니다. 중복 지원을 피하기 위해 지원 전에 신중하게 검토하시기 바랍니다."
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_website
@@ -971,12 +981,12 @@ msgstr "사이트 이동 경로"
 msgid ""
 "e.g. Summarize the position in one or two lines that will be displayed on "
 "the Jobs list page..."
-msgstr ""
+msgstr "예: 채용 공고 목록 페이지에 표시할 직책에 대한 간략한 요약을 한두 줄로 입력합니다."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "e.g. https://www.linkedin.com/in/fpodoo"
-msgstr ""
+msgstr "예: https://www.linkedin.com/in/fpodoo"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -987,6 +997,11 @@ msgstr "info@yourcompany.example.com"
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__full_url
 msgid "job URL"
 msgstr "채용 URL"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open position"
+msgstr "공개 채용"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index

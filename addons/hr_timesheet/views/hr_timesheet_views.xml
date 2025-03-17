@@ -34,6 +34,7 @@
                     <attribute name="edit">0</attribute>
                     <attribute name="create">0</attribute>
                     <attribute name="delete">0</attribute>
+                    <attribute name="js_class"></attribute>
                 </xpath>
                 <xpath expr="//field[@name='task_id']" position="attributes">
                     <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
@@ -213,13 +214,13 @@
                 </xpath>
                 <filter name="month" position="inside">
                     <filter name="date_this_week" string="This Week" domain="[
-                        ('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,weekday=0), datetime.time(0,0,0)).to_utc())),
-                        ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(weekday=0), datetime.time(0,0,0)).to_utc())),
+                        ('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc())),
+                        ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1,weekday=0), datetime.time(0,0,0)).to_utc())),
                     ]"/>
                     <filter name="date_today" string="Today" domain="[('date', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=1), datetime.time(23, 59, 59)).to_utc())]"/>
                     <filter name="date_last_week" string="Last Week" domain="[
-                        ('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-2,weekday=0), datetime.time(0,0,0)).to_utc())),
-                        ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,weekday=0), datetime.time(0,0,0)).to_utc())),
+                        ('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-2,days=1,weekday=0), datetime.time(0,0,0)).to_utc())),
+                        ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc())),
                     ]"/>
                 </filter>
                 <xpath expr="//group[@name='groupby']" position="before">
@@ -287,6 +288,7 @@
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1">
+                    <field name="company_id" invisible="1"/>
                     <templates>
                         <t t-name="card">
                             <div class="d-flex gap-1">

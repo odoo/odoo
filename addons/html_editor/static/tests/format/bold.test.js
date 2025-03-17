@@ -55,7 +55,7 @@ test("should make qweb tag bold", async () => {
     });
 });
 
-test("should make qweb tag bold even with partial selection", async () => {
+test("should make qweb tag bold and create a step even with partial selection inside contenteditable false", async () => {
     const { editor, el } = await setupEditor(
         `<div><p t-esc="'Test'" contenteditable="false">T[e]st</p></div>`
     );
@@ -64,6 +64,13 @@ test("should make qweb tag bold even with partial selection", async () => {
         `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`
     );
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
+    const historySteps = editor.shared.history.getHistorySteps();
+    expect(historySteps.length).toBe(2);
+    const lastStep = historySteps.at(-1);
+    expect(lastStep.mutations.length).toBe(1);
+    expect(lastStep.mutations[0].type).toBe("attributes");
+    expect(lastStep.mutations[0].attributeName).toBe("style");
+    expect(lastStep.mutations[0].value).toBe("font-weight: bolder;");
 });
 
 test("should make a whole heading bold after a triple click", async () => {
@@ -169,6 +176,52 @@ test("should not format non-editable text (bold)", async () => {
     });
 });
 
+test("should make a few characters bold inside table (bold)", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>[abc</p></td>
+                        <td class="o_selected_td"><p>def</p></td>
+                        <td class="o_selected_td"><p>]<br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>`),
+        stepFunction: bold,
+        contentAfterEdit: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>${strong(`[abc`)}</p></td>
+                        <td class="o_selected_td"><p>${strong(`def`)}</p></td>
+                        <td class="o_selected_td"><p>${strong(`]<br>`)}</p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+            </tbody>
+            </table>`),
+    });
+});
+
 test("should insert a span zws when toggling a formatting command twice", () => {
     return testEditor({
         contentBefore: `<p>[]<br></p>`,
@@ -223,7 +276,8 @@ test("should type in bold", async () => {
     expect(getContent(el)).toBe(`<p>ab${strong("xy")}z[]cd</p>`);
 });
 
-test.tags("desktop")("create bold with shortcut + selected with arrow", async () => {
+test.tags("desktop");
+test("create bold with shortcut + selected with arrow", async () => {
     const { editor, el } = await setupEditor("<p>ab[]cd</p>");
     await press(["control", "b"]);
     expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
@@ -246,7 +300,7 @@ describe("inside container or inline with class already bold", () => {
     test("should force the font-weight to normal with an inline with class", async () => {
         await testEditor({
             styleContent: styleContentBold,
-            contentBefore: `<div>a<span class="boldClass">[b]</span>c</div>`,
+            contentBefore: `<div class="o-paragraph">a<span class="boldClass">[b]</span>c</div>`,
             stepFunction: bold,
             contentAfter: `<div>a<span class="boldClass"><span style="font-weight: normal;">[b]</span></span>c</div>`,
         });
@@ -255,9 +309,9 @@ describe("inside container or inline with class already bold", () => {
     test("should force the font-weight to normal", async () => {
         await testEditor({
             styleContent: styleContentBold,
-            contentBefore: `<div class="boldClass">a[b]c</div>`,
+            contentBefore: `<p class="boldClass">a[b]c</p>`,
             stepFunction: bold,
-            contentAfter: `<div class="boldClass">a<span style="font-weight: normal;">[b]</span>c</div>`,
+            contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
         });
     });
 
@@ -265,9 +319,9 @@ describe("inside container or inline with class already bold", () => {
         for (const tag of BOLD_TAGS) {
             await testEditor({
                 styleContent: styleContentBold,
-                contentBefore: `<div class="boldClass">a${tag("[b]")}c</div>`,
+                contentBefore: `<p class="boldClass">a${tag("[b]")}c</p>`,
                 stepFunction: bold,
-                contentAfter: `<div class="boldClass">a<span style="font-weight: normal;">[b]</span>c</div>`,
+                contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
             });
         }
     });

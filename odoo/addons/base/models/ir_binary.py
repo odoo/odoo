@@ -9,6 +9,7 @@ from odoo.http import Stream, request
 from odoo.tools import file_open, replace_exceptions
 from odoo.tools.image import image_process, image_guess_size_from_field_name
 from odoo.tools.mimetypes import guess_mimetype, get_extension
+from odoo.tools.misc import verify_limited_field_access_token
 
 
 DEFAULT_PLACEHOLDER_PATH = 'web/static/img/placeholder.png'
@@ -45,7 +46,8 @@ class IrBinary(models.AbstractModel):
             record = self.env[res_model].browse(res_id).exists()
         if not record:
             raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")
-
+        if access_token and verify_limited_field_access_token(record, field, access_token):
+            return record.sudo()
         record = self._find_record_check_access(record, access_token, field)
         return record
 
@@ -72,21 +74,18 @@ class IrBinary(models.AbstractModel):
             return record._to_http_stream()
 
         record.check_field_access_rights('read', [field_name])
-        field_def = record._fields[field_name]
 
-        # fields.Binary(attachment=False) or compute/related
-        if not field_def.attachment or field_def.compute or field_def.related:
-            return Stream.from_binary_field(record, field_name)
+        if record._fields[field_name].attachment:
+            field_attachment = self.env['ir.attachment'].sudo().search(
+                domain=[('res_model', '=', record._name),
+                        ('res_id', '=', record.id),
+                        ('res_field', '=', field_name)],
+                limit=1)
+            if not field_attachment:
+                raise MissingError("The related attachment does not exist.")
+            return field_attachment._to_http_stream()
 
-        # fields.Binary(attachment=True)
-        field_attachment = self.env['ir.attachment'].sudo().search(
-            domain=[('res_model', '=', record._name),
-                    ('res_id', '=', record.id),
-                    ('res_field', '=', field_name)],
-            limit=1)
-        if not field_attachment:
-            raise MissingError("The related attachment does not exist.")
-        return field_attachment._to_http_stream()
+        return Stream.from_binary_field(record, field_name)
 
     def _get_stream_from(
         self, record, field_name='raw', filename=None, filename_field='name',

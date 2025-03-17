@@ -6,11 +6,13 @@ patch(PosStore.prototype, {
     // Override
     async setup() {
         await super.setup(...arguments);
-        this.onNotified("MERCADO_PAGO_LATEST_MESSAGE", (payload) => {
+        this.data.connectWebSocket("MERCADO_PAGO_LATEST_MESSAGE", (payload) => {
             if (payload.config_id === this.config.id) {
-                this.getPendingPaymentLine(
-                    "mercado_pago"
-                ).payment_method.payment_terminal.handleMercadoPagoWebhook();
+                const pendingLine = this.getPendingPaymentLine("mercado_pago");
+
+                if (pendingLine) {
+                    pendingLine.payment_method_id.payment_terminal.handleMercadoPagoWebhook();
+                }
             }
         });
     },

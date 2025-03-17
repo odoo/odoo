@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
 from zlib import error as zlib_error
-try:
-    from PyPDF2.errors import PdfStreamError, PdfReadError
-except ImportError:
-    from PyPDF2.utils import PdfStreamError, PdfReadError
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import pdf
+from odoo.tools.pdf import PdfReadError, PdfStreamError
 
 
 class IrActionsReport(models.Model):
@@ -37,7 +34,7 @@ class IrActionsReport(models.Model):
                 if stream:
                     record = self.env[attachment.res_model].browse(attachment.res_id)
                     try:
-                        stream = pdf.add_banner(stream, record.name, logo=True)
+                        stream = pdf.add_banner(stream, record.name or '', logo=True)
                     except (ValueError, PdfStreamError, PdfReadError, TypeError, zlib_error, NotImplementedError):
                         record._message_log(body=_(
                             "There was an error when trying to add the banner to the original PDF.\n"
@@ -50,7 +47,8 @@ class IrActionsReport(models.Model):
         return collected_streams
 
     def _is_invoice_report(self, report_ref):
-        return self._get_report(report_ref).is_invoice_report
+        report = self._get_report(report_ref)
+        return report.is_invoice_report or report.report_name == 'account.report_invoice'
 
     def _get_splitted_report(self, report_ref, content, report_type):
         if report_type == 'html':

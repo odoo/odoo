@@ -3,7 +3,8 @@
 // The notification just add overlays.
 
 .o_notification_manager {
-    @include o-position-absolute($top: $o-navbar-height * 1.15, $right: $o-notification-margin, $left: $o-notification-margin);
+    position: fixed;
+    inset: ($o-navbar-height * 1.15) $o-notification-margin auto $o-notification-margin;
     z-index: $o-notification-zindex;
 
     @include media-breakpoint-up(sm) {

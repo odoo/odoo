@@ -145,13 +145,19 @@ class AccountMove(models.Model):
             return _("Cannot send an entry that is not posted to TicketBAI.")
         if self.l10n_es_tbai_state in ('sent', 'cancelled'):
             return _("This entry has already been posted.")
+        if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.is_purchase_document() and not self.ref:
+            return _("You need to fill in the Reference field as the invoice number from your vendor.")
+
 
     def _l10n_es_tbai_get_attachment_name(self, cancel=False):
         return self.name + ('_post.xml' if not cancel else '_cancel.xml')
 
     def _l10n_es_tbai_create_edi_document(self, cancel=False):
+        name = self.name
+        if self.is_purchase_document():
+            name = self.ref
         return self.env['l10n_es_edi_tbai.document'].sudo().create({
-            'name': self.name,
+            'name': name,
             'date': self.date,
             'company_id': self.company_id.id,
             'is_cancel': cancel,
@@ -282,13 +288,16 @@ class AccountMove(models.Model):
         tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
         self.env['l10n_es_edi_tbai.document']._add_base_lines_tax_amounts(base_lines, self.company_id, tax_lines=tax_lines)
+        taxes = self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy()
+        is_oss = any(tax._l10n_es_get_regime_code() == '17' for tax in taxes)
 
         return {
             **self._l10n_es_tbai_get_credit_note_values(),
-            'origin': self.invoice_origin,
-            'taxes': self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy(),
+            'origin': self.invoice_origin and self.invoice_origin[:250] or 'manual',
+            'taxes': taxes,
             'rate':  abs(self.amount_total / self.amount_total_signed) if self.amount_total else 1,
             'base_lines': base_lines,
+            'nosujeto_causa': 'IE' if is_oss else 'RL',
             **({'post_doc': self.l10n_es_tbai_post_document_id} if cancel else {}),
         }
 
@@ -350,3 +359,8 @@ class AccountMove(models.Model):
                                'rec': tax})
         return {'iva_values': iva_values,
                 'amount_total': amount_total}
+
+    def _refunds_origin_required(self):
+        if self.l10n_es_tbai_is_required:
+            return True
+        return super()._refunds_origin_required()

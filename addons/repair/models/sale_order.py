@@ -79,10 +79,10 @@ class SaleOrderLine(models.Model):
             return res
         return super().write(vals)
 
-    def _action_launch_stock_rule(self, previous_product_uom_qty=False):
+    def _action_launch_stock_rule(self, **kwargs):
         # Picking must be generated for products created from the SO but not for parts added from the RO, as they're already handled there
         lines_without_repair_move = self.filtered(lambda line: not line.move_ids.sudo().repair_id)
-        return super(SaleOrderLine, lines_without_repair_move)._action_launch_stock_rule(previous_product_uom_qty)
+        return super(SaleOrderLine, lines_without_repair_move)._action_launch_stock_rule(**kwargs)
 
     def _create_repair_order(self):
         new_repair_vals = []

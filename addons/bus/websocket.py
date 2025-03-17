@@ -821,6 +821,7 @@ class WebsocketRequest:
 
         try:
             self.registry = Registry(self.db)
+            threading.current_thread().dbname = self.registry.db_name
             self.registry.check_signaling()
         except (
             AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError
@@ -889,7 +890,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "18.0-1"
+    _VERSION = "18.0-3"
 
     @classmethod
     def websocket_allowed(cls, request):
@@ -961,6 +962,14 @@ class WebsocketConnectionHandler:
         headers = request.httprequest.headers
         origin_url = urlparse(headers.get('origin'))
         if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
+            _logger.warning(
+                'Downgrading websocket session. Host=%(host)s, Origin=%(origin)s, Scheme=%(scheme)s.',
+                {
+                    'host': headers.get('host'),
+                    'origin': headers.get('origin'),
+                    'scheme': request.httprequest.scheme,
+                },
+            )
             session = root.session_store.new()
             session.update(get_default_session(), db=request.session.db)
             root.session_store.save(session)

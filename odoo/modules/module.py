@@ -28,7 +28,7 @@ except ImportError:
 
     class Requirement:
         def __init__(self, pydep):
-            if not re.fullmatch(r'\w+', pydep):  # check that we have no versions or marker in pydep
+            if not re.fullmatch(r'[\w\-]+', pydep):  # check that we have no versions or marker in pydep
                 msg = f"Package `packaging` is required to parse `{pydep}` external dependency and is not installed"
                 raise Exception(msg)
             self.marker = None

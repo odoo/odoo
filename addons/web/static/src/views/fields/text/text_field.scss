@@ -1,24 +1,5 @@
-.o_field_text > div {
-    > textarea {
-        height: auto;
-        resize: none;
-        overflow-y: hidden;
-    }
-}
-.o_field_text_buttons {
-    float: right;
-    margin-left: -35px;
-    margin-right: 10px;
-    margin-top: -40px;
-
-    .o_field_translate {
-        margin-left: 0 !important;
-    }
-}
-
-.o_field_text {
-    textarea.o_field_translate:hover + .o_field_text_buttons .o_field_translate,
-    textarea.o_field_translate:focus + .o_field_text_buttons .o_field_translate {
-        visibility: visible;
-    }
+.o_field_text > div > textarea {
+    height: auto;
+    resize: none;
+    overflow-y: hidden;
 }

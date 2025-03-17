@@ -21,7 +21,7 @@
                 </xpath>
                 <xpath expr="//label[@for='commitment_date']" position="before">
                     <field name="warehouse_id" invisible="1" readonly="state == 'sale'"/>  <!-- needed for js logic -->
-                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1" readonly="state == 'sale'"/>
+                    <field name="warehouse_id" options="{'no_create': True}" force_save="1" readonly="state == 'sale'"/>
                     <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>
                     <field name="incoterm_location"/>
                     <field name="picking_policy" required="True" readonly="state not in ['draft', 'sent']"/>

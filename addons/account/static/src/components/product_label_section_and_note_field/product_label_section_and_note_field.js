@@ -203,8 +203,6 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
             return "fw-bold";
         } else if (this.isNote()) {
             return "fst-italic";
-        } else if (!this.productName) {
-            return "text-warning";
         }
         return "";
     }
@@ -226,10 +224,11 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
 
     updateLabel(value) {
         this.props.record.update({
-          name:
-            this.productName && this.productName !== value
-              ? `${this.productName}\n${value}`
-              : value,
+            name: (
+                this.productName && value && this.productName.concat("\n", value)
+                || !value && this.productName
+                || value
+            ),
         });
     }
 }

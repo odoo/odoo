@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import float_compare, float_is_zero, format_date
 
 
 class PosOrder(models.Model):
@@ -60,7 +60,11 @@ class PosOrder(models.Model):
                         self.env['sale.advance.payment.inv']._prepare_down_payment_section_values(sale_order_origin)
                     )
                 order_reference = line.name
-                sale_order_line_description = _("Down payment (ref: %(order_reference)s on \n %(date)s)", order_reference=order_reference, date=line.order_id.date_order.strftime('%m-%d-%y'))
+
+                if order.partner_id.lang and order.partner_id.lang != line.env.lang:
+                    line = line.with_context(lang=order.partner_id.lang)
+
+                sale_order_line_description = _("Down payment (ref: %(order_reference)s on \n %(date)s)", order_reference=order_reference, date=format_date(line.env, line.order_id.date_order))
                 sale_line = self.env['sale.order.line'].create({
                     'order_id': sale_order_origin.id,
                     'product_id': line.product_id.id,
@@ -159,6 +163,12 @@ class PosOrder(models.Model):
 
         return inv_line_vals
 
+    def write(self, vals):
+        if 'crm_team_id' in vals:
+            vals['crm_team_id'] = vals['crm_team_id'] if vals.get('crm_team_id') else self.session_id.crm_team_id.id
+        return super().write(vals)
+
+
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
@@ -195,6 +205,5 @@ class PosOrderLine(models.Model):
     def _launch_stock_rule_from_pos_order_lines(self):
         orders = self.mapped('order_id')
         for order in orders:
-            for line in order.lines:
-                line.sale_order_line_id.move_ids.mapped("move_line_ids").unlink()
+            self.env['stock.move'].browse(order.lines.sale_order_line_id.move_ids._rollup_move_origs()).filtered(lambda ml: ml.state not in ['cancel', 'done'])._action_cancel()
         return super()._launch_stock_rule_from_pos_order_lines()

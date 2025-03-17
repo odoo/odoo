@@ -317,7 +317,7 @@ class Repair(models.Model):
     @api.depends('move_ids.quantity', 'move_ids.product_uom_qty', 'move_ids.product_uom.rounding')
     def _compute_has_uncomplete_moves(self):
         for repair in self:
-            repair.has_uncomplete_moves = any(not move.picked or float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in repair.move_ids)
+            repair.has_uncomplete_moves = any(float_compare(move.quantity, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0 for move in repair.move_ids)
 
     @api.depends('move_ids', 'state', 'move_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
@@ -624,7 +624,7 @@ class Repair(models.Model):
         repairs_to_confirm = self.filtered(lambda repair: repair.state == 'draft')
         repairs_to_confirm._check_company()
         repairs_to_confirm.move_ids._check_company()
-        repairs_to_confirm.move_ids._adjust_procure_method()
+        repairs_to_confirm.move_ids._adjust_procure_method(picking_type_code='repair_operation')
         repairs_to_confirm.move_ids._action_confirm()
         repairs_to_confirm.move_ids._trigger_scheduler()
         repairs_to_confirm.write({'state': 'confirmed'})

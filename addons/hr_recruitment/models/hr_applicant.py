@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 from odoo import api, fields, models, tools
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.translate import _
 
@@ -38,7 +38,7 @@ class Applicant(models.Model):
 
     candidate_id = fields.Many2one('hr.candidate', required=True, index=True)
     partner_id = fields.Many2one(related="candidate_id.partner_id")
-    partner_name = fields.Char(related="candidate_id.partner_name", inverse="_inverse_name")
+    partner_name = fields.Char(compute="_compute_partner_name", search="_search_partner_name", inverse="_inverse_name", compute_sudo=True)
     email_from = fields.Char(related="candidate_id.email_from", readonly=False)
     email_normalized = fields.Char(related="candidate_id.email_normalized")
     partner_phone = fields.Char(related="candidate_id.partner_phone", readonly=False)
@@ -100,7 +100,7 @@ class Applicant(models.Model):
     medium_id = fields.Many2one(ondelete='set null', help="This displays how the applicant has reached out, e.g. via Email, LinkedIn, Website, etc.")
     source_id = fields.Many2one(ondelete='set null')
     interviewer_ids = fields.Many2many('res.users', 'hr_applicant_res_users_interviewers_rel',
-        string='Interviewers', index=True, tracking=True,
+        string='Interviewers', index=True, tracking=True, copy=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
     application_status = fields.Selection([
         ('ongoing', 'Ongoing'),
@@ -121,6 +121,14 @@ class Applicant(models.Model):
             WHERE active IS TRUE
         """)
 
+    @api.depends("candidate_id.partner_name")
+    def _compute_partner_name(self):
+        for applicant in self:
+            applicant.partner_name = applicant.candidate_id.partner_name
+
+    def _search_partner_name(self, operator, value):
+        return [('candidate_id.partner_name', operator, value)]
+
     def _inverse_name(self):
         for applicant in self:
             if applicant.partner_name and not applicant.candidate_id:
@@ -131,7 +139,7 @@ class Applicant(models.Model):
     @api.depends('candidate_id')
     def _compute_other_applications_count(self):
         for applicant in self:
-            same_candidate_applications = max(len(applicant.candidate_id.applicant_ids) - 1, 0)
+            same_candidate_applications = max(len(applicant.with_context(active_test=False).candidate_id.applicant_ids) - 1, 0)
             if applicant.candidate_id:
                 domain = applicant.candidate_id._get_similar_candidates_domain()
                 similar_candidates = self.env['hr.candidate'].with_context(active_test=False).search(domain) - applicant.candidate_id
@@ -191,7 +199,7 @@ class Applicant(models.Model):
     @api.depends('candidate_id')
     def _compute_categ_ids(self):
         for applicant in self:
-            applicant.categ_ids = applicant.candidate_id.categ_ids
+            applicant.categ_ids = applicant.candidate_id.categ_ids.ids + applicant.categ_ids.ids
 
     @api.depends('refuse_reason_id', 'date_closed')
     def _compute_application_status(self):
@@ -339,6 +347,8 @@ class Applicant(models.Model):
         ], ['ids:array_agg(id)'], groupby=['res_id'])
         attachments_by_candidate = {e['res_id']: e['ids'] for e in attachments_result}
         for applicant in applicants:
+            if applicant.candidate_id.company_id and applicant.company_id != applicant.candidate_id.company_id:
+                raise ValidationError(_("You cannot create an applicant in a different company than the candidate"))
             candidate_id = applicant.candidate_id.id
             if candidate_id not in attachments_by_candidate:
                 continue
@@ -371,24 +381,30 @@ class Applicant(models.Model):
 
             new_interviewers = self.interviewer_ids - old_interviewers - self.env.user
             if new_interviewers:
-                notification_subject = _("You have been assigned as an interviewer for %s", self.display_name)
-                notification_body = _("You have been assigned as an interviewer for the Applicant %s", self.partner_name)
-                self.message_notify(
-                    res_id=self.id,
-                    model=self._name,
-                    partner_ids=new_interviewers.partner_id.ids,
-                    author_id=self.env.user.partner_id.id,
-                    email_from=self.env.user.email_formatted,
-                    subject=notification_subject,
-                    body=notification_body,
-                    email_layout_xmlid="mail.mail_notification_layout",
-                    record_name=self.display_name,
-                    model_description="Applicant",
-                )
+                for applicant in self:
+                    notification_subject = _("You have been assigned as an interviewer for %s", applicant.display_name)
+                    notification_body = _("You have been assigned as an interviewer for the Applicant %s", applicant.partner_name)
+                    applicant.message_notify(
+                        res_id=applicant.id,
+                        model=applicant._name,
+                        partner_ids=new_interviewers.partner_id.ids,
+                        author_id=self.env.user.partner_id.id,
+                        email_from=self.env.user.email_formatted,
+                        subject=notification_subject,
+                        body=notification_body,
+                        email_layout_xmlid="mail.mail_notification_layout",
+                        record_name=applicant.display_name,
+                        model_description="Applicant",
+                    )
         if vals.get('date_closed'):
             for applicant in self:
                 if applicant.job_id.date_to:
                     applicant.candidate_id.availability = applicant.job_id.date_to + relativedelta(days=1)
+
+        if vals.get("company_id") and not self.env.context.get('do_not_propagate_company', False):
+            self.candidate_id.with_context(do_not_propagate_company=True).write({"company_id": vals["company_id"]})
+            self.candidate_id.applicant_ids.with_context(do_not_propagate_company=True).write({"company_id": vals["company_id"]})
+
         return res
 
     def get_empty_list_help(self, help_message):
@@ -503,7 +519,7 @@ class Applicant(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'hr.applicant',
             'view_mode': 'list,kanban,form,pivot,graph,calendar,activity',
-            'domain': [('id', 'in', (self.candidate_id.applicant_ids - self + similar_candidates.applicant_ids).ids)],
+            'domain': [('id', 'in', (self.candidate_id.applicant_ids + similar_candidates.applicant_ids).ids)],
             'context': {
                 'active_test': False,
                 'search_default_stage': 1,
@@ -573,14 +589,28 @@ class Applicant(models.Model):
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
-        self = self.with_context(default_user_id=False)
+        self = self.with_context(default_user_id=False, mail_notify_author=True)  # Allows sending stage updates to the author
         stage = False
-        if custom_values and 'job_id' in custom_values:
-            stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
+        candidate_defaults = {}
         partner_name, email_from_normalized = tools.parse_contact_from_email(msg.get('from'))
-        candidate = self.env['hr.candidate'].create({'partner_name': partner_name or email_from_normalized})
+        candidate_domain = [
+            ("email_from", "=", email_from_normalized),
+        ]
+        if custom_values and 'job_id' in custom_values:
+            job = self.env['hr.job'].browse(custom_values['job_id'])
+            stage = job._get_first_stage()
+            candidate_defaults['company_id'] = job.company_id.id
+            candidate_domain = expression.AND([candidate_domain, [("company_id", "in", [job.company_id.id, False])]])
+
+        candidate = self.env["hr.candidate"].search(candidate_domain, limit=1)\
+            or self.env["hr.candidate"].create({
+                "partner_name": partner_name or email_from_normalized,
+                **candidate_defaults,
+            })
+
         defaults = {
             'candidate_id': candidate.id,
+            'partner_name': partner_name,
         }
         job_platform = self.env['hr.job.platform'].search([('email', '=', email_from_normalized)], limit=1)
         if msg.get('from') and not job_platform:

@@ -287,7 +287,7 @@ class Company(models.Model):
             if vals.get('name') and not vals.get('partner_id')
         ]
         if no_partner_vals_list:
-            partners = self.env['res.partner'].create([
+            partners = self.env['res.partner'].with_context(default_parent_id=False).create([
                 {
                     'name': vals['name'],
                     'is_company': True,
@@ -335,6 +335,15 @@ class Company(models.Model):
             'active', # user._get_company_ids and other potential cached search
             'sequence', # user._get_company_ids and other potential cached search
         }
+
+    def unlink(self):
+        """
+        Unlink the companies and clear the cache to make sure that
+        _get_company_ids of res.users gets only existing company ids.
+        """
+        res = super().unlink()
+        self.env.registry.clear_cache()
+        return res
 
     def write(self, values):
         invalidation_fields = self.cache_invalidation_fields()

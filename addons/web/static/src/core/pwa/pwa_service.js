@@ -24,7 +24,6 @@ let REGISTER_BEFOREINSTALLPROMPT_EVENT;
 browser.addEventListener("beforeinstallprompt", (ev) => {
     // This event is only triggered by the browser when the native prompt to install can be shown
     // This excludes incognito tabs, as well as visiting the website while the app is installed
-    ev.preventDefault();
     if (REGISTER_BEFOREINSTALLPROMPT_EVENT) {
         // service has been started before the event was triggered, update the service
         return REGISTER_BEFOREINSTALLPROMPT_EVENT(ev);

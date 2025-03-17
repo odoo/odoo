@@ -19,8 +19,8 @@ function assertCityAndState(expectedCity, expectedState) {
 }
 
 registry.category("web_tour.tours").add("test_brazilian_address", {
-    test: true,
     url: '/shop?search=Brazilian test product',
+    checkDelay: 500,
     steps: () => [
         ...tourUtils.addToCart({productName: "Brazilian test product", search: false}),
         tourUtils.goToCart({quantity: 1}),
@@ -54,6 +54,9 @@ registry.category("web_tour.tours").add("test_brazilian_address", {
             run: 'click',
         },
         tourUtils.goToCheckout(),
+        {
+            trigger: "form[data-company-country-code=BR]:has(#o_city_id:hidden)",
+        },
         {
             content: 'Input a zip first',
             trigger: 'input[name="zip"]',

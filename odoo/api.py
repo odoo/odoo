@@ -443,6 +443,22 @@ def readonly(method: T) -> T:
     method._readonly = True
     return method
 
+def private(method):
+    """ Decorate a record-style method to indicate that the method cannot be
+        called using RPC. Example::
+
+            @api.private
+            def method(self, args):
+                ...
+
+        If you have business methods that should not be called over RPC, you
+        should prefix them with "_". This decorator may be used in case of
+        existing public methods that become non-RPC callable or for ORM
+        methods.
+    """
+    method._api_private = True
+    return method
+
 _create_logger = logging.getLogger(__name__ + '.create')
 
 
@@ -550,6 +566,7 @@ class Environment(Mapping):
         self.transaction.reset()
 
     def __new__(cls, cr, uid, context, su=False, uid_origin=None):
+        assert isinstance(cr, BaseCursor)
         if uid == SUPERUSER_ID:
             su = True
 
@@ -569,7 +586,6 @@ class Environment(Mapping):
                 return env
 
         # otherwise create environment, and add it in the set
-        assert isinstance(cr, BaseCursor)
         self = object.__new__(cls)
         self.cr, self.uid, self.su, self.uid_origin = cr, uid, su, uid_origin
         self.context = frozendict(context)

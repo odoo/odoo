@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Daye Jeong, 2024
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,27 +72,20 @@ msgstr "영업팀에 문서를 자동으로 배정하려면 팀원을 추가하�
 
 #. module: sales_team
 #. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current team"
-" %(team_name)s."
-msgstr "%(user_name)s 사용자를 이 팀에 추가 할 경우, 현재 소속된 %(team_name)s팀에서 제외됩니다."
-
-#. module: sales_team
-#. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current "
-"teams %(team_names)s."
-msgstr "%(user_name)s 사용자를 이 팀에 추가 할 경우, 현재 소속된 %(team_names)s팀에서 제외됩니다."
+"Adding %(user_name)s in this team will remove them from %(team_names)s. "
+"Working in multiple teams? Activate the option under Configuration>Settings."
+msgstr ""
+"%(user_name)s 님을 이 팀에 추가할 경우, %(team_names)s 팀에서는 제거됩니다. 여러 개의 팀에서 작업 중인가요? "
+"환경설정 > 설정에서 메뉴를 활성화하세요."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid ""
-"Adding %(user_names)s in this team would remove them from their current "
-"teams (%(team_names)s)."
-msgstr "%(user_names)s을(를) 이 팀에 추가하면 현재 소속팀 ( %(team_names)s)에서는 제거됩니다."
+"Adding %(user_names)s in this team will remove them from %(team_names)s."
+msgstr "이 팀에 %(user_names)s을 추가하면 %(team_names)s에서 해당 사용자가 제거됩니다."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -281,7 +276,7 @@ msgstr "ID"
 msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
-msgstr "해당하는 경우 사용자는 여러 개의 영업팀에 속할 수 있습니다. 그렇지 않은 경우 한 개의 팀에만 소속될 수 있습니다."
+msgstr "True인 경우 여러 개의 영업팀에 배치할 수 있습니다. 그렇지 않은 경우 소속이 하나의 영업팀으로 제한됩니다."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -300,7 +295,7 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
-msgstr "활성 필드가 false로 설정되면 영업 팀을 제거하지 않고 숨길 수 있습니다."
+msgstr "활성 필드를 false로 설정하면, 영업팀을 제거하지 않아도 필드를 숨길 수 있습니다."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -342,8 +337,7 @@ msgstr "최근 갱신 일자"
 msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
-msgstr ""
-"주 사용자인 영업팀입니다. 특히 파이프라인 관리에 사용하거나 영업팀에서 청구서 발행 또는 구독 업무를 진행할 경우에 사용합니다."
+msgstr "주 사용자인 영업팀입니다. 특히 파이프라인을 관리하거나 영업팀을 청구서 발행 또는 구독 업무에서 설정할 때 사용합니다."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -596,15 +590,7 @@ msgstr "해당 사용자의 회사 기본값입니다."
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
-msgstr "이는 수행 작업을 다양한 카테고리로 분류한 것입니다 (예: '전화'나 '회의 준비')."
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
-"settings."
-msgstr "한 영업 담당자를 여러 팀에 추가하려면 설정 메뉴에서 다중 팀 기능을 활성화하세요."
+msgstr "이는 수행해야 하는 작업을 다양한 카테고리로 분류한 것입니다(예: '전화' 또는 '회의 준비')."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -691,6 +677,13 @@ msgstr "이 팀에 소속되어 있는 사용자입니다. "
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "웹사이트"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid ""
+"Working in multiple teams? Activate the option under Configuration>Settings."
+msgstr "여러 팀에서 작업해야 하나요? 환경설정 > 설정에서 이 옵션을 활성화하세요."
 
 #. module: sales_team
 #. odoo-python

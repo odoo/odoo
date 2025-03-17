@@ -9,7 +9,11 @@
                 <button string="Create e-Waybill / Challan"
                         type="object"
                         name="action_l10n_in_ewaybill_create"
-                        invisible="country_code != 'IN' or l10n_in_ewaybill_id or state != 'done'"
+                        invisible="
+                            country_code != 'IN'
+                            or l10n_in_ewaybill_id
+                            or (picking_type_code == 'incoming' and state not in ('done', 'assigned'))
+                            or (picking_type_code != 'incoming' and state != 'done')"
                         data-hotkey="e"
                         groups="stock.group_stock_manager"/>
             </xpath>

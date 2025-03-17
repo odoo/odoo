@@ -13,7 +13,7 @@ export class Stripe {
         env,
         stripePaymentMethod,
         access_token,
-        pos_config_id,
+        pos_config,
         errorCallback,
         handleReaderConnection
     ) {
@@ -21,7 +21,7 @@ export class Stripe {
         this.terminal = null;
         this.access_token = access_token;
         this.stripePaymentMethod = stripePaymentMethod;
-        this.pos_config_id = pos_config_id;
+        this.pos_config = pos_config;
         this.errorCallback = errorCallback;
         this.handleReaderConnection = handleReaderConnection;
 
@@ -46,13 +46,13 @@ export class Stripe {
 
     async startPayment(order) {
         try {
-            const result = await rpc(`/kiosk/payment/${this.pos_config_id}/kiosk`, {
-                order: order,
+            const result = await rpc(`/kiosk/payment/${this.pos_config.id}/kiosk`, {
+                order: order.serialize({ orm: true }),
                 access_token: this.access_token,
                 payment_method_id: this.stripePaymentMethod.id,
             });
             const paymentStatus = result.payment_status;
-            const savedOrder = result.order;
+            const savedOrder = result.order[0];
             await this.connectReader();
             const clientSecret = paymentStatus.client_secret;
             const paymentMethod = await this.collectPaymentMethod(clientSecret);

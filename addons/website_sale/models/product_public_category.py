@@ -64,6 +64,7 @@ class ProductPublicCategory(models.Model):
 
     #=== COMPUTE METHODS ===#
 
+    @api.depends('parent_path')
     def _compute_parents_and_self(self):
         for category in self:
             if category.parent_path:

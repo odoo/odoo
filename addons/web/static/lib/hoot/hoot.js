@@ -2,6 +2,7 @@
 
 import { logger } from "./core/logger";
 import { Runner } from "./core/runner";
+import { urlParams } from "./core/url";
 import { makeRuntimeHook } from "./hoot_utils";
 import { setRunner } from "./main_runner";
 import { setupHootUI } from "./ui/setup_hoot_ui";
@@ -17,7 +18,7 @@ import { setupHootUI } from "./ui/setup_hoot_ui";
 // Internal
 //-----------------------------------------------------------------------------
 
-const runner = new Runner();
+const runner = new Runner(urlParams);
 
 setRunner(runner);
 
@@ -26,10 +27,10 @@ setRunner(runner);
 //-----------------------------------------------------------------------------
 
 /**
- * @param {unknown} value
+ * @param {...unknown} values
  */
-export function registerDebugInfo(value) {
-    logger.logDebug("debug context provided:", value);
+export function registerDebugInfo(...values) {
+    logger.logDebug("debug context provided:", ...values);
 }
 
 // Main test API
@@ -46,7 +47,6 @@ export const onError = makeRuntimeHook("onError");
 
 // Fixture
 export const getFixture = runner.fixture.get;
-export const mountOnFixture = runner.fixture.mount;
 
 // Other functions
 export const dryRun = runner.exportFn(runner.dryRun);

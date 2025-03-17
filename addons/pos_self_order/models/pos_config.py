@@ -272,6 +272,7 @@ class PosConfig(models.Model):
             }
         }
         response['pos.config']['data'][0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
+        response['pos.config']['data'][0]['_pos_special_products_ids'] = self._get_special_products().ids
         self.env['pos.session']._load_pos_data_relations('pos.config', response)
 
         # Classic data loading
@@ -323,6 +324,7 @@ class PosConfig(models.Model):
         self.ensure_one()
 
         if not self.current_session_id:
+            self._check_before_creating_new_session()
             session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
             session.set_opening_control(0, "")
             self._notify('STATUS', {'status': 'open'})

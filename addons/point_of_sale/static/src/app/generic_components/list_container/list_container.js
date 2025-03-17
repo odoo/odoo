@@ -2,6 +2,7 @@ import { Component, useEffect, useRef, xml } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/utils/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
 
 class ListContainerDialog extends Component {
     static components = { Dialog };
@@ -11,14 +12,17 @@ class ListContainerDialog extends Component {
         close: Function,
     };
     static template = xml`
-        <Dialog title.translate="Choose an order" footer="false">
-            <div class="d-flex p-2 flex-wrap" style="gap: 0.5rem;">
+        <Dialog title="title" footer="false">
+            <div class="list-container-items d-flex p-2 flex-wrap" style="gap: 0.5rem;">
                 <t t-foreach="props.items" t-as="item" t-key="item_index">
                     <t t-slot="default" item="item" />
                 </t>
             </div>
         </Dialog>
     `;
+    setup() {
+        this.title = _t("Choose an order");
+    }
 }
 
 export class ListContainer extends Component {
@@ -40,7 +44,7 @@ export class ListContainer extends Component {
             <button t-if="this.sizing.isLarger or props.forceSmall" t-on-click="toggle"
                 class="btn btn-secondary mx-1 fa fa-caret-down" />
             <div class="overflow-hidden w-100 position-relative">
-                <div t-ref="container" class="d-flex w-100">
+                <div t-ref="container" class="list-container-items d-flex w-100">
                     <div t-if="!props.forceSmall" t-foreach="props.items" t-as="item" t-key="item_index" t-att-class="{'invisible': shouldBeInvisible(item_index)}">
                         <t t-slot="default" item="item"/>
                     </div>

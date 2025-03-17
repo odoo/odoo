@@ -7,7 +7,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("text_highlights", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [
@@ -55,7 +54,7 @@ registerWebsitePreviewTour("text_highlights", {
             const secondLine = document.createElement("i");
             secondLine.textContent = "Text content line B";
             this.anchor.replaceChildren(firstLine, document.createElement("br"), secondLine);
-            // Select the whole content.            
+            // Select the whole content.
             const range = iframeDOC.createRange();
             const selection = iframeDOC.getSelection();
             range.selectNodeContents(this.anchor);

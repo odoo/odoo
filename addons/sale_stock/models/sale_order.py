@@ -36,9 +36,9 @@ class SaleOrder(models.Model):
         ('partial', 'Partially Delivered'),
         ('full', 'Fully Delivered'),
     ], string='Delivery Status', compute='_compute_delivery_status', store=True,
-       help="Red: Late\n\
-            Orange: To process today\n\
-            Green: On time")
+       help="Blue: Not Delivered/Started\n\
+            Orange: Partially Delivered\n\
+            Green: Fully Delivered")
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
     effective_date = fields.Datetime("Effective Date", compute='_compute_effective_date', store=True, help="Completion date of the first delivery order.")
     expected_date = fields.Datetime( help="Delivery date you can promise to the customer, computed from the minimum lead time of "
@@ -103,6 +103,7 @@ class SaleOrder(models.Model):
     def _check_warehouse(self):
         """ Ensure that the warehouse is set in case of storable products """
         orders_without_wh = self.filtered(lambda order: order.state not in ('draft', 'cancel') and not order.warehouse_id)
+        company_ids_with_wh = {group['company_id'][0] for group in self.env['stock.warehouse'].read_group(domain=[('company_id', 'in', orders_without_wh.mapped('company_id').ids)], fields=['id:recordset'], groupby=['company_id'])} if orders_without_wh else {}
         other_company = set()
         for order_line in orders_without_wh.order_line:
             if order_line.product_id.type != 'consu':
@@ -110,6 +111,8 @@ class SaleOrder(models.Model):
             if order_line.route_id.company_id and order_line.route_id.company_id != order_line.company_id:
                 other_company.add(order_line.route_id.company_id.id)
                 continue
+            if order_line.order_id.company_id.id in company_ids_with_wh:
+                raise UserError(_('You must set a warehouse on your sale order to proceed.'))
             self.env['stock.warehouse'].with_company(order_line.order_id.company_id)._warehouse_redirect_warning()
         other_company_warehouses = self.env['stock.warehouse'].search([('company_id', 'in', list(other_company))])
         if any(c not in other_company_warehouses.company_id.ids for c in other_company):
@@ -120,7 +123,10 @@ class SaleOrder(models.Model):
             for order in self:
                 pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line') if not order_line.is_expense}
 
-        if values.get('partner_shipping_id'):
+        if values.get('partner_shipping_id') and self._context.get('update_delivery_shipping_partner'):
+            for order in self:
+                order.picking_ids.partner_id = values.get('partner_shipping_id')
+        elif values.get('partner_shipping_id'):
             new_partner = self.env['res.partner'].browse(values.get('partner_shipping_id'))
             for record in self:
                 picking = record.mapped('picking_ids').filtered(lambda x: x.state not in ('done', 'cancel'))

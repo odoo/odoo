@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 
 const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
 registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
-    test: true,
     steps: () =>
         [
             // One card for gift_card_1.
@@ -66,8 +65,11 @@ registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
             PosLoyalty.eWalletButtonState({ highlighted: false }),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAAAAA"),
-            PosLoyalty.eWalletButtonState({ highlighted: true, text: getEWalletText("Pay") }),
-            PosLoyalty.clickEWalletButton(getEWalletText("Pay")),
+            PosLoyalty.eWalletButtonState({
+                highlighted: true,
+                text: getEWalletText("Pay"),
+                click: true,
+            }),
             SelectionPopup.has("ewallet_1"),
             SelectionPopup.has("ewallet_2"),
             SelectionPopup.has("ewallet_1", { run: "click" }),

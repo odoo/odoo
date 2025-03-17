@@ -41,6 +41,7 @@
                                     t-att-data-product-id="product_id"
                                     t-att-data-product-template-id="product_template_id"
                                     t-att-data-product-selected="record.is_product_variant"
+                                    t-att-data-is-combo="record.type == 'combo'"
                                 >
                                     <i class="fa fa-fw fa-shopping-cart"/>
                                 </button>
@@ -234,6 +235,7 @@
                                 t-att-data-product-id="product_id"
                                 t-att-data-product-template-id="product_template_id"
                                 t-att-data-product-selected="record.is_product_variant"
+                                t-att-data-is-combo="record.type == 'combo'"
                             >
                                 Add to Cart
                             </button>
@@ -257,9 +259,7 @@
                                 <div class="card-title h1" t-field="record.display_name"/>
                                 <div class="d-flex align-items-center my-4">
                                     <div class="h4 mb-0 me-3">
-                                        <span>
-                                            <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
-                                        </span>
+                                        <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                                     </div>
                                     <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
                                         <t t-set="rating_avg" t-value="record.rating_avg"/>
@@ -279,6 +279,7 @@
                                         t-att-data-product-id="product_id"
                                         t-att-data-product-template-id="product_template_id"
                                         t-att-data-product-selected="record.is_product_variant"
+                                        t-att-data-is-combo="record.type == 'combo'"
                                     >
                                         Add to Cart
                                     </button>
@@ -336,6 +337,7 @@
                                             t-att-data-product-id="product_id"
                                             t-att-data-product-template-id="product_template_id"
                                             t-att-data-product-selected="record.is_product_variant"
+                                            t-att-data-is-combo="record.type == 'combo'"
                                         >
                                             <i class="fa fa-fw fa-shopping-cart"/>
                                         </button>
@@ -385,6 +387,7 @@
                                     t-att-data-product-id="product_id"
                                     t-att-data-product-template-id="product_template_id"
                                     t-att-data-product-selected="record.is_product_variant"
+                                    t-att-data-is-combo="record.type == 'combo'"
                                 >
                                     Add to Cart
                                 </button>

@@ -3,6 +3,7 @@
 # 	* project_stock_account
 # 
 # Translators:
+# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -26,6 +27,8 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project "
 "'%(project_name)s' linked to the stock picking."
 msgstr ""
+"จำเป็นต้องมีแผนวิเคราะห์ '%(missing_plan_names)s' สำหรับโปรเจ็กต์ "
+"'%(project_name)s' ที่เชื่อมโยงกับการเลือกสต็อก"
 
 #. module: project_stock_account
 #: model:ir.model.fields,field_description:project_stock_account.field_stock_picking_type__analytic_costs
@@ -33,9 +36,19 @@ msgid "Analytic Costs"
 msgstr ""
 
 #. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "รายการการวิเคราะห์"
+
+#. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
 msgstr "การประยุกต์ใช้แผนการวิเคราะห์"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "หมวดหมู่"
 
 #. module: project_stock_account
 #: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__business_domain
@@ -43,9 +56,25 @@ msgid "Domain"
 msgstr "โดเมน"
 
 #. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_line__category__picking_entry
+msgid "Inventory Transfer"
+msgstr ""
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/project_project.py:0
+msgid "Materials"
+msgstr "วัสดุ"
+
+#. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "ประเภทการรับ"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_project_project
+msgid "Project"
+msgstr "โปรเจ็กต์"
 
 #. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_stock_move
@@ -63,3 +92,5 @@ msgid ""
 "Validating stock pickings will generate analytic entries for the selected "
 "project. Products set for re-invoicing will also be billed to the customer."
 msgstr ""
+"การตรวจสอบความถูกต้องของการเลือกสรรสินค้าจะสร้างรายการวิเคราะห์สำหรับโปรเจ็กต์ที่เลือก"
+" สินค้าที่กำหนดให้ออกใบแจ้งหนี้ใหม่จะเรียกเก็บเงินจากลูกค้าด้วยเช่นกัน"

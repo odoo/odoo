@@ -878,6 +878,10 @@ class TestChannelRTC(MailCommon):
                             {
                                 "channelMember": channel_member.id,
                                 "id": channel_member.rtc_session_ids.id,
+                                "isCameraOn": channel_member.rtc_session_ids.is_camera_on,
+                                "isDeaf": channel_member.rtc_session_ids.is_deaf,
+                                "isScreenSharingOn": channel_member.rtc_session_ids.is_screen_sharing_on,
+                                "isSelfMuted": channel_member.rtc_session_ids.is_muted,
                             },
                         ],
                         "res.partner": [
@@ -912,6 +916,10 @@ class TestChannelRTC(MailCommon):
                             {
                                 "channelMember": channel_member.id,
                                 "id": channel_member.rtc_session_ids.id,
+                                "isCameraOn": channel_member.rtc_session_ids.is_camera_on,
+                                "isDeaf": channel_member.rtc_session_ids.is_deaf,
+                                "isScreenSharingOn": channel_member.rtc_session_ids.is_screen_sharing_on,
+                                "isSelfMuted": channel_member.rtc_session_ids.is_muted,
                             },
                         ],
                         "res.partner": [

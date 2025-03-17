@@ -85,7 +85,7 @@ test("click on partner follower details", async () => {
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
     await contains(".o-mail-Follower-details");
-    $(".o-mail-Follower-details")[0].click();
+    await click(".o-mail-Follower-details:first");
     await openFormDef;
     await assertSteps(["do_action"]); // redirect to partner profile
 });

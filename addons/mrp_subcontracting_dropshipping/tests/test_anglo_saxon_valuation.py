@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo import Command
 from odoo.tests import tagged, Form
 
 
@@ -181,12 +182,14 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         purchase_order.button_confirm()
         dropship_transfer = purchase_order.picking_ids[0]
         dropship_transfer.move_ids[0].quantity = 50
-        dropship_transfer.with_context(cancel_backorder=False)._action_done()
+        res = dropship_transfer.button_validate()
+        wizard = Form(self.env[res['res_model']].with_context(res['context'])).save()
+        wizard.process()
         account_move_1 = sale_order._create_invoices()
         account_move_1.action_post()
         dropship_backorder = dropship_transfer.backorder_ids[0]
         dropship_backorder.move_ids[0].quantity = 50
-        dropship_backorder._action_done()
+        dropship_backorder.button_validate()
         account_move_2 = sale_order._create_invoices()
         account_move_2.action_post()
 
@@ -210,6 +213,17 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         purchase order line has been manually edited.
         """
         kit_final_prod = self.product_a
+        product_c = self.env['product.product'].create({
+            'name': 'product_c',
+            'uom_id': self.env.ref('uom.product_uom_dozen').id,
+            'uom_po_id': self.env.ref('uom.product_uom_dozen').id,
+            'lst_price': 120.0,
+            'standard_price': 100.0,
+            'property_account_income_id': self.copy_account(self.company_data['default_account_revenue']).id,
+            'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
+            'taxes_id': [Command.set((self.tax_sale_a + self.tax_sale_b).ids)],
+            'supplier_taxes_id': [Command.set((self.tax_purchase_a + self.tax_purchase_b).ids)],
+        })
         kit_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_final_prod.product_tmpl_id.id,
             'product_uom_id': kit_final_prod.uom_id.id,
@@ -218,13 +232,21 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         })
         kit_bom.bom_line_ids = [(0, 0, {
             'product_id': self.product_b.id,
-            'product_qty': 1,
+            'product_qty': 4,
+        }), (0, 0, {
+            'product_id': product_c.id,
+            'product_qty': 2,
         })]
 
         self.env['product.supplierinfo'].create({
             'product_id': self.product_b.id,
             'partner_id': self.partner_a.id,
-            'price': 2000,
+            'price': 160,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': product_c.id,
+            'partner_id': self.partner_a.id,
+            'price': 100,
         })
 
         (kit_final_prod + self.product_b).categ_id.write({
@@ -251,14 +273,18 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         account_move = sale_order._create_invoices()
         account_move.action_post()
 
+        # Each product_a should cost:
+        # 4x product_b = 160 * 4 = 640 +
+        # 2x product_c = 100 * 2 = 200
+        #                        = 840
         self.assertRecordValues(
             account_move.line_ids.sorted('balance'),
             [
-                {'name': 'product_a',                       'debit': 0.0,       'credit': 4000.0},
-                {'name': 'product_a',                       'debit': 0.0,       'credit': 1800.0},
-                {'name': '15% (Copy)',                      'debit': 0.0,       'credit': 270.0},
-                {'name': 'INV/2024/00001 installment #1',   'debit': 621.0,     'credit': 0.0},
-                {'name': 'INV/2024/00001 installment #2',   'debit': 1449.0,    'credit': 0.0},
-                {'name': 'product_a',                       'debit': 4000.0,    'credit': 0.0},
+                {'name': 'product_a',                           'debit': 0.0,       'credit': 1800.0},
+                {'name': 'product_a',                           'debit': 0.0,       'credit': 1680.0},
+                {'name': '15% (Copy)',                          'debit': 0.0,       'credit': 270.0},
+                {'name': f'{account_move.name} installment #1', 'debit': 621.0,     'credit': 0.0},
+                {'name': f'{account_move.name} installment #2', 'debit': 1449.0,    'credit': 0.0},
+                {'name': 'product_a',                           'debit': 1680.0,    'credit': 0.0},
             ]
         )

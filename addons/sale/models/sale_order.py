@@ -490,12 +490,13 @@ class SaleOrder(models.Model):
                 )
             order.team_id = cached_teams[key]
 
-    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id')
+    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id', 'payment_term_id')
     def _compute_amounts(self):
         AccountTax = self.env['account.tax']
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+            base_lines += order._add_base_lines_for_early_payment_discount()
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
             tax_totals = AccountTax._get_tax_totals_summary(
@@ -506,6 +507,43 @@ class SaleOrder(models.Model):
             order.amount_untaxed = tax_totals['base_amount_currency']
             order.amount_tax = tax_totals['tax_amount_currency']
             order.amount_total = tax_totals['total_amount_currency']
+
+    def _add_base_lines_for_early_payment_discount(self):
+        """
+        When applying a payment term with an early payment discount, and when said payment term computes the tax on the
+        'mixed' setting, the tax computation is always based on the discounted amount untaxed.
+        Creates the necessary line for this behavior to be displayed.
+        :returns: array containing the necessary lines or empty array if the payment term isn't epd mixed
+        """
+        self.ensure_one()
+        epd_lines = []
+        if (
+            self.payment_term_id.early_discount
+            and self.payment_term_id.early_pay_discount_computation == 'mixed'
+            and self.payment_term_id.discount_percentage
+        ):
+            percentage = self.payment_term_id.discount_percentage
+            currency = self.currency_id or self.company_id.currency_id
+            for line in self.order_line.filtered(lambda x: not x.display_type):
+                line_amount_after_discount = (line.price_subtotal / 100) * percentage
+                epd_lines.append(self.env['account.tax']._prepare_base_line_for_taxes_computation(
+                    record=self,
+                    price_unit=-line_amount_after_discount,
+                    quantity=1.0,
+                    currency_id=currency,
+                    sign=1,
+                    special_type='early_payment',
+                    tax_ids=line.tax_id,
+                ))
+                epd_lines.append(self.env['account.tax']._prepare_base_line_for_taxes_computation(
+                    record=self,
+                    price_unit=line_amount_after_discount,
+                    quantity=1.0,
+                    currency_id=currency,
+                    sign=1,
+                    special_type='early_payment',
+                ))
+        return epd_lines
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
@@ -732,17 +770,18 @@ class SaleOrder(models.Model):
                            order.company_id.account_use_credit_limit
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
-                    order,
+                    order.sudo(),  # ensure access to `credit` & `credit_limit` fields
                     current_amount=(order.amount_total / order.currency_rate),
                 )
 
     @api.depends_context('lang')
-    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id')
+    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id', 'payment_term_id')
     def _compute_tax_totals(self):
         AccountTax = self.env['account.tax']
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+            base_lines += order._add_base_lines_for_early_payment_discount()
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
             order.tax_totals = AccountTax._get_tax_totals_summary(
@@ -792,6 +831,12 @@ class SaleOrder(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
+    def onchange(self, values, field_names, fields_spec):
+        self_with_context = self
+        if not field_names: # Some warnings should not be displayed for the first onchange
+            self_with_context = self.with_context(sale_onchange_first_call=True)
+        return super(SaleOrder, self_with_context).onchange(values, field_names, fields_spec)
+
     @api.onchange('commitment_date', 'expected_date')
     def _onchange_commitment_date(self):
         """ Warn if the commitment dates is sooner than the expected date """
@@ -807,6 +852,8 @@ class SaleOrder(models.Model):
     @api.onchange('company_id')
     def _onchange_company_id_warning(self):
         self.show_update_pricelist = True
+        if self.env.context.get('sale_onchange_first_call'):
+            return
         if self.order_line and self.state == 'draft':
             return {
                 'warning': {
@@ -995,6 +1042,7 @@ class SaleOrder(models.Model):
             'default_res_ids': self.ids,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
+            'email_notification_allow_footer': True,
             'proforma': self.env.context.get('proforma', False),
         }
 
@@ -1306,8 +1354,7 @@ class SaleOrder(models.Model):
     def _recompute_prices(self):
         lines_to_recompute = self._get_update_prices_lines()
         lines_to_recompute.invalidate_recordset(['pricelist_item_id'])
-        lines_to_recompute.technical_price_unit = 0.0
-        lines_to_recompute._compute_price_unit()
+        lines_to_recompute.with_context(force_price_recomputation=True)._compute_price_unit()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset
         # if pricelist rule is different than when the price was first computed.
@@ -1456,6 +1503,12 @@ class SaleOrder(models.Model):
 
         return self.env['sale.order.line'].browse(invoiceable_line_ids + down_payment_line_ids)
 
+    def _create_account_invoices(self, invoice_vals_list, final):
+        """Small method to allow overriding the behavior right after an invoice is created."""
+        # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
+        # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
+        return self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
+
     def _create_invoices(self, grouped=False, final=False, date=None):
         """ Create invoice(s) for the given Sales Order(s).
 
@@ -1572,15 +1625,16 @@ class SaleOrder(models.Model):
                     line[2]['sequence'] = SaleOrderLine._get_invoice_line_sequence(new=sequence, old=line[2]['sequence'])
                     sequence += 1
 
-        # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
-        # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
-        moves = self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
+        moves = self._create_account_invoices(invoice_vals_list, final)
 
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
         if final:
-            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
+            if moves_to_switch := moves.sudo().filtered(lambda m: m.amount_total < 0):
+                moves_to_switch.action_switch_move_type()
+                self.invoice_ids._set_reversed_entry(moves_to_switch)
+
         for move in moves:
             if final:
                 # Downpayment might have been determined by a fixed amount set by the user.
@@ -1733,10 +1787,6 @@ class SaleOrder(models.Model):
             subtitles.append(
                 format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
             )
-
-        if self.validity_date and self.state in ['draft', 'sent']:
-            formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
-            subtitles.append(_("Expires on %(date)s", date=formatted_date))
 
         render_context['subtitles'] = subtitles
         return render_context
@@ -2018,6 +2068,25 @@ class SaleOrder(models.Model):
                 user_id=order.user_id.id or order.partner_id.user_id.id,
                 note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
+    def _prepare_analytic_account_data(self, prefix=None):
+        """ Prepare SO analytic account creation values.
+
+        :return: `account.analytic.account` creation values
+        :rtype: dict
+        """
+        self.ensure_one()
+        name = self.name
+        if prefix:
+            name = prefix + ": " + self.name
+        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+        return {
+            'name': name,
+            'code': self.client_order_ref,
+            'company_id': self.company_id.id,
+            'plan_id': project_plan.id,
+            'partner_id': self.partner_id.id,
+        }
+
     def _prepare_down_payment_section_line(self, **optional_values):
         """ Prepare the values to create a new down payment section.
 
@@ -2160,7 +2229,7 @@ class SaleOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
-        return sol.price_unit
+        return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
 
     #=== TOOLING ===#
 

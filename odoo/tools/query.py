@@ -67,7 +67,9 @@ class Query:
         # holds the list of WHERE conditions (to be joined with 'AND')
         self._where_clauses: list[SQL] = []
 
-        # order, limit, offset
+        # groupby, having, order, limit, offset
+        self.groupby: SQL | None = None
+        self.having: SQL | None = None
         self._order: SQL | None = None
         self.limit: int | None = None
         self.offset: int | None = None
@@ -75,7 +77,8 @@ class Query:
         # memoized result
         self._ids: tuple[int, ...] | None = None
 
-    def make_alias(self, alias: str, link: str) -> str:
+    @staticmethod
+    def make_alias(alias: str, link: str) -> str:
         """ Return an alias based on ``alias`` and ``link``. """
         return _generate_table_alias(alias, link)
 
@@ -178,10 +181,12 @@ class Query:
         """ Return the SELECT query as an ``SQL`` object. """
         sql_args = map(SQL, args) if args else [SQL.identifier(self.table, 'id')]
         return SQL(
-            "%s%s%s%s%s%s",
+            "%s%s%s%s%s%s%s%s",
             SQL("SELECT %s", SQL(", ").join(sql_args)),
             SQL(" FROM %s", self.from_clause),
             SQL(" WHERE %s", self.where_clause) if self._where_clauses else SQL(),
+            SQL(" GROUP BY %s", self.groupby) if self.groupby else SQL(),
+            SQL(" HAVING %s", self.having) if self.having else SQL(),
             SQL(" ORDER BY %s", self._order) if self._order else SQL(),
             SQL(" LIMIT %s", self.limit) if self.limit else SQL(),
             SQL(" OFFSET %s", self.offset) if self.offset else SQL(),

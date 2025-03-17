@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* phone_validation
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-msgid " Please correct the number and try again."
-msgstr " Пожалуйста, исправьте номер и повторите попытку."
+msgid "%(error)s Please correct the number and try again."
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
@@ -48,8 +50,8 @@ msgstr "Архивировано"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-msgid "Are you sure you want to unblacklist this Phone Number?"
-msgstr "Вы уверены, что хотите исключить этот номер телефона из черного списка?"
+msgid "Are you sure you want to unblacklist this phone number?"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -90,18 +92,19 @@ msgstr "Телефон в черном списке - это телефон"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Blacklisted phone numbers won't receive SMS Mailings anymore."
-msgstr "Номера телефонов, внесенные в черный список, больше не будут получать SMS-рассылки."
+msgstr ""
+"Номера телефонов, внесенные в черный список, больше не будут получать SMS-"
+"рассылки."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/res_users.py:0
-msgid "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)"
-msgstr "Заблокирован удалением учетной записи портала %(portal_user_name)s на %(user_name)s (#%(user_id)s)"
-
-#. module: phone_validation
-#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-msgid "Confirm"
-msgstr "Подтвердить"
+msgid ""
+"Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
+"(#%(user_id)s)"
+msgstr ""
+"Заблокирован удалением учетной записи портала %(portal_user_name)s на "
+"%(user_name)s (#%(user_id)s)"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -133,8 +136,12 @@ msgstr "Отображаемое имя"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized
-msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
-msgstr "Поле, используемое для хранения очищенного телефонного номера. Помогает ускорить поиск и сравнение."
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr ""
+"Поле, используемое для хранения очищенного телефонного номера. Помогает "
+"ускорить поиск и сравнение."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -164,7 +171,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Если флажок установлен, значит, новые сообщения требуют вашего внимания."
+msgstr ""
+"Если флажок установлен, значит, новые сообщения требуют вашего внимания."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
@@ -174,8 +182,12 @@ msgstr "Если отмечено, некоторые сообщения име�
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
-msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
-msgstr "Если санируемый номер телефона находится в черном списке, контакт больше не будет получать массовые рассылки смс из любого списка"
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Если санируемый номер телефона находится в черном списке, контакт больше не "
+"будет получать массовые рассылки смс из любого списка"
 
 #. module: phone_validation
 #. odoo-python
@@ -203,13 +215,25 @@ msgstr "Невозможное число %s: слишком много цифр
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Указывает, является ли занесенный в черный список номер телефона мобильным. Помогает определить, какой номер занесен в черный список             , если в модели присутствуют поля \"мобильный\" и \"телефон\"."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Указывает, является ли занесенный в черный список номер телефона мобильным. "
+"Помогает определить, какой номер занесен в черный список             , если "
+"в модели присутствуют поля \"мобильный\" и \"телефон\"."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "Указывает, является ли номер телефона, занесенный в черный список, номером телефона. Помогает определить, какой номер занесен в черный список             , если в модели есть поле \"мобильный\" и \"телефон\"."
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Указывает, является ли номер телефона, занесенный в черный список, номером "
+"телефона. Помогает определить, какой номер занесен в черный список"
+"             , если в модели есть поле \"мобильный\" и \"телефон\"."
 
 #. module: phone_validation
 #. odoo-python
@@ -331,8 +355,11 @@ msgstr "Текст над номером в хедере для мобильны
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
-msgid "Please enter at least 3 characters when searching a Phone/Mobile number."
-msgstr "Пожалуйста, введите не менее 3 символов при поиске номера телефона/мобильного телефона."
+msgid ""
+"Please enter at least 3 characters when searching a Phone/Mobile number."
+msgstr ""
+"Пожалуйста, введите не менее 3 символов при поиске номера "
+"телефона/мобильного телефона."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
@@ -342,6 +369,7 @@ msgstr "Причина"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Remove phone from blacklist"
 msgstr "Удалить телефон из черного списка"
 
@@ -371,6 +399,11 @@ msgstr "Причина разблокировки: %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "Пользователь"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "e.g \"Asked to receive our next newsletters\""
+msgstr ""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

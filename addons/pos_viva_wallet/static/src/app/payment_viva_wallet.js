@@ -2,7 +2,12 @@ import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { sprintf } from "@web/core/utils/strings";
+import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
+
+// Due to consistency issues with the webhook, we also poll
+// the status of the payment periodically as a fallback.
+const POLLING_INTERVAL_MS = 5000;
 
 export class PaymentVivaWallet extends PaymentInterface {
     /*
@@ -80,7 +85,7 @@ export class PaymentVivaWallet extends PaymentInterface {
             sessionId: line.sessionId,
             terminalId: line.payment_method_id.viva_wallet_terminal_id,
             cashRegisterId: this.pos.get_cashier().name,
-            amount: line.amount * 100,
+            amount: roundPrecision(line.amount * 100),
             currencyCode: this.pos.currency.iso_numeric.toString(),
             merchantReference: line.sessionId + "/" + this.pos.session.id,
             customerTrns: customerTrns,
@@ -105,7 +110,9 @@ export class PaymentVivaWallet extends PaymentInterface {
             cashRegisterId: this.pos.get_cashier().name,
         };
         return this._call_viva_wallet(data, "viva_wallet_send_payment_cancel").then((data) => {
-            this._viva_wallet_handle_response(data);
+            if (data.error) {
+                this._show_error(data.error);
+            }
             return true;
         });
     }
@@ -140,6 +147,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         // we use the handle_payment_response method on the payment line
         const resolver = this.paymentLineResolvers?.[line.uuid];
         if (resolver) {
+            this.paymentLineResolvers[line.uuid] = null;
             resolver(isPaymentSuccessful);
         } else {
             line.handle_payment_response(isPaymentSuccessful);
@@ -156,7 +164,34 @@ export class PaymentVivaWallet extends PaymentInterface {
 
     waitForPaymentConfirmation() {
         return new Promise((resolve) => {
-            this.paymentLineResolvers[this.pending_viva_wallet_line().uuid] = resolve;
+            const paymentLine = this.pending_viva_wallet_line();
+            const sessionId = paymentLine.sessionId;
+            this.paymentLineResolvers[paymentLine.uuid] = resolve;
+            const intervalId = setInterval(async () => {
+                const isPaymentStillValid = () =>
+                    this.paymentLineResolvers[paymentLine.uuid] &&
+                    this.pending_viva_wallet_line()?.sessionId === sessionId &&
+                    paymentLine.payment_status === "waitingCard";
+                if (!isPaymentStillValid()) {
+                    clearInterval(intervalId);
+                    return;
+                }
+
+                const result = await this._call_viva_wallet(
+                    sessionId,
+                    "viva_wallet_get_payment_status"
+                );
+                if ("success" in result && isPaymentStillValid()) {
+                    clearInterval(intervalId);
+                    if (this.isPaymentSuccessful(result)) {
+                        this.handleSuccessResponse(paymentLine, result);
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                    this.paymentLineResolvers[paymentLine.uuid] = null;
+                }
+            }, POLLING_INTERVAL_MS);
         });
     }
 

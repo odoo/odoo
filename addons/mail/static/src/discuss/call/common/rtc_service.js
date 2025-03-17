@@ -10,9 +10,22 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { url } from "@web/core/utils/urls";
 import { callActionsRegistry } from "./call_actions";
+
+/**
+ *
+ * @param {EventTarget} target
+ * @param {string} event
+ * @param {Function} f event listener callback
+ * @return {Function} unsubscribe function
+ */
+function subscribe(target, event, f) {
+    target.addEventListener(event, f);
+    return () => target.removeEventListener(event, f);
+}
 
 /**
  * @typedef {'audio' | 'camera' | 'screen' } streamType
@@ -76,7 +89,7 @@ class Network {
     p2p;
     /** @type {import("@mail/../lib/odoo_sfu/odoo_sfu").SfuClient} */
     sfu;
-    /** @type {array[{ name: string, f: EventListener }]} */
+    /** @type {[{ name: string, f: EventListener }]} */
     _listeners = [];
     /**
      * @param {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer} p2p
@@ -85,6 +98,30 @@ class Network {
     constructor(p2p, sfu) {
         this.p2p = p2p;
         this.sfu = sfu;
+    }
+
+    getSfuConsumerStats(sessionId) {
+        const consumers = this.sfu?._consumers.get(sessionId);
+        if (!consumers) {
+            return [];
+        }
+        return Object.entries(consumers).map(([type, consumer]) => {
+            let state = "active";
+            if (!consumer) {
+                state = "no consumer";
+            } else if (consumer.closed) {
+                state = "closed";
+            } else if (consumer.paused) {
+                state = "paused";
+            } else if (!consumer.track) {
+                state = "no track";
+            } else if (!consumer.track.enabled) {
+                state = "track disabled";
+            } else if (consumer.track.muted) {
+                state = "track muted";
+            }
+            return { type, state };
+        });
     }
 
     /**
@@ -96,6 +133,15 @@ class Network {
             this.sfu.disconnect();
         }
         this.sfu = sfu;
+    }
+    removeSfu() {
+        if (!this.sfu) {
+            return;
+        }
+        for (const { name, f } of this._listeners) {
+            this.sfu.removeEventListener(name, f);
+        }
+        this.sfu.disconnect();
     }
     /**
      * @param {string} name
@@ -113,8 +159,10 @@ class Network {
      * not setting it will remove the track from the server
      */
     async updateUpload(type, track) {
-        await this.p2p.updateUpload(type, track);
-        await this.sfu?.updateUpload(type, track);
+        await Promise.all([
+            this.p2p.updateUpload(type, track),
+            this.sfu?.updateUpload(type, track),
+        ]);
     }
     /**
      * Stop or resume the consumption of tracks from the other call participants.
@@ -182,6 +230,10 @@ export class Rtc extends Record {
     actionsStack = [];
     /** @type {string|undefined} String representing the last call action activated, or undefined if none are */
     lastSelfCallAction = undefined;
+    /** callbacks to be called when cleaning the state up after a call */
+    cleanups = [];
+    /** @type {number} */
+    sfuTimeout;
 
     callActions = Record.attr([], {
         compute() {
@@ -216,10 +268,10 @@ export class Rtc extends Record {
             connectionType: undefined,
             hasPendingRequest: false,
             channel: undefined,
-            logs: new Map(),
+            globalLogs: {},
+            logs: new Map(), // deprecated
             sendCamera: false,
             sendScreen: false,
-            serverState: undefined,
             updateAndBroadcastDebounce: undefined,
             audioTrack: undefined,
             cameraTrack: undefined,
@@ -233,6 +285,10 @@ export class Rtc extends Record {
             pttReleaseTimeout: undefined,
             sourceCameraStream: null,
             sourceScreenStream: null,
+            /**
+             * Whether the network fell back to p2p mode in a SFU call.
+             */
+            fallbackMode: false,
         });
         this.blurManager = undefined;
     }
@@ -333,7 +389,7 @@ export class Rtc extends Record {
         this.state.pttReleaseTimeout = browser.setTimeout(() => {
             this.setTalking(false);
             if (!this.selfSession?.isMute) {
-                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+                this.soundEffectsService.play("push-to-talk-off");
             }
         }, Math.max(this.store.settings.voice_active_duration || 0, duration));
     }
@@ -348,7 +404,7 @@ export class Rtc extends Record {
         }
         browser.clearTimeout(this.state.pttReleaseTimeout);
         if (!this.selfSession.isTalking && !this.selfSession.isMute) {
-            this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
+            this.soundEffectsService.play("push-to-talk-on");
         }
         this.setTalking(true);
     }
@@ -387,6 +443,7 @@ export class Rtc extends Record {
      */
     async leaveCall(channel = this.state.channel) {
         this.state.hasPendingRequest = true;
+        this.logSnapshot();
         await this.rpcLeaveCall(channel);
         this.endCall(channel);
         this.state.hasPendingRequest = false;
@@ -442,14 +499,22 @@ export class Rtc extends Record {
      * @param {import("models").Thread} channel
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
+     * @param {{ exit: () => {} }} [initialState.fullscreen] if set, the call view is using fullscreen.
+     *   Providing fullscreen object allows to exit on call leave.
      * @param {boolean} [initialState.camera]
      */
-    async toggleCall(channel, { audio = true, camera } = {}) {
+    async toggleCall(channel, { audio = true, fullscreen, camera } = {}) {
+        await Promise.resolve(() =>
+            loadJS(url("/mail/static/lib/selfie_segmentation/selfie_segmentation.js")).catch(
+                () => {}
+            )
+        );
         if (this.state.hasPendingRequest) {
             return;
         }
         const isActiveCall = channel.eq(this.state.channel);
         if (this.state.channel) {
+            fullscreen?.exit();
             await this.leaveCall(this.state.channel);
         }
         if (!isActiveCall) {
@@ -507,7 +572,14 @@ export class Rtc extends Record {
         }
     }
 
+    updateUpload() {
+        this.network?.updateUpload("audio", this.state.audioTrack);
+        this.network?.updateUpload("camera", this.state.cameraTrack);
+        this.network?.updateUpload("screen", this.state.screenTrack);
+    }
+
     async _initConnection() {
+        this.selfSession.connectionState = "selecting network type";
         this.state.connectionType = CONNECTION_TYPES.P2P;
         this.network?.disconnect();
         // loading p2p in any case as we may need to receive peer-to-peer connections from users who failed to connect to the SFU.
@@ -516,29 +588,50 @@ export class Rtc extends Record {
             iceServers: this.iceServers,
         });
         this.network = new Network(this.p2pService);
+        this.updateUpload();
         if (this.serverInfo) {
+            this.log(this.selfSession, "loading sfu server", {
+                step: "loading sfu server",
+                serverInfo: this.serverInfo,
+            });
+            this.selfSession.connectionState = "loading SFU assets";
             try {
                 await this._loadSfu();
                 this.state.connectionType = CONNECTION_TYPES.SERVER;
-                this.network.addSfu(this.sfuClient);
+                if (this.network) {
+                    this.network.addSfu(this.sfuClient);
+                } else {
+                    return; // the call may be ended by the time the sfu is loaded
+                }
             } catch (e) {
+                this.state.fallbackMode = true;
                 this.notification.add(
                     _t("Failed to load the SFU server, falling back to peer-to-peer"),
                     {
                         type: "warning",
                     }
                 );
-                this.log(this.selfSession, "failed to load sfu server", { error: e });
+                this.log(this.selfSession, "failed to load sfu server", {
+                    error: e,
+                    important: true,
+                });
             }
+            this.selfSession.connectionState = "initializing";
+        } else {
+            this.log(this.selfSession, "no sfu server info, using peer-to-peer");
         }
         this.network.addEventListener("stateChange", this._handleSfuClientStateChange);
         this.network.addEventListener("update", this._handleNetworkUpdates);
         this.network.addEventListener("log", ({ detail: { id, level, message } }) => {
             const session = this.store.RtcSession.get(id);
             if (session) {
-                this.log(session, message, { step: "p2p", level });
+                this.log(session, message, { step: "p2p", level, important: true });
             }
         });
+        if (this.state.channel) {
+            await this.call();
+            this.updateUpload();
+        }
     }
 
     /**
@@ -548,30 +641,30 @@ export class Rtc extends Record {
      * @param {Error} [param2.error]
      * @param {String} [param2.step] current step of the flow
      * @param {String} [param2.state] current state of the connection
+     * @param {Boolean} [param2.important] if the log is important and should be kept even if logRtc is disabled
      */
-    log(session, entry, { error, step, state, ...data } = {}) {
+    log(session, entry, { error, step, state, important, ...data } = {}) {
         session.logStep = entry;
-        if (!this.store.settings.logRtc) {
+        if (!this.store.settings.logRtc && !important) {
             return;
         }
-        if (!this.state.logs.has(session.id)) {
-            this.state.logs.set(session.id, { step: "", state: "", logs: [] });
+        let sessionEntry = this.state.logs[session.id];
+        if (!sessionEntry) {
+            this.state.logs[session.id] = sessionEntry = { step: "", state: "", logs: [] };
         }
         if (step) {
-            this.state.logs.get(session.id).step = step;
+            sessionEntry.step = step;
         }
         if (state) {
-            this.state.logs.get(session.id).state = state;
+            sessionEntry.state = state;
         }
-        const trace = window.Error().stack || "";
-        this.state.logs.get(session.id).logs.push({
+        sessionEntry.logs.push({
             event: `${luxon.DateTime.now().toFormat("HH:mm:ss")}: ${entry}`,
             error: error && {
                 name: error.name,
                 message: error.message,
                 stack: error.stack && error.stack.split("\n"),
             },
-            trace: trace.split("\n"),
             ...data,
         });
     }
@@ -612,8 +705,8 @@ export class Rtc extends Record {
                     return;
                 }
                 for (const [id, info] of Object.entries(payload)) {
-                    const session = this.store.RtcSession.get(Number(id));
-                    if (!session) {
+                    const session = await this.store.RtcSession.getWhenReady(Number(id));
+                    if (!session || !this.state.channel) {
                         return;
                     }
                     // `isRaisingHand` is turned into the Date `raisingHand`
@@ -625,10 +718,15 @@ export class Rtc extends Record {
             case "track":
                 {
                     const { sessionId, type, track, active } = payload;
-                    const session = this.store.RtcSession.get(sessionId);
-                    if (!session) {
+                    const session = await this.store.RtcSession.getWhenReady(sessionId);
+                    if (!session || !this.state.channel) {
+                        this.log(
+                            this.selfSession,
+                            `track received for unknown session ${sessionId} (${this.state.connectionType})`
+                        );
                         return;
                     }
+                    this.log(session, `${type} track received (${this.state.connectionType})`);
                     try {
                         await this.handleRemoteTrack({ session, track, type, active });
                     } catch {
@@ -644,43 +742,75 @@ export class Rtc extends Record {
         }
     }
 
-    async _handleSfuClientStateChange({ detail: { state, cause } }) {
-        this.state.serverState = state;
+    _handleSfuClientStateChange({ detail: { state, cause } }) {
+        this.log(this.selfSession, `sfu state change: ${state}. cause: ${cause}`, { state });
+        this.selfSession.connectionState = state;
         switch (state) {
             case this.SFU_CLIENT_STATE.AUTHENTICATED:
                 // if we are hot-swapping connection type, we clear the p2p as late as possible
                 this.p2pService.removeALlPeers();
-                this.selfSession.connectionState = "connecting";
                 break;
             case this.SFU_CLIENT_STATE.CONNECTED:
+                browser.clearTimeout(this.sfuTimeout);
                 this.sfuClient.updateInfo(this.formatInfo(), {
                     needRefresh: true, // asks the server to send the info from all the channel
                 });
                 this.sfuClient.updateUpload("audio", this.state.audioTrack);
                 this.sfuClient.updateUpload("camera", this.state.cameraTrack);
                 this.sfuClient.updateUpload("screen", this.state.screenTrack);
-                this.selfSession.connectionState = "connected";
                 return;
             case this.SFU_CLIENT_STATE.CLOSED:
                 {
+                    if (!this.state.channel) {
+                        return;
+                    }
                     let text;
                     if (cause === "full") {
                         text = _t("Channel full");
+                        this.leaveCall();
                     } else {
-                        text = _t("Connection to SFU server closed by the server");
+                        text = _t(
+                            "Connection to SFU server closed by the server, falling back to peer-to-peer"
+                        );
+                        this.log(this.selfSession, text, { important: true });
+                        this._downgradeConnection();
                     }
                     this.notification.add(text, {
                         type: "warning",
                     });
-                    await this.leaveCall();
                 }
                 return;
         }
     }
 
-    async call() {
+    async _downgradeConnection() {
+        this.serverInfo = undefined;
+        this.state.fallbackMode = true;
+        this.state.connectionType = CONNECTION_TYPES.P2P;
+        this.network.removeSfu();
+        await this.call();
+        this.updateUpload();
+    }
+
+    /**
+     *
+     * @param {Object} [param0={}]
+     * @param {boolean} [param0.asFallback=false] whether the call is made as a fallback to the SFU, in which case
+     * p2p connections are offered more eagerly as other participants may not offer them if their primary connection
+     * type is SFU.
+     * @return {Promise<void>}
+     */
+    async call({ asFallback = false } = {}) {
+        if (asFallback && !this.state.fallbackMode) {
+            return;
+        }
         if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
             if (this.sfuClient.state === this.SFU_CLIENT_STATE.DISCONNECTED) {
+                browser.clearTimeout(this.sfuTimeout);
+                this.sfuTimeout = browser.setTimeout(() => {
+                    this.log(this.selfSession, "sfu connection timeout", { important: true });
+                    this._downgradeConnection();
+                }, 10000);
                 await this.sfuClient.connect(this.serverInfo.url, this.serverInfo.jsonWebToken, {
                     channelUUID: this.serverInfo.channelUUID,
                     iceServers: this.iceServers,
@@ -731,38 +861,18 @@ export class Rtc extends Record {
         const data = await rpc(
             "/mail/rtc/channel/join_call",
             {
+                camera,
                 channel_id: channel.id,
                 check_rtc_session_ids: channel.rtcSessions.map((session) => session.id),
             },
             { silent: true }
         );
+        this.state.hasPendingRequest = false;
         // Initializing a new session implies closing the current session.
         this.clear();
-        this.state.logs.clear();
         this.state.channel = channel;
         this.store.insert(data);
-        this.state.logs.set("channelId", this.state.channel.id);
-        this.state.logs.set("selfSessionId", this.selfSession.id);
-        this.state.logs.set("hasTURN", hasTurn(this.iceServers));
-        const channelProxy = reactive(this.state.channel, () => {
-            if (channel.notEq(this.state.channel)) {
-                throw new Error("channel has changed");
-            }
-            if (this.state.channel) {
-                if (this.state.channel && this.selfSession.notIn(channelProxy.rtcSessions)) {
-                    // if the current RTC session is not in the channel sessions, this call is no longer valid.
-                    this.endCall();
-                    return;
-                }
-                for (const session of this.state.channel.rtcSessions) {
-                    if (session.notIn(channelProxy.rtcSessions)) {
-                        this.log(session, "session removed from the server");
-                        this.disconnect(session);
-                    }
-                }
-            }
-            void channelProxy.rtcSessions.map((s) => s);
-        });
+        this.newLogs();
         this.state.updateAndBroadcastDebounce = debounce(
             async () => {
                 if (!this.selfSession) {
@@ -786,23 +896,55 @@ export class Rtc extends Record {
             { leading: true, trailing: true }
         );
         this.state.channel.rtcInvitingSession = undefined;
+        if (camera) {
+            await this.toggleVideo("camera");
+        }
         await this._initConnection();
-        if (!this.state.channel?.id) {
-            return;
-        }
-        await this.call();
-        if (!this.state.channel?.id) {
-            return;
-        }
-        this.soundEffectsService.play("channel-join");
-        this.state.hasPendingRequest = false;
         await this.resetAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
             return;
         }
-        if (camera) {
-            await this.toggleVideo("camera");
+        this.soundEffectsService.play("channel-join");
+        this.cleanups.push(
+            // only register the beforeunload event if there is a call as FireFox will not place
+            // the pages with beforeunload listeners in the bfcache.
+            subscribe(browser, "beforeunload", (event) => {
+                event.preventDefault();
+            })
+        );
+    }
+
+    newLogs() {
+        const date = luxon.DateTime.now().toFormat("yyyy-MM-dd-HH:mm:ss");
+        const id = `c:${this.state.channel.id}-s:${this.selfSession.id}-d:${date}`;
+        this.state.logs = this.state.globalLogs[id] = {};
+        this.state.logs["hasTurn"] = hasTurn(this.iceServers);
+    }
+
+    logSnapshot() {
+        const peers = [];
+        this.p2pService?.peers.forEach((peer) => {
+            peers.push({
+                id: peer.id,
+                state: peer.connection.connectionState,
+                iceState: peer.connection.iceConnectionState,
+            });
+        });
+        const server = {};
+        if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
+            server.info = this.serverInfo;
+            server.state = this.sfuClient?.state;
+            server.consumersStats = this.state.channel.rtcSessions.map((session) =>
+                this.network.getSfuConsumerStats(session.id)
+            );
+            server.errors = this.sfuClient?.errors.map((error) => error.message);
         }
+        this.state.globalLogs[`snapshot-${luxon.DateTime.now().toFormat("yyyy-MM-dd-HH-mm-ss")}`] =
+            {
+                peers,
+                server,
+                connectionType: this.state.connectionType,
+            };
     }
 
     async rpcLeaveCall(channel) {
@@ -855,17 +997,21 @@ export class Rtc extends Record {
                 this.removeVideoFromSession(session);
                 session.isTalking = false;
             }
+            this.cleanups.splice(0).forEach((cleanup) => cleanup());
         }
+        browser.clearTimeout(this.sfuTimeout);
         this.sfuClient = undefined;
         this.network = undefined;
-        this.state.serverState = undefined;
         this.state.updateAndBroadcastDebounce?.cancel();
         this.state.disconnectAudioMonitor?.();
         this.state.audioTrack?.stop();
         this.state.cameraTrack?.stop();
         this.state.screenTrack?.stop();
+        this.state.fallbackMode = undefined;
         closeStream(this.state.sourceCameraStream);
         this.state.sourceCameraStream = null;
+        closeStream(this.state.sourceScreenStream);
+        this.state.sourceScreenStream = null;
         if (this.blurManager) {
             this.blurManager.close();
             this.blurManager = undefined;
@@ -884,6 +1030,7 @@ export class Rtc extends Record {
             sendCamera: false,
             sendScreen: false,
             channel: undefined,
+            fallbackMode: false,
         });
     }
 
@@ -961,7 +1108,10 @@ export class Rtc extends Record {
         if (this.selfSession) {
             switch (type) {
                 case "camera": {
-                    this.removeVideoFromSession(this.selfSession, "camera");
+                    this.removeVideoFromSession(this.selfSession, {
+                        type: "camera",
+                        cleanup: false,
+                    });
                     if (this.state.cameraTrack) {
                         this.updateStream(this.selfSession, this.state.cameraTrack);
                     }
@@ -969,7 +1119,10 @@ export class Rtc extends Record {
                 }
                 case "screen": {
                     if (!this.state.screenTrack) {
-                        this.removeVideoFromSession(this.selfSession, "screen");
+                        this.removeVideoFromSession(this.selfSession, {
+                            type: "screen",
+                            cleanup: false,
+                        });
                     } else {
                         this.updateStream(this.selfSession, this.state.screenTrack);
                     }
@@ -1020,10 +1173,6 @@ export class Rtc extends Record {
      * @param {String} type 'camera' or 'screen'
      */
     async setVideo(track, type, activateVideo = false) {
-        if (this.blurManager) {
-            this.blurManager.close();
-            this.blurManager = undefined;
-        }
         const stopVideo = () => {
             if (track) {
                 track.stop();
@@ -1047,13 +1196,17 @@ export class Rtc extends Record {
             if (type === "screen") {
                 this.soundEffectsService.play("screen-sharing");
             }
+            if (type === "camera" && this.blurManager) {
+                this.blurManager.close();
+                this.blurManager = undefined;
+            }
             stopVideo();
             return;
         }
         let sourceStream;
         try {
             if (type === "camera") {
-                if (this.state.sourceCameraStream && this.state.sendCamera) {
+                if (this.state.sourceCameraStream) {
                     sourceStream = this.state.sourceCameraStream;
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getUserMedia({
@@ -1062,7 +1215,7 @@ export class Rtc extends Record {
                 }
             }
             if (type === "screen") {
-                if (this.state.sourceScreenStream && this.state.sendScreen) {
+                if (this.state.sourceScreenStream) {
                     sourceStream = this.state.sourceScreenStream;
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
@@ -1080,14 +1233,21 @@ export class Rtc extends Record {
             stopVideo();
             return;
         }
-        let videoStream = sourceStream;
+        let outputTrack = sourceStream ? sourceStream.getVideoTracks()[0] : undefined;
+        if (outputTrack) {
+            outputTrack.addEventListener("ended", async () => {
+                await this.toggleVideo(type, false);
+            });
+        }
         if (this.store.settings.useBlur && type === "camera") {
             try {
+                this.blurManager?.close();
                 this.blurManager = new BlurManager(sourceStream, {
                     backgroundBlur: this.store.settings.backgroundBlurAmount,
                     edgeBlur: this.store.settings.edgeBlurAmount,
                 });
-                videoStream = await this.blurManager.stream;
+                const bluredStream = await this.blurManager.stream;
+                outputTrack = bluredStream.getVideoTracks()[0];
             } catch (_e) {
                 this.notification.add(
                     _t("%(name)s: %(message)s)", { name: _e.name, message: _e.message }),
@@ -1096,26 +1256,20 @@ export class Rtc extends Record {
                 this.store.settings.useBlur = false;
             }
         }
-        track = videoStream ? videoStream.getVideoTracks()[0] : undefined;
-        if (track) {
-            track.addEventListener("ended", async () => {
-                await this.toggleVideo(type, false);
-            });
-        }
         switch (type) {
             case "camera": {
                 Object.assign(this.state, {
                     sourceCameraStream: sourceStream,
-                    cameraTrack: track,
-                    sendCamera: Boolean(track),
+                    cameraTrack: outputTrack,
+                    sendCamera: Boolean(outputTrack),
                 });
                 break;
             }
             case "screen": {
                 Object.assign(this.state, {
                     sourceScreenStream: sourceStream,
-                    screenTrack: track,
-                    sendScreen: Boolean(track),
+                    screenTrack: outputTrack,
+                    sendScreen: Boolean(outputTrack),
                 });
                 break;
             }
@@ -1166,7 +1320,7 @@ export class Rtc extends Record {
             audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
             this.state.audioTrack = audioTrack;
             this.linkVoiceActivationDebounce();
-            await this.network.updateUpload("audio", this.state.audioTrack);
+            await this.network?.updateUpload("audio", this.state.audioTrack);
         }
     }
 
@@ -1212,6 +1366,9 @@ export class Rtc extends Record {
         const session = this.store.RtcSession.get(id);
         if (session) {
             if (this.selfSession && session.eq(this.selfSession)) {
+                this.log(this.selfSession, "self session deleted, ending call", {
+                    important: true,
+                });
                 this.endCall();
             }
             this.disconnect(session);
@@ -1262,17 +1419,23 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {RtcSession} session
-     * @param {String} [videoType]
+     * @param {import("models").RtcSession} session
+     * @param {Object} [param1]
+     * @param {String} [param1.type]
+     * @param {boolean} [param1.cleanup]
      */
-    removeVideoFromSession(session, videoType = false) {
-        if (videoType) {
-            this.updateActiveSession(session, videoType);
-            closeStream(session.videoStreams.get(videoType));
-            session.videoStreams.delete(videoType);
+    removeVideoFromSession(session, { type, cleanup = true } = {}) {
+        if (type) {
+            this.updateActiveSession(session, type);
+            if (cleanup) {
+                closeStream(session.videoStreams.get(type));
+            }
+            session.videoStreams.delete(type);
         } else {
-            for (const stream of session.videoStreams.values()) {
-                closeStream(stream);
+            if (cleanup) {
+                for (const stream of session.videoStreams.values()) {
+                    closeStream(stream);
+                }
             }
             session.videoStreams.clear();
         }
@@ -1318,8 +1481,11 @@ export class Rtc extends Record {
         if (activeRtcSession.isMainVideoStreamActive) {
             if (videoType === session.mainVideoStreamType) {
                 if (videoType === "screen") {
-                    this.state.channel.activeRtcSession = undefined;
-                } else {
+                    session.mainVideoStreamType = "camera";
+                } else if (
+                    this.actionsStack.includes("camera-on") &&
+                    this.actionsStack.includes("share-screen")
+                ) {
                     session.mainVideoStreamType = "screen";
                 }
             }
@@ -1386,14 +1552,13 @@ export const rtcService = {
                 if (!rtc.selfSession) {
                     return;
                 }
-                if (rtc.serverInfo?.url === serverInfo?.url) {
+                if (rtc.serverInfo?.channelUUID === serverInfo.channelUUID) {
                     // no reason to swap if the server is the same, if at some point we want to force a swap
                     // there should be an explicit flag in the event payload.
                     return;
                 }
                 rtc.serverInfo = serverInfo;
                 await rtc._initConnection();
-                await rtc.call();
             }
         );
         services["bus_service"].subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {

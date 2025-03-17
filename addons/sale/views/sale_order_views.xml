@@ -410,6 +410,7 @@
                                 <group>
                                     <group invisible="display_type">
                                         <field name="product_updatable" invisible="1"/>
+                                        <label for="product_id"/>
                                         <div class="d-flex align-items-baseline">
                                             <span class="fa fa-exclamation-triangle text-warning me-1"
                                                 title="This product is archived"
@@ -422,7 +423,8 @@
                                                     'quantity': product_uom_qty,
                                                     'pricelist': parent.pricelist_id,
                                                     'uom': product_uom,
-                                                    'company_id': parent.company_id
+                                                    'company_id': parent.company_id,
+                                                    'default_uom_id': product_uom,
                                                 }"
                                                 readonly="not product_updatable"
                                                 required="not display_type and not is_downpayment"
@@ -533,6 +535,7 @@
                                         'uom':product_uom,
                                         'company_id': parent.company_id,
                                         'default_lst_price': price_unit,
+                                        'default_uom_id': product_uom,
                                     }"
                                     options="{
                                         'no_open': True,
@@ -542,7 +545,7 @@
                                     widget="sol_product_many2one"/>
                                 <field name="product_template_id"
                                     string="Product"
-                                    readonly="not product_updatable"
+                                    readonly="id and not product_updatable"
                                     required="not display_type and not is_downpayment"
                                     context="{
                                         'partner_id': parent.partner_id,
@@ -551,6 +554,7 @@
                                         'uom':product_uom,
                                         'company_id': parent.company_id,
                                         'default_list_price': price_unit,
+                                        'default_uom_id': product_uom,
                                     }"
                                     options="{
                                         'no_open': True,

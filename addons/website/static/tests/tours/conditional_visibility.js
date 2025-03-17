@@ -53,7 +53,6 @@ function checkEyesIconAfterSave(footerIsHidden = true) {
 registerWebsitePreviewTour('conditional_visibility_1', {
     edition: true,
     url: '/',
-    test: true,
 }, () => [
 ...insertSnippet(snippets[0]),
 ...clickOnSnippet(snippets[0]),
@@ -107,7 +106,6 @@ changeOption('ConditionalVisibility', 'we-toggler'),
 
 registerWebsitePreviewTour("conditional_visibility_3", {
     edition: true,
-    test: true,
     url: "/",
 },
 () => [
@@ -156,7 +154,6 @@ checkEyeIcon("Banner", false),
 
 registerWebsitePreviewTour("conditional_visibility_4", {
     edition: true,
-    test: true,
     url: "/",
 },
 () => [
@@ -197,7 +194,6 @@ registerWebsitePreviewTour("conditional_visibility_4", {
 
 registerWebsitePreviewTour("conditional_visibility_5", {
     edition: true,
-    test: true,
     url: "/",
 }, () => [
     {

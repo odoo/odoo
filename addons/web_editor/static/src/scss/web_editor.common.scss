@@ -91,6 +91,7 @@
     @include print-variable('h6-font-size', $h6-font-size);
     @include print-variable('font-size-base', $font-size-base);
     @include print-variable('small-font-size', $small-font-size);
+    @include print-variable('lead-font-size', $lead-font-size);
 }
 
 html, body {
@@ -546,6 +547,14 @@ blockquote {
     font-style: italic;
 }
 
+pre {
+    white-space: pre-wrap;
+
+    p {
+        margin-bottom: 0px;
+    }
+}
+
 // Extend bootstrap to create background and text utilities for some colors
 // outside of the $theme-colors too (but not btn-, alert-, etc).
 @for $index from 1 through 5 {
@@ -567,6 +576,11 @@ blockquote {
 
                 &:hover, &:focus {
                     color: $dropdown-link-hover-color !important;
+                }
+                &.active, &:active {
+                    // Restore BS default custom property to allow contextual
+                    // active state. (see bootstrap_review_frontend.scss)
+                    color: var(--dropdown-link-active-color, #{$dropdown-link-active-color}) !important;
                 }
             }
             &.disabled,
@@ -695,20 +709,6 @@ blockquote {
                 .show > .nav-link {
                     background-color: $-btn-primary-color;
                     color: color-contrast($-btn-primary-color);
-                }
-            }
-            .dropdown-menu .dropdown-item { // Need to add +1 priority thanks to
-                                            // .dropdown-menu (see .o_cc).
-                &.active,
-                &:active {
-                    &, h6 { // Quick fix: sometimes we use h6 in dropdowns
-                        @include gradient-bg($-btn-primary-color);
-                        color: color-contrast($-btn-primary-color) !important;
-
-                        &:hover, &:focus {
-                            color: color-contrast($-btn-primary-color) !important;
-                        }
-                    }
                 }
             }
             a.list-group-item {

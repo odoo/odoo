@@ -1,29 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* utm
-#
+# 
 # Translators:
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2022
-# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
-# Kovács Tibor <kovika@gmail.com>, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
-# Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# krnkris, 2022
-# Martin Trigaux, 2022
-# Tamás Németh <ntomasz81@gmail.com>, 2022
-#
+# Tamás Dombos, 2024
+# Kovács Tibor <kovika@gmail.com>, 2024
+# Martin Trigaux, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# Ákos Nagy <akos.nagy@oregional.hu>, 2024
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# krnkris, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: krnkris, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: utm
@@ -58,7 +57,7 @@ msgstr "Jóváhagyott"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "Archiválás"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
@@ -120,7 +119,9 @@ msgstr "Kampányok"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
-msgid "Campaigns are used to centralize your marketing efforts and track their results."
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
 msgstr ""
 
 #. module: utm
@@ -143,7 +144,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__color
 #: model:ir.model.fields,field_description:utm.field_utm_tag__color
 msgid "Color Index"
-msgstr "Színjegyzék"
+msgstr "Szín index"
 
 #. module: utm
 #. odoo-javascript
@@ -264,7 +265,9 @@ msgstr ""
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-msgid "Gather data, build a recipient list and write content based on your Marketing target."
+msgid ""
+"Gather data, build a recipient list and write content based on your "
+"Marketing target."
 msgstr ""
 
 #. module: utm
@@ -284,7 +287,7 @@ msgstr "HTTP irányítás"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__id
 #: model:ir.model.fields,field_description:utm.field_utm_tag__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: utm
 #. odoo-javascript
@@ -308,7 +311,7 @@ msgstr "Frissítette"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__write_date
 #: model:ir.model.fields,field_description:utm.field_utm_tag__write_date
 msgid "Last Updated on"
-msgstr "Frissítve ekkor"
+msgstr "Frissítve"
 
 #. module: utm
 #. odoo-javascript
@@ -336,7 +339,7 @@ msgstr "Marketing"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
-msgstr "Közepes"
+msgstr "Médium"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
@@ -374,6 +377,14 @@ msgid "No Sources yet!"
 msgstr ""
 
 #. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_medium.py:0
+msgid ""
+"Oops, you can't delete the Medium '%s'.\n"
+"Doing so would be like tearing down a load-bearing wall — not the best idea."
+msgstr ""
+
+#. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Pre-Launch"
@@ -388,14 +399,16 @@ msgstr ""
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-msgid "Prepare your Campaign, test it with part of your audience and deploy it fully afterwards."
+msgid ""
+"Prepare your Campaign, test it with part of your audience and deploy it "
+"fully afterwards."
 msgstr ""
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Report"
-msgstr "Kimutatás"
+msgstr "Riport"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__user_id
@@ -406,7 +419,7 @@ msgstr "Felelős"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Restore"
-msgstr ""
+msgstr "Visszaállítás"
 
 #. module: utm
 #. odoo-javascript
@@ -418,7 +431,7 @@ msgstr "Átnézés"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Running"
-msgstr "Érvényes"
+msgstr "Folyamatban"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_fall_drive
@@ -499,30 +512,28 @@ msgstr "Szakaszok"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
-msgid "Stages allow you to organize your workflow  (e.g. plan, design, in progress, done, …)."
+msgid ""
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
+" done, …)."
 msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
-msgid "Tag color. No color means no display in kanban to distinguish internal tags from public categorization tags."
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
 msgstr ""
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "A címke név már létezik!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Tags"
 msgstr "Címkék"
-
-#. module: utm
-#. odoo-python
-#: code:addons/utm/models/utm_medium.py:0
-msgid "The UTM medium '%s' cannot be deleted as it is used in some main functional flows, such as the recruitment and the mass mailing."
-msgstr ""
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
@@ -545,8 +556,12 @@ msgstr "Ezen a héten"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
-msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
-msgstr "Ez egy név, ami segít a különböző kampányok nyomon követésében, pl. Őszi_kampány, Karácsonyi_ajánlat"
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Ez egy név, ami segít a különböző kampányok nyomon követésében, pl. "
+"Őszi_kampány, Karácsonyi_ajánlat"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
@@ -555,8 +570,12 @@ msgstr "Ez az eljuttatás módja, pl. képeslap, e-mail vagy szalaghirdetés"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
-msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
-msgstr "Ez a hivatkozás forrása, pl. keresőmotor, egy másik tartomány vagy egy e-mail lista neve"
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Ez a hivatkozás forrása, pl. keresőmotor, egy másik tartomány vagy egy "
+"e-mail lista neve"
 
 #. module: utm
 #. odoo-javascript
@@ -567,7 +586,9 @@ msgstr ""
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-msgid "Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely content."
+msgid ""
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
+" content."
 msgstr ""
 
 #. module: utm
@@ -589,7 +610,9 @@ msgstr "UTM média"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "UTM Mediums track the mean that was used to attract traffic (e.g. \"Website\", \"Twitter\", ...)."
+msgid ""
+"UTM Mediums track the mean that was used to attract traffic (e.g. "
+"\"Website\", \"X\", ...)."
 msgstr ""
 
 #. module: utm
@@ -609,7 +632,9 @@ msgstr ""
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", ...)."
+msgid ""
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
+"...)."
 msgstr ""
 
 #. module: utm
@@ -631,6 +656,14 @@ msgstr "UTMs"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Use This For My Campaigns"
+msgstr ""
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
 msgstr ""
 
 #. module: utm

@@ -47,4 +47,8 @@ export class ProductCatalogOrderLine extends Component {
         const options = { digits, decimalPoint: ".", thousandsSep: "" };
         return parseFloat(formatFloat(this.props.quantity, options));
     }
+
+    get showPrice() {
+        return true;
+    }
 }

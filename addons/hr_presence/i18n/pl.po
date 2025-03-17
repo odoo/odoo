@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 09:53+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,11 +30,11 @@ msgstr ""
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
 "Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter.\n"
-"                    <br>Best Regards,<br><br>\n"
+"                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
 msgstr ""
@@ -150,7 +151,7 @@ msgstr "Ręczne ustawianie obecności"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Out of Working Hours"
-msgstr ""
+msgstr "Poza godzinami pracy"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_tree
@@ -166,7 +167,7 @@ msgstr "Kontrola obecności"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence/Absence"
-msgstr ""
+msgstr "Obecność/Nieobecność"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -176,15 +177,15 @@ msgid "Present"
 msgstr "Obecny(a)"
 
 #. module: hr_presence
-#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
-msgid "Send a SMS"
-msgstr ""
-
-#. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Send SMS"
 msgstr "Wyślij SMS"
+
+#. module: hr_presence
+#: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
+msgid "Send a SMS"
+msgstr ""
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
@@ -209,6 +210,12 @@ msgstr ""
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
 msgstr "Niespodziewana absencja"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Unplanned Absence"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log

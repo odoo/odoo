@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* partner_autocomplete
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: partner_autocomplete
@@ -24,6 +24,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
 msgid "Additional info"
 msgstr "Додаткова інформація"
+
+#. module: partner_autocomplete
+#: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Automatically enrich your contact base with corporate data."
+msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -78,6 +83,11 @@ msgstr "Назва для відображення"
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__iap_enrich_auto_done
 msgid "Enrich Done"
 msgstr "Залучення виконано"
+
+#. module: partner_autocomplete
+#: model:iap.service,unit_name:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Enrichments"
+msgstr ""
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_ir_http
@@ -145,7 +155,7 @@ msgstr "Синхронізація автозаповнення партнера
 #. module: partner_autocomplete
 #: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
 msgid "Partner Autocomplete: Sync with remote DB"
-msgstr ""
+msgstr "Автозаповнення партнера: Синхронізувати з віддаленою БД"
 
 #. module: partner_autocomplete
 #. odoo-python

@@ -56,11 +56,11 @@ class RequestUID(object):
 
 
 class ModelConverter(werkzeug.routing.BaseConverter):
+    regex = r'[0-9]+'
 
     def __init__(self, url_map, model=False):
-        super(ModelConverter, self).__init__(url_map)
+        super().__init__(url_map)
         self.model = model
-        self.regex = r'([0-9]+)'
 
         IrHttp = Registry(threading.current_thread().dbname)['ir.http']
         self.slug = IrHttp._slug
@@ -76,12 +76,11 @@ class ModelConverter(werkzeug.routing.BaseConverter):
 
 
 class ModelsConverter(werkzeug.routing.BaseConverter):
+    regex = r'[0-9,]+'
 
     def __init__(self, url_map, model=False):
-        super(ModelsConverter, self).__init__(url_map)
+        super().__init__(url_map)
         self.model = model
-        # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
-        self.regex = r'([0-9,]+)'
 
     def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
@@ -229,12 +228,16 @@ class IrHttp(models.AbstractModel):
             # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
             uid = request.env['res.users.apikeys']._check_credentials(scope='rpc', key=token)
             if not uid:
-                raise werkzeug.exceptions.Unauthorized("Invalid apikey")
+                raise werkzeug.exceptions.Unauthorized(
+                    "Invalid apikey",
+                    www_authenticate=werkzeug.datastructures.WWWAuthenticate('bearer'))
             if request.env.uid and request.env.uid != uid:
                 raise AccessDenied("Session user does not match the used apikey")
             request.update_env(user=uid)
         elif not request.env.uid:
-            raise werkzeug.exceptions.Unauthorized('User not authenticated, use the "Authorization" header')
+            raise werkzeug.exceptions.Unauthorized(
+                'User not authenticated, use the "Authorization" header',
+                www_authenticate=werkzeug.datastructures.WWWAuthenticate('bearer'))
         elif not check_sec_headers():
             raise AccessDenied("Missing \"Authorization\" or Sec-headers for interactive usage")
         cls._auth_method_user()
@@ -372,7 +375,7 @@ class IrHttp(models.AbstractModel):
         for url, endpoint in self._generate_routing_rules(mods, converters=self._get_converters()):
             routing = submap(endpoint.routing, ROUTING_KEYS)
             if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
-                routing['methods'] = routing['methods'] + ['OPTIONS']
+                routing['methods'] = [*routing['methods'], 'OPTIONS']
             rule = FasterRule(url, endpoint=endpoint, **routing)
             rule.merge_slashes = False
             routing_map.add(rule)
@@ -426,4 +429,8 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
+        return True if cookie_type == 'required' else bool(request.env.user)
+
+    @api.model
+    def _verify_request_recaptcha_token(self, action):
         return True

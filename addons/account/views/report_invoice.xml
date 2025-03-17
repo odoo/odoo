@@ -153,14 +153,14 @@
                                         </t>
                                         <t t-elif="line.display_type == 'line_section'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
+                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                             </td>
                                             <t t-set="current_section" t-value="line"/>
                                             <t t-set="current_subtotal" t-value="0"/>
                                         </t>
                                         <t t-elif="line.display_type == 'line_note'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
+                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
                                             </td>
                                         </t>
                                     </tr>
@@ -234,7 +234,7 @@
                                     <div class="oe_structure"/>
                                 </t>
                             </div>
-                            <div id="payment_term" class="clearfix">
+                            <div id="payment_term" class="clearfix overflow-auto">
                                 <div class="justify-text">
                                     <p t-if="not is_html_empty(o.fiscal_position_id.note)" name="note" class="mb-2">
                                         <span t-field="o.fiscal_position_id.note"/>
@@ -365,10 +365,10 @@
                 </t>
             </t>
 
-            <tr t-if="'cash_rounding_amount_currency' in tax_totals">
+            <tr t-if="'cash_rounding_base_amount_currency' in tax_totals">
                 <td>Rounding</td>
                 <td class="text-end">
-                    <span t-out="tax_totals['cash_rounding_amount_currency']"
+                    <span t-out="tax_totals['cash_rounding_base_amount_currency']"
                           t-options='{"widget": "monetary", "display_currency": currency}'
                     >0</span>
                 </td>
@@ -398,10 +398,10 @@
                     </p>
                     <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                         <tr class="o_subtotal">
+                            <td>
+                                <span t-out="subtotal['name']">Untaxed amount</span>
+                            </td>
                             <td class="text-end">
-                                <td>
-                                    <span t-out="subtotal['name']">Untaxed amount</span>
-                                </td>
                                 <span t-out="subtotal['base_amount']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'
                                 >27.00</span>

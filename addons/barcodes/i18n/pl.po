@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,6 +25,8 @@ msgstr ""
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
 msgstr ""
+" '*' nie jest poprawnym wyrażeniem regularnym dla wzorca kodu kreskowego. "
+"Czy miałeś na myśli '.*' ?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -123,7 +126,7 @@ msgstr "Zeskanowany kod kreskowy"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Barcode: %(barcode)s"
-msgstr ""
+msgstr "Kod kreskowy: %(barcode)s"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -211,6 +214,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Wzorce mogą także określać jak wartości liczbowe (np. waga lub cena) mogą być\n"
+"                                zakodowane w kodzie kreskowym. S one określane przez <code>{NNN}</code> gdzie N-ki\n"
+"                                definiują miejsca kodowania cyfr. Liczby zmiennoprzecinkowe obsługiwane są w formacie\n"
+"                                <code>{NNNDD}</code>, gdzie dziesiętne oznaczane są literą D. W tych przypadkach,\n"
+"                                braku części dziesiętnych, pole to<i>musi</i> być wypełnione\n"
+"                                zerami."
 
 #. module: barcodes
 #. odoo-javascript
@@ -255,6 +264,8 @@ msgstr "Wzorzec dopasowania kodu kreskowego"
 msgid ""
 "The barcode pattern %(pattern)s does not lead to a valid regular expression."
 msgstr ""
+"Wzór kodu kreskowego %(pattern)s nie prowadzi do ważnego wyrażenia "
+"regularnego."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids

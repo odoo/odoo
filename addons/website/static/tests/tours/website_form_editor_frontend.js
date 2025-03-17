@@ -3,7 +3,6 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
-    test: true,
     steps: () => [
     {
         trigger:  "form[data-model_name='mail.mail']" +
@@ -45,7 +44,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('State')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
     },
     {
@@ -68,7 +67,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('State')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
     },
     {
@@ -91,7 +90,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                 ":has(.s_website_form_field:has(label:contains('Your Message')):not(.o_has_error))" +
                 ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                ":has(.s_website_form_field:has(label:contains('State')).o_has_error)" +
                 ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
     },
     {
@@ -118,6 +117,11 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         content:  "Check a service",
         trigger:  "input[name='Service'][value='Development Service']",
         run: "click",
+    },
+    {
+        content:  "Select a State",
+        trigger:  "select[name='State']",
+        run:      "select Canada",
     },
     {
         content:  "Complete Your Name field",
@@ -176,7 +180,6 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
 ]});
 
 registry.category("web_tour.tours").add("website_form_editor_tour_results", {
-    test: true,
     steps: () => [
     {
         content: "Check mail.mail records have been created",
@@ -210,11 +213,14 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
     }
 ]});
 registry.category("web_tour.tours").add('website_form_contactus_submit', {
-    test: true,
     url: '/contactus',
     steps: () => [
     // As the demo portal user, only two inputs needs to be filled to send
     // the email
+    {
+        isActive: ["body:has(.o-livechat-root)"],
+        trigger: ":shadow span:contains(select an option above)",
+    },
     {
         content: "Fill in the subject",
         trigger: 'input[name="subject"]',
@@ -236,7 +242,6 @@ registry.category("web_tour.tours").add('website_form_contactus_submit', {
     },
 ]});
 registry.category("web_tour.tours").add('website_form_contactus_check_changed_email', {
-    test: true,
     url: '/contactus',
     steps: () => [
         {

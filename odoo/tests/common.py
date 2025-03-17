@@ -1049,7 +1049,6 @@ class ChromeBrowser:
 
         self.chrome, self.devtools_port = self._chrome_start(
             user_data_dir=self.user_data_dir,
-            window_size=test_case.browser_size,
             touch_enabled=test_case.touch_enabled,
             headless=headless,
             debug=debug,
@@ -1079,6 +1078,19 @@ class ChromeBrowser:
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
+        self._websocket_send('Page.setDownloadBehavior', params={
+            'behavior': 'deny',
+            'eventsEnabled': False,
+        })
+        self._websocket_send('Emulation.setFocusEmulationEnabled', params={'enabled': True})
+        emulated_device = {
+            'mobile': False,
+            'width': None,
+            'height': None,
+            'deviceScaleFactor': 1,
+        }
+        emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.split(",")]
+        self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
 
     @property
     def screencasts_frames_dir(self):
@@ -1159,7 +1171,7 @@ class ChromeBrowser:
     def _chrome_start(
             self,
             user_data_dir: str,
-            window_size: str, touch_enabled: bool,
+            touch_enabled: bool,
             headless=True,
             debug=False,
     ):
@@ -1188,7 +1200,6 @@ class ChromeBrowser:
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
-            '--window-size': window_size,
             '--no-first-run': '',
             # FIXME: these next 2 flags are temporarily uncommented to allow client
             # code to manually run garbage collection. This is done as currently
@@ -1207,7 +1218,7 @@ class ChromeBrowser:
             switches['--touch-events'] = ''
         if debug is not False:
             switches['--auto-open-devtools-for-tabs'] = ''
-            switches['--start-maximized'] = ''
+            switches['--start-fullscreen'] = ''
 
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
@@ -1529,9 +1540,13 @@ which leads to stray network requests and inconsistencies."""
 
     def take_screenshot(self, prefix='sc_'):
         def handler(f):
-            base_png = f.result(timeout=0)['data']
+            try:
+                base_png = f.result(timeout=0)['data']
+            except Exception as e:
+                self._logger.runbot("Couldn't capture screenshot: %s", e)
+                return
             if not base_png:
-                self._logger.warning("Couldn't capture screenshot: expected image data, got ?? error ??")
+                self._logger.runbot("Couldn't capture screenshot: expected image data, got %r", base_png)
                 return
             decoded = base64.b64decode(base_png, validate=True)
             save_test_file(type(self.test_case).__name__, decoded, prefix, logger=self._logger)
@@ -1979,17 +1994,27 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, **kw):
-        """ Test js code running in the browser
-        - optionnally log as 'login'
-        - load page given by url_path
-        - wait for ready object to be available
-        - eval(code) inside the page
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+        """ Test JavaScript code running in the browser.
 
-        To signal success test do: console.log() with the expected success signal ("test successful" by default)
-        To signal test failure raise an exception or call console.error with a message.
-        Test will stop when a failure occurs if error_checker is not defined or returns True for this message
+        To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
+        To signal test failure raise an exception or call `console.error` with a message.
+        Test will stop when a failure occurs if `error_checker` is not defined or returns `True` for this message
 
+        :param string url_path: URL path to load the browser page on
+        :param string code: JavaScript code to be executed
+        :param string ready: JavaScript object to wait for before proceeding with the test
+        :param string login: logged in user which will execute the test. e.g. 'admin', 'demo'
+        :param int timeout: maximum time to wait for the test to complete (in seconds). Default is 60 seconds
+        :param dict cookies: dictionary of cookies to set before loading the page
+        :param error_checker: function to filter failures out. 
+            If provided, the function is called with the error log message, and if it returns `False` the log is ignored and the test continue
+            If not provided, every error log triggers a failure
+        :param bool watch: open a new browser window to watch the test execution
+        :param string success_signal: string signal to wait for to consider the test successful
+        :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour. 
+            The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
+        :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -2029,6 +2054,18 @@ class HttpCase(TransactionCase):
                 for name, value in cookies.items():
                     browser.set_cookie(name, value, '/', HOST)
 
+            cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING') # used by dedicated runbot builds
+            cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
+
+            if cpu_throttling:
+                assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
+                timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
+                _logger.log(
+                    logging.INFO if cpu_throttling_os else logging.WARNING,
+                    'CPU throttling mode is only suitable for local testing - ' \
+                    'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
+                browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
+
             browser.navigate_to(url, wait_stop=not bool(ready))
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
@@ -2060,10 +2097,16 @@ class HttpCase(TransactionCase):
             'keepWatchBrowser': kwargs.get('watch', False),
             'debug': kwargs.get('debug', False),
             'startUrl': url_path,
+            'delayToCheckUndeterminisms': kwargs.pop('delay_to_check_undeterminisms', int(os.getenv("ODOO_TOUR_DELAY_TO_CHECK_UNDETERMINISMS", "0")) or 0),
         }
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
-        return self.browser_js(url_path=url_path, code=code, ready=ready, success_signal="tour succeeded", **kwargs)
+        timeout = kwargs.pop('timeout', 60)
+
+        if options["delayToCheckUndeterminisms"] > 0:
+            timeout = timeout + 1000 * options["delayToCheckUndeterminisms"]
+            _logger.runbot("Tour %s is launched with mode: check for undeterminisms.", tour_name)
+        return self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
 
     def profile(self, **kwargs):
         """
@@ -2157,11 +2200,10 @@ def warmup(func, *args, **kwargs):
     self.env.invalidate_all()
     # run once to warm up the caches
     self.warm = False
-    self.cr.execute('SAVEPOINT test_warmup')
-    func(*args, **kwargs)
-    self.env.flush_all()
+    with contextlib.closing(self.cr.savepoint(flush=False)):
+        func(*args, **kwargs)
+        self.env.flush_all()
     # run once for real
-    self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
     self.env.invalidate_all()
     self.warm = True
     func(*args, **kwargs)

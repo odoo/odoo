@@ -3,15 +3,10 @@ import { Plugin } from "../plugin";
 import { descendants } from "../utils/dom_traversal";
 
 export class CommentPlugin extends Plugin {
-    static name = "comment";
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE":
-                this.removeComment(payload.node);
-                break;
-        }
-    }
+    static id = "comment";
+    resources = {
+        normalize_handlers: this.removeComment.bind(this),
+    };
 
     removeComment(node) {
         for (const el of [node, ...descendants(node)]) {

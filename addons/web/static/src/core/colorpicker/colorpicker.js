@@ -76,7 +76,10 @@ export class Colorpicker extends Component {
             useExternalListener(doc, "mouseup", this.onMouseUp.bind(this));
         }
         onMounted(async () => {
-            const rgba = convertCSSColorToRgba(this.props.defaultColor);
+            const defaultCssColor = this.props.selectedColor
+                ? this.props.selectedColor
+                : this.props.defaultColor;
+            const rgba = convertCSSColorToRgba(defaultCssColor);
             if (rgba) {
                 this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
             }
@@ -85,9 +88,10 @@ export class Colorpicker extends Component {
             this._updateUI();
         });
         onWillUpdateProps((newProps) => {
-            if (newProps.selectedColor) {
-                this.setSelectedColor(newProps.selectedColor);
-            }
+            const newSelectedColor = newProps.selectedColor
+                ? newProps.selectedColor
+                : newProps.defaultColor;
+            this.setSelectedColor(newSelectedColor);
         });
     }
 
