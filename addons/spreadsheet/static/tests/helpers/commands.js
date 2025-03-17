@@ -25,6 +25,15 @@ export function selectCell(model, xc, sheetId = model.getters.getActiveSheetId()
 }
 
 /**
+ * Add a global filter. Does not wait for the data sources to be reloaded
+ * @param {import("@spreadsheet").OdooSpreadsheetModel} model
+ * @param {CmdGlobalFilter} filter
+ */
+export function addGlobalFilterWithoutReload(model, filter, fieldMatchings = {}) {
+    return model.dispatch("ADD_GLOBAL_FILTER", { filter, ...fieldMatchings });
+}
+
+/**
  * Add a global filter and ensure the data sources are completely reloaded
  * @param {import("@spreadsheet").OdooSpreadsheetModel} model
  * @param {CmdGlobalFilter} filter
@@ -265,4 +274,15 @@ export function updatePivotMeasureDisplay(model, pivotId, measureId, display) {
     const measure = measures.find((m) => m.id === measureId);
     measure.display = display;
     updatePivot(model, pivotId, { measures });
+}
+
+export function createSheet(model, data = {}) {
+    const sheetId = data.sheetId || model.uuidGenerator.uuidv4();
+    return model.dispatch("CREATE_SHEET", {
+        position: data.position !== undefined ? data.position : 1,
+        sheetId,
+        cols: data.cols,
+        rows: data.rows,
+        name: data.name,
+    });
 }
