@@ -331,11 +331,11 @@ class SaleOrderLine(models.Model):
             'partner_id': self.order_id.partner_shipping_id.id,
         }
 
-    def _create_procurements(self, product_qty, procurement_uom, origin, values):
+    def _create_procurements(self, product_qty, procurement_uom, values):
         self.ensure_one()
         return [self.env['procurement.group'].Procurement(
             self.product_id, product_qty, procurement_uom, self._get_location_final(),
-            self.product_id.display_name, origin, self.order_id.company_id, values)]
+            self.product_id.display_name, self.order_id.name, self.order_id.company_id, values)]
 
     def _action_launch_stock_rule(self, *, previous_product_uom_qty=False):
         """
@@ -375,9 +375,8 @@ class SaleOrderLine(models.Model):
 
             line_uom = line.product_uom_id
             quant_uom = line.product_id.uom_id
-            origin = f'{line.order_id.name} - {line.order_id.client_order_ref}' if line.order_id.client_order_ref else line.order_id.name
             product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
-            procurements += line._create_procurements(product_qty, procurement_uom, origin, values)
+            procurements += line._create_procurements(product_qty, procurement_uom, values)
         if procurements:
             self.env['procurement.group'].run(procurements)
 
