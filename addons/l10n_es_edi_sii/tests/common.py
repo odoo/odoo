@@ -25,8 +25,8 @@ class TestEsEdiCommon(AccountEdiTestCommon):
         cls.certificate = cls.env['certificate.certificate'].create({
             'name': 'Test ES certificate',
             'content': base64.b64encode(
-                misc.file_open("l10n_es_edi_sii/demo/certificates/sello_entidad_act.p12", 'rb').read()),
-            'pkcs12_password': 'IZDesa2021',
+                misc.file_open("l10n_es_edi_sii/demo/certificates/aeat_1234.p12", 'rb').read()),
+            'pkcs12_password': '1234',
             'scope': 'sii',
             'company_id': cls.company_data['company'].id,
         })
