@@ -11,16 +11,12 @@
             <xpath expr="//field[@name='phone']" position="after">
                 <field name="phone_sanitized" groups="base.group_no_one" invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='phone']" position="replace">
+            <xpath expr="//field[@name='phone']" position="before">
                 <field name="phone_blacklisted" invisible="1"/>
-                <label for="phone" class="oe_inline"/>
-                <div class="o_row o_row_readonly">
-                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
-                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-                        type="object" context="{'default_phone': phone}" groups="base.group_user"
-                        invisible="not phone_blacklisted"/>
-                    <field name="phone" widget="phone"/>
-                </div>
+                <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                    title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+                    type="object" context="{'default_phone': phone}" groups="base.group_user"
+                    invisible="not phone_blacklisted"/>
             </xpath>
         </field>
     </record>

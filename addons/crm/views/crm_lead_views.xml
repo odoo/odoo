@@ -241,7 +241,7 @@
                             <field name="lead_properties" nolabel="1" columns="2"/>
                         </div>
                         <notebook>
-                            <page string="Internal Notes" name="internal_notes">
+                            <page string="Notes" name="internal_notes">
                                 <field name="description" placeholder="Add a description..." options="{'collaborative': true}" />
                             </page>
                             <page name="extra" string="Extra Info" invisible="type == 'opportunity'">
@@ -265,9 +265,9 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="lead" string="Extra Information" invisible="type == 'lead'">
+                            <page name="lead" string="Contacts" invisible="type == 'lead'">
                                 <group>
-                                    <group string="Contact Information">
+                                    <group string="Company Information">
                                         <field name="partner_name"/>
                                         <label for="street_page_lead" string="Address"/>
                                         <div class="o_address_format">
@@ -278,17 +278,17 @@
                                             <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                             <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
-                                        <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                         <field name="lang_active_count" invisible="1"/>
                                         <field name="lang_id" invisible="lang_active_count &lt;= 1"
                                             options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                     </group>
-                                    <group class="mt48">
+                                    <group string="Contact Information">
                                         <label for="contact_name_page_lead"/>
                                         <div class="o_row">
                                             <field name="contact_name" id="contact_name_page_lead"/>
                                         </div>
                                         <field name="function"/>
+                                        <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                     </group>
                                     <group string="Marketing">
                                         <field name="campaign_id" options="{'create_name_field': 'title'}"/>
@@ -296,14 +296,12 @@
                                         <field name="source_id" />
                                         <field name="referred"/>
                                     </group>
-                                    <group string="Tracking" name="Misc">
+                                    <group string="Ownership" name="Misc">
                                         <field name="company_id"
                                             groups="base.group_multi_company"
                                             options="{'no_create': True}"
                                             placeholder="Visible to all"/>
                                         <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
-                                        <field name="day_open" />
-                                        <field name="day_close"/>
                                         <field name="type" invisible="1"/>
                                     </group>
                                 </group>

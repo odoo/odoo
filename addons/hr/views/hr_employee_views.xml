@@ -74,24 +74,26 @@
                     <sheet>
                         <div name="button_box" class="oe_button_box">
                         </div>
-                        <field name="avatar_128" invisible="1"/>
-                        <div class="row justify-content-between position-relative w-100 m-0 mb-2">
-                            <div class="oe_title mw-75 ps-0 pe-2">
-                                <h1 class="d-flex flex-row align-items-center">
-                                    <div invisible="not user_id" class="me-2">
-                                        <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
-                                    </div>
-                                    <field name="name" placeholder="Employee's Name"
-                                        required="True" style="font-size: min(4vw, 2.6rem);"/>
-                                </h1>
-                                <h2>
-                                    <field name="job_title" placeholder="Job Title"/>
-                                </h2>
-                            </div>
+                        <div class="d-flex align-items-center">
                             <div class="o_employee_avatar m-0 p-0">
                                 <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                                 <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                            </div>
+                            <div class="d-flex flex-column ms-2">
+                                <div class="oe_title mw-75 ps-0 pe-2">
+                                    <h1 class="d-flex flex-row align-items-center">
+                                        <field name="name" placeholder="Employee's Name"
+                                            required="True" style="font-size: min(4vw, 2.6rem);"/>
+                                        <div invisible="not user_id" class="me-2">
+                                            <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                        </div>
+                                    </h1>
+                                    <h2 class="d-flex align-items-baseline">
+                                        <i class="fa fa-suitcase fa-fw me-1 text-primary" title="Position"/>
+                                        <field name="job_title" placeholder="Job Title"/>
+                                    </h2>
+                                </div>
                             </div>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -280,6 +282,7 @@
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email" optional="hide"/>
