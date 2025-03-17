@@ -8,6 +8,33 @@ from odoo.tools import mute_logger
 class TestReadProgressBar(common.TransactionCase):
     """Test for read_progress_bar"""
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.progressbar_model = cls.env['ir.model'].create({
+            'model': 'x_progressbar',
+            'name': 'progress_bar',
+            'field_id': [
+                (0, 0, {
+                    'field_description': 'Country',
+                    'name': 'x_country_id',
+                    'ttype': 'many2one',
+                    'relation': 'res.country',
+                }),
+                (0, 0, {
+                    'field_description': 'Date',
+                    'name': 'x_date',
+                    'ttype': 'date',
+                }),
+                (0, 0, {
+                    'field_description': 'State',
+                    'name': 'x_state',
+                    'ttype': 'selection',
+                    'selection': "[('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')]",
+                }),
+            ],
+        })
+
     def setUp(self):
         super(TestReadProgressBar, self).setUp()
         self.Model = self.env['res.partner']
@@ -59,30 +86,6 @@ class TestReadProgressBar(common.TransactionCase):
         self.assertEqual(groups[1][groupby][0], pg_groups["testWeekGrouping_second"])
 
     def test_simple(self):
-        model = self.env['ir.model'].create({
-            'model': 'x_progressbar',
-            'name': 'progress_bar',
-            'field_id': [
-                (0, 0, {
-                    'field_description': 'Country',
-                    'name': 'x_country_id',
-                    'ttype': 'many2one',
-                    'relation': 'res.country',
-                }),
-                (0, 0, {
-                    'field_description': 'Date',
-                    'name': 'x_date',
-                    'ttype': 'date',
-                }),
-                (0, 0, {
-                    'field_description': 'State',
-                    'name': 'x_state',
-                    'ttype': 'selection',
-                    'selection': "[('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')]",
-                }),
-            ],
-        })
-
         c1, c2, c3 = self.env['res.country'].search([], limit=3)
 
         self.env['x_progressbar'].create([
@@ -126,7 +129,7 @@ class TestReadProgressBar(common.TransactionCase):
         })
 
         # add a computed field on model
-        model.write({'field_id': [
+        self.progressbar_model.write({'field_id': [
             (0, 0, {
                 'field_description': 'Related State',
                 'name': 'x_state_computed',
@@ -146,3 +149,24 @@ class TestReadProgressBar(common.TransactionCase):
         # It is not possible to read_progress_bar with ungroupable fields
         with self.assertRaises(ValueError), mute_logger('odoo.domains'):
             self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
+
+    def test_groupby_same_field_than_progressbar_field(self):
+        """ Test when group by is the same field than the one used for the progress bar """
+        self.env['x_progressbar'].create([
+            {'x_state': 'foo'},
+            {'x_state': 'foo'},
+            {'x_state': 'foo'},
+            {'x_state': 'bar'},
+            {'x_state': 'bar'},
+            {'x_state': 'baz'},
+        ])
+        progress_bar = {
+            'field': 'x_state',
+            'colors': {'foo': 'success', 'bar': 'warning', 'baz': 'danger'},
+        }
+        result = self.env['x_progressbar'].read_progress_bar([], 'x_state', progress_bar)
+        self.assertDictEqual(result, {
+            'foo': {'bar': 0, 'baz': 0, 'foo': 3},
+            'bar': {'bar': 2, 'baz': 0, 'foo': 0},
+            'baz': {'bar': 0, 'baz': 1, 'foo': 0},
+        })

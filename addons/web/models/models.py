@@ -818,11 +818,19 @@ class Base(models.AbstractModel):
 
         result = defaultdict(lambda: dict.fromkeys(progress_bar['colors'], 0))
         domain = AND([domain, [(progress_bar['field'], 'in', list(progress_bar['colors']))]])
+        groupby = [group_by]
+        if progress_bar['field'] != group_by:
+            groupby.append(progress_bar['field'])
 
-        for main_group, field_value, count in self._read_group(
-            domain, [group_by, progress_bar['field']], ['__count'],
+        for group in self._read_group(
+            domain, groupby, ['__count'],
         ):
+            main_group = group[0]
+            count = group[-1]
             group_by_value = str(adapt(main_group))
+            field_value = group_by_value
+            if len(groupby) == 2:
+                field_value = group[1]
             result[group_by_value][field_value] += count
 
         return result
