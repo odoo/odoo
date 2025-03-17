@@ -213,7 +213,8 @@ class IrSequence(models.Model):
 
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
-                'weekday': '%w', 'h24': '%H', 'h12': '%I', 'min': '%M', 'sec': '%S'
+                'weekday': '%w', 'h24': '%H', 'h12': '%I', 'min': '%M', 'sec': '%S',
+                'isoyear': '%G', 'isoy': '%g', 'isoweek': '%V',
             }
             res = {}
             for key, format in sequences.items():
