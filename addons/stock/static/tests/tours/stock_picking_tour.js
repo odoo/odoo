@@ -286,15 +286,11 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
         trigger: "body:not(:has(.modal))",
     },
     {
-        trigger: '.o_searchview_input_container',
-        run: () => {
-            const applyButtons = document.querySelectorAll('button[name=action_apply_inventory]');
-            if (applyButtons.length > 0){
-                console.error('Not all quants were applied!');
-            }
-        },
+        content: "Check that all quants were applied.",
+        trigger: "body:not(:has(button[name=action_apply_inventory]))",
     },
-]});
+    ],
+});
 
 registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
     steps: () => [

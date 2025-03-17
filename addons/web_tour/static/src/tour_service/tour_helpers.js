@@ -1,4 +1,5 @@
 import * as hoot from "@odoo/hoot-dom";
+import { waitForStable } from "@web/core/macro";
 
 export class TourHelpers {
     /**
@@ -197,8 +198,8 @@ export class TourHelpers {
      * @example
      *  run : "press Enter",
      */
-    press(...args) {
-        return hoot.press(args.flatMap((arg) => typeof arg === "string" && arg.split("+")));
+    async press(...args) {
+        await hoot.press(args.flatMap((arg) => typeof arg === "string" && arg.split("+")));
     }
 
     /**
@@ -265,9 +266,9 @@ export class TourHelpers {
      * @example
      *  run: "uncheck input[type=checkbox]", // Unchecks the selector
      */
-    uncheck(selector) {
+    async uncheck(selector) {
         const element = this._get_action_element(selector);
-        hoot.uncheck(element);
+        await hoot.uncheck(element);
     }
 
     /**
@@ -277,10 +278,12 @@ export class TourHelpers {
      * @example
      *  run: "goToUrl /shop", // Go to /shop
      */
-    goToUrl(url) {
+    async goToUrl(url) {
         const linkEl = document.createElement("a");
         linkEl.href = url;
-        linkEl.click();
+        //We want DOM is stable before quit it.
+        await waitForStable();
+        await hoot.click(linkEl);
     }
 
     /**
