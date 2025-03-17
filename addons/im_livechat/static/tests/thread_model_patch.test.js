@@ -46,6 +46,28 @@ test("Thread name unchanged when inviting new users", async () => {
     await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
 });
 
+test("Thread name renamed after editing", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
+    const channelId = pyEnv["discuss.channel"].create({
+        anonymous_name: "Visitor #20",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-DiscussSidebar-item:contains('Visitor #20')");
+    await contains(".o-mail-Discuss-threadName[title='Visitor #20']");
+    await insertText(".o-mail-Discuss-threadName", "New Name", { replace: true });
+    await triggerHotkey("Enter");
+    await contains(".o-mail-Discuss-threadName[title='New Name']");
+    await contains(".o-mail-DiscussSidebar-item:contains('New Name')");
+});
+
 test("Display livechat custom username if defined", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].write(serverState.partnerId, {

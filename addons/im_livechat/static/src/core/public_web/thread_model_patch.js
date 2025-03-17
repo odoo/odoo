@@ -55,6 +55,9 @@ patch(Thread.prototype, {
         if (this.channel_type !== "livechat" || !this.correspondent) {
             return super.displayName;
         }
+        if (this.custom_channel_name) {
+            return this.custom_channel_name;
+        }
         if (!this.correspondent.persona.is_public && this.correspondent.persona.country) {
             return `${this.correspondent.name} (${this.correspondent.persona.country.name})`;
         }
