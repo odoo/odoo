@@ -1,7 +1,7 @@
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { useSetupAction } from "@web/search/action_hook";
@@ -129,6 +129,7 @@ export class KanbanController extends Component {
         this.model = useState(
             useModelWithSampleData(KanbanSampleModel, this.modelParams, this.modelOptions)
         );
+        useBus(this.model.bus, "render", () => this.render());
         if (archInfo.progressAttributes) {
             const { activeBars } = this.props.state || {};
             this.progressBarState = useProgressBar(
