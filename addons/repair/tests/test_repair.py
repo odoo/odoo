@@ -479,6 +479,26 @@ class TestRepair(common.TransactionCase):
         ], limit=1)
         self.assertEqual(repair.move_ids[0].location_dest_id, location_dest_id)
 
+    def test_no_recompute_location_when_change_user_after_confirm(self):
+        user1 = self.env['res.users'].create({
+            'name': 'A User',
+            'login': 'a_user',
+            'email': 'a@user.com',
+        })
+        repair_order = self._create_simple_repair_order()
+        repair_order.location_id = self.stock_location_14
+        repair_order.recycle_location_id = self.stock_location_14
+        repair_order.action_validate()
+        repair_order.user_id = user1
+        self.assertEqual(repair_order.location_id, self.stock_location_14)
+        self.assertEqual(repair_order.recycle_location_id, self.stock_location_14)
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        with Form(repair_order) as ro_form:
+            ro_form.user_id = user1
+        self.assertEqual(repair_order.location_id, self.stock_location_14)
+        self.assertEqual(repair_order.recycle_location_id, self.stock_location_14)
+
     def test_purchase_price_so_create_from_repair(self):
         """
         Test that the purchase price is correctly set on the SO line,
