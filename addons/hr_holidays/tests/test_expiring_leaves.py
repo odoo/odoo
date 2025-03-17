@@ -46,7 +46,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
             'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -55,7 +55,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'yearly',
                 'yearly_day': 1,
-                'yearly_month': 'jan',
+                'yearly_month': '1',
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost'
                 })
@@ -118,7 +118,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
             'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -127,7 +127,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'yearly',
                 'yearly_day': 1,
-                'yearly_month': 'jan',
+                'yearly_month': '1',
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'maximum',
                 'postpone_max_days': carryover_limit,
@@ -203,7 +203,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
             'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -212,7 +212,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'yearly',
                 'yearly_day': 1,
-                'yearly_month': 'jan',
+                'yearly_month': '1',
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'maximum',
                 'postpone_max_days': carryover_limit,
@@ -230,7 +230,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'yearly',
                 'yearly_day': 1,
-                'yearly_month': 'jan',
+                'yearly_month': '1',
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'all',
                 })
@@ -304,7 +304,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
             'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -313,7 +313,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'yearly',
                 'yearly_day': 1,
-                'yearly_month': 'jan',
+                'yearly_month': '1',
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost',
                 })
@@ -378,7 +378,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                     'added_value_type': 'day',
                     'frequency': 'yearly',
                     'yearly_day': 1,
-                    'yearly_month': 'jan',
+                    'yearly_month': '1',
                     'cap_accrued_time': False,
                     'action_with_unused_accruals': 'maximum',
                     'postpone_max_days': 5,
@@ -428,7 +428,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
             'carryover_day': 1,
-            'carryover_month': 'sep',
+            'carryover_month': '9',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -437,7 +437,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'yearly',
                 'yearly_day': 1,
-                'yearly_month': 'jan',
+                'yearly_month': '1',
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'maximum',
                 'postpone_max_days': 5,
@@ -501,7 +501,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
             'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -510,7 +510,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'yearly',
                 'yearly_day': 1,
-                'yearly_month': 'jan',
+                'yearly_month': '1',
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost'
                 })
@@ -589,7 +589,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
             'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -598,7 +598,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'yearly',
                 'yearly_day': 1,
-                'yearly_month': 'jan',
+                'yearly_month': '1',
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost'
                 })
