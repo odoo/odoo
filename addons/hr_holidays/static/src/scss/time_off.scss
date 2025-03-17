@@ -1,3 +1,28 @@
+.modal-content {
+    .o_hr_leave_form {
+        .o_form_sheet_bg {
+            padding-right: 0;
+            min-height: 160px;
+            overflow: hidden;
+            .ribbon {
+                & span {
+                    --ribbon-font-size: 14px !important;
+                }
+            }
+            .o_form_statusbar {
+                padding-right: 16px;
+            }
+        }
+        .o_form_sheet {
+            padding-top: 0;
+            padding-right: 16px;
+            padding-bottom: 0;
+        }
+        .o_hr_leave_content {
+            padding-top: 8px;
+        }
+    }
+}
 .o_hr_leave_form {
     .o_form_sheet {
         padding-top: 0;
@@ -22,12 +47,16 @@
         .o_hr_leave_subtitle {
             font-size: 1.2rem;
         }
-        .o_hr_leave_column {
-            padding: 16px;
+        .col_left {
+            padding-top: 16px;
         }
         .col_right {
-            background-color: map-get($grays, '200');
-            padding-top: 28px;
+            .sub_table {
+                background-color: map-get($grays, '200');
+                border-radius: 0.25rem;
+            }
+            padding-top: 16px;
+            padding-bottom: 16px;
         }
         .o_hr_leave_date {
             display: flex;

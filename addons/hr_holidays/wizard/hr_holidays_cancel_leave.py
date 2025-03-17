@@ -9,7 +9,7 @@ class HrHolidaysCancelLeave(models.TransientModel):
     _description = 'Cancel Time Off Wizard'
 
     leave_id = fields.Many2one('hr.leave', string="Time Off Request", required=True)
-    reason = fields.Text(required=True)
+    reason = fields.Text()
 
     def action_cancel_leave(self):
         self.ensure_one()
