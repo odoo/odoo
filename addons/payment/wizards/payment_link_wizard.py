@@ -3,6 +3,7 @@
 from werkzeug import urls
 
 from odoo import _, api, fields, models
+from odoo.tools.float_utils import float_repr
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -97,8 +98,20 @@ class PaymentLinkWizard(models.TransientModel):
             self.partner_id.id, self.amount, self.currency_id.id
         )
 
-    def _prepare_anchor(self):
-        """ Prepare the anchor to append to the payment link.
+    @api.depends('amount', 'currency_id', 'partner_id', 'company_id')
+    def _compute_link(self):
+        for payment_link in self:
+            related_document = self.env[payment_link.res_model].browse(payment_link.res_id)
+            base_url = related_document.get_base_url()  # Don't generate links for the wrong website
+            url_params = {
+                'amount': float_repr(self.amount, self.currency_id.decimal_places),
+                'access_token': self._get_access_token(),
+                **self._get_additional_link_values(),
+            }
+            payment_link.link = f'{base_url}/payment/pay?{urls.url_encode(url_params)}'
+
+    def _get_additional_link_values(self):
+        """ Return the additional values to append to the payment link.
 
         Note: self.ensure_one()
 
