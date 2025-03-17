@@ -1897,7 +1897,7 @@ class BaseModel(metaclass=MetaModel):
         sql_having = self._read_group_having(having, query)
         sql_order, sql_extra_groupby = self._read_group_orderby(order, groupby_terms, query)
 
-        groupby_terms = list(groupby_terms.values())
+        groupby_terms = [groupby_terms[spec] for spec in groupby]
 
         query_parts = [
             SQL("SELECT %s", SQL(", ").join(groupby_terms + select_terms)),
