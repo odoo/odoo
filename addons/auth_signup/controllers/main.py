@@ -7,6 +7,7 @@ from werkzeug.urls import url_encode
 from odoo import http, tools, _
 from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PARAMS, LOGIN_SUCCESSFUL_PARAMS
+from odoo.addons.web.models.res_users import SKIP_CAPTCHA_LOGIN
 from odoo.addons.base_setup.controllers.main import BaseSetup
 from odoo.exceptions import UserError
 from odoo.http import request
@@ -58,6 +59,7 @@ class AuthSignupHome(Home):
                 template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
                 if user_sudo and template:
                     template.sudo().send_mail(user_sudo.id, force_send=True)
+                request.update_context(skip_captcha_login=SKIP_CAPTCHA_LOGIN)
                 return self.web_login(*args, **kw)
             except UserError as e:
                 qcontext['error'] = e.args[0]
@@ -89,6 +91,7 @@ class AuthSignupHome(Home):
             try:
                 if qcontext.get('token'):
                     self.do_signup(qcontext)
+                    request.update_context(skip_captcha_login=SKIP_CAPTCHA_LOGIN)
                     return self.web_login(*args, **kw)
                 else:
                     login = qcontext.get('login')
