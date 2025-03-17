@@ -50,6 +50,10 @@ ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObj
 PdfReadError = errors.PdfReadError  # moved in 2.0
 PdfStreamError = errors.PdfStreamError  # moved in 2.0
 createStringObject = create_string_object  # deprecated in 2.0, removed in 5.0
+try:
+    DependencyError = errors.DependencyError
+except AttributeError:
+    DependencyError = NotImplementedError
 
 # ----------------------------------------------------------
 # PyPDF2 hack
