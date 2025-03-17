@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import common
 from . import test_account_move_payment_method
+from . import test_edi_address
 from . import test_edi_export
 from . import test_edi_import
 from . import test_edi_reverse_charge
