@@ -11,63 +11,37 @@
     }
 
     // Day
-
-    .o_date_item_cell {
-        position: relative;
-        border-radius: 0;
-    }
-
-    .o_current,
     .o_selected {
         color: $o-component-active-color;
-    }
-
-    .o_selected:not(.o_select_start):not(.o_select_end) {
         background: $o-component-active-bg;
     }
 
-    .o_current,
-    .o_highlighted,
     .o_select_start,
     .o_select_end {
-        &:before {
-            content: "";
-            position: absolute;
-            box-shadow: inset 0 0 0 1px $o-component-active-border;
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 100%;
-            z-index: 1;
-        }
+        --selected-day-color: #{mix(lighten($o-component-active-border, 10%), $o-component-active-bg, 15%)};
+        --percent: calc(100% / sqrt(2));
+        background:
+            #{$o-component-active-bg}
+            radial-gradient(
+                circle,
+                var(--selected-day-color) 0% var(--percent),
+                transparent var(--percent) 100%
+            )
+        ;
     }
 
-    .o_select_start,
-    .o_select_end {
-        &:before {
-            background: mix(lighten($o-component-active-border, 10%), $o-component-active-bg, 15%);
-        }
-
-        &:after {
-            content: "";
-            position: absolute;
-            background: transparent;
-            width: 50%;
-            aspect-ratio: 1/2;
-        }
-
-        &:not(.o_select_end):after {
-            right: 0;
-            background: $o-component-active-bg;
-        }
-
-        &:not(.o_select_start):after {
-            right: 50%;
-            background: $o-component-active-bg;
-        }
+    .o_select_start {
+        border-top-left-radius: 50%;
+        border-bottom-left-radius: 50%;
     }
 
-    .o_today span {
-        border-bottom: 0.2em solid $danger;
+    .o_select_end  {
+        border-top-right-radius: 50%;
+        border-bottom-right-radius: 50%;
+    }
+
+    .o_today {
+        color: $o-brand-primary;
     }
 
     // Grids
@@ -111,7 +85,6 @@
     .o_cell_md {
         aspect-ratio: 1;
         @include media-breakpoint-up(md) {
-            padding: 0.4rem;
             width: var(--DateTimePicker__Cell-size-md);
             height: var(--DateTimePicker__Cell-size-md);
         }
