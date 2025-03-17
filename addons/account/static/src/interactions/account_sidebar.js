@@ -32,8 +32,9 @@ export class AccountSidebar extends Sidebar {
      */
     updateIframeSize() {
         const wrapwrapEl = this.invoiceHTMLEl.contentDocument.querySelector("div#wrapwrap");
-        this.invoiceHTMLEl.style.height = 0;
-        this.invoiceHTMLEl.style.height = wrapwrapEl.scrollHeight;
+        // Set it to 0 first to handle the case where scrollHeight is too big for its content.
+        this.invoiceHTMLEl.height = 0;
+        this.invoiceHTMLEl.height = wrapwrapEl.scrollHeight;
         // scroll to the right place after iframe resize
         const isAnchor = /^#[\w-]+$/.test(window.location.hash)
         if (!isAnchor) {
