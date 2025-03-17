@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo import fields, models, _
 
 
 class HrLeave(models.Model):
@@ -62,8 +60,8 @@ class HrLeave(models.Model):
     def _check_missing_global_leave_timesheets(self):
         if not self:
             return
-        min_date = min([leave.date_from for leave in self])
-        max_date = max([leave.date_to for leave in self])
+        min_date = min(self.mapped('date_from'))
+        max_date = max(self.mapped('date_to'))
 
         global_leaves = self.env['resource.calendar.leaves'].search([
             ("resource_id", "=", False),

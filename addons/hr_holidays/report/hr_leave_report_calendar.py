@@ -118,8 +118,5 @@ class HrLeaveReportCalendar(models.Model):
     def action_approve(self):
         self.leave_id.action_approve(check_state=False)
 
-    def action_validate(self):
-        self.leave_id.action_validate()
-
     def action_refuse(self):
         self.leave_id.action_refuse()

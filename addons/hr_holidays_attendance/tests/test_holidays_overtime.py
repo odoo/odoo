@@ -120,15 +120,6 @@ class TestHolidaysOvertime(TransactionCase):
         self.assertFalse(leave.overtime_id.exists(), "Overtime should be deleted")
         self.assertEqual(self.employee.total_overtime, 8)
 
-        leave.action_reset_confirm()
-        self.assertFalse(leave.overtime_id.exists(), "Overtime should not be created")
-        self.assertEqual(self.employee.total_overtime, 8)
-
-        overtime = leave.overtime_id
-        leave.unlink()
-        self.assertFalse(overtime.exists(), "Overtime should be deleted along with the leave")
-        self.assertEqual(self.employee.total_overtime, 8)
-
     def test_leave_check_overtime_write(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
         self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 16))
@@ -234,7 +225,7 @@ class TestHolidaysOvertime(TransactionCase):
             'request_date_from': '2022-1-6',
             'request_date_to': '2022-1-6',
         })
-        leave.with_user(self.user_manager).action_validate()
+        leave.with_user(self.user_manager).action_approve()
         self.assertEqual(self.employee.total_overtime, 8)
 
         self.assertTrue(leave.with_user(self.user).can_cancel)

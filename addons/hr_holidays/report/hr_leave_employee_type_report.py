@@ -132,6 +132,14 @@ class HrLeaveEmployeeTypeReport(models.Model):
             'view_mode': 'pivot',
             'search_view_id': [self.env.ref('hr_holidays.view_search_hr_holidays_employee_type_report').id],
             'domain': domain,
+            'help': _("""
+                <p class="o_view_nocontent_empty_folder">
+                    No Balance yet!
+                </p>
+                <p>
+                    Why don't you start by <a type="action" class="text-link" name="%d">Allocating Time off</a> ?
+                </p>
+            """, self.env.ref("hr_holidays.hr_leave_allocation_action_form").id),
             'context': {
                 'search_default_year': True,
                 'search_default_company': True,

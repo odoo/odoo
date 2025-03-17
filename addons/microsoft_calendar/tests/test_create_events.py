@@ -593,7 +593,7 @@ class TestCreateEvents(TestCommon):
             'request_date_from': datetime(2020, 1, 15),
             'request_date_to': datetime(2020, 1, 15),
         })
-        self.holiday.with_user(self.user_hrmanager).action_validate()
+        self.holiday.with_user(self.user_hrmanager).action_approve()
 
         # Ensure the event exists in the calendar and is correctly linked to the time off
         search_domain = [

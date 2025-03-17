@@ -28,15 +28,7 @@ class HrWorkEntry(models.Model):
     def action_approve_leave(self):
         self.ensure_one()
         if self.leave_id:
-            # Already confirmed once
-            if self.leave_id.state == 'validate1':
-                self.leave_id.action_validate()
-            # Still in confirmed state
-            else:
-                self.leave_id.action_approve()
-                # If double validation, still have to validate it again
-                if self.leave_id.validation_type == 'both':
-                    self.leave_id.action_validate()
+            self.leave_id.action_approve()
 
     def action_refuse_leave(self):
         self.ensure_one()

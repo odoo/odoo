@@ -51,7 +51,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
             leave = self.env['hr.leave'].create(leave_vals)
             leave.action_approve()
             with self.mock_mail_gateway():
-                leave.action_validate()
+                leave.action_approve()
                 admin_emails = self._new_mails.filtered(lambda x: x.partner_ids.employee_ids.id == self.ref('hr.employee_admin'))
                 self.assertEqual(len(admin_emails), 1, "Mitchell Admin should receive an email")
                 self.assertTrue("has been accepted" in admin_emails.preview)

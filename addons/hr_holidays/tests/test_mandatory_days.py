@@ -114,14 +114,18 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             self.assertTrue(day in mandatory_days)
             self.assertEqual(color, mandatory_days[day])
 
-        with self.assertRaises(ValidationError), Form(self.env['hr.leave'].with_user(self.employee_user.id).with_context(default_employee_id=self.employee_emp.id)) as leave_form:
+        with Form(self.env['hr.leave'].with_user(self.employee_user.id).with_context(default_employee_id=self.employee_emp.id)) as leave_form:
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = datetime(2021, 11, 1)
             leave_form.request_date_to = datetime(2021, 11, 1)
-            self.assertFalse(leave_form.has_mandatory_day)
+
+            leave_form.save()  # need to be saved to have access to record
+            self.assertFalse(leave_form.record.has_mandatory_day)
 
             leave_form.request_date_to = datetime(2021, 11, 5)
-            self.assertTrue(leave_form.has_mandatory_day)
+
+            leave_form.save()  # need to be saved to have access to record
+            self.assertTrue(leave_form.record.has_mandatory_day)
 
     @freeze_time('2021-10-15')
     def test_department_mandatory_days(self):

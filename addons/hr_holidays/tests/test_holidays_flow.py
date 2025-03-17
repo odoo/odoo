@@ -172,7 +172,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             _check_holidays_status(hol_status_2_employee_group, self.employee_emp, 2.0, 0.0, 2.0, 1.0)
 
             # HrManager validates the second step
-            hol2_user_group.with_user(self.user_hrmanager_id).action_validate()
+            hol2_user_group.with_user(self.user_hrmanager_id).action_approve()
             self.assertEqual(hol2.state, 'validate',
                             'hr_holidays: second validation should lead to validate state')
             # Check left days: - 1 day taken
@@ -206,11 +206,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             # I find a small mistake on my leave request to I click on "Refuse" button to correct a mistake.
             hol3.action_refuse()
             self.assertEqual(hol3.state, 'refuse', 'hr_holidays: refuse should lead to refuse state')
-            # Reset to confirm.
-            hol3.action_reset_confirm()
-            self.assertEqual(hol3.state, 'confirm', 'hr_holidays: confirming should lead to confirm state')
-            # I validate the holiday request by clicking on "To Approve" button.
-            hol3.action_validate()
+            # Validate it again
+            hol3.action_approve()
             self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
             # Check left days for casual leave: 19 days left
             _check_holidays_status(hol3_status, self.env['hr.employee'].browse(employee_id), 20.0, 1.0, 19.0, 19.0)

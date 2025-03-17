@@ -41,7 +41,6 @@
                     </group>
                     <footer class="d-flex justify-content-end gap-1">
                         <button name="action_approve" string="Approve" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
-                        <button name="action_validate" string="Validate" type="object" close="1" invisible="state != 'validate1' or not is_manager"/>
                         <button name="action_refuse" string="Refuse" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
                     </footer>
                 </sheet>

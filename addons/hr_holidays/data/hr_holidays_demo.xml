@@ -125,7 +125,7 @@
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="state">confirm</field>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_sl')"/>
     </function>
 
@@ -189,7 +189,7 @@
         <field name="request_date_to" eval="time.strftime('%Y-%m-20')"/>
         <field name="employee_id" ref="hr.employee_al"/>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_cl_al')"/>
     </function>
 
@@ -201,7 +201,7 @@
         <field name="employee_id" ref="hr.employee_al"/>
         <field name="state">confirm</field>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_sl_al')"/>
     </function>
 
@@ -238,7 +238,7 @@
         <field name="request_date_to" eval="time.strftime('%Y-%m-28')"/>
         <field name="employee_id" ref="hr.employee_mit"/>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_cl_mit')"/>
     </function>
 
@@ -288,7 +288,7 @@
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_cl_qdp')"/>
     </function>
 
@@ -300,7 +300,7 @@
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_sl_qdp')"/>
     </function>
 
@@ -362,7 +362,7 @@
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_cl_vad')"/>
     </function>
 
@@ -374,7 +374,7 @@
         <field name="employee_id" ref="hr.employee_niv"/>
         <field name="state">confirm</field>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_sl_vad')"/>
     </function>
 
@@ -409,7 +409,7 @@
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="state">confirm</field>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_sl_kim')"/>
     </function>
 
@@ -421,7 +421,7 @@
         <field name="employee_id" ref="hr.employee_jve"/>
         <field name="state">confirm</field>
     </record>
-    <function model="hr.leave" name="action_validate">
+    <function model="hr.leave" name="action_approve">
         <value eval="ref('hr_holidays.hr_holidays_sl_kim_2')"/>
     </function>
 

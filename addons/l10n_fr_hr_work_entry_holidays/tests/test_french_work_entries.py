@@ -74,7 +74,7 @@ class TestFrenchWorkEntries(TransactionCase):
             'request_date_from': '2021-09-06',
             'request_date_to': '2021-09-08',  # This should fill the gap up to the 10th
         })
-        leave.action_validate()
+        leave.action_approve()
 
         # Since the gaps have been filled, we should now get 10 work entries
         with self.assertQueryCount(45):
