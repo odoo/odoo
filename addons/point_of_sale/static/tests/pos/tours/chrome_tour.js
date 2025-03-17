@@ -7,6 +7,8 @@ import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import { refresh, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("ChromeTour", {
     checkDelay: 50,
@@ -189,5 +191,33 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_indexed_db_draft_order", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
+            refresh(),
+            inLeftSide(ProductScreen.orderLineHas("Desk Organizer", "1")),
+            ProductScreen.clickDisplayedProduct("Desk Pad", true, "1.0"),
+            refresh(),
+            inLeftSide([
+                ...ProductScreen.orderLineHas("Desk Organizer", "1"),
+                ...ProductScreen.orderLineHas("Desk Pad", "1"),
+                ...ProductScreen.clickLine("Desk Pad"),
+                Numpad.click("⌫"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "0", "0"),
+                Numpad.click("⌫"),
+                ...ProductScreen.orderLineHas("Desk Pad").map(negateStep),
+            ]),
+            refresh(),
+            inLeftSide([
+                ...ProductScreen.orderLineHas("Desk Organizer", "1"),
+                ...ProductScreen.orderLineHas("Desk Pad").map(negateStep),
+            ]),
         ].flat(),
 });

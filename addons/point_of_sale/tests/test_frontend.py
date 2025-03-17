@@ -1803,6 +1803,10 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
 
+    def test_indexed_db_draft_order(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_indexed_db_draft_order', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
