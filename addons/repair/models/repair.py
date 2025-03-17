@@ -249,7 +249,7 @@ class RepairOrder(models.Model):
             elif len(repair.picking_id.move_ids.lot_ids) == 1:
                 repair.lot_id = repair.picking_id.move_ids.lot_ids
 
-    @api.depends('user_id', 'company_id')
+    @api.depends('company_id')
     def _compute_picking_type_id(self):
         picking_type_by_company = self._get_picking_type()
         for ro in self:
