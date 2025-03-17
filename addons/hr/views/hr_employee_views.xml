@@ -79,9 +79,9 @@
                         </div>
                         <div class="d-flex align-items-center">
                             <div class="o_employee_avatar m-0 p-0">
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                                 <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
-                                <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                             </div>
                             <div class="d-flex flex-column ms-2">
                                 <div class="oe_title mw-75 ps-0 pe-2">
@@ -356,7 +356,7 @@
                                 <div>
                                     <field class="fw-bold fs-5" name="name" placeholder="Employee's Name"/>
                                     <div t-if="record.show_hr_icon_display.raw_value" class="float-end">
-                                        <field name="hr_icon_display" class="o_employee_availability" widget="hr_presence_status" />
+                                        <field name="hr_icon_display" widget="hr_presence_status" />
                                     </div>
                                 </div>
                                 <field t-if="record.job_title.raw_value" name="job_title"/>
