@@ -1878,6 +1878,10 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
 
+    def test_indexed_db_draft_order(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_indexed_db_draft_order', login="pos_user")
+
     def test_pricelist_parent_category_rule(self):
         parent_category = self.env['product.category'].create({
             'name': 'Parent Category',
