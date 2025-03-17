@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
+from datetime import datetime
 
 import psycopg2
 import psycopg2.errors
@@ -192,10 +192,47 @@ class TestIrSequenceGenerate(BaseCase):
             with self.assertRaises(UserError):
                 env['ir.sequence'].next_by_code('test_sequence_type_7')
 
+    def test_ir_sequence_interpolation_dict(self):
+        """ Test date-based interpolation directives in sequence suffix/prefix. """
+        with environment() as env:
+            seq = env['ir.sequence'].create({
+                'code': 'test_sequence_type_8',
+                'name': "Test sequence",
+                'prefix': '%(year)s/%(month)s/%(day)s/',
+                'suffix': '/%(y)s/%(doy)s/%(woy)s',
+            })
+            self.assertTrue(seq)
+            now = datetime.now()
+            self.assertEqual(
+                env['ir.sequence'].next_by_code('test_sequence_type_8'),
+                now.strftime('%Y/%m/%d/1/%y/%j/%W'),
+            )
+
+    def test_ir_sequence_iso_directives(self):
+        """ Test ISO 8061 date directives in sequence suffix/prefix. """
+        with environment() as env:
+            seq = env['ir.sequence'].create({
+                'code': 'test_sequence_type_9',
+                'name': "Test sequence",
+                'prefix': '%(isoyear)s/%(isoy)s/',
+                'suffix': '/%(isoweek)s/%(weekday)s',
+            })
+            self.assertTrue(seq)
+            isoyear, isoweek, weekday = datetime.now().isocalendar()
+            self.assertEqual(
+                env['ir.sequence'].next_by_code('test_sequence_type_9'),
+                f"{isoyear}/{isoyear % 100}/1/{isoweek}/{weekday}",
+            )
+
+    @classmethod
+    def setUpClass(cls):
+        with environment() as env:
+            cls._sequence_ids = env['ir.sequence'].search([]).ids
+
     @classmethod
     def tearDownClass(cls):
-        drop_sequence('test_sequence_type_5')
-        drop_sequence('test_sequence_type_6')
+        with environment() as env:
+            env['ir.sequence'].search([('id', 'not in', cls._sequence_ids)]).unlink()
 
 
 class TestIrSequenceInit(common.TransactionCase):
