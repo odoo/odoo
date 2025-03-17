@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import common
+from odoo.tests import common, patch
 from odoo.tools import frozendict
 from odoo import Command
 
@@ -83,6 +83,25 @@ class TestCompanyCheck(common.TransactionCase):
             'parent_id': self.parent_company_b_id.id,
             'company_id': self.company_b.id,
         })
+
+    def test_check_company_write_performance(self):
+        child = self.env['test_new_api.model_child'].create({
+            'name': 'M1',
+            'company_id': self.company_b.id,
+        })
+        child.invalidate_recordset()
+
+        ChildModel = self.registry['test_new_api.model_child']
+        old_check_company = ChildModel._check_company
+        # One query for reading child company_id field (for check_company)
+        # One query for reading parent_company_b_id company_id field (for check_company)
+        # One query for the update
+        with (
+            self.assertQueryCount(3),
+            patch.object(ChildModel, '_check_company', autospec=True, side_effect=old_check_company) as spy
+        ):
+            child.parent_id = self.parent_company_b_id
+            spy.assert_called_once_with(child, ['parent_id'])
 
     def test_company_environment(self):
         """ Check the company context on the environment is verified. """

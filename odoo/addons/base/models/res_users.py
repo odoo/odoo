@@ -541,7 +541,7 @@ class Users(models.Model):
                         pass
 
     @api.constrains('company_id', 'company_ids', 'active')
-    def _check_company(self):
+    def _check_company_inconsistencies(self):
         for user in self.filtered(lambda u: u.active):
             if user.company_id not in user.company_ids:
                 raise ValidationError(

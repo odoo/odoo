@@ -285,6 +285,7 @@ class Lead(models.Model):
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
             if lead.team_id != team:
                 lead.team_id = team.id
+        self._origin._check_company(['team_id'])
 
     @api.depends('user_id', 'team_id', 'partner_id')
     def _compute_company_id(self):
