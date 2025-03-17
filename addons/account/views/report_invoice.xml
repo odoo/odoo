@@ -130,8 +130,10 @@
 
                                     <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                         <t t-if="line.display_type == 'product'" name="account_invoice_line_accountable">
-                                            <td name="account_invoice_line_name">
-                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
+                                            <td name="account_invoice_line_name" style="word-wrap: break-word; white-space: normal; max-width: 200px; page-break-inside: avoid;">
+                                                <div style="page-break-inside: avoid; overflow-wrap: break-word; word-break: break-word;">
+                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
+                                                </div>
                                             </td>
                                             <td name="td_quantity" class="text-end text-nowrap">
                                                 <span t-field="line.quantity">3.00</span>
