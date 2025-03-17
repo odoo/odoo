@@ -52,14 +52,16 @@ class TestReportStockQuantity(tests.TransactionCase):
         })
 
     def test_report_stock_quantity(self):
-        from_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=-1))
-        to_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=4))
+        today = fields.Date.today()
+        current_month_start = today.replace(day=1)
+        from_date = fields.Date.to_string(current_month_start - timedelta(days=28))
+        to_date = fields.Date.to_string((current_month_start + timedelta(days=31)).replace(day=1))
         report = self.env['report.stock.quantity']._read_group(
             [('date', '>=', from_date), ('date', '<=', to_date), ('product_id', '=', self.product1.id)],
-            ['date:day', 'product_id', 'state'],
+            ['date:month', 'product_id', 'state'],
             ['product_qty:sum'])
         forecast_report = [qty for __, __, state, qty in report if state == 'forecast']
-        self.assertEqual(forecast_report, [0, 100, 100, 100, -20, -20])
+        self.assertEqual(forecast_report, [0, -20, -20])
 
     def test_report_stock_quantity_stansit(self):
         wh2 = self.env['stock.warehouse'].create({'name': 'WH2', 'code': 'WH2'})
@@ -90,24 +92,26 @@ class TestReportStockQuantity(tests.TransactionCase):
 
         self.env.flush_all()
         report = self.env['report.stock.quantity']._read_group(
-            [('date', '>=', fields.Date.today()), ('date', '<=', fields.Date.today()), ('product_id', '=', self.product1.id)],
-            ['date:day', 'product_id', 'state'],
+            [('date', '=', fields.Date.today().replace(day=1)), ('product_id', '=', self.product1.id)],
+            ['date:month', 'product_id', 'state'],
             ['product_qty:sum'])
 
         forecast_in_report = [qty for __, __, state, qty in report if state == 'in']
         self.assertEqual(forecast_in_report, [25])
         forecast_out_report = [qty for __, __, state, qty in report if state == 'out']
-        self.assertEqual(forecast_out_report, [-25])
+        self.assertEqual(forecast_out_report, [-145])
 
     def test_report_stock_quantity_with_product_qty_filter(self):
-        from_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=-1))
-        to_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=4))
+        today = fields.Date.today()
+        current_month_start = today.replace(day=1)
+        from_date = fields.Date.to_string(current_month_start)
+        to_date = fields.Date.to_string(current_month_start)
         report = self.env['report.stock.quantity']._read_group(
             [('product_qty', '<', 0), ('date', '>=', from_date), ('date', '<=', to_date), ('product_id', '=', self.product1.id)],
             ['date:day', 'product_id', 'state'],
             ['product_qty:sum'])
         forecast_report = [qty for __, __, state, qty in report if state == 'forecast']
-        self.assertEqual(forecast_report, [-20, -20])
+        self.assertEqual(forecast_report, [-20])
 
     def test_replenishment_report_1(self):
         self.product_replenished = self.env['product.product'].create({

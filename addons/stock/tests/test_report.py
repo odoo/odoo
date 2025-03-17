@@ -118,30 +118,33 @@ class TestReports(TestReportsCommon):
             'location_id': warehouse.view_location_id.id,
         })
 
-        # Inventory Adjustement of 50.0 today.
+        # Inventory Adjustement of 50.0 for the current month
+        current_month_start = date.today().replace(day=1)
+        next_month_start = (current_month_start + timedelta(days=32)).replace(day=1)
+        prev_month_start = (current_month_start - timedelta(days=1)).replace(day=1)
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': product.id,
             'location_id': stock.id,
             'inventory_quantity': 50
         }).action_apply_inventory()
         self.env.flush_all()
-        report_records_today = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today())],
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start)],
             [], ['product_qty:sum'])
-        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
+        report_records_next_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', next_month_start)],
             [], ['product_qty:sum'])
-        report_records_yesterday = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today() - timedelta(days=1))],
+        report_records_prev_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', prev_month_start)],
             [], ['product_qty:sum'])
-        self.assertEqual(report_records_today[0][0], 50.0)
-        self.assertEqual(report_records_tomorrow[0][0], 50.0)
-        self.assertEqual(report_records_yesterday[0][0], 0.0)
+        self.assertEqual(report_records_current_month[0][0], 50.0)
+        self.assertEqual(report_records_next_month[0][0], 50.0)
+        self.assertEqual(report_records_prev_month[0][0], 50.0)
 
-        # Delivery of 20.0 units tomorrow
+        # Delivery of 20.0 units for next month
         move_out = self.env['stock.move'].create({
             'name': 'Move Out 20',
-            'date': datetime.now() + timedelta(days=1),
+            'date': next_month_start,
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,
@@ -149,26 +152,26 @@ class TestReports(TestReportsCommon):
             'product_uom_qty': 20.0,
         })
         self.env.flush_all()
-        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
+        report_records_next_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', next_month_start)],
             [], ['product_qty:sum'])
-        self.assertEqual(report_records_tomorrow[0][0], 50.0)
+        self.assertEqual(report_records_next_month[0][0], 50.0)
         move_out._action_confirm()
         self.env.flush_all()
-        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
+        report_records_next_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', next_month_start)],
             ['state'], ['product_qty:sum'])
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'forecast'), 30.0)
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'out'), -20.0)
-        report_records_today = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today())],
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_next_month if state == 'forecast'), 30.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_next_month if state == 'out'), -20.0)
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start)],
             ['state'], ['product_qty:sum'])
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'forecast'), 50.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_current_month if state == 'forecast'), 50.0)
 
-        # Receipt of 10.0 units tomorrow
+        # Receipt of 10.0 for next month
         move_in = self.env['stock.move'].create({
             'name': 'Move In 10',
-            'date': datetime.now() + timedelta(days=1),
+            'date': next_month_start,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock.id,
             'product_id': product.id,
@@ -177,21 +180,21 @@ class TestReports(TestReportsCommon):
         })
         move_in._action_confirm()
         self.env.flush_all()
-        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
+        report_records_next_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', next_month_start)],
             ['state'], ['product_qty:sum'])
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'forecast'), 40.0)
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'out'), -20.0)
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'in'), 10.0)
-        report_records_today = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today())],
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_next_month if state == 'forecast'), 40.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_next_month if state == 'out'), -20.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_next_month if state == 'in'), 10.0)
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start)],
             ['state'], ['product_qty:sum'])
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'forecast'), 50.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_current_month if state == 'forecast'), 50.0)
 
-        # Delivery of 20.0 units tomorrow
+        # Delivery of 20.0 units for previous month
         move_out = self.env['stock.move'].create({
             'name': 'Move Out 30 - Day-1',
-            'date': datetime.now() - timedelta(days=1),
+            'date': prev_month_start,
             'location_id': stock.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'product_id': product.id,
@@ -200,27 +203,27 @@ class TestReports(TestReportsCommon):
         })
         move_out._action_confirm()
         self.env.flush_all()
-        report_records_today = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today())],
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start)],
             ['state'], ['product_qty:sum'])
-        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
+        report_records_next_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', next_month_start)],
             ['state'], ['product_qty:sum'])
-        report_records_yesterday = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today() - timedelta(days=1))],
+        report_records_prev_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', prev_month_start)],
             ['state'], ['product_qty:sum'])
 
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_yesterday if state == 'forecast'), -30.0)
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_yesterday if state == 'out'), -30.0)
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_yesterday if state == 'in'), 0.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_prev_month if state == 'forecast'), 20.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_prev_month if state == 'out'), -30.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_prev_month if state == 'in'), 0.0)
 
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'forecast'), 20.0)
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'out'), 0.0)
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'in'), 0.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_current_month if state == 'forecast'), 20.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_current_month if state == 'out'), 0.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_current_month if state == 'in'), 0.0)
 
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'forecast'), 10.0)
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'out'), -20.0)
-        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'in'), 10.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_next_month if state == 'forecast'), 10.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_next_month if state == 'out'), -20.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_next_month if state == 'in'), 10.0)
 
     def test_report_quantity_2(self):
         """ Not supported case.
@@ -261,14 +264,15 @@ class TestReports(TestReportsCommon):
         })
         move._action_confirm()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today()), ('warehouse_id', '!=', False)],
+        current_month_start = date.today().replace(day=1)
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start), ('warehouse_id', '!=', False)],
             ['state'], ['product_qty:sum'])
-        self.assertEqual(sum(product_qty for state, product_qty in report_records if state == 'forecast'), 40.0)
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today())],
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_current_month if state == 'forecast'), 40.0)
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start)],
             ['state'], ['product_qty:sum'])
-        self.assertEqual(sum(product_qty for state, product_qty in report_records if state == 'forecast'), 40.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_current_month if state == 'forecast'), 40.0)
         move = self.env['stock.move'].create({
             'name': 'Move outside warehouse',
             'location_id': stock_without_wh.id,
@@ -279,10 +283,10 @@ class TestReports(TestReportsCommon):
         })
         move._action_confirm()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today())],
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start)],
             ['state'], ['product_qty:sum'])
-        self.assertEqual(sum(product_qty for state, product_qty in report_records if state == 'forecast'), 40.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_current_month if state == 'forecast'), 40.0)
 
     def test_report_quantity_3(self):
         product_form = Form(self.env['product.product'])
@@ -303,10 +307,11 @@ class TestReports(TestReportsCommon):
         })
 
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today())],
+        current_month_start = date.today().replace(day=1)
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start)],
             [], ['product_qty:sum'])
-        self.assertEqual(report_records[0][0], 0.0)
+        self.assertEqual(report_records_current_month[0][0], 0.0)
 
         # Receipt of 20.0 units tomorrow
         move_in = self.env['stock.move'].create({
@@ -323,10 +328,10 @@ class TestReports(TestReportsCommon):
         move_in.picked = True
         move_in._action_done()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today())],
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start)],
             [], ['product_qty:sum'])
-        self.assertEqual(report_records[0][0], 20.0)
+        self.assertEqual(report_records_current_month[0][0], 20.0)
 
         # Delivery of 10.0 units tomorrow
         move_out = self.env['stock.move'].create({
@@ -343,10 +348,10 @@ class TestReports(TestReportsCommon):
         move_out.picked = True
         move_out._action_done()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('product_id', '=', product.id), ('date', '=', date.today())],
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('product_id', '=', product.id), ('date', '=', current_month_start)],
             [], ['product_qty:sum'])
-        self.assertEqual(report_records[0][0], 10.0)
+        self.assertEqual(report_records_current_month[0][0], 10.0)
 
     def test_report_quantity_4(self):
         """ Checks the predicted quantity works in a multi-step setup.
@@ -355,7 +360,9 @@ class TestReports(TestReportsCommon):
         customer_loc, supplier_loc = self.env['stock.warehouse']._get_partner_locations()
         self.wh_2.write({'reception_steps': 'two_steps', 'delivery_steps': 'pick_ship'})
 
-        # Pick move for delivery of 5 units in 2 days
+        current_month_start = now.date().replace(day=1)
+        next_month_start = (current_month_start + timedelta(days=32)).replace(day=1)
+        # Pick move for delivery of 5 units for next month
         move_pick = self.env['stock.move'].create({
             'name': 'Out',
             'picking_type_id': self.wh_2.pick_type_id.id,
@@ -363,20 +370,21 @@ class TestReports(TestReportsCommon):
             'location_final_id': customer_loc.id,
             'product_id': self.product1.id,
             'product_uom_qty': 5.0,
-            'date': now + timedelta(days=2),
+            'date': next_month_start,
         })
         move_pick._action_confirm()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', now.date())],
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', current_month_start)],
             [], ['product_qty:sum'])
-        self.assertFalse(report_records[0][0], "Forecast should still be at 0 today, so no records.")
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', (now + timedelta(days=2)).date())],
+        self.assertFalse(report_records_current_month[0][0], "Forecast should still be at 0 today, so no records.")
+        report_records_next_month = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', next_month_start)],
             [], ['product_qty:sum'])
-        self.assertEqual(report_records[0][0], -5)
+        self.assertEqual(report_records_next_month[0][0], -5)
 
-        # In move for receipt of 10 units tomorrow
+        two_months_later = (current_month_start + timedelta(days=62)).replace(day=1)
+        # In move for receipt of 10 units for next month
         move_in = self.env['stock.move'].create({
             'name': 'In',
             'picking_type_id': self.wh_2.in_type_id.id,
@@ -384,22 +392,22 @@ class TestReports(TestReportsCommon):
             'location_final_id': self.wh_2.lot_stock_id.id,
             'product_id': self.product1.id,
             'product_uom_qty': 10.0,
-            'date': now + timedelta(days=1),
+            'date': two_months_later,
         })
         move_in._action_confirm()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', now.date())],
+        report_records_current_month = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', current_month_start)],
             [], ['product_qty:sum'])
-        self.assertFalse(report_records[0][0], "Forecast should still be at 0 today, so no records.")
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', (now + timedelta(days=1)).date())],
+        self.assertFalse(report_records_current_month[0][0], "Forecast should still be at 0 today, so no records.")
+        report_records_next_month = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', next_month_start)],
             [], ['product_qty:sum'])
-        self.assertEqual(report_records[0][0], 10)
-        report_records = self.env['report.stock.quantity']._read_group(
-            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', (now + timedelta(days=2)).date())],
+        self.assertEqual(report_records_next_month[0][0], -5)
+        report_records_two_months_later = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', two_months_later)],
             [], ['product_qty:sum'])
-        self.assertEqual(report_records[0][0], 5)
+        self.assertEqual(report_records_two_months_later[0][0], 5)
 
     def test_report_forecast_1(self):
         """ Checks report data for product is empty. Then creates and process
