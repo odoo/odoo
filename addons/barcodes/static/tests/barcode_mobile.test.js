@@ -1,7 +1,10 @@
+/** @odoo-module **/
+
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { getActiveElement, queryFirst, keyDown, click } from "@odoo/hoot-dom";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { barcodeService } from "@barcodes/barcode_service";
+import { Component, xml } from "@odoo/owl";
 
 beforeEach(() => {
     patchWithCleanup(barcodeService, {
@@ -9,24 +12,30 @@ beforeEach(() => {
         isMobileChrome: true,
     });
 });
+class Root extends Component {
+    static template = xml`
+    <form>
+        <input name="email" type="email"/>
+        <input name="number" type="number"/>
+        <input name="password" type="password"/>
+        <input name="tel" type="tel"/>
+        <input name="text"/>
+        <input name="explicit_text" type="text"/>
+        <textarea></textarea>
+        <div contenteditable="true"></div>
+        <select name="select">
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+        </select>
+    </form>`;
+    static props = ["*"];
+}
 
+test.tags("mobile");
 test("barcode field automatically focus behavior", async () => {
-    await mountWithCleanup(`
-        <form>
-            <input name="email" type="email"/>
-            <input name="number" type="number"/>
-            <input name="password" type="password"/>
-            <input name="tel" type="tel"/>
-            <input name="text"/>
-            <input name="explicit_text" type="text"/>
-            <textarea/>
-            <div contenteditable="true"/>
-            <select name="select">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-            </select>
-        </form>
-    `);
+    expect.assertions(10);
+    await mountWithCleanup(Root);
+
     // Some elements doesn't need to keep the focus
     await click(document.body);
     await keyDown("a");
