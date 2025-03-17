@@ -3,24 +3,11 @@ import { assignDefined } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
+import { _t } from "@web/core/l10n/translation";
 
 export class Attachment extends FileModelMixin(Record) {
     static _name = "ir.attachment";
     static id = "id";
-    /** @type {Object.<number, import("models").Attachment>} */
-    static records = {};
-    /** @returns {import("models").Attachment} */
-    static get(data) {
-        return super.get(data);
-    }
-    /**
-     * @template T
-     * @param {T} data
-     * @returns {T extends any[] ? import("models").Attachment[] : import("models").Attachment}
-     */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
     static new() {
         /** @type {import("models").Attachment} */
         const attachment = super.new(...arguments);
@@ -81,6 +68,10 @@ export class Attachment extends FileModelMixin(Record) {
             await rpc("/mail/attachment/delete", rpcParams);
         }
         this.delete();
+    }
+
+    get previewName() {
+        return this.voice ? _t("Voice Message") : this.name || "";
     }
 }
 

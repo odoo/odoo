@@ -14,18 +14,20 @@ from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
 from markupsafe import Markup
+from contextlib import suppress
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path
 from odoo.service.model import get_public_method
-from odoo.tools import config, lazy_property, frozendict, SQL
+from odoo.tools import _, config, lazy_property, frozendict, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -201,6 +203,8 @@ actual arch.
          """)
     model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
 
+    invalid_locators = fields.Json(compute='_compute_invalid_locators')
+
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')
     def _compute_arch(self):
@@ -313,6 +317,49 @@ actual arch.
     def _inverse_compute_model_id(self):
         for record in self:
             record.model = record.model_id.model
+
+    @api.depends('arch', 'inherit_id')
+    def _compute_invalid_locators(self):
+        self.invalid_locators = []
+        for view in self.filtered('inherit_id'):
+            source = view.with_context(ir_ui_view_tree_cut_off_view=view)._get_combined_arch()
+            invalid_locators = []
+            specs = collections.deque([etree.fromstring(view.arch)])
+            while specs:
+                spec = specs.popleft()
+                if spec.tag == 'data':
+                    specs.extend(spec)
+                    continue
+                # Capture 'move' nodes to handles cases where move operations are nested within other xpath operations
+                # <xpath expr="parent" position="after">
+                #   <xpath expr="child" position="move"/>
+                # </xpath>
+                specs.extend(c for c in spec if c.get("position") == 'move')
+                node = None
+                with suppress(ValidationError):  # Syntax error
+                    # If locate_node returns None here:
+                    # Invalid expression: Ok Syntax, but cannot be anchored to the parent view.
+                    node = self.locate_node(source, spec)
+                if node is None:
+                    invalid_locators.append({
+                        "tag": spec.tag,
+                        "attrib": dict(spec.attrib),
+                        "sourceline": spec.sourceline
+                    })
+                else:
+                    try:
+                        # Since subsequent xpaths may be dependent on previous xpaths, we apply the spec.
+                        source = apply_inheritance_specs(source, spec)
+                    except ValueError as e:
+                        # This function is only interested in locating invalid locators.
+                        # Here, ValueError is raised for:
+                        #   Invalid mode attribute
+                        #   Invalid attributes attribute
+                        #   Invalid position
+                        #   Element <attribute> with 'add' or 'remove' cannot contain text
+                        #   Invalid separator for python expressions in attributes
+                        pass
+            view.invalid_locators = invalid_locators
 
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
@@ -572,7 +619,15 @@ actual arch.
     @api.model
     def _get_inheriting_views_domain(self):
         """ Return a domain to filter the sub-views to inherit from. """
-        return [('active', '=', True)]
+        base_domain =  [('active', '=', True)]
+        tree_cut_off_view = self.env.context.get("ir_ui_view_tree_cut_off_view")
+        if not tree_cut_off_view:
+            return base_domain
+        cut_off_domain = [
+            "|", ("priority", "<", tree_cut_off_view.priority),
+            "&", ("priority", "=", tree_cut_off_view.priority), ("id", "<", tree_cut_off_view.id)
+        ]
+        return expression.AND([base_domain, cut_off_domain])
 
     @api.model
     def _get_filter_xmlid_query(self):
@@ -1279,8 +1334,10 @@ actual arch.
     #------------------------------------------------------
     def _postprocess_tag_calendar(self, node, name_manager, node_info):
         for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
-            if fnames := node.get(additional_field):
-                name_manager.has_field(node, fnames.split('.', 1)[0], node_info)
+            if fname := node.get(additional_field):
+                name_manager.has_field(node, fname, node_info)
+        if fname := node.get('aggregate'):
+            name_manager.has_field(node, fname.split(':')[0], node_info)
         for f in node:
             if f.tag == 'filter':
                 name_manager.has_field(node, f.get('name'), node_info)
@@ -1319,6 +1376,8 @@ actual arch.
                 if isinstance(domain, str):
                     vnames = get_expression_field_names(domain)
                     name_manager.must_have_fields(node, vnames, node_info, ('domain', domain))
+            if field.type == 'properties':
+                name_manager.must_have_fields(node, [field.definition_record], node_info, ('fieldname', field.name))
             context = node.get('context')
             if context:
                 vnames = get_expression_field_names(context)

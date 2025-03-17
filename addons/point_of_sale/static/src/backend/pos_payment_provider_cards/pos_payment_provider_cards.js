@@ -23,16 +23,18 @@ export class PosPaymentProviderCards extends Component {
                 providers.map((p) => p[1]),
             ]);
 
-            this.state.providers = providers.map((prov) => {
-                const status = res.state.find((p) => p.name === prov[1]);
-                return Object.assign(
-                    {
-                        selection: prov[0],
-                        provider: prov[2],
-                    },
-                    status
-                );
-            });
+            this.state.providers = providers
+                .filter((prov) => res.state.some((moduleState) => moduleState.name === prov[1]))
+                .map((prov) => {
+                    const status = res.state.find((p) => p.name === prov[1]);
+                    return Object.assign(
+                        {
+                            selection: prov[0],
+                            provider: prov[2],
+                        },
+                        status
+                    );
+                });
         });
     }
 
@@ -71,8 +73,10 @@ const providers = [
     ["paytm", "pos_paytm", "PayTM"],
     ["razorpay", "pos_razorpay", "Razorpay"],
     ["stripe", "pos_stripe", "Stripe"],
-    ["viva_wallet", "pos_viva_wallet", "Viva Wallet"],
+    ["viva_com", "pos_viva_com", "Viva.com"],
     ["worldline", "pos_iot_worldline", "Worldline"],
+    ["tyro", "pos_tyro", "Tyro"],
+    ["pine_labs", "pos_pine_labs", "Pine Labs"],
 ];
 
 export const PosPaymentProviderCardsParams = {

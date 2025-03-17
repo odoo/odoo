@@ -349,9 +349,15 @@ registry.category("web_tour.tours").add("SearchProducts", {
             ProductScreen.searchProduct("chair"),
             ProductScreen.clickDisplayedProduct("Test chair 1"),
             ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.clickDisplayedProduct("Test sofa"),
             ProductScreen.searchProduct("CHAIR"),
             ProductScreen.clickDisplayedProduct("Test chair 1"),
             ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.clickDisplayedProduct("Test sofa"),
+            ProductScreen.searchProduct("clémentine"),
+            ProductScreen.clickDisplayedProduct("clémentine"),
+            ProductScreen.searchProduct("2100005000000"),
+            ProductScreen.clickDisplayedProduct("Wall Shelf Unit"),
         ].flat(),
 });
 
@@ -386,7 +392,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             PartnerList.checkContactValues(
                 "John Doe",
                 "1 street of astreet",
-                "1234567890",
+                "9898989899",
                 "john@doe.com"
             ),
             selectButton("Discard"),
@@ -401,7 +407,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             ProductScreenPartnerList.searchCustomerValueAndClear("26432685463"),
             ProductScreenPartnerList.searchCustomerValueAndClear("Acity"),
             ProductScreenPartnerList.searchCustomerValueAndClear("United States"),
-            ProductScreenPartnerList.searchCustomerValueAndClear("1234567890"),
+            ProductScreenPartnerList.searchCustomerValueAndClear("9898989899"),
             ProductScreen.clickPartnerButton(),
             PartnerList.searchCustomerValue("john@doe.com"),
         ].flat(),
@@ -419,17 +425,14 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             },
             ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button:eq(-1) > span:contains("AAX")',
             },
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button:eq(-1) > span:contains("AAX")',
                 run: "click",
             },
             {
-                trigger: '.category-button:eq(3) > span:contains("AAY")',
-            },
-            {
-                trigger: '.category-button:not(:contains("AAD"))',
+                trigger: '.category-button:eq(-1) > span:contains("AAY")',
             },
         ].flat(),
 });
@@ -515,5 +518,34 @@ registry.category("web_tour.tours").add("SortOrderlinesByCategories", {
                 "Product_11 Category sequence 2",
                 "Product_22 Category sequence 2",
             ]),
+        ].flat(),
+});
+registry.category("web_tour.tours").add("CustomerPopupTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            negateStep(PartnerList.checkCustomerShown("Z partner to search")),
+            PartnerList.searchCustomerValue("Z partner to search", true),
+            ProductScreen.clickCustomer("Z partner to search"),
+            ProductScreen.clickPartnerButton(),
+            negateStep(PartnerList.checkCustomerShown("Z partner to scroll")),
+            PartnerList.scrollBottom(),
+            ProductScreen.clickCustomer("Z partner to scroll"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pricelist_multi_items_different_qty_thresholds", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("tpmcapi product"),
+            ProductScreen.clickDisplayedProduct("tpmcapi product"),
+            ProductScreen.clickDisplayedProduct("tpmcapi product"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("30"),
         ].flat(),
 });

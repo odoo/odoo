@@ -503,7 +503,7 @@ class TestLotValuation(TestStockValuationCommon):
             {'value': -13.5, 'lot_id': self.lot3.id, 'quantity': -3},
         ])
 
-    def test_lot_fifo_vaccum(self):
+    def test_lot_fifo_vacuum(self):
         """ Test lot fifo vacuum"""
         self.product1.standard_price = 9
         self._make_out_move(self.product1, 2, lot_ids=[self.lot1])
@@ -666,3 +666,22 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 1)
         self.assertEqual(lot.quantity_svl, 0)
         self.assertEqual(lot.value_svl, 0)
+
+    def test_no_lot_valuation_if_quant_without_lot(self):
+        """ Ensure that it is not possible to set lot_valuated to True
+        if there is valued quantities without lot in on hand.
+        This is because you can't validate a move without lot when lot valuation is enabled.
+        The user would hence be unable to use the quant without lot anyway.
+        """
+        self.product1.tracking = 'none'
+        self.product1.lot_valuated = False
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 1
+        })
+        quant.action_apply_inventory()
+
+        self.product1.tracking = 'lot'
+        with self.assertRaises(UserError):
+            self.product1.lot_valuated = True

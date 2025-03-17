@@ -154,10 +154,12 @@
             <!-- Option page tweaks -->
             <xpath expr="//field[@name='email_from']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
-                <attribute name="readonly">state in ('sending', 'done')</attribute>
             </xpath>
             <xpath expr="//label[@for='reply_to']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='reply_to']" position="attributes">
+                <attribute name="required">mailing_type == 'mail'</attribute>
             </xpath>
             <xpath expr="//div[@name='reply_to_details']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
@@ -169,8 +171,7 @@
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
             </xpath>
             <xpath expr="//field[@name='mail_server_id']" position="attributes">
-                <attribute name="invisible">mailing_type != 'mail' or not mail_server_available</attribute>
-                <attribute name="readonly">state in ('sending', 'done')</attribute>
+                <attribute name="invisible" add="mailing_type != 'mail'" separator=" or "/>
             </xpath>
             <!-- A/B Testing -->
             <xpath expr="//field[@name='ab_testing_mailings_count']" position="after">

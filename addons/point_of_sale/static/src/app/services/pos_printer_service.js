@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { PrinterService } from "@point_of_sale/app/services/printer_service";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const posPrinterService = {
+export const posPrinterService = {
     dependencies: ["hardware_proxy", "dialog", "renderer"],
     start(env, { hardware_proxy, dialog, renderer }) {
         return new PosPrinterService(env, { hardware_proxy, dialog, renderer });
@@ -37,9 +37,12 @@ class PosPrinterService extends PrinterService {
         try {
             return await super.printHtml(...arguments);
         } catch (error) {
+            if (error.body === undefined) {
+                console.error("An unknown error occured in printHtml:", error);
+            }
             this.dialog.add(ConfirmationDialog, {
                 title: error.title || _t("Printing error"),
-                body: error.body + _t("Do you want to print using the web printer? "),
+                body: (error.body ?? "") + _t("Do you want to print using the web printer? "),
                 confirm: async () => {
                     // We want to call the _printWeb when the dialog is fully gone
                     // from the screen which happens after the next animation frame.

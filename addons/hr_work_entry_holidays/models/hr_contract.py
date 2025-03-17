@@ -55,7 +55,7 @@ class HrContract(models.Model):
             rc_leave = including_holiday_rcleaves[0]
         if rc_leave:
             return self._get_leave_work_entry_type_dates(rc_leave, interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
+        return self.env.ref('hr_work_entry.work_entry_type_leave')
 
     def _get_sub_leave_domain(self):
         domain = super()._get_sub_leave_domain()

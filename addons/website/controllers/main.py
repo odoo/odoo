@@ -733,6 +733,10 @@ class Website(Home):
                 result.append(group)
         return result
 
+    @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
+    def save_xml(self, view_id, arch):
+        request.env['ir.ui.view'].browse(view_id).with_context(lang=request.website.default_lang_id.code).arch = arch
+
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
@@ -803,11 +807,12 @@ class Website(Home):
             raise werkzeug.exceptions.Forbidden()
 
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
-        if res_model == 'website.page':
-            fields.extend(['website_indexed', 'website_id'])
-
         res = {'can_edit_seo': True}
         record = request.env[res_model].browse(res_id)
+        if res_model == 'website.page':
+            fields.extend(['website_indexed', 'website_id'])
+            res["website_is_published"] = record.website_published
+
         try:
             request.website._check_user_can_modify(record)
         except AccessError:
@@ -933,6 +938,47 @@ class Website(Home):
         return {
             'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
         }
+
+    @http.route(['/website/update_footer_template'], type='jsonrpc', auth='user', website=True)
+    def update_footer_template(self, template_key, possible_values):
+        """ Enables the footer template and its corresponding copyright template
+            on template change. The goal is to ensure that the content width of
+            the copyright aligns with the footer.
+        """
+
+        # Define templates views to enable/disable
+        views_enable = [template_key]
+        views_disable = self.theme_customize_data_get(possible_values, is_view_data=True)
+
+        # Define the possible footer classes and corresponding views
+        width_views = {
+            'container-fluid': 'website.footer_copyright_content_width_fluid',
+            'o_container_small': 'website.footer_copyright_content_width_small',
+        }
+
+        # Parse new footer template and get the content width
+        new_template = self._get_customize_data([template_key], is_view_data=True)
+        if not new_template or not new_template[0].arch:
+            return
+
+        tree = etree.HTML(new_template[0].arch)
+        container_classes = ['container', 'container-fluid', 'o_container_small']
+        classes_selector = ' or '.join([f"hasclass('{c}')" for c in container_classes])
+        res = tree.xpath(f"//div[{classes_selector}]")
+
+        # Define copyright views to enable/disable
+        if res:
+            classes = res[0].get('class').split()
+            width = next((c for c in container_classes if c in classes), False)
+            if width:
+                views_enable += [width_views.get(width)]
+                views_disable += [v for k, v in width_views.items() if k != width]
+
+        # Activate/Deactivate the computed views
+        self.theme_customize_data(is_view_data=True,
+                                  enable=views_enable,
+                                  disable=views_disable,
+                                  reset_view_arch=False)
 
     # ------------------------------------------------------
     # Server actions

@@ -632,6 +632,19 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ProductConfiguratorTour')
 
+    def test_optional_product(self):
+        # optional product in pos
+        self.desk_pad.write({'pos_optional_product_ids': [
+            Command.set([ self.small_shelf.id ])
+        ]})
+
+        self.letter_tray.write({'pos_optional_product_ids': [
+            Command.set([ self.configurable_chair.id ])
+        ]})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_optional_product')
+
     def test_05_ticket_screen(self):
         self.pos_user.write({
             'group_ids': [
@@ -1427,7 +1440,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             "state_id": self.env.ref("base.state_us_30").id,  # Ohio
             "country_id": self.env.ref("base.us").id,
             "zip": "26432685463",
-            "phone": "1234567890",
+            "phone": "9898989899",
             "email": "john@doe.com"
         })
 
@@ -1500,20 +1513,15 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_product_categories_order(self):
         """ Verify that the order of categories doesnt change in the frontend """
         self.env['pos.category'].search([]).write({'sequence': 100})
-        catgA = self.env['pos.category'].create({
+        self.env['pos.category'].create({
             'name': 'AAA',
             'parent_id': False,
             'sequence': 1,
         })
-        catgB = self.env['pos.category'].create({
+        self.env['pos.category'].create({
             'name': 'AAC',
             'parent_id': False,
             'sequence': 3,
-        })
-        self.env['pos.category'].create({
-            'name': 'AAD',
-            'parent_id': False,
-            'sequence': 4,
         })
         parentA = self.env['pos.category'].create({
             'name': 'AAB',
@@ -1524,7 +1532,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'AAX',
             'parent_id': parentA.id,
         })
-        catgC = self.env['pos.category'].create({
+        self.env['pos.category'].create({
             'name': 'AAY',
             'parent_id': parentB.id,
         })
@@ -1532,7 +1540,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # It's presence is checked during the tour to make sure app doesn't crash.
         self.env['product.product'].create({
             'name': 'Product in AAB and AAX',
-            'pos_categ_ids': [(6, 0, [parentA.id, parentB.id, catgA.id, catgB.id, catgC.id])],
+            'pos_categ_ids': [(6, 0, [parentA.id, parentB.id])],
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
@@ -1595,6 +1603,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Test sofa',
             'available_in_pos': True,
             "default_code": "CHAIR_01",
+        })
+        self.env['product.product'].create({
+            'name': 'clémentine',
+            'available_in_pos': True,
         })
         self.main_pos_config.open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchProducts', login="pos_user")
@@ -1681,6 +1693,51 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SortOrderlinesByCategories', login="pos_user")
+
+    def test_customer_popup(self):
+        """Verify that the customer popup search & inifnite scroll work properly"""
+        self.env["res.partner"].create([{"name": "Z partner to search"}, {"name": "Z partner to scroll"}])
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CustomerPopupTour', login="pos_user")
+
+    def test_pricelist_multi_items_different_qty_thresholds(self):
+        """ Having multiple pricelist items for the same product tmpl with ascending `min_quantity`
+        values, prefer the "latest available"- that is, the one with greater `min_quantity`.
+        """
+        product = self.env['product.product'].create({
+            'name': 'tpmcapi product',
+            'list_price': 1.0,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        self.main_pos_config.pricelist_id.write({
+            'item_ids': [Command.create({
+                'display_applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'compute_price': 'fixed',
+                'fixed_price': 10.0,
+                'min_quantity': 3,
+            }), Command.create({
+                'display_applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'compute_price': 'fixed',
+                'fixed_price': 20.0,
+                'min_quantity': 2,
+            })],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f'/pos/ui?config_id={self.main_pos_config.id}',
+            'test_pricelist_multi_items_different_qty_thresholds',
+            login='pos_user'
+        )
+
+    def test_tracking_number_closing_session(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_tracking_number_closing_session', login="pos_user")
+        for order in self.env['pos.order'].search([]):
+            self.assertEqual(int(order.tracking_number) % 100, 1)
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

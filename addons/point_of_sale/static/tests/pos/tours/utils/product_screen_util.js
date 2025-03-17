@@ -194,32 +194,6 @@ export function customerIsSelected(name) {
         },
     ];
 }
-export function inputCustomerSearchbar(value) {
-    return [
-        {
-            isActive: ["mobile"],
-            content: "click more button",
-            trigger: ".modal-header .fa-search",
-            run: "click",
-        },
-        {
-            trigger: ".modal-header .input-group input",
-            run: "edit " + value,
-        },
-        {
-            /**
-             * Manually trigger keyup event to show the search field list
-             * because the previous step do not trigger keyup event.
-             */
-            trigger: ".modal-header .input-group input",
-            run: function () {
-                document
-                    .querySelector(".modal-header .input-group input")
-                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
-            },
-        },
-    ];
-}
 export function clickRefund() {
     return [clickReview(), ...clickControlButton("Refund")];
 }
@@ -724,4 +698,22 @@ export function verifyOrderlineSequence(products) {
             index + 1
         }) span:contains("${productName}")`,
     }));
+}
+
+export function checkProductExtraPrice(productName, extraAmount) {
+    return {
+        content: `'${productName}' should have '${extraAmount}' extra price`,
+        trigger: `article.product:has(.product-name:contains("${productName}")):has(.price-extra:contains("${extraAmount}"))`,
+    };
+}
+
+export function addDiscount(discount) {
+    return [
+        Numpad.click("%"),
+        Numpad.isActive("%"),
+        discount
+            .toString()
+            .split("")
+            .flatMap((key) => Numpad.click(key)),
+    ].flat();
 }

@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import warnings
+
+from collections import defaultdict, OrderedDict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from functools import partial
 from operator import itemgetter
 from werkzeug.urls import url_encode
 
@@ -25,158 +28,113 @@ class WebsiteHrRecruitment(WebsiteForm):
         '/jobs',
         '/jobs/page/<int:page>',
     ], type='http', auth="public", website=True, sitemap=sitemap_jobs)
-    def jobs(self, country_id=None, department_id=None, office_id=None, contract_type_id=None,
-             is_remote=False, is_other_department=False, is_untyped=None, page=1, search=None, **kwargs):
-        env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
+    def jobs(self, country_id=None, all_countries=False, department_id=None, office_id=None, contract_type_id=None,
+             is_remote=False, is_other_department=False, is_untyped=None,  industry_id=None, is_industry_untyped=False,
+             noFuzzy=False, page=1, search=None, **kwargs):
+        """ This method is returning the job page.
+        It's filtering the jobs by the given parameters and compute the display values for the filters
+        by contaminating the jobs with the other filters.
+        """
+        def job_filtering_condition(job, filter_to_disable=False):
+            country_filter = country if (country and filter_to_disable != 'country_id') else None
+            field_filters = {
+                'department_id': department.id,
+                'address_id': office.id,
+                'industry_id': industry.id,
+                'contract_type_id': contract_type.id,
+            }
 
-        Country = env['res.country']
-        Jobs = env['hr.job']
-        Department = env['hr.department']
-
-        country = Country.browse(int(country_id)) if country_id else None
-        department = Department.browse(int(department_id)) if department_id else None
-        office_id = int(office_id) if office_id else None
-        contract_type_id = int(contract_type_id) if contract_type_id else None
-
-        # Default search by user country
-        if not (country or department or office_id or contract_type_id or kwargs.get('all_countries')):
-            if request.geoip.country_code:
-                countries_ = Country.search([('code', '=', request.geoip.country_code)])
-                country = countries_[0] if countries_ else None
-                if country:
-                    country_count = Jobs.search_count(AND([
-                        request.website.website_domain(),
-                        [('address_id.country_id', '=', country.id)]
-                    ]))
-                    if not country_count:
-                        country = False
-
-        options = {
-            'displayDescription': True,
-            'allowFuzzy': not request.params.get('noFuzzy'),
-            'country_id': country.id if country else None,
-            'department_id': department.id if department else None,
-            'office_id': office_id,
-            'contract_type_id': contract_type_id,
-            'is_remote': is_remote,
-            'is_other_department': is_other_department,
-            'is_untyped': is_untyped,
-        }
-        total, details, fuzzy_search_term = request.website._search_with_fuzzy("jobs", search,
-            limit=1000, order="is_published desc, sequence, no_of_recruitment desc", options=options)
-        # Browse jobs as superuser, because address is restricted
-        jobs = details[0].get('results', Jobs).sudo()
-
-        def sort(records_list, field_name):
-            """ Sort records in the given collection according to the given
-            field name, alphabetically. None values instead of records are
-            placed at the end.
-
-            :param list records_list: collection of records or None values
-            :param str field_name: field on which to sort
-            :return: sorted list
-            """
-            return sorted(
-                records_list,
-                key=lambda item: (item is None, item.sudo()[field_name] if item and item.sudo()[field_name] else ''),
+            all_fields = all(
+                job[job_field].id == value
+                for job_field, value in field_filters.items()
+                if job_field != filter_to_disable and value
+            )
+            if not all_fields or (
+                country_filter and not (
+                    job.address_id and job.address_id.country_id == country
+                )
+            ):
+                return False
+            not_exist_filter = {
+                'department_id': is_other_department,
+                'address_id': is_remote and filter_to_disable != 'country_id',
+                'industry_id': is_industry_untyped,
+                'contract_type_id': is_untyped,
+            }
+            return all(
+                not job[job_field]
+                for job_field, value in not_exist_filter.items()
+                if job_field != filter_to_disable and value
             )
 
-        # Countries
-        if country or is_remote:
-            cross_country_options = options.copy()
-            cross_country_options.update({
-                'allowFuzzy': False,
-                'country_id': None,
-                'is_remote': False,
+        def compute_filter_selection_counters(filtered_jobs, grouping_field, key_getter):
+            jobs_grouped = filtered_jobs.grouped(grouping_field)
+            counter = OrderedDict({'all': len(filtered_jobs)} | {
+                key_getter(field_value): len(jobs_in_group) for field_value, jobs_in_group in jobs_grouped.items()
             })
-            cross_country_total, cross_country_details, _ = request.website._search_with_fuzzy("jobs",
-                fuzzy_search_term or search, limit=1000, order="is_published desc, sequence, no_of_recruitment desc",
-                options=cross_country_options)
-            # Browse jobs as superuser, because address is restricted
-            cross_country_jobs = cross_country_details[0].get('results', Jobs).sudo()
-        else:
-            cross_country_total = total
-            cross_country_jobs = jobs
-        country_offices = set(j.address_id or None for j in cross_country_jobs)
-        countries = sort(set(o and o.country_id or None for o in country_offices), 'name')
-        count_per_country = {'all': cross_country_total}
-        for c, jobs_list in groupby(cross_country_jobs, lambda job: job.address_id.country_id):
-            count_per_country[c] = len(jobs_list)
-        count_remote = len(cross_country_jobs.filtered(lambda job: not job.address_id))
-        if count_remote:
-            count_per_country[None] = count_remote
+            if None in counter:
+                counter.move_to_end(None)
+            counter.move_to_end('all', last=False)
+            return counter
 
-        # Departments
-        if department or is_other_department:
-            cross_department_options = options.copy()
-            cross_department_options.update({
-                'allowFuzzy': False,
-                'department_id': None,
-                'is_other_department': False,
-            })
-            cross_department_total, cross_department_details, _ = request.website._search_with_fuzzy("jobs",
-                fuzzy_search_term or search, limit=1000, order="is_published desc, sequence, no_of_recruitment desc",
-                options=cross_department_options)
-            cross_department_jobs = cross_department_details[0].get('results', Jobs)
-        else:
-            cross_department_total = total
-            cross_department_jobs = jobs
-        departments = sort(set(j.department_id or None for j in cross_department_jobs), 'name')
-        count_per_department = {'all': cross_department_total}
-        for d, jobs_list in groupby(cross_department_jobs, lambda job: job.department_id):
-            count_per_department[d] = len(jobs_list)
-        count_other_department = len(cross_department_jobs.filtered(lambda job: not job.department_id))
-        if count_other_department:
-            count_per_department[None] = count_other_department
+        def get_filter_snippets_display_values(jobs):
+            """this function is used to compute the display values for the filters
+            by contaminating the jobs with the other filters.
+            """
+            counter_by_object_by_field = defaultdict(OrderedDict)
+            fields_and_filters = {
+                ('address_id', 'count_per_office'),
+                ('department_id', 'count_per_department'),
+                ('contract_type_id', 'count_per_employment_type'),
+                ('industry_id', 'count_per_industry'),
+            }
+            for field, alias in fields_and_filters:
+                filtered_jobs = jobs.filtered(partial(job_filtering_condition, filter_to_disable=field))
+                counter_by_object_by_field[alias] = compute_filter_selection_counters(
+                    filtered_jobs, field, lambda field_value: field_value or None)
 
-        # Offices
-        if office_id or is_remote:
-            cross_office_options = options.copy()
-            cross_office_options.update({
-                'allowFuzzy': False,
-                'office_id': None,
-                'is_remote': False,
-            })
-            cross_office_total, cross_office_details, _ = request.website._search_with_fuzzy("jobs",
-                fuzzy_search_term or search, limit=1000, order="is_published desc, sequence, no_of_recruitment desc",
-                options=cross_office_options)
-            # Browse jobs as superuser, because address is restricted
-            cross_office_jobs = cross_office_details[0].get('results', Jobs).sudo()
-        else:
-            cross_office_total = total
-            cross_office_jobs = jobs
-        offices = sort(set(j.address_id or None for j in cross_office_jobs), 'city')
-        count_per_office = {'all': cross_office_total}
-        for o, jobs_list in groupby(cross_office_jobs, lambda job: job.address_id):
-            count_per_office[o] = len(jobs_list)
-        count_remote = len(cross_office_jobs.filtered(lambda job: not job.address_id))
-        if count_remote:
-            count_per_office[None] = count_remote
+            filtered_jobs = jobs.filtered(partial(job_filtering_condition, filter_to_disable='country_id'))
+            counter_by_object_by_field['count_per_country'] = compute_filter_selection_counters(
+                filtered_jobs, 'address_id',
+                lambda address_id: address_id.country_id if address_id and address_id.country_id else None
+            )
+            return counter_by_object_by_field
 
-        # Employment types
-        if contract_type_id or is_untyped:
-            cross_type_options = options.copy()
-            cross_type_options.update({
-                'allowFuzzy': False,
-                'contract_type_id': None,
-                'is_untyped': False,
-            })
-            cross_type_total, cross_type_details, _ = request.website._search_with_fuzzy("jobs",
-                fuzzy_search_term or search, limit=1000, order="is_published desc, sequence, no_of_recruitment desc",
-                options=cross_type_options)
-            cross_type_jobs = cross_type_details[0].get('results', Jobs)
-        else:
-            cross_type_total = total
-            cross_type_jobs = jobs
-        employment_types = sort(set(j.contract_type_id for j in jobs if j.contract_type_id), 'name')
-        count_per_employment_type = {'all': cross_type_total}
-        for t, jobs_list in groupby(cross_type_jobs, lambda job: job.contract_type_id):
-            count_per_employment_type[t] = len(jobs_list)
-        count_untyped = len(cross_type_jobs.filtered(lambda job: not job.contract_type_id))
-        if count_untyped:
-            count_per_employment_type[None] = count_untyped
+        def to_int(query_arg):
+            return int(query_arg) if query_arg and query_arg.isdigit() else False
 
-        pager = request.website.pager(
+        env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
+        website = request.website
+        department = env['hr.department'].browse(to_int(department_id)).exists()
+        country = env['res.country'].browse(to_int(country_id)).exists()
+        office = env['res.partner'].browse(to_int(office_id)).exists()
+        contract_type = env['hr.contract.type'].browse(to_int(contract_type_id)).exists().sudo()
+        industry =  env['res.partner.industry'].browse(to_int(industry_id)).exists().sudo()
+
+        if not (country or department or office or contract_type or all_countries) \
+            and (code := request.geoip.country_code) \
+                and (country := env['res.country'].search([('code', '=', code)], limit=1)):
+            country_count = env['hr.job'].search_count(AND([
+                website.website_domain(),
+                [('address_id.country_id', '=', country.id)]
+            ]))
+            if not country_count:
+                country = False
+
+        _total_not_used, details, fuzzy_search_term = website._search_with_fuzzy(
+            "jobs", search,
+            limit=self._jobs_per_page * 50,
+            order="is_published desc, sequence, no_of_recruitment desc",
+            options={
+                'displayDescription': True,
+                'allowFuzzy': not noFuzzy,
+            }
+        )
+        searched_jobs = details[0].get('results', env['hr.job']).sudo()
+        job_filter_values = get_filter_snippets_display_values(searched_jobs)
+        found_jobs = searched_jobs.filtered(job_filtering_condition)
+        total = len(found_jobs)
+        pager = website.pager(
             url=request.httprequest.path.partition('/page/')[0],
             url_args=request.httprequest.args,
             total=total,
@@ -184,33 +142,22 @@ class WebsiteHrRecruitment(WebsiteForm):
             step=self._jobs_per_page,
         )
         offset = pager['offset']
-        jobs = jobs[offset:offset + self._jobs_per_page]
-
-        office = env['res.partner'].browse(int(office_id)) if office_id else None
-        contract_type = env['hr.contract.type'].browse(int(contract_type_id)) if contract_type_id else None
-
-        # Render page
+        jobs_to_display = found_jobs[offset:offset + self._jobs_per_page]
         return request.render("website_hr_recruitment.index", {
-            'jobs': jobs,
-            'countries': countries,
-            'departments': departments,
-            'offices': offices,
-            'employment_types': employment_types,
+            'jobs': jobs_to_display,
             'country_id': country,
             'department_id': department,
             'office_id': office,
             'contract_type_id': contract_type,
+            'industry_id': industry,
             'is_remote': is_remote,
             'is_other_department': is_other_department,
             'is_untyped': is_untyped,
+            'is_industry_untyped': is_industry_untyped,
             'pager': pager,
             'search': fuzzy_search_term or search,
             'search_count': total,
-            'original_search': fuzzy_search_term and search,
-            'count_per_country': count_per_country,
-            'count_per_department': count_per_department,
-            'count_per_office': count_per_office,
-            'count_per_employment_type': count_per_employment_type,
+            **job_filter_values,
         })
 
     @http.route('/jobs/add', type='jsonrpc', auth="user", website=True)

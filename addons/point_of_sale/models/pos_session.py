@@ -130,7 +130,7 @@ class PosSession(models.Model):
     @api.model
     def _load_pos_data_models(self, config_id):
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
-            'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'pos.category', 'product.attribute', 'product.attribute.custom.value',
+            'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.template.attribute.exclusion', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
             'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module']
@@ -249,7 +249,7 @@ class PosSession(models.Model):
 
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
-        result = self.env['pos.payment']._read_group([('session_id', 'in', self.ids)], ['session_id'], ['amount:sum'])
+        result = self.env['pos.payment']._read_group(self._get_captured_payments_domain(), ['session_id'], ['amount:sum'])
         session_amount_map = {session.id: amount for session, amount in result}
         for session in self:
             session.total_payments_amount = session_amount_map.get(session.id) or 0
@@ -446,9 +446,10 @@ class PosSession(models.Model):
 
     def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
-        self.ensure_one()
+        record = self.ensure_one()
+        if self.env.user.has_group('point_of_sale.group_pos_user'):
+            record = record.sudo()
         data = {}
-        sudo = self.env.user.has_group('point_of_sale.group_pos_user')
         if self.get_session_orders().filtered(lambda o: o.state != 'cancel') or self.sudo().statement_line_ids:
             self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
             if self.state == 'closed':
@@ -459,14 +460,10 @@ class PosSession(models.Model):
             if self.update_stock_at_closing:
                 self._create_picking_at_end_of_session()
                 self._get_closed_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_ids)
-            try:
-                with self.env.cr.savepoint():
-                    data = self.with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
-            except AccessError as e:
-                if sudo:
-                    data = self.sudo().with_company(self.company_id).with_context(check_move_validity=False, skip_invoice_sync=True)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
-                else:
-                    raise e
+            # when the user is POS, update the record in sudo
+            data = record.with_company(record.company_id).with_context(
+                check_move_validity=False, skip_invoice_sync=True
+            )._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
 
             balance = sum(self.move_id.line_ids.mapped('balance'))
             try:
@@ -506,6 +503,7 @@ class PosSession(models.Model):
         self.picking_ids.move_ids.sudo()._trigger_scheduler()
 
         self.write({'state': 'closed'})
+        self.env.flush_all()  # ensure sale.report is up to date
         return True
 
     def _post_statement_difference(self, amount):
@@ -1325,11 +1323,11 @@ class PosSession(models.Model):
         for payment_method, lines in payment_method_to_receivable_lines.items():
             receivable_account = self._get_receivable_account(payment_method)
             if receivable_account.reconcile:
-                lines.filtered(lambda line: not line.reconciled).reconcile()
+                lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
         for payment, lines in payment_to_receivable_lines.items():
             if payment.partner_id.property_account_receivable_id.reconcile:
-                lines.filtered(lambda line: not line.reconciled).reconcile()
+                lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
         # Reconcile invoice payments' receivable lines. But we only do when the account is reconcilable.
         # Though `account_default_pos_receivable_account_id` should be of type receivable, there is currently
@@ -1337,11 +1335,11 @@ class PosSession(models.Model):
         if self.company_id.account_default_pos_receivable_account_id.reconcile:
             for payment_method in combine_inv_payment_receivable_lines:
                 lines = combine_inv_payment_receivable_lines[payment_method] | combine_invoice_receivable_lines.get(payment_method, self.env['account.move.line'])
-                lines.filtered(lambda line: not line.reconciled).reconcile()
+                lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
             for payment in split_inv_payment_receivable_lines:
                 lines = split_inv_payment_receivable_lines[payment] | split_invoice_receivable_lines.get(payment, self.env['account.move.line'])
-                lines.filtered(lambda line: not line.reconciled).reconcile()
+                lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
         # reconcile stock output lines
         pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
@@ -1351,7 +1349,7 @@ class PosSession(models.Model):
         for account_id in stock_output_lines:
             ( stock_output_lines[account_id]
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
-            ).filtered(lambda aml: not aml.reconciled).reconcile()
+            ).filtered(lambda aml: not aml.reconciled).with_context(no_cash_basis=True).reconcile()
         return data
 
     def _get_rounding_difference_vals(self, amount, amount_converted):
@@ -1681,9 +1679,12 @@ class PosSession(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'pos.payment',
             'view_mode': 'list,form',
-            'domain': [('session_id', '=', self.id)],
+            'domain': self._get_captured_payments_domain(),
             'context': {'search_default_group_by_payment_method': 1}
         }
+    
+    def _get_captured_payments_domain(self):
+        return [('session_id', 'in', self.ids), ('pos_order_id.state', 'in', ['paid', 'invoiced', 'done'])]
 
     def open_frontend_cb(self):
         """Open the pos interface with config_id as an extra argument.
@@ -1698,6 +1699,8 @@ class PosSession(models.Model):
         return self.config_id.open_ui()
 
     def set_opening_control(self, cashbox_value: int, notes: str):
+        if self.state != 'opening_control':
+            return
         self.state = 'opened'
         self.start_at = fields.Datetime.now()
         self.name = self.config_id.name + self.env['ir.sequence'].with_context(
@@ -1724,7 +1727,7 @@ class PosSession(models.Model):
             message += _('Opening control message: ')
             message += notes
         if message:
-            self.message_post(body=plaintext2html(message))
+            self.message_post(body=plaintext2html(message), email_from=self.env.user.email or "admin@example.com")
 
     def action_view_order(self):
         return {

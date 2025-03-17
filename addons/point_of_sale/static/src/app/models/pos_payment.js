@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
-import { roundDecimals } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
@@ -22,10 +21,7 @@ export class PosPayment extends Base {
 
     setAmount(value) {
         this.pos_order_id.assertEditable();
-        this.amount = roundDecimals(
-            parseFloat(value) || 0,
-            this.pos_order_id.currency.decimal_places
-        );
+        this.amount = this.pos_order_id.currency.round(parseFloat(value) || 0);
     }
 
     getAmount() {
@@ -78,9 +74,11 @@ export class PosPayment extends Base {
         return isPaymentSuccessful;
     }
 
-    updateRefundPaymentLine(refundedPaymentLine) {
-        this.transaction_id = refundedPaymentLine.transaction_id;
-    }
+    /**
+     * @param {object} - refundedPaymentLine
+     * Override in dependent modules to update the refund payment line with the refunded payment line
+     */
+    updateRefundPaymentLine(refundedPaymentLine) {}
 }
 
 registry.category("pos_available_models").add(PosPayment.pythonModel, PosPayment);

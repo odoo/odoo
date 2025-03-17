@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryAllTexts, select } from "@odoo/hoot-dom";
+import { click, edit, queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -12,9 +12,9 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import {
+    editTime,
     getPickerApplyButton,
     getPickerCell,
-    getTimePickers,
     zoomOut,
 } from "@web/../tests/core/datetime/datetime_test_helpers";
 
@@ -58,7 +58,7 @@ test("DatetimeField in form view", async () => {
         arch: '<form><field name="datetime"/></form>',
     });
 
-    const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
+    const expectedDateString = "02/08/2017 12:00"; // 10:00:00 without timezone
     expect(".o_field_datetime input").toHaveValue(expectedDateString, {
         message: "the datetime should be correctly displayed",
     });
@@ -79,18 +79,14 @@ test("DatetimeField in form view", async () => {
     await animationFrame();
     await click(getPickerCell("22"));
     await animationFrame();
-    const [hourSelect, minuteSelect] = getTimePickers().at(0);
-    await select("8", { target: hourSelect });
-    await animationFrame();
-    await select("25", { target: minuteSelect });
-    await animationFrame();
+    await editTime("8:25");
     // Close the datepicker
     await click(".o_form_view_container");
     await animationFrame();
 
     expect(".o_datetime_picker").toHaveCount(0, { message: "datepicker should be closed" });
 
-    const newExpectedDateString = "04/22/2018 08:25:00";
+    const newExpectedDateString = "04/22/2018 08:25";
     expect(".o_field_datetime input").toHaveValue(newExpectedDateString, {
         message: "the selected date should be displayed in the input",
     });
@@ -132,11 +128,7 @@ test("DatetimeField only triggers fieldChange when a day is picked and when an h
 
     expect.verifySteps([]);
 
-    const [hourSelect, minuteSelect] = getTimePickers().at(0);
-    await select("8", { target: hourSelect });
-    await animationFrame();
-    await select("25", { target: minuteSelect });
-    await animationFrame();
+    await editTime("8:25");
 
     expect.verifySteps([]);
 
@@ -146,7 +138,7 @@ test("DatetimeField only triggers fieldChange when a day is picked and when an h
 
     expect(".o_datetime_picker").toHaveCount(0);
 
-    expect(".o_field_datetime input").toHaveValue("04/22/2018 08:25:00");
+    expect(".o_field_datetime input").toHaveValue("04/22/2018 08:25");
     expect.verifySteps(["onchange"]);
 });
 
@@ -192,7 +184,7 @@ test("DatetimeField in editable list view", async () => {
         arch: /* xml */ `<list editable="bottom"><field name="datetime"/></list>`,
     });
 
-    const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
+    const expectedDateString = "02/08/2017 12:00"; // 10:00:00 without timezone
     expect("tr.o_data_row td:not(.o_list_record_selector):first").toHaveText(expectedDateString, {
         message: "the datetime should be correctly displayed",
     });
@@ -227,18 +219,14 @@ test("DatetimeField in editable list view", async () => {
     await animationFrame();
     await click(getPickerCell("22"));
     await animationFrame();
-    const [hourSelect, minuteSelect] = getTimePickers().at(0);
-    await select("8", { target: hourSelect });
-    await animationFrame();
-    await select("25", { target: minuteSelect });
-    await animationFrame();
+    await editTime("8:25");
     // Apply changes
 
     await click(getPickerApplyButton());
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(0, { message: "datepicker should be closed" });
 
-    const newExpectedDateString = "04/22/2018 08:25:00";
+    const newExpectedDateString = "04/22/2018 08:25";
 
     expect(".o_field_datetime input:first").toHaveValue(newExpectedDateString, {
         message: "the date should be correct in edit mode",
@@ -282,8 +270,8 @@ test("multi edition of DatetimeField in list view: edit date in input", async ()
     await click(".modal .modal-footer .btn-primary");
     await animationFrame();
 
-    expect(".o_data_row:first-child .o_data_cell:first").toHaveText("10/02/2019 09:00:00");
-    expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("10/02/2019 09:00:00");
+    expect(".o_data_row:first-child .o_data_cell:first").toHaveText("10/02/2019 09:00");
+    expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("10/02/2019 09:00");
 });
 
 test.tags("desktop");
@@ -336,7 +324,7 @@ test("DatetimeField remove value", async () => {
         arch: /* xml */ '<form><field name="datetime"/></form>',
     });
 
-    expect(".o_field_datetime input:first").toHaveValue("02/08/2017 12:00:00", {
+    expect(".o_field_datetime input:first").toHaveValue("02/08/2017 12:00", {
         message: "the date should be correct in edit mode",
     });
 
@@ -373,9 +361,9 @@ test("datetime field: hit enter should update value", async () => {
 
     // Enter a beginning of date and press enter to validate
     await click(".o_field_datetime input");
-    await edit("01/08/22 14:30:40", { confirm: "Enter" });
+    await edit("01/08/22 14:30", { confirm: "Enter" });
 
-    const datetimeValue = `01/08/2022 14:30:40`;
+    const datetimeValue = `01/08/2022 14:30`;
 
     expect(".o_field_datetime input:first").toHaveValue(datetimeValue);
 
@@ -416,13 +404,12 @@ test("datetime field: use picker with arabic numbering system", async () => {
         arch: /* xml */ `<form string="Partners"><field name="datetime" /></form>`,
     });
 
-    expect("[name=datetime] input:first").toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٠٠:٠٠");
+    expect("[name=datetime] input:first").toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٠٠");
 
     await click("[name=datetime] input");
     await animationFrame();
-    await select(45, { target: getTimePickers()[0][1] });
-    await animationFrame();
-    expect("[name=datetime] input:first").toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٤٥:٠٠");
+    await editTime("11:45");
+    expect("[name=datetime] input:first").toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٤٥");
 });
 
 test("datetime field in list view with show_seconds option", async () => {
@@ -434,8 +421,8 @@ test("datetime field in list view with show_seconds option", async () => {
         resModel: "partner",
         arch: /* xml */ `
             <list>
-                <field name="datetime" widget="datetime" options="{'show_seconds': false}" string="show_seconds as false"/>
-                <field name="datetime" widget="datetime" string="show_seconds as true"/>
+                <field name="datetime" widget="datetime" string="show_seconds as false"/>
+                <field name="datetime" widget="datetime" options="{'show_seconds': true}" string="show_seconds as true"/>
             </list>`,
     });
 
@@ -453,15 +440,15 @@ test("edit a datetime field in form view with show_seconds option", async () => 
         resModel: "partner",
         arch: /* xml */ `
             <form>
-                <field name="datetime" widget="datetime" options="{'show_seconds': false}" string="show_seconds as false"/>
-                <field name="datetime" widget="datetime" string="show_seconds as true"/>
+                <field name="datetime" widget="datetime" string="show_seconds as false"/>
+                <field name="datetime" widget="datetime" options="{'show_seconds': true}"  string="show_seconds as true"/>
             </form>`,
     });
 
     const [dateField1, dateField2] = queryAll(".o_input.cursor-pointer");
     await click(dateField1);
     await animationFrame();
-    expect(".o_time_picker_select").toHaveCount(3); // 3rd 'o_time_picker_select' is for the seconds
+    expect(".o_time_picker_input").toHaveValue("11:00");
     await edit("02/08/2017 11:00:00", { confirm: "Enter" });
     await animationFrame();
 
@@ -469,7 +456,13 @@ test("edit a datetime field in form view with show_seconds option", async () => 
         message: "seconds should be hidden for showSeconds false",
     });
 
-    expect(dateField2).toHaveValue("02/08/2017 11:00:00", {
+    await click(dateField2);
+    await animationFrame();
+    expect(".o_time_picker_input").toHaveValue("11:00:00");
+    await edit("02/08/2017 11:00:30", { confirm: "Enter" });
+    await animationFrame();
+
+    expect(dateField2).toHaveValue("02/08/2017 11:00:30", {
         message: "seconds should be visible for showSeconds true",
     });
 });
@@ -514,12 +507,12 @@ test("datetime field in list with show_time option", async () => {
     expect(dates[0]).toHaveText("02/08/2017", {
         message: "for date field only date should be visible with date widget",
     });
-    expect(dates[1]).toHaveText("02/08/2017 12:00:00", {
+    expect(dates[1]).toHaveText("02/08/2017 12:00", {
         message: "for datetime field only date should be visible with date widget",
     });
     await click(dates[0]);
     await animationFrame();
-    expect(".o_field_datetime input:first").toHaveValue("02/08/2017 12:00:00", {
+    expect(".o_field_datetime input:first").toHaveValue("02/08/2017 12:00", {
         message: "for datetime field both date and time should be visible with datetime widget",
     });
 });
@@ -538,7 +531,7 @@ test("datetime field in form view with condensed option", async () => {
             </form>`,
     });
 
-    const expectedDateString = "2/8/2017 8:00:00"; // 10:00:00 without timezone
+    const expectedDateString = "2/8/2017 8:00"; // 10:00:00 without timezone
     expect(".o_field_datetime input").toHaveValue(expectedDateString);
     expect(".o_field_datetime.o_readonly_modifier").toHaveText(expectedDateString);
 });
@@ -559,6 +552,6 @@ test("datetime field in kanban view with condensed option", async () => {
             </kanban>`,
     });
 
-    const expectedDateString = "2/8/2017 8:00:00"; // 10:00:00 without timezone
+    const expectedDateString = "2/8/2017 8:00"; // 10:00:00 without timezone
     expect(".o_kanban_record:first").toHaveText(expectedDateString);
 });

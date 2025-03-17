@@ -90,5 +90,9 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         chat_request.message_post(body="Hello", author_id=self.operator.partner_id.id)
         guest = self.env["mail.guest"].create({"name": "Guest"})
         self.assertNotEqual(chat_request.channel_member_ids.guest_id, guest)
-        self.env.ref('website.default_website').with_context(guest=guest)._get_livechat_request_session()
+        self.make_jsonrpc_request(
+            "/mail/action",
+            {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
+            headers={"Cookie": f"{guest._cookie_name}={guest._format_auth_cookie()};"},
+        )
         self.assertEqual(chat_request.channel_member_ids.guest_id, guest)

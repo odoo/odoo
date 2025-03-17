@@ -28,5 +28,6 @@ modules.
     ],
     'auto_install': True,
     'uninstall_hook': 'uninstall_hook',
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

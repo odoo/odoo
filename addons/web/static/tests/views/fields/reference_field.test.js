@@ -149,8 +149,8 @@ test("ReferenceField can quick create models", async () => {
     expect.verifySteps([
         "get_views",
         "onchange",
-        "name_search", // for the select
-        "name_search", // for the spawned many2one
+        "web_name_search", // for the select
+        "web_name_search", // for the spawned many2one
         "name_create",
         "web_save",
     ]);
@@ -169,10 +169,13 @@ test("ReferenceField respects no_quick_create", async () => {
     await click(".o_field_widget[name='reference'] input");
     await edit("new partner");
     await runAllTimers();
-    expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveCount(1, {
-        message: "Dropdown should be opened and have only one item",
+    expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveCount(2, {
+        message: "Dropdown should be opened and have two items",
     });
-    expect(".ui-autocomplete .o_m2o_dropdown_option").toHaveClass(
+    expect(".ui-autocomplete .o_m2o_dropdown_option:eq(0)").toHaveClass(
+        "o_m2o_dropdown_option_search_more"
+    );
+    expect(".ui-autocomplete .o_m2o_dropdown_option:eq(1)").toHaveClass(
         "o_m2o_dropdown_option_create_edit"
     );
 });
@@ -302,9 +305,9 @@ test("reference in form view", async () => {
             });
             return false;
         }
-        if (method === "name_search") {
+        if (method === "web_name_search") {
             expect(model).toBe("partner.type", {
-                message: "the name_search should be done on the newly set model",
+                message: "the web_name_search should be done on the newly set model",
             });
         }
         if (method === "web_save") {

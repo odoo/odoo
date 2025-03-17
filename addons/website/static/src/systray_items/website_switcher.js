@@ -33,8 +33,6 @@ export class WebsiteSwitcherSystray extends Component {
                 'data-tooltip-position': 'left',
             }),
             callback: () => {
-                // TODO share this condition with the website_preview somehow
-                // -> we should probably show the redirection warning here too
                 if (!session.website_bypass_domain_redirect // Used by the Odoo support (bugs to be expected)
                         && website.domain
                         && !wUtils.isHTTPSorNakedDomainRedirection(website.domain, window.location.origin)) {
@@ -72,7 +70,7 @@ export class WebsiteSwitcherSystray extends Component {
                     }
                 }
             },
-            class: website.id === this.websiteService.currentWebsite.id ? 'active' : '',
+            class: website.id === this.websiteService.currentWebsite.id ? 'text-truncate active' : 'text-truncate',
         }));
     }
 }

@@ -38,8 +38,13 @@
                             <record id="mod_390_casilla_84_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">aeat_mod_390_65.balance + aeat_mod_390_658.balance</field>
-                                <field name="subformula">cross_report</field>
+                                <field name="formula">aeat_mod_390_84.result_cross_aeat_mod_390_65 + aeat_mod_390_658.balance</field>
+                            </record>
+                            <record id="mod_390_casilla_84_result_cross_aeat_mod_390_65" model="account.report.expression">
+                                <field name="label">result_cross_aeat_mod_390_65</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">aeat_mod_390_65.balance</field>
+                                <field name="subformula">cross_report(l10n_es.mod_390_section_2)</field>
                             </record>
                         </field>
                     </record>
@@ -51,7 +56,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">aeat_mod_303_77.balance</field>
-                                <field name="subformula">cross_report</field>
+                                <field name="subformula">cross_report(l10n_es.mod_303)</field>
                             </record>
                         </field>
                     </record>
@@ -63,7 +68,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">aeat_mod_303_67.balance</field>
-                                <field name="subformula">cross_report</field>
+                                <field name="subformula">cross_report(l10n_es.mod_303)</field>
                             </record>
                         </field>
                     </record>

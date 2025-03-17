@@ -91,7 +91,7 @@ class HrApplicant(models.Model):
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
-    job_id = fields.Many2one('hr.job', "Job Position", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True)
+    job_id = fields.Many2one('hr.job', "Job Position", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True, copy=False)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_proposed = fields.Float("Proposed", aggregator="avg", help="Salary Proposed by the Organisation", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
@@ -122,7 +122,7 @@ class HrApplicant(models.Model):
     medium_id = fields.Many2one(ondelete='set null', help="This displays how the applicant has reached out, e.g. via Email, LinkedIn, Website, etc.")
     source_id = fields.Many2one(ondelete='set null')
     interviewer_ids = fields.Many2many('res.users', 'hr_applicant_res_users_interviewers_rel',
-        string='Interviewers', index=True, tracking=True,
+        string='Interviewers', index=True, tracking=True, copy=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
     application_status = fields.Selection([
         ('ongoing', 'Ongoing'),
@@ -611,6 +611,10 @@ class HrApplicant(models.Model):
             if not applicant.stage_id.hired_stage:
                 applicant.date_closed = False
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, partner_name=self.env._("%s (copy)", applicant.partner_name)) for applicant, vals in zip(self, vals_list)]
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -682,20 +686,21 @@ class HrApplicant(models.Model):
 
             new_interviewers = self.interviewer_ids - old_interviewers - self.env.user
             if new_interviewers:
-                notification_subject = _("You have been assigned as an interviewer for %s", self.display_name)
-                notification_body = _("You have been assigned as an interviewer for the Applicant %s", self.partner_name)
-                self.message_notify(
-                    res_id=self.id,
-                    model=self._name,
-                    partner_ids=new_interviewers.partner_id.ids,
-                    author_id=self.env.user.partner_id.id,
-                    email_from=self.env.user.email_formatted,
-                    subject=notification_subject,
-                    body=notification_body,
-                    email_layout_xmlid="mail.mail_notification_layout",
-                    record_name=self.display_name,
-                    model_description="Applicant",
-                )
+                for applicant in self:
+                    notification_subject = _("You have been assigned as an interviewer for %s", applicant.display_name)
+                    notification_body = _("You have been assigned as an interviewer for the Applicant %s", applicant.partner_name)
+                    applicant.message_notify(
+                        res_id=applicant.id,
+                        model=applicant._name,
+                        partner_ids=new_interviewers.partner_id.ids,
+                        author_id=self.env.user.partner_id.id,
+                        email_from=self.env.user.email_formatted,
+                        subject=notification_subject,
+                        body=notification_body,
+                        email_layout_xmlid="mail.mail_notification_layout",
+                        record_name=applicant.display_name,
+                        model_description="Applicant",
+                    )
         if vals.get('date_closed'):
             for applicant in self:
                 if applicant.job_id.date_to:

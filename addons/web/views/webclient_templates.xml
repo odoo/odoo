@@ -265,10 +265,10 @@
                         odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
                         const { user_context,  cache_hashes } = odoo.__session_info__;
                         const lang = new URLSearchParams(document.location.search).get("lang");
-                        let menuURL = `/web/webclient/load_menus/${cache_hashes.load_menus}`;
+                        let menuURL = `/web/webclient/load_menus?unique=${new Date().getTime().toString()}`;
                         if (lang) {
                             user_context.lang = lang;
-                            menuURL += `?lang=${lang}`
+                            menuURL += `&amp;lang=${lang}`;
                         }
                         odoo.reloadMenus = () => fetch(menuURL).then(res => res.json());
                         odoo.loadMenusPromise = odoo.reloadMenus();

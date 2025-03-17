@@ -12,13 +12,14 @@ import { formatFloat } from "@web/views/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 import { loadBundle } from "@web/core/assets";
-import { renderToString } from "@web/core/utils/render";
+import { renderToMarkup } from "@web/core/utils/render";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, onWillUnmount, useEffect, useRef, onWillStart } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
+import { createElementWithContent } from "@web/core/utils/html";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
 const NO_DATA = _t("No data");
@@ -192,13 +193,13 @@ export class GraphRenderer extends Component {
         }
         const chartAreaTop = this.chart.chartArea.top;
         const viewContentTop = this.containerRef.el.getBoundingClientRect().top;
-        const innerHTML = renderToString("web.GraphRenderer.CustomTooltip", {
+        const content = renderToMarkup("web.GraphRenderer.CustomTooltip", {
             maxWidth: getMaxWidth(this.chart.chartArea),
             measure: measures[measure].string,
             mode: this.model.metaData.mode,
             tooltipItems: this.getTooltipItems(data, metaData, tooltipModel),
         });
-        const template = Object.assign(document.createElement("template"), { innerHTML });
+        const template = createElementWithContent("template", content);
         const tooltip = template.content.firstChild;
         this.containerRef.el.prepend(tooltip);
 
@@ -409,8 +410,8 @@ export class GraphRenderer extends Component {
         }
         if (mode === "pie") {
             legendOptions.labels = {
-                generateLabels: (chart) => {
-                    return chart.data.labels.map((label, index) => {
+                generateLabels: (chart) =>
+                    chart.data.labels.map((label, index) => {
                         const hidden = !chart.getDataVisibility(index);
                         const fullText = label;
                         const text = shortenLabel(fullText);
@@ -427,8 +428,7 @@ export class GraphRenderer extends Component {
                             fontColor: GRAPH_LEGEND_COLOR,
                             lineWidth: 0,
                         };
-                    });
-                },
+                    }),
             };
         } else {
             legendOptions.position = "top";
@@ -437,23 +437,21 @@ export class GraphRenderer extends Component {
             legendOptions.labels = {
                 generateLabels: (chart) => {
                     const { data } = chart;
-                    const labels = data.datasets.map((dataset, index) => {
-                        return {
-                            text: shortenLabel(dataset.label),
-                            fullText: dataset.label,
-                            fillStyle: dataset[referenceColor],
-                            hidden: !chart.isDatasetVisible(index),
-                            lineCap: dataset.borderCapStyle,
-                            lineDash: dataset.borderDash,
-                            lineDashOffset: dataset.borderDashOffset,
-                            lineJoin: dataset.borderJoinStyle,
-                            lineWidth: dataset.borderWidth,
-                            strokeStyle: dataset[referenceColor],
-                            pointStyle: dataset.pointStyle,
-                            datasetIndex: index,
-                            fontColor: GRAPH_LEGEND_COLOR,
-                        };
-                    });
+                    const labels = data.datasets.map((dataset, index) => ({
+                        text: shortenLabel(dataset.label),
+                        fullText: dataset.label,
+                        fillStyle: dataset[referenceColor],
+                        hidden: !chart.isDatasetVisible(index),
+                        lineCap: dataset.borderCapStyle,
+                        lineDash: dataset.borderDash,
+                        lineDashOffset: dataset.borderDashOffset,
+                        lineJoin: dataset.borderJoinStyle,
+                        lineWidth: dataset.borderWidth,
+                        strokeStyle: dataset[referenceColor],
+                        pointStyle: dataset.pointStyle,
+                        datasetIndex: index,
+                        fontColor: GRAPH_LEGEND_COLOR,
+                    }));
                     return labels;
                 },
             };

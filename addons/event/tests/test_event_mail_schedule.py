@@ -79,6 +79,13 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
                 ]
             })
 
+    def setUp(self):
+        super().setUp()
+        # patch registry to simulate a ready environment
+        self.patch(self.env.registry, 'ready', True)
+        # we don't use mock_mail_gateway thus want to mock smtp to test the stack
+        self._mock_smtplib_connection()
+
     def execute_event_cron(self, *, freeze_date=None):
         cron = self.event_cron_id.sudo()
         with contextlib.ExitStack() as stack:
@@ -486,11 +493,15 @@ class TestMailSchedule(EventMailCommon):
     @users('user_eventmanager')
     def test_event_mail_schedule_fail_global_composer_message(self):
         """ Test message logged depending on issue when trying to send communications """
-        cron = self.env.ref("event.event_mail_scheduler").sudo()
-
         # set template write_uid
         user_admin = self.env.ref('base.user_admin')
-        self.template_reminder.with_user(user_admin).write({'name': 'Take Ownership', 'body_html': '<p>Failing <t t-out="object.evnetypo_id"/></p>'})
+        # templates are now protected, but bypass the check to force having a bad
+        # value in DB
+        with patch.object(type(self.template_reminder), '_check_can_be_rendered', return_value=True):
+            self.template_reminder.with_user(user_admin).write({
+                'name': 'Take Ownership',
+                'body_html': '<p>Failing <t t-out="object.evnetypo_id"/></p>',
+            })
 
         before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
         self.assertTrue(before_scheduler)
@@ -609,7 +620,7 @@ class TestMailSchedule(EventMailCommon):
         # a new scheduler after)
         self.env.invalidate_all()
         # event 19
-        with self.assertQueryCount(36), self.mock_datetime_and_now(reference_now), \
+        with self.assertQueryCount(35), self.mock_datetime_and_now(reference_now), \
              self.mock_mail_gateway():
             _existing = self.env['event.registration'].create([
                 {
@@ -632,7 +643,7 @@ class TestMailSchedule(EventMailCommon):
         ]})
         self.env.invalidate_all()
         # event 50
-        with self.assertQueryCount(68), \
+        with self.assertQueryCount(66), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             _new = self.env['event.registration'].create([

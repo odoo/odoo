@@ -50,21 +50,6 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
     return steps;
 };
 
-
-/**
- * ROOMS STEPS
- */
-
-var discoverRoomSteps = function (roomName) {
-    var steps = [{
-        content: 'Go on "' + roomName + '" room in List',
-        // can't click on it, it will try to launch Jitsi and fail on chrome headless
-        trigger: 'a.o_wevent_meeting_room_card h4:contains("' + roomName + '")',
-    }];
-    return steps;
-};
-
-
 /**
  * REGISTER STEPS
  */
@@ -173,16 +158,6 @@ var browseBackSteps = [{
     trigger: 'h5:contains("Book your talks")',
 }];
 
-var browseMeetSteps = [{
-    content: 'Browse Meet',
-    trigger: 'a:contains("Community")',
-    run: "click",
-}, {
-    content: 'Check we are on the community page',
-    trigger: 'h3:contains("Join a room")',
-}];
-
-
 registry.category("web_tour.tours").add('wevent_register', {
     url: '/event',
     steps: () => [].concat(
@@ -194,8 +169,6 @@ registry.category("web_tour.tours").add('wevent_register', {
         browseTalksSteps,
         discoverTalkSteps('Our Last Day Together!', true, false, true),
         browseBackSteps,
-        browseMeetSteps,
-        discoverRoomSteps('Best wood for furniture'),
         registerSteps,
     )
 });

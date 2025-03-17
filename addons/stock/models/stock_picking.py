@@ -12,7 +12,7 @@ from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_datetime, format_date, format_list, groupby, SQL
+from odoo.tools import format_datetime, format_date, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -373,7 +373,8 @@ class StockPickingType(models.Model):
             }
             for p_date in dates:
                 date_category = self.env["stock.picking"].calculate_date_category(p_date)
-                summaries[picking_type_id]['total_' + date_category] += 1
+                if date_category:
+                    summaries[picking_type_id]['total_' + date_category] += 1
 
         self._prepare_graph_data(summaries)
 
@@ -1082,6 +1083,7 @@ class StockPicking(models.Model):
 
     @api.onchange('location_id')
     def _onchange_location_id(self):
+        (self.move_ids | self.move_ids_without_package).location_id =  self.location_id
         for move in self.move_ids.filtered(lambda m: m.move_orig_ids):
             for ml in move.move_line_ids:
                 parent_path = [int(loc_id) for loc_id in ml.location_id.parent_path.split('/')[:-1]]
@@ -1170,8 +1172,11 @@ class StockPicking(models.Model):
         return super().unlink()
 
     def do_print_picking(self):
+        picking_operations_report = self.env.ref('stock.action_report_picking',raise_if_not_found=False)
+        if not picking_operations_report:
+            raise UserError(_("The Picking Operations report has been deleted so you cannot print at this time unless the report is restored."))
         self.write({'printed': True})
-        return self.env.ref('stock.action_report_picking').report_action(self)
+        return picking_operations_report.report_action(self)
 
     def should_print_delivery_address(self):
         self.ensure_one()
@@ -1400,8 +1405,8 @@ class StockPicking(models.Model):
             if pickings_without_lots:
                 message += _(
                     '\n\nTransfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s.',
-                    transfer_list=format_list(self.env, pickings_without_lots.mapped('name')),
-                    product_list=format_list(self.env, products_without_lots.mapped('display_name')),
+                    transfer_list=pickings_without_lots.mapped('name'),
+                    product_list=products_without_lots.mapped('display_name'),
                 )
             if message:
                 raise UserError(message.lstrip())
@@ -1769,7 +1774,7 @@ class StockPicking(models.Model):
 
     def _get_action(self, action_xmlid):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
-        context = self.env.context
+        context = dict(self.env.context)
         context.update(literal_eval(action['context']))
         action['context'] = context
 
@@ -1806,7 +1811,7 @@ class StockPicking(models.Model):
 
         The categories are based on current user's timezone (e.g. "today" will last
         between 00:00 and 23:59 local time). The datetime itself is assumed to be
-        in UTC. If the datetime is falsy, this function returns "none".
+        in UTC. If the datetime is falsy, this function returns "".
         """
         start_today = fields.Datetime.context_timestamp(
             self.env.user, fields.Datetime.now()
@@ -1817,7 +1822,7 @@ class StockPicking(models.Model):
         start_day_2 = start_today + timedelta(days=2)
         start_day_3 = start_today + timedelta(days=3)
 
-        date_category = "none"
+        date_category = ""
 
         if datetime:
             datetime = datetime.astimezone(pytz.UTC)

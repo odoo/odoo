@@ -20,8 +20,8 @@ import polib
 import re
 import tarfile
 import typing
-import warnings
 from collections import defaultdict, namedtuple
+from collections.abc import Iterable
 from contextlib import suppress
 from datetime import datetime
 from os.path import join
@@ -35,6 +35,7 @@ from psycopg2.extras import Json
 
 from odoo.exceptions import UserError
 from .config import config
+from .i18n import format_list
 from .misc import file_open, file_path, get_iso_codes, split_every, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
 
 if typing.TYPE_CHECKING:
@@ -56,92 +57,6 @@ JAVASCRIPT_TRANSLATION_COMMENT = 'odoo-javascript'
 
 SKIPPED_ELEMENTS = ('script', 'style', 'title')
 
-_LOCALE2WIN32 = {
-    'af_ZA': 'Afrikaans_South Africa',
-    'sq_AL': 'Albanian_Albania',
-    'ar_SA': 'Arabic_Saudi Arabia',
-    'eu_ES': 'Basque_Spain',
-    'be_BY': 'Belarusian_Belarus',
-    'bs_BA': 'Bosnian_Bosnia and Herzegovina',
-    'bg_BG': 'Bulgarian_Bulgaria',
-    'ca_ES': 'Catalan_Spain',
-    'hr_HR': 'Croatian_Croatia',
-    'zh_CN': 'Chinese_China',
-    'zh_TW': 'Chinese_Taiwan',
-    'cs_CZ': 'Czech_Czech Republic',
-    'da_DK': 'Danish_Denmark',
-    'nl_NL': 'Dutch_Netherlands',
-    'et_EE': 'Estonian_Estonia',
-    'fa_IR': 'Farsi_Iran',
-    'ph_PH': 'Filipino_Philippines',
-    'fi_FI': 'Finnish_Finland',
-    'fr_FR': 'French_France',
-    'fr_BE': 'French_France',
-    'fr_CH': 'French_France',
-    'fr_CA': 'French_France',
-    'ga': 'Scottish Gaelic',
-    'gl_ES': 'Galician_Spain',
-    'ka_GE': 'Georgian_Georgia',
-    'de_DE': 'German_Germany',
-    'el_GR': 'Greek_Greece',
-    'gu': 'Gujarati_India',
-    'he_IL': 'Hebrew_Israel',
-    'hi_IN': 'Hindi',
-    'hu': 'Hungarian_Hungary',
-    'is_IS': 'Icelandic_Iceland',
-    'id_ID': 'Indonesian_Indonesia',
-    'it_IT': 'Italian_Italy',
-    'ja_JP': 'Japanese_Japan',
-    'kn_IN': 'Kannada',
-    'km_KH': 'Khmer',
-    'ko_KR': 'Korean_Korea',
-    'lo_LA': 'Lao_Laos',
-    'lt_LT': 'Lithuanian_Lithuania',
-    'lat': 'Latvian_Latvia',
-    'ml_IN': 'Malayalam_India',
-    'mi_NZ': 'Maori',
-    'mn': 'Cyrillic_Mongolian',
-    'no_NO': 'Norwegian_Norway',
-    'nn_NO': 'Norwegian-Nynorsk_Norway',
-    'pl': 'Polish_Poland',
-    'pt_PT': 'Portuguese_Portugal',
-    'pt_BR': 'Portuguese_Brazil',
-    'ro_RO': 'Romanian_Romania',
-    'ru_RU': 'Russian_Russia',
-    'sr_CS': 'Serbian (Cyrillic)_Serbia and Montenegro',
-    'sk_SK': 'Slovak_Slovakia',
-    'sl_SI': 'Slovenian_Slovenia',
-    #should find more specific locales for Spanish countries,
-    #but better than nothing
-    'es_AR': 'Spanish_Spain',
-    'es_BO': 'Spanish_Spain',
-    'es_CL': 'Spanish_Spain',
-    'es_CO': 'Spanish_Spain',
-    'es_CR': 'Spanish_Spain',
-    'es_DO': 'Spanish_Spain',
-    'es_EC': 'Spanish_Spain',
-    'es_ES': 'Spanish_Spain',
-    'es_GT': 'Spanish_Spain',
-    'es_HN': 'Spanish_Spain',
-    'es_MX': 'Spanish_Spain',
-    'es_NI': 'Spanish_Spain',
-    'es_PA': 'Spanish_Spain',
-    'es_PE': 'Spanish_Spain',
-    'es_PR': 'Spanish_Spain',
-    'es_PY': 'Spanish_Spain',
-    'es_SV': 'Spanish_Spain',
-    'es_UY': 'Spanish_Spain',
-    'es_VE': 'Spanish_Spain',
-    'sv_SE': 'Swedish_Sweden',
-    'ta_IN': 'English_Australia',
-    'th_TH': 'Thai_Thailand',
-    'tr_TR': 'Turkish_Türkiye',
-    'uk_UA': 'Ukrainian_Ukraine',
-    'vi_VN': 'Vietnamese_Viet Nam',
-    'tlh_TLH': 'Klingon',
-
-}
-
 # these direct uses of CSV are ok.
 import csv # pylint: disable=deprecated-module
 
@@ -158,7 +73,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'label',
+    'value_label', 'data-tooltip', 'label', 'confirm-label', 'cancel-label'
 }, lambda e: True)
 
 def translate_attrib_value(node):
@@ -430,7 +345,6 @@ html_translate.is_text = is_text
 xml_translate.term_adapter = xml_term_adapter
 
 
-
 def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> str:
     """Translate and format using a module, language, source text and args."""
     # get the translation by using the language
@@ -452,6 +366,14 @@ def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> 
             args = {k: v._translate(lang) if isinstance(v, LazyGettext) else v for k, v in args.items()}
         else:
             args = tuple(v._translate(lang) if isinstance(v, LazyGettext) else v for v in args)
+    if any(isinstance(a, Iterable) and not isinstance(a, str) for a in (args.values() if args_is_dict else args)):
+        # automatically format list-like arguments in a localized way
+        def process_translation_arg(v):
+            return format_list(env=None, lst=v, lang_code=lang) if isinstance(v, Iterable) and not isinstance(v, str) else v
+        if args_is_dict:
+            args = {k: process_translation_arg(v) for k, v in args.items()}
+        else:
+            args = tuple(process_translation_arg(v) for v in args)
     # format
     try:
         return translation % args
@@ -1725,9 +1647,6 @@ class TranslationImporter:
 def get_locales(lang=None):
     if lang is None:
         lang = locale.getlocale()[0]
-
-    if os.name == 'nt':
-        lang = _LOCALE2WIN32.get(lang, lang)
 
     def process(enc):
         ln = locale._build_localename((lang, enc))

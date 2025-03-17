@@ -12,7 +12,6 @@ const PURCHASE_DECORATORS = {
     sent: "info",
     ['to approve']: "info",
     purchase: "info",
-    done: "info",
     cancel: "secondary",
 };
 

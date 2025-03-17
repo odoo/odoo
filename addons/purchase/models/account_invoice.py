@@ -360,7 +360,7 @@ class AccountMove(models.Model):
 
         common_domain = [
             ('company_id', '=', self.company_id.id),
-            ('state', 'in', ('purchase', 'done')),
+            ('state', '=', 'purchase'),
             ('invoice_status', 'in', ('to invoice', 'no'))
         ]
 

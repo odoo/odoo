@@ -22,7 +22,6 @@ import {
     getService,
     mockService,
     onRpc,
-    serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
@@ -38,14 +37,12 @@ test("simple chatter on a record", async () => {
         if (route.startsWith("/mail") || route.startsWith("/discuss")) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
+        if (route.endsWith("lazy_session_info")) {
+            asyncStep("lazy_session_info");
+        }
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitForSteps([`lazy_session_info`]);
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");

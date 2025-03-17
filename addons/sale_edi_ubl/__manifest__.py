@@ -12,5 +12,6 @@ File with embedded xml data will allow seller to retrieve Order data from Files.
     'depends': ['sale', 'account_edi_ubl_cii'],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

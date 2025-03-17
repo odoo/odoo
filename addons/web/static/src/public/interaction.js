@@ -195,10 +195,21 @@ export class Interaction {
     }
 
     /**
+     * Mechanism to handle context-specific protection of a specific
+     * chunk of synchronous code after returning from an asynchronous one.
+     * This should typically be used around code that follows an
+     * await waitFor(...).
+     */
+    protectSyncAfterAsync(fn) {
+        return this.__colibri__.protectSyncAfterAsync(this, "protectSyncAfterAsync", fn);
+    }
+
+    /**
      * Wait for a specific timeout, then execute the given function (unless the
      * interaction has been destroyed). The dynamic content is then applied.
      */
     waitForTimeout(fn, delay) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "waitForTimeout", fn);
         return setTimeout(() => {
             if (!this.isDestroyed) {
                 fn.call(this);
@@ -214,6 +225,7 @@ export class Interaction {
      * interaction has been destroyed). The dynamic content is then applied.
      */
     waitForAnimationFrame(fn) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "waitForAnimationFrame", fn);
         return window.requestAnimationFrame(() => {
             if (!this.isDestroyed) {
                 fn.call(this);
@@ -228,6 +240,7 @@ export class Interaction {
      * Debounces a function and makes sure it is cancelled upon destroy.
      */
     debounced(fn, delay) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "debounced", fn);
         const debouncedFn = debounce(async (...args) => {
             await fn.apply(this, args);
             if (this.isReady && !this.isDestroyed) {
@@ -254,6 +267,7 @@ export class Interaction {
      * Throttles a function for animation and makes sure it is cancelled upon destroy.
      */
     throttled(fn) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "throttled", fn);
         const throttledFn = throttleForAnimation(async (...args) => {
             await fn.apply(this, args);
             if (this.isReady && !this.isDestroyed) {
@@ -282,6 +296,7 @@ export class Interaction {
      * more than 400ms.
      */
     locked(fn, useLoadingAnimation = false) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "locked", fn);
         if (useLoadingAnimation) {
             return makeButtonHandler(fn);
         } else {
@@ -326,10 +341,13 @@ export class Interaction {
      * @param { HTMLElement } el
      * @param { HTMLElement } [locationEl] the target
      * @param { "afterbegin" | "afterend" | "beforebegin" | "beforeend" } [position]
+     * @param { boolean } [removeOnClean]
      */
-    insert(el, locationEl = this.el, position = "beforeend") {
+    insert(el, locationEl = this.el, position = "beforeend", removeOnClean = true) {
         locationEl.insertAdjacentElement(position, el);
-        this.registerCleanup(() => el.remove());
+        if (removeOnClean) {
+            this.registerCleanup(() => el.remove());
+        }
         this.services["public.interactions"].startInteractions(el);
         this.refreshListeners();
     }
@@ -343,9 +361,17 @@ export class Interaction {
      * @param { HTMLElement } [locationEl] the target
      * @param { "afterbegin" | "afterend" | "beforebegin" | "beforeend" } [position]
      * @param { Function } callback called with rendered elements before insertion
+     * @param { boolean } [removeOnClean]
      * @returns { HTMLElement[] } rendered elements
      */
-    renderAt(template, renderContext, locationEl, position = "beforeend", callback) {
+    renderAt(
+        template,
+        renderContext,
+        locationEl,
+        position = "beforeend",
+        callback,
+        removeOnClean = true
+    ) {
         const fragment = renderToFragment(template, renderContext);
         const result = [...fragment.children];
         const els = [...fragment.children];
@@ -354,7 +380,7 @@ export class Interaction {
             els.reverse();
         }
         for (const el of els) {
-            this.insert(el, locationEl, position);
+            this.insert(el, locationEl, position, removeOnClean);
         }
         return result;
     }

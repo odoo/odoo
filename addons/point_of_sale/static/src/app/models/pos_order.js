@@ -1,10 +1,10 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { random5Chars, uuidv4, gte, lt } from "@point_of_sale/utils";
-import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
+import { random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { localization } from "@web/core/l10n/localization";
 
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
@@ -17,6 +17,10 @@ export class PosOrder extends Base {
 
         if (!this.session_id && (!this.finalized || typeof this.id !== "number")) {
             this.session_id = this.session;
+
+            if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
+                this._isResidual = true;
+            }
         }
 
         // Data present in python model
@@ -40,6 +44,9 @@ export class PosOrder extends Base {
 
         if (!this.date_order) {
             this.date_order = DateTime.now();
+        }
+        if (!this.user_id && this.models["res.users"]) {
+            this.user_id = this.user;
         }
 
         // !!Keep all uiState in one object!!
@@ -103,6 +110,15 @@ export class PosOrder extends Base {
             ? this.preset_time.toFormat("HH:mm")
             : false;
     }
+    get presetDateTime() {
+        return this.preset_time?.isValid
+            ? this.preset_time.hasSame(this.date_order, "day")
+                ? this.preset_time.toFormat(localization.shortTimeFormat)
+                : this.preset_time.toFormat(
+                      `${localization.dateFormat} ${localization.shortTimeFormat}`
+                  )
+            : false;
+    }
 
     get presetRequirementsFilled() {
         return (
@@ -137,7 +153,7 @@ export class PosOrder extends Base {
         // TODO: Properly differentiate refund orders from normal ones.
         const documentSign =
             this.lines.length === 0 ||
-            !this.lines.every((l) => lt(l.qty, 0, { decimals: currency.decimal_places }))
+            !this.lines.every((l) => l.product_id.uom_id.isNegative(l.qty))
                 ? 1
                 : -1;
 
@@ -180,7 +196,7 @@ export class PosOrder extends Base {
                         this.config.rounding_method,
                         remaining
                     );
-                    if (!floatIsZero(paymentAmount - remaining, this.currency.decimal_places)) {
+                    if (!this.currency.isZero(paymentAmount - remaining)) {
                         order_rounding = roundedRemaining - remaining;
                     }
                 }
@@ -204,7 +220,7 @@ export class PosOrder extends Base {
     get orderHasZeroRemaining() {
         const { order_remaining, order_rounding } = this.taxTotals;
         const remaining_with_rounding = order_remaining + order_rounding;
-        return floatIsZero(remaining_with_rounding, this.currency.decimal_places);
+        return this.currency.isZero(remaining_with_rounding);
     }
 
     /**
@@ -221,28 +237,13 @@ export class PosOrder extends Base {
     }
 
     getRoundedRemaining(roundingMethod, remaining) {
-        let { rounding_method: method, rounding } = roundingMethod;
-        if (
-            lt(remaining, 0, {
-                decimals: this.currency.decimal_places,
-            })
-        ) {
-            // oppose the rounding method if remaining is negative
-            method =
-                method === "UP"
-                    ? "DOWN"
-                    : method === "DOWN"
-                    ? "UP"
-                    : method === "HALF-UP"
-                    ? "HALF-DOWN"
-                    : method === "HALF-DOWN"
-                    ? "HALF-UP"
-                    : method;
-        }
-        if (floatIsZero(remaining, this.currency.decimal_places)) {
+        if (this.currency.isZero(remaining)) {
             return 0;
+        } else if (this.currency.isNegative(remaining)) {
+            return roundingMethod.asymmetricRound(remaining);
+        } else {
+            return roundingMethod.round(remaining);
         }
-        return roundPrecision(remaining, rounding, method);
     }
 
     getCashierName() {
@@ -282,6 +283,8 @@ export class PosOrder extends Base {
             if (this.last_order_preparation_change.lines[line.preparationKey]) {
                 this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
                     line.getQuantity();
+                this.last_order_preparation_change.lines[line.preparationKey]["note"] =
+                    line.getNote();
             } else {
                 this.last_order_preparation_change.lines[line.preparationKey] = {
                     attribute_value_names: line.attribute_value_ids.map((a) => a.name),
@@ -606,11 +609,10 @@ export class PosOrder extends Base {
 
     /* ---- Payment Status --- */
     getSubtotal() {
-        return roundPrecision(
+        return this.currency.round(
             this.lines.reduce(function (sum, orderLine) {
                 return sum + orderLine.getDisplayPrice();
-            }, 0),
-            this.currency.rounding
+            }, 0)
         );
     }
 
@@ -641,7 +643,7 @@ export class PosOrder extends Base {
 
     getTotalDiscount() {
         const ignored_product_ids = this._getIgnoredProductIdsTotalDiscount();
-        return roundPrecision(
+        return this.currency.round(
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
@@ -659,8 +661,7 @@ export class PosOrder extends Base {
                     }
                 }
                 return sum;
-            }, 0),
-            this.currency.rounding
+            }, 0)
         );
     }
 
@@ -669,14 +670,13 @@ export class PosOrder extends Base {
     }
 
     getTotalPaid() {
-        return roundPrecision(
+        return this.currency.round(
             this.payment_ids.reduce(function (sum, paymentLine) {
                 if (paymentLine.isDone()) {
                     sum += paymentLine.getAmount();
                 }
                 return sum;
-            }, 0),
-            this.currency.rounding
+            }, 0)
         );
     }
 
@@ -736,10 +736,7 @@ export class PosOrder extends Base {
      */
     hasRemainingAmount() {
         const { order_remaining } = this.taxTotals;
-        return (
-            this.orderHasZeroRemaining ||
-            gte(order_remaining, 0, { decimals: this.currency.decimal_places })
-        );
+        return this.orderHasZeroRemaining || !this.currency.isNegative(order_remaining);
     }
 
     getChange() {
@@ -751,10 +748,7 @@ export class PosOrder extends Base {
     }
 
     getDue() {
-        return (
-            this.taxTotals.order_sign *
-            roundPrecision(this.taxTotals.order_remaining, this.currency.rounding)
-        );
+        return this.taxTotals.order_sign * this.currency.round(this.taxTotals.order_remaining);
     }
 
     getRoundingApplied() {
@@ -763,10 +757,7 @@ export class PosOrder extends Base {
 
     isPaid() {
         const { order_remaining } = this.taxTotals;
-        return (
-            this.orderHasZeroRemaining ||
-            lt(order_remaining, 0, { decimals: this.currency.decimal_places })
-        );
+        return this.orderHasZeroRemaining || this.currency.isNegative(order_remaining);
     }
 
     isRefundInProcess() {
@@ -865,9 +856,9 @@ export class PosOrder extends Base {
         );
 
         if (newPartner) {
-            newPartnerFiscalPosition = newPartner.property_account_position_id
+            newPartnerFiscalPosition = newPartner.fiscal_position_id
                 ? this.models["account.fiscal.position"].find(
-                      (position) => position.id === newPartner.property_account_position_id?.id
+                      (position) => position.id === newPartner.fiscal_position_id?.id
                   )
                 : defaultFiscalPosition;
             newPartnerPricelist =
@@ -1012,11 +1003,11 @@ export class PosOrder extends Base {
     }
 
     get showRounding() {
-        return !floatIsZero(this.taxTotals.order_rounding, this.currency.decimal_places);
+        return !this.currency.isZero(this.taxTotals.order_rounding);
     }
 
     get showChange() {
-        return !floatIsZero(this.orderChange, this.currency.decimal_places) && this.finalized;
+        return !this.currency.isZero(this.orderChange) && this.finalized;
     }
 }
 

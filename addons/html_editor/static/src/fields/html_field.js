@@ -1,3 +1,5 @@
+import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
+import { stripVersion } from "@html_editor/html_migrations/html_migrations_utils";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import {
     COLLABORATION_PLUGINS,
@@ -21,6 +23,7 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { HtmlViewer } from "./html_viewer";
+import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 
@@ -48,6 +51,7 @@ export class HtmlField extends Component {
         collaborativeTrigger: { type: String, optional: true },
         dynamicPlaceholder: { type: Boolean, optional: true, default: false },
         dynamicPlaceholderModelReferenceField: { type: String, optional: true },
+        migrateHTML: { type: Boolean, optional: true },
         cssReadonlyAssetId: { type: String, optional: true },
         sandboxedPreview: { type: Boolean, optional: true },
         codeview: { type: Boolean, optional: true },
@@ -64,6 +68,7 @@ export class HtmlField extends Component {
     };
 
     setup() {
+        this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.mutex = new Mutex();
 
         this.codeViewRef = useRef("codeView");
@@ -80,7 +85,9 @@ export class HtmlField extends Component {
         this.state = useState({
             key: 0,
             showCodeView: false,
-            containsComplexHTML: computeContainsComplexHTML(this.value),
+            containsComplexHTML: computeContainsComplexHTML(
+                this.props.record.data[this.props.name]
+            ),
         });
 
         useRecordObserver((record) => {
@@ -106,7 +113,13 @@ export class HtmlField extends Component {
 
     get value() {
         const value = this.props.record.data[this.props.name];
-        const newVal = fixInvalidHTML(value);
+        let newVal = fixInvalidHTML(value);
+        if (this.props.migrateHTML) {
+            newVal = this.htmlUpgradeManager.processForUpgrade(newVal, {
+                containsComplexHTML: this.state.containsComplexHTML,
+                env: this.env,
+            });
+        }
         if (instanceofMarkup(value)) {
             return markup(newVal);
         }
@@ -134,6 +147,7 @@ export class HtmlField extends Component {
         if (this.props.isCollaborative) {
             stripHistoryIds(element);
         }
+        stripVersion(element);
     }
 
     async updateValue(value) {
@@ -206,6 +220,7 @@ export class HtmlField extends Component {
         const config = {
             content: this.value,
             Plugins: [
+                ...(this.props.migrateHTML ? [EditorVersionPlugin] : []),
                 ...MAIN_PLUGINS,
                 ...(this.props.isCollaborative ? COLLABORATION_PLUGINS : []),
                 ...(this.props.dynamicPlaceholder ? DYNAMIC_PLACEHOLDER_PLUGINS : []),
@@ -258,7 +273,7 @@ export class HtmlField extends Component {
                 user_commands: [
                     {
                         id: "codeview",
-                        title: _t("Code view"),
+                        description: _t("Code view"),
                         icon: "fa-code",
                         run: this.toggleCodeView.bind(this),
                     },
@@ -326,11 +341,12 @@ export const htmlField = {
             editorConfig,
             isCollaborative: options.collaborative,
             collaborativeTrigger: options.collaborative_trigger,
+            migrateHTML: "migrateHTML" in options ? Boolean(options.migrateHTML) : true,
             dynamicPlaceholder: options.dynamic_placeholder,
             dynamicPlaceholderModelReferenceField:
                 options.dynamic_placeholder_model_reference_field,
             embeddedComponents:
-                "embedded_components" in options ? options.embedded_components : true,
+                "embedded_components" in options ? Boolean(options.embedded_components) : true,
             sandboxedPreview: Boolean(options.sandboxedPreview),
             cssReadonlyAssetId: options.cssReadonly,
             codeview: Boolean(odoo.debug && options.codeview),

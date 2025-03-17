@@ -717,6 +717,14 @@ class PosConfig(models.Model):
         except (TypeError, ValueError, OverflowError):
             return default_limit
 
+    def _get_limited_partner_count(self):
+        default_limit = 100
+        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_customer_count', default_limit)
+        try:
+            return int(config_param)
+        except (TypeError, ValueError, OverflowError):
+            return default_limit
+
     def get_limited_partners_loading(self, offset=0):
         return self.env.execute_query(SQL("""
             WITH pm AS
@@ -735,7 +743,7 @@ class PosConfig(models.Model):
             )
             ORDER BY  COALESCE(pm.order_count, 0) DESC,
                       NAME limit %s offset %s;
-        """, self.company_id.id, 100, offset))
+        """, self.company_id.id, self._get_limited_partner_count(), offset))
 
     def action_pos_config_modal_edit(self):
         return {
@@ -780,7 +788,7 @@ class PosConfig(models.Model):
             'type': self.customer_display_type,
             'has_bg_img': bool(self.customer_display_bg_img),
             'company_id': self.company_id.id,
-            **({'proxy_ip': self._get_display_device_ip()} if self.customer_display_type == 'proxy' else {}),
+            **({'proxy_ip': self._get_display_device_ip()} if self.customer_display_type != 'none' else {}),
         }
 
     @api.model
@@ -1032,3 +1040,12 @@ class PosConfig(models.Model):
         if 'allowed_company_ids' in self.env.context:
             safe_context['allowed_company_ids'] = self.env.context['allowed_company_ids']
         return self.env(context=safe_context)
+
+    @api.model
+    def _set_default_pos_load_limit(self):
+        param_model = self.env["ir.config_parameter"]
+        if not param_model.get_param("point_of_sale.limited_product_count"):
+            param_model.set_param("point_of_sale.limited_product_count", 20000)
+
+        if not param_model.get_param("point_of_sale.limited_customer_count"):
+            param_model.set_param("point_of_sale.limited_customer_count", 100)

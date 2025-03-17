@@ -274,7 +274,7 @@ class ProductPricelistItem(models.Model):
             )
 
     def _get_integer(self, percentage):
-        return int(percentage) if percentage.is_integer() else percentage
+        return int(percentage) if percentage == int(percentage) else percentage
 
     def _get_displayed_discount(self, item):
         if item.base == 'standard_price':
@@ -476,7 +476,7 @@ class ProductPricelistItem(models.Model):
             res = False
 
         elif self.applied_on == "2_product_category":
-            if (
+            if not product.categ_id or (
                 product.categ_id != self.categ_id
                 and not product.categ_id.parent_path.startswith(self.categ_id.parent_path)
             ):

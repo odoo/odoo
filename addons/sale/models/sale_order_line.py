@@ -401,7 +401,7 @@ class SaleOrderLine(models.Model):
         if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
 
-        name = "\n"
+        name = ""
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
@@ -1283,6 +1283,14 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
 
+        if self.product_id.type == 'combo':
+            # If the quantity to invoice is a whole number, format it as an integer (with no decimal point)
+            qty_to_invoice = int(self.qty_to_invoice) if self.qty_to_invoice == int(self.qty_to_invoice) else self.qty_to_invoice
+            return {
+                'display_type': 'line_section',
+                'sequence': self.sequence,
+                'name': f'{self.product_id.name} x {qty_to_invoice}',
+            }
         res = {
             'display_type': self.display_type or 'product',
             'sequence': self.sequence,
@@ -1494,3 +1502,9 @@ class SaleOrderLine(models.Model):
                 [('product_id', 'not in', discount_products_ids)],
             ])
         return domain
+
+    def _get_lines_with_price(self):
+        """ A combo product line always has a zero price (by design). The actual price of the combo
+        product can be computed by summing the prices of its combo items (i.e. its linked lines).
+        """
+        return self.linked_line_ids if self.product_type == 'combo' else self

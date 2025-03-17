@@ -7,7 +7,6 @@ import re
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list
 from odoo.tools.translate import _
 
 
@@ -63,7 +62,7 @@ class AccountAnalyticLine(models.Model):
         'project.task', 'Task', index='btree_not_null',
         compute='_compute_task_id', store=True, readonly=False,
         domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
-    parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True)
+    parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True, index='btree_not_null')
     project_id = fields.Many2one(
         'project.project', 'Project', domain=_domain_project_id, index=True,
         compute='_compute_project_id', store=True, readonly=False)
@@ -341,7 +340,7 @@ class AccountAnalyticLine(models.Model):
         if missing_plan_names:
             raise ValidationError(_(
                 "'%(missing_plan_names)s' analytic plan(s) required on the project '%(project_name)s' linked to the timesheet.",
-                missing_plan_names=format_list(self.env, missing_plan_names),
+                missing_plan_names=missing_plan_names,
                 project_name=project.name,
             ))
         return {

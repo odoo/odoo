@@ -318,10 +318,13 @@ patch(Chatter.prototype, {
     },
 
     async _follow(thread) {
-        await this.orm.call(thread.model, "message_subscribe", [[thread.id]], {
+        const data = await rpc("/mail/thread/subscribe", {
+            res_model: thread.model,
+            res_id: thread.id,
             partner_ids: [this.store.self.id],
         });
-        this.onFollowerChanged(thread);
+        this.store.insert(data);
+        this.onFollowerChanged();
     },
 
     onActivityChanged(thread) {
@@ -372,8 +375,10 @@ patch(Chatter.prototype, {
 
     async onClickUnfollow() {
         const thread = this.state.thread;
-        await thread.selfFollower.remove();
-        this.onFollowerChanged(thread);
+        if (thread.selfFollower) {
+            await thread.selfFollower.remove();
+            this.onFollowerChanged();
+        }
     },
 
     onCloseFullComposerCallback() {
@@ -382,10 +387,9 @@ patch(Chatter.prototype, {
         this.props.record?.load();
     },
 
-    onFollowerChanged(thread) {
+    onFollowerChanged() {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
-        this.load(thread, ["followers", "suggestedRecipients"]);
     },
 
     _onMounted() {

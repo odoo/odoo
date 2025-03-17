@@ -318,3 +318,6 @@ class TestMailComposerUI(MailCommon, HttpCase):
 
         self.assertEqual(len(re.findall(signature_pattern, message_3.body)), 0)
         self.assertTrue(message_3.email_add_signature)
+
+    def test_send_attachment_without_body(self):
+        self.start_tour("/odoo/discuss", "create_thread_for_attachment_without_body",login="admin")

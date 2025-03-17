@@ -27,5 +27,6 @@ following:
             'pos_razorpay/static/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

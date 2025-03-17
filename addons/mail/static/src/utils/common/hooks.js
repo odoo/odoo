@@ -2,6 +2,7 @@ import {
     onMounted,
     onPatched,
     onWillUnmount,
+    toRaw,
     useComponent,
     useEffect,
     useRef,
@@ -13,6 +14,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
+import { convertBrToLineBreak } from "./format";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -433,7 +435,24 @@ export function useMessageEdition() {
         composerOfThread: null,
         /** @type {import('@mail/core/common/message_model').Message} */
         editingMessage: null,
+        enterEditMode(message) {
+            const rawMsg = toRaw(message);
+            const text = convertBrToLineBreak(rawMsg.body);
+            rawMsg.composer = {
+                mentionedPartners: rawMsg.recipients,
+                text,
+                selection: {
+                    start: text.length,
+                    end: text.length,
+                    direction: "none",
+                },
+            };
+            state.editingMessage = message;
+        },
         exitEditMode() {
+            if (state.editingMessage) {
+                state.editingMessage.composer = undefined;
+            }
             state.editingMessage = null;
             if (state.composerOfThread) {
                 state.composerOfThread.props.composer.autofocus++;
@@ -552,18 +571,19 @@ export function useDiscussSystray() {
 export const useMovable = makeDraggableHook({
     name: "useMovable",
     onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
-        const { height } = getRect(ctx.current.element);
         ctx.current.container = document.createElement("div");
         addStyle(ctx.current.container, {
             position: "fixed",
             top: 0,
-            bottom: `${height}px`,
+            bottom: 0,
             left: 0,
             right: 0,
         });
         ctx.current.element.after(ctx.current.container);
         addCleanup(() => ctx.current.container.remove());
     },
+    onDragStart: () => true,
+    onDragEnd: () => true,
     onDrop({ ctx, getRect }) {
         const { top, left } = getRect(ctx.current.element);
         return { top, left };

@@ -14,6 +14,13 @@ class ResPartner(models.Model):
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
     pos_contact_address = fields.Char('PoS Address', compute='_compute_contact_address')
     invoice_emails = fields.Char(compute='_compute_invoice_emails', readonly=True)
+    fiscal_position_id = fields.Many2one(
+        'account.fiscal.position',
+        string='Automatic Fiscal Position',
+        compute='_compute_fiscal_position_id',
+        help="Fiscal positions are used to adapt taxes and accounts for particular "
+             "customers or sales orders/invoices. The default value comes from the customer.",
+    )
 
     def _compute_contact_address(self):
         super()._compute_contact_address()
@@ -26,12 +33,14 @@ class ResPartner(models.Model):
         if len(domain) == 0:
             limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading(offset)}
             domain += [('id', 'in', list(limited_partner_ids))]
-            new_partner = self.search_read(domain, self._load_pos_data_fields(config_id), load=False)
+            new_partners = self.search(domain)
         else:
             # If search domain is not empty, we need to search inside all partners
-            new_partner = self.search_read(domain, self._load_pos_data_fields(config_id), offset=offset, limit=100, load=False)
+            new_partners = self.search(domain, offset=offset, limit=100)
+        fiscal_positions = new_partners.fiscal_position_id
         return {
-            'res.partner': new_partner,
+            'res.partner': new_partners.read(self._load_pos_data_fields(config_id), load=False),
+            'account.fiscal.position': fiscal_positions.read(self.env['account.fiscal.position']._load_pos_data_fields(config_id), load=False)
         }
 
     @api.model
@@ -48,11 +57,15 @@ class ResPartner(models.Model):
         partner_ids = limited_partner_ids.union(loaded_order_partner_ids)
         return [('id', 'in', list(partner_ids))]
 
+    def _compute_fiscal_position_id(self):
+        for partner in self:
+            partner.fiscal_position_id = self.env['account.fiscal.position'].with_company(self.env.company)._get_fiscal_position(partner)
+
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
             'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
-            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'pos_contact_address', 'invoice_emails'
+            'barcode', 'write_date', 'property_product_pricelist', 'parent_name', 'pos_contact_address', 'invoice_emails', 'fiscal_position_id'
         ]
 
     def _compute_pos_order(self):

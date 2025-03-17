@@ -93,7 +93,7 @@ export class TablePlugin extends Plugin {
 
         /** Handlers */
         selectionchange_handlers: this.updateSelectionTable.bind(this),
-        clean_handlers: this.deselectTable.bind(this),
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
         clean_for_save_handlers: ({ root }) => this.deselectTable(root),
         before_line_break_handlers: this.resetTableSelection.bind(this),
         before_split_block_handlers: this.resetTableSelection.bind(this),
@@ -116,6 +116,7 @@ export class TablePlugin extends Plugin {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
         this.addDomListener(this.editable, "keydown", (ev) => {
+            this._isKeyDown = true;
             const arrowHandled = ["arrowup", "control+arrowup", "arrowdown", "control+arrowdown"];
             if (arrowHandled.includes(getActiveHotkey(ev))) {
                 this.navigateCell(ev);
@@ -209,7 +210,9 @@ export class TablePlugin extends Plugin {
         const columnIndex = getColumnIndex(reference);
         const table = closestElement(reference, "table");
         const tableWidth = table.style.width && parseFloat(table.style.width);
-        const referenceColumn = table.querySelectorAll(`tr td:nth-of-type(${columnIndex + 1})`);
+        const referenceColumn = table.querySelectorAll(
+            `tr td:nth-of-type(${columnIndex + 1}), tr th:nth-of-type(${columnIndex + 1})`
+        );
         const referenceCellWidth = reference.style.width
             ? parseFloat(reference.style.width)
             : reference.clientWidth;
@@ -234,7 +237,7 @@ export class TablePlugin extends Plugin {
             }
         }
         referenceColumn.forEach((cell, rowIndex) => {
-            const newCell = this.document.createElement("td");
+            const newCell = this.document.createElement(cell.tagName);
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             baseContainer.append(this.document.createElement("br"));
             newCell.append(baseContainer);
@@ -266,11 +269,11 @@ export class TablePlugin extends Plugin {
         if (referenceRowHeight) {
             newRow.style.height = referenceRowHeight + "px";
         }
-        const cells = reference.querySelectorAll("td");
+        const cells = reference.querySelectorAll("td, th");
         const referenceRowWidths = [...cells].map((cell) => cell.style.width);
         newRow.append(
-            ...Array.from(Array(cells.length)).map(() => {
-                const td = this.document.createElement("td");
+            ...Array.from(cells).map((cell) => {
+                const td = this.document.createElement(cell.tagName);
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 baseContainer.append(this.document.createElement("br"));
                 td.append(baseContainer);
@@ -727,7 +730,12 @@ export class TablePlugin extends Plugin {
             startTd === endTd &&
             startTd.classList.contains("o_selected_td") &&
             this.isShiftArrowKeyboardSelection;
-        this.deselectTable();
+        if (!(startTd && startTd === endTd) || this._isKeyDown) {
+            delete this._isKeyDown;
+            // Prevent deselecting single cell unless selection changes
+            // through keyboard.
+            this.deselectTable();
+        }
         delete this.isShiftArrowKeyboardSelection;
         const startTable = ancestors(selection.startContainer, this.editable)
             .filter((node) => node.nodeName === "TABLE")
@@ -776,6 +784,7 @@ export class TablePlugin extends Plugin {
                     table.classList.toggle("o_selected_table", true);
                     for (const td of getTableCells(table)) {
                         td.classList.toggle("o_selected_td", true);
+                        this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
                     }
                 }
             }
@@ -971,6 +980,7 @@ export class TablePlugin extends Plugin {
                 (_, index) => index >= minColIndex && index <= maxColIndex
             )) {
                 td.classList.toggle("o_selected_td", true);
+                this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
             }
         }
     }
@@ -1003,6 +1013,11 @@ export class TablePlugin extends Plugin {
             }
             for (const td of selectedTds) {
                 this.dependencies.color.colorElement(td, color, mode);
+                if (color) {
+                    td.style["color"] = getComputedStyle(td).color;
+                } else {
+                    td.style["color"] = "";
+                }
             }
         }
     }
@@ -1040,5 +1055,61 @@ export class TablePlugin extends Plugin {
             focusNode: anchorTD.lastChild,
             focusOffset: nodeSize(anchorTD.lastChild),
         });
+    }
+
+    /**
+     * @param {DocumentFragment} clonedContents
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     */
+    processContentForClipboard(clonedContents, selection) {
+        if (
+            clonedContents.firstChild.nodeName === "TR" ||
+            clonedContents.firstChild.nodeName === "TD"
+        ) {
+            // We enter this case only if selection is within single table.
+            const table = closestElement(selection.commonAncestorContainer, "table");
+            const tableClone = table.cloneNode(true);
+            // A table is considered fully selected if it is nested inside a
+            // cell that is itself selected, or if all its own cells are
+            // selected.
+            const isTableFullySelected =
+                (table.parentElement &&
+                    !!closestElement(table.parentElement, "td.o_selected_td")) ||
+                getTableCells(table).every((td) => td.classList.contains("o_selected_td"));
+            if (!isTableFullySelected) {
+                for (const td of tableClone.querySelectorAll("td:not(.o_selected_td)")) {
+                    if (closestElement(td, "table") === tableClone) {
+                        // ignore nested
+                        td.remove();
+                    }
+                }
+                const trsWithoutTd = Array.from(tableClone.querySelectorAll("tr")).filter(
+                    (row) => !row.querySelector("td")
+                );
+                for (const tr of trsWithoutTd) {
+                    if (closestElement(tr, "table") === tableClone) {
+                        // ignore nested
+                        tr.remove();
+                    }
+                }
+            }
+            // If it is fully selected, clone the whole table rather than
+            // just its rows.
+            clonedContents = tableClone;
+        }
+        const startTable = closestElement(selection.startContainer, "table");
+        if (clonedContents.firstChild.nodeName === "TABLE" && startTable) {
+            // Make sure the full leading table is copied.
+            clonedContents.firstChild.after(startTable.cloneNode(true));
+            clonedContents.firstChild.remove();
+        }
+        const endTable = closestElement(selection.endContainer, "table");
+        if (clonedContents.lastChild.nodeName === "TABLE" && endTable) {
+            // Make sure the full trailing table is copied.
+            clonedContents.lastChild.before(endTable.cloneNode(true));
+            clonedContents.lastChild.remove();
+        }
+        this.deselectTable(clonedContents);
+        return clonedContents;
     }
 }

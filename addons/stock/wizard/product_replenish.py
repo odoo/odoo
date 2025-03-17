@@ -18,7 +18,8 @@ class ProductReplenish(models.TransientModel):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', required=True)
     product_has_variants = fields.Boolean('Has variants', default=False, required=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Unity of measure', required=True)
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
+    product_uom_id = fields.Many2one('uom.uom', string='Unity of measure', domain="[('id', 'in', allowed_uom_ids)]", required=True)
     forecast_uom_id = fields.Many2one(related='product_id.uom_id')
     quantity = fields.Float('Quantity', default=1, required=True)
     date_planned = fields.Datetime('Scheduled Date', required=True, compute="_compute_date_planned", readonly=False,
@@ -34,6 +35,11 @@ class ProductReplenish(models.TransientModel):
     def _onchange_product_id(self):
         if not self.env.context.get('default_quantity'):
             self.quantity = abs(self.forecasted_quantity) if self.forecasted_quantity < 0 else 1
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        for rec in self:
+            rec.allowed_uom_ids = rec.product_id.uom_id | rec.product_id.uom_ids | rec.product_id.seller_ids.product_uom_id
 
     @api.depends('warehouse_id', 'product_id')
     def _compute_forecasted_quantity(self):
@@ -87,15 +93,13 @@ class ProductReplenish(models.TransientModel):
     def launch_replenishment(self):
         if not self.route_id:
             raise UserError(_("You need to select a route to replenish your products"))
-        uom_reference = self.product_id.uom_id
-        self.quantity = self.product_uom_id._compute_quantity(self.quantity, uom_reference, rounding_method='HALF-UP')
         try:
             now = self.env.cr.now()
             self.env['procurement.group'].with_context(clean_context(self.env.context)).run([
                 self.env['procurement.group'].Procurement(
                     self.product_id,
                     self.quantity,
-                    uom_reference,
+                    self.product_uom_id,
                     self.warehouse_id.lot_stock_id,  # Location
                     _("Manual Replenishment"),  # Name
                     _("Manual Replenishment"),  # Origin

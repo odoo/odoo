@@ -6,7 +6,7 @@ from collections import defaultdict
 from itertools import groupby
 from markupsafe import Markup
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, modules
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import clean_context
@@ -229,41 +229,48 @@ class MailScheduledMessage(models.Model):
             This is useful when scheduled messages are sent from the _post_messages_cron.
         """
         notification_parameters_whitelist = self._notification_parameters_whitelist()
+        auto_commit = not modules.module.current_test
         for scheduled_message in self:
             message_creator = scheduled_message.create_uid
             try:
-                with self.env.cr.savepoint():
-                    scheduled_message.with_user(message_creator)._check()
-                    self.env[scheduled_message.model].browse(scheduled_message.res_id).with_context(
+                scheduled_message.with_user(message_creator)._check()
+                self.env[scheduled_message.model].browse(scheduled_message.res_id).with_context(
                         clean_context(scheduled_message.send_context or {})
                     ).with_user(message_creator).message_post(
-                        attachment_ids=list(scheduled_message.attachment_ids.ids),
-                        author_id=scheduled_message.author_id.id,
-                        body=scheduled_message.body,
-                        partner_ids=list(scheduled_message.partner_ids.ids),
-                        subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
-                        **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
-                    )
+                    attachment_ids=list(scheduled_message.attachment_ids.ids),
+                    author_id=scheduled_message.author_id.id,
+                    body=scheduled_message.body,
+                    partner_ids=list(scheduled_message.partner_ids.ids),
+                    subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
+                    **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
+                )
+                if auto_commit:
+                    self.env.cr.commit()
             except Exception:
                 if raise_exception:
                     raise
                 _logger.info("Posting of scheduled message with ID %s failed", scheduled_message.id, exc_info=True)
                 # notify user about the failure (send content as user might have lost access to the record)
+                if auto_commit:
+                    self.env.cr.rollback()
                 try:
-                    with self.env.cr.savepoint():
-                        self.env['mail.thread'].message_notify(
-                            partner_ids=[message_creator.partner_id.id],
-                            subject=_("A scheduled message could not be sent"),
-                            body=_("The message scheduled on %(model)s(%(id)s) with the following content could not be sent:%(original_message)s",
-                                model=scheduled_message.model,
-                                id=scheduled_message.res_id,
-                                original_message=Markup("<br>-----<br>%s<br>-----<br>") % scheduled_message.body,
-                            )
+                    self.env['mail.thread'].message_notify(
+                        partner_ids=[message_creator.partner_id.id],
+                        subject=_("A scheduled message could not be sent"),
+                        body=_("The message scheduled on %(model)s(%(id)s) with the following content could not be sent:%(original_message)s",
+                            model=scheduled_message.model,
+                            id=scheduled_message.res_id,
+                            original_message=Markup("<br>-----<br>%s<br>-----<br>") % scheduled_message.body,
                         )
+                    )
+                    if auto_commit:
+                        self.env.cr.commit()
                 except Exception:
                     # in case even message_notify fails, make sure the failing scheduled message
                     # will be deleted
                     _logger.exception("The notification about the failed scheduled message could not be sent")
+                    if auto_commit:
+                        self.env.cr.rollback()
         self.unlink()
 
     # ------------------------------------------------------

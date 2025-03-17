@@ -11,7 +11,6 @@ import { OverlayContainer } from "@web/core/overlay/overlay_container";
 export class LivechatRoot extends Component {
     static template = xml`
         <ChatHub/>
-        <LivechatButton/>
         <OverlayContainer overlays="overlayService.overlays"/>
     `;
     static components = { ChatHub, LivechatButton, OverlayContainer };

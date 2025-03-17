@@ -103,7 +103,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "incoming_email_to": False,
                                         "is_discussion": True,
                                         "is_note": False,
-                                        "link_preview_ids": [],
+                                        "message_link_preview_ids": [],
                                         "message_type": "notification",
                                         "model": "discuss.channel",
                                         "notification_ids": [],
@@ -449,8 +449,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                         ],
                         "res.partner": self._filter_partners_fields(
                             {
+                                "avatar_128_access_token": limited_field_access_token(
+                                    self.user_admin.partner_id, "avatar_128"
+                                ),
                                 "id": self.user_admin.partner_id.id,
-                                "im_status": "offline",
+                                "im_status": self.user_admin.im_status,
                                 "name": self.user_admin.partner_id.name,
                                 "write_date": fields.Datetime.to_string(
                                     self.user_admin.partner_id.write_date
@@ -824,7 +827,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
                             "<br>Type <b>#channel</b> to mention a channel."
                             "<br>Type <b>/command</b> to execute a command."
-                            "<br>Type <b>:shortcut</b> to insert a canned response in your message."
+                            "<br>Type <b>::shortcut</b> to insert a canned response in your message."
+                            "<br>Type <b>:emoji:</b> to insert an emoji in your message."
                             "</span>",
                         "channel_id": channel.id,
                     },
@@ -862,7 +866,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
                             "<br>Type <b>#channel</b> to mention a channel."
                             "<br>Type <b>/command</b> to execute a command."
-                            "<br>Type <b>:shortcut</b> to insert a canned response in your message."
+                            "<br>Type <b>::shortcut</b> to insert a canned response in your message."
+                            "<br>Type <b>:emoji:</b> to insert an emoji in your message."
                             "</span>",
                         "channel_id": test_group.id,
                     },

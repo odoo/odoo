@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="label_packaging_barcode_view">
+            <t t-foreach="docs" t-as="packaging">
+                <t t-translation="off">
+^XA
+^FO100,50
+^A0N,44,33^FD<t t-esc="packaging.uom_id.name"/>^FS
+^FO100,100
+^A0N,44,33^FD<t t-esc="packaging.product_id.display_name"/>^FS
+^FO100,150
+^A0N,44,33^FDQty: <t t-esc="packaging.uom_id.relative_factor"/> <t t-esc="packaging.uom_id.name" groups="uom.group_uom"/>^FS
+<t t-if="packaging.barcode">
+^FO100,200^BY3
+^BCN,100,Y,N,N
+^FD<t t-esc="packaging.barcode"/>^FS
+</t>
+^XZ
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

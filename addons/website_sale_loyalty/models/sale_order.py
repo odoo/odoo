@@ -180,8 +180,8 @@ class SaleOrder(models.Model):
 
         return super()._cart_update_order_line(order_line, quantity, **kwargs)
 
-    def _verify_cart_after_update(self, order_line):
-        super()._verify_cart_after_update(order_line)
+    def _verify_cart_after_update(self):
+        super()._verify_cart_after_update()
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
         if request:  # In case the rewards application modifies the cart quantity

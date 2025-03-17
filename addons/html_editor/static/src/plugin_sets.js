@@ -4,6 +4,7 @@ import { CommentPlugin } from "./core/comment_plugin";
 import { DeletePlugin } from "./core/delete_plugin";
 import { DialogPlugin } from "./core/dialog_plugin";
 import { DomPlugin } from "./core/dom_plugin";
+import { SeparatorPlugin } from "./main/separator_plugin";
 import { FormatPlugin } from "./core/format_plugin";
 import { HistoryPlugin } from "./core/history_plugin";
 import { InputPlugin } from "./core/input_plugin";
@@ -16,7 +17,7 @@ import { SelectionPlugin } from "./core/selection_plugin";
 import { ShortCutPlugin } from "./core/shortcut_plugin";
 import { SplitPlugin } from "./core/split_plugin";
 import { UserCommandPlugin } from "./core/user_command_plugin";
-import { AlignPlugin } from "./main/align_plugin";
+import { AlignPlugin } from "./main/align/align_plugin";
 import { BannerPlugin } from "./main/banner_plugin";
 import { ChatGPTPlugin } from "./main/chatgpt/chatgpt_plugin";
 import { ColumnPlugin } from "./main/column_plugin";
@@ -58,11 +59,11 @@ import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/colla
 import { CollaborationSelectionPlugin } from "./others/collaboration/collaboration_selection_plugin";
 import { DynamicPlaceholderPlugin } from "./others/dynamic_placeholder_plugin";
 import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
-import { ExcalidrawPlugin } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin";
 import { TableOfContentPlugin } from "@html_editor/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin";
 import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin";
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
+import { EditorVersionPlugin } from "./core/editor_version_plugin";
 
 /**
  * @typedef { Object } SharedMethods
@@ -126,6 +127,7 @@ export const MAIN_PLUGINS = [
     BannerPlugin,
     ChatGPTPlugin,
     ColorPlugin,
+    SeparatorPlugin,
     ColumnPlugin,
     EmojiPlugin,
     HintPlugin,
@@ -171,7 +173,6 @@ export const COLLABORATION_PLUGINS = [
 
 export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedComponentPlugin,
-    ExcalidrawPlugin,
     TableOfContentPlugin,
     ToggleBlockPlugin,
     VideoPlugin,
@@ -183,5 +184,6 @@ export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,
     ...MAIN_PLUGINS,
     ...EMBEDDED_COMPONENT_PLUGINS,
+    EditorVersionPlugin,
     QWebPlugin,
 ];

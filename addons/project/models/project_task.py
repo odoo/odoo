@@ -232,7 +232,7 @@ class ProjectTask(models.Model):
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
-    parent_id = fields.Many2one('project.task', string='Parent Task', index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
+    parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]", export_string_translation=False)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count', export_string_translation=False)
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count', export_string_translation=False)
@@ -352,6 +352,13 @@ class ProjectTask(models.Model):
             record.display_in_project = record.project_id and (
                 not record.parent_id or record.project_id != record.parent_id.project_id
             )
+
+    def _inverse_parent_id(self):
+        for task in self:
+            if not task.parent_id:
+                task.display_in_project = True
+            elif task.display_in_project and task.project_id == task.parent_id.project_id:
+                task.display_in_project = False
 
     @api.depends('stage_id', 'depend_on_ids.state', 'project_id.allow_task_dependencies')
     def _compute_state(self):
@@ -807,6 +814,10 @@ class ProjectTask(models.Model):
         if not_project_user:
             vals_list = [{k: v for k, v in vals.items() if k in self.SELF_READABLE_FIELDS} for vals in vals_list]
 
+        active_users = self.env['res.users']
+        has_default_users = 'user_ids' in default
+        if not has_default_users:
+            active_users = self.user_ids.filtered('active')
         milestone_mapping = self.env.context.get('milestone_mapping', {})
         for task, vals in zip(self, vals_list):
 
@@ -824,6 +835,9 @@ class ProjectTask(models.Model):
                     'parent_id': False,
                 }
                 vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in task.child_ids]
+            if not has_default_users and vals['user_ids']:
+                active_users = task.user_ids & active_users
+                vals['user_ids'] = [Command.set(active_users.ids)]
         return vals_list
 
     def _create_task_mapping(self, copied_tasks):
@@ -993,11 +1007,10 @@ class ProjectTask(models.Model):
         if fields and (not check_group_user or self.env.user._is_portal()) and not self.env.su:
             unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
             if unauthorized_fields:
-                unauthorized_field_list = format_list(self.env, list(unauthorized_fields))
                 if operation == 'read':
-                    error_message = _('You cannot read the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
+                    error_message = _('You cannot read the following fields on tasks: %(field_list)s', field_list=unauthorized_fields)
                 else:
-                    error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
+                    error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_fields)
                 raise AccessError(error_message)
 
     def _has_field_access(self, field, operation):
@@ -1281,8 +1294,6 @@ class ProjectTask(models.Model):
                         if not project_link:
                             project_link = link_per_project_id[task.project_id.id] = task.project_id._get_html_link(title=task.project_id.display_name)
                         project_link_per_task_id[task.id] = project_link
-        if vals.get('parent_id') is False:
-            vals['display_in_project'] = True
         result = super().write(vals)
         if portal_can_write:
             super(ProjectTask, self_no_sudo).write(vals_no_sudo)
@@ -1982,7 +1993,7 @@ class ProjectTask(models.Model):
         # as it is a computed field. personal_stage_type_ids behaves like a M2O from the point
         # of view of the user, we therefore use this field instead.
         if 'personal_stage_type_id' in groupby:
-            # limitation: problem when both personal_stage_type_id and personal_stage_type_ids 
+            # limitation: problem when both personal_stage_type_id and personal_stage_type_ids
             # appear in read_group, but this has no functional utility
             groupby = ['personal_stage_type_ids' if fname == 'personal_stage_type_id' else fname for fname in groupby]
             if order:

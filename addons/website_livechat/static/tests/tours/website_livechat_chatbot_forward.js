@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
             trigger: messagesContain("Hello, what can I do for you?"),
         },
         {
-            trigger: ".o-livechat-root:shadow li:contains(Forward to operator)",
+            trigger: ".o-livechat-root:shadow button:contains(Forward to operator)",
             run: "click",
         },
         {
@@ -24,8 +24,18 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_forward", {
                 ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(joined the channel)",
         },
         {
-            trigger:
-                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(Forward Bot left the channel)",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            run: "edit Hello, I need help!",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            run: "press Enter",
+        },
+        {
+            trigger: messagesContain("Hello, I need help!"),
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
         },
     ],
 });

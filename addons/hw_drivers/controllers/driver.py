@@ -17,11 +17,13 @@ from odoo import http, tools
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices, manager
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import route
 
 _logger = logging.getLogger(__name__)
 
 
 class DriverController(http.Controller):
+    @route.protect
     @http.route('/hw_drivers/action', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
     def action(self, session_id, device_identifier, data):
         """
@@ -42,6 +44,7 @@ class DriverController(http.Controller):
                     _logger.info("Ignored request from %s as iot_idempotent_id %s already received from session %s",
                                  session_id, iot_idempotent_id, idempotent_session)
                     return False
+            _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
             iot_device.action(data)
             return True
         return False
@@ -54,13 +57,13 @@ class DriverController(http.Controller):
         """
         helpers.get_certificate_status()
 
+    @route.protect
     @http.route('/hw_drivers/event', type='jsonrpc', auth='none', cors='*', csrf=False, save_session=False)
     def event(self, listener):
         """
         listener is a dict in witch there are a sessions_id and a dict of device_identifier to listen
         """
         req = event_manager.add_request(listener)
-
         # Search for previous events and remove events older than 5 seconds
         oldest_time = time.time() - 5
         for event in list(event_manager.events):
@@ -69,6 +72,7 @@ class DriverController(http.Controller):
                 continue
             if event['device_identifier'] in listener['devices'] and event['time'] > listener['last_event']:
                 event['session_id'] = req['session_id']
+                _logger.debug("Event %s found for device %s ", event, event['device_identifier'])
                 return event
 
         # Wait for new event

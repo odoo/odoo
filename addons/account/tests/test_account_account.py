@@ -1,6 +1,6 @@
 from odoo import Command
 from odoo.addons.account.tests.common import TestAccountMergeCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, new_test_user
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
 import psycopg2
@@ -336,7 +336,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         move.line_ids.filtered(lambda line: line.account_id == account).reconcile()
 
         # Try to set the account as a not-reconcile one.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             account.reconcile = False
 
     def test_remove_account_from_account_group(self):
@@ -622,6 +622,68 @@ class TestAccountAccount(TestAccountMergeCommon):
             move_type="out_invoice"
         )
         self.assertFalse(account.id in results_2, "Deprecated account should NOT appear in account suggestions")
+
+    def test_placeholder_code(self):
+        """ Test that the placeholder code is '{code_in_company} ({company})'
+            where `company` is the first of the user's companies that is
+            in `account.company_ids`.
+
+            Check that `_field_to_sql` gives the same value.
+        """
+        def get_placeholder_code_via_sql(account):
+            account_query = account._as_query()
+            placeholder_code_sql = account_query.select(account._field_to_sql('account_account', 'placeholder_code', account_query))
+            placeholder_code = self.env.execute_query(placeholder_code_sql)[0][0]
+            return placeholder_code
+
+        # This user cannot access company 2, so it can't access the created account.
+        user_2 = new_test_user(
+            self.env,
+            name="User that can't access company 2",
+            login='user_that_cannot_access_company_2',
+            password='user_that_cannot_access_company_2',
+            email='user_that_cannot_access_company_2@test.com',
+            group_ids=self.get_default_groups().ids,
+            company_id=self.env.company.id,
+        )
+
+        account = self.env['account.account'].create([{
+            'name': 'My account',
+            'company_ids': [Command.set(self.company_data_2['company'].ids)],
+            'code': '180001',
+        }])
+
+        self.assertEqual(account.placeholder_code, '180001 (company_2)')
+        self.assertEqual(get_placeholder_code_via_sql(account), '180001 (company_2)')
+
+        self.assertEqual(account.with_company(self.company_data_2['company']).placeholder_code, '180001')
+        self.assertEqual(get_placeholder_code_via_sql(account.with_company(self.company_data_2['company'])), '180001')
+
+        # Invalidate in order to recompute `placeholder_code` with `user_2`
+        account.invalidate_recordset(fnames=['placeholder_code'])
+        self.assertEqual(account.with_user(user_2).sudo().placeholder_code, False)
+        self.assertEqual(get_placeholder_code_via_sql(account.with_user(user_2).sudo()), None)
+
+    def test_account_accessible_by_search_in_sudo_mode(self):
+        """ Test that even if an account isn't accessible by the current user, it is returned by a search in sudo mode. """
+        account = self.env['account.account'].with_company(self.company_data_2['company']).create([{
+            'name': 'Account in Company 2',
+            'code': '180002',
+        }])
+
+        # This user can't access company 2, so it can't access the created account.
+        user_that_cannot_access_company_2 = new_test_user(
+            self.env,
+            name="User that can't access company 2",
+            login='user_that_cannot_access_company_2',
+            password='user_that_cannot_access_company_2',
+            email='user_that_cannot_access_company_2@test.com',
+            group_ids=self.get_default_groups().ids,
+            company_id=self.env.company.id,
+        )
+
+        searched_account = self.env['account.account'].with_user(user_that_cannot_access_company_2).sudo().search([('id', '=', account.id)])
+        self.assertEqual(searched_account, account)
 
     @freeze_time('2017-01-01')
     def test_account_opening_balance(self):
@@ -956,3 +1018,25 @@ class TestAccountAccount(TestAccountMergeCommon):
             child_group,
             "group_id computation should work if company_id is not in self.env.companies"
         )
+
+    def test_compute_account(self):
+        account_sale = self.company_data['default_account_revenue'].copy()
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'account_id': account_sale.id,
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                })
+            ]
+        })
+
+        self.assertEqual(invoice.invoice_line_ids.account_id, account_sale)
+
+        invoice.line_ids._compute_account_id()
+
+        self.assertEqual(invoice.invoice_line_ids.account_id, self.company_data['default_account_revenue'])

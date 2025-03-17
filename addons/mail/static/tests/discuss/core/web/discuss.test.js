@@ -29,21 +29,20 @@ test("can create a new channel", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
         if (
-            route.startsWith("/mail") ||
             route.startsWith("/discuss/channel/create_channel") ||
             route.startsWith("/discuss/channel/messages") ||
-            route.startsWith("/discuss/search")
+            route.startsWith("/discuss/search") ||
+            (route === "/mail/data" && args.fetch_params.includes("channels_as_member")) ||
+            route === "/mail/inbox/messages"
         ) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
+        if (route.endsWith("lazy_session_info")) {
+            asyncStep("lazy_session_info");
+        }
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitForSteps([`lazy_session_info`]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
@@ -78,8 +77,14 @@ test("can make a DM chat", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     onRpcBefore((route, args) => {
-        if (route.startsWith("/mail") || route.startsWith("/discuss")) {
+        if (route === "/mail/data" && args.fetch_params.includes("channels_as_member")) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
+        }
+        if (route === "/mail/inbox/messages" || route.startsWith("/discuss")) {
+            asyncStep(`${route} - ${JSON.stringify(args)}`);
+        }
+        if (route.endsWith("lazy_session_info")) {
+            asyncStep("lazy_session_info");
         }
     });
     onRpc((params) => {
@@ -92,12 +97,7 @@ test("can make a DM chat", async () => {
         }
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitForSteps([`lazy_session_info`]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({

@@ -10,6 +10,7 @@ from uuid import uuid4
 
 from dateutil.relativedelta import relativedelta
 from odoo import _, api, exceptions, fields, models
+from odoo.exceptions import LockError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import safe_eval
@@ -25,6 +26,33 @@ DOMAIN_FIELDS_RE = re.compile(r"""
     (?:[^,]*?,){2}          # anything with two commas (to ensure that we are inside a triplet)
     [^,]*?[()[\]]           # anything except a comma followed by a closing bracket or another opening bracket
 """, re.VERBOSE)
+
+
+def _get_domain_fields(env, model, domain):
+    IrModelFields = env["ir.model.fields"]
+    if not domain:
+        return IrModelFields
+    fields = IrModelFields
+    # wondering why we use a regex instead of safe_eval?
+    # because this method is called on a compute method hence could be triggered
+    # from an onchange call (i.e. a manually crafted malicious one)
+    # see: https://github.com/odoo/odoo/pull/189772#issuecomment-2548804283
+    for match in DOMAIN_FIELDS_RE.finditer(domain):
+        if field := match.groupdict().get('field'):
+            fields |= IrModelFields._get(model, field)
+    return fields
+
+
+def _domain_fields_differences(automation, domain1, domain2):
+    IrModelFields = automation.env["ir.model.fields"]
+    if not automation.model_id:
+        return IrModelFields, IrModelFields
+    d1_fields = _get_domain_fields(automation.env, automation.model_id.model, domain1)
+    d2_fields = _get_domain_fields(automation.env, automation.model_id.model, domain2)
+    in_d1_only_fields = d1_fields - d2_fields
+    in_d2_only_fields = d2_fields - d1_fields
+    return in_d1_only_fields, in_d2_only_fields
+
 
 DATE_RANGE = {
     'minutes': relativedelta(minutes=1),
@@ -44,7 +72,6 @@ DATE_RANGE_FACTOR = {
 
 CREATE_TRIGGERS = [
     'on_create',
-
     'on_create_or_write',
     'on_priority_set',
     'on_stage_set',
@@ -94,8 +121,7 @@ class BaseAutomation(models.Model):
     name = fields.Char(string="Automation Rule Name", required=True, translate=True)
     description = fields.Html(string="Description")
     model_id = fields.Many2one(
-        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade",
-        help="Model on which the automation rule runs."
+        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade"
     )
     model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
     model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
@@ -106,7 +132,7 @@ class BaseAutomation(models.Model):
         store=True,
         readonly=False,
     )
-    url = fields.Char(compute='_compute_url')
+    url = fields.Char(compute='_compute_url', help="Use this URL in the third-party app to call this webhook.")
     webhook_uuid = fields.Char(string="Webhook UUID", readonly=True, copy=False, default=lambda self: str(uuid4()))
     record_getter = fields.Char(default="model.env[payload.get('_model')].browse(int(payload.get('_id')))",
                                 help="This code will be run to find on which record the automation rule should be run.")
@@ -128,8 +154,8 @@ class BaseAutomation(models.Model):
             ('on_priority_set', "Priority is set to"),
             ('on_archive', "On archived"),
             ('on_unarchive', "On unarchived"),
-            ('on_create_or_write', "On save"),
-            ('on_create', "On creation"),  # deprecated, use 'on_create_or_write' instead
+            ('on_create', "On create"),
+            ('on_create_or_write', "On create and edit"),
             ('on_write', "On update"),  # deprecated, use 'on_create_or_write' instead
 
             ('on_unlink', "On deletion"),
@@ -173,9 +199,7 @@ class BaseAutomation(models.Model):
         string='Delay after trigger date',
         compute='_compute_trg_date_range_data',
         readonly=False, store=True,
-        help="Delay after the trigger date. "
-        "You can put a negative number if you need a delay before the "
-        "trigger date, like sending a reminder 15 minutes before a meeting.")
+        help="Use negative value to trigger it before the date")
     trg_date_range_type = fields.Selection(
         [('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
         string='Delay type',
@@ -185,7 +209,7 @@ class BaseAutomation(models.Model):
         "resource.calendar", string='Use Calendar',
         compute='_compute_trg_date_calendar_id',
         readonly=False, store=True,
-        help="When calculating a day-based timed condition, it is possible"
+        help="When calculating a day-based timed condition, it is possible "
              "to use a calendar to compute the date based on working days.")
     filter_pre_domain = fields.Char(
         string='Before Update Domain',
@@ -193,6 +217,7 @@ class BaseAutomation(models.Model):
         readonly=False, store=True,
         help="If present, this condition must be satisfied before the update of the record. "
              "Not checked on record creation.")
+    previous_domain = fields.Char(store=False, default=lambda self: self.filter_domain)
     filter_domain = fields.Char(
         string='Apply on',
         help="If present, this condition must be satisfied before executing the automation rule.",
@@ -213,7 +238,6 @@ class BaseAutomation(models.Model):
         compute='_compute_trigger_field_ids', readonly=False, store=True,
         help="The automation rule will be triggered if and only if one of these fields is updated."
              "If empty, all fields are watched.")
-    least_delay_msg = fields.Char(compute='_compute_least_delay_msg')
 
     # which fields have an impact on the registry and the cron
     CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_field_ids']
@@ -364,19 +388,30 @@ class BaseAutomation(models.Model):
         to_reset = self.filtered(lambda a: a.trigger != 'on_change')
         to_reset.on_change_field_ids = False
         for automation in (self - to_reset):
-            automation.on_change_field_ids |= automation._get_filter_domain_fields()
+            automation._onchange_domain()
 
     @api.depends('model_id', 'trigger', 'filter_domain')
     def _compute_trigger_field_ids(self):
         for automation in self:
             if automation.trigger == "on_create_or_write":
-                automation.trigger_field_ids |= automation._get_filter_domain_fields()
+                automation._onchange_domain()
                 continue
             automation._onchange_trigger()
 
     @api.depends('model_id')
     def _compute_trigger(self):
         self.trigger = False
+
+    @api.onchange("filter_domain")
+    def _onchange_domain(self):
+        removed_fields, added_fields = _domain_fields_differences(self, self.previous_domain, self.filter_domain)
+        if self.trigger == "on_change":
+            self.on_change_field_ids = self.on_change_field_ids.filtered(lambda f: f._origin.id not in removed_fields.ids)
+            self.on_change_field_ids |= added_fields
+        if self.trigger == "on_create_or_write":
+            self.trigger_field_ids = self.trigger_field_ids.filtered(lambda f: f._origin.id not in removed_fields.ids)
+            self.trigger_field_ids |= added_fields
+        self.previous_domain = self.filter_domain
 
     @api.onchange('trigger')
     def _onchange_trigger(self):
@@ -386,7 +421,6 @@ class BaseAutomation(models.Model):
             else False
         )
         self.trigger_field_ids = field
-
 
     @api.onchange('trigger', 'action_server_ids')
     def _onchange_trigger_or_actions(self):
@@ -462,6 +496,19 @@ class BaseAutomation(models.Model):
         record_copy.action_server_ids = actions
         return record_copy
 
+    def action_open_scheduled_action(self):
+        cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
+        if not cron:
+            message = _("The scheduled action for Automation Rules seems to have vanished.")
+            raise exceptions.MissingError(message)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Scheduled Action'),
+            'view_mode': 'form',
+            'res_model': 'ir.cron',
+            'res_id': cron.id,
+        }
+
     def action_rotate_webhook_uuid(self):
         for automation in self:
             automation.webhook_uuid = str(uuid4())
@@ -476,26 +523,11 @@ class BaseAutomation(models.Model):
             'domain': [('path', '=', "base_automation(%s)" % self.id)],
         }
 
-    def _get_filter_domain_fields(self):
-        self.ensure_one()
-        if not self.filter_domain or not self.model_id:
-            return self.env['ir.model.fields']
-        model = self.model_id.model
-        fields = self.env["ir.model.fields"]
-        # wondering why we use a regex instead of safe_eval?
-        # because this method is called on a compute method hence could be triggered
-        # from an onchange call (i.e. a manually crafted malicious one)
-        # see: https://github.com/odoo/odoo/pull/189772#issuecomment-2548804283
-        for match in DOMAIN_FIELDS_RE.finditer(self.filter_domain):
-            if field := match.groupdict().get('field'):
-                fields |= self.env["ir.model.fields"]._get(model, field)
-        return fields
-
     def _get_trigger_specific_field(self):
         self.ensure_one()
         match self.trigger:
             case 'on_create_or_write':
-                return self._get_filter_domain_fields()
+                return _get_domain_fields(self.env, self.model_id.model, self.filter_domain)
             case 'on_stage_set':
                 domain = [('ttype', '=', 'many2one'), ('name', 'in', ['stage_id', 'x_studio_stage_id'])]
             case 'on_tag_set':
@@ -588,8 +620,12 @@ class BaseAutomation(models.Model):
         """
         cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
         if cron:
+            try:
+                cron.lock_for_update(allow_referencing=True)
+            except LockError:
+                return
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
-            cron.try_write({
+            cron.write({
                 'active': bool(automations),
                 'interval_type': 'minutes',
                 'interval_number': self._get_cron_interval(automations),
@@ -641,13 +677,9 @@ class BaseAutomation(models.Model):
         if automations is None:
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
 
-        # Minimum 1 minute, maximum 4 hours, 10% tolerance
-        delay = min(automations.mapped(get_delay), default=0)
-        return min(max(1, delay // 10), 4 * 60) if delay else 4 * 60
-
-    def _compute_least_delay_msg(self):
-        msg = _("Note that this automation rule can be triggered up to %d minutes after its schedule.")
-        self.least_delay_msg = msg % self._get_cron_interval()
+        # Minimum 1 minute, maximum 4 hours, 10% tolerance, ignore automations with no delay
+        delays = [d for d in automations.mapped(get_delay) if d]
+        return min(max(1, min(delays) // 10), 4 * 60) if delays else 4 * 60
 
     def _filter_pre(self, records, feedback=False):
         """ Filter the records that satisfy the precondition of automation ``self``. """
@@ -862,6 +894,11 @@ class BaseAutomation(models.Model):
             """ Instanciate an onchange method for the given automation rule. """
             def base_automation_onchange(self):
                 automation_rule = self.env['base.automation'].browse(automation_rule_id)
+
+                if not automation_rule._filter_post(self):
+                    # Do nothing if onchange record does not satisfy the filter_domain
+                    return
+
                 result = {}
                 actions = automation_rule.sudo().action_server_ids.with_context(
                     active_model=self._name,
@@ -971,7 +1008,9 @@ class BaseAutomation(models.Model):
     @api.model
     def _check(self, automatic=False, use_new_cursor=False):
         warnings.warn("Since 19.0, use _cron_process_time_based_automations", DeprecationWarning)
-        self._cron_process_time_based_actions(auto_commit=automatic)
+        if not automatic:
+            raise RuntimeError("can run time-based automations only in automatic mode")
+        self._cron_process_time_based_actions()
 
     def _search_time_based_automation_records(self, *, until):
         automation = self.ensure_one()
@@ -1051,7 +1090,7 @@ class BaseAutomation(models.Model):
             return Model.search(domain).filtered_domain(time_domain)
 
     @api.model
-    def _cron_process_time_based_actions(self, *, auto_commit=True):
+    def _cron_process_time_based_actions(self):
         """ Execute the time-based automations.
 
         :param auto_commit: Set to True when called from a CRON to commit after
@@ -1062,9 +1101,14 @@ class BaseAutomation(models.Model):
 
         # retrieve all the automation rules to run based on a timed condition
         automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
-        for automation_number, automation in enumerate(automations, 1):
-            if auto_commit and not automation.active:
-                # automation deactivated between commits
+        self.env['ir.cron']._commit_progress(remaining=len(automations))
+
+        for automation in automations:
+            # is automation deactivated or disappeared between commits?
+            try:
+                if not automation.active:
+                    continue
+            except MissingError:
                 continue
             _logger.info("Starting time-based automation rule `%s`.", automation.name)
             now = self.env.cr.now()
@@ -1078,14 +1122,6 @@ class BaseAutomation(models.Model):
                     _logger.error(traceback.format_exc())
 
             automation.write({'last_run': now})
-            if auto_commit:
-                # auto-commit for batch processing
-                # because we process all between `last_run` and `now`
-                self.env['ir.cron']._notify_progress(
-                    done=automation_number,
-                    remaining=(len(automations) - automation_number),
-                )
-                self.env.cr.commit()
-            else:
-                self.env.flush_all()
             _logger.info("Time-based automation rule `%s` done.", automation.name)
+            if not self.env['ir.cron']._commit_progress(1):
+                break

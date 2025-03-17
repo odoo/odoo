@@ -13,14 +13,13 @@ import {
     queryAllValues,
     queryAttribute,
     queryFirst,
-    select,
     waitFor,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
 import {
+    editTime,
     getPickerApplyButton,
     getPickerCell,
-    getTimePickers,
 } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickCancel,
@@ -1220,7 +1219,7 @@ test("properties: date(time) property manipulations", async () => {
     // check initial properties
     expect("[property-name=property_1] .o_property_field_value input").toHaveValue("01/01/2019");
     expect("[property-name=property_2] .o_property_field_value input").toHaveValue(
-        "01/01/2019 11:00:00"
+        "01/01/2019 11:00"
     );
 
     // edit date property
@@ -1238,12 +1237,8 @@ test("properties: date(time) property manipulations", async () => {
     await animationFrame();
     await click(getPickerCell("31"));
     await animationFrame();
-    const [[hourSelect, minuteSelect]] = getTimePickers();
-    await select("12", { target: hourSelect });
-    await animationFrame();
-    await select("5", { target: minuteSelect });
-    await animationFrame();
-    expect("[property-name=property_2] input").toHaveValue("12/31/2018 12:05:00");
+    await editTime("12:05");
+    expect("[property-name=property_2] input").toHaveValue("12/31/2018 12:05");
 
     // save
     expect.verifySteps([]);

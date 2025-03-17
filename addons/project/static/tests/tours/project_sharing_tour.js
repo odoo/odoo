@@ -217,3 +217,14 @@ registry.category("web_tour.tours").add("test_04_project_sharing_chatter_message
         { trigger: ".o-mail-Message .o-mail-MessageReaction:contains('👀')" },
     ],
 });
+
+registry.category("web_tour.tours").add("portal_project_sharing_chatter_mention_users", {
+    url: "/my/projects",
+    steps: () => [
+        { trigger: "table > tbody > tr a:has(span:contains(Project Sharing))", run: "click" },
+        { trigger: ".o_project_sharing" },
+        { trigger: ".o_kanban_record:contains('Test Task')", run: "click" },
+        { trigger: ".o-mail-Composer-input", run: "edit @Georges" },
+        { trigger: ".o-mail-Composer-suggestion:contains('Georges')" },
+    ],
+});

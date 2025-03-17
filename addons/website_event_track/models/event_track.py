@@ -7,7 +7,7 @@ from random import randint
 
 from odoo import api, fields, models, tools
 from odoo.osv import expression
-from odoo.tools.mail import is_html_empty
+from odoo.tools.mail import email_normalize, is_html_empty
 from odoo.tools.translate import _, html_translate
 
 
@@ -22,6 +22,7 @@ class EventTrack(models.Model):
         'website.published.mixin',
         'website.searchable.mixin'
     ]
+    _primary_email = 'contact_email'
 
     @api.model
     def _get_default_stage_id(self):
@@ -101,8 +102,8 @@ class EventTrack(models.Model):
         readonly=False, store=True, tracking=30)
     location_id = fields.Many2one('event.track.location', 'Location')
     # time information
-    date = fields.Datetime('Track Date')
-    date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
+    date = fields.Datetime('Track Date', compute='_compute_date', inverse="_inverse_date", store=True)
+    date_end = fields.Datetime('Track End Date', compute='_compute_end_date', inverse="_inverse_end_date", store=True)
     duration = fields.Float('Duration', default=0.5)
     is_track_live = fields.Boolean(
         'Is Track Live', compute='_compute_track_time_data')
@@ -266,6 +267,20 @@ class EventTrack(models.Model):
 
     # TIME
 
+    @api.depends('date_end', 'duration')
+    def _compute_date(self):
+        for track in self:
+            if track.date_end:
+                delta = timedelta(minutes=60 * track.duration)
+                track.date = track.date_end - delta
+            else:
+                track.date = False
+
+    def _inverse_date(self):
+        for track in self:
+            if track.date and track.date_end:
+                track.duration = (track.date_end - track.date).total_seconds() / 3600
+
     @api.depends('date', 'duration')
     def _compute_end_date(self):
         for track in self:
@@ -275,6 +290,10 @@ class EventTrack(models.Model):
             else:
                 track.date_end = False
 
+    def _inverse_end_date(self):
+        for track in self:
+            if track.date and track.date_end:
+                track.duration = (track.date_end - track.date).total_seconds() / 3600
 
     # FRONTEND DESCRIPTION
 
@@ -473,24 +492,15 @@ class EventTrack(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
-    def _message_get_default_recipients(self):
-        return {
-            track.id: {
-                'partner_ids': [],
-                'email_to': ','.join(tools.email_normalize_all(track.contact_email or track.partner_email)) or track.contact_email or track.partner_email,
-                'email_cc': False
-            } for track in self
-        }
-
-    def _message_add_suggested_recipients(self, primary_email=False):
-        email_to_lst, partners = super()._message_add_suggested_recipients(primary_email)
-        if not self.partner_id:
-            #  Priority: contact information then speaker information
-            if self.contact_email:
-                email_to_lst.append(self.contact_email)
-            elif self.partner_email:
-                email_to_lst.append(self.partner_email)
-        return email_to_lst, partners
+    def _message_get_default_recipients(self, with_cc=False, all_tos=False):
+        recipients = super()._message_get_default_recipients(with_cc=with_cc, all_tos=all_tos)
+        for track in self.filtered(lambda t: not t.partner_id.email_normalized and not email_normalize(t.contact_email) and t.partner_email):
+            info = recipients[track.id]
+            info['email_to'] = ','.join(tools.mail.email_split_and_format_normalize(track.partner_email)) or track.partner_email
+            # default only: email is sufficient, otherwise propose even "wrong" partners
+            if not all_tos:
+                info['partner_ids'] = []
+        return recipients
 
     def _message_post_after_hook(self, message, msg_vals):
         #  OVERRIDE

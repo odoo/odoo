@@ -1,8 +1,13 @@
-from odoo import api, fields, models, tools, _, Command
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from collections.abc import Collection
+
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 from odoo.osv import expression
 from odoo.tools import SetDefinitions
+
 
 class ResGroups(models.Model):
     _name = 'res.groups'
@@ -101,7 +106,7 @@ class ResGroups(models.Model):
         classified = self.env['res.config.settings']._get_classified_fields()
         for _name, _groups, implied_group in classified['group']:
             if implied_group.id in self.ids:
-                raise ValidationError(_('You cannot delete a group linked with a settings field.'))
+                raise ValidationError(self.env._('You cannot delete a group linked with a settings field.'))
 
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
@@ -154,13 +159,13 @@ class ResGroups(models.Model):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         for group, vals in zip(self, vals_list):
-            vals['name'] = default.get('name') or _('%s (copy)', group.name)
+            vals['name'] = default.get('name') or self.env._('%s (copy)', group.name)
         return vals_list
 
     def write(self, vals):
         if 'name' in vals:
             if vals['name'].startswith('-'):
-                raise UserError(_('The name of the group can not start with "-"'))
+                raise UserError(self.env._('The name of the group can not start with "-"'))
 
         # invalidate caches before updating groups, since the recomputation of
         # field 'share' depends on method has_group()
@@ -213,10 +218,12 @@ class ResGroups(models.Model):
 
     def _search_all_implied_ids(self, operator, value):
         """ Compute the search on the reflexive transitive closure of implied_ids. """
-        if operator not in ('in', 'not in') or not isinstance(value, (int, list, tuple)):
-            raise NotImplementedError
         if isinstance(value, int):
             value = [value]
+        elif isinstance(value, str):
+            raise NotImplementedError
+        if operator not in ('in', 'not in') or not isinstance(value, Collection):
+            raise NotImplementedError(f"_search_all_implied_ids with {operator!r} {value!r}")
         group_definitions = self._get_group_definitions()
         ids = [*value, *group_definitions.get_subset_ids(value)]
         return [('id', operator, ids)]
@@ -296,3 +303,7 @@ class ResGroups(models.Model):
             for group in groups
         }
         return SetDefinitions(data)
+
+    @api.model
+    def _is_feature_enabled(self, group_reference):
+        return self.env['res.users'].sudo().browse(api.SUPERUSER_ID)._has_group(group_reference)

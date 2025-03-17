@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import {
@@ -27,7 +26,6 @@ import {
     isTangible,
     isUnprotecting,
     listElementSelector,
-    paragraphRelatedElementsSelector,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -72,27 +70,12 @@ export class DomPlugin extends Plugin {
         user_commands: [
             { id: "insertFontAwesome", run: this.insertFontAwesome.bind(this) },
             { id: "setTag", run: this.setTag.bind(this) },
-            {
-                id: "insertSeparator",
-                title: _t("Separator"),
-                description: _t("Insert a horizontal rule separator"),
-                icon: "fa-minus",
-                run: this.insertSeparator.bind(this),
-            },
         ],
-        powerbox_items: {
-            categoryId: "structure",
-            commandId: "insertSeparator",
-        },
         /** Handlers */
-        clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),
         clean_for_save_handlers: ({ root }) => {
             this.removeEmptyClassAndStyleAttributes(root);
-            for (const el of root.querySelectorAll("hr[contenteditable]")) {
-                el.removeAttribute("contenteditable");
-            }
         },
-        normalize_handlers: this.normalize.bind(this),
+        clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
     };
     contentEditableToRemove = new Set();
 
@@ -473,15 +456,13 @@ export class DomPlugin extends Plugin {
      * @param {HTMLElement} target
      */
     copyAttributes(source, target) {
-        this.dispatchTo("clean_handlers", source);
         if (source?.nodeType !== Node.ELEMENT_NODE || target?.nodeType !== Node.ELEMENT_NODE) {
             return;
         }
-        // TODO: provide a resource to ignore some attributes.
-        const ignoredAttrs = new Set();
+        const ignoredAttrs = new Set(this.getResource("system_attributes"));
         const ignoredClasses = new Set(this.getResource("system_classes"));
         for (const attr of source.attributes) {
-            if (ignoredAttrs.has(attr)) {
+            if (ignoredAttrs.has(attr.name)) {
                 continue;
             }
             if (attr.name !== "class" || ignoredClasses.size === 0) {
@@ -601,20 +582,6 @@ export class DomPlugin extends Plugin {
         this.dependencies.history.addStep();
     }
 
-    insertSeparator() {
-        const selection = this.dependencies.selection.getEditableSelection();
-        const sep = this.document.createElement("hr");
-        const block = closestBlock(selection.startContainer);
-        const element =
-            closestElement(selection.startContainer, paragraphRelatedElementsSelector) ||
-            (block && !isListItemElement(block) ? block : null);
-
-        if (element && element !== this.editable) {
-            element.before(sep);
-        }
-        this.dependencies.history.addStep();
-    }
-
     removeEmptyClassAndStyleAttributes(root) {
         for (const node of [root, ...descendants(root)]) {
             if (node.classList && !node.classList.length) {
@@ -622,24 +589,6 @@ export class DomPlugin extends Plugin {
             }
             if (node.style && !node.style.length) {
                 node.removeAttribute("style");
-            }
-        }
-    }
-
-    normalize(el) {
-        if (el.tagName === "HR") {
-            el.setAttribute(
-                "contenteditable",
-                el.hasAttribute("contenteditable") ? el.getAttribute("contenteditable") : "false"
-            );
-        } else {
-            for (const separator of el.querySelectorAll("hr")) {
-                separator.setAttribute(
-                    "contenteditable",
-                    separator.hasAttribute("contenteditable")
-                        ? separator.getAttribute("contenteditable")
-                        : "false"
-                );
             }
         }
     }

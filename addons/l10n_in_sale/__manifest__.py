@@ -11,7 +11,6 @@
         'sale',
     ],
     'data': [
-        'views/report_sale_order.xml',
         'views/sale_views.xml',
     ],
     'demo': [
@@ -19,5 +18,6 @@
     ],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

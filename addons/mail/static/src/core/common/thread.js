@@ -1,7 +1,8 @@
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
+import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/core/common/record";
-import { useVisible } from "@mail/utils/common/hooks";
+import { useMessageEdition, useVisible } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -41,7 +42,7 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {
-    static components = { Message, Transition, DateSection };
+    static components = { Message, NotificationMessage, Transition, DateSection };
     static props = [
         "showDates?",
         "isInChatWindow?",
@@ -81,6 +82,7 @@ export class Thread extends Component {
             scrollTop: null,
         });
         this.lastJumpPresent = this.props.jumpPresent;
+        this.messageEdition = this.props.messageEdition ?? useMessageEdition();
         this.orm = useService("orm");
         /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageHighlight>|null} */
         this.messageHighlight = this.env.messageHighlight
@@ -348,6 +350,7 @@ export class Thread extends Component {
         });
         useEffect(this.applyScroll);
         useChildSubEnv({
+            getCurrentThread: () => this.props.thread,
             onImageLoaded: this.applyScroll,
         });
         const observer = new ResizeObserver(() => {

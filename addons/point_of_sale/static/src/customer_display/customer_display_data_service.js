@@ -21,7 +21,7 @@ export const CustomerDisplayDataService = {
                 }
             );
         }
-        if (session.type === "proxy") {
+        if (session.proxy_ip) {
             const intervalId = setInterval(async () => {
                 try {
                     const response = await fetch(

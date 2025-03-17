@@ -5,7 +5,7 @@
     'description': """
 E-Transport implementation for Romania
     """,
-    'depends': ['stock_delivery', 'l10n_ro_edi'],
+    'depends': ['stock_delivery', 'l10n_ro_edi', 'stock_picking_batch'],
     'assets': {
         'web.assets_backend': [
             'l10n_ro_edi_stock/static/src/components/**/*',
@@ -21,5 +21,6 @@ E-Transport implementation for Romania
         'report/report_deliveryslip.xml',
     ],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': "LGPL-3",
 }

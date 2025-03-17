@@ -63,6 +63,7 @@
     'installable': True,
     'application': True,
     'post_init_hook': '_project_post_init',
+    'uninstall_hook': '_project_uninstall_hook',
     'assets': {
         'web.assets_backend': [
             'project/static/src/css/project.css',
@@ -216,5 +217,6 @@
             'web/static/src/start.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

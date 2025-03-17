@@ -49,7 +49,7 @@ class TestDisableSnippetsAssets(TransactionCase):
 
         unwanted_snippets_assets_changes = set(self.initial_active_snippets_assets) - set(self._get_active_snippets_assets()) - set([s_image_gallery_000.path])
 
-        # The vaccuum should not have activated/deactivated any other snippet asset than the original ones
+        # The vacuum should not have activated/deactivated any other snippet asset than the original ones
         self.assertEqual(
             len(unwanted_snippets_assets_changes),
             0,

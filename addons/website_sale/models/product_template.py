@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero, is_html_empty
@@ -10,7 +10,6 @@ from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
-
 
 _logger = logging.getLogger(__name__)
 
@@ -284,7 +283,9 @@ class ProductTemplate(models.Model):
         date = fields.Date.context_today(self)
 
         pricelist_prices = pricelist._compute_price_rule(self, 1.0)
-        comparison_prices_enabled = self.env.user.has_group('website_sale.group_product_price_comparison')
+        comparison_prices_enabled = self.env['res.groups']._is_feature_enabled(
+            'website_sale.group_product_price_comparison'
+        )
 
         res = {}
         for template in self:
@@ -449,6 +450,19 @@ class ProductTemplate(models.Model):
                 combination_info,
             )
 
+        if (
+            product_or_template.type == 'combo'
+            and website.show_line_subtotals_tax_selection == 'tax_included'
+            and not all(
+                tax.price_include
+                for tax
+                in product_or_template.combo_ids.sudo().combo_item_ids.product_id.taxes_id
+            )
+        ):
+            combination_info['tax_disclaimer'] = _(
+                "Final price may vary based on selection. Tax will be calculated at checkout."
+            )
+
         return combination_info
 
     def _get_additionnal_combination_info(self, product_or_template, quantity, date, website):
@@ -495,7 +509,9 @@ class ProductTemplate(models.Model):
         if (
             not has_discounted_price
             and product_or_template.compare_list_price
-            and self.env.user.has_group('website_sale.group_product_price_comparison')
+            and self.env['res.groups']._is_feature_enabled(
+                'website_sale.group_product_price_comparison'
+            )
         ):
             # TODO VCR comparison price only depends on the product template, but is shown/hidden
             # depending on product price, should be removed from combination info in the future
@@ -537,7 +553,7 @@ class ProductTemplate(models.Model):
             'taxes': taxes,  # taxes after fpos mapping
         })
 
-        if self.env.user.has_group('website_sale.group_show_uom_price'):
+        if self.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price'):
             combination_info.update({
                 'base_unit_name': product_or_template.base_unit_name,
                 'base_unit_price': product_or_template._get_base_unit_price(
@@ -810,14 +826,14 @@ class ProductTemplate(models.Model):
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
-        monetary_options = {'display_currency': mapping['detail']['display_currency']}
         if combination_info.get('prevent_zero_price_sale'):
             website = self.env['website'].get_current_website()
-            price = website.prevent_zero_price_sale_text
-        else:
-            price = self.env['ir.qweb.field.monetary'].value_to_html(
-                combination_info['price'], monetary_options
-            )
+            return website.prevent_zero_price_sale_text, None
+
+        monetary_options = {'display_currency': mapping['detail']['display_currency']}
+        price = self.env['ir.qweb.field.monetary'].value_to_html(
+            combination_info['price'], monetary_options
+        )
         list_price = None
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(

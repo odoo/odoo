@@ -742,7 +742,7 @@ test("check kwargs of a rpc call with a domain", async () => {
             method: "name_search",
             args: [],
             kwargs: {
-                args: [["bool", "=", true]],
+                domain: [["bool", "=", true]],
                 context: { lang: "en", uid: 7, tz: "taht", allowed_company_ids: [1] },
                 limit: 8 + 1,
                 operator: "ilike",
@@ -1143,7 +1143,7 @@ test("search a property", async () => {
     expect(`.o-dropdown-item.focus`).toHaveText("Search Properties");
     expect(".o-dropdown-item.focus:only .fa-caret-down").toHaveCount(1);
     // move on the many2one property
-    await keyDown("ArrowRight");
+    await keyDown("ArrowRight", { repeat: false });
     await animationFrame();
     await runAllTimers();
     expect(`.o-dropdown-item.focus`).toHaveText("My Partner (Bar 1)");
@@ -1165,7 +1165,7 @@ test("search a property", async () => {
     expect(`.o-dropdown-item.focus`).toHaveText("My Partner (Bar 1)");
     expect(".o-dropdown-item.focus:only .fa-caret-down").toHaveCount(1);
     // select the first many2one
-    await keyDown("ArrowRight");
+    await keyDown("ArrowRight", { repeat: false });
     await animationFrame();
     await runAllTimers();
     expect(`.o-dropdown-item.focus`).toHaveText("Bob");
@@ -1392,7 +1392,7 @@ test("edit a field", async () => {
 test("no rpc for getting display_name for facets if known", async () => {
     onRpc("/web/domain/validate", () => true);
     onRpc("name_search", ({ kwargs }) => {
-        expect.step(kwargs.args /** domain */);
+        expect.step(kwargs.domain);
     });
     onRpc(({ method }) => expect.step(method));
 
@@ -1633,72 +1633,6 @@ test("select autocompleted many2one with allowed_company_ids domain (cids: 1)", 
     ]);
 });
 
-test("select autocompleted many2one with companies.active_ids domain (cids: 1-5)", async () => {
-    cookie.set("cids", "1-5");
-    serverState.companies = [
-        ...serverState.companies,
-        {
-            id: 5,
-            name: "Hierophant",
-        },
-    ];
-
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchMenuTypes: [],
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <field name="bar" domain="[('company', 'in', companies.active_ids)]"/>
-            </search>
-        `,
-    });
-
-    await editSearch("rec");
-    await contains(`.o_expand`).click();
-    expect(queryAllTexts(`.o_searchview_autocomplete .o-dropdown-item`)).toEqual([
-        "Search Bar for: rec",
-        "Second record",
-        "Third record",
-        "Add Custom Filter",
-    ]);
-});
-
-test("select autocompleted many2one with companies.active_ids domain (cids: 1)", async () => {
-    cookie.set("cids", "1");
-    serverState.companies = [
-        ...serverState.companies,
-        {
-            id: 5,
-            name: "Hierophant",
-        },
-    ];
-
-    await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchMenuTypes: [],
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <field name="bar" domain="[('company', 'in', companies.active_ids)]"/>
-            </search>
-        `,
-    });
-
-    await click(".o_searchview input");
-    await clear();
-    await animationFrame();
-
-    await editSearch("rec");
-    await contains(`.o_expand`).click();
-    await runAllTimers();
-    expect(queryAllTexts(`.o_searchview_autocomplete .o-dropdown-item`)).toEqual([
-        "Search Bar for: rec",
-        "Second record",
-        "Add Custom Filter",
-    ]);
-});
-
 test("throw error when domain can not be parsed", async () => {
     expect.errors(1);
     await mountWithSearch(SearchBar, {
@@ -1889,3 +1823,34 @@ test("subitems do not have a load more item if there is no more records availabl
     await expect(".o_searchview_autocomplete .o-dropdown-item.o_indent").toHaveCount(1);
     await expect(".o_searchview_autocomplete .o-dropdown-item.o_indent").toHaveText("(no result)");
 });
+
+test(
+    "single name_search call and no flicker when holding ArrowRight",
+    async function () {
+        onRpc(({ method }) => {
+            if (method === "name_search") {
+                expect.step(method);
+            }
+        });
+
+        await mountWithSearch(SearchBar, {
+            resModel: "partner",
+            searchMenuTypes: [],
+            searchViewId: false,
+        });
+
+        await editSearch("a");
+        await press("arrowdown");
+        await press("arrowleft");
+        await animationFrame();
+
+        for (let i = 0; i < 3; i++) {
+            await press("arrowright", { repeat: i > 0 });
+            await animationFrame();
+            expect(".o_menu_item.o_indent").toHaveCount(0);
+            expect("input.o_searchview_input").toBeFocused();
+        }
+        await press("arrowright");
+        expect.verifySteps(["name_search"]);
+    }
+);

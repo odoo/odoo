@@ -179,11 +179,9 @@ const odooYearAdapter = {
 };
 
 const odooDayOfWeekAdapter = {
-    normalizeServerValue(groupBy, field, readGroupResult) {
-        /**
-         * 0: First day of the week in the locale.
-         */
-        return Number(readGroupResult[groupBy]) + 1;
+    normalizeServerValue(groupBy, field, readGroupResult, locale) {
+        const fromLocaleIsZero = (7 - locale.weekStart + Number(readGroupResult[groupBy])) % 7;
+        return fromLocaleIsZero + 1; // 1-based
     },
     increment(normalizedValue, step) {
         return (normalizedValue + step) % 7;
@@ -220,11 +218,11 @@ const odooSecondNumberAdapter = {
  */
 function falseHandlerDecorator(adapter) {
     return {
-        normalizeServerValue(groupBy, field, readGroupResult) {
+        normalizeServerValue(groupBy, field, readGroupResult, locale) {
             if (readGroupResult[groupBy] === false) {
                 return false;
             }
-            return adapter.normalizeServerValue(groupBy, field, readGroupResult);
+            return adapter.normalizeServerValue(groupBy, field, readGroupResult, locale);
         },
         increment(normalizedValue, step) {
             if (

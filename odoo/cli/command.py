@@ -1,19 +1,20 @@
 import argparse
 import contextlib
-import logging
+import re
 import sys
 from inspect import cleandoc
 from pathlib import Path
 
 import odoo.init  # import first for core setup
 import odoo.cli
-from odoo.modules import get_module_path, get_modules, initialize_sys_path
+from odoo.modules import initialize_sys_path, load_script
 from odoo.tools import config
 
+
+COMMAND_NAME_RE = re.compile(r'^[a-z][a-z0-9_]*$', re.I)
+PROG_NAME = Path(sys.argv[0]).name
 commands = {}
 """All loaded commands"""
-
-PROG_NAME = Path(sys.argv[0]).name
 
 
 class Command:
@@ -24,7 +25,16 @@ class Command:
 
     def __init_subclass__(cls):
         cls.name = cls.name or cls.__name__.lower()
-        commands[cls.name] = cls
+        module = cls.__module__.rpartition('.')[2]
+        if not cls.is_valid_name(cls.name):
+            raise ValueError(
+                f"Command name {cls.name!r} "
+                f"must match {COMMAND_NAME_RE.pattern!r}")
+        if cls.name != module:
+            raise ValueError(
+                f"Command name {cls.name!r} "
+                f"must match Module name {module!r}")
+        commands[cls.name] = cls 
 
     @property
     def prog(self):
@@ -41,9 +51,13 @@ class Command:
             )
         return self._parser
 
+    @classmethod
+    def is_valid_name(cls, name):
+        return re.match(COMMAND_NAME_RE, name)
+
 
 def load_internal_commands():
-    """Load `commands` from `odoo.cli`"""
+    """ Load ``commands`` from ``odoo.cli`` """
     for path in odoo.cli.__path__:
         for module in Path(path).iterdir():
             if module.suffix != '.py':
@@ -51,33 +65,44 @@ def load_internal_commands():
             __import__(f'odoo.cli.{module.stem}')
 
 
-def load_addons_commands():
-    """Load `commands` from `odoo.addons.*.cli`"""
-    logging.disable(logging.CRITICAL)
+def load_addons_commands(command=None):
+    """
+    Search the addons path for modules with a ``cli/{command}.py`` file.
+    In case no command is provided, discover and load all the commands.
+    """
+    if command is None:
+        command = '*'
+    elif not Command.is_valid_name(command):
+        return
+
+    mapping = {}
     initialize_sys_path()
-    for module in get_modules():
-        if (Path(get_module_path(module)) / 'cli').is_dir():
-            with contextlib.suppress(ImportError):
-                __import__(f'odoo.addons.{module}')
-    logging.disable(logging.NOTSET)
-    return list(commands)
+    for path in odoo.addons.__path__:
+        for fullpath in Path(path).glob(f'*/cli/{command}.py'):
+            if (found_command := fullpath.stem) and Command.is_valid_name(found_command):
+                # loading as odoo.cli and not odoo.addons.{module}.cli
+                # so it doesn't load odoo.addons.{module}.__init__
+                mapping[f'odoo.cli.{found_command}'] = fullpath 
+
+    for fq_name, fullpath in mapping.items():
+        with contextlib.suppress(ImportError):
+            load_script(fullpath, fq_name)
 
 
 def find_command(name: str) -> Command | None:
     """ Get command by name. """
-    # check in the loaded commands
+
+    # built-in commands
     if command := commands.get(name):
         return command
+
     # import from odoo.cli
-    try:
+    with contextlib.suppress(ImportError):
         __import__(f'odoo.cli.{name}')
-    except ImportError:
-        pass
-    else:
-        if command := commands.get(name):
-            return command
-    # last try, import from odoo.addons.*.cli
-    load_addons_commands()
+        return commands[name]
+
+    # import from odoo.addons.*.cli
+    load_addons_commands(command=name)
     return commands.get(name)
 
 
@@ -104,7 +129,10 @@ def main():
         command_name = 'server'
 
     if command := find_command(command_name):
-        o = command()
-        o.run(args)
+        command().run(args)
     else:
-        sys.exit(f"Unknown command {command_name!r}")
+        message = (
+            f"Unknown command {command_name!r}.\n"
+            f"Use '{PROG_NAME} --help' to see the list of available commands."
+        )
+        sys.exit(message)

@@ -3,7 +3,7 @@
 
 {
     'name' : 'Analytic Accounting',
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Accounting/Accounting',
     'depends' : ['base', 'mail', 'uom'],
     'description': """
@@ -40,5 +40,6 @@ that have no counterpart in the general financial accounts.
         ],
     },
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

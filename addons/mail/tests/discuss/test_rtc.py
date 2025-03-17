@@ -28,6 +28,12 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # end of previous session
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+
+                # start call notification message post
+                (self.cr.dbname, "discuss.channel", channel.id),
+                (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                (self.cr.dbname, "discuss.channel", channel.id, "members"),
+
                 # update sessions
                 (self.cr.dbname, "discuss.channel", channel.id),
             ],
@@ -87,6 +93,25 @@ class TestChannelRTC(MailCommon):
                         ),
                     },
                 },
+                {
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "discuss.channel.member": [
+                            {
+                                "id": channel_member.id,
+                                "message_unread_counter": 0,
+                                "message_unread_counter_bus_id": 0,
+                                "new_message_separator": channel_member.new_message_separator + 1,
+                                "persona": {
+                                    "id": channel_member.partner_id.id,
+                                    "type": "partner"
+                                },
+                                "syncUnread": True,
+                                "thread": { "id": channel.id, "model": "discuss.channel" }
+                            }
+                        ]
+                    },
+                },
             ],
         ):
             store = Store()
@@ -135,7 +160,7 @@ class TestChannelRTC(MailCommon):
                 ),
                 "Rtc": {
                     "iceServers": False,
-                    "selfSession": channel_member.rtc_session_ids.id,
+                    "localSession": channel_member.rtc_session_ids.id,
                     "serverInfo": None,
                 },
             },
@@ -804,6 +829,8 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # end session
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # update status call message
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -895,6 +922,22 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel.id,
                                 "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
+                            },
+                        ],
+                    },
+                },
+                {
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "mail.message": [
+                            {
+                                "attachment_ids": [],
+                                "body": '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                "id": channel.last_call_message_id.id,
+                                "pinned_at": False,
+                                "recipients":[],
+                                "translationValue": False,
+                                "write_date": channel.last_call_message_id.write_date
                             },
                         ],
                     },
@@ -1122,6 +1165,8 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # end session
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # update status call message
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -1135,6 +1180,22 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel.id,
                                 "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
+                            },
+                        ],
+                    },
+                },
+                {
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "mail.message": [
+                            {
+                                "attachment_ids": [],
+                                "body": '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                "id": channel.last_call_message_id.id,
+                                "pinned_at": False,
+                                "recipients":[],
+                                "translationValue": False,
+                                "write_date": channel.last_call_message_id.write_date
                             },
                         ],
                     },
@@ -1259,7 +1320,7 @@ class TestChannelRTC(MailCommon):
             ],
         ):
             current_rtc_sessions, outdated_rtc_sessions = channel_member._rtc_sync_sessions(
-                check_rtc_session_ids=[join_call_values["Rtc"]["selfSession"]] + unused_ids
+                check_rtc_session_ids=[join_call_values["Rtc"]["localSession"]] + unused_ids
             )
         self.assertEqual(channel_member.rtc_session_ids, current_rtc_sessions)
         self.assertEqual(unused_ids, outdated_rtc_sessions.ids)

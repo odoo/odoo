@@ -40,10 +40,21 @@ test("should open the Powerbox on type `/`", async () => {
     expect(".o-we-powerbox").toHaveCount(1);
 });
 
-test.tags("iframe");
-test("in iframe: should open the Powerbox on type `/`", async () => {
+test.tags("iframe", "desktop");
+test("in iframe, desktop: should open the Powerbox on type `/`", async () => {
     const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
     expect("iframe").toHaveCount(1);
+    expect(".o-we-powerbox").toHaveCount(0);
+    expect(getContent(el)).toBe("<p>ab[]</p>");
+    await insertText(editor, "/");
+    await animationFrame();
+    expect(".o-we-powerbox").toHaveCount(1);
+});
+
+test.tags("iframe", "mobile");
+test("in iframe, mobile: should open the Powerbox on type `/`", async () => {
+    const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
+    expect("iframe").toHaveCount(2);
     expect(".o-we-powerbox").toHaveCount(0);
     expect(getContent(el)).toBe("<p>ab[]</p>");
     await insertText(editor, "/");
@@ -54,7 +65,7 @@ test("in iframe: should open the Powerbox on type `/`", async () => {
 test("should correctly hint in iframes", async () => {
     const { el } = await setupEditor("<p>[]<br></p>", { props: { iframe: true } });
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 
@@ -62,7 +73,7 @@ test("should open the Powerbox on type `/`, but in an empty paragraph", async ()
     const { el, editor } = await setupEditor("<p>[]<br></p>");
     expect(".o-we-powerbox").toHaveCount(0);
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     await press("/");
     await insertText(editor, "/");
@@ -88,9 +99,9 @@ describe("search", () => {
         expect(commandNames(el).length).toBe(28);
         expect(".o-we-category").toHaveCount(8);
         expect(queryAllTexts(".o-we-category")).toEqual([
+            "FORMAT",
             "STRUCTURE",
             "BANNER",
-            "FORMAT",
             "MEDIA",
             "NAVIGATION",
             "WIDGET",
@@ -394,7 +405,7 @@ describe("search", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(getContent(el)).toBe(
-                `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
             );
 
             await insertText(editor, "a");
@@ -460,7 +471,7 @@ test.todo("should close the powerbox if keyup event is called on other block", a
 test.tags("desktop");
 test("should insert a 3x3 table on type `/table`", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
-    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
 
     await insertText(editor, "/table");
     await waitFor(".o-we-powerbox ");
@@ -471,7 +482,7 @@ test("should insert a 3x3 table on type `/table`", async () => {
     await press("Enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<table class="table table-bordered o_table"><tbody><tr><td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
+        `<table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
     );
 });
 
@@ -483,7 +494,7 @@ test("should insert a 3x3 table on type `/table` in mobile view", async () => {
     await press("Enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<table class="table table-bordered o_table"><tbody><tr><td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
+        `<table class="table table-bordered o_table"><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
     );
 });
 
@@ -504,7 +515,7 @@ test("should toggle list on empty paragraph", async () => {
     expect(".o-we-powerbox").toHaveCount(1);
     await press("Enter");
     expect(getContent(el)).toBe(
-        `<ul class="o_checklist"><li placeholder="List" class="o-we-hint">[]<br></li></ul>`
+        `<ul class="o_checklist"><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ul>`
     );
     // need 1 animation frame to close
     await animationFrame();
@@ -555,7 +566,7 @@ test("should restore state before /command insertion when command is executed (2
     patchWithCleanup(console, { warn: () => {} });
 
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     await insertText(editor, "/");
     // @todo @phoenix: remove this once we manage inputs.
@@ -568,7 +579,7 @@ test("should restore state before /command insertion when command is executed (2
     expect(commandNames(el)).toEqual(["No-op"]);
     await press("Enter");
     expect(getContent(el, { sortAttrs: true })).toBe(
-        `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
+        `<p class="o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
     );
 });
 
@@ -579,7 +590,7 @@ test("should discard /command insertion from history when command is executed", 
     patchWithCleanup(console, { warn: () => {} });
 
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     // @todo @phoenix: remove this once we manage inputs.
     // Simulate <br> removal by contenteditable when something is inserted
@@ -603,7 +614,7 @@ test("should discard /command insertion from history when command is executed", 
     expect(getContent(el)).toBe("<p>a[]</p>");
     execCommand(editor, "historyUndo");
     expect(getContent(el, { sortAttrs: true })).toBe(
-        `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
+        `<p class="o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>`
     );
 });
 
@@ -732,7 +743,7 @@ test("select command with 'mouseenter' after scroll -- doc in iframe", async () 
 
     await hover(".o-we-command-name:eq(3)");
     await animationFrame();
-    expect(".active .o-we-command-name").toHaveText("4 columns");
+    expect(".active .o-we-command-name").toHaveText("Text");
 });
 
 test("click on a command", async () => {
@@ -779,10 +790,10 @@ test.todo("add plugins with the same powerboxCategory should crash", async () =>
             config: { Plugins: [...MAIN_PLUGINS, Plugin1, Plugin2] },
         })
     ).rejects.toThrow();
-    expect(["Duplicate category id: test"]).toVerifyErrors();
-    expect([
+    expect.verifyErrors(["Duplicate category id: test"]);
+    expect.verifySteps([
         "[Owl] Unhandled error. Destroying the root component",
         "[Owl] Unhandled error. Destroying the root component",
         "[Owl] Unhandled error. Destroying the root component",
-    ]).toVerifySteps();
+    ]);
 });

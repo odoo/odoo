@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, Command, fields, models, _
+from odoo import SUPERUSER_ID, api, Command, fields, models, _
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
@@ -365,7 +365,7 @@ class PurchaseOrderLine(models.Model):
             name = product_lang.display_name
             if product_lang.description_purchase:
                 name += '\n' + product_lang.description_purchase
-            lines = lines.filtered(lambda l: l.name == name + '\n' + description_picking)
+            lines = lines.filtered(lambda l: (l.name == name + '\n' + description_picking) or (values.get('product_description_variants') in (product_lang.name, product_id.with_user(SUPERUSER_ID).name) and l.name == name))
             if lines:
                 return lines[0]
 
@@ -394,7 +394,7 @@ class PurchaseOrderLine(models.Model):
     @api.model
     def _update_qty_received_method(self):
         """Update qty_received_method for old PO before install this module."""
-        self.search(['!', ('state', 'in', ['purchase', 'done'])])._compute_qty_received_method()
+        self.search(['!', ('state', '=', 'purchase')])._compute_qty_received_method()
 
     def _merge_po_line(self, rfq_line):
         super()._merge_po_line(rfq_line)

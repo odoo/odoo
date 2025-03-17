@@ -158,7 +158,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <list>
+            <list export_xlsx="0">
                 <field name="product_id" column_invisible="context.get('single_product', False)"/>
                 <field name="location_id" column_invisible="context.get('hide_location', False)"/>
                 <field name="lot_id" groups="stock.group_production_lot"
@@ -185,6 +185,7 @@
                 <attribute name="js_class">inventory_report_list</attribute>
                 <attribute name="create">0</attribute>
                 <attribute name="delete">0</attribute>
+                <attribute name="export_xlsx">1</attribute>
             </xpath>
         </field>
     </record>
@@ -216,6 +217,7 @@
         <field name="name">Inventory</field>
         <field name="model_id" ref="model_stock_quant"/>
         <field name="state">code</field>
+        <field name="path">stock-locations</field>
         <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
             action = model.with_context(
@@ -225,19 +227,21 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="dashboard_open_quants"> <!-- Used in dashboard -->
-        <field name="name">Update Quantity</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1, 'inventory_mode':True}</field>
+    <record model="ir.actions.act_window" id="stock_quant_action"> <!-- Used in dashboard -->
+        <field name="name">Locations</field>
+        <field name="context">
+        {
+            'search_default_internal_loc': 1,
+            'inventory_mode':True,
+        }
+        </field>
         <field name="res_model">stock.quant</field>
-        <field name="view_id" ref="view_stock_quant_tree_editable"/>
-    </record>
-
-    <record model="ir.actions.act_window" id="location_open_quants"> <!-- Used in location -->
-        <field name="context">{'search_default_productgroup': 1}</field>
-        <field name="domain">[('location_id', 'child_of', active_ids)]</field>
-        <field name="name">Current Stock</field>
-        <field name="res_model">stock.quant</field>
-        <field name="view_id" ref="view_stock_quant_tree"/>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+No Stock On Hand. This analysis gives you an overview of the current stock level of your products.
+            </p>
+        </field>
     </record>
 
     <record id="quant_package_search_view" model="ir.ui.view">

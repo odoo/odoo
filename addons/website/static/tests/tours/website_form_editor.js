@@ -986,12 +986,12 @@ registerWebsitePreviewTour("website_form_nested_forms", {
     {
         trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
         content: "Try to drag the form into another form",
-        run: "drag_and_drop :iframe #wrap .o_portal_details a",
+        run: "drag_and_drop :iframe .o_customer_address_fill a",
     },
     {
         content: "Check the form was not dropped into another form",
         trigger:
-            ":iframe form[action='/my/account']:not(:has([data-snippet='s_website_form']))",
+            ":iframe form[action='/my/address/submit']:not(:has([data-snippet='s_website_form']))",
         run: () => null,
     },
 ]);

@@ -39,5 +39,6 @@ associated to every resource. It also manages the leaves of every resource.
             'resource/static/tests/components/*.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

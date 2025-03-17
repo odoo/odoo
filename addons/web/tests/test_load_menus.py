@@ -36,7 +36,7 @@ class LoadMenusTests(HttpCase):
         self.authenticate("admin", "admin")
 
     def test_load_menus(self):
-        menu_loaded = self.url_open("/web/webclient/load_menus/1234")
+        menu_loaded = self.url_open("/web/webclient/load_menus?unique=1234")
         expected = {
             str(self.menu.id): {
                 'actionID': self.action.id,  # Take the first action in children (see load_web_menus)
@@ -49,7 +49,6 @@ class LoadMenusTests(HttpCase):
                 'webIcon': False,
                 'webIconData': '/web/static/img/default_icon_app.png',
                 'webIconDataMimetype': False,
-                'webInvisible': False,
                 'xmlid': '',
             },
             str(self.menu_child.id): {
@@ -63,7 +62,6 @@ class LoadMenusTests(HttpCase):
                 'webIcon': False,
                 'webIconData': False,
                 'webIconDataMimetype': False,
-                'webInvisible': False,
                 'xmlid': '',
             },
             'root': {
@@ -78,7 +76,6 @@ class LoadMenusTests(HttpCase):
                 'webIcon': None,
                 'webIconData': None,
                 'webIconDataMimetype': None,
-                'webInvisible': False,
                 'xmlid': '',
             },
         }

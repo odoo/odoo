@@ -1611,23 +1611,43 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(len(company_records), 1)
 
     def test_27_company_dependent_bool_integer_float(self):
-         company0 = self.env.ref('base.main_company')
-         company1 = self.env['res.company'].create({'name': 'A'})
-         Model = self.env['test_new_api.company']
-         record = Model.create({})
-         record.invalidate_recordset()
-         cr = self.env.cr
-         cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
-         self.assertEqual(cr.fetchone(), (None, None, None))
-         for company in [company0, company1]:
-             record_company = record.with_company(company)
-             self.assertEqual(record_company.truth, False)
-             self.assertEqual(record_company.count, 0)
-             self.assertEqual(record_company.phi, 0.0)
-         record.write({'truth': False, 'count': 0, 'phi': 0})  # write fallback equivalent
-         record.invalidate_recordset()
-         cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
-         self.assertEqual(cr.fetchone(), (None, None, None))
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        Model = self.env['test_new_api.company']
+        record = Model.create({})
+        record.invalidate_recordset()
+        cr = self.env.cr
+        cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
+        self.assertEqual(cr.fetchone(), (None, None, None))
+        for company in [company0, company1]:
+            record_company = record.with_company(company)
+            self.assertEqual(record_company.truth, False)
+            self.assertEqual(record_company.count, 0)
+            self.assertEqual(record_company.phi, 0.0)
+        record.write({'truth': False, 'count': 0, 'phi': 0})  # write fallback equivalent
+        record.invalidate_recordset()
+        cr.execute("SELECT truth, count, phi FROM test_new_api_company WHERE id = %s", (record.id,))
+        self.assertEqual(cr.fetchone(), (None, None, None))
+
+    def test_27_company_dependent_missing_many2one(self):
+        """ Test ORM can handle missing records for many2one company dependent fields """
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A'})
+        Model = self.env['test_new_api.company']
+        record = Model.create({})
+        record.tag_id = 1000  # non-existing record id
+        record.invalidate_recordset()
+
+        self.env.cr.execute(
+            'SELECT id FROM test_new_api_company WHERE id = %s and (tag_id->%s)::int = %s',
+            [record.id, str(self.env.company.id), 1000],
+        )
+        self.assertEqual(self.env.cr.rowcount, 1)
+        self.assertFalse(record.tag_id)
+        self.assertEqual(
+            record.search([('id', '=', record.id), ('tag_id', '=', False)]),
+            record,
+        )
 
     def test_28_company_dependent_search(self):
         """ Test the search on company-dependent fields in all corner cases.
@@ -2857,7 +2877,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(image_data_uri(record.image_256)[:30], 'data:image/png;base64,iVBORw0K')
 
         # ensure invalid image raises
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError):
             record.write({
                 'image': 'invalid image',
             })
@@ -3238,7 +3258,7 @@ class TestX2many(TransactionExpressionCase):
             'a_restricted_b_ids': [Command.set(record_b.ids)],
         })
         with self.assertRaises(psycopg2.IntegrityError):
-            with mute_logger('odoo.sql_db'), self.cr.savepoint():
+            with mute_logger('odoo.sql_db'):
                 record_a.unlink()
         # Test B is still cascade.
         record_b.unlink()
@@ -3252,7 +3272,7 @@ class TestX2many(TransactionExpressionCase):
             'b_restricted_b_ids': [Command.set(record_b.ids)],
         })
         with self.assertRaises(psycopg2.IntegrityError):
-            with mute_logger('odoo.sql_db'), self.cr.savepoint():
+            with mute_logger('odoo.sql_db'):
                 record_b.unlink()
         # Test A is still cascade.
         record_a.unlink()
@@ -4626,6 +4646,71 @@ class TestComputeQueries(TransactionCase):
         self.assertEqual(records.mapped('name'), ['Foo1', 'Foo2', 'Foo3', False])
         self.assertEqual(records.mapped('value1'), [10, 0, 0, 0])
         self.assertEqual(records.mapped('value2'), [0, 12, 0, 0])
+
+    def test_create_cache_consistency(self):
+        """ The cache should always contains the raw value of the database. The
+        cache value of non-assigned column during create() should be None for
+        any column field type.
+        """
+        record = self.env['test_new_api.create.performance'].create({})
+        self.assertEqual(record.confirmed, False)
+        cached_value = record._cache['confirmed']
+
+        # the cached value should be the same as if we had fetched it from database
+        record.invalidate_recordset()
+        record.fetch(['confirmed'])
+        self.assertEqual(record._cache['confirmed'], cached_value)
+
+    def test_create_cache_of_compute_store_fields(self):
+        model = self.env['test_new_api.create.performance']
+        model.create({})  # warmup
+
+        with self.assertQueryCount(2):  # one for create + one to update name_changes
+            record = model.create({'name': 'blabla'})
+            self.assertEqual(record.name_changes, 1)
+
+    def test_create_x2many_performance(self):
+        model = self.env['test_new_api.create.performance']
+        model.create({})  # warmup
+
+        # 1 INSERT on model table (without the pending update of name_changes)
+        with self.assertQueryCount(1, flush=False):
+            record = model.create({})
+        with self.assertQueryCount(0):
+            self.assertFalse(record.line_ids)
+        with self.assertQueryCount(0):
+            self.assertFalse(record.tag_ids)
+
+        # 1 INSERT on model table (without the pending update of name_changes)
+        with self.assertQueryCount(1, flush=False):
+            record = model.create({
+                'line_ids': [],
+                'tag_ids': [],
+            })
+        with self.assertQueryCount(0):
+            self.assertFalse(record.line_ids)
+        with self.assertQueryCount(0):
+            self.assertFalse(record.tag_ids)
+
+        # warmup for defaults in secondary models
+        record = model.create({
+            'line_ids': [Command.create({})],
+            'tag_ids': [Command.create({})],
+        })
+
+        # 1 INSERT on model table (without the pending update of name_changes)
+        # 1 INSERT on table of comodel of line_ids
+        # 1 INSERT on table of comodel of tag_ids
+        # 1 INSERT on relation of tag_ids
+        with self.assertQueryCount(4, flush=False):
+            record = model.create({
+                'line_ids': [Command.create({})],
+                'tag_ids': [Command.create({})],
+            })
+        with self.assertQueryCount(0):
+            self.assertTrue(record.line_ids)
+        with self.assertQueryCount(0):
+            self.assertTrue(record.tag_ids)
 
     def test_partial_compute_batching(self):
         """ Create several 'new' records and check that the partial compute

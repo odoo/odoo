@@ -118,7 +118,7 @@ const READ_GROUP_NUMBER_GRANULARITY = [
 
 const DATE_FORMAT = {
     day: (date) => date.toFormat("yyyy-MM-dd"),
-    day_of_week: (date) => date.weekday,
+    day_of_week: (date) => date.weekday % 7, // (0 = Sunday, 6 = Saturday)
     day_of_month: (date) => date.day,
     day_of_year: (date) => date.ordinal,
     week: (date) => `W${date.toFormat("WW kkkk")}`,
@@ -1609,30 +1609,11 @@ export class Model extends Array {
         /** @type {typeof this.views} */
         const result = {};
 
-        const binding_actions = MockServer.current.actions.filter(
-            // In hoot, the actions are a list of objects, not real models.
-            // We can't use a "normal" reference. So in this case we do the reference by the name of the model.
-            (action) => action.binding_model_id === this._name
-        );
-
         // Determine all the models/fields used in the views
         // modelFields = {modelName: {fields: Set([...fieldNames])}}
         const modelFields = {};
         views.forEach(([viewId, viewType]) => {
             result[viewType] = getView(this, [viewId, viewType], kwargs);
-            if (options.toolbar) {
-                const toolbarAction = binding_actions.filter((action) =>
-                    action.binding_view_types.split(",").includes(viewType)
-                );
-                if (toolbarAction.length) {
-                    result[viewType].toolbar.action = toolbarAction.map((action) => ({
-                        id: action.id,
-                        name: action.name,
-                        binding_view_types: action.binding_view_types,
-                        binding_invisible: action.binding_invisible,
-                    }));
-                }
-            }
             for (const [modelName, fields] of Object.entries(result[viewType].models)) {
                 modelFields[modelName] ||= { fields: new Set() };
                 for (const field of fields) {
@@ -1672,8 +1653,8 @@ export class Model extends Array {
      * @param {number} [limit]
      */
     name_search(name, domain, operator, limit) {
-        const kwargs = getKwArgs(arguments, "name", "args", "operator", "limit");
-        ({ name = "", args: domain = [], operator = "ilike", limit = 100 } = kwargs);
+        const kwargs = getKwArgs(arguments, "name", "domain", "operator", "limit");
+        ({ name = "", domain = [], operator = "ilike", limit = 100 } = kwargs);
 
         const actualDomain = new Domain(domain);
         /** @type {[number, string][]} */
@@ -2452,6 +2433,28 @@ export class Model extends Array {
     }
 
     /**
+     * @param {string} name
+     * @param {Record<string, any>} specification
+     * @param {DomainListRepr} [domain]
+     * @param {string} [operator]
+     * @param {number} [limit]
+     */
+    web_name_search(name, specification, domain, operator, limit) {
+        const kwargs = getKwArgs(arguments, "name", "specification", "args", "operator", "limit");
+        ({ name, specification, domain = [], operator = "ilike", limit = 100 } = kwargs);
+
+        const idNamePairs = this.name_search(name, domain, operator, limit, kwargs);
+        if (Object.keys(specification).length === 1 && "display_name" in specification) {
+            return idNamePairs.map(([id, name]) => ({ id, display_name: name }));
+        }
+
+        return this.web_read(
+            idNamePairs.map(([id]) => id),
+            specification
+        );
+    }
+
+    /**
      * @param {MaybeIterable<number>} idOrIds
      * @param {Record<string, any>} specification
      */
@@ -3011,31 +3014,25 @@ export class Model extends Array {
                 case "many2many":
                 case "one2many": {
                     if (relatedFields && Object.keys(relatedFields).length) {
-                        const ids = unique(records.flatMap((r) => r[fieldName]));
-                        const result = getRelation(field).web_read(
-                            ids,
-                            relatedFields,
-                            makeKwArgs({ context: spec[fieldName].context })
-                        );
-                        /** @type {Record<string, ModelRecord>} */
-                        const allRelRecords = {};
-                        for (const relRecord of result) {
-                            allRelRecords[relRecord.id] = relRecord;
-                        }
                         const { limit, order } = spec[fieldName];
+                        const relModel = getRelation(field);
                         for (const record of records) {
                             /** @type {number[]} */
-                            const relResIds = record[fieldName];
-                            let relRecords = relResIds.map((resId) => allRelRecords[resId]);
+                            let relResIds = record[fieldName];
                             if (order) {
-                                relRecords = orderByField(getRelation(field), order, relRecords);
+                                const relRecords = relModel.read(relResIds);
+                                const orderedRelRecords = orderByField(relModel, order, relRecords);
+                                relResIds = orderedRelRecords.map((r) => r.id);
                             }
+                            let result = relModel.web_read(
+                                relResIds,
+                                relatedFields,
+                                makeKwArgs({ context: spec[fieldName].context })
+                            );
                             if (limit) {
-                                relRecords = relRecords.map((r, i) =>
-                                    i < limit ? r : { id: r.id }
-                                );
+                                result = result.map((r, i) => (i < limit ? r : { id: r.id }));
                             }
-                            record[fieldName] = relRecords;
+                            record[fieldName] = result;
                         }
                     }
                     break;

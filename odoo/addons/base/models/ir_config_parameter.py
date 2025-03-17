@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """
 Store database-specific configuration parameters
@@ -7,7 +6,7 @@ Store database-specific configuration parameters
 import uuid
 import logging
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import config, ormcache, mute_logger
 
@@ -112,7 +111,7 @@ class IrConfig_Parameter(models.Model):
         if 'key' in vals:
             illegal = _default_parameters.keys() & self.mapped('key')
             if illegal:
-                raise ValidationError(_("You cannot rename config parameters with keys %s", ', '.join(illegal)))
+                raise ValidationError(self.env._("You cannot rename config parameters with keys %s", ', '.join(illegal)))
         self.env.registry.clear_cache()
         return super().write(vals)
 
@@ -123,4 +122,4 @@ class IrConfig_Parameter(models.Model):
     @api.ondelete(at_uninstall=False)
     def unlink_default_parameters(self):
         for record in self.filtered(lambda p: p.key in _default_parameters.keys()):
-            raise ValidationError(_("You cannot delete the %s record.", record.key))
+            raise ValidationError(self.env._("You cannot delete the %s record.", record.key))

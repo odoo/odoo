@@ -1,5 +1,3 @@
-import { htmlToTextContentInline } from "@mail/utils/common/format";
-
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -24,6 +22,8 @@ export class OutOfFocusService {
         this.multiTab = services.multi_tab;
         this.notificationService = services.notification;
         this.soundEffectService = services["mail.sound_effects"];
+        /** @type {import("models").Store} */
+        this.store = services["mail.store"];
         this.closeFuncs = [];
     }
 
@@ -51,10 +51,7 @@ export class OutOfFocusService {
                 notificationTitle = author.name;
             }
         }
-        const notificationContent = htmlToTextContentInline(message.body).substring(
-            0,
-            PREVIEW_MSG_MAX_SIZE
-        );
+        const notificationContent = message.previewText.substring(0, PREVIEW_MSG_MAX_SIZE);
         this.sendNotification({
             message: notificationContent,
             sound: message.thread?.model === "discuss.channel",
@@ -143,7 +140,7 @@ export class OutOfFocusService {
     }
 
     _playSound() {
-        if (this.canPlayAudio && this.multiTab.isOnMainTab()) {
+        if (this.canPlayAudio && this.multiTab.isOnMainTab() && this.store.settings.messageSound) {
             this.soundEffectService.play("new-message");
         }
     }
@@ -158,7 +155,7 @@ export class OutOfFocusService {
 }
 
 export const outOfFocusService = {
-    dependencies: ["multi_tab", "notification", "mail.sound_effects"],
+    dependencies: ["multi_tab", "notification", "mail.sound_effects", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services

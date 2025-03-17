@@ -23,7 +23,8 @@
                         type="'project_task_state_selection'"
                         fieldInfo="fieldInfo.state"/>
                 </div>
-                <div class="subtask_create" t-on-click.stop="(ev) => this.onSubTaskCreated(ev)">
+                <div class="subtask_create" t-on-click.stop="(ev) => this.onSubTaskCreated(ev)"
+                    t-on-keydown="(ev) => ev.code === 'Escape' ? this._onBlur(ev) : ()=>{}">
                     <t t-if="subtaskCreate.open">
                         <SubtaskCreate
                             name="subtaskCreate.name"
@@ -32,7 +33,7 @@
                             onBlur.bind="_onBlur" />
                     </t>
                     <t t-else="">
-                        <i class="fa fa-plus my-2"/> New
+                        <i class="fa fa-plus my-2"/> Add Sub-task
                     </t>
                 </div>
             </div>

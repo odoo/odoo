@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
     MockServer,
     clickSave,
@@ -37,6 +38,7 @@ import {
 
 import { browser } from "@web/core/browser/browser";
 import { router, routerBus } from "@web/core/browser/router";
+import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
@@ -1046,6 +1048,7 @@ test("execute_action of type object raises error: re-enables buttons", async () 
     await click('.o_form_view button[name="object"]');
     expect(".o_form_button_create").not.toBeEnabled();
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_form_button_create").toBeEnabled();
 });
 
@@ -1070,6 +1073,7 @@ test("execute_action of type object raises error in modal: re-enables buttons", 
     expect(".modal .o_form_view").toHaveCount(1);
     expect(".modal footer button").not.toBeEnabled();
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".modal .o_form_view").toHaveCount(1);
     expect(".modal footer button").toBeEnabled();
 });
@@ -1860,6 +1864,42 @@ test("stored action is restored correctly with domain", async () => {
     expect(".o_data_row").toHaveCount(1);
 });
 
+test("current_action doesn't contains _originalAction", async () => {
+    class myActionComponent extends Component {
+        static template = xml`<div>This is a Client Action</div>`;
+        static props = ["*"];
+    }
+
+    const myAction = (env, action) => {
+        registry.category("actions").add("myAction", myActionComponent, { force: true });
+        return action;
+    };
+    registry.category("actions").add("myAction", myAction);
+    redirect("/odoo/myAction");
+    await mountWithCleanup(WebClient);
+
+    await animationFrame();
+    expect(JSON.parse(sessionStorage.getItem("current_action"))).toEqual(
+        {
+            context: {},
+            domain: [],
+            jsId: "action_1",
+            params: {
+                action: "myAction",
+                actionStack: [
+                    {
+                        action: "myAction",
+                    },
+                ],
+            },
+            tag: "myAction",
+            target: "current",
+            type: "ir.actions.client",
+        },
+        { message: "current_action doesn't contains _originalAction" }
+    );
+});
+
 test.tags("desktop");
 test("destroy action with lazy loaded controller", async () => {
     redirect("/odoo/action-3/2");
@@ -2414,10 +2454,10 @@ test("window action in target new fails (onchange) on desktop", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(".o_form_view button[name='5']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test.tags("mobile");
@@ -2440,10 +2480,10 @@ test("window action in target new fails (onchange) on mobile", async () => {
     await getService("action").doAction(2);
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     await contains(".o-dropdown-item-unstyled-button button[name='5']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test.tags("desktop");
@@ -2475,10 +2515,10 @@ test("Uncaught error in target new is catch only once on desktop", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(".o_form_view button[name='26']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test.tags("mobile");
@@ -2511,10 +2551,10 @@ test("Uncaught error in target new is catch only once on mobile", async () => {
     await getService("action").doAction(2);
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     await contains(".o-dropdown-item-unstyled-button button[name='26']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test("action and get_views rpcs are cached", async () => {
@@ -2782,23 +2822,4 @@ test("execute a window action with mobile_view_mode", async () => {
         ],
     });
     expect(".o_list_view").toHaveCount(1);
-});
-
-test("can use user evalContext (companies) on action domain", async () => {
-    onRpc("web_search_read", ({ kwargs }) => {
-        expect.step(kwargs.domain);
-    });
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction({
-        res_id: 1,
-        type: "ir.actions.act_window",
-        target: "current",
-        res_model: "partner",
-        views: [
-            [false, "kanban"],
-            [false, "pivot"],
-        ],
-        domain: "[('employee_id', '=', companies.active_ids)]",
-    });
-    expect.verifySteps([[["employee_id", "=", [1]]]]);
 });

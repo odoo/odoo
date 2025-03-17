@@ -30,16 +30,22 @@ class ChatbotScriptStep(models.Model):
         name = self.env._("%s's New Lead", self.chatbot_script_id.title)
         if msg := self._find_first_user_free_input(discuss_channel):
             name = html2plaintext(msg.body)[:100]
-        return {
-            "origin_channel_id": discuss_channel.id,
-            "company_id": self.crm_team_id.company_id.id,
+        partner = self.env.user.partner_id
+        team = self.crm_team_id
+        if partner.company_id and team.company_id and partner.company_id != team.company_id:
+            team = self.env["crm.team"]
+        vals = {
             'description': description + discuss_channel._get_channel_history(),
             "name": name,
+            "origin_channel_id": discuss_channel.id,
             'source_id': self.chatbot_script_id.source_id.id,
-            'team_id': self.crm_team_id.id,
-            'type': 'lead' if self.crm_team_id.use_leads else 'opportunity',
+            "team_id": team.id,
             'user_id': False,
         }
+        if team:
+            vals["type"] = "lead" if team.use_leads else "opportunity"
+        return vals
+
 
     def _process_step(self, discuss_channel):
         self.ensure_one()
@@ -68,11 +74,7 @@ class ChatbotScriptStep(models.Model):
                 'phone': customer_values['phone'],
             }
         else:
-            partner = self.env.user.partner_id
-            create_values = {
-                'partner_id': partner.id,
-                'company_id': partner.company_id.id,
-            }
+            create_values = {"partner_id": self.env.user.partner_id.id}
         create_values.update(self._chatbot_crm_prepare_lead_values(
             discuss_channel, customer_values['description']))
         return self.env["crm.lead"].create(create_values)
@@ -95,6 +97,11 @@ class ChatbotScriptStep(models.Model):
                 lambda team: team.assignment_max
                 and lead.filtered_domain(literal_eval(team.assignment_domain or "[]"))
             )
+        if self.env.user.partner_id.company_id:
+            teams = teams.filtered(
+                lambda team: not team.company_id
+                or team.company_id == self.env.user.partner_id.company_id
+            )
         assignable_user_ids = [
             member.user_id.id
             for member in teams.crm_team_member_ids
@@ -102,14 +109,14 @@ class ChatbotScriptStep(models.Model):
             and member._get_assignment_quota() > 0
             and lead.filtered_domain(literal_eval(member.assignment_domain or "[]"))
         ]
+        previous_operator = discuss_channel.livechat_operator_id
         # sudo: im_livechat.channel - getting available operators is acceptable
         users = discuss_channel.livechat_channel_id.sudo()._get_available_operators_by_livechat_channel(
             self.env["res.users"].browse(assignable_user_ids)
         )[discuss_channel.livechat_channel_id]
         message = self._process_step_forward_operator(discuss_channel, users=users)
-        operator_partner = discuss_channel.livechat_operator_id
-        if operator_partner != self.chatbot_script_id.operator_partner_id:
-            user = next(user for user in users if user.partner_id == operator_partner)
+        if previous_operator != discuss_channel.livechat_operator_id:
+            user = next(user for user in users if user.partner_id == discuss_channel.livechat_operator_id)
             lead.user_id = user
             lead.team_id = next(team for team in teams if user in team.crm_team_member_ids.user_id)
             msg = self.env._("Created a new lead: %s", lead._get_html_link())

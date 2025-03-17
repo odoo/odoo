@@ -14,7 +14,7 @@
                     Choose your time
                 </option>
                 <t t-foreach="slots" t-as="slot" t-key="slot_index">
-                    <option t-att-value="slot[0]" t-esc="slot[0]" disabled="1" />
+                    <option t-att-value="slot[0]" t-esc="formatDate(slot[0])" disabled="1" />
                     <option t-foreach="Object.values(slot[1])"
                         t-as="s" t-key="s_index"
                         t-att-value="s.datetime.toFormat('yyyy-MM-dd HH:mm:ss')"

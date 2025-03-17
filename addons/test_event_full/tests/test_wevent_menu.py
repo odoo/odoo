@@ -19,7 +19,7 @@ class TestWEventMenu(TestWEventCommon):
         menus = [
             ('booth_menu_ids', 'Get a Booth'),
             ('exhibitor_menu_ids', 'Exhibitor'),
-            ('community_menu_ids', 'Community'),
+            ('community_menu_ids', 'Leaderboard'),
             ('track_menu_ids', 'Talks'),
             ('track_menu_ids', 'Agenda'),
             ('track_proposal_menu_ids', 'Talk Proposal'),

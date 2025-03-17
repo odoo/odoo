@@ -1,12 +1,18 @@
-import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
-import { animationFrame } from "@odoo/hoot-mock";
-import { describe, test } from "@odoo/hoot";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { defineLivechatModels } from "./livechat_test_helpers";
+import {
+    click,
+    contains,
+    openDiscuss,
+    setupChatHub,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
+import { test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
+import { defineLivechatModels } from "./livechat_test_helpers";
 
-describe.current.tags("desktop");
 defineLivechatModels();
 
 test.tags("mobile");
@@ -33,6 +39,7 @@ test("can fold livechat chat windows in mobile", async () => {
     await contains(".o-mail-ChatBubble");
 });
 
+test.tags("desktop");
 test("closing a chat window with no message from admin side unpins it", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
@@ -72,7 +79,7 @@ test("closing a chat window with no message from admin side unpins it", async ()
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Partner 2" });
 });
 
-test.tags("focus required");
+test.tags("desktop", "focus required");
 test("Focus should not be stolen when a new livechat open", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 12" });
@@ -109,4 +116,25 @@ test("Focus should not be stolen when a new livechat open", async () => {
     await contains(".o-mail-ChatWindow", { text: "Visitor 12" });
     await animationFrame();
     await contains(".o-mail-Composer-input[placeholder='Message #general…']:focus");
+});
+
+test("do not ask confirmation if other operators are present", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #12" });
+    const otherOperatorId = pyEnv["res.partner"].create({ name: "John" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: otherOperatorId }),
+        ],
+        livechat_operator_id: serverState.partnerId,
+        channel_type: "livechat",
+        livechat_active: true,
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await contains(".o-mail-ChatWindow");
+    await click("[title*='Close Chat Window']");
+    await contains(".o-mail-ChatWindow", { count: 0 });
 });

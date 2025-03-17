@@ -452,6 +452,35 @@ img, .media_iframe_video, .o_image {
     }
 }
 
+// Address
+.o_portal_address_row {
+    @include media-breakpoint-down(md) {
+        overflow-x: auto;
+
+        > div {
+            width: auto;
+        }
+    }
+
+    .o_address_kanban_add_new, .o_address_kanban_card {
+        min-height: 12rem;
+    }
+}
+
+.o_customer_address_fill {
+    .col-form-label:not(.label-optional)::after {
+        content: " *";
+        font-weight: normal;
+    }
+}
+
+.oe_clear_stucture {
+
+    > .oe_structure {
+        clear: both;
+    }
+}
+
 // Copyright
 .o_footer_copyright {
     .o_footer_copyright_name {

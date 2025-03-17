@@ -136,12 +136,13 @@ _logger = logging.getLogger('odoo.registry')
 # we add them on definition classes that define a model without extending it.
 # This increases the number of fields that are shared across registries.
 
-def is_model_definition(cls):
+
+def is_model_definition(cls: type) -> bool:
     """ Return whether ``cls`` is a model definition class. """
     return isinstance(cls, models.MetaModel) and getattr(cls, 'pool', None) is None
 
 
-def is_model_class(cls):
+def is_model_class(cls: type) -> bool:
     """ Return whether ``cls`` is a model registry class. """
     return getattr(cls, 'pool', None) is not None
 

@@ -68,7 +68,7 @@ class PrinterDriver(Driver):
     connection_type = 'printer'
 
     def __init__(self, identifier, device):
-        super(PrinterDriver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self.device_type = 'printer'
         self.device_connection = device['device-class'].lower()
         self.device_name = device['device-make-and-model']
@@ -90,14 +90,12 @@ class PrinterDriver(Driver):
 
         if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.device_subtype = "receipt_printer"
-            if self.connected_by_usb:
-                self.print_status_receipt()
         elif any(cmd in device['device-id'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']):
             self.device_subtype = "label_printer"
-            if self.connected_by_usb:
-                self.print_status_zpl()
         else:
             self.device_subtype = "office_printer"
+
+        self.print_status()
 
     @classmethod
     def supported(cls, device):
@@ -203,6 +201,8 @@ class PrinterDriver(Driver):
                           self.device_identifier)
 
     def print_receipt(self, data):
+        _logger.debug("print_receipt called for printer %s", self.device_name)
+
         receipt = b64decode(data['receipt'])
         im = Image.open(io.BytesIO(receipt))
 
@@ -366,6 +366,14 @@ class PrinterDriver(Driver):
 
         return { "mac": mac, "pairing_code": pairing_code, "ssid": ssid, "ips": ips }
 
+    def print_status(self):
+        if not self.connected_by_usb:
+            return
+        if self.device_subtype == "receipt_printer":
+            self.print_status_receipt()
+        if self.device_subtype == "label_printer":
+            self.print_status_zpl()
+
     def print_status_receipt(self):
         """Prints the status ticket of the IoTBox on the current printer."""
         wlan = ''
@@ -375,7 +383,9 @@ class PrinterDriver(Driver):
         pairing_code = ''
 
         iot_status = self._get_iot_status()
-        wlan = '\nWireless network:\n%s\n\n' % iot_status["ssid"]
+
+        if iot_status['ssid']:
+            wlan = '\nWireless network:\n%s\n\n' % iot_status["ssid"]
 
         ips = iot_status["ips"]
         if len(ips) == 0:
@@ -390,7 +400,8 @@ class PrinterDriver(Driver):
             homepage = '\nHomepage:\nhttp://%s:8069\n\n' % ips[0]
 
         if iot_status["pairing_code"]:
-            pairing_code = '\nPairing Code:\n%s\n' % iot_status["pairing_code"]
+            pairing_code = '\nPairing Code: %s\n' % iot_status["pairing_code"]
+            pairing_code += 'Enter this code in the Odoo IoT app to pair your IoT Box.\n'
 
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         title = commands['title'] % b'IoTBox Status'
@@ -408,17 +419,21 @@ class PrinterDriver(Driver):
             command += f"^FT35,155 ^A0N,25 ^FDIP: {', '.join(iot_status['ips'])}^FS"
         if iot_status["pairing_code"]:
             command += f"^FT35,190 ^A0N,25 ^FDPairing code: {iot_status['pairing_code']}^FS"
+            command += "^FT35,225 ^A0N,25 ^FDEnter this code in the Odoo IoT app^FS"
         command += "^XZ"
 
         self.print_raw(command.encode())
 
     def open_cashbox(self, data):
         """Sends a signal to the current printer to open the connected cashbox."""
+        _logger.debug("open_cashbox called for printer %s", self.device_name)
+
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         for drawer in commands['drawers']:
             self.print_raw(drawer)
 
     def _action_default(self, data):
+        _logger.debug("_action_default called for printer %s", self.device_name)
         self.print_raw(b64decode(data['document']))
         send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
 

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
@@ -11,6 +12,14 @@ describe("Range collapsed", () => {
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
                 stepFunction: toggleCheckList,
+                contentAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
+            });
+        });
+
+        test("should turn an empty paragraph into a checklist with shortcut", async () => {
+            await testEditor({
+                contentBefore: "<p>[]<br></p>",
+                stepFunction: () => press(["control", "shift", "9"]),
                 contentAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
             });
         });
@@ -49,11 +58,11 @@ describe("Range collapsed", () => {
 
         test("should turn an empty heading into a checklist and display the right hint", async () => {
             const { el, editor } = await setupEditor("<h1>[]</h1>");
-            expect(getContent(el)).toBe(`<h1 placeholder="Heading 1" class="o-we-hint">[]</h1>`);
+            expect(getContent(el)).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]</h1>`);
 
             toggleCheckList(editor);
             expect(getContent(el)).toBe(
-                `<ul class="o_checklist"><li><h1 placeholder="Heading 1" class="o-we-hint">[]</h1></li></ul>`
+                `<ul class="o_checklist"><li><h1 o-we-hint-text="Heading 1" class="o-we-hint">[]</h1></li></ul>`
             );
 
             await insertText(editor, "a");
@@ -420,6 +429,14 @@ describe("Range not collapsed", () => {
             });
         });
 
+        test("should turn a paragraph into a checklist with shortcut", async () => {
+            await testEditor({
+                contentBefore: "<p>[abc]</p>",
+                stepFunction: () => press(["control", "shift", "9"]),
+                contentAfter: '<ul class="o_checklist"><li>[abc]</li></ul>',
+            });
+        });
+
         test("should turn a heading into a checklist", async () => {
             await testEditor({
                 contentBefore: "<p>ab</p><h1>cd[ef]gh</h1>",
@@ -499,6 +516,16 @@ describe("Range not collapsed", () => {
                 stepFunction: toggleCheckList,
                 contentAfter:
                     '<ul class="o_checklist"><li class="o_checked">a[b</li><li>cd</li><li class="o_checked">e]f</li><li>gh</li></ul>',
+            });
+        });
+
+        test("should turn a list into a checklist list with text alignment", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul><li style="text-align: right;">[abc</li><li style="text-align: right;">def]</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="text-align: right;">[abc</li><li style="text-align: right;">def]</li></ul>',
             });
         });
     });

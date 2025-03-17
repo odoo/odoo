@@ -70,7 +70,7 @@ class DropdownNestingState {
  * close itself when the active element is the same as the current
  * dropdown to separate dropdowns in different dialogs.
  *
- * @param {import("@web/core/dropdown/dropdown").DropdownState} state
+ * @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} state
  * @returns
  */
 export function useDropdownNesting(state) {
@@ -111,9 +111,9 @@ export function useDropdownNesting(state) {
         },
         /**@type {import("@web/core/navigation/navigation").NavigationOptions} */
         navigationOptions: {
-            onEnabled: (items) => {
+            onEnabled: (navigator) => {
                 if (current.parent) {
-                    items[0]?.setActive();
+                    navigator.items[0]?.setActive();
                 }
             },
             onMouseEnter: (item) => {

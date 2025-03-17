@@ -11,13 +11,15 @@
                 SOLD:
             </div>
 
+            <t t-set="ProductUnit" t-as="pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit')" />
+
             <div class="orderlines">
                 <t t-foreach="products" t-as="category" t-key="category['name']">
                     <t t-foreach="category['products']" t-as="line" t-key="line_index">
                         <div class="responsive-price">
                             <t t-esc="line['product_name'].substr(0,20)" />
                             <span class="pos-receipt-right-align">
-                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit').digits)) / Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit').digits)" />
+                                <t t-esc="ProductUnit.round(line.quantity)" />
                                 <t t-if="line.uom !== 'Units'">
                                     <t t-esc="line.uom" />
                                 </t>
@@ -46,7 +48,7 @@
                         <div class="responsive-price">
                             <t t-esc="line['product_name'].substr(0,20)" />
                             <span class="pos-receipt-right-align">
-                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit')?.digits)) / Math.pow(10, pos.models['decimal.precision'].find((dp) => dp.name === 'Product Unit')?.digits)" />
+                                <t t-esc="ProductUnit.round(line.quantity)" />
                                 <t t-if="line.uom !== 'Units'">
                                     <t t-esc="line.uom" />
                                 </t>

@@ -12,18 +12,21 @@ import {
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
+import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
     static props = {
         config: { type: Object },
+        migrateHTML: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        hasFullHtml: false,
+        migrateHTML: true,
     };
 
     setup() {
+        this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.iframeRef = useRef("iframe");
 
         this.state = useState({
@@ -97,12 +100,21 @@ export class HtmlViewer extends Component {
 
     /**
      * Allows overrides to process the value used in the Html Viewer.
+     * Typically, if the value comes from the html_field, it is already fixed
+     * (invalid and obsolete elements were replaced). If used as a standalone,
+     * the HtmlViewer has to handle invalid nodes and html upgrades.
      *
      * @param { string | Markup } value
      * @returns { string | Markup }
      */
     formatValue(value) {
-        const newVal = fixInvalidHTML(value);
+        let newVal = fixInvalidHTML(value);
+        if (this.props.migrateHTML) {
+            newVal = this.htmlUpgradeManager.processForUpgrade(newVal, {
+                containsComplexHTML: this.props.config.hasFullHtml,
+                env: this.env,
+            });
+        }
         if (instanceofMarkup(value)) {
             return markup(newVal);
         }

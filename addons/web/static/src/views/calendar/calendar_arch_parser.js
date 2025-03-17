@@ -9,7 +9,6 @@ const FIELD_ATTRIBUTE_NAMES = [
     "date_delay",
     "date_stop",
     "all_day",
-    "recurrence_update",
     "create_name_field",
     "color",
 ];
@@ -18,20 +17,22 @@ const SCALES = ["day", "week", "month", "year"];
 export class CalendarParseArchError extends Error {}
 
 export class CalendarArchParser {
-    parse(arch, models, modelName) {
+    parse(xmlDoc, models, modelName) {
         const fields = models[modelName].fields;
         const fieldNames = new Set(fields.display_name ? ["display_name"] : []);
         const fieldMapping = { date_start: "date_start" };
         let jsClass = null;
         let eventLimit = 5;
         let scales = [...SCALES];
-        const sessionScale = browser.sessionStorage.getItem("calendar-scale");
+        const sessionScale = browser.sessionStorage.getItem("calendar-scale"); // FIXME: move
         let scale = sessionScale || "week";
         let canCreate = true;
         let canDelete = true;
         let canEdit = true;
+        let aggregate;
         let quickCreate = true;
         let quickCreateViewId = null;
+        const multiCreateView = xmlDoc.getAttribute("multi_create_view");
         let hasEditDialog = false;
         let showUnusualDays = false;
         let isDateHidden = false;
@@ -42,7 +43,7 @@ export class CalendarArchParser {
         const popoverFieldNodes = {};
         const filtersInfo = {};
 
-        visitXML(arch, (node) => {
+        visitXML(xmlDoc, (node) => {
             switch (node.tagName) {
                 case "calendar": {
                     if (!node.hasAttribute("date_start")) {
@@ -59,6 +60,10 @@ export class CalendarArchParser {
                             fieldNames.add(fieldName);
                             fieldMapping[fieldAttrName] = fieldName;
                         }
+                    }
+                    if (node.hasAttribute("aggregate")) {
+                        aggregate = node.getAttribute("aggregate");
+                        fieldNames.add(aggregate.split(":")[0]);
                     }
 
                     if (node.hasAttribute("event_limit")) {
@@ -155,6 +160,7 @@ export class CalendarArchParser {
                                 resModel: field.relation,
                                 writeFieldName: null,
                                 writeResModel: null,
+                                context: fieldInfo.context || "{}",
                             };
                             filterInfo = filtersInfo[fieldName];
                         }
@@ -170,21 +176,8 @@ export class CalendarArchParser {
                         if (node.hasAttribute("write_field")) {
                             filterInfo.writeFieldName = node.getAttribute("write_field");
                         }
-                        if (node.hasAttribute("filters")) {
-                            if (node.hasAttribute("color")) {
-                                filterInfo.colorFieldName = node.getAttribute("color");
-                            }
-                            if (node.hasAttribute("avatar_field") && field.relation) {
-                                if (
-                                    field.relation.includes([
-                                        "res.users",
-                                        "res.partners",
-                                        "hr.employee",
-                                    ])
-                                ) {
-                                    filterInfo.avatarFieldName = "image_128";
-                                }
-                            }
+                        if (node.hasAttribute("filters") && node.hasAttribute("color")) {
+                            filterInfo.colorFieldName = node.getAttribute("color");
                         }
                     }
 
@@ -194,6 +187,7 @@ export class CalendarArchParser {
         });
 
         return {
+            aggregate,
             canCreate,
             canDelete,
             canEdit,
@@ -203,6 +197,7 @@ export class CalendarArchParser {
             filtersInfo,
             formViewId,
             hasEditDialog,
+            multiCreateView,
             quickCreate,
             quickCreateViewId,
             isDateHidden,

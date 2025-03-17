@@ -28,7 +28,7 @@ import {
     validateContent,
     validateSameHistory,
 } from "./_helpers/collaboration";
-import { dispatchClean } from "./_helpers/dispatch";
+import { cleanHints } from "./_helpers/dispatch";
 import { unformat } from "./_helpers/format";
 import { getContent } from "./_helpers/selection";
 import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
@@ -198,8 +198,8 @@ describe("collaborative makeSavePoint", () => {
         mergePeersSteps(peerInfos);
         savepoint();
         mergePeersSteps(peerInfos);
-        dispatchClean(peerInfos.c1.editor);
-        dispatchClean(peerInfos.c2.editor);
+        cleanHints(peerInfos.c1.editor);
+        cleanHints(peerInfos.c2.editor);
         renderTextualSelection(peerInfos);
         expect(peerInfos.c1.editor.editable).toHaveInnerHTML(
             `<p>[c1}{c1]<br></p><p>ab[c2}{c2]</p>`
@@ -239,8 +239,8 @@ describe("history addExternalStep", () => {
         mergePeersSteps(peerInfos);
         peerInfos.c1.editor.shared.history.addStep();
         mergePeersSteps(peerInfos);
-        dispatchClean(peerInfos.c1.editor);
-        dispatchClean(peerInfos.c2.editor);
+        cleanHints(peerInfos.c1.editor);
+        cleanHints(peerInfos.c2.editor);
         // TODO @phoenix c1 editable should be `<p>iab[]</p>`, but its selection
         // was not adjusted properly when receiving the external step
         expect(getContent(peerInfos.c1.editor.editable)).toBe(`<p>ia[]b</p>`);
@@ -514,7 +514,7 @@ describe("sanitize", () => {
                 execCommand(editor, "historyRedo");
             },
             contentAfter:
-                '<div contenteditable="true" class="o-paragraph o-we-hint" placeholder="Type &quot;/&quot; for commands">[c1}{c1]<br></div>',
+                '<div contenteditable="true" class="o-paragraph o-we-hint" o-we-hint-text="Type &quot;/&quot; for commands">[c1}{c1]<br></div>',
         });
     });
     test("should not sanitize the content of an element recursively when sanitizing an attribute", async () => {
@@ -779,13 +779,13 @@ describe("Collaboration with embedded components", () => {
         addStep(e1);
         peerInfos.c2.collaborationPlugin.onExternalHistorySteps(peerInfos.c1.historyPlugin.steps);
         validateSameHistory(peerInfos);
-        dispatchClean(e2);
+        cleanHints(e2);
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
             `<div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div><p>[]<br></p>`
         );
         await animationFrame();
-        dispatchClean(e1);
-        dispatchClean(e2);
+        cleanHints(e1);
+        cleanHints(e2);
         expect(getContent(e1.editable, { sortAttrs: true })).toBe(
             unformat(`
                 <div contenteditable="false" data-embedded="counter" data-oe-protected="true">

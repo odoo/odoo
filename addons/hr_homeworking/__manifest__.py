@@ -12,10 +12,12 @@
         'views/res_users.xml',
     ],
     'installable': True,
+    'auto_install': True,
     'assets': {
         'web.assets_backend': [
             'hr_homeworking/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

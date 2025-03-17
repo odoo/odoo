@@ -5,9 +5,8 @@
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager" />
         <field name="arch" type="xml">
             <field name='duration_display' position="after">
-                <div invisible="not employee_id or not overtime_deductible or employee_overtime &lt;= 0">
-                    <field name="employee_overtime" nolabel="1" widget="float_time" class="text-success" style="width: 6rem;" /> Extra Hours Available
-                </div>
+                    <field name="employee_overtime" string="Extra Hours Available" widget="float_time" class="text-success" style="width: 6rem;"
+                        invisible="not employee_id or not overtime_deductible or employee_overtime &lt;= 0"/>
             </field>
         </field>
     </record>

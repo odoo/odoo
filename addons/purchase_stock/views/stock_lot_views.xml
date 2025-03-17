@@ -24,8 +24,8 @@
                            invisible="not purchase_order_ids or display_complete">
                         <list>
                             <field name="name"/>
-                            <field name="partner_id" readonly="state in ['cancel', 'done', 'purchase']"/>
-                            <field name="date_order" readonly="state in ['cancel', 'done', 'purchase']"/>
+                            <field name="partner_id" readonly="state in ['cancel', 'purchase']"/>
+                            <field name="date_order" readonly="state in ['cancel', 'purchase']"/>
                             <field name="state" column_invisible="True"/>
                         </list>
                     </field>

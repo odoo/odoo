@@ -2,7 +2,7 @@
 <odoo auto_sequence="1">
     <record id="tax_report" model="account.report">
         <field name="name">Tax report</field>
-        <field name="name@nl">Belastingrapport</field>
+        <field name="name@nl">Btw-aangifte</field>
         <field name="name@de">Steuerbericht</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.nl"/>
@@ -12,8 +12,8 @@
         <field name="column_ids">
             <record id="tax_report_balance" model="account.report.column">
                 <field name="name">Balance</field>
-                <field name="name@nl">Balans</field>
-                <field name="name@de">Bilanz</field>
+                <field name="name@nl">Saldo</field>
+                <field name="name@de">Saldo</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
@@ -21,14 +21,14 @@
             <record id="tax_report_rub_1" model="account.report.line">
                 <field name="name">Section 1: Domestic performance</field>
                 <field name="name@nl">Rubriek 1: Prestaties binnenland</field>
-                <field name="name@de">Abschnitt 1: Leistung im Inland</field>
+                <field name="name@de">Abschnitt 1: Inländische Leistung</field>
                 <field name="aggregation_formula">1A_OMZET.balance + 1B_OMZET.balance + 1C_OMZET.balance + 1D_OMZET.balance + 1E_OMZET.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_1a" model="account.report.line">
                         <field name="name">1a. Supplies/services taxed at high rate (turnover)</field>
                         <field name="name@nl">1a. Leveringen/diensten belast met hoog tarief (omzet)</field>
-                        <field name="name@de">1a. Lieferungen/Dienstleistungen, die mit einem hohen Steuersatz besteuert werden (Umsatz)</field>
+                        <field name="name@de">1a. Hoch besteuerte Lieferungen/Dienstleistungen (Umsatz)</field>
                         <field name="code">1A_OMZET</field>
                         <field name="expression_ids">
                             <record id="tax_report_rub_1a_tag" model="account.report.expression">
@@ -54,7 +54,7 @@
                     <record id="tax_report_rub_1c" model="account.report.line">
                         <field name="name">1c. Supplies/services taxed at other rates except 0% (turnover)</field>
                         <field name="name@nl">1c. Leveringen/diensten belast met overige tarieven behalve 0% (omzet)</field>
-                        <field name="name@de">1c. Lieferungen/Dienstleistungen, die mit anderen Sätzen als 0% besteuert werden (Umsatz)</field>
+                        <field name="name@de">1c. Lieferungen/Dienstleistungen, die mit anderen Sätzen als 0 % besteuert werden (Umsatz)</field>
                         <field name="code">1C_OMZET</field>
                         <field name="expression_ids">
                             <record id="tax_report_rub_1c_tag" model="account.report.expression">
@@ -80,7 +80,7 @@
                     <record id="tax_report_rub_1e" model="account.report.line">
                         <field name="name">1e. Supplies/services taxed at 0% or not taxed with you (turnover)</field>
                         <field name="name@nl">1e. Leveringen/diensten belast met 0% of niet bij u belast (omzet)</field>
-                        <field name="name@de">1e. Mit 0% besteuerte oder bei Ihnen nicht besteuerte Lieferungen/Dienstleistungen (Umsatz)</field>
+                        <field name="name@de">1e. Lieferungen/Dienstleistungen, die bei Ihnen mit 0 % oder gar nicht besteuert werden (Umsatz)</field>
                         <field name="code">1E_OMZET</field>
                         <field name="expression_ids">
                             <record id="tax_report_rub_1e_tag" model="account.report.expression">
@@ -95,14 +95,14 @@
             <record id="tax_report_rub_2" model="account.report.line">
                 <field name="name">Section 2: Domestic reverse charge arrangements (turnover)</field>
                 <field name="name@nl">Rubriek 2: Verleggingsregelingen binnenland (omzet)</field>
-                <field name="name@de">Abschnitt 2: Verlagerung der Steuerschuldnerschaft im Inland (Umsatz)</field>
+                <field name="name@de">Abschnitt 2: Inländische Umkehrung der Steuerschuldnerschaft (Umsatz)</field>
                 <field name="aggregation_formula">2A_OMZET.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_2a" model="account.report.line">
                         <field name="name">2a. Supplies/services where the collection of turnover tax has been transferred to you (turnover)</field>
                         <field name="name@nl">2a. Leveringen/diensten waarbij de heffing van omzetbelasting naar u is verlegd (omzet)</field>
-                        <field name="name@de">2a. Lieferungen/Leistungen, bei denen die Erhebung der Umsatzsteuer auf Sie übertragen wurde (Umsatz)</field>
+                        <field name="name@de">2a. Lieferungen/Dienstleistungen, bei denen die Umsatzsteuer an Sie abgeführt wurde (Umsatz)</field>
                         <field name="code">2A_OMZET</field>
                         <field name="expression_ids">
                             <record id="tax_report_rub_2a_tag" model="account.report.expression">
@@ -136,15 +136,15 @@
                     </record>
                     <record id="tax_report_rub_3b" model="account.report.line">
                         <field name="name">3b. Deliveries to/services in countries within the EU and A-B-C supply chain transactions (turnover)</field>
-                        <field name="name@nl">3b. Leveringen aan/diensten in landen binnen de EU en transacties in de toeleveringsketen A-B-C (omzet)</field>
-                        <field name="name@de">3b. Lieferungen an/Dienstleistungen in Ländern innerhalb der EU und A-B-C-Lieferkettengeschäfte (Umsatz)</field>
+                        <field name="name@nl">3b. Leveringen naar/diensten in landen binnen de EU en ABC-leveringen (omzet)</field>
+                        <field name="name@de">3b. Lieferungen/Dienstleistungen in Ländern innerhalb der EU und ABC-Lieferungen (Umsatz)</field>
                         <field name="code">3B_OMZET</field>
                         <field name="aggregation_formula">3BG_OMZET.balance + 3BT_OMZET.balance + 3BS_OMZET.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_rub_3bg" model="account.report.line">
                                 <field name="name">3bg. Deliveries of products to countries within the EU (turnover).</field>
-                                <field name="name@nl">3bg. Leveringen producten naar landen binnen de EU (omzet)</field>
-                                <field name="name@de">3bg. Lieferungen von Produkten in Länder innerhalb der EU (Umsatz).</field>
+                                <field name="name@nl">3bg. Leveringen van producten naar landen binnen de EU (omzet)</field>
+                                <field name="name@de">3bg. Lieferungen von Produkten in Länder innerhalb der EU (Umsatz)</field>
                                 <field name="code">3BG_OMZET</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_rub_3bg_tag" model="account.report.expression">
@@ -156,8 +156,8 @@
                             </record>
                             <record id="tax_report_rub_3bt" model="account.report.line">
                                 <field name="name">3bt. A-B-C supply chain transactions within the EU (turnover)</field>
-                                <field name="name@nl">3bt. A-B-C toeleveringsketen transacties binnen de EU (omzet)</field>
-                                <field name="name@de">3bt. A-B-C-Lieferkettengeschäfte innerhalb der EU (Umsatz)</field>
+                                <field name="name@nl">3bt. ABC-leveringen binnen de EU (omzet)</field>
+                                <field name="name@de">3bt. ABC-Lieferungen innerhalb der EU (Umsatz)</field>
                                 <field name="code">3BT_OMZET</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_rub_3bt_tag" model="account.report.expression">
@@ -170,7 +170,7 @@
                             <record id="tax_report_rub_3bs" model="account.report.line">
                                 <field name="name">3bs. Services in countries within the EU (revenue)</field>
                                 <field name="name@nl">3bs. Diensten in landen binnen de EU (omzet)</field>
-                                <field name="name@de">3bs. Dienstleistungen in Ländern innerhalb der EU (Einnahmen)</field>
+                                <field name="name@de">3bs. Dienstleistungen in Ländern innerhalb der EU (Umsatz)</field>
                                 <field name="code">3BS_OMZET</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_rub_3bs_tag" model="account.report.expression">
@@ -200,7 +200,7 @@
             <record id="tax_report_rub_4" model="account.report.line">
                 <field name="name">Section 4: Services provided to you from abroad (turnover)</field>
                 <field name="name@nl">Rubriek 4: Prestaties vanuit het buitenland aan u verricht (omzet)</field>
-                <field name="name@de">Abschnitt 4: Für Sie aus dem Ausland erbrachte Dienstleistungen (Umsatz)</field>
+                <field name="name@de">Abschnitt 4: Ihnen aus dem Ausland erbrachte Dienstleistungen (Umsatz)</field>
                 <field name="aggregation_formula">4A_OMZET.balance + 4B_OMZET.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
@@ -234,16 +234,16 @@
             </record>
             <record id="tax_report_rub_btw_1" model="account.report.line">
                 <field name="name">Section 1: Domestic services (VAT)</field>
-                <field name="name@nl">Rubriek 1: Prestaties binnenland (BTW)</field>
-                <field name="name@de">Abschnitt 1: Inländische Dienstleistungen (Mehrwertsteuer)</field>
+                <field name="name@nl">Rubriek 1: Prestaties binnenland (btw)</field>
+                <field name="name@de">Abschnitt 1: Inländische Dienstleistungen (MwSt.)</field>
                 <field name="code">NLTAX_B1</field>
                 <field name="aggregation_formula">1A_BTW.balance + 1B_BTW.balance + 1C_BTW.balance + 1D_BTW.balance + 1E_BTW.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_btw_1a" model="account.report.line">
                         <field name="name">1a. Supplies/services taxed at 21% (VAT)</field>
-                        <field name="name@nl">1a. Leveringen/diensten belast met 21% (BTW)</field>
-                        <field name="name@de">1a. Mit 21% besteuerte Lieferungen/Dienstleistungen (MwSt.)</field>
+                        <field name="name@nl">1a. Leveringen/diensten belast met 21% (btw)</field>
+                        <field name="name@de">1a. Mit 21 % besteuerte Lieferungen/Dienstleistungen (MwSt.)</field>
                         <field name="code">1A_BTW</field>
                         <field name="expression_ids">
                             <record id="tax_report_rub_btw_1a_tag" model="account.report.expression">
@@ -255,7 +255,7 @@
                     </record>
                     <record id="tax_report_rub_btw_1b" model="account.report.line">
                         <field name="name">1b. Supplies/services taxed at low rate (VAT)</field>
-                        <field name="name@nl">1b. Leveringen/diensten belast met laag tarief (BTW)</field>
+                        <field name="name@nl">1b. Leveringen/diensten belast met laag tarief (btw)</field>
                         <field name="name@de">1b. Niedrig besteuerte Lieferungen/Dienstleistungen (MwSt.)</field>
                         <field name="code">1B_BTW</field>
                         <field name="expression_ids">
@@ -268,8 +268,8 @@
                     </record>
                     <record id="tax_report_rub_btw_1c" model="account.report.line">
                         <field name="name">1c. Supplies/services taxed at other rates except 0% (VAT)</field>
-                        <field name="name@nl">1c. Leveringen/diensten belast met overige tarieven behalve 0% (BTW)</field>
-                        <field name="name@de">1c. Lieferungen/Dienstleistungen, die mit anderen Sätzen als 0% (MwSt.) besteuert werden</field>
+                        <field name="name@nl">1c. Leveringen/diensten belast met overige tarieven behalve 0% (btw)</field>
+                        <field name="name@de">1c. Lieferungen/Dienstleistungen, die mit anderen Sätzen als 0 % besteuert werden (MwSt.)</field>
                         <field name="code">1C_BTW</field>
                         <field name="expression_ids">
                             <record id="tax_report_rub_btw_1c_tag" model="account.report.expression">
@@ -281,7 +281,7 @@
                     </record>
                     <record id="tax_report_rub_btw_1d" model="account.report.line">
                         <field name="name">1d. Private use (VAT)</field>
-                        <field name="name@nl">1d. Privégebruik (BTW)</field>
+                        <field name="name@nl">1d. Privégebruik (btw)</field>
                         <field name="name@de">1d. Private Nutzung (MwSt.)</field>
                         <field name="code">1D_BTW</field>
                         <field name="expression_ids">
@@ -294,8 +294,8 @@
                     </record>
                     <record id="tax_report_rub_btw_1e" model="account.report.line">
                         <field name="name">1e. Supplies/services taxed at 0% or not taxed with you (VAT)</field>
-                        <field name="name@nl">1e. Leveringen/diensten belast met 0% of niet bij u belast (BTW)</field>
-                        <field name="name@de">1e. Lieferungen/Dienstleistungen, die mit 0 % besteuert werden oder bei Ihnen nicht besteuert werden (MwSt.)</field>
+                        <field name="name@nl">1e. Leveringen/diensten belast met 0% of niet bij u belast (btw)</field>
+                        <field name="name@de">1e. Lieferungen/Dienstleistungen, die bei Ihnen mit 0 % oder gar nicht besteuert werden (MwSt.)</field>
                         <field name="code">1E_BTW</field>
                         <field name="expression_ids">
                             <record id="tax_report_rub_btw_1e_tag" model="account.report.expression">
@@ -309,15 +309,15 @@
             </record>
             <record id="tax_report_rub_btw_2" model="account.report.line">
                 <field name="name">Section 2: Domestic reverse charge (VAT) schemes</field>
-                <field name="name@nl">Rubriek 2: Verleggingsregelingen binnenland (BTW)</field>
-                <field name="name@de">Abschnitt 2: Umkehrung der Steuerschuldnerschaft (Mehrwertsteuer) im Inland</field>
+                <field name="name@nl">Rubriek 2: Verleggingsregelingen binnenland (btw)</field>
+                <field name="name@de">Abschnitt 2: Inländische Umkehrung der Steuerschuldnerschaft (MwSt.)</field>
                 <field name="aggregation_formula">NLTAX_B2.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_btw_2a" model="account.report.line">
                         <field name="name">2a. Supplies/services where the levy of Sales Tax has been transferred to you (VAT)</field>
-                        <field name="name@nl">2a. Leveringen/diensten waarbij de heffing van Heffing van omzetbelasting naar u is verlegd (BTW)</field>
-                        <field name="name@de">2a. Lieferungen/Dienstleistungen, bei denen die Erhebung der Umsatzsteuer auf Sie übertragen wurde (VAT)</field>
+                        <field name="name@nl">2a. Leveringen/diensten waarbij de heffing van Heffing van omzetbelasting naar u is verlegd (btw)</field>
+                        <field name="name@de">2a. Lieferungen/Dienstleistungen, bei denen die Umsatzsteuer an Sie abgeführt wurde (MwSt.)</field>
                         <field name="code">NLTAX_B2</field>
                         <field name="expression_ids">
                             <record id="tax_report_rub_btw_2a_tag" model="account.report.expression">
@@ -331,14 +331,14 @@
             </record>
             <record id="tax_report_rub_btw_4" model="account.report.line">
                 <field name="name">Section 4: Services provided to you from abroad (VAT)</field>
-                <field name="name@nl">Rubriek 4: Prestaties vanuit het buitenland aan u verricht (BTW)</field>
-                <field name="name@de">Abschnitt 4: Aus dem Ausland für Sie erbrachte Dienstleistungen (MwSt.)</field>
+                <field name="name@nl">Rubriek 4: Prestaties vanuit het buitenland aan u verricht (btw)</field>
+                <field name="name@de">Abschnitt 4: Ihnen aus dem Ausland erbrachte Dienstleistungen (MwSt.)</field>
                 <field name="aggregation_formula">NLTAX_B4a.balance + NLTAX_B4b.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_btw_4a" model="account.report.line">
                         <field name="name">4a. Supplies/services from countries outside the EU (VAT)</field>
-                        <field name="name@nl">4a. Leveringen/diensten uit landen buiten de EU (BTW)</field>
+                        <field name="name@nl">4a. Leveringen/diensten uit landen buiten de EU (btw)</field>
                         <field name="name@de">4a. Lieferungen/Dienstleistungen aus Ländern außerhalb der EU (MwSt.)</field>
                         <field name="code">NLTAX_B4a</field>
                         <field name="expression_ids">
@@ -351,7 +351,7 @@
                     </record>
                     <record id="tax_report_rub_btw_4b" model="account.report.line">
                         <field name="name">4b. Supplies/services from countries within the EU (VAT)</field>
-                        <field name="name@nl">4b. Leveringen/diensten uit landen binnen de EU (BTW)</field>
+                        <field name="name@nl">4b. Leveringen/diensten uit landen binnen de EU (btw)</field>
                         <field name="name@de">4b. Lieferungen/Dienstleistungen aus Ländern innerhalb der EU (MwSt.)</field>
                         <field name="code">NLTAX_B4b</field>
                         <field name="expression_ids">
@@ -366,21 +366,21 @@
             </record>
             <record id="tax_report_rub_btw_5" model="account.report.line">
                 <field name="name">Section 5: Input tax, small business scheme and total (VAT)</field>
-                <field name="name@nl">Rubriek 5: Voorbelasting, kleineondernemersregeling en totaal (BTW)</field>
+                <field name="name@nl">Rubriek 5: Voorbelasting, kleineondernemersregeling en totaal (btw)</field>
                 <field name="name@de">Abschnitt 5: Vorsteuer, Kleinunternehmerregelung und Gesamtbetrag (MwSt.)</field>
                 <field name="aggregation_formula"></field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_rub_btw_5a" model="account.report.line">
                         <field name="name">5a. Sales tax payable (headings 1a to 4b) (VAT)</field>
-                        <field name="name@nl">5a. Verschuldigde omzetbelasting (rubrieken 1a t/m 4b) (BTW)</field>
+                        <field name="name@nl">5a. Verschuldigde omzetbelasting (rubrieken 1a t/m 4b) (btw)</field>
                         <field name="name@de">5a. Zu zahlende Umsatzsteuer (Rubriken 1a bis 4b) (MwSt.)</field>
                         <field name="aggregation_formula">NLTAX_B1.balance + NLTAX_B2.balance + NLTAX_B4a.balance + NLTAX_B4b.balance</field>
                     </record>
                     <record id="tax_report_rub_btw_5b" model="account.report.line">
                         <field name="name">5b. Input tax (VAT)</field>
-                        <field name="name@nl">5b. Voorbelasting (BTW)</field>
-                        <field name="name@de">5b. Vorsteuer (Mehrwertsteuer)</field>
+                        <field name="name@nl">5b. Voorbelasting (btw)</field>
+                        <field name="name@de">5b. Vorsteuer (MwSt.)</field>
                         <field name="code">NLTAX_B5b</field>
                         <field name="expression_ids">
                             <record id="tax_report_rub_btw_5b_tag" model="account.report.expression">
@@ -392,13 +392,13 @@
                     </record>
                     <record id="tax_report_rub_btw_5c" model="account.report.line">
                         <field name="name">5c. Subtotal (heading 5a minus 5b) (VAT)</field>
-                        <field name="name@nl">5c. Subtotaal (rubriek 5a min 5b) (BTW)</field>
+                        <field name="name@nl">5c. Subtotaal (rubriek 5a min 5b) (btw)</field>
                         <field name="name@de">5c. Zwischensumme (Rubrik 5a minus 5b) (MwSt.)</field>
                         <field name="aggregation_formula">NLTAX_B1.balance + NLTAX_B2.balance + NLTAX_B4a.balance + NLTAX_B4b.balance - NLTAX_B5b.balance</field>
                     </record>
                     <record id="tax_report_rub_btw_5d" model="account.report.line">
                         <field name="name">5d. Reduction according to the small business scheme (VAT)</field>
-                        <field name="name@nl">5d. Vermindering volgens de kleineondernemersregeling (BTW)</field>
+                        <field name="name@nl">5d. Vermindering volgens de kleineondernemersregeling (btw)</field>
                         <field name="name@de">5d. Ermäßigung nach der Kleinunternehmerregelung (MwSt.)</field>
                         <field name="code">NLTAX_B5d</field>
                         <field name="expression_ids">
@@ -411,7 +411,7 @@
                     </record>
                     <record id="tax_report_rub_btw_5e" model="account.report.line">
                         <field name="name">5e. Estimate previous return(s) (VAT)</field>
-                        <field name="name@nl">5e. Schatting vorige aangifte(n) (BTW)</field>
+                        <field name="name@nl">5e. Schatting vorige aangifte(n) (btw)</field>
                         <field name="name@de">5e. Schätzung der früheren Steuererklärung(en) (MwSt.)</field>
                         <field name="code">NLTAX_B5e</field>
                         <field name="expression_ids">
@@ -424,7 +424,7 @@
                     </record>
                     <record id="tax_report_rub_btw_5f" model="account.report.line">
                         <field name="name">5f. Estimate this return (VAT)</field>
-                        <field name="name@nl">5f. Schatting deze aangifte (BTW)</field>
+                        <field name="name@nl">5f. Schatting deze aangifte (btw)</field>
                         <field name="name@de">5f. Schätzung dieser Erklärung (MwSt.)</field>
                         <field name="code">NLTAX_B5f</field>
                         <field name="expression_ids">
@@ -437,7 +437,7 @@
                     </record>
                     <record id="tax_report_rub_btw_5g" model="account.report.line">
                         <field name="name">5g. Total payable/reclaimable (VAT)</field>
-                        <field name="name@nl">5g. Totaal te betalen/terug te vragen (BTW)</field>
+                        <field name="name@nl">5g. Totaal te betalen/terug te vragen (btw)</field>
                         <field name="name@de">5g. Zu zahlender/rückforderbarer Gesamtbetrag (MwSt.)</field>
                         <field name="code">NLTAX_B5g</field>
                         <field name="aggregation_formula">NLTAX_B1.balance + NLTAX_B2.balance + NLTAX_B4a.balance + NLTAX_B4b.balance - NLTAX_B5b.balance - NLTAX_B5d.balance - NLTAX_B5e.balance - NLTAX_B5f.balance</field>

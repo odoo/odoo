@@ -9,6 +9,7 @@
     'summary': 'Management of leaves for part-time workers in France',
     'depends': ['hr_holidays'],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'data': [
         'views/res_config_settings_views.xml',

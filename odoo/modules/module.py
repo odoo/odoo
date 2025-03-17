@@ -56,7 +56,7 @@ _DEFAULT_MANIFEST = {
     'application': False,
     'bootstrap': False,  # web
     'assets': {},
-    'author': 'Odoo S.A.',
+    #author, mandatory
     'auto_install': False,
     'category': 'Uncategorized',
     'cloc_exclude': [],
@@ -305,6 +305,14 @@ def load_manifest(module: str, mod_path: str | None = None) -> dict:
             with tools.file_open(readme_path[0]) as fd:
                 manifest['description'] = fd.read()
 
+    if not manifest.get('author'):
+        # Altought contributors and maintainer are not documented, it is
+        # not uncommon to find them in manifest files, use them as
+        # alternative.
+        author = manifest.get('contributors') or manifest.get('maintainer') or ''
+        manifest['author'] = str(author)
+        _logger.warning("Missing `author` key in manifest for %r, defaulting to %r", module, str(author))
+
     if not manifest.get('license'):
         manifest['license'] = 'LGPL-3'
         _logger.warning("Missing `license` key in manifest for %r, defaulting to LGPL-3", module)
@@ -535,3 +543,12 @@ def check_manifest_dependencies(manifest: dict) -> None:
             tools.find_in_path(binary)
         except OSError:
             raise Exception('Unable to find %r in path' % (binary,))
+
+
+def load_script(path: str, module_name: str):
+    full_path = file_path(path) if not os.path.isabs(path) else path
+    spec = importlib.util.spec_from_file_location(module_name, full_path)
+    assert spec and spec.loader, f"spec not found for {module_name}"
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module

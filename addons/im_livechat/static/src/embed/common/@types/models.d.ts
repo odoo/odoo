@@ -1,28 +1,24 @@
 declare module "models" {
-    import { LivechatRule as LivechatRuleClass } from "@im_livechat/embed/common/livechat/livechat_rule_model";
-
-    export interface LivechatRule extends LivechatRuleClass { }
-
-    export interface ChatWindpw {
-        hasFeedbackPanel: boolean,
-    }
-
     export interface Message {
-        chatbotStep: ChatbotStep,
+        disableChatbotAnswers: boolean;
     }
-
+    export interface Store {
+        activeLivechats: Thread[];
+        guest_token: null;
+        livechat_available: boolean;
+        livechat_rule: LivechatChannelRule;
+    }
     export interface Thread {
-        livechatWelcomeMessage: Message,
-        chatbot: Chatbot,
-        requested_by_operator: boolean,
-    }
-
-    export interface Models {
-        "ChatbotScriptStep": ChatbotScriptStep,
-        "ChatbotStep": ChatbotStep,
-        "Chatbot": Chatbot,
-        "ChatbotScriptStepAnswer": ChatbotScriptStepAnswer,
-        "chatbot.script": ChatbotScript,
-        "LivechatRule": LivechatRule,
+        _toggleChatbot: boolean;
+        chatbot: Chatbot;
+        chatbotTypingMessage: Message;
+        hasWelcomeMessage: Readonly<boolean>;
+        isLastMessageFromCustomer: Readonly<boolean>;
+        livechat_active: boolean;
+        livechat_operator_id: Persona;
+        livechatWelcomeMessage: Message;
+        readyToSwapDeferred: Deferred;
+        requested_by_operator: boolean;
+        storeAsActiveLivechats: Store;
     }
 }

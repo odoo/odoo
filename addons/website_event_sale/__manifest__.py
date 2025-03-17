@@ -25,5 +25,6 @@ Sell event tickets through eCommerce app.
             'website_event_sale/static/src/scss/*.scss',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

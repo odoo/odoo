@@ -4,7 +4,7 @@ import { unformat } from "../_helpers/format";
 import { bold, resetSize, setColor, insertText } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
 import { press, queryAll, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { nodeSize } from "@html_editor/utils/position";
 
 function expectContentToBe(el, html) {
@@ -364,7 +364,12 @@ describe("select a full table on cross over", () => {
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr></tbody></table>",
-                stepFunction: setColor("aquamarine", "color"),
+                stepFunction: async (editor) => {
+                    // Table selection happens on selectionchange
+                    // event which is fired in the next tick.
+                    await tick();
+                    setColor("aquamarine", "color")(editor);
+                },
                 contentAfterEdit: unformat(`
                     <p>
                         a<font style="color: aquamarine;">[bc</font>

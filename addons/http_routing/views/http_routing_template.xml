@@ -62,12 +62,31 @@
         </div>
     </template>
 
-    <template id="400">
+    <template id="4xx">
         <t t-call="web.frontend_layout">
             <div id="wrap">
                 <div class="container">
                     <h1 class="mt-5">Oops! Something went wrong.</h1>
                     <p>Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
+        </t>
+    </template>
+
+    <template id="400">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">400: Bad Request</h1>
+                    <p>The server couldn't understand the request. Take a look at the error message below.</p>
                 </div>
                 <t t-if="editable or debug">
                     <t t-call="http_routing.http_error_debug"/>
@@ -133,6 +152,44 @@
                     </section>
                 </div>
             </div>
+        </t>
+    </template>
+
+    <template id="415">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">415: Unsupported Media Type</h1>
+                    <p>It looks like the URL you are accessing doesn't support the format of the request. Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
+        </t>
+    </template>
+
+    <template id="422">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">Oops! Something went wrong.</h1>
+                    <p>Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
         </t>
     </template>
 

@@ -318,7 +318,8 @@ const UserValueWidget = publicWidget.Widget.extend({
             this.illustrationEl = document.createElement('i');
             this.illustrationEl.classList.add('fa', this.options.dataAttributes.icon);
         }
-        if (this.options.dataAttributes.reload) {
+        // Set no-preview = true by default (avoid uncaught promise when not set)
+        if (this.options.dataAttributes.reload && !('noPreview' in this.options.dataAttributes)) {
             this.options.dataAttributes.noPreview = "true";
         }
     },
@@ -2968,7 +2969,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     async _search(needle) {
         const recTuples = await this.orm.call(this.options.model, "name_search", [], {
             name: needle,
-            args: (await this._getSearchDomain()).concat(
+            domain: (await this._getSearchDomain()).concat(
                 Object.values(this.options.domainComponents).filter(item => item !== null)
             ),
             operator: "ilike",
@@ -9216,7 +9217,7 @@ registry.ContainerWidth = SnippetOptionWidget.extend({
      */
     selectClass: async function (previewMode, widgetValue, params) {
         await this._super(...arguments);
-        if (previewMode === 'reset') {
+        if (previewMode === "reset" || !previewMode) {
             this.$target.removeClass('o_container_preview');
         } else if (previewMode) {
             this.$target.addClass('o_container_preview');

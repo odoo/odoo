@@ -26,5 +26,6 @@
             'website_mail_group/static/src/**/*.edit.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

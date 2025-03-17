@@ -123,18 +123,6 @@
                             <field name="website_description" nolabel="1" options="{'disableVideo': False}"
                                 placeholder='e.g. "Openwood specializes in home decoration..."'/>
                         </page>
-                        <page string="Online"
-                            name="page_online"
-                            invisible="exhibitor_type != 'online'">
-                            <group>
-                                <group>
-                                    <field name="room_name" required="exhibitor_type == 'online'" string="Jitsi Name"/>
-                                    <field name="room_lang_id"/>
-                                    <field name="room_max_capacity" required="exhibitor_type == 'online'"/>
-                                    <field name="chat_room_id" groups="base.group_no_one"/>
-                                </group>
-                            </group>
-                        </page>
                     </notebook>
                 </sheet>
                 <chatter/>

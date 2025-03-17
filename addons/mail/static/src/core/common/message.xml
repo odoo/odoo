@@ -2,11 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <div t-if="message.isNotification" class="o-mail-NotificationMessage text-break mx-auto text-muted opacity-75 px-3 text-center smaller" t-on-click="onClickNotificationMessage"  t-att-class="props.className" t-ref="root">
-            <i t-if="message.notificationIcon" t-attf-class="{{ message.notificationIcon }} me-1"/>
-            <span class="o-mail-NotificationMessage-author d-inline" t-if="message.author and !message.body.includes(escape(message.author.name))" t-esc="message.author.name"/> <t t-out="message.body"/>
-        </div>
-        <ActionSwiper t-else="" onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
+        <ActionSwiper onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative rounded-0"
                 t-att-class="attClass"
                 role="group"
@@ -31,8 +27,8 @@
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }" name="header">
-                            <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author small" t-att-class="getAuthorAttClass()">
-                                <strong class="me-1" t-esc="authorName"/>
+                            <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author small" t-att-class="getAuthorAttClass()">
+                                <strong class="me-1" t-esc="message.authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeShort">
@@ -65,7 +61,7 @@
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing or message.edited))">
-                                        <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="false"/>
+                                        <MessageLinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" messageLinkPreviews="message.message_link_preview_ids"/>
                                         <t t-else="">
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div t-if="message.bubbleColor" class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
@@ -85,7 +81,7 @@
                                                             'flex-grow-1': state.isEditing,
                                                             }" t-ref="body">
                                                     <i t-if="message.isEmpty" class="text-muted opacity-75" t-esc="message.inlineBody"/>
-                                                    <Composer t-elif="state.isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
+                                                    <Composer t-elif="props.message.eq(props.messageEdition?.editingMessage)" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
@@ -115,7 +111,7 @@
                                         imagesHeight="message.attachment_ids.length === 1 ? 300 : 75"
                                         messageSearch="props.messageSearch"/>
                                 </div>
-                                <LinkPreviewList t-if="message.link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="props.message.editable"/>
+                                <MessageLinkPreviewList t-if="message.message_link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" messageLinkPreviews="message.message_link_preview_ids"/>
                             </div>
                             <t t-if="!message.is_note and !message.isPending and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
                         </div>
@@ -192,8 +188,8 @@
 
 <t t-name="mail.Message.notification">
     <div t-if="message.thread?.eq(props.thread) and message.notification_ids.length > 0" class="mx-1">
-        <span class="o-mail-Message-notification cursor-pointer" t-att-class="message.failureNotifications.length > 0 ? 'text-danger' : text-600" role="button" tabindex="0" t-on-click="onClickNotification">
-            <i t-att-class="message.notification_ids[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notification_ids[0].label" t-out="message.notification_ids[0].label"/>
+        <span class="o-mail-Message-notification cursor-pointer opacity-100-hover" t-att-class="message.failureNotifications.length > 0 ? 'text-danger opacity-75' : 'opacity-50'" role="button" tabindex="0" t-on-click="onClickNotification">
+            <i t-att-class="message.notification_ids[0].icon" role="img" aria-label="Delivery failure"/> <span class="fw-bold small" t-if="message.notification_ids[0].label" t-out="message.notification_ids[0].label"/>
         </span>
     </div>
     <div t-elif="message.thread?.eq(props.thread) and (message.incoming_email_to?.length or message.incoming_email_cc?.length)" class="mx-1">

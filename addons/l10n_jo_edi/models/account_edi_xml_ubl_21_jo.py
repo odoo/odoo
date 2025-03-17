@@ -117,8 +117,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _get_partner_party_identification_vals_list(self, partner):
         return [{
-            'id_attrs': {'schemeID': 'TN'},
-            'id': partner.vat,
+            'id_attrs': {'schemeID': 'TN' if not partner.country_code or partner.country_code == 'JO' else 'PN'},
+            'id': partner.vat if partner.vat and partner.vat != '/' else '',
         }]
 
     def _get_partner_address_vals(self, partner):
@@ -163,7 +163,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return [{
                 'payment_means_code': 10,
                 'payment_means_code_attrs': {'listID': "UN/ECE 4461"},
-                'instruction_note': invoice.ref.replace('/', '_'),
+                'instruction_note': invoice.ref.replace('/', '_') if invoice.ref else '',
             }]
         else:
             return []

@@ -12,7 +12,6 @@ import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -26,6 +25,8 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             Chrome.clickOrders(),
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
+            TicketScreen.nthRowContains(1, "001"),
+            TicketScreen.nthRowIsHighlighted(1),
             Chrome.clickRegister(),
             ProductScreen.orderIsEmpty(),
             ProductScreen.addOrderline("Desk Pad", "1", "2"),
@@ -33,6 +34,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.deleteOrder("001"),
             Dialog.confirm(),
             TicketScreen.nthRowContains(1, "003"),
+            TicketScreen.nthRowIsHighlighted(1),
             Chrome.clickRegister(),
             ProductScreen.addOrderline("Desk Pad", "1", "2"),
             ProductScreen.clickPartnerButton(),

@@ -5,6 +5,7 @@ import json
 import logging
 import re
 import time
+from contextlib import contextmanager
 
 from functools import partial
 from collections import defaultdict
@@ -48,13 +49,12 @@ class ViewCase(TransactionCaseWithUserDemo):
     def assertInvalid(self, arch, expected_message=None, name='invalid view', inherit_id=False, model='ir.ui.view'):
         with mute_logger('odoo.addons.base.models.ir_ui_view'):
             with self.assertRaises(ValidationError) as catcher:
-                with self.cr.savepoint():
-                    self.View.create({
-                        'name': name,
-                        'model': model,
-                        'inherit_id': inherit_id,
-                        'arch': arch,
-                    })
+                self.View.create({
+                    'name': name,
+                    'model': model,
+                    'inherit_id': inherit_id,
+                    'arch': arch,
+                })
         message = str(catcher.exception.args[0])
         self.assertEqual(catcher.exception.context['name'], name)
         if expected_message:
@@ -172,7 +172,6 @@ class TestNodeLocator(common.TransactionCase):
         )
         self.assertIsNone(node)
 
-
 class TestViewInheritance(ViewCase):
     def arch_for(self, name, view_type='form', parent=None):
         """ Generates a trivial view of the specified ``view_type``.
@@ -282,18 +281,18 @@ class TestViewInheritance(ViewCase):
 
     def test_no_recursion(self):
         r1 = self.makeView('R1')
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             r1.write({'inherit_id': r1.id})
 
         r2 = self.makeView('R2', r1.id)
         r3 = self.makeView('R3', r2.id)
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             r2.write({'inherit_id': r3.id})
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             r1.write({'inherit_id': r3.id})
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             r1.write({
                 'inherit_id': r1.id,
                 'arch': self.arch_for('itself', parent=True),
@@ -373,6 +372,137 @@ class TestViewInheritance(ViewCase):
     def test_no_arch(self):
         self.d1._check_xml()
 
+    def test_invalid_locators(self):
+        """ Check ir.ui.view's invalid_locators field is computed correctly."""
+        base_view_arch = """
+            <form string="View">
+                <div name="div1">
+                    <field name="id"/>
+                </div>
+            </form>
+        """
+        base_view = self.makeView('invalid_xpath_base_view', arch=base_view_arch)
+
+        child_view_arch = """
+        <data>
+            <xpath expr="//form/div[1]/div[1]" position="attributes">
+                <attribute name='string'>Invalid Div</attribute>
+            </xpath>
+            <field name="invalid_field" position="after">
+                <field name="inherit_id"/>
+            </field>
+            <xpath expr="//form/div[1]" position="inside">
+                <xpath expr="//field[@name='invalid_field']" position="move"/>
+            </xpath>
+        </data>
+        """
+
+        child_view = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': child_view_arch,
+            'inherit_id': base_view.id,
+            'priority': 10,
+            'active': False,
+        })
+
+        self.assertEqual(
+            child_view.invalid_locators,
+            [
+                {
+                    "tag": "xpath",
+                    "attrib": {"expr": "//form/div[1]/div[1]", "position": "attributes"},
+                    "sourceline": 2,
+                },
+                {
+                    'tag': 'field',
+                    'attrib': {'name': 'invalid_field', 'position': 'after'},
+                    'sourceline': 5
+                },
+                {
+                    'tag': 'xpath',
+                    'attrib': {'expr': "//field[@name='invalid_field']", 'position': 'move'},
+                    'sourceline': 9
+                }
+            ],
+        )
+
+    def test_invalid_locators_with_valid_xpath(self):
+        """ Check ir.ui.view's invalid_locators field is computed correctly."""
+        base_view_arch = """
+            <form string="View">
+                <div name="div1">
+                    <field name="id"/>
+                </div>
+            </form>
+        """
+        base_view = self.makeView('invalid_xpath_base_view', arch=base_view_arch)
+
+        child_view_arch = """
+        <data>
+            <xpath expr="//form/div[1]" position="attributes">
+                <attribute name='string'>Valid</attribute>
+            </xpath>
+            <field name="id" position="after">
+                <field name="ref_id"/>
+            </field>
+            <xpath expr="//div[hasclass('parasite')]" position="inside" >
+                <div class="fails" />
+            </xpath>
+        </data>
+        """
+
+        child_view = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': child_view_arch,
+            'inherit_id': base_view.id,
+            'priority': 10,
+            'active': False,
+        })
+
+        child_applied = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': """<data>
+                <field name="id" position="before">
+                    <div class="parasite" />
+                </field>
+                </data>""",
+            'inherit_id': base_view.id,
+            'priority': 10,
+            'active': True,
+        })
+
+        child_view_arch2 = """
+        <data>
+            <xpath expr="//div[hasclass('parasite')]" position="inside">
+                <div class="not_fails"/>
+            </xpath>
+            <field name="user_id" position="after">
+                <div class="fails" />
+            </field>
+        </data>
+        """
+
+        child_view2 = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': child_view_arch2,
+            'inherit_id': base_view.id,
+            'priority': 10,
+            'active': False,
+        })
+
+        # Assert that accessing invalid_locators does not cause database writes.
+        actual_queries = []
+        with contextmanager(lambda: self._patchExecute(actual_queries))():
+            self.assertEqual(child_applied.invalid_locators, False)
+        self.assertTrue(len(actual_queries) > 0)
+        self.assertFalse(any("update" in q.lower() for q in actual_queries))
+
+        self.assertEqual(child_view.invalid_locators, [{'tag': 'xpath', 'attrib': {'expr': "//div[hasclass('parasite')]", 'position': 'inside'}, 'sourceline': 8}])
+        self.assertEqual(child_view2.invalid_locators, [{'tag': 'field', 'attrib': {'name': 'user_id', 'position': 'after'}, 'sourceline': 5}])
 
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
@@ -4571,7 +4701,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'event_booth_sale',
             'website_event_booth_exhibitor',
             'website_customer',
-            'website_event_meet',
             'sale_planning',
             'sale_project',
             'sale_subscription',
@@ -4635,7 +4764,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
 
         modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'intalled'), ('name', 'in', only_log_modules)]).mapped('name'))
         module_log_views = defaultdict(list)
-        module_error_views = defaultdict(lambda: defaultdict(list)) 
+        module_error_views = defaultdict(lambda: defaultdict(list))
         uncommented_regexp = r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)'''
         views = self.env['ir.ui.view'].search([('type', 'in', ('list', 'form')), '|', ('arch_db', 'like', 'invisible=_True_'), ('arch_db', 'like', 'invisible=_1_')])
         for view in views.filtered('model_data_id'):
@@ -4755,13 +4884,7 @@ class ViewModifiers(ViewCase):
         _test_modifiers("""<field name="a" invisible="a == context['b']"/>""",
             {"a"},
         )
-        _test_modifiers("""<field name="a" invisible="company_id == allowed_company_ids[0]"/>""",  # deprecated
-            {"company_id"},
-        )
-        _test_modifiers("""<field name="a" invisible="company_id == companies.active_id"/>""",
-            {"company_id"},
-        )
-        _test_modifiers("""<field name="a" invisible="companies.has(company_id, 'country_code', 'BE')"/>""",
+        _test_modifiers("""<field name="a" invisible="company_id == allowed_company_ids[0]"/>""",
             {"company_id"},
         )
         _test_modifiers("""<field name="a" invisible="company_id == (field_1 or False)"/>""",

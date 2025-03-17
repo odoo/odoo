@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_cod" model="payment.provider">
+        <field name="name">Cash on Delivery</field>
+        <field name="image_128" type="base64" file="delivery/static/src/img/payment_method_cash_on_delivery.png"/>
+        <field name="module_id" ref="base.module_delivery"/>
+        <field name="code">custom</field>
+        <field name="custom_mode">cash_on_delivery</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([ref('delivery.payment_method_cash_on_delivery')])]"
+        />
+        <field name="redirect_form_view_id" ref="payment_custom.redirect_form"/>
+        <field name="state">enabled</field>
+        <field name="is_published">True</field>
+        <field name="pending_msg" type="html">
+<p>The delivery staff will collect payment upon delivery.</p>
+        </field>
+    </record>
+
+</odoo>

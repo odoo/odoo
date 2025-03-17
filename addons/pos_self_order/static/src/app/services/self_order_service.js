@@ -563,6 +563,8 @@ export class SelfOrder extends Reactive {
                         hours,
                         minutes,
                     },
+                    preset_name: order.preset_id?.name || "",
+                    preset_time: order.presetDateTime,
                 };
                 const receipt = renderToElement("pos_self_order.OrderChangeReceipt", {
                     changes: printingChanges,
@@ -932,6 +934,9 @@ export const selfOrderService = {
 registry.category("services").add("printer", printerService);
 registry.category("services").add("self_order", selfOrderService);
 
+/**
+ * @returns {SelfOrder}
+ */
 export function useSelfOrder() {
     return useService("self_order");
 }

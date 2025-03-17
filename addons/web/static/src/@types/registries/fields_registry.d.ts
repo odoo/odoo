@@ -2,25 +2,28 @@ declare module "registries" {
     import { FieldDefinition, FieldType } from "fields";
     import { Component } from "@odoo/owl";
     import { Domain } from "@web/core/domain";
+    import { _t } from "@web/core/l10n/translation";
+
+    type TranslatableString = ReturnType<typeof _t> | string;
 
     interface DynamicFieldInfo {
-        context: object;
+        context: Record<string, any>;
         domain(): Domain | undefined;
         readonly: boolean;
     }
 
     interface StaticFieldInfo {
-        attrs: object;
+        attrs: Record<string, any>;
         context: string;
-        decorations: object;
+        decorations: Record<string, any>;
         domain?: string;
         field: FieldDefinition;
         forceSave: boolean;
-        help?: string;
+        help?: TranslatableString;
         name: string;
         onChange: boolean;
-        options: object;
-        string: string;
+        options: Record<string, any>;
+        string: TranslatableString;
         type: string;
         viewType: string;
         widget?: string;
@@ -29,8 +32,8 @@ declare module "registries" {
     type OptionType = "boolean" | "field" | "number" | "selection" | "string";
 
     interface IOption<T extends OptionType> {
-        help?: string;
-        label: string;
+        help?: TranslatableString;
+        label: TranslatableString;
         name: string;
         type: T;
     }
@@ -40,7 +43,7 @@ declare module "registries" {
     }
 
     interface FieldOption extends IOption<"field"> {
-        availableTypes: FieldType[];
+        availableTypes?: FieldType[];
     }
 
     interface NumberOption extends IOption<"number"> {
@@ -52,7 +55,7 @@ declare module "registries" {
     }
 
     interface SelectionOptionChoice {
-        label: string;
+        label: TranslatableString;
         value: string;
     }
 
@@ -66,11 +69,12 @@ declare module "registries" {
     export interface FieldsRegistryItemShape {
         additionalClasses?: string[];
         component: typeof Component;
-        displayName?: string;
-        extractProps?(options: StaticFieldInfo, dynamicInfo: DynamicFieldInfo): object;
+        displayName?: TranslatableString;
+        extractProps?(options: StaticFieldInfo, dynamicInfo: DynamicFieldInfo): Record<string, any>;
         fieldDependencies?: Partial<StaticFieldInfo>[] | ((baseInfo: StaticFieldInfo) => Partial<StaticFieldInfo>[]);
+        listViewWidth?: number | number[] | ((param: { type: FieldType; hasLabel: boolean; }) => number | false);
         relatedFields?: Partial<StaticFieldInfo>[] | ((baseInfo: StaticFieldInfo) => Partial<StaticFieldInfo>[]);
-        isEmpty?(record: object, fieldName: string): boolean;
+        isEmpty?(record: Record<string, any>, fieldName: string): boolean;
         supportedOptions?: SupportedOptions[];
         supportedTypes?: FieldType[];
         useSubView?: boolean;

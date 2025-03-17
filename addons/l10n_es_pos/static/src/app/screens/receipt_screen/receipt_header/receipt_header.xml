@@ -18,7 +18,8 @@
             <t t-set="partner" t-value="order.partner_id"/>
             <t t-if="order.config.is_spanish and partner and partner.id !== order.config.simplified_partner_id.id">
                 <div>Customer: <t t-esc="partner.name" /></div>
-                <div t-if="partner.vat"><t t-esc="order.company.country_id?.vat_label || 'Tax ID'"/>: <t t-esc="partner.vat" /></div>
+                <t t-set="default_vat_label">Tax ID</t>
+                <div t-if="partner.vat"><t t-esc="order.company.country_id?.vat_label || default_vat_label"/>: <t t-esc="partner.vat" /></div>
                 <div t-if="partner.address" t-esc="partner.address"/>
             </t>
         </xpath>

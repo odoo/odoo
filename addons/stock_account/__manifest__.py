@@ -52,5 +52,6 @@ Dashboard / Reports for Warehouse Management includes:
             'stock_account/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

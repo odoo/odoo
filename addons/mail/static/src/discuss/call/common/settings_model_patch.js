@@ -7,6 +7,7 @@ const SettingsPatch = {
     setup() {
         super.setup(...arguments);
     },
+    /** @param {import("models").RtcSession} rtcSession */
     getVolume(rtcSession) {
         return (
             rtcSession.volume ??

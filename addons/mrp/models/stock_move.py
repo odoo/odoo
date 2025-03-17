@@ -84,37 +84,6 @@ class StockMoveLine(models.Model):
         aggregated_properties['line_key'] += f'_{bom.id if bom else ""}'
         return aggregated_properties
 
-    @api.model
-    def _compute_packaging_qtys(self, aggregated_move_lines):
-        non_kit_ml = {}
-        kit_aggregated_ml = set()
-        kit_moves = defaultdict(lambda: self.env['stock.move'])
-        kit_qty = {}
-
-        filters = {'incoming_moves': lambda m: True, 'outgoing_moves': lambda m: False}
-        for bom, moves in kit_moves.items():
-            if moves.picking_id.backorder_ids:
-                kit_qty_ordered = (moves + moves.picking_id.backorder_ids.move_ids)._compute_kit_quantities(bom.product_id or bom.product_tmpl_id.product_variant_id, 1, bom, filters)
-                kit_qty_done = moves._compute_kit_quantities(bom.product_id or bom.product_tmpl_id.product_variant_id, 1, bom, filters)
-            else:
-                kit_qty_done = moves._compute_kit_quantities(bom.product_id or bom.product_tmpl_id.product_variant_id, 1, bom, filters)
-                kit_qty_ordered = kit_qty_done
-            kit_qty[bom.id] = (kit_qty_ordered, kit_qty_done)
-
-        for key in kit_aggregated_ml:
-            line = aggregated_move_lines[key]
-            bom_id = line['bom']
-            kit_qty_ordered, kit_qty_done = kit_qty[bom_id.id]
-            line['packaging_qty'] = line['packaging']._compute_qty(kit_qty_ordered, bom_id.product_uom_id)
-            line['packaging_quantity'] = line['packaging']._compute_qty(kit_qty_done, bom_id.product_uom_id)
-            aggregated_move_lines[key] = line
-
-        non_kit_ml = super()._compute_packaging_qtys(non_kit_ml)
-        for line in non_kit_ml.values():
-            aggregated_move_lines[line['line_key']] = line
-
-        return aggregated_move_lines
-
     def _get_aggregated_product_quantities(self, **kwargs):
         """Returns dictionary of products and corresponding values of interest grouped by optional kit_name
 
@@ -210,6 +179,12 @@ class StockMove(models.Model):
         'Manual Consumption', compute='_compute_manual_consumption', store=True, readonly=False,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
+
+    @api.depends('product_id.bom_ids', 'product_id.bom_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        super()._compute_allowed_uom_ids()
+        for move in self:
+            move.allowed_uom_ids |= move.product_id.bom_ids.product_uom_id
 
     @api.depends('production_id')
     def _compute_packaging_uom_id(self):
@@ -479,6 +454,13 @@ class StockMove(models.Model):
         merge_into = merge_into and merge_into.action_explode()
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
+
+    def _action_done(self, cancel_backorder=False):
+        # explode kit moves that avoided the action_explode of any confirmation process
+        moves_to_explode = self.filtered(lambda m: m.product_id.is_kits and m.state not in ('draft', 'cancel'))
+        exploded_moves = moves_to_explode.action_explode()
+        moves = (self - moves_to_explode) | exploded_moves
+        return super(StockMove, moves)._action_done(cancel_backorder)
 
     def _should_bypass_reservation(self, forced_location=False):
         return super()._should_bypass_reservation(forced_location) or self.product_id.is_kits

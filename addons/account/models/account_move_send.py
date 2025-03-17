@@ -103,17 +103,12 @@ class AccountMoveSend(models.AbstractModel):
         if len(moves) > 1 and (partners_without_mail := moves.filtered(
                 lambda m: 'email' in moves_data[m]['sending_methods'] and not m.partner_id.email).partner_id
         ):
+            # should only appear in mass invoice sending
             alerts['account_missing_email'] = {
                 'level': 'warning',
                 'message': _("Partner(s) should have an email address."),
                 'action_text': _("View Partner(s)"),
                 'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)")),
-            }
-        if moves.invoice_pdf_report_id:
-            alerts['account_pdf_exist'] = {
-                'level': 'info',
-                'message': _("The existing PDFs will be used for sending. "
-                             "If you want to regenerate them, please delete the attachment from the invoice."),
             }
         return alerts
 
@@ -154,6 +149,8 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_default_mail_partner_ids(self, move, mail_template, mail_lang):
+        # TDE FIXME: this should use standard composer / template code to be sure
+        # it is aligned with standard recipients management. Todo later
         partners = self.env['res.partner'].with_company(move.company_id)
         if mail_template.use_default_to:
             defaults = move._message_get_default_recipients()[move.id]

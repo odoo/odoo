@@ -648,6 +648,45 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         avail_qty_comp1 = self.env['stock.quant']._get_available_quantity(self.comp1, self.subcontractor_partner1.property_stock_subcontractor, allow_negative=True)
         self.assertEqual(avail_qty_comp1, -5)
 
+    def test_backorder_with_subcontracting(self):
+        """Test that a subcontracted move is not marked as picked when its quantity is updated.
+        """
+        self.bom.consumption = 'warning'
+        # Create incoming shipment.
+        with Form(self.env['stock.picking']) as picking_form:
+            picking_form.picking_type_id = self.warehouse.in_type_id
+            picking_form.partner_id = self.subcontractor_partner1
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.finished
+                move.product_uom_qty = 5
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.comp1
+                move.product_uom_qty = 5
+            receipt = picking_form.save()
+        receipt.action_confirm()
+
+        # Record the over-consumption of a component
+        self.assertTrue(receipt._get_subcontract_production())
+        action_record = receipt.action_record_components()
+        sbc_mo = self.env['mrp.production'].browse(action_record['res_id'])
+
+        self.assertEqual(receipt.move_ids.mapped('picked'), [False, False])
+        self.assertEqual(receipt.move_ids.mapped('quantity'), [5.0, 5.0])
+        receipt.move_ids[0].quantity = 2
+        receipt.move_ids[1].quantity = 4
+        self.assertEqual(receipt.move_ids.mapped('picked'), [False, False])
+        self.assertEqual(receipt.move_ids.mapped('quantity'), [2.0, 4.0])
+        res = receipt.button_validate()
+        wizard = Form(self.env[res['res_model']].with_context(res['context'])).save()
+        wizard.process()
+        backorder = receipt.backorder_ids
+        self.assertEqual(receipt.move_ids.mapped('quantity'), [2.0, 4.0])
+        self.assertEqual(backorder.move_ids.mapped('quantity'), [3.0, 1.0])
+        backorder.button_validate()
+        self.assertEqual(backorder.state, 'done')
+        self.assertEqual(backorder.move_ids.mapped('quantity'), [3.0, 1.0])
+        self.assertEqual(backorder.move_ids.mapped('picked'), [True, True])
+
     def test_flow_warning_bom_2(self):
         """ For an initial demand of 10 subcontracted products
             - The production of 3 is recorded, with an over-consumption of its components
@@ -1299,7 +1338,7 @@ class TestSubcontractingTracking(TransactionCase):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished_product
-            move.quantity = nb_finished_product
+            move.product_uom_qty = nb_finished_product
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
         picking_receipt.do_unreserve()
@@ -1545,6 +1584,76 @@ class TestSubcontractingTracking(TransactionCase):
         # Validate the picking
         picking_receipt.button_validate()
         self.assertEqual(picking_receipt.state, 'done')
+
+    def test_flow_mass_produce_tracked_product(self):
+        """
+        Test the mass production process for subcontracted tracked final products
+        """
+        todo_nb = 3
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        finished_product, component = self.env['product.product'].create([{
+            'name': 'Pepper Spray',
+            'is_storable': True,
+            'tracking': 'serial',
+        }, {
+            'name': 'Pepper',
+            'is_storable': True,
+            'route_ids': [(4, resupply_sub_on_order_route.id)],
+        }])
+
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.type = 'subcontract'
+        bom_form.subcontractor_ids.add(self.subcontractor_partner1)
+        bom_form.product_tmpl_id = finished_product.product_tmpl_id
+        with bom_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = component
+            bom_line.product_qty = 1
+        bom = bom_form.save()
+
+        self.env['stock.quant']._update_available_quantity(component, self.env.ref('stock.stock_location_stock'), todo_nb)
+
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = finished_product
+            move.product_uom_qty = todo_nb
+            move.quantity = todo_nb
+            move.picked = True
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        mo = self.env['mrp.production'].search([('bom_id', '=', bom.id)], limit=1)
+        initial_name = mo.name
+
+        # Process the delivery of the components
+        compo_picking = mo.picking_ids
+        compo_picking.action_assign()
+        compo_picking.button_validate()
+
+        batch_produce_action = mo.button_mark_done()
+        wizard = Form(self.env['mrp.batch.produce'].with_context(**batch_produce_action['context']))
+        # Let the wizard generate all serial numbers
+        wizard.lot_name = "sn#1"
+        wizard.lot_qty = todo_nb
+        wizard = wizard.save()
+        wizard.action_generate_production_text()
+        wizard.action_prepare()
+
+        # Each generated serial number should have its own mo
+        self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.sorted("name"), [
+            {"name": initial_name + "-001", "state": "confirmed"},
+            {"name": initial_name + "-002", "state": "confirmed"},
+            {"name": initial_name + "-003", "state": "confirmed"},
+        ])
+        self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.move_raw_ids, [
+            {"quantity": 1.0, "state": "assigned"},
+            {"quantity": 1.0, "state": "assigned"},
+            {"quantity": 1.0, "state": "assigned"},
+        ])
+        mo.procurement_group_id.mrp_production_ids.button_mark_done()
+        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("state"), ['done', 'done' , 'done'])
 
 
 @tagged('post_install', '-at_install')

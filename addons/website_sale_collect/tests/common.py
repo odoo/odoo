@@ -17,7 +17,7 @@ class ClickAndCollectCommon(PaymentCustomCommon, WebsiteSaleStockCommon):
 
         # Create the in-store delivery method.
         cls.dm_product = cls._prepare_carrier_product(list_price=0.0)
-        cls.provider = cls._prepare_provider('on_site')
+        cls.provider = cls._prepare_provider(code='custom', custom_mode='on_site')
         cls.in_store_dm = cls._prepare_carrier(
             cls.dm_product,
             fixed_price=0.0,

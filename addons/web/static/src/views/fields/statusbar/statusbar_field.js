@@ -281,20 +281,6 @@ export class StatusBarField extends Component {
         return classNames.join(" ");
     }
 
-    /**
-     * @param {StatusBarItem} item
-     * TODO: unused, remove in master
-     */
-    getItemAriaLabel(item) {
-        if (item.isSelected) {
-            return _t("Current state is %s", item.label);
-        }
-        if (this.props.isDisabled) {
-            return _t("Unselected state is %s", item.label);
-        }
-        return _t("Not active state, click to change it to %s", item.label);
-    }
-
     getSortedItems() {
         const before = [];
         const after = [];

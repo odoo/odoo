@@ -28,6 +28,27 @@ import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { getTextColorOrClass } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
+import { ListSelector } from "./list_selector";
+import { reactive } from "@odoo/owl";
+import { composeToolbarButton } from "../toolbar/toolbar";
+
+const listSelectorItems = [
+    {
+        id: "bulleted_list",
+        commandId: "toggleListUL",
+        mode: "UL",
+    },
+    {
+        id: "numbered_list",
+        commandId: "toggleListOL",
+        mode: "OL",
+    },
+    {
+        id: "checklist",
+        commandId: "toggleListCL",
+        mode: "CL",
+    },
+];
 
 export class ListPlugin extends Plugin {
     static id = "list";
@@ -42,12 +63,9 @@ export class ListPlugin extends Plugin {
         "dom",
         "color",
     ];
+    toolbarListSelectorKey = reactive({ value: 0 });
     resources = {
         user_commands: [
-            {
-                id: "toggleList",
-                run: this.toggleListCommand.bind(this),
-            },
             {
                 id: "toggleListUL",
                 title: _t("Bulleted list"),
@@ -70,26 +88,23 @@ export class ListPlugin extends Plugin {
                 run: () => this.toggleListCommand({ mode: "CL" }),
             },
         ],
-        toolbar_groups: withSequence(30, { id: "list" }),
+        shortcuts: [
+            { hotkey: "control+shift+7", commandId: "toggleListOL" },
+            { hotkey: "control+shift+8", commandId: "toggleListUL" },
+            { hotkey: "control+shift+9", commandId: "toggleListCL" },
+        ],
         toolbar_items: [
-            {
-                id: "bulleted_list",
-                groupId: "list",
-                commandId: "toggleListUL",
-                isActive: this.isListActive("UL"),
-            },
-            {
-                id: "numbered_list",
-                groupId: "list",
-                commandId: "toggleListOL",
-                isActive: this.isListActive("OL"),
-            },
-            {
-                id: "checklist",
-                groupId: "list",
-                commandId: "toggleListCL",
-                isActive: this.isListActive("CL"),
-            },
+            withSequence(5, {
+                id: "list",
+                groupId: "layout",
+                description: _t("Toggle List"),
+                Component: ListSelector,
+                props: {
+                    getButtons: () => this.listSelectorButtons,
+                    getListMode: this.getListMode.bind(this),
+                    key: this.toolbarListSelectorKey,
+                },
+            }),
         ],
         powerbox_items: [
             {
@@ -104,12 +119,12 @@ export class ListPlugin extends Plugin {
                 categoryId: "structure",
                 commandId: "toggleListCL",
             },
-        ],
+        ].map((item) => withSequence(5, item)),
         power_buttons: [
             { commandId: "toggleListUL" },
             { commandId: "toggleListOL" },
             { commandId: "toggleListCL" },
-        ],
+        ].map((item) => withSequence(15, item)),
 
         hints: [{ selector: "LI", text: _t("List") }],
         system_style_properties: ["--placeholder-left"],
@@ -118,6 +133,7 @@ export class ListPlugin extends Plugin {
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
         make_hint_handlers: this.handleListPlaceholderPosition.bind(this),
+        step_added_handlers: this.updateToolbarButtons.bind(this),
 
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -129,12 +145,13 @@ export class ListPlugin extends Plugin {
         format_selection_overrides: this.applyFormatToListItem.bind(this),
         set_tag_overrides: this.handleListStylePosition.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
-        move_node_whitelist_selectors: "ol, ul",
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
     };
 
     setup() {
         this.addDomListener(this.editable, "touchstart", this.onPointerdown);
         this.addDomListener(this.editable, "mousedown", this.onPointerdown);
+        this.listSelectorButtons = this.getListSelectorButtons();
     }
 
     toggleListCommand({ mode } = {}) {
@@ -380,6 +397,10 @@ export class ListPlugin extends Plugin {
         return node;
     }
 
+    /**
+     * @param {HTMLElement} element
+     * @returns {"UL"|"OL"|"CL"|undefined}
+     */
     getListMode(listContainerEl) {
         if (!["UL", "OL"].includes(listContainerEl.tagName)) {
             return;
@@ -388,13 +409,6 @@ export class ListPlugin extends Plugin {
             return "OL";
         }
         return listContainerEl.classList.contains("o_checklist") ? "CL" : "UL";
-    }
-
-    isListActive(listMode) {
-        return (selection) => {
-            const block = closestBlock(selection.anchorNode);
-            return block?.tagName === "LI" && this.getListMode(block.parentNode) === listMode;
-        };
     }
 
     /**
@@ -414,12 +428,7 @@ export class ListPlugin extends Plugin {
         // Clear list style (@todo @phoenix - why??)
         newList.style.removeProperty("list-style");
         for (const li of newList.children) {
-            if (li.style.listStyle !== "none") {
-                li.style.listStyle = null;
-                if (!li.style.all) {
-                    li.removeAttribute("style");
-                }
-            }
+            li.style.removeProperty("list-style");
         }
         removeClass(newList, "o_checklist");
         if (newMode === "CL") {
@@ -524,19 +533,23 @@ export class ListPlugin extends Plugin {
      */
     indentLI(li) {
         const lip = this.document.createElement("li");
+        const parentLi = li.parentElement;
+        const nextSiblingLi = li.nextSibling;
         lip.classList.add("oe-nested");
         const destul =
             li.previousElementSibling?.querySelector("ol, ul") ||
             li.nextElementSibling?.querySelector("ol, ul") ||
             li.closest("ol, ul");
-
+        const cursors = this.dependencies.selection.preserveSelection();
+        // Remove the LI first to force a removal mutation in collaboration.
+        parentLi.removeChild(li);
         const ul = createList(this.document, this.getListMode(destul));
         lip.append(ul);
 
-        const cursors = this.dependencies.selection.preserveSelection();
         // lip replaces li
         li.before(lip);
         ul.append(li);
+        parentLi.insertBefore(lip, nextSiblingLi);
         cursors.update((cursor) => {
             if (cursor.node === lip.parentNode) {
                 const childIndex = childNodeIndex(lip);
@@ -805,7 +818,7 @@ export class ListPlugin extends Plugin {
         if (!closestLI || isBlockUnsplittable) {
             return;
         }
-        if (!closestLI.textContent) {
+        if (isEmptyBlock(closestLI)) {
             this.outdentLI(closestLI);
             return true;
         }
@@ -883,6 +896,19 @@ export class ListPlugin extends Plugin {
         }
 
         return true;
+    }
+
+    /**
+     * @param {DocumentFragment} clonedContents
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     */
+    processContentForClipboard(clonedContents, selection) {
+        if (clonedContents.firstChild.nodeName === "LI") {
+            const list = selection.commonAncestorContainer.cloneNode();
+            list.replaceChildren(...childNodes(clonedContents));
+            clonedContents = list;
+        }
+        return clonedContents;
     }
 
     // --------------------------------------------------------------------------
@@ -1030,5 +1056,22 @@ export class ListPlugin extends Plugin {
             rangeEl.remove();
             this.dependencies.history.enableObserver();
         }
+    }
+
+    // --------------------------------------------------------------------------
+    // Toolbar buttons
+    // --------------------------------------------------------------------------
+
+    updateToolbarButtons() {
+        this.toolbarListSelectorKey.value++;
+    }
+
+    getListSelectorButtons() {
+        return listSelectorItems.map((item) => {
+            const command = this.resources.user_commands.find((cmd) => cmd.id === item.commandId);
+            // We want short descriptions for these buttons.
+            item.description = command.title;
+            return composeToolbarButton(command, item);
+        });
     }
 }

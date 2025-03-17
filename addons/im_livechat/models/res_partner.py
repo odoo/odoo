@@ -4,7 +4,8 @@ from markupsafe import Markup
 
 from odoo import api, models, fields, _
 from odoo.addons.mail.tools.discuss import Store
-
+from odoo.tools.misc import OrderedSet
+from odoo.fields import Domain
 
 class ResPartner(models.Model):
     """Update of res.partner class to take into account the livechat username."""
@@ -28,12 +29,20 @@ class ResPartner(models.Model):
             self.env["im_livechat.channel"].search([]).available_operator_ids.partner_id
         )
         for partner in self:
+            languages = list(OrderedSet([
+                lang_name_by_code[partner.lang],
+                # sudo: res.users.settings - operator can access other operators languages
+                *partner.user_ids.sudo().livechat_lang_ids.mapped("name")
+            ]))
             store.add(
                 partner,
                 {
                     "invite_by_self_count": invite_by_self_count_by_partner.get(partner, 0),
                     "is_available": partner in active_livechat_partners,
-                    "lang_name": lang_name_by_code[partner.lang],
+                    "lang_name": languages[0],
+                    # sudo: res.users.settings - operator can access other operators expertises
+                    "livechat_expertise": partner.user_ids.sudo().livechat_expertise_ids.mapped("name"),
+                    "livechat_languages": languages[1:],
                 },
             )
 

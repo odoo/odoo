@@ -95,12 +95,31 @@ PublicRoot.include({
 // Patch Colibri.
 
 patch(Colibri.prototype, {
+    protectSyncAfterAsync(interaction, name, fn) {
+        fn = super.protectSyncAfterAsync(interaction, name, fn);
+        const fullName = `${interaction.constructor.name}/${name}`;
+        return (...args) => {
+            // TODO No jQuery ?
+            const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
+            wysiwyg?.odooEditor.observerUnactive(fullName);
+            const result = fn(...args);
+            wysiwyg?.odooEditor.observerActive(fullName);
+            return result;
+        };
+    },
     addListener(target, event, fn, options) {
         fn = fn.bind(this.interaction);
+        let stealth = true;
+        const parts = event.split(".");
+        if (parts.includes("keepInHistory") || options?.keepInHistory) {
+            stealth = false;
+            event = parts.filter((part) => part !== "keepInHistory").join(".");
+            delete options?.keepInHistory;
+        }
         // TODO No jQuery ?
         const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
         let stealthFn = fn;
-        if (wysiwyg?.odooEditor && !fn.isHandler) {
+        if (wysiwyg?.odooEditor && !fn.isHandler && stealth) {
             const name = `${this.interaction.constructor.name}/${event}`;
             stealthFn = async (...args) => {
                 wysiwyg.odooEditor.observerUnactive(name);
@@ -128,3 +147,14 @@ patch(Colibri.prototype, {
         wysiwyg?.odooEditor.observerActive(name);
     },
 });
+
+export function withHistory(dynamicContent) {
+    const result = {};
+    for (const [selector, content] of Object.entries(dynamicContent)) {
+        result[selector] = {};
+        for (const [key, value] of Object.entries(content)) {
+            result[selector][key.startsWith("t-on-") ? `${key}.keepInHistory` : key] = value;
+        }
+    }
+    return result;
+}

@@ -9,7 +9,7 @@ class ResUsersSettings(models.Model):
     _description = 'User Settings'
     _rec_name = 'user_id'
 
-    user_id = fields.Many2one('res.users', string="User", required=True, readonly=True, ondelete='cascade')
+    user_id = fields.Many2one("res.users", string="User", required=True, ondelete="cascade", domain=[("res_users_settings_id", "=", False)])
 
     _unique_user_id = models.Constraint(
         'UNIQUE(user_id)',

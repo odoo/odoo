@@ -22,6 +22,8 @@ from odoo.addons.calendar.models.calendar_recurrence import (
     WEEKDAY_SELECTION,
     BYDAY_SELECTION
 )
+from odoo.addons.calendar.models.utils import interval_from_events
+from odoo.tools.date_intervals import intervals_overlap
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
 from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
@@ -190,6 +192,7 @@ class CalendarEvent(models.Model):
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners)
     invalid_email_partner_ids = fields.Many2many('res.partner', compute='_compute_invalid_email_partner_ids')
+    unavailable_partner_ids = fields.Many2many('res.partner', string="Unavailable Attendees", compute='_compute_unavailable_partner_ids')
     # alarms
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
@@ -481,6 +484,21 @@ class CalendarEvent(models.Model):
         for event in self:
             event.display_description = not is_html_empty(event.description)
 
+    @api.depends('partner_ids', 'start', 'stop')
+    def _compute_unavailable_partner_ids(self):
+        self.unavailable_partner_ids = False
+        for start, stop, events in interval_from_events(self):
+            events_by_partner_id = events.partner_ids._get_busy_calendar_events(
+                start, stop)
+            for event in events:
+                for partner in event.partner_ids:
+                    if any(
+                        intervals_overlap(
+                            (event.start, event.stop), (other_event.start, other_event.stop))
+                        for other_event in events_by_partner_id.get(partner._origin.id, []) if other_event != event
+                    ):
+                        event.unavailable_partner_ids |= partner
+
     @api.depends('videocall_source', 'access_token')
     def _compute_videocall_location(self):
         for event in self:
@@ -542,7 +560,16 @@ class CalendarEvent(models.Model):
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
         model_name = defaults.get('res_model')
         valid_activity_model_ids = model_name and model_name not in self._get_activity_excluded_models() and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
-        if meeting_activity_type and not defaults.get('activity_ids'):
+
+        # if user is creating an event for an activity that already has one, create a second activity
+        existing_event = False
+        orig_activity_ids = self.env['mail.activity'].browse(self._context.get('orig_activity_ids', []))
+        if len(orig_activity_ids) == 1:
+            existing_event = orig_activity_ids.calendar_event_id
+            if existing_event and orig_activity_ids.activity_type_id.category == 'meeting':
+                meeting_activity_type = orig_activity_ids.activity_type_id
+
+        if meeting_activity_type and (not defaults.get('activity_ids') or existing_event):
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
                 if values.get('activity_ids'):

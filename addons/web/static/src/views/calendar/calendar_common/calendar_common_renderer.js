@@ -1,6 +1,7 @@
-import { getLocalYearAndWeek, is24HourFormat } from "@web/core/l10n/dates";
+import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+import { is24HourFormat } from "@web/core/l10n/time";
 import { localization } from "@web/core/l10n/localization";
-import { renderToString } from "@web/core/utils/render";
+import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { getColor } from "../colors";
 import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
@@ -8,6 +9,8 @@ import { makeWeekColumn } from "./calendar_common_week_column";
 
 import { Component } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
+import { useSquareSelection } from "@web/views/calendar/square_selection_hook";
+import { CALENDAR_MODES } from "@web/views/calendar/calendar_modes";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -55,15 +58,25 @@ export class CalendarCommonRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
+        calendarMode: { type: String, optional: true },
+        multiCreateRecord: { type: Function, optional: true },
+        multiDeleteRecords: { type: Function, optional: true },
+    };
+
+    static defaultProps = {
+        calendarMode: CALENDAR_MODES.filter,
     };
 
     setup() {
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.click = useClickHandler(this.onClick, this.onDblClick);
         this.popover = useCalendarPopover(this.constructor.components.Popover);
+
         useBus(this.props.model.bus, "SCROLL_TO_CURRENT_HOUR", () =>
             this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
+
+        useSquareSelection();
     }
 
     get options() {
@@ -121,6 +134,7 @@ export class CalendarCommonRenderer extends Component {
             eventDisplay: "block", // Restore old render in daygrid view for single-day timed events
             viewDidMount: this.viewDidMount,
             moreLinkDidMount: this.wrapMoreLink,
+            fixedWeekCount: false,
         };
     }
 
@@ -225,14 +239,12 @@ export class CalendarCommonRenderer extends Component {
         const record = this.props.model.records[event.id];
         if (record) {
             // This is needed in order to give the possibility to change the event template.
-            const injectedContentStr = renderToString(this.constructor.eventTemplate, {
+            const fragment = renderToFragment(this.constructor.eventTemplate, {
                 ...record,
                 startTime: this.getStartTime(record),
                 endTime: this.getEndTime(record),
             });
-            const domParser = new DOMParser();
-            const { children } = domParser.parseFromString(injectedContentStr, "text/html").body;
-            return { domNodes: children };
+            return { domNodes: fragment.children };
         }
         return true;
     }

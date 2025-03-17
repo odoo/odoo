@@ -253,8 +253,8 @@ class MrpBom(models.Model):
         parent_production_id = self.env.context.get('parent_production_id')
         if parent_production_id:  # In this case, assign the newly created BoM to the MO.
             # Clean context to avoid parasitic default values.
-            self.env.context = clean_context(self.env.context)
-            production = self.env['mrp.production'].browse(parent_production_id)
+            env = self.env(context=clean_context(self.env.context))
+            production = env['mrp.production'].browse(parent_production_id)
             production._link_bom(res[0])
         return res
 
@@ -648,7 +648,7 @@ class MrpBomLine(models.Model):
                 - always and dynamic: match_all_variant_values()
         """
         self.ensure_one()
-        if product._name == 'product.template':
+        if not product or product._name == 'product.template':
             return False
 
         # attributes create_variant 'always' and 'dynamic'
@@ -777,7 +777,7 @@ class MrpBomByproduct(models.Model):
         custom control.
         """
         self.ensure_one()
-        if product._name == 'product.template':
+        if not product or product._name == 'product.template':
             return False
         return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
 

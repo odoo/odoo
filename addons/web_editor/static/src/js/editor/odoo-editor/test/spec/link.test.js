@@ -699,6 +699,12 @@ describe('Link', () => {
                 contentBeforeEdit: '<p>a<a href="#/" class="nav-link">[]b</a>c</p>',
             });
         });
+        it('should not zwnbsp-pad link if parent is `contenteditable=false`', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div contenteditable="false">a<a href="#/">[]b</a>c</div>`,
+                contentBeforeEdit: `<div contenteditable="false" data-oe-keep-contenteditable="">a<a href="#/">[]b</a>c</div>`,
+            });
+        });
         it('should not zwnbsp-pad in nav', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<nav>a<a href="#/">[]b</a>c</nav>',
@@ -858,6 +864,35 @@ describe('Link', () => {
                 contentBeforeEdit: '<p>a\ufeff<a href="exist">\ufeff<span class="fa fa-star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
                 contentAfterEdit: '<p>a\ufeff<a href="exist">\ufeff<span class="fa fa-star" contenteditable="false">\u200b</span>\ufeff</a>\ufeffb</p>',
                 contentAfter: '<p>a<a href="exist"><span class="fa fa-star"></span></a>b</p>',
+            });
+        });
+        it('should not convert to telephone url while inserting digits inside link', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><a href="#">[]</a></p>',
+                stepFunction: async editor => {
+                    await insertText(editor, '1');
+                    await insertText(editor, '2');
+                    await insertText(editor, '3');
+                },
+                contentAfter: '<p><a href="#">123[]</a></p>',
+            });
+        });
+        it('should update url if existing url is telephone url while inserting', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><a href="tel:123">123[]</a></p>',
+                stepFunction: async editor => {
+                    await insertText(editor, '4');
+                },
+                contentAfter: '<p><a href="tel:1234">1234[]</a></p>',
+            });
+        });
+        it('should convert url to telephone url if label starts with tel protocol', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><a href="#">tel://[]</a></p>',
+                stepFunction: async editor => {
+                    await insertText(editor, '1');
+                },
+                contentAfter: '<p><a href="tel://1">tel://1[]</a></p>',
             });
         });
         // it('should select and replace all text and add the next char in bold', async () => {

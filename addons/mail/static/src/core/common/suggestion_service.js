@@ -190,36 +190,14 @@ export class SuggestionService {
         };
     }
 
+    isSuggestionValid(persona, thread) {
+        return persona.type === "partner" && !persona.eq(this.store.odoobot);
+    }
+
     getPartnerSuggestions(thread) {
-        let partners;
-        const isNonPublicChannel =
-            thread &&
-            (thread.channel_type === "group" ||
-                thread.channel_type === "chat" ||
-                (thread.channel_type === "channel" &&
-                    (thread.parent_channel_id || thread).group_public_id));
-        if (isNonPublicChannel) {
-            // Only return the channel members when in the context of a
-            // group restricted channel. Indeed, the message with the mention
-            // would be notified to the mentioned partner, so this prevents
-            // from inadvertently leaking the private message to the
-            // mentioned partner.
-            partners = thread.channel_member_ids
-                .map((member) => member.persona)
-                .filter((persona) => persona.type === "partner");
-            if (thread.channel_type === "channel") {
-                const group = (thread.parent_channel_id || thread).group_public_id;
-                partners = new Set([...partners, ...(group?.personas ?? [])]);
-            }
-        } else {
-            partners = Object.values(this.store.Persona.records).filter((persona) => {
-                if (thread?.model !== "discuss.channel" && persona.eq(this.store.odoobot)) {
-                    return false;
-                }
-                return persona.type === "partner";
-            });
-        }
-        return partners;
+        return Object.values(this.store.Persona.records).filter((persona) =>
+            this.isSuggestionValid(persona, thread)
+        );
     }
 
     searchPartnerSuggestions(cleanedSearchTerm, thread, sort) {
@@ -263,12 +241,7 @@ export class SuggestionService {
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
-        const context = this.sortPartnerSuggestionsContext();
-        const memberPartnerIds = new Set(
-            thread?.channel_member_ids
-                .filter((member) => member.persona.type === "partner")
-                .map((member) => member.persona.id)
-        );
+        const context = this.sortPartnerSuggestionsContext(thread);
         return partners.sort((p1, p2) => {
             p1 = toRaw(p1);
             p2 = toRaw(p2);
@@ -278,7 +251,6 @@ export class SuggestionService {
             for (const fn of compareFunctions) {
                 const result = fn(p1, p2, {
                     env: this.env,
-                    memberPartnerIds,
                     searchTerm: cleanedSearchTerm,
                     thread,
                     context,

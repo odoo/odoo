@@ -637,6 +637,8 @@ export class MockServer {
                 return this.mockSearchRead(args.model, args.args, args.kwargs);
             case "unlink":
                 return this.mockUnlink(args.model, args.args);
+            case "web_name_search":
+                return this.mockWebNameSearch(args.model, args.args, args.kwargs);
             case "web_read":
                 return this.mockWebRead(args.model, args.args, args.kwargs);
             case "web_save":
@@ -873,7 +875,7 @@ export class MockServer {
     mockNameSearch(model, args, kwargs) {
         const str = args && typeof args[0] === "string" ? args[0] : kwargs.name;
         const limit = kwargs.limit || 100;
-        const domain = (args && args[1]) || kwargs.args || [];
+        const domain = (args && args[1]) || kwargs.domain || [];
         const { records } = this.models[model];
         const result = [];
         for (const r of records) {
@@ -1100,7 +1102,7 @@ export class MockServer {
                     case "hour_number":
                         return date.hour;
                     case "day_of_week":
-                        return date.weekday;
+                        return date.weekday % 7; // (0 = Sunday, 6 = Saturday)
                     case "day_of_month":
                         return date.day;
                     case "day_of_year":
@@ -1923,6 +1925,18 @@ export class MockServer {
             context: kwargs.context,
         });
         return this.mockRead(modelName, [records.map((r) => r.id), fieldNames]);
+    }
+
+    mockWebNameSearch(modelName, args, kwargs) {
+        const idNamePairs = this.mockNameSearch(modelName, args, kwargs);
+        if (
+            Object.keys(kwargs.specification).length === 1 &&
+            "display_name" in kwargs.specification
+        ) {
+            return idNamePairs.map(([id, name]) => ({ id, display_name: name }));
+        }
+        const ids = idNamePairs.map(([id]) => id);
+        return this.mockWebRead(modelName, [ids], kwargs);
     }
 
     mockWebSave(modelName, args, kwargs) {

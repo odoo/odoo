@@ -101,7 +101,10 @@ export class PosData extends Reactive {
         // This method initializes indexedDB with all models loaded into the PoS. The default key is ID.
         // But some models have another key configured in data_service_options.js. These models are
         // generally those that can be created in the frontend.
-        const models = Object.keys(relations).map((model) => {
+        const allModelNames = Array.from(
+            new Set([...Object.keys(relations), ...Object.keys(this.opts.databaseTable)])
+        );
+        const models = allModelNames.map((model) => {
             const key = this.opts.databaseTable[model]?.key || "id";
             return [key, model];
         });
@@ -186,22 +189,7 @@ export class PosData extends Reactive {
             }
         }
 
-        if (results && results["pos.order"]) {
-            const ids = results["pos.order"]
-                .map((o) => o.id)
-                .filter((id) => typeof id === "number");
-
-            if (ids.length) {
-                const result = await this.read("pos.order", ids);
-                const serverIds = result.map((r) => r.id);
-
-                for (const id of ids) {
-                    if (!serverIds.includes(id)) {
-                        this.localDeleteCascade(this.models["pos.order"].get(id));
-                    }
-                }
-            }
-        }
+        await this.checkAndDeleteMissingOrders(results);
 
         return results;
     }
@@ -229,7 +217,8 @@ export class PosData extends Reactive {
 
         if (
             (navigator.onLine && session?.state !== "opened") ||
-            session?.id !== odoo.pos_session_id
+            session?.id !== odoo.pos_session_id ||
+            odoo.from_backend
         ) {
             try {
                 const limitedLoading = this.isLimitedLoading();
@@ -642,6 +631,25 @@ export class PosData extends Reactive {
         });
 
         this.syncInProgress = false;
+    }
+
+    async checkAndDeleteMissingOrders(results) {
+        if (results && results["pos.order"]) {
+            const ids = results["pos.order"]
+                .map((o) => o.id)
+                .filter((id) => typeof id === "number");
+
+            if (ids.length) {
+                const result = await this.read("pos.order", ids);
+                const serverIds = result.map((r) => r.id);
+
+                for (const id of ids) {
+                    if (!serverIds.includes(id)) {
+                        this.localDeleteCascade(this.models["pos.order"].get(id));
+                    }
+                }
+            }
+        }
     }
 
     write(model, ids, vals) {

@@ -24,7 +24,10 @@ const storePatch = {
         const [oldestUnreadThread] = this.discuss.livechats
             .filter((thread) => thread.isUnread)
             .sort(
-                (t1, t2) => compareDatetime(t1.lastInterestDt, t2.lastInterestDt) || t1.id - t2.id
+                (t1, t2) =>
+                    t2.livechat_active - t1.livechat_active ||
+                    compareDatetime(t1.lastInterestDt, t2.lastInterestDt) ||
+                    t1.id - t2.id
             );
         if (!oldestUnreadThread) {
             return false;

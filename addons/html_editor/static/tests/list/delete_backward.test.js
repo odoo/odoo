@@ -2415,71 +2415,87 @@ describe("Selection not collapsed", () => {
             });
         });
 
-        test("should delete across two list items", async () => {
+        describe("should delete across two list items", () => {
             // Forward selection
-            await testEditor({
-                contentBefore:
-                    '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="o_checked">ef]gh</li></ul>',
-                stepFunction: deleteBackward,
-                contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+            test("should delete across two list items (1)", async () => {
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="o_checked">ef]gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                });
             });
-            await testEditor({
-                contentBefore:
-                    '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li>ef]gh</li></ul>',
-                stepFunction: deleteBackward,
-                contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+            test("should delete across two list items (2)", async () => {
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li>ef]gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                });
             });
             // Backward selection
-            await testEditor({
-                contentBefore:
-                    '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="o_checked">ef[gh</li></ul>',
-                stepFunction: deleteBackward,
-                contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+            test("should delete across two list items (3)", async () => {
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="o_checked">ef[gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                });
             });
-            await testEditor({
-                contentBefore:
-                    '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li>ef[gh</li></ul>',
-                stepFunction: deleteBackward,
-                contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+            test("should delete across two list items (4)", async () => {
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li>ef[gh</li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                });
             });
         });
 
-        test("should delete across an unindented list item and an indented list item", async () => {
+        describe("should delete across an unindented list item and an indented list item", () => {
             // Forward selection
-            await testEditor({
-                contentBefore:
-                    '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef]gh</li></ul></li></ul>',
-                stepFunction: deleteBackward,
-                contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+            test("should delete across an unindented list item and an indented list item (1)", async () => {
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef]gh</li></ul></li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                });
             });
-            await testEditor({
-                contentBefore:
-                    '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="oe-nested"><ul class="o_checklist"><li>ef]gh</li></ul></li></ul>',
-                stepFunction: deleteBackward,
-                // The indented list cannot be unchecked while its
-                // parent is checked: it gets checked automatically
-                // as a result. So "efgh" gets rendered as checked.
-                // Given that the parent list item was explicitely
-                // set as "checked", that status is preserved.
-                contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+            test("should delete across an unindented list item and an indented list item (2)", async () => {
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="oe-nested"><ul class="o_checklist"><li>ef]gh</li></ul></li></ul>',
+                    stepFunction: deleteBackward,
+                    // The indented list cannot be unchecked while its
+                    // parent is checked: it gets checked automatically
+                    // as a result. So "efgh" gets rendered as checked.
+                    // Given that the parent list item was explicitely
+                    // set as "checked", that status is preserved.
+                    contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                });
             });
             // Backward selection
-            await testEditor({
-                contentBefore:
-                    '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef[gh</li></ul></li></ul>',
-                stepFunction: deleteBackward,
-                contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+            test("should delete across an unindented list item and an indented list item (3)", async () => {
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef[gh</li></ul></li></ul>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                });
             });
-            await testEditor({
-                contentBefore:
-                    '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="oe-nested"><ul class="o_checklist"><li>ef[gh</li></ul></li></ul>',
-                stepFunction: deleteBackward,
-                // The indented list cannot be unchecked while its
-                // parent is checked: it gets checked automatically
-                // as a result. So "efgh" gets rendered as checked.
-                // Given that the parent list item was explicitely
-                // set as "checked", that status is preserved.
-                contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+            test("should delete across an unindented list item and an indented list item (4)", async () => {
+                await testEditor({
+                    contentBefore:
+                        '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="oe-nested"><ul class="o_checklist"><li>ef[gh</li></ul></li></ul>',
+                    stepFunction: deleteBackward,
+                    // The indented list cannot be unchecked while its
+                    // parent is checked: it gets checked automatically
+                    // as a result. So "efgh" gets rendered as checked.
+                    // Given that the parent list item was explicitely
+                    // set as "checked", that status is preserved.
+                    contentAfter: '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
+                });
             });
         });
 
@@ -2534,7 +2550,7 @@ describe("Selection not collapsed", () => {
                     '<ul class="o_checklist"><li>ab</li><li class="o_checked"><a href="#">[cd</a></li><li>ef]</li><li>gh</li></ul>',
                 stepFunction: deleteBackward,
                 contentAfterEdit:
-                    '<ul class="o_checklist"><li>ab</li><li placeholder="List" class="o-we-hint">[]<br></li><li>gh</li></ul>',
+                    '<ul class="o_checklist"><li>ab</li><li o-we-hint-text="List" class="o-we-hint">[]<br></li><li>gh</li></ul>',
                 contentAfter: '<ul class="o_checklist"><li>ab</li><li>[]<br></li><li>gh</li></ul>',
             });
         });

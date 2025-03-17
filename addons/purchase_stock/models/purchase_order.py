@@ -6,7 +6,6 @@ from markupsafe import Markup
 from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.exceptions import UserError
-from odoo.tools import format_list
 from odoo.tools.misc import OrderedSet
 
 
@@ -130,7 +129,7 @@ class PurchaseOrder(models.Model):
 
         purchase_orders_with_receipt = self.filtered(lambda po: any(move.state == 'done' for move in po.order_line.move_ids))
         if purchase_orders_with_receipt:
-            raise UserError(_("Unable to cancel purchase order(s): %s since they have receipts that are already done.", format_list(self.env, purchase_orders_with_receipt.mapped('display_name'))))
+            raise UserError(_("Unable to cancel purchase order(s): %s since they have receipts that are already done.", purchase_orders_with_receipt.mapped('display_name')))
         for order in self:
             # If the product is MTO, change the procure_method of the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
@@ -186,7 +185,7 @@ class PurchaseOrder(models.Model):
         three_months_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(months=3))
 
         purchases = self.env['purchase.order'].search_fetch(
-            [('state', 'in', ['purchase', 'done']), ('date_planned', '>=', three_months_ago)],
+            [('state', '=', 'purchase'), ('date_planned', '>=', three_months_ago)],
             ['date_planned', 'effective_date', 'user_id'])
 
         otd_purchase_count = 0
@@ -309,7 +308,7 @@ class PurchaseOrder(models.Model):
 
     def _create_picking(self):
         StockPicking = self.env['stock.picking']
-        for order in self.filtered(lambda po: po.state in ('purchase', 'done')):
+        for order in self.filtered(lambda po: po.state == 'purchase'):
             if any(product.type == 'consu' for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))

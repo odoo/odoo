@@ -13,10 +13,7 @@ export class ServerDialog extends Component {
     setup() {
         this.store = toRaw(useStore());
         this.state = useState({ waitRestart: false, loading: false, error: null });
-        this.form = useState({
-            token: "",
-            iotname: this.store.base.hostname,
-        });
+        this.form = useState({ token: "" });
     }
 
     async connectToServer() {
@@ -57,7 +54,7 @@ export class ServerDialog extends Component {
     static template = xml`
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
-                Processing your request please wait...
+                Updating Odoo Server information, please wait...
             </t>
         </LoadingFullScreen>
 
@@ -66,37 +63,28 @@ export class ServerDialog extends Component {
                 Configure Odoo Server
             </t>
             <t t-set-slot="body">
-                <div class="alert alert-warning fs-6" role="alert">
-                    Paste the token from the Connect wizard in your Odoo instance in the Server Token field.
-                    If you change the IoT Box Name, your IoT Box will need a reboot.
+                <div class="alert alert-warning fs-6 pb-0" role="alert">
+                    <ol>
+                        <li>Install <b>IoT App</b> on your database,</li>
+                        <li>From the IoT App click on <b>Connect</b> button.</li>
+                    </ol>
                 </div>
                 <div class="mt-3">
-                    <div class="input-group-sm mb-3" t-if="this.store.isLinux">
-                        <label for="iotname">IoT Name</label>
-                        <input name="iotname" type="text" class="form-control" t-model="this.form.iotname" />
-                        <small t-if="!this.form.iotname" class="text-danger">Please enter a correct name</small>
-                    </div>
                     <div class="input-group-sm mb-3">
-                        <label for="token">Server Token</label>
-                        <input name="token" type="text" class="form-control" t-model="this.form.token" />
-                        <small t-if="!this.form.token" class="text-danger">Please enter a server token</small>
+                        <input type="text" class="form-control" t-model="form.token" placeholder="Server token"/>
                     </div>
-                    <div class="d-flex justify-content-end gap-2">
-                        <button type="submit" class="btn btn-warning btn-sm" t-att-disabled="this.state.loading" t-on-click="connectToServer">Connect</button>
+                    <div class="small" t-if="store.base.server_status">
+                        <p class="m-0">
+                            Your current server is: <br/> 
+                            <strong t-esc="store.base.server_status" />
+                        </p>
                     </div>
-                    <small t-if="this.state.error" class="text-danger" t-esc="this.state.error"/>
                 </div>
             </t>
             <t t-set-slot="footer">
-                <div class="d-flex justify-content-between w-100">
-                    <div class="small">
-                        <p class="m-0">Your current server is:<br/> <strong t-esc="this.store.base.server_status" /></p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-danger btn-sm" t-on-click="clearConfiguration">Clear configuration</button>
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
+                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="state.loading or !form.token" t-on-click="connectToServer">Connect</button>
+                <button type="button" class="btn btn-secondary btn-sm" t-if="store.base.server_status" t-on-click="clearConfiguration">Disconnect from current</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
     `;

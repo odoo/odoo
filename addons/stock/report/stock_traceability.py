@@ -115,9 +115,25 @@ class StockTraceabilityReport(models.TransientModel):
             usage = 'out'
         return usage
 
+    def _get_partner_names(self, move_line):
+        """ Return partner name instead of source or destination location based on
+            whether the product is incoming or outgoing.
+        """
+        partner_name = move_line.picking_partner_id.name
+        source_name = move_line.location_id.display_name
+        destination_name = move_line.location_dest_id.display_name
+
+        if (picking_code := move_line.picking_id.picking_type_code) == 'incoming':
+            return partner_name, destination_name
+        elif picking_code == 'outgoing':
+            return source_name, partner_name
+        else:
+            return source_name, destination_name
+
     def _make_dict_move(self, level, parent_id, move_line, unfoldable=False):
         res_model, res_id, ref = self._get_reference(move_line)
         dummy, is_used = self._get_linked_move_lines(move_line)
+        location_source, location_destination = self._get_partner_names(move_line)
         data = [{
             'level': level,
             'unfoldable': unfoldable,
@@ -131,8 +147,10 @@ class StockTraceabilityReport(models.TransientModel):
             'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.quantity), move_line.product_id.uom_id.name),
             'lot_name': move_line.lot_id.name,
             'lot_id': move_line.lot_id.id,
-            'location_source': move_line.location_id.name,
-            'location_destination': move_line.location_dest_id.name,
+            'location_source': location_source,
+            'location_destination': location_destination,
+            'partner_id': move_line.picking_partner_id.id,
+            'picking_type_code': move_line.picking_id.picking_type_code,
             'reference_id': ref,
             'res_id': res_id,
             'res_model': res_model}]
@@ -152,6 +170,10 @@ class StockTraceabilityReport(models.TransientModel):
                 'lot_name': data.get('lot_name', False),
                 'lot_id': data.get('lot_id', False),
                 'reference': data.get('reference_id', False),
+                'location_source': data.get('location_source', False),
+                'location_destination': data.get('location_destination', False),
+                'partner_id': data.get('partner_id', False),
+                'picking_type_code': data.get('picking_type_code', False),
                 'res_id': data.get('res_id', False),
                 'res_model': data.get('res_model', False),
                 'columns': [data.get('reference_id', False),

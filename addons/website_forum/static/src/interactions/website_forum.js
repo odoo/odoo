@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-
+import { htmlJoin } from "@mail/utils/common/html";
 import { markup } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";;
@@ -256,14 +256,16 @@ export class WebsiteForum extends Interaction {
             return;
         }
         const forumId = parseInt(this.el.ownerDocument.getElementById("wrapwrap").dataset.forum_id);
-        const additionalInfoWithForumID = forumId
-            ? markup(`<br/>
-                <a class="alert-link" href="/forum/${forumId}/faq">
-                    ${escape(_t("Read the guidelines to know how to gain karma."))}
-                </a>`)
-            : "";
-        const translatedText = _t("karma is required to perform this action. ");
-        const message = markup(`${karma} ${escape(translatedText)}${additionalInfoWithForumID}`);
+        let message = _t("%(score)s karma is required to perform this action.", { score: karma });
+        if (forumId) {
+            message = htmlJoin(
+                message,
+                _t("%(link_start)sRead the guidelines to know how to gain karma.%(link_end)s", {
+                    link_start: markup(`<br><a class="alert-link" href="/forum/${forumId}/faq">`),
+                    link_end: markup("</a>"),
+                })
+            );
+        }
         this.services.notification.add(message, {
             type: "warning",
             sticky: false,

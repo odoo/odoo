@@ -10,6 +10,7 @@ import {
     useOpenMany2XRecord,
 } from "@web/views/fields/relational_utils";
 import { registry } from "@web/core/registry";
+import { Mutex } from "@web/core/utils/concurrency";
 import { standardFieldProps } from "../standard_field_props";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -51,6 +52,7 @@ export class Many2ManyTagsField extends Component {
         context: { type: Object, optional: true },
         placeholder: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
+        searchThreshold: { type: Number, optional: true },
         string: { type: String, optional: true },
         noSearchMore: { type: Boolean, optional: true },
     };
@@ -76,6 +78,8 @@ export class Many2ManyTagsField extends Component {
             this.deleteTagByIndex.bind(this)
         );
         this.autoCompleteRef = useRef("autoComplete");
+        this.mutex = new Mutex();
+
         const { saveRecord, removeRecord } = useX2ManyCrud(
             () => this.props.record.data[this.props.name],
             true
@@ -89,12 +93,10 @@ export class Many2ManyTagsField extends Component {
                 onDelete: removeRecord,
                 edit: this.props.record.isInEdition,
             },
-            getEvalParams: (props) => {
-                return {
-                    evalContext: this.evalContext,
-                    readonly: props.readonly,
-                };
-            },
+            getEvalParams: (props) => ({
+                evalContext: this.evalContext,
+                readonly: props.readonly,
+            }),
         });
 
         this.openMany2xRecord = useOpenMany2XRecord({
@@ -103,17 +105,17 @@ export class Many2ManyTagsField extends Component {
                 create: false,
                 write: true,
             },
-            onRecordSaved: async (record) => {
-                await this.props.record.data[this.props.name].forget(record);
-                return saveRecord([record.resId]);
+            onRecordSaved: (record) => {
+                const records = this.props.record.data[this.props.name].records;
+                return records.find((r) => r.resId === record.resId).load();
             },
         });
 
         this.update = (recordlist) => {
             recordlist = recordlist
-                ? recordlist.filter((element) => {
-                      return !this.tags.some((record) => record.resId === element.id);
-                  })
+                ? recordlist.filter(
+                      (element) => !this.tags.some((record) => record.resId === element.id)
+                  )
                 : [];
             if (!recordlist.length) {
                 return;
@@ -170,8 +172,11 @@ export class Many2ManyTagsField extends Component {
     }
 
     async deleteTagByIndex(index) {
-        const { id } = this.tags[index] || {};
-        this.deleteTag(id);
+        this.mutex.exec(() => {
+            if (this.tags[index]) {
+                return this.deleteTag(this.tags[index].id);
+            }
+        });
     }
 
     async deleteTag(id) {
@@ -235,6 +240,14 @@ export const many2ManyTagsField = {
             availableTypes: ["integer"],
             help: _t("Set an integer field to use colors with the tags."),
         },
+        {
+            label: _t("Typeahead search"),
+            name: "search_threshold",
+            type: "number",
+            help: _t(
+                "Defines the minimum number of characters to perform the search. If not set, the search is performed on focus."
+            ),
+        },
     ],
     supportedTypes: ["many2many", "one2many"],
     relatedFields: ({ options }) => {
@@ -260,6 +273,7 @@ export const many2ManyTagsField = {
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
             placeholder: attrs.placeholder,
+            searchThreshold: options.search_threshold,
             string,
         };
     },

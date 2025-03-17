@@ -37,8 +37,8 @@
         'report/report_deliveryslip.xml',
         'report/report_stockinventory.xml',
         'report/report_stock_rule.xml',
-        'report/stock_lot_customer.xml',
         'report/package_templates.xml',
+        'report/packaging_barcode.xml',
         'report/picking_templates.xml',
         'report/product_templates.xml',
         'report/report_return_slip.xml',
@@ -119,5 +119,6 @@
             'stock/static/tests/stock_traceability_report_backend_tests.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

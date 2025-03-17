@@ -183,6 +183,9 @@
                 <t t-snippet="website.s_numbers_boxed" string="Numbers boxed" group="content">
                     <keywords>statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, performance, achievements, benchmarks, milestones, indicators, data, measurements, reports, trends, results, analytics, summaries, summary</keywords>
                 </t>
+                <t t-snippet="website.s_numbers_framed" string="Numbers framed" group="content">
+                    <keywords>statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, performance, achievements, benchmarks, milestones, indicators, data, measurements, reports, trends, results</keywords>
+                </t>
                 <t t-snippet="website.s_numbers_list" string="Numbers list" group="content">
                     <keywords>statistics, stats, KPI, metrics, dashboard, analytics, highlights, figures, skills, achievements, benchmarks, milestones, indicators, data, measurements, reports, trends, results, analytics, cta, call to action, button</keywords>
                 </t>
@@ -233,6 +236,9 @@
                 </t>
                 <t t-snippet="website.s_accordion_image" string="Accordion Image" group="content">
                     <keywords>common answers, common questions, faq, QA, collapse, expandable, toggle, collapsible, hide-show, movement, information, image, picture, photo, illustration, media, visual</keywords>
+                </t>
+                <t t-snippet="website.s_carousel_cards" string="Carousel Cards" group="content">
+                    <keywords>gallery, carousel, slider, slideshow, picture, photo, image-slider, rotating, swipe, transition, media-carousel, movement, cta, engagement, call to action</keywords>
                 </t>
 
                 <!-- Keep `s_embed_code` snippet at the very end of the "Content" group -->
@@ -376,6 +382,9 @@
                 <t t-snippet="website.s_website_form_cover" string="Form Cover" group="contact_and_forms">
                     <keywords>contact, collect, submission, input, fields, questionnaire, survey, registration, request, image, picture, photo, illustration, media, visual</keywords>
                 </t>
+                <t t-snippet="website.s_form_aside" string="Form Aside" group="contact_and_forms">
+                    <keywords>contact, collect, submission, input, fields, questionnaire, survey, registration, request, image, picture, photo, illustration, media, visual, get-in-touch</keywords>
+                </t>
 
                 <!-- Products group -->
                 <t id="sale_products_hook"/>
@@ -421,6 +430,7 @@
 
             <!-- Inner snippets -->
             <snippets id="snippet_content" string="Inner content">
+                <t t-snippet="website.s_inline_text" string="Text" t-thumbnail="/website/static/src/img/snippets_thumbs/s_inline_text.svg"/>
                 <t t-snippet="website.s_button" string="Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.svg"/>
                 <t t-snippet="website.s_image" string="Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image.svg"/>
                 <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg"/>
@@ -586,7 +596,7 @@
 <template id="snippet_options_carousel">
     <div data-js="Carousel"
          data-selector="section"
-         data-exclude=".s_carousel_intro_wrapper"
+         data-exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper"
          data-target="> .carousel">
         <we-row string="Slide">
             <we-button data-add-slide="true" data-no-preview="true" class="o_we_bg_brand_primary">Add Slide</we-button>
@@ -618,6 +628,27 @@
                   data-select-data-attribute="0s" data-attribute-name="bsInterval"
                   data-unit="s" data-save-unit="ms" data-step="0.1"/>
     </div>
+</template>
+
+<template id="snippet_options_carousel_bottom_controllers" inherit_id="website.snippet_options_carousel" primary="True">
+    <xpath expr="//div" position="attributes">
+        <attribute name="data-target">.s_carousel_intro</attribute>
+        <attribute name="data-exclude"/>
+        <attribute name="data-js">Carousel</attribute>
+    </xpath>
+    <xpath expr="//we-button[@data-select-class='s_carousel_arrows_hidden']" position="replace">
+        <we-button data-select-class="s_carousel_arrows_hidden" data-name="carousel_arrows_hidden_opt" data-toggle-controllers="">Hidden</we-button>
+    </xpath>
+    <xpath expr="//we-button[@data-select-class='s_carousel_indicators_hidden']" position="replace">
+        <we-button data-select-class="s_carousel_indicators_hidden" data-name="carousel_indicators_hidden_opt" data-toggle-controllers="">Hidden</we-button>
+    </xpath>
+    <xpath expr="//we-select" position="replace">
+        <we-select string="Controllers" data-apply-to=".o_horizontal_controllers_row">
+            <we-button data-select-class="justify-content-between">Default</we-button>
+            <we-button data-select-class="justify-content-between flex-row-reverse">Reversed</we-button>
+            <we-button data-select-class="justify-content-center" data-name="carousel_controllers_centered_opt"  data-dependencies="carousel_arrows_hidden_opt, carousel_indicators_hidden_opt">Centered</we-button>
+        </we-select>
+    </xpath>
 </template>
 
 <template id="snippet_options_border_line_widgets">
@@ -801,7 +832,7 @@
              which the s_card options should be bound (instead of the s_card).
              Note: defined here to be set above all the other options that might
              need it. -->
-        <t t-set="card_parent_handlers" t-value="'.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div'"/>
+        <t t-set="card_parent_handlers" t-value="'.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item'"/>
 
         <!-- Binding the option on the snippet if it is not a s_card with a
              handler parent -->
@@ -883,7 +914,7 @@
          o_colored_level. Use inline-style color for the same reason. -->
     <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="'section'"/>
-        <t t-set="target" t-value="'> .carousel'"/>
+        <t t-set="target" t-value="'> .carousel:not(.s_carousel_cards)'"/>
         <t t-set="with_colors" t-value="True"/>
         <t t-set="with_images" t-value="True"/>
         <t t-set="with_videos" t-value="True"/>
@@ -893,9 +924,10 @@
     </t>
 
     <t t-call="website.snippet_options_carousel"/>
+    <t t-call="website.snippet_options_carousel_bottom_controllers"/>
 
     <div data-js="CarouselItem"
-         data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item">
+         data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item">
         <we-button class="fa fa-fw fa-angle-left" data-switch-to-slide="left" data-no-preview="true" title="Move Backward"/>
         <we-button class="fa fa-fw fa-angle-right me-2" data-switch-to-slide="right" data-no-preview="true" title="Move Forward"/>
         <we-button class="fa fa-fw fa-plus o_we_bg_success" data-add-slide-item="true" data-no-preview="true" title="Add Slide"/>
@@ -903,7 +935,7 @@
     </div>
 
     <div data-js="GalleryElement"
-        data-selector=".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item">
+        data-selector=".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item">
         <we-row string="Re-order" data-no-preview="true">
             <we-button class="fa fa-fw fa-angle-double-left" title="Move to first" data-position="first"/>
             <we-button class="fa fa-fw fa-angle-left" title="Move to previous" data-position="prev"/>
@@ -997,7 +1029,7 @@
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
     <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable, .s_website_form_cover .row > .o_not_editable, .s_split_intro .row > .o_not_editable'"/>
-    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper'"/>
+    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_item'"/>
 
     <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="both_bg_color_image_selector"/>
@@ -1047,7 +1079,7 @@
 
     <div data-js="sizing_y"
         data-selector="section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating"
-        data-exclude="section:has(> .carousel), .s_image_gallery .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize"/>
+        data-exclude="section:has(> .carousel:not(.s_carousel_cards)), .s_carousel_cards_item, .s_image_gallery .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize"/>
 
     <div data-js="sizing_x"
         data-selector=".row > div"
@@ -1169,6 +1201,20 @@
                        data-customize-website-variable="'sidebar'"
                        data-img="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
         </we-select>
+
+        <!-- Header Content Width - Options -->
+        <we-button-group string="Content Width" data-dependencies="!header_sidebar_opt"
+                         data-no-preview="true" data-reload="/">
+                <we-button title="Small"
+                           data-img="/website/static/src/img/snippets_options/content_width_small.svg"
+                           data-customize-website-views="website.header_width_small"/>
+                <we-button title="Regular"
+                           data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                           data-customize-website-views=""/>
+                <we-button title="Full"
+                           data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                           data-customize-website-views="website.header_width_full"/>
+        </we-button-group>
 
         <!-- Header Sidebar Template - Options -->
         <we-input string="Width"
@@ -1492,16 +1538,14 @@
                   data-dependencies="!header_effect_scroll_opt"/>
     </div>
 
-    <!-- Footer - Colors & Layouts -->
-    <div data-js="WebsiteLevelColor"
+    <!-- Footer - Layouts -->
+    <div data-js="FooterTemplateSelector"
          data-selector="#wrapwrap > footer"
          data-no-check="true"
          groups="website.group_website_designer">
-
-        <!-- Layouts -->
         <we-select string="Template"
-            data-variable="footer-template"
-            data-reload="/">
+                   data-variable="footer-template"
+                   data-reload="/">
             <we-button title="Default"
                        data-customize-website-views="website.footer_custom"
                        data-customize-website-variable="'default'"
@@ -1535,6 +1579,36 @@
                        data-customize-website-variable="'headline'"
                        data-img="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
         </we-select>
+    </div>
+
+    <!-- Footer Content Width -->
+    <div data-js="ContainerWidthFooter"
+         data-selector="#wrapwrap > footer"
+         data-no-check="true"
+         groups="website.group_website_designer">
+        <we-button-group string="Content Width"
+                         data-reload="/" data-no-preview="false"
+                         data-apply-to="> #footer > section > .container, > #footer > section > .container-fluid, > #footer > section > .o_container_small, .o_footer_copyright > .container, .o_footer_copyright > .container-fluid, .o_footer_copyright > .o_container_small">
+            <we-button title="Small"
+                       data-img="/website/static/src/img/snippets_options/content_width_small.svg"
+                       data-select-class="o_container_small"
+                       data-customize-website-views="website.footer_copyright_content_width_small"/>
+            <we-button title="Regular"
+                       data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                       data-select-class="container"/>
+            <we-button Title="Full"
+                       data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                       data-select-class="container-fluid"
+                       data-customize-website-views="website.footer_copyright_content_width_fluid"/>
+        </we-button-group>
+    </div>
+
+    <!-- Footer - Colors & Copyright -->
+    <div data-js="WebsiteLevelColor"
+         data-selector="#wrapwrap > footer"
+         data-no-check="true"
+         groups="website.group_website_designer">
+
         <!-- Colors -->
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="footer"
@@ -1554,11 +1628,13 @@
                        data-customize-website-views="website.template_footer_slideout"
                        data-customize-website-variable="'slideout_shadow'"/>
         </we-select>
+
+        <!-- Copyright -->
         <we-checkbox string="Copyright"
-                data-name="footer_copyright_opt"
-                data-customize-website-views="website.footer_no_copyright|"
-                data-no-preview="true"
-                data-reload="/"/>
+                     data-name="footer_copyright_opt"
+                     data-customize-website-views="website.footer_no_copyright|"
+                     data-no-preview="true"
+                     data-reload="/"/>
     </div>
 
     <!-- Footer - Borders & Shadows -->
@@ -1706,7 +1782,8 @@
 
     <!-- Stretch section -->
     <div data-js="ContainerWidth" data-selector="section, .s_carousel .carousel-item, .s_carousel_intro_item"
-        data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]" data-target="> .container, > .container-fluid, > .o_container_small">
+         data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], #footer > *"
+         data-target="> .container, > .container-fluid, > .o_container_small">
         <we-button-group string="Content Width">
             <we-button data-select-class="o_container_small"
                        data-img="/website/static/src/img/snippets_options/content_width_small.svg"
@@ -1721,7 +1798,7 @@
     </div>
 
     <!-- Scroll to next section button (only for full height) -->
-    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page">
+    <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], .s_instagram_page, .o_mega_menu > section">
         <!-- Min height of section -->
         <we-button-group string="Height" data-show-scroll-button="">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>

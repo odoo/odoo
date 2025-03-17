@@ -5,10 +5,11 @@ import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_tab
 import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
+import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
-    static components = { PopupTable, OrderWidget, PresetInfoPopup };
+    static components = { PopupTable, OrderWidget, PresetInfoPopup, ProductCard };
     static props = {};
 
     setup() {
@@ -40,6 +41,14 @@ export class CartPage extends Component {
         }
     }
 
+    get optionalProducts() {
+        const optionalProducts =
+            this.selfOrder.currentOrder.lines.flatMap(
+                (line) => line.product_id.product_tmpl_id.pos_optional_product_ids
+            ) || [];
+        return optionalProducts;
+    }
+
     getLineChangeQty(line) {
         const currentQty = line.qty;
         const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
@@ -59,10 +68,7 @@ export class CartPage extends Component {
             return;
         }
 
-        if (
-            !this.selfOrder.currentOrder.presetRequirementsFilled &&
-            this.selfOrder.config.self_ordering_mode === "mobile"
-        ) {
+        if (!this.selfOrder.currentOrder.presetRequirementsFilled && orderingMode !== "table") {
             this.state.fillInformations = true;
             return;
         }

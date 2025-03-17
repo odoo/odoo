@@ -103,14 +103,24 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         const parsedDate = DateTime.fromJSDate(date).toISODate();
         const multiCalendar = this.props.model.multiCalendar;
         const showLine = ["week", "month"].includes(this.props.model.scale);
-        const worklocation = this.props.model.worklocations[parsedDate];
+        let worklocation = this.props.model.worklocations[parsedDate];
         const workLocationSetForCurrentUser =
             multiCalendar ?
             Object.keys(worklocation).some(key => worklocation[key].some(wlItem => wlItem.userId === user.userId)
             ) : worklocation?.userId === user.userId;
+
+        let displayedWorkLocation = worklocation ? (JSON.parse(JSON.stringify(worklocation))) : {};
+        // do not display the work locations of the current user if the user filter is not active
+        if (multiCalendar && !this.props.model.data.userFilterActive) {
+            for (let wl in worklocation){
+                displayedWorkLocation[wl] = worklocation[wl].filter(wlItem => wlItem.userId !== user.userId);
+            }
+            displayedWorkLocation = Object.fromEntries(Object.entries(displayedWorkLocation).filter(([_, wlItems]) => wlItems.length !== 0));
+        }
+
         return {
             ...super.headerTemplateProps(date),
-            worklocation,
+            worklocation : displayedWorkLocation,
             workLocationSetForCurrentUser,
             multiCalendar,
             showLine,

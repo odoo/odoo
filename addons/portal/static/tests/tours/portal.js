@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
         },
         {
             content: "Submit the form",
-            trigger: 'button[type=submit]',
+            trigger: 'button[id=save_address]',
             run: "click",
         },
         {

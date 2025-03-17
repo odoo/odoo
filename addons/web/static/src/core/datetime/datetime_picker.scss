@@ -67,28 +67,7 @@
     }
 
     .o_today span {
-        position: relative;
-
-        &::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            bottom: $spacer * -0.25;
-            transform: translateX(-50%);
-            width: 0.95em;
-            height: 0.2em;
-            border-radius: $border-radius-pill;
-            background: $danger;
-        }
-    }
-
-    .o_time_picker_select {
-        background: none;
-
-        &:focus,
-        &:hover {
-            border-color: var(--primary);
-        }
+        border-bottom: 0.2em solid $danger;
     }
 
     // Grids
@@ -145,10 +124,5 @@
 
     .o_text_sm {
         font-size: 0.875rem;
-    }
-
-    .o_time_picker {
-        /*rtl:ignore*/
-        direction: ltr;
     }
 }

@@ -765,12 +765,11 @@ class AccountMove(models.Model):
         if moves and xml_contents:
             errors = moves._l10n_my_edi_submit_documents(xml_contents)
 
-            if errors:
-                for move in moves:
-                    move.message_post(body=AccountMoveSend._format_error_html({
-                        'error_title': _('Error when sending the invoices to the E-invoicing service.'),
-                        'errors': errors[move],
-                    }))
+            for move in moves.filtered(lambda m: m in errors):
+                move.message_post(body=AccountMoveSend._format_error_html({
+                    'error_title': _('Error when sending the invoices to the E-invoicing service.'),
+                    'errors': errors[move],
+                }))
 
             # At this point we will need to commit as we reached the api, and we could have a mix of failed and valid invoice.
             if moves._can_commit():
@@ -793,12 +792,11 @@ class AccountMove(models.Model):
             retry += 1
         # While technically an in_progress status is not an error, it won't hurt much to display it as such.
         # The "error" message in this case should be clear enough.
-        if errors:
-            for move in moves:
-                move.message_post(body=AccountMoveSend._format_error_html({
-                    'error_title': _('Error when sending the invoices to the E-invoicing service.'),
-                    'errors': errors[move],
-                }))
+        for move in moves.filtered(lambda m: m in errors):
+            move.message_post(body=AccountMoveSend._format_error_html({
+                'error_title': _('Error when sending the invoices to the E-invoicing service.'),
+                'errors': errors[move],
+            }))
         # We commit again if possible, to ensure that the invoice status is set in the database in case of errors later.
         if self._can_commit():
             self._cr.commit()

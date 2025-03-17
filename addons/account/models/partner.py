@@ -1,22 +1,25 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-import time
-import re
 import logging
+import re
+import time
 
-from psycopg2 import errors as pgerrors
+from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, mute_logger
-from odoo.exceptions import ValidationError, UserError
-from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
-from odoo.tools import SQL, unique
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, SQL, mute_logger, unique
+
+from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
+
+
+_ref_company_registry = {
+    'jp': '7000012050002',
+}
 
 
 class AccountFiscalPosition(models.Model):
@@ -339,6 +342,7 @@ class ResPartner(models.Model):
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
+    partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -529,7 +533,6 @@ class ResPartner(models.Model):
         compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit',
         help='Set a value greater than 0.0 to activate a credit limit check')
     show_credit_limit = fields.Boolean(
-        default=lambda self: self.env.company.account_use_credit_limit,
         compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
     days_sales_outstanding = fields.Float(
         string='Days Sales Outstanding (DSO)',
@@ -564,6 +567,7 @@ class ResPartner(models.Model):
     )
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
+    supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
     invoice_ids = fields.One2many('account.move', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
@@ -636,6 +640,27 @@ class ResPartner(models.Model):
         for partner in self:
             partner.bank_account_count = mapped_data.get(partner.id, 0)
 
+    def _compute_supplier_invoice_count(self):
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.with_context(active_test=False).search_fetch(
+            [('id', 'child_of', self.ids)],
+            ['parent_id'],
+        )
+        supplier_invoice_groups = self.env['account.move']._read_group(
+            domain=[('partner_id', 'in', all_partners.ids),
+                    *self.env['account.move']._check_company_domain(self.env.company),
+                    ('move_type', 'in', ('in_invoice', 'in_refund'))],
+            groupby=['partner_id'], aggregates=['__count']
+        )
+        self_ids = set(self._ids)
+
+        self.supplier_invoice_count = 0
+        for partner, count in supplier_invoice_groups:
+            while partner:
+                if partner.id in self_ids:
+                    partner.supplier_invoice_count += count
+                partner = partner.parent_id
+
     def _get_duplicated_bank_accounts(self):
         self.ensure_one()
         if not self.bank_ids:
@@ -685,8 +710,7 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _compute_show_credit_limit(self):
-        for partner in self:
-            partner.show_credit_limit = self.env.company.account_use_credit_limit
+        self.show_credit_limit = self.env.company.account_use_credit_limit
 
     def _get_suggested_invoice_edi_format(self):
         # TO OVERRIDE
@@ -792,22 +816,15 @@ class ResPartner(models.Model):
             raise UserError(_("The partner cannot be deleted because it is used in Accounting"))
 
     def _increase_rank(self, field, n=1):
-        if self.ids and field in ['customer_rank', 'supplier_rank']:
-            try:
-                with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
-                    self.env.execute_query(SQL("""
-                        SELECT %(field)s FROM res_partner WHERE ID IN %(partner_ids)s FOR NO KEY UPDATE NOWAIT;
-                        UPDATE res_partner SET %(field)s = %(field)s + %(n)s
-                        WHERE id IN %(partner_ids)s
-                        """,
-                        field=SQL.identifier(field),
-                        partner_ids=tuple(self.ids),
-                        n=n,
-                    ))
-                    self.invalidate_recordset([field])
-                    self.modified([field])
-            except (pgerrors.LockNotAvailable, pgerrors.SerializationFailure):
-                _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
+        assert isinstance(n, int) and field in ('customer_rank', 'supplier_rank')
+        try:
+            self.lock_for_update(allow_referencing=True)
+        except LockError:
+            _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
+            return
+        records = self.sudo()
+        for record in records:
+            record[field] += n
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
@@ -838,6 +855,14 @@ class ResPartner(models.Model):
         """
         return ""
 
+    def _get_frontend_writable_fields(self):
+        frontend_writable_fields = super()._get_frontend_writable_fields()
+        frontend_writable_fields.update({'invoice_sending_method', 'invoice_edi_format'})
+
+        return frontend_writable_fields
+
+    # TODO accounting/JCO, seems strange that this address validation logic is only there for pos, and
+    # not for standard address management on portal/ecommerce
     @api.model
     def get_partner_localisation_fields_required_to_invoice(self, country_id):
         """ Returns the list of fields that needs to be filled when creating an invoice for the selected country.
@@ -998,3 +1023,12 @@ class ResPartner(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             partner.partner_vat_placeholder = placeholder
+
+    @api.depends('country_id')
+    def _compute_partner_company_registry_placeholder(self):
+        """ Provides a dynamic placeholder on the company registry field for countries that may need it.
+        Add your country and the value you want in the _ref_company_registry map.
+        """
+        for partner in self:
+            country_code = partner.country_id.code or ''
+            partner.partner_company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')

@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    focus,
     hover,
     insertText,
     onRpcBefore,
@@ -14,8 +15,8 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { leave, press, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
+import { animationFrame, leave, press, queryFirst } from "@odoo/hoot-dom";
+import { Deferred, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -57,6 +58,40 @@ test("Start edition on click edit", async () => {
     await contains(".o-mail-Message .o-mail-Composer-input", { count: 0 });
 });
 
+test("Can only edit one message at a time", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "Hello!",
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "Goodbye!",
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Expand']", { parent: [".o-mail-Message", { text: "Goodbye!" }] });
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await contains(".o-mail-Composer-input", { value: "Goodbye!" });
+    await click("[title='Expand']", { parent: [".o-mail-Message", { text: "Hello!" }] });
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer-input", { count: 1 });
+    await contains(".o-mail-Composer-input", { value: "Hello!" });
+    await focus(".o-mail-Composer-input", { value: "" });
+    await press("ArrowUp");
+    await contains(".o-mail-Message .o-mail-Composer-input", { count: 1 });
+    await contains(".o-mail-Composer-input", { value: "Goodbye!" });
+});
+
 test("Edit message (mobile)", async () => {
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
@@ -85,6 +120,31 @@ test("Edit message (mobile)", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message .fa-paper-plane-o");
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
+});
+
+test("Can add reaction to a message on an ipad", async () => {
+    mockTouch(true);
+    mockUserAgent("android");
+
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello world",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await click(".o-mail-Message [title='Expand']");
+    await click("button:contains('Add a Reaction')");
+    await click(".o-EmojiPicker-content .o-Emoji:contains('😀')");
+    await contains(".o-mail-MessageReaction:contains('😀\n1')");
 });
 
 test("Editing message keeps the mentioned channels", async () => {
@@ -130,10 +190,19 @@ test("Can edit message comment in chatter", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await contains(".o-mail-Message:contains('Escape to cancel, CTRL-Enter to save')");
+    await insertText(".o-mail-Message .o-mail-Composer-input", "edited again", { replace: true });
+    await press("Enter");
+    await animationFrame();
+    await contains(".o-mail-Message .o-mail-Composer-input"); // still editing message
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "edited again\n" });
+    await triggerHotkey("control+Enter"); // somehow press doesn't work :(
+    await contains(".o-mail-Message-content", { text: "edited again (edited)" });
 });
 
-test("Can edit message comment in chatter (mobile)", async () => {
-    patchUiSize({ size: SIZES.SM });
+test.skip("Can edit message comment in chatter (mobile)", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
     pyEnv["mail.message"].create({
@@ -146,7 +215,7 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await click("button:contains('Edit')");
     await contains("button", { text: "Discard editing" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click("button[title='Save editing']");
@@ -338,7 +407,7 @@ test("Update the link previews when a message is edited", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/link_preview", (args) => asyncStep("link_preview"));
+    onRpcBefore("/mail/link_preview$", (args) => asyncStep("link_preview"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
@@ -547,6 +616,7 @@ test("Can open emoji picker after edit mode", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await click(".o-mail-Message a", { text: "save" });
+    await contains(".o-mail-Message", { text: "Hello world" });
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
     await contains(".o-EmojiPicker");

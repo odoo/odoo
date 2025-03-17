@@ -11,5 +11,6 @@
     ],
     'installable': True,
     'auto_install': ['hr_timesheet'],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -1120,10 +1120,10 @@ class TestWebReadGroup(common.TransactionCase):
                               groupby=['date:day_of_week']))
         self.assertEqual(result, [
             {
-                'date:day_of_week': 6,
+                'date:day_of_week': 0,
                 '__count': 1,
                 'value:sum': 98,
-                '__extra_domain': [('date.day_of_week', '=', 6)],
+                '__extra_domain': [('date.day_of_week', '=', 0)],
             }])
         res = Model.with_context({'tz': 'fr_BE'}).search(result[0]['__extra_domain'])
         self.assertEqual(len(res), 1)
@@ -1144,6 +1144,90 @@ class TestWebReadGroup(common.TransactionCase):
         res = Model.with_context({'tz': 'NZ'}).search(result[0]['__extra_domain'])
         self.assertEqual(len(res), 1)
         self.assertEqual(res.mapped('value'), [98])
+
+    def test_groupby_day_of_week_ordered_with_user_lang(self):
+        Model = self.env['test_read_group.fill_temporal']
+        Model.create([
+            {'value': 98, 'date': '2023-02-05'}, # Sunday
+            {'value': 99, 'date': '2023-02-06'}, # Monday
+        ])
+        self.env['res.lang']._activate_lang('fr_BE')
+        result = Model.formatted_read_group([],
+                    aggregates=['__count', 'value:sum'],
+                    groupby=['date:day_of_week'])
+        self.assertEqual(result, [
+            {
+                'date:day_of_week': 0, # Sunday
+                '__count': 1,
+                'value:sum': 98,
+                '__extra_domain': [('date.day_of_week', '=', 0)],
+            },
+            {
+                'date:day_of_week': 1, # Monday
+                '__count': 1,
+                'value:sum': 99,
+                '__extra_domain': [('date.day_of_week', '=', 1)],
+            }])
+        result = (Model.with_context({'tz': 'fr_BE'}) # first day of week is Monday
+                  .formatted_read_group([],
+                        aggregates=['__count', 'value:sum'],
+                        groupby=['date:day_of_week']))
+        self.assertEqual(result, [
+            {
+                'date:day_of_week': 1, # Monday
+                '__count': 1,
+                'value:sum': 99,
+                '__extra_domain': [('date.day_of_week', '=', 1)],
+            },
+            {
+                'date:day_of_week': 0, # Sunday
+                '__count': 1,
+                'value:sum': 98,
+                '__extra_domain': [('date.day_of_week', '=', 0)],
+            }])
+
+    def test_groupby_day_of_week_descending_order_with_user_lang(self):
+        Model = self.env['test_read_group.fill_temporal']
+        Model.create([
+            {'value': 98, 'date': '2023-02-05'}, # Sunday
+            {'value': 99, 'date': '2023-02-06'}, # Monday
+        ])
+        self.env['res.lang']._activate_lang('fr_BE')
+        result = Model.formatted_read_group([],
+                    aggregates=['__count', 'value:sum'],
+                    groupby=['date:day_of_week'],
+                    order='date:day_of_week DESC')
+        self.assertEqual(result, [
+            {
+                'date:day_of_week': 1, # Monday
+                '__count': 1,
+                'value:sum': 99,
+                '__extra_domain': [('date.day_of_week', '=', 1)],
+            },
+            {
+                'date:day_of_week': 0, # Sunday
+                '__count': 1,
+                'value:sum': 98,
+                '__extra_domain': [('date.day_of_week', '=', 0)],
+            }])
+        result = (Model.with_context({'tz': 'fr_BE'}) # first day of week is Monday
+                  .formatted_read_group([],
+                        aggregates=['__count', 'value:sum'],
+                        groupby=['date:day_of_week'],
+                        order='date:day_of_week DESC'))
+        self.assertEqual(result, [
+            {
+                'date:day_of_week': 0, # Sunday
+                '__count': 1,
+                'value:sum': 98,
+                '__extra_domain': [('date.day_of_week', '=', 0)],
+            },
+            {
+                'date:day_of_week': 1, # Monday
+                '__count': 1,
+                'value:sum': 99,
+                '__extra_domain': [('date.day_of_week', '=', 1)],
+            }])
 
     def test_groupby_many2many(self):
         User = self.env['test_read_group.user']

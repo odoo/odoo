@@ -9,7 +9,7 @@
     'summary': 'Event: manage sponsors and exhibitors',
     'website': 'https://www.odoo.com/app/events',
     'depends': [
-        'website_event_jitsi',
+        'website_event',
     ],
     'data': [
         'security/security.xml',
@@ -42,5 +42,6 @@
             '/website_event_exhibitor/static/src/scss/event_full_page_ticket_report.scss',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

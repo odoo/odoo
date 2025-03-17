@@ -168,6 +168,10 @@ For more specific needs, you may also assign custom-defined actions
         "web.assets_web_dark": [
             'mail/static/src/**/*.dark.scss',
         ],
+        "web.assets_frontend": [
+            "mail/static/src/utils/common/html.js",
+            "mail/static/src/utils/common/format.js",
+        ],
         'mail.assets_discuss_public_test_tours': [
             'web_tour/static/src/tour_pointer/**/*',
             'web/static/lib/hoot-dom/**/*',
@@ -245,5 +249,6 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'web/static/src/**/*.dark.scss'),
         ]
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

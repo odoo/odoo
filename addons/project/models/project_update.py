@@ -49,7 +49,7 @@ class ProjectUpdate(models.Model):
         ('at_risk', 'At Risk'),
         ('off_track', 'Off Track'),
         ('on_hold', 'On Hold'),
-        ('done', 'Done'),
+        ('done', 'Complete'),
     ], required=True, tracking=True, export_string_translation=False)
     color = fields.Integer(compute='_compute_color', export_string_translation=False)
     progress = fields.Integer(tracking=True)

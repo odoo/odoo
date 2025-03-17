@@ -77,7 +77,7 @@ export const busService = {
                     multiTab.setSharedValue("last_notification_id", notifications.at(-1).id);
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
-                        busService._onMessage(id, type, payload);
+                        busService._onMessage(env, id, type, payload);
                     }
                     break;
                 }
@@ -284,6 +284,6 @@ export const busService = {
         };
     },
     /** Overriden to provide logs in tests. Use subscribe() in production. */
-    _onMessage(id, type, payload) {},
+    _onMessage(env, id, type, payload) {},
 };
 registry.category("services").add("bus_service", busService);

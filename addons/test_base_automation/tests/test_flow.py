@@ -820,19 +820,94 @@ if env.context.get('old_values', None):  # on write
 
     def test_120_on_change(self):
         Model = self.env.get(self.lead_model.model)
-        lead_name_field = self.env['ir.model.fields'].search([
-            ('model_id', '=', self.lead_model.id),
-            ('name', '=', 'name'),
-        ])
+        lead_name_field = self.env['ir.model.fields']._get(self.lead_model.model, "name")
         self.assertEqual(lead_name_field.name in Model._onchange_methods, False)
         create_automation(
             self,
             model_id=self.lead_model.id,
             trigger='on_change',
+            filter_domain="[('name', 'like', 'IMPORTANT')]",
             on_change_field_ids=[lead_name_field.id],
-            _actions={'state': 'code', 'code': ""},
+            _actions={
+                'state': 'code',
+                'code': """
+action = {
+    'value': {
+        'priority': '[IMPORTANT]' in record.name,
+    }
+}
+            """,
+            },
         )
         self.assertEqual(lead_name_field.name in Model._onchange_methods, True)
+
+        with Form(self.env[self.lead_model.model]) as f:
+            self.assertEqual(f.priority, False)
+            f.name = 'Lead Test'
+            self.assertEqual(f.priority, False)
+
+            # changed because contains "IMPORTANT", true because contains "[IMPORTANT]"
+            f.name = 'Lead Test [IMPORTANT]'
+            self.assertEqual(f.priority, True)
+
+            # not changed because does not contain "IMPORTANT"
+            f.name = 'Lead Test'
+            self.assertEqual(f.priority, True)
+
+            # changed because contains "IMPORTANT", false because does not contain "[IMPORTANT]"
+            f.name = 'Lead Test [NOT IMPORTANT]'
+            self.assertEqual(f.priority, False)
+
+            # changed because contains "IMPORTANT", true because contains "[IMPORTANT]"
+            f.name = 'Lead Test [IMPORTANT]'
+            self.assertEqual(f.priority, True)
+
+    def test_121_on_change_with_domain_field_not_in_view(self):
+        lead_name_field = self.env['ir.model.fields']._get(self.lead_model.model, "name")
+        create_automation(
+            self,
+            model_id=self.lead_model.id,
+            trigger='on_change',
+            filter_domain="[('active', '!=', False)]",
+            on_change_field_ids=[lead_name_field.id],
+            _actions={
+                'state': 'code',
+                'code': """
+action = {
+    'value': {
+        'priority': '[IMPORTANT]' in record.name,
+    }
+}
+            """,
+            },
+        )
+        my_view = self.env["ir.ui.view"].create({
+            "name": "My View",
+            "model": self.lead_model.model,
+            "type": "form",
+            "arch": """
+                <form>
+                    <field name='name'/>
+                    <field name='priority'/>
+                </form>
+            """,
+        })
+        record = self.env[self.lead_model.model].create({
+            "name": "Test Lead",
+            "active": False,
+            "priority": False,
+        })
+        self.assertEqual(record.priority, False)
+        with Form(record, view=my_view) as f:
+            f.name = "[IMPORTANT] Lead"
+        self.assertEqual(record.priority, False)
+
+        record.name = "Test Lead"
+        record.active = True
+        self.assertEqual(record.priority, False)
+        with Form(record, view=my_view) as f:
+            f.name = "[IMPORTANT] Lead"
+        self.assertEqual(record.priority, True)
 
     def test_130_on_unlink(self):
         automation = create_automation(
@@ -875,13 +950,14 @@ if env.context.get('old_values', None):  # on write
         # first run, check we have a field set
         # this does not happen using the UI where the trigger is forced to be set
         self.assertFalse(automation.last_run)
-        with self.assertLogs('odoo.addons.base_automation', 'WARNING') as capture:
-            self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+        with self.assertLogs('odoo.addons.base_automation', 'WARNING') as capture, self.enter_registry_test_mode():
+            self.env["base.automation"]._cron_process_time_based_actions()
         self.assertRegex(capture.output[0], r"Missing date trigger")
         automation.trg_date_id = model.field_id.filtered(lambda f: f.name == 'date_automation_last')
 
         # normal run
-        self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+        with self.enter_registry_test_mode():
+            self.env["base.automation"]._cron_process_time_based_actions()
         self.assertTrue(automation.last_run)
 
     @common.freeze_time('2020-01-01 03:00:00')
@@ -901,23 +977,26 @@ if env.context.get('old_values', None):  # on write
             "trg_date_id": model.field_id.filtered(lambda f: f.name == 'date_automation_last').id,
         })
 
-        with patch.object(automation.__class__, '_process', side_effect=automation._process) as mock:
+        with (
+            patch.object(automation.__class__, '_process', side_effect=automation._process) as mock,
+            self.enter_registry_test_mode(),
+        ):
             with patch.object(self.env.cr, '_now', now := datetime.datetime.now()):
                 past_date = now - datetime.timedelta(1)
-                self.env["base.automation.lead.test"].create({
+                self.env["base.automation.lead.test"].create([{
                     'name': f'lead {i}',
                     # 2 without a date, 8 set in past, 5 set in future
                     'date_automation_last': False if i < 2 else past_date if i < 10 else now + datetime.timedelta(minutes=i),
-                } for i in range(15))
+                } for i in range(15)])
             with common.freeze_time('2020-01-01 03:01:01'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # process records
-                self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+                self.env["base.automation"]._cron_process_time_based_actions()
                 self.assertEqual(mock.call_count, 10)
                 self.assertEqual(automation.last_run, self.env.cr.now())
             with common.freeze_time('2020-01-01 03:11:59'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # 2 in the future (because of timing)
                 # 10 previously done records because we use the date_automation_last as trigger without delay
-                self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+                self.env["base.automation"]._cron_process_time_based_actions()
                 self.assertEqual(mock.call_count, 22)
                 self.assertEqual(automation.last_run, self.env.cr.now())
                 # test triggering using a calendar
@@ -925,7 +1004,7 @@ if env.context.get('old_values', None):  # on write
                 automation.trg_date_range_type = 'day'
                 self.env["base.automation.lead.test"].create({'name': 'calendar'})  # for the run
             with common.freeze_time('2020-02-02 03:11:00'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
-                self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+                self.env["base.automation"]._cron_process_time_based_actions()
                 self.assertEqual(mock.call_count, 38)
 
     def test_005_check_model_with_different_rec_name_char(self):
@@ -1173,18 +1252,20 @@ class TestCompute(common.TransactionCase):
         self.assertEqual(automation.on_change_field_ids.ids, [])
 
         # Change the trigger fields will not change the domain
-        automation_form.trigger_field_ids.set(
+        automation_form.trigger_field_ids.add(
             self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids')
         )
         automation = automation_form.save()
         self.assertEqual(automation.filter_pre_domain, False)
         self.assertEqual(automation.filter_domain, repr([('priority', '=', True), ('employee', '=', False)]))
-        self.assertEqual(automation.trigger_field_ids.ids, [
+        self.assertItemsEqual(automation.trigger_field_ids.ids, [
+            self.env.ref('test_base_automation.field_base_automation_lead_test__priority').id,
+            self.env.ref('test_base_automation.field_base_automation_lead_test__employee').id,
             self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id
         ])
         self.assertEqual(automation.on_change_field_ids.ids, [])
 
-        # Erase the domain will not change the trigger fields
+        # Erase the domain will remove corresponding fields from the trigger fields
         automation_form.filter_domain = False
         automation = automation_form.save()
         self.assertEqual(automation.filter_pre_domain, False)

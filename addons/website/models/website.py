@@ -153,6 +153,9 @@ class Website(models.Model):
     def _default_social_tiktok(self):
         return self.env.ref('base.main_company').social_tiktok
 
+    def _default_social_discord(self):
+        return self.env.ref('base.main_company').social_discord
+
     def _default_logo(self):
         with tools.file_open('website/static/src/img/website_logo.svg', 'rb') as f:
             return base64.b64encode(f.read())
@@ -165,6 +168,7 @@ class Website(models.Model):
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
     social_tiktok = fields.Char('TikTok Account', default=_default_social_tiktok)
+    social_discord = fields.Char('Discord Account', default=_default_social_discord)
     social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the website logo as the default social share image.")
     has_social_default_image = fields.Boolean(compute='_compute_has_social_default_image', store=True)
 
@@ -516,7 +520,9 @@ class Website(models.Model):
     @api.model
     def configurator_skip(self):
         website = self.get_current_website()
+        theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
         website.configurator_done = True
+        return theme.button_choose_theme()
 
     @api.model
     def configurator_missing_industry(self, unknown_industry):
@@ -1041,6 +1047,9 @@ class Website(models.Model):
             fallback_create_missing_industry_image('s_wavy_grid_default_image_4', 's_carousel_default_image_1')
             fallback_create_missing_industry_image('s_timeline_images_default_image_1', 's_media_list_default_image_1')
             fallback_create_missing_industry_image('s_timeline_images_default_image_2', 's_media_list_default_image_2')
+            fallback_create_missing_industry_image('s_carousel_cards_default_image_1', 's_carousel_default_image_1')
+            fallback_create_missing_industry_image('s_carousel_cards_default_image_2', 's_carousel_default_image_2')
+            fallback_create_missing_industry_image('s_carousel_cards_default_image_3', 's_carousel_default_image_3')
 
         except Exception:
             pass

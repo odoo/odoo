@@ -837,7 +837,8 @@ class MrpProduction(models.Model):
         if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
             return
         productions_bypass_qty_producting = self.filtered(lambda p: p.lot_producing_id and p.product_tracking == 'lot' and p._origin and p._origin.qty_producing == p.qty_producing)
-        (self - productions_bypass_qty_producting)._set_qty_producing(False)
+        # sudo needed for portal users
+        (self - productions_bypass_qty_producting).sudo()._set_qty_producing(False)
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
@@ -1860,6 +1861,8 @@ class MrpProduction(models.Model):
         new_moves_vals = []
         moves = []
         move_to_backorder_moves = {}
+        # unlink all unregistered move lines linked a move containing an effictive registration
+        (self.move_raw_ids | self.move_finished_ids).filtered(lambda m: m.picked and not m.additional).move_line_ids.filtered(lambda ml: not ml.picked).unlink()
         for production in self:
             for move in production.move_raw_ids | production.move_finished_ids:
                 if move.additional:

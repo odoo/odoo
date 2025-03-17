@@ -21,6 +21,13 @@ class ProductTemplate(models.Model):
         string="Product Description",
         translate=True
     )
+    pos_optional_product_ids = fields.Many2many(
+        comodel_name='product.template',
+        relation='pos_product_optional_rel',
+        column1='src_id',
+        column2='dest_id',
+        string="POS Optional Products",
+        help="Optional products are suggested when customers add items to their cart (e.g., adding a burger suggests cold drinks or fries).")
 
     def create_product_variant_from_pos(self, attribute_value_ids, config_id):
         """ Create a product variant from the POS interface. """
@@ -50,7 +57,8 @@ class ProductTemplate(models.Model):
         return [
             'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
-            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description'
+            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description',
+            'pos_optional_product_ids'
         ]
 
     def _load_pos_data(self, data):
@@ -102,6 +110,9 @@ class ProductTemplate(models.Model):
         products += config._get_special_products().product_tmpl_id
         if config.tip_product_id:
             products += config.tip_product_id.product_tmpl_id
+        # Ensure optional products are loaded when configured.
+        if products.filtered(lambda p: p.pos_optional_product_ids):
+            products |= products.mapped("pos_optional_product_ids")
 
         fields = self._load_pos_data_fields(config.id)
         available_products = products.read(fields, load=False)
@@ -163,6 +174,19 @@ class ProductTemplate(models.Model):
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 ))
 
+    def _ensure_unused_in_pos(self):
+        open_pos_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
+        used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
+        if used_products & self:
+            raise UserError(_(
+                "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+                "Make sure to close all sessions first to avoid any issues.",
+            ))
+
+    def action_archive(self):
+        self._ensure_unused_in_pos()
+        return super().action_archive()
+
     @api.onchange('sale_ok')
     def _onchange_sale_ok(self):
         if not self.sale_ok:
@@ -185,7 +209,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         config = self.env['pos.config'].browse(pos_config_id)
         product_variant = self.env['product.product'].browse(product_variant_id) if product_variant_id else False
-        template_or_variant = product_variant or self
+        template_or_variant = product_variant or self.product_variant_id
 
         # Tax related
         taxes = self.taxes_id.compute_all(price, config.currency_id, quantity, template_or_variant)
@@ -218,6 +242,7 @@ class ProductTemplate(models.Model):
             {'id': w.id,
             'name': w.name,
             'available_quantity': template_or_variant.with_context({'warehouse_id': w.id}).qty_available,
+            'free_qty': template_or_variant.with_context({'warehouse_id': w.id}).free_qty,
             'forecasted_quantity': template_or_variant.with_context({'warehouse_id': w.id}).virtual_available,
             'uom': template_or_variant.uom_name}
             for w in self.env['stock.warehouse'].search([('company_id', '=', config.company_id.id)])]
@@ -253,5 +278,6 @@ class ProductTemplate(models.Model):
             'pricelists': pricelist_list,
             'warehouses': warehouse_list,
             'suppliers': supplier_list,
-            'variants': variant_list
+            'variants': variant_list,
+            'optional_products': self.pos_optional_product_ids.read(['id', 'name', 'list_price']),
         }

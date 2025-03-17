@@ -45,9 +45,11 @@ const messagePatch = {
                 return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
             },
         });
+        /** @type {Promise<Thread>[]} */
         this.mentionedChannelPromises = [];
         this.threadAsFirstUnread = Record.one("Thread", { inverse: "firstUnreadMessage" });
     },
+    /** @returns {import("models").ChannelMember[]} */
     get channelMemberHaveSeen() {
         return this.thread.membersThatCanSeen.filter(
             (m) => m.hasSeen(this) && m.persona.notEq(this.author)

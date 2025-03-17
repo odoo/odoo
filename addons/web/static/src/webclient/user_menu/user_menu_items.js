@@ -38,23 +38,22 @@ function supportItem(env) {
 
 class ShortcutsFooterComponent extends Component {
     static template = "web.UserMenu.ShortcutsFooterComponent";
-    static props = {};
+    static props = {
+        switchNamespace: { type: Function, optional: true },
+    };
     setup() {
         this.runShortcutKey = isMacOS() ? "CONTROL" : "ALT";
     }
 }
 
 function shortCutsItem(env) {
-    // ℹ️ `_t` can only be inlined directly inside JS template literals after
-    // Babel has been updated to version 2.12.
-    const translatedText = _t("Shortcuts");
     return {
         type: "item",
         id: "shortcuts",
         hide: env.isSmall,
         description: markup(
             `<div class="d-flex align-items-center justify-content-between">
-                <span>${escape(translatedText)}</span>
+                <span>${escape(_t("Shortcuts"))}</span>
                 <span class="fw-bold">${isMacOS() ? "CMD" : "CTRL"}+K</span>
             </div>`
         ),

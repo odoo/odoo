@@ -19,14 +19,13 @@ import {
     mockTimeZone,
     runAllTimers,
 } from "@odoo/hoot-mock";
-import { Component, onWillRender, onWillStart, xml } from "@odoo/owl";
+import { Component, onRendered, onWillRender, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
     contains,
     defineActions,
     defineModels,
     defineParams,
-    defineStyle,
     fields,
     getMockEnv,
     getService,
@@ -39,6 +38,7 @@ import {
     patchWithCleanup,
     preloadBundle,
     serverState,
+    validateSearch,
 } from "@web/../tests/web_test_helpers";
 import {
     changeScale,
@@ -274,13 +274,6 @@ beforeEach(() => {
     });
     patchWithCleanup(CalendarYearRenderer.prototype, patchFullCalendarOptions());
     patchWithCleanup(CalendarCommonRenderer.prototype, patchFullCalendarOptions());
-
-    // Disable action swiper transitions
-    defineStyle(/* css */ `
-        .o_actionswiper_target_container {
-            transition: none !important;
-        }
-    `);
 });
 
 onRpc("has_group", () => true);
@@ -412,7 +405,7 @@ test(`simple calendar rendering on desktop`, async () => {
         message: "By default, only the events of the current user are displayed (0 in this case)",
     });
 
-    await toggleFilter("attendee_ids", "all");
+    await toggleSectionFilter("attendee_ids");
     expect(`.o_event`).toHaveCount(6, {
         message: "should display 6 events on the week (4 event + 1 is_all_day + 1 >24h is_all_day)",
     });
@@ -425,7 +418,7 @@ test(`simple calendar rendering on desktop`, async () => {
     expect(`.o_calendar_sidebar .o_datetime_picker .o_selected`).toHaveCount(1);
 
     await changeScale("month");
-    await toggleFilter("attendee_ids", "all");
+    await toggleSectionFilter("attendee_ids");
     await toggleFilter("attendee_ids", "1");
     await toggleFilter("attendee_ids", "2");
     expect(`.o_event`).toHaveCount(8, {
@@ -445,7 +438,7 @@ test(`simple calendar rendering on desktop`, async () => {
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item:eq(-1) label img`).toHaveCount(0);
 
     expect(`.o_calendar_filter:eq(0)`).toBeDisplayed();
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(2);
     expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
 
     await toggleFilter("attendee_ids", "1");
@@ -460,14 +453,14 @@ test(`simple calendar rendering on desktop`, async () => {
     expect(queryAllTexts`.dropdown-item`).toEqual(["partner 3", "partner 4"]);
 
     await contains(`.dropdown-item:eq(0)`).click();
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(4);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
 
     await contains(`.o_calendar_sidebar input[type=text]`).click();
     expect(`.dropdown-item`).toHaveCount(1);
     expect(`.dropdown-item`).toHaveText("partner 4");
 
     await removeFilter("attendee_ids", "2");
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(2);
 });
 
 test.tags("mobile");
@@ -513,8 +506,7 @@ test(`simple calendar rendering on mobile`, async () => {
     expect(`.o_event`).toHaveCount(0, {
         message: "By default, only the events of the current user are displayed (0 in this case)",
     });
-
-    await toggleFilter("attendee_ids", "all");
+    await toggleSectionFilter("attendee_ids");
     await changeScale("week");
     expect(`.o_event`).toHaveCount(6, {
         message: "should display 6 events on the week (4 event + 1 is_all_day + 1 >24h is_all_day)",
@@ -526,7 +518,7 @@ test(`simple calendar rendering on mobile`, async () => {
     await changeScale("day");
     expect(`.o_event`).toHaveCount(2);
     await changeScale("month");
-    await toggleFilter("attendee_ids", "all");
+    await toggleSectionFilter("attendee_ids");
     await toggleFilter("attendee_ids", "1");
     await toggleFilter("attendee_ids", "2");
     expect(`.o_event`).toHaveCount(8, {
@@ -547,7 +539,7 @@ test(`simple calendar rendering on mobile`, async () => {
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item:eq(-1) label img`).toHaveCount(0);
 
     expect(`.o_calendar_filter:eq(0)`).toBeDisplayed();
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(2);
     expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
     await hideCalendarPanel();
     await toggleFilter("attendee_ids", "1");
@@ -563,14 +555,14 @@ test(`simple calendar rendering on mobile`, async () => {
     expect(queryAllTexts`.dropdown-item`).toEqual(["partner 3", "partner 4"]);
 
     await contains(`.dropdown-item:eq(0)`).click();
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(4);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
 
     await contains(`.o_calendar_sidebar input[type=text]`).click();
     expect(`.dropdown-item`).toHaveCount(1);
     expect(`.dropdown-item`).toHaveText("partner 4");
 
     await removeFilter("attendee_ids", "2");
-    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
+    expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(2);
 });
 
 test(`filter panel autocomplete: updates when typing`, async () => {
@@ -635,7 +627,7 @@ test(`check the avatar of the attendee in the calendar filter panel`, async () =
         type: "calendar",
         arch: `
             <calendar date_start="start" date_stop="stop">
-                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" avatar_field="avatar_128"/>
             </calendar>
         `,
     });
@@ -654,7 +646,7 @@ test(`check the avatar of the attendee in the calendar filter panel`, async () =
     expect(`.o-autocomplete--dropdown-item:first-child .dropdown-item img`).toHaveClass("o_avatar");
 
     await contains(".o-autocomplete--dropdown-item:first-child").click();
-    expect(".o_calendar_filter_item:eq(-2)").toHaveText("partner 3");
+    expect(".o_calendar_filter_item:eq(-1)").toHaveText("partner 3");
 });
 
 test.tags("desktop");
@@ -688,12 +680,8 @@ test(`Select multiple attendees in the calendar filter panel autocomplete on des
 
     const section = `.o_calendar_filter[data-name="attendee_ids"]`;
     expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
-    await checkFilterItems(3);
-    expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
-        "partner 1",
-        "partner 2",
-        "Everything",
-    ]);
+    await checkFilterItems(2);
+    expect(queryAllTexts`.o_calendar_filter_item`).toEqual(["partner 1", "partner 2"]);
 
     expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
     await contains(`${section} .o-autocomplete--input`).click();
@@ -719,13 +707,12 @@ test(`Select multiple attendees in the calendar filter panel autocomplete on des
     expect("o_dialog").toHaveCount(0);
 
     expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
-    await checkFilterItems(5);
+    await checkFilterItems(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "partner 1",
         "partner 2",
         "partner 3",
         "partner 4",
-        "Everything",
     ]);
 });
 
@@ -758,12 +745,8 @@ test(`add a filter with the search more dialog on desktop`, async () => {
         `,
     });
     const section = `.o_calendar_filter[data-name="attendee_ids"]`;
-    expect(`${section} .o_calendar_filter_item`).toHaveCount(3);
-    expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
-        "partner 1",
-        "partner 2",
-        "Everything",
-    ]);
+    expect(`${section} .o_calendar_filter_item`).toHaveCount(2);
+    expect(queryAllTexts`.o_calendar_filter_item`).toEqual(["partner 1", "partner 2"]);
 
     // Open the autocomplete dropdown
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
@@ -828,13 +811,12 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     expect("o_dialog").toHaveCount(0);
 
     expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
-    await checkFilterItems(5);
+    await checkFilterItems(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "foo partner 5",
         "foo partner 6",
         "partner 1",
         "partner 2",
-        "Everything",
     ]);
 
     // Open the autocomplete dropdown
@@ -894,15 +876,59 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     // Close the search more dialog without choosing a record
     await contains(`.modal .o_form_button_cancel`).click();
     expect(`.modal`).toHaveCount(0);
-    expect(`${section} .o_calendar_filter_item`).toHaveCount(5);
+    expect(`${section} .o_calendar_filter_item`).toHaveCount(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "foo partner 5",
         "foo partner 6",
         "partner 1",
         "partner 2",
-        "Everything",
     ]);
     expect(`.o-autocomplete--input`).toHaveValue("");
+});
+
+test.tags("desktop");
+test(`add a filter with the search more dialog (field with a context)`, async () => {
+    CalendarPartner._views = {
+        list: `<list><field name="name"/></list>`,
+        search: `<search/>`,
+    };
+    CalendarPartner._records.push(
+        { id: 5, name: "foo partner 5" },
+        { id: 6, name: "foo partner 6" },
+        { id: 7, name: "foo partner 7" },
+        { id: 8, name: "foo partner 8" },
+        { id: 9, name: "foo partner 9" },
+        { id: 10, name: "foo partner 10" },
+        { id: 11, name: "foo partner 11" },
+        { id: 12, name: "foo partner 12" },
+        { id: 13, name: "foo partner 13" },
+        { id: 14, name: "foo partner 14" }
+    );
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" context="{'search_view_ref': 'my_view'}"/>
+            </calendar>
+        `,
+    });
+
+    onRpc("get_views", ({ kwargs }) => {
+        expect.step("get_views");
+        expect(kwargs.context.search_view_ref).toBe("my_view");
+    });
+    await contains(`.o_calendar_filter[data-name="attendee_ids"] .o-autocomplete--input`).click();
+    await advanceTime(500);
+    expect(
+        `.o_calendar_filter[data-name="attendee_ids"] .o-autocomplete--dropdown-item:last-child`
+    ).toHaveText("Search More...");
+    await contains(
+        `.o_calendar_filter[data-name="attendee_ids"] .o-autocomplete--dropdown-item:last-child`
+    ).click();
+    expect(`.modal`).toHaveCount(1);
+    expect.verifySteps(["get_views"]);
 });
 
 test.tags("mobile");
@@ -936,12 +962,8 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     });
     await displayCalendarPanel();
     const section = `.o_calendar_filter[data-name="attendee_ids"]`;
-    expect(`${section} .o_calendar_filter_item`).toHaveCount(3);
-    expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
-        "partner 1",
-        "partner 2",
-        "Everything",
-    ]);
+    expect(`${section} .o_calendar_filter_item`).toHaveCount(2);
+    expect(queryAllTexts`.o_calendar_filter_item`).toEqual(["partner 1", "partner 2"]);
 
     // Open the autocomplete dropdown
     expect(`${section} .o-autocomplete--dropdown-menu`).toHaveCount(0);
@@ -1004,13 +1026,12 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     expect("o_dialog").toHaveCount(0);
 
     expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
-    expect(`.o_calendar_filter_item`).toHaveCount(5);
+    expect(`.o_calendar_filter_item`).toHaveCount(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "foo partner 5",
         "foo partner 6",
         "partner 1",
         "partner 2",
-        "Everything",
     ]);
 
     // Open the autocomplete dropdown
@@ -1066,13 +1087,12 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     ]);
     await closeCwPopOver();
     expect(`.modal`).toHaveCount(0);
-    expect(`${section} .o_calendar_filter_item`).toHaveCount(5);
+    expect(`${section} .o_calendar_filter_item`).toHaveCount(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "foo partner 5",
         "foo partner 6",
         "partner 1",
         "partner 2",
-        "Everything",
     ]);
     expect(`.o-autocomplete--input`).toHaveValue("");
 });
@@ -1692,14 +1712,14 @@ test(`create event with timezone in week mode with formViewDialog`, async () => 
     await selectTimeRange("2016-12-13 08:00:00", "2016-12-13 10:00:00");
     await contains(`.o-calendar-quick-create--input`).edit("new event", { confirm: false });
     await contains(`.o-calendar-quick-create--edit-btn`).click();
-    expect(`.o_field_widget[name='start'] input`).toHaveValue("12/13/2016 08:00:00");
+    expect(`.o_field_widget[name='start'] input`).toHaveValue("12/13/2016 08:00");
 
     // Set is_all_day to true in formViewDialog
     await contains(`.modal .o_field_boolean[name='is_all_day'] input`).click();
     expect(`.o_field_widget[name='start_date'] input`).toHaveValue("12/13/2016");
 
     await contains(`.modal .o_field_boolean[name='is_all_day'] input`).click();
-    expect(`.o_field_widget[name='start'] input`).toHaveValue("12/13/2016 02:00:00");
+    expect(`.o_field_widget[name='start'] input`).toHaveValue("12/13/2016 02:00");
 
     // use datepicker to enter a date: 12/13/2016 08:00:00
     await contains(`.o_field_widget[name="start"] input`).click();
@@ -2071,9 +2091,9 @@ test(`rendering, with many2many on desktop`, async () => {
             </calendar>
         `,
     });
-    expect(`.o_calendar_filter_item .o_cw_filter_avatar`).toHaveCount(3);
+    expect(`.o_calendar_filter_item .o_cw_filter_avatar`).toHaveCount(2);
 
-    await toggleFilter("attendee_ids", "all");
+    await toggleSectionFilter("attendee_ids");
     await clickEvent(4);
     expect(`.o_cw_popover`).toHaveCount(1);
     expect(`.o_cw_popover img`).toHaveCount(1);
@@ -2102,9 +2122,9 @@ test(`rendering, with many2many on mobile`, async () => {
         `,
     });
     await displayCalendarPanel();
-    expect(`.o_calendar_filter_item .o_cw_filter_avatar`).toHaveCount(3);
+    expect(`.o_calendar_filter_item .o_cw_filter_avatar`).toHaveCount(2);
     await hideCalendarPanel();
-    await toggleFilter("attendee_ids", "all");
+    await toggleSectionFilter("attendee_ids");
     await clickEvent(4);
     expect(".modal").toHaveCount(1);
     expect(`.modal img`).toHaveCount(1);
@@ -2419,39 +2439,6 @@ test(`check filters with filter_field specified on mobile`, async () => {
     expect(MockServer.env["filter.partner"].read([2])[0].is_checked).toBe(false);
 });
 
-test('"all" filter', async () => {
-    onRpc("event", "search_read", ({ kwargs }) => {
-        expect.step(kwargs.domain[2] || []);
-    });
-    await mountView({
-        resModel: "event",
-        type: "calendar",
-        arch: `
-            <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="week" attendee="attendee_ids" color="partner_id">
-                <filter name="user_id" avatar_field="image"/>
-                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
-            </calendar>
-        `,
-    });
-
-    // By default, no user is selected
-    expect(`.o_event`).toHaveCount(0);
-    expect.verifySteps([["attendee_ids", "in", []]]);
-
-    await toggleFilter("attendee_ids", 1);
-    expect(`.o_event`).toHaveCount(4);
-    expect.verifySteps([["attendee_ids", "in", [1]]]);
-
-    await toggleFilter("attendee_ids", 2);
-    expect(`.o_event`).toHaveCount(5);
-    expect.verifySteps([["attendee_ids", "in", [1, 2]]]);
-
-    // Click on the "all" filter to reload all events
-    await toggleFilter("attendee_ids", "all");
-    expect(`.o_event`).toHaveCount(5);
-    expect.verifySteps([[]]);
-});
-
 test(`dynamic filters with selection fields`, async () => {
     Event._fields.selection = fields.Selection({
         string: "Ambiance",
@@ -2514,9 +2501,6 @@ test(`Colors: cycling through available colors`, async () => {
     expect(`.o_event[data-event-id="55"]`).toHaveClass("o_calendar_color_55");
     expect(`.o_event[data-event-id="56"]`).toHaveClass("o_calendar_color_1");
     await displayCalendarPanel();
-    expect(
-        `.o_calendar_filter[data-name="attendee_ids"] .o_calendar_filter_item[data-value="all"]`
-    ).toHaveCount(1);
     expect(
         `.o_calendar_filter[data-name="attendee_ids"] .o_calendar_filter_item[data-value="1"]`
     ).toHaveClass("o_cw_filter_color_1");
@@ -2626,8 +2610,6 @@ test(`Add filters and specific color`, async () => {
     });
     expect.verifySteps([
         "get_views (event)",
-        "has_access (event)",
-        "has_access (event)",
         "search_read (filter.partner) [partner_id]",
         "search_read (event) [display_name, start, stop, is_all_day, color, attendee_ids, type_id]",
     ]);
@@ -2799,16 +2781,13 @@ test(`makeFilterUser: color for current user`, async () => {
     const section = `.o_calendar_filter[data-name="attendee_ids"]`;
     expect(`${section} [class*='o_cw_filter_color_']`).toHaveCount(3);
     expect(`${section} .o_cw_filter_label`).toHaveText("Attendees");
-    expect(`${section} .o_calendar_filter_item`).toHaveCount(4);
+    expect(`${section} .o_calendar_filter_item`).toHaveCount(3);
     expect(`${section} .o_calendar_filter_item[data-value="17"]`).toHaveText("Mitchell Admin");
     expect(`${section} .o_calendar_filter_item[data-value="17"]`).toHaveClass(
         "o_cw_filter_color_17"
     );
     expect(`${section} .o_calendar_filter_item[data-value="2"]`).toHaveClass("o_cw_filter_color_2");
     expect(`${section} .o_calendar_filter_item[data-value="1"]`).toHaveClass("o_cw_filter_color_1");
-    expect(`${section} .o_calendar_filter_item[data-value="all"]`).toHaveText(
-        "Everybody's calendars"
-    );
 });
 
 test(`Colors: dynamic filters with same color as events`, async () => {
@@ -3025,14 +3004,14 @@ test(`create event with filters`, async () => {
 
     // By default only
     await toggleFilter("attendee_ids", 1);
-    await checkFilterItems(5);
+    await checkFilterItems(4);
     expect(`.o_event`).toHaveCount(4);
 
     // quick create a record
     await selectTimeRange("2016-12-15 06:00:00", "2016-12-15 08:00:00");
     await contains(`.o-calendar-quick-create--input`).edit("coucou", { confirm: false });
     await contains(`.o-calendar-quick-create--create-btn`).click();
-    await checkFilterItems(6);
+    await checkFilterItems(5);
     expect(`.o_event`).toHaveCount(5);
 
     // change default value for quick create an hide record
@@ -3046,7 +3025,7 @@ test(`create event with filters`, async () => {
     await selectTimeRange("2016-12-13 06:00:00", "2016-12-13 08:00:00");
     await contains(`.o-calendar-quick-create--input`).edit("coucou 2", { confirm: false });
     await contains(`.o-calendar-quick-create--create-btn`).click();
-    await checkFilterItems(6);
+    await checkFilterItems(5);
     expect(`.o_event`).toHaveCount(4);
 
     await toggleFilter("partner_id", 4);
@@ -3087,7 +3066,7 @@ test(`create event with filters (no quickCreate)`, async () => {
     // dislay all attendee calendars
     await toggleSectionFilter("attendee_ids");
     await toggleFilter("partner_id", 4);
-    await checkFilterItems(5);
+    await checkFilterItems(4);
     expect(`.o_event`).toHaveCount(3);
 
     // quick create a record
@@ -3095,8 +3074,26 @@ test(`create event with filters (no quickCreate)`, async () => {
     await contains(`.o-calendar-quick-create--input`).edit("coucou", { confirm: false });
     await contains(`.o-calendar-quick-create--edit-btn`).click();
     await contains(`.modal-footer .o_form_button_save`).click();
-    await checkFilterItems(6);
+    await checkFilterItems(5);
     expect(`.o_event`).toHaveCount(4);
+});
+
+test(`Toggle multiple values at once in a filter with filter_field`, async () => {
+    onRpc("write", ({ args }) => {
+        expect.step(`write ${args[0]}`);
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" filter_field="is_checked"/>
+            </calendar>
+        `,
+    });
+
+    await toggleSectionFilter("attendee_ids");
+    expect.verifySteps(["write 1,2"]); // single write rpc, on both records
 });
 
 test.tags("desktop");
@@ -3132,7 +3129,7 @@ test(`Update event with filters on desktop`, async () => {
     // select needed partner filters
     await toggleFilter("attendee_ids", 1);
     await toggleFilter("partner_id", 4);
-    expect(`.o_calendar_filter_item`).toHaveCount(5);
+    expect(`.o_calendar_filter_item`).toHaveCount(4);
     expect(`.o_event`).toHaveCount(3);
 
     await clickEvent(2);
@@ -3145,12 +3142,12 @@ test(`Update event with filters on desktop`, async () => {
     await contains(`.ui-autocomplete.dropdown-menu .ui-menu-item:contains(user 5)`).click();
     await contains(`.modal .o_form_button_save`).click();
 
-    expect(`.o_calendar_filter_item`).toHaveCount(6);
+    expect(`.o_calendar_filter_item`).toHaveCount(5);
     expect(`.o_event`).toHaveCount(3);
 
     // test the behavior of the 'select all' input checkbox
     expect(`.o_calendar_filter_item input:checked`).toHaveCount(3);
-    expect(`.o_calendar_filter_item input:not(:checked)`).toHaveCount(3);
+    expect(`.o_calendar_filter_item input:not(:checked)`).toHaveCount(2);
 
     // Click to select all users
     await toggleSectionFilter("partner_id");
@@ -3203,7 +3200,7 @@ test(`Update event with filters on mobile`, async () => {
     // select needed partner filters
     await toggleFilter("attendee_ids", 1);
     await toggleFilter("partner_id", 4);
-    await checkFilterItems(5);
+    await checkFilterItems(4);
     expect(`.o_event`).toHaveCount(3);
 
     await clickEvent(2);
@@ -3215,13 +3212,13 @@ test(`Update event with filters on mobile`, async () => {
     await contains(`.o_kanban_record:contains(user 5)`).click();
     await contains(`.modal .o_form_button_save`).click();
 
-    await checkFilterItems(6);
+    await checkFilterItems(5);
     expect(`.o_event`).toHaveCount(3);
     await displayCalendarPanel();
 
     // test the behavior of the 'select all' input checkbox
     expect(`.o_calendar_filter_item input:checked`).toHaveCount(3);
-    expect(`.o_calendar_filter_item input:not(:checked)`).toHaveCount(3);
+    expect(`.o_calendar_filter_item input:not(:checked)`).toHaveCount(2);
     await hideCalendarPanel();
 
     // Click to select all users
@@ -3293,27 +3290,9 @@ test(`change pager with filters`, async () => {
     await toggleFilter("partner_id", 4);
     await pickDate("2016-12-05");
     await changeScale("week");
-    await checkFilterItems(6);
+    await checkFilterItems(5);
     expect(`.o_event`).toHaveCount(2);
     expect(queryAllTexts`.fc-event .o_event_title`).toEqual(["event 8", "event 9"]);
-});
-
-test(`ensure events are still shown if filters give an empty domain`, async () => {
-    await mountView({
-        resModel: "event",
-        type: "calendar",
-        arch: `
-            <calendar date_start="start" mode="week">
-                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
-            </calendar>
-        `,
-    });
-
-    await toggleSectionFilter("attendee_ids");
-    expect(`.o_event`).toHaveCount(5);
-
-    await toggleFilter("attendee_ids", "all");
-    expect(`.o_event`).toHaveCount(5);
 });
 
 test.tags("desktop");
@@ -3474,25 +3453,26 @@ test(`timezone does not affect drag and drop on desktop`, async () => {
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
 
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/16/2016 16:00:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("12/16/2016 16:00");
 
     await closeCwPopOver();
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("11/27/2016 16:00:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("11/27/2016 16:00");
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
 });
-// TODO JUM
-test.tags("mobile").skip(`timezone does not affect drag and drop on mobile`, async () => {
+
+test.tags("mobile");
+test(`timezone does not affect drag and drop on mobile`, async () => {
     mockTimeZone(-40);
     patchWithCleanup(CalendarRenderer.prototype, {
         get actionSwiperProps() {
@@ -3517,26 +3497,27 @@ test.tags("mobile").skip(`timezone does not affect drag and drop on mobile`, asy
             </calendar>
         `,
     });
+
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00:00");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
+    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
     await closeCwPopOver();
 
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/16/2016 16:00:00");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
+    expect(`.o_field_widget[name="start"]`).toHaveText("12/16/2016 16:00");
     await closeCwPopOver();
 
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("11/27/2016 16:00:00");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
+    expect(`.o_field_widget[name="start"]`).toHaveText("11/27/2016 16:00");
     await closeCwPopOver();
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00:00");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
+    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
 });
 
 test.tags("desktop");
@@ -3581,16 +3562,6 @@ test(`timezone does not affect calendar with date field on desktop`, async () =>
     expect(
         `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
     ).toHaveText("11/27/2016");
-
-    await closeCwPopOver();
-    await moveEventToDate(8, "2017-01-07");
-    expect.verifySteps(["write 2017-01-07"]);
-
-    await clickEvent(8);
-    expect(`.o_cw_popover`).toHaveCount(1);
-    expect(
-        `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
-    ).toHaveText("01/07/2017");
 });
 
 test.tags("mobile");
@@ -3642,16 +3613,6 @@ test(`timezone does not affect calendar with date field on mobile`, async () => 
     expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
         "11/27/2016"
     );
-
-    await closeCwPopOver();
-    await moveEventToDate(8, "2017-01-07");
-    expect.verifySteps(["write 2017-01-07"]);
-
-    await clickEvent(8);
-    expect(`.modal`).toHaveCount(1);
-    expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
-        "01/07/2017"
-    );
 });
 
 test(`drag and drop on month mode`, async () => {
@@ -3698,11 +3659,11 @@ test(`drag and drop on month mode with all_day mapping`, async () => {
 
     // use datepicker to enter a date: 12/20/2016 07:00:00
     await contains(`.o_field_widget[name="start"] input`).click();
-    await contains(`.o_time_picker_select:eq(0)`).select("7");
+    await selectHourOnPicker("7:00");
 
     // use datepicker to enter a date: 12/20/2016 19:00:00
     await contains(`.o_field_widget[name="stop"] input`).click();
-    await contains(`.o_time_picker_select:eq(0)`).select("19");
+    await selectHourOnPicker("19:00");
     await contains(`.modal .o_form_button_save`).click();
     await moveEventToDate(8, "2016-12-19");
     await clickEvent(8);
@@ -3892,8 +3853,8 @@ test(`default week start (US) month mode on desktop`, async () => {
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-week-number`).toHaveText("36");
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-day-number`).toHaveText("1");
     expect(`.fc-daygrid-day:eq(0)`).toHaveAttribute("data-date", "2019-09-01");
-    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("12");
-    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-12");
+    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("5");
+    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-05");
 });
 
 test.tags("mobile");
@@ -3919,8 +3880,8 @@ test(`default week start (US) month mode on mobile`, async () => {
     expect(`.o-fc-week:eq(0)`).toHaveText("36");
     expect(`.fc-daygrid-day:eq(0) .fc-daygrid-day-number`).toHaveText("1");
     expect(`.fc-daygrid-day:eq(0)`).toHaveAttribute("data-date", "2019-09-01");
-    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("12");
-    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-12");
+    expect(`.fc-daygrid-day:eq(-1) .fc-daygrid-day-number`).toHaveText("5");
+    expect(`.fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-05");
 });
 
 test.tags("desktop");
@@ -4690,14 +4651,6 @@ test(`calendar with option month_overflow not set (default)`, async () => {
             user_id: serverState.userId,
             partner_id: 1,
         },
-        {
-            id: 3,
-            name: "event january",
-            start: "2017-01-02 10:00:00",
-            stop: "2016-01-02 15:00:00",
-            user_id: serverState.userId,
-            partner_id: 1,
-        },
     ];
 
     onRpc("search_read", ({ kwargs }) => {
@@ -4716,7 +4669,7 @@ test(`calendar with option month_overflow not set (default)`, async () => {
             </calendar>
         `,
     });
-    expect(`.o_event`).toHaveCount(3);
+    expect(`.o_event`).toHaveCount(2);
     expect(".fc-day-disabled").toHaveCount(0);
     expect.verifySteps(["search_read"]);
 });
@@ -4766,7 +4719,7 @@ test(`calendar with option month_overflow set to false`, async () => {
         `,
     });
     expect(".o_event").toHaveCount(1);
-    expect(".fc-day-disabled").toHaveCount(11);
+    expect(".fc-day-disabled").toHaveCount(4);
     expect.verifySteps(["search_read"]);
 });
 
@@ -5162,48 +5115,6 @@ test(`Scale: scale default is fetched from localStorage`, async () => {
     expect.verifySteps(["scale_year"]);
 });
 
-test(`Retaining the 'all' filter value on re-rendering`, async () => {
-    defineActions([
-        {
-            id: 1,
-            name: "Partners",
-            res_model: "event",
-            views: [
-                [false, "calendar"],
-                [false, "list"],
-            ],
-        },
-    ]);
-
-    Event._views = {
-        calendar: `
-            <calendar date_start="start" date_stop="stop" all_day="allday" mode="week" event_open_popup="1" attendee="attendee_ids" color="partner_id">
-                <filter name="user_id" avatar_field="image"/>
-                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
-                <field name="partner_id" filters="1" invisible="1"/>
-            </calendar>
-        `,
-        list: `
-            <list sample="1">
-                <field name="start"/>
-                <field name="stop"/>
-            </list>
-        `,
-        search: `<search/>`,
-    };
-
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(1);
-    await displayCalendarPanel();
-    await contains(`.o_calendar_filter_item[data-value='all'] input`).click();
-    expect(`.o_calendar_filter_item[data-value='all'] input`).toBeChecked();
-
-    await getService("action").switchView("list");
-    await getService("action").switchView("calendar");
-    await displayCalendarPanel();
-    expect(`.o_calendar_filter_item[data-value='all'] input`).toBeChecked();
-});
-
 test.tags("desktop");
 test(`scroll to current hour when clicking on today`, async () => {
     mockDate("2016-12-12T01:00:00", 1);
@@ -5313,8 +5224,8 @@ test("update time while drag and drop on month mode", async () => {
     await clickEvent(8);
     await contains(".o_cw_popover_edit").click();
 
-    expect(".o_field_widget[name='start'] input").toHaveValue("12/26/2016 08:00:00");
-    expect(".o_field_widget[name='stop'] input").toHaveValue("12/29/2016 10:00:00");
+    expect(".o_field_widget[name='start'] input").toHaveValue("12/26/2016 08:00");
+    expect(".o_field_widget[name='stop'] input").toHaveValue("12/29/2016 10:00");
 });
 
 test("html field on calendar shouldn't have a tooltip", async () => {
@@ -5609,12 +5520,11 @@ test("calendar: check context is correclty sent to fetch data", async () => {
 });
 
 test(`disable editing without write access rights`, async () => {
-    onRpc("has_access", ({ args }) => args[1] != "write");
     await mountView({
         resModel: "event",
         type: "calendar",
         arch: `
-            <calendar date_start="start" date_stop="stop">
+            <calendar date_start="start" date_stop="stop" edit="0">
                 <field name="name"/>
             </calendar>
         `,
@@ -5622,4 +5532,115 @@ test(`disable editing without write access rights`, async () => {
     expect(`.fc-event-draggable`).toHaveCount(0, {
         message: "Record should not be draggable/editable",
     });
+});
+
+test(`calendar view with show_unusual_days`, async () => {
+    let unusualDays = {
+        "2016-12-14": true,
+    };
+    onRpc("get_unusual_days", ({ args }) => {
+        expect.step(`get_unusual_days from ${args[0]} to ${args[1]}`);
+        return unusualDays;
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" show_unusual_days="1">
+                <field name="name"/>
+            </calendar>
+        `,
+    });
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(1);
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveAttribute("data-date", "2016-12-14");
+
+    unusualDays = {
+        "2016-12-14": true,
+        "2016-12-21": true,
+    };
+    await changeScale("month");
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(2);
+    expect(".fc-daygrid-day.o_calendar_disabled:eq(0)").toHaveAttribute("data-date", "2016-12-14");
+    expect(".fc-daygrid-day.o_calendar_disabled:eq(1)").toHaveAttribute("data-date", "2016-12-21");
+
+    await changeScale("week");
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(1);
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveAttribute("data-date", "2016-12-14");
+
+    unusualDays = {};
+    await navigate("next");
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(0);
+
+    await navigate("prev");
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveCount(1);
+    expect(".fc-daygrid-day.o_calendar_disabled").toHaveAttribute("data-date", "2016-12-14");
+
+    expect.verifySteps([
+        "get_unusual_days from 2016-12-10 23:00:00 to 2016-12-17 22:59:59",
+        "get_unusual_days from 2016-11-26 23:00:00 to 2017-01-07 22:59:59",
+        "get_unusual_days from 2016-12-17 23:00:00 to 2016-12-24 22:59:59",
+    ]);
+});
+
+test.tags("desktop");
+test(`calendar renderer is rendered once after search refresh`, async () => {
+    patchWithCleanup(CalendarRenderer.prototype, {
+        setup() {
+            super.setup();
+            onRendered(() => expect.step("rendered"));
+        },
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <filter name="user_id"/>
+            </calendar>
+        `,
+    });
+    expect.verifySteps(["rendered"]);
+    await validateSearch();
+    expect.verifySteps(["rendered"]);
+});
+
+test.tags("desktop");
+test(`calendar with filters and count aggregate`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" aggregate="id:count">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" filter_field="is_checked"/>
+            </calendar>
+        `,
+    });
+
+    expect(queryAllTexts(".o_calendar_filter_item span")).toEqual(["partner 1", "2", "partner 2"]);
+});
+
+test.tags("desktop");
+test(`calendar with dynamic filters and sum aggregate`, async () => {
+    Event._fields.revenue = fields.Float();
+    Event._records[0].revenue = 1200;
+    Event._records[1].revenue = 350;
+    Event._records[2].revenue = 800;
+    Event._records[3].revenue = 3000;
+    Event._records[4].revenue = 1900;
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" aggregate="revenue:sum">
+                <field name="partner_id" filters="1"/>
+            </calendar>
+        `,
+    });
+
+    expect(queryAllTexts(".o_calendar_filter_item span")).toEqual([
+        "partner 1",
+        "4,550",
+        "partner 4",
+        "2,700",
+    ]);
 });

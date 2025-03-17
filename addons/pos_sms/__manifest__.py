@@ -13,5 +13,6 @@
             'pos_sms/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

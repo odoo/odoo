@@ -92,6 +92,16 @@ export class TraceabilityReport extends Component {
         });
     }
 
+    onClickPartner(line) {
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: "res.partner",
+            res_id: line.partner_id,
+            views: [[false, "form"]],
+            target: "current",
+        });
+    }
+
     onCLickOpenLot(line) {
         this.actionService.doAction({
             type: "ir.actions.client",

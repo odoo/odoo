@@ -7,8 +7,6 @@ import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer } from "./mock_server/mock_server";
-import { allowedFns } from "@web/core/py_js/py_interpreter";
-
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
  *
@@ -103,17 +101,10 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
             }
             translatedTerms[translationLoaded] = false;
         }
-
-        // Ideally: should be done in a patch of the user, but this is less intrusive for now.
-        allowedFns.forEach((fn) => {
-            if (fn.name === "has") {
-                allowedFns.delete(fn);
-            }
-        });
     });
     Object.assign(currentEnv, partialEnv, createDebugContext(currentEnv)); // This is needed if the views are in debug mode
 
-    registerDebugInfo(currentEnv);
+    registerDebugInfo("env", currentEnv);
 
     startRouter();
     await startServices(currentEnv);
@@ -153,12 +144,16 @@ export function mockService(name, serviceFactory) {
         name,
         {
             ...originalService,
-            async start(env, dependencies) {
+            start(env, dependencies) {
                 if (typeof serviceFactory === "function") {
                     return serviceFactory(env, dependencies);
                 } else {
-                    const service = await originalService.start(env, dependencies);
-                    patch(service, serviceFactory);
+                    const service = originalService.start(env, dependencies);
+                    if (service instanceof Promise) {
+                        service.then((value) => patch(value, serviceFactory));
+                    } else {
+                        patch(service, serviceFactory);
+                    }
                     return service;
                 }
             },

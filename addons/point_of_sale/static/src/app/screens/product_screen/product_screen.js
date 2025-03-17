@@ -23,6 +23,7 @@ import {
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
+import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optional_products_popup/optional_products_popup";
 
 const { DateTime } = luxon;
 
@@ -288,21 +289,6 @@ export class ProductScreen extends Component {
             this.currentOrder.getSelectedOrderline()?.getDisplayPrice()
         );
     }
-    /**
-     * This getter is used to restart the animation on the product-reminder.
-     * When the information present on the product-reminder will change,
-     * the key will change and thus a new product-reminder will be created
-     * and the old one will be garbage collected leading to the animation
-     * being retriggered.
-     */
-    get animationKey() {
-        return [
-            this.currentOrder.getSelectedOrderline()?.uuid,
-            this.selectedOrderlineQuantity,
-            this.selectedOrderlineDisplayName,
-            this.selectedOrderlineTotal,
-        ].join(",");
-    }
 
     switchPane() {
         this.pos.scanning = false;
@@ -330,13 +316,8 @@ export class ProductScreen extends Component {
             this.state.currentOffset = 0;
         }
         const result = await this.loadProductFromDB();
-        if (result.length > 0) {
-            this.notification.add(
-                _t('%s product(s) found for "%s".', result.length, searchProductWord),
-                3000
-            );
-        } else {
-            this.notification.add(_t('No more product found for "%s".', searchProductWord));
+        if (result.length === 0) {
+            this.notification.add(_t('No other products found for "%s".', searchProductWord), 3000);
         }
         if (this.state.previousSearchWord === searchProductWord) {
             this.state.currentOffset += result.length;
@@ -384,7 +365,12 @@ export class ProductScreen extends Component {
     }
 
     async addProductToOrder(product) {
-        await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, {});
+        const line = await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, {});
+        if (line?.product_id?.product_tmpl_id?.pos_optional_product_ids?.length) {
+            this.dialog.add(OptionalProductPopup, {
+                productTemplate: product,
+            });
+        }
     }
 
     async onProductInfoClick(productTemplate) {

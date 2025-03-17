@@ -274,7 +274,7 @@ class TestHrEmployee(TestHrCommon):
         employee_form = Form(self.env['hr.employee'].with_user(self.res_users_hr_officer).with_company(company=test_company.id))
         employee_form.name = "Second employee"
         employee_form.user_id = self.res_users_hr_officer
-        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError), self.cr.savepoint():
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError):
             employee_form.save()
 
         employee_2 = self.env['hr.employee'].create({
@@ -285,7 +285,7 @@ class TestHrEmployee(TestHrCommon):
         # Try to set the user with existing employee in the company, on another existing employee
         employee_2_form = Form(employee_2.with_user(self.res_users_hr_officer).with_company(company=test_company.id))
         employee_2_form.user_id = self.res_users_hr_officer
-        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError), self.cr.savepoint():
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError):
             employee_2_form.save()
 
 
@@ -394,7 +394,7 @@ class TestHrEmployee(TestHrCommon):
             'company_id': company_A.id,
         })
         # User cannot be assigned to more than one employee in the same company. work_contact_id should not be removed.
-        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError), self.cr.savepoint():
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError):
             self.env['hr.employee'].create({
                 'name': 'new_employee_B',
                 'user_id': user.id,
@@ -472,7 +472,7 @@ class TestHrEmployee(TestHrCommon):
         domain = Domain([
             ('name', '=', 'Test Employee'),
             ('active', '=', True)
-        ])._optimize(self.env['hr.employee'])
+        ]).optimize(self.env['hr.employee'])
         with self.assertNoLogs('odoo.domains'):
             self.assertEqual(
                 employee.ids,

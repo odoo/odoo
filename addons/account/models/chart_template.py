@@ -263,6 +263,8 @@ class AccountChartTemplate(models.AbstractModel):
             if prop.startswith('property_'):
                 template_data.pop(prop)
         data.pop('account.reconcile.model', None)
+        if 'res.company' in data:
+            data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
 
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
@@ -315,6 +317,7 @@ class AccountChartTemplate(models.AbstractModel):
                 or len(template_line_ids) not in (0, len(tax.repartition_line_ids))
             )
 
+        existing_current_year_earnings_account = self.env['account.account'].search([('company_ids', '=', company.id),('account_type', '=', 'equity_unaffected')], limit=1)
         obsolete_xmlid = set()
         skip_update = set()
         for model_name, records in data.items():
@@ -364,6 +367,9 @@ class AccountChartTemplate(models.AbstractModel):
                                         repartition_line_values.clear()
                                         repartition_line_values['tag_ids'] = tags or [Command.clear()]
                 elif model_name == 'account.account':
+                    if  existing_current_year_earnings_account and values['account_type'] == 'equity_unaffected':
+                        skip_update.add((model_name, xmlid))
+                        continue
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
@@ -494,7 +500,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         return data
 
-    def _load_data(self, data, ignore_duplicates=False):
+    def _load_data(self, data):
         """Load all the data linked to the template into the database.
 
         The data can contain translation values (i.e. `name@fr_FR` to translate the name in French)
@@ -504,8 +510,6 @@ class AccountChartTemplate(models.AbstractModel):
         :param data: Basically all the final data of records to create/update for the chart
                      of accounts. It is a mapping {model: {xml_id: values}}.
         :type data: dict[str, dict[(str, int), dict]]
-
-        :param ignore_duplicates: if true, inputs that match records already in the DB will be ignored
         """
         def deref_values(values, model):
             """Replace xml_id references by database ids in all provided values.
@@ -628,7 +632,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'values': deref_values(record_vals, self.env[model]),
                     'noupdate': True,
                 })
-            created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals, ignore_duplicates=ignore_duplicates)
+            created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals)
         return created_records
 
     def _post_load_data(self, template_code, company, template_data):
@@ -1159,7 +1163,15 @@ class AccountChartTemplate(models.AbstractModel):
                     format_tag = re.sub(r'\s+', ' ', tag.strip())
                     mapped_tag = tags.get(format_tag)
                     if not mapped_tag:
-                        raise UserError(self.env._('Error while loading the localization. You should probably update your localization app first.'))
+                        country = self.env['res.country'].browse(country_id)
+                        message = self.env._(
+                            'Error while loading the localization: missing tax tag %(tag_name)s for country %(country_name)s. You should probably update your localization app first.',
+                            tag_name=format_tag, country_name=country.name)
+                        if not self._context.get('ignore_missing_tags'):
+                            raise UserError(message)
+                        else:
+                            _logger.error(message)
+                            continue
                     res.append(mapped_tag)
             return res
         return mapping_getter
@@ -1369,7 +1381,9 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Gather translations for records that are created from the chart_template data
         for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
-            chart_template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
+            chart_template_data = template_data or self.env['account.chart.template'] \
+                .with_context(ignore_missing_tags=True) \
+                ._get_chart_template_data(chart_template)
             chart_template_data.pop('template_data', None)
             for mname, data in chart_template_data.items():
                 for _xml_id, record in data.items():

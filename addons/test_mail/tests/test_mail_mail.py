@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import psycopg2
 import pytz
 import re
 import smtplib
@@ -17,7 +15,7 @@ from unittest.mock import call, patch, PropertyMock
 from odoo import api, Command, fields, SUPERUSER_ID
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, LockError
 from odoo.tests import common, tagged, users
 from odoo.tools import formataddr, mute_logger
 
@@ -370,7 +368,7 @@ class TestMailMail(MailCommon):
                              'Scheduled date: %s should be stored as %s, received %s' % (scheduled_datetime, expected_datetime, mail.scheduled_date))
             self.assertEqual(mail.state, 'outgoing')
 
-        with freeze_time(now):
+        with freeze_time(now), self.mock_mail_gateway():
             self.env['mail.mail'].process_email_queue()
             for mail, expected_state in zip(mails, expected_states):
                 self.assertEqual(mail.state, expected_state)
@@ -1135,7 +1133,7 @@ class TestMailMailServer(MailCommon):
 
 
 @tagged('mail_mail')
-class TestMailMailRace(common.TransactionCase):
+class TestMailMailRace(MailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_bounce_during_send(self):
@@ -1167,6 +1165,7 @@ class TestMailMailRace(common.TransactionCase):
             })],
         })
         notif = env['mail.notification'].search([('res_partner_id', '=', self.partner.id)])
+        notif.ensure_one()  # for patched method
         # we need to commit transaction or cr will keep the lock on notif
         cr.commit()
 
@@ -1178,8 +1177,8 @@ class TestMailMailRace(common.TransactionCase):
             with this.registry.cursor() as cr, mute_logger('odoo.sql_db'):
                 try:
                     # try ro aquire lock (no wait) on notification (should fail)
-                    cr.execute("SELECT notification_status FROM mail_notification WHERE id = %s FOR UPDATE NOWAIT", [notif.id])
-                except psycopg2.OperationalError:
+                    notif.with_env(notif.env(cr=cr)).lock_for_update()
+                except LockError:
                     # record already locked by send, all good
                     bounce_deferred.append(True)
                 else:
@@ -1190,9 +1189,9 @@ class TestMailMailRace(common.TransactionCase):
                     cr.execute("UPDATE mail_notification SET notification_status='bounce' WHERE id = %s", [notif.id])
             return message['Message-Id']
 
-        self.patch(self.registry['ir.mail_server'], 'send_email', send_email)
-
-        mail.send()
+        with self.mock_mail_gateway():
+            self.patch(self.registry['ir.mail_server'], 'send_email', send_email)
+            mail.send()
 
         self.assertTrue(bounce_deferred, "The bounce should have been deferred")
         self.assertEqual(notif.notification_status, 'sent')

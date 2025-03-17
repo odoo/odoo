@@ -40,7 +40,7 @@ import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
-import { dispatchClean, dispatchCleanForSave } from "./_helpers/dispatch";
+import { cleanHints, dispatchCleanForSave } from "./_helpers/dispatch";
 
 function getConfig(components) {
     return {
@@ -413,7 +413,7 @@ describe("Mount and Destroy embedded components", () => {
                         </div>
                     </div>
                 </div>
-                <p class="target o-we-hint" placeholder='Type "/" for commands'>[]<br></p>
+                <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
             `)
         );
         for (const index of indexOrder) {
@@ -439,7 +439,7 @@ describe("Mount and Destroy embedded components", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <div data-embedded="recursiveComponent" data-oe-protected="true" contenteditable="false"></div>
-                <p class="target o-we-hint" placeholder='Type "/" for commands'>[]<br></p>
+                <p class="target o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
             `)
         );
         // Verify that there is no potential host outside of the editable,
@@ -576,7 +576,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
         await animationFrame();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
@@ -590,7 +590,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
         await animationFrame();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
@@ -605,7 +605,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
         await animationFrame();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
@@ -619,7 +619,7 @@ describe("Selection after embedded component insertion", () => {
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
         await animationFrame();
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
@@ -928,7 +928,7 @@ describe("In-editor manipulations", () => {
                 config: getConfig([embedding("counter", Counter)]),
             }
         );
-        dispatchClean(editor);
+        cleanHints(editor);
         expect(getContent(el)).toBe(
             `<div><p>a</p></div><div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>`
         );
@@ -1349,6 +1349,31 @@ describe("Embedded state", () => {
         expect(getContent(editor.getElContent())).toBe(
             `<p><span data-embedded="counter" data-embedded-props="{}"></span></p>`
         );
+    });
+
+    test("Removing a non-existing property in the embedded state should do nothing", async () => {
+        let counter;
+        patchWithCleanup(SavedCounter.prototype, {
+            setup() {
+                super.setup();
+                counter = this;
+            },
+        });
+        const { el } = await setupEditor(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}'></span></p>`,
+            { config: getConfig([savedCounter]) }
+        );
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true" contenteditable="false"><span class="counter">Counter:1</span></span></p>`
+        );
+        delete counter.embeddedState.notValue;
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true" contenteditable="false"><span class="counter">Counter:1</span></span></p>`
+        );
+        expect(counter.embeddedState).toEqual({
+            value: 1,
+        });
     });
 
     test("Write on `data-embedded-state` should write on the state, re-render the component and write on `data-embedded-props` and the embedded state", async () => {

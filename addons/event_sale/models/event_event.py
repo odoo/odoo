@@ -19,7 +19,7 @@ class EventEvent(models.Model):
                  'sale_order_lines_ids.price_total', 'sale_order_lines_ids.currency_id',
                  'sale_order_lines_ids.company_id', 'sale_order_lines_ids.order_id.date_order')
     def _compute_sale_price_total(self):
-        """ Takes all the sale.order.lines related to this event and converts amounts
+        """ Takes only confirmed the sale.order.lines related to this event and converts amounts
         from the currency of the sale order to the currency of the event company.
 
         To avoid extra overhead, we use conversion rates as of 'today'.
@@ -29,7 +29,7 @@ class EventEvent(models.Model):
         we sell a single event ticket). """
         date_now = fields.Datetime.now()
         event_subtotals = self.env['sale.order.line']._read_group(
-            [('event_id', 'in', self.ids), ('price_total', '!=', 0), ('state', '!=', 'cancel')],
+            [('event_id', 'in', self.ids), ('price_total', '!=', 0), ('state', '=', 'sale')],
             ['event_id', 'currency_id'],
             ['price_total:sum'],
         )
@@ -46,10 +46,10 @@ class EventEvent(models.Model):
             event.sale_price_total = event_subtotals_mapping.get(event._origin, 0)
 
     def action_view_linked_orders(self):
-        """ Redirects to the orders linked to the current events """
+        """ Redirects to only the confirmed orders linked to the current events """
         sale_order_action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         sale_order_action.update({
-            'domain': [('state', '!=', 'cancel'), ('order_line.event_id', 'in', self.ids)],
+            'domain': [('state', '=', 'sale'), ('order_line.event_id', 'in', self.ids)],
             'context': {'create': 0},
         })
         return sale_order_action

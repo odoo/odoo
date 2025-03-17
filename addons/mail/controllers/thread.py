@@ -188,9 +188,7 @@ class ThreadController(http.Controller):
         if not thread:
             raise NotFound()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
-            thread.env.context = frozendict(
-                thread.env.context, mail_post_autofollow_author_skip=True, mail_post_autofollow=False
-            )
+            thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
         post_data = {
                 key: value
                 for key, value in post_data.items()
@@ -238,3 +236,19 @@ class ThreadController(http.Controller):
     @classmethod
     def _can_delete_attachment(cls, message, **kwargs):
         return cls._can_edit_message(message, **kwargs)
+
+    @http.route("/mail/thread/unsubscribe", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_thread_unsubscribe(self, res_model, res_id, partner_ids):
+        thread = self.env[res_model].browse(res_id)
+        thread.message_unsubscribe(partner_ids)
+        return Store(
+            thread, [], as_thread=True, request_list=["followers", "suggestedRecipients"]
+        ).get_result()
+
+    @http.route("/mail/thread/subscribe", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_thread_subscribe(self, res_model, res_id, partner_ids):
+        thread = self.env[res_model].browse(res_id)
+        thread.message_subscribe(partner_ids)
+        return Store(
+            thread, [], as_thread=True, request_list=["followers", "suggestedRecipients"]
+        ).get_result()

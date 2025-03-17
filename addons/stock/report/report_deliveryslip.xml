@@ -51,6 +51,10 @@
                             <strong>Order</strong>
                             <div t-field="o.origin" class="m-0">S0001</div>
                         </div>
+                        <div t-if="o.picking_type_id.code == 'internal' and o.partner_id" class="col col-3 mw-100 mb-2" name="div_contact">
+                            <strong>Contact</strong>
+                            <div t-field="o.partner_id" class="m-0"/>
+                        </div>
                         <div t-if="o.state" class="col col-3 mw-100 mb-2" name="div_sched_date">
                             <strong>Shipping Date</strong>
                             <div t-if="o.state == 'done'" t-field="o.date_done" class="m-0"/>
@@ -62,7 +66,7 @@
                         </div>
                     </div>
                     <div class="oe_structure"></div>
-                    <t t-set="format_number" t-value="lambda x: int(x) if x.is_integer() else x"/>
+                    <t t-set="format_number" t-value="lambda x: int(x) if x == int(x) else x"/>
                     <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table" style="table-layout: fixed; width: 100%">
                         <thead>
                             <tr>
@@ -91,7 +95,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-sm mt48" t-elif="o.move_line_ids and o.state=='done'" name="stock_move_line_table" style="table-layout: fixed; width: 100%">
+                    <table class="table table-sm mt48" t-elif="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
                         <t t-set="has_serial_number" t-value="False"/>
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_lot_on_delivery_slip"/>
                         <thead>

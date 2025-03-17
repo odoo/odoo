@@ -13,21 +13,24 @@ import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 import { TextFilterValue } from "../filter_text_value/filter_text_value";
 import { getFields, ModelNotFoundError } from "@spreadsheet/data_sources/data_source";
+import { BooleanMultiSelector } from "../boolean_multi_selector/boolean_multi_selector";
 
 const { ValidationMessages } = components;
 
 export class FilterValue extends Component {
-    static template = "spreadsheet_edition.FilterValue";
+    static template = "spreadsheet.FilterValue";
     static components = {
         DateFilterValue,
         DateFromToValue,
         MultiRecordSelector,
         TextFilterValue,
         ValidationMessages,
+        BooleanMultiSelector,
     };
     static props = {
         filter: Object,
         model: Object,
+        showTitle: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -92,6 +95,10 @@ export class FilterValue extends Component {
         this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
     }
 
+    onBooleanInput(id, value) {
+        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
+    }
+
     async onTagSelected(id, resIds) {
         if (!resIds.length) {
             // force clear, even automatic default values
@@ -114,6 +121,6 @@ export class FilterValue extends Component {
     }
 
     clear(id) {
-        this.props.model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id });
+        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id });
     }
 }

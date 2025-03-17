@@ -19,6 +19,10 @@ patch(Message.prototype, {
      * @param {import("@im_livechat/core/common/chatbot_step_model").StepAnswer} answer
      */
     answerChatbot(answer) {
+        if (this.props.message.disableChatbotAnswers) {
+            return;
+        }
+        this.props.message.disableChatbotAnswers = true;
         return this.props.message.thread.post(answer.name, {}, { selected_answer_id: answer.id });
     },
 });

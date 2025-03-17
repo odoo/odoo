@@ -4,10 +4,9 @@
 from collections import defaultdict
 
 from markupsafe import Markup
-from psycopg2.errors import LockNotAvailable
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import LockError, UserError
 
 TBAI_REFUND_REASONS = [
     ('R1', "R1: Art. 80.1, 80.2, 80.6 and rights founded error"),
@@ -177,11 +176,9 @@ class AccountMove(models.Model):
     def _l10n_es_tbai_lock_move(self):
         """ Acquire a write lock on the invoices in self. """
         self.ensure_one()
-
         try:
-            with self.env.cr.savepoint(flush=False):
-                self.env.cr.execute('SELECT * FROM account_move WHERE id = %s FOR UPDATE NOWAIT', [self.id])
-        except LockNotAvailable:
+            self.lock_for_update()
+        except LockError:
             raise UserError(_('Cannot send this entry as it is already being processed.'))
 
     # -------------------------------------------------------------------------
@@ -293,7 +290,7 @@ class AccountMove(models.Model):
 
         return {
             **self._l10n_es_tbai_get_credit_note_values(),
-            'origin': self.invoice_origin,
+            'origin': self.invoice_origin and self.invoice_origin[:250] or 'manual',
             'taxes': taxes,
             'rate':  abs(self.amount_total / self.amount_total_signed) if self.amount_total else 1,
             'base_lines': base_lines,

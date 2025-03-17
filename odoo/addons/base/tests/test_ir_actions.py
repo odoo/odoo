@@ -422,7 +422,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.env.user.write({'group_ids': [Command.link(group0.id)]})
 
         bindings = Actions.get_bindings('res.country')
-        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types', 'binding_invisible']))
+        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))
 
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
@@ -751,7 +751,7 @@ class TestCustomFields(TestCommonCustomFields):
 
         # create a non-computed field, and assert how many queries it takes
         model_id = self.env['ir.model']._get_id('res.partner')
-        query_count = 49
+        query_count = 50
         with self.assertQueryCount(query_count):
             self.env.registry.clear_cache()
             self.env['ir.model.fields'].create({

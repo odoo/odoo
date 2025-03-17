@@ -5,7 +5,7 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import Command, fields
+from odoo import fields
 from odoo.addons.mail.tests.test_mail_activity import ActivityScheduleCase
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged, users
@@ -25,12 +25,32 @@ class TestActivitySchedule(ActivityScheduleCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        # add some triggered and suggested next activitities
+        cls.test_type_1, cls.test_type_2, cls.test_type_3 = cls.env['mail.activity.type'].create([
+            {'name': 'TestAct1', 'res_model': 'mail.test.activity',},
+            {'name': 'TestAct2', 'res_model': 'mail.test.activity',},
+            {'name': 'TestAct3', 'res_model': 'mail.test.activity',},
+        ])
+        cls.test_type_1.write({
+            'chaining_type': 'trigger',
+            'delay_count': 2,
+            'delay_from': 'current_date',
+            'delay_unit': 'days',
+            'triggered_next_type_id': cls.test_type_2.id,
+        })
+        cls.test_type_2.write({
+            'chaining_type': 'suggest',
+            'delay_count': 3,
+            'delay_unit': 'weeks',
+            'suggested_next_type_ids': [(4, cls.test_type_1.id), (4, cls.test_type_3.id)],
+        })
+
         # prepare plans
         cls.plan_party = cls.env['mail.activity.plan'].create({
             'name': 'Test Plan A Party',
             'res_model': 'mail.test.activity',
             'template_ids': [
-                Command.create({
+                (0, 0, {
                     'activity_type_id': cls.activity_type_todo.id,
                     'delay_count': 1,
                     'delay_from': 'before_plan_date',
@@ -38,7 +58,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                     'responsible_type': 'on_demand',
                     'sequence': 10,
                     'summary': 'Book a place',
-                }), Command.create({
+                }), (0, 0, {
                     'activity_type_id': cls.activity_type_todo.id,
                     'delay_count': 1,
                     'delay_from': 'after_plan_date',
@@ -54,7 +74,7 @@ class TestActivitySchedule(ActivityScheduleCase):
             'name': 'Test Onboarding',
             'res_model': 'mail.test.activity',
             'template_ids': [
-                Command.create({
+                (0, 0, {
                     'activity_type_id': cls.activity_type_todo.id,
                     'delay_count': 3,
                     'delay_from': 'before_plan_date',
@@ -63,7 +83,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                     'responsible_type': 'other',
                     'sequence': 10,
                     'summary': 'Plan training',
-                }), Command.create({
+                }), (0, 0, {
                     'activity_type_id': cls.activity_type_todo.id,
                     'delay_count': 2,
                     'delay_from': 'after_plan_date',
@@ -85,6 +105,9 @@ class TestActivitySchedule(ActivityScheduleCase):
                 'name': f'test_record_{idx}'
             } for idx in range(5)
         ])
+
+        # some big dict comparisons
+        cls.maxDiff = None
 
     @users('employee')
     def test_activity_schedule(self):
@@ -199,6 +222,35 @@ class TestActivitySchedule(ActivityScheduleCase):
         self.plan_party.res_model = 'res.partner'
         with Form(self.env['mail.activity.schedule'].with_context(plan_mode_context)) as form:
             self.assertEqual(form.plan_id, self.plan_onboarding)
+
+    @users('admin')
+    def test_plan_next_activities(self):
+        """ Test that next activities are displayed correctly. """
+        test_plan = self.env['mail.activity.plan'].create({
+            'name': 'Test Plan',
+            'res_model': 'mail.test.activity',
+            'template_ids': [
+                (0, 0, {'activity_type_id': self.test_type_1.id}),
+                (0, 0, {'activity_type_id': self.test_type_2.id}),
+                (0, 0, {'activity_type_id': self.test_type_3.id}),
+            ],
+        })
+        # Assert expected next activities
+        expected_next_activities = [['TestAct2'], ['TestAct1', 'TestAct3'], []]
+        for template, expected_names in zip(test_plan.template_ids, expected_next_activities, strict=True):
+            self.assertEqual(template.next_activity_ids.mapped('name'), expected_names)
+        # Test the plan summary
+        with self.subTest(test_case='Check plan summary'):
+            form = self._instantiate_activity_schedule_wizard(self.test_records[0])
+            form.plan_id = test_plan
+            expected_summary = (
+                '<ul>'
+                '<li>TestAct1<ul><li>TestAct2 3 weeks after previous activity deadline</li></ul></li>'
+                '<li>TestAct2<ul><li>TestAct1 2 days after previous activity completion date or TestAct3 0 days after previous activity deadline</li></ul></li>'
+                '<li>TestAct3</li>'
+                '</ul>'
+            )
+            self.assertEqual(form.plan_summary, expected_summary)
 
     @users('employee')
     def test_plan_schedule(self):

@@ -25,5 +25,6 @@ Publish your customers as business references on your website to attract new pot
         'views/snippets.xml',
     ],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

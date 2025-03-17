@@ -2,6 +2,7 @@
 
 import json
 import logging
+
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -11,17 +12,10 @@ from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationE
 from odoo.fields import Command
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import (
-    SQL,
-    float_is_zero,
-    format_amount,
-    format_date,
-    is_html_empty,
-)
+from odoo.tools import SQL, float_is_zero, format_amount, format_date, is_html_empty
 from odoo.tools.mail import html_keep_url
 
 from odoo.addons.payment import utils as payment_utils
-
 
 _logger = logging.getLogger(__name__)
 
@@ -1125,10 +1119,7 @@ class SaleOrder(models.Model):
         context.pop('default_name', None)
 
         self.with_context(context)._action_confirm()
-        user = self[:1].create_uid
-        if user and user.sudo().has_group('sale.group_auto_done_setting'):
-            # Public user can confirm SO, so we check the group on any record creator.
-            self.action_lock()
+        self.filtered(lambda so: so._should_be_locked()).action_lock()
 
         if self.env.context.get('send_email'):
             self._send_order_confirmation_mail()
@@ -1138,8 +1129,7 @@ class SaleOrder(models.Model):
     def _should_be_locked(self):
         self.ensure_one()
         # Public user can confirm SO, so we check the group on any record creator.
-        user = self[:1].create_uid
-        return user and user.sudo().has_group('sale.group_auto_done_setting')
+        return self.env['res.groups']._is_feature_enabled('sale.group_auto_done_setting')
 
     def _confirmation_error_message(self):
         """ Return whether order can be confirmed or not if not then returm error message. """
@@ -1174,7 +1164,6 @@ class SaleOrder(models.Model):
             This method should be extended when the confirmation should generated
             other documents. In this method, the SO are in 'sale' state (not yet 'done').
         """
-        pass
 
     def _send_order_confirmation_mail(self):
         """ Send a mail to the SO customer to inform them that their order has been confirmed.

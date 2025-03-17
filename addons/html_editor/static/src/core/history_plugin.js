@@ -125,8 +125,18 @@ export class HistoryPlugin extends Plugin {
     ];
     resources = {
         user_commands: [
-            { id: "historyUndo", title: _t("Undo"), icon: "fa-undo", run: this.undo.bind(this) },
-            { id: "historyRedo", title: _t("Redo"), icon: "fa-repeat", run: this.redo.bind(this) },
+            {
+                id: "historyUndo",
+                description: _t("Undo"),
+                icon: "fa-undo",
+                run: this.undo.bind(this),
+            },
+            {
+                id: "historyRedo",
+                description: _t("Redo"),
+                icon: "fa-repeat",
+                run: this.redo.bind(this),
+            },
         ],
         ...(hasTouch() && {
             toolbar_groups: withSequence(5, { id: "historyMobile" }),
@@ -136,12 +146,14 @@ export class HistoryPlugin extends Plugin {
                     groupId: "historyMobile",
                     commandId: "historyUndo",
                     isDisabled: () => !this.canUndo(),
+                    namespaces: ["compact", "expanded"],
                 },
                 {
                     id: "redo",
                     groupId: "historyMobile",
                     commandId: "historyRedo",
                     isDisabled: () => !this.canRedo(),
+                    namespaces: ["compact", "expanded"],
                 },
             ],
         }),
@@ -158,6 +170,7 @@ export class HistoryPlugin extends Plugin {
 
     setup() {
         this.mutationFilteredClasses = new Set(this.getResource("system_classes"));
+        this.mutationFilteredAttributes = new Set(this.getResource("system_attributes"));
         this._onKeyupResetContenteditableNodes = [];
         this.addDomListener(this.document, "beforeinput", this._onDocumentBeforeInput.bind(this));
         this.addDomListener(this.document, "input", this._onDocumentInput.bind(this));
@@ -346,6 +359,9 @@ export class HistoryPlugin extends Plugin {
                     continue;
                 }
                 if (record.attributeName === "contenteditable") {
+                    continue;
+                }
+                if (this.mutationFilteredAttributes.has(record.attributeName)) {
                     continue;
                 }
                 // @todo @phoenix test attributeCache

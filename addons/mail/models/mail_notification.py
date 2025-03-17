@@ -87,9 +87,8 @@ class MailNotification(models.Model):
             ('notification_status', 'in', ('sent', 'canceled'))
         ]
         records = self.search(domain, limit=GC_UNLINK_LIMIT)
-        if len(records) >= GC_UNLINK_LIMIT:
-            self.env.ref('base.autovacuum_job')._trigger()
-        return records.unlink()
+        records.unlink()
+        return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
 
     # ------------------------------------------------------------
     # TOOLS
@@ -125,5 +124,5 @@ class MailNotification(models.Model):
             "mail_message_id",
             "notification_status",
             "notification_type",
-            Store.One("res_partner_id", ["name"], rename="persona"),
+            Store.One("res_partner_id", ["name", "email"], rename="persona"),
         ]

@@ -35,5 +35,6 @@
             'sale_pdf_quote_builder/static/tests/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

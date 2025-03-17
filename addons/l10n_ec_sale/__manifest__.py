@@ -10,8 +10,10 @@
         'sale',
     ],
     'data': [
+        'views/payment_method_views.xml',
         'views/sale_views.xml',
     ],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

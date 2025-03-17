@@ -315,10 +315,10 @@ class StockMove(models.Model):
         for move in self:
             move.is_quantity_done_editable = move.product_id
 
-    @api.depends('picking_id', 'name', 'picking_id.name')
+    @api.depends('name', 'picking_id.name', 'scrap_id.name', 'scrapped')
     def _compute_reference(self):
         for move in self:
-            move.reference = move.picking_id.name if move.picking_id else move.name
+            move.reference = move.scrap_id.name if move.scrapped else move.picking_id.name or move.name
 
     @api.depends('move_line_ids')
     def _compute_move_lines_count(self):
@@ -661,6 +661,8 @@ Please change the quantity done or the rounding precision in your settings.""",
             picking_id = self.env['stock.picking'].browse(vals.get('picking_id'))
             if picking_id.group_id and 'group_id' not in vals:
                 vals['group_id'] = picking_id.group_id.id
+            if picking_id.state == 'done' and vals.get('state') != 'done':
+                vals['state'] = 'done'
             if vals.get('state') == 'done':
                 vals['picked'] = True
         return super().create(vals_list)
@@ -1913,9 +1915,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _action_done(self, cancel_backorder=False):
         moves = self.filtered(
-            lambda move: move.state == 'draft'
-            or float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
-        )._action_confirm(merge=False)  # MRP allows scrapping draft moves
+            lambda move: move.state == 'draft')._action_confirm(merge=False)
         moves = (self | moves).exists().filtered(lambda x: x.state not in ('done', 'cancel'))
 
         # Cancel moves where necessary ; we should do it before creating the extra moves because
@@ -2065,6 +2065,8 @@ Please change the quantity done or the rounding precision in your settings.""",
         return new_move_vals
 
     def _recompute_state(self):
+        if self._context.get('preserve_state'):
+            return
         moves_state_to_write = defaultdict(set)
         for move in self:
             rounding = move.product_uom.rounding
@@ -2316,6 +2318,13 @@ Please change the quantity done or the rounding precision in your settings.""",
         """ Open the form view of the move's reference document, if one exists, otherwise open form view of self
         """
         self.ensure_one()
+        if self.scrapped:
+            return {
+                'res_model': 'stock.scrap',
+                'type': 'ir.actions.act_window',
+                'views': [[False, 'form']],
+                'res_id': self.scrap_id.id,
+            }
         source = self.picking_id
         if source and source.browse().has_access('read'):
             return {

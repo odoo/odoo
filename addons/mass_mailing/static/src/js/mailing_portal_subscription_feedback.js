@@ -3,8 +3,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { renderToElement } from "@web/core/utils/render";
-
+import { renderToMarkup } from "@web/core/utils/render";
+import { setElementContent } from "@web/core/utils/html";
 
 publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.extend({
     events: {
@@ -82,12 +82,12 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
     _setLastAction: function (lastAction) {
         this.lastAction = lastAction;
         if (this.lastAction === 'blocklist_add') {
-            document.querySelector('div#o_mailing_subscription_feedback p').innerHTML = _t(
+            document.querySelector('div#o_mailing_subscription_feedback p').textContent = _t(
                 'Please let us know why you want to be in our block list.'
             );
         }
         else {
-            document.querySelector('div#o_mailing_subscription_feedback p').innerHTML = _t(
+            document.querySelector('div#o_mailing_subscription_feedback p').textContent = _t(
                 'Please let us know why you updated your subscription.'
             );
         }
@@ -120,7 +120,7 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
         }
         if (cleanFeedback) {
             feedbackArea.value = '';
-            feedbackInfo.innerHTML = "";
+            feedbackInfo.textContent = "";
         }
     },
 
@@ -130,13 +130,13 @@ publicWidget.registry.MailingPortalSubscriptionFeedback = publicWidget.Widget.ex
     _updateInfo: function (infoKey) {
         const feedbackInfo = document.getElementById('o_mailing_subscription_feedback_info');
         if (infoKey !== undefined) {
-            const infoContent = renderToElement(
+            const infoContent = renderToMarkup(
                 "mass_mailing.portal.feedback_update_info",
                 {
                     infoKey: infoKey,
                 }
             );
-            feedbackInfo.innerHTML = infoContent.innerHTML;
+            setElementContent(feedbackInfo, infoContent);
             feedbackInfo.classList.add(infoKey === 'feedback_sent' ? 'text-success' : 'text-danger');
             feedbackInfo.classList.remove('d-none', infoKey === 'feedback_sent' ? 'text-danger': 'text-success');
         }

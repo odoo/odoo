@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import logging
-import threading
-import warnings
 
-from odoo import api, fields, models, tools, _, Command
+from odoo import api, fields, models, modules, tools, Command
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
@@ -23,7 +20,7 @@ class ResCompany(models.Model):
     _parent_store = True
 
     def copy(self, default=None):
-        raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
+        raise UserError(self.env._('Duplicating a company is not allowed. Please create a new company instead.'))
 
     def _get_logo(self):
         with file_open('base/static/img/res_company_logo.png', 'rb') as file:
@@ -232,7 +229,7 @@ class ResCompany(models.Model):
         is_ready_and_not_test = (
             not tools.config['test_enable']
             and (self.env.registry.ready or not self.env.registry._init)
-            and not getattr(threading.current_thread(), 'testing', False)
+            and not modules.module.current_test
         )
         if uninstalled_modules and is_ready_and_not_test:
             return uninstalled_modules.button_immediate_install()
@@ -330,6 +327,15 @@ class ResCompany(models.Model):
             'sequence', # user._get_company_ids and other potential cached search
         }
 
+    def unlink(self):
+        """
+        Unlink the companies and clear the cache to make sure that
+        _get_company_ids of res.users gets only existing company ids.
+        """
+        res = super().unlink()
+        self.env.registry.clear_cache()
+        return res
+
     def write(self, values):
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
@@ -348,7 +354,7 @@ class ResCompany(models.Model):
             self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
 
         if 'parent_id' in values:
-            raise UserError(_("The company hierarchy cannot be changed."))
+            raise UserError(self.env._("The company hierarchy cannot be changed."))
 
         if values.get('currency_id'):
             currency = self.env['res.currency'].browse(values['currency_id'])
@@ -391,7 +397,7 @@ class ResCompany(models.Model):
                 ])
                 if company_active_users:
                     # You cannot disable companies with active users
-                    raise ValidationError(_(
+                    raise ValidationError(self.env._(
                         'The company %(company_name)s cannot be archived because it is still used '
                         'as the default company of %(active_users)s users.',
                         company_name=company.name,
@@ -405,7 +411,7 @@ class ResCompany(models.Model):
                 for fname in company._get_company_root_delegated_field_names():
                     if company[fname] != company.parent_id[fname]:
                         description = self.env['ir.model.fields']._get("res.company", fname).field_description
-                        raise ValidationError(_("The %s of a subsidiary must be the same as it's root company.", description))
+                        raise ValidationError(self.env._("The %s of a subsidiary must be the same as it's root company.", description))
 
     @api.model
     def _get_main_company(self):
@@ -452,7 +458,7 @@ class ResCompany(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Branches'),
+            'name': self.env._('Branches'),
             'res_model': 'res.company',
             'domain': [('parent_id', '=', self.id)],
             'context': {

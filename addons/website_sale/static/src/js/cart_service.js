@@ -5,7 +5,7 @@ import { ProductCombo } from '@sale/js/models/product_combo';
 import {
     ProductConfiguratorDialog
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
-import { serializeComboItem, getSelectedCustomPtav } from '@sale/js/sale_utils';
+import { getSelectedCustomPtav, serializeComboItem } from '@sale/js/sale_utils';
 import { browser } from '@web/core/browser/browser';
 import { serializeDateTime } from '@web/core/l10n/dates';
 import { _t } from '@web/core/l10n/translation';
@@ -153,7 +153,6 @@ export class CartService {
                     productTemplateId: productTemplateId,
                     productId: productId,
                     quantity: remainingData.quantity,
-                    is_combo: true,
                     linked_products: selectedComboItems.map(
                         (comboItem) => this._serializeComboItem(
                             comboItem, productTemplateId, remainingData.quantity
@@ -171,7 +170,7 @@ export class CartService {
                 remainingData,
                 {
                     isBuyNow: isBuyNow,
-                    showQuantity: Boolean(document.querySelector('.css_quantity')),
+                    showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
                 },
                 rest
             );
@@ -206,7 +205,7 @@ export class CartService {
                 {
                     isBuyNow: isBuyNow,
                     isMainProductConfigurable: !isConfigured,
-                    showQuantity: Boolean(document.querySelector('.css_quantity')),
+                    showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
                 },
                 rest
             );
@@ -270,7 +269,6 @@ export class CartService {
                         productTemplateId: productTemplateId,
                         productId: productId,
                         quantity: comboProductData.quantity,
-                        is_combo: true,
                         linked_products: selectedComboItems.map(
                             (comboItem) => this._serializeComboItem(
                                 comboItem, productTemplateId, comboProductData.quantity

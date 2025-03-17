@@ -800,9 +800,9 @@ class TestCRMLead(TestCrmCommon):
         for team in teams:
             with self.subTest(team=team):
                 if team != team_other_comp:
-                    self.assertIn(f"<a href='mailto:{team.display_name}'>{team.display_name}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                    self.assertIn(f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
                 else:
-                    self.assertNotIn(f"<a href='mailto:{team.display_name}'>{team.display_name}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                    self.assertNotIn(f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
                 team.active = False
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
@@ -850,10 +850,9 @@ class TestCRMLead(TestCrmCommon):
         })
 
         # search term containing less than 3 characters should throw an error (some currently not working)
+        self.env['crm.lead'].search([('phone_mobile_search', 'like', '')])  # no restriction, returns all
         with self.assertRaises(UserError):
-            self.env['crm.lead'].search([('phone_mobile_search', 'like', '')])
-        # with self.assertRaises(UserError):
-        #     self.env['crm.lead'].search([('phone_mobile_search', 'like', '7   ')])
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', '7   ')])
         with self.assertRaises(UserError):
             self.env['crm.lead'].search([('phone_mobile_search', 'like', 'c')])
         with self.assertRaises(UserError):

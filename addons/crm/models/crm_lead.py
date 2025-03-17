@@ -753,7 +753,7 @@ class CrmLead(models.Model):
             if stage_updated and vals.get('stage_id'):
                 stage = self.env['crm.stage'].browse(vals['stage_id'])
                 if stage.is_won:
-                    vals.update({'probability': 100, 'automated_probability': 100})
+                    vals.update({'active': True, 'probability': 100, 'automated_probability': 100})
                     stage_is_won = True
         # user change; update date_open if at least one lead does not
         # have the same user
@@ -1312,7 +1312,7 @@ class CrmLead(models.Model):
         alias_record = alias_records[0] if alias_records else None
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             sub_title = Markup(_('Use the <i>New</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
-                'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (alias_record.display_name, alias_record.display_name),
+                'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (alias_record.alias_email, alias_record.alias_email),
             }
         return super().get_empty_list_help(
             f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
@@ -1799,9 +1799,11 @@ class CrmLead(models.Model):
 
         domain = ['|'] * (len(domain) - 1) + domain
         if include_lost:
-            domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
+            # include lost means archived opportunities are allowed, if lost
+            domain += [('won_status', '!=', 'won'), '|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
-            domain += [('active', '=', True), ('won_status', '!=', 'won')]
+            # always filter out archived, those are not actionable anymore
+            domain += [('won_status', '=', 'pending'), ('active', '=', True)]
 
         return self.with_context(active_test=False).search(domain)
 
@@ -1832,28 +1834,19 @@ class CrmLead(models.Model):
     # CUSTOMER TOOLS
     # --------------------------------------------------
 
-    def _find_matching_partner(self, email_only=False):
+    def _find_matching_partner(self):
         """ Try to find a matching partner with available information on the
-        lead, using notably customer's name, email, ...
+        lead, using currently customer's email
 
-        :param email_only: Only find a matching based on the email. To use
-            for automatic process where ilike based on name can be too dangerous
         :return: partner browse record
         """
         self.ensure_one()
         partner = self.partner_id
-
-        if not partner and self.email_from:
-            partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
-
-        if not partner and not email_only:
-            # search through the existing partners based on the lead's partner or contact name
-            # to be aligned with _create_customer, search on lead's name as last possibility
-            for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
-                partner = self.env['res.partner'].search([('name', 'ilike', customer_potential_name)], limit=1)
-                if partner:
-                    break
-
+        if not partner and (self.email_normalized or self.email_from):
+            partner = self._partner_find_from_emails_single(
+                [self.email_normalized or self.email_from],
+                no_create=True,
+            )
         return partner
 
     def _create_customer(self):
@@ -1981,15 +1974,6 @@ class CrmLead(models.Model):
         if leftover:
             res.update(super(CrmLead, leftover)._notify_get_reply_to(default=default, author_id=author_id))
         return res
-
-    def _message_get_default_recipients(self):
-        return {
-            r.id: {
-                'partner_ids': [],
-                'email_to': ','.join(tools.email_normalize_all(r.email_from)) or r.email_from,
-                'email_cc': False,
-            } for r in self
-        }
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):

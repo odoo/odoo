@@ -58,5 +58,6 @@ If you need to manage your meetings, you should install the CRM module.
             'calendar/static/tests/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

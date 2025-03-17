@@ -111,7 +111,7 @@ class HrAttendance(http.Controller):
                         'kiosk_mode': kiosk_mode,
                         'from_trial_mode': from_trial_mode,
                         'barcode_source': company.attendance_barcode_source,
-                        'lang': py_to_js_locale(company.partner_id.lang),
+                        'lang': py_to_js_locale(company.partner_id.lang or company.env.lang),
                         'server_version_info': version_info.get('server_version_info'),
                     },
                 }
@@ -157,7 +157,9 @@ class HrAttendance(http.Controller):
                 'id': employee.id,
                 'display_name': employee.display_name,
                 'job_id': employee.job_id.name,
-                'avatar': image_data_uri(employee.avatar_128)
+                'avatar': image_data_uri(employee.avatar_128),
+                'status': employee.attendance_state,
+                'mode': employee.last_attendance_id.in_mode
             } for employee in employees]
             return {'records': employees_data, 'length': request.env['hr.employee'].sudo().search_count(domain)}
         return []

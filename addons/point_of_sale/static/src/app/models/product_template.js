@@ -2,8 +2,8 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { roundPrecision } from "@web/core/utils/numbers";
-import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 import { markup } from "@odoo/owl";
+import { getTaxesAfterFiscalPosition, getTaxesValues } from "./utils/tax_utils";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 /**
@@ -68,10 +68,34 @@ export class ProductTemplate extends Base {
             return baseLine.tax_details.total_excluded_currency;
         }
     }
+    getProductPriceInfo(product, company, pricelist = false, fiscalPosition = false) {
+        if (!product) {
+            product = this.product_variant_ids[0];
+        }
+        const price = this.getPrice(pricelist, 1, 0, false, product);
+
+        const extraValues = this.prepareProductBaseLineForTaxesComputationExtraValues(
+            price,
+            pricelist,
+            fiscalPosition
+        );
+
+        // Taxes computation.
+        const taxesData = getTaxesValues(
+            extraValues.tax_ids,
+            extraValues.price_unit,
+            extraValues.quantity,
+            product,
+            extraValues.product_id,
+            company,
+            extraValues.currency_id
+        );
+
+        return taxesData;
+    }
 
     isAllowOnlyOneLot() {
-        const productUnit = this.uom_id;
-        return this.tracking === "lot" || !productUnit || !productUnit.is_pos_groupable;
+        return this.tracking === "lot" || !this.uom_id || !this.uom_id.is_pos_groupable;
     }
 
     isTracked() {
@@ -192,7 +216,10 @@ export class ProductTemplate extends Base {
                 break;
             }
             if (rule.product_tmpl_id?.id === productTmpl.id) {
-                productTemplateRule = rule;
+                // Prefer the rule with the highest `min_quantity`
+                if (!productTemplateRule || productTemplateRule.min_quantity < rule.min_quantity) {
+                    productTemplateRule = rule;
+                }
             }
         }
 
@@ -245,7 +272,7 @@ export class ProductTemplate extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name"];
+        const fields = ["display_name", "default_code"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
@@ -253,10 +280,11 @@ export class ProductTemplate extends Base {
     }
 
     exactMatch(searchWord) {
-        const fields = ["barcode", "default_code"];
+        const fields = ["barcode"];
         const variantMatch = this.product_variant_ids.some(
             (variant) =>
                 (variant.default_code && variant.default_code.toLowerCase() == searchWord) ||
+                (variant.barcode && variant.barcode.toLowerCase() == searchWord) ||
                 variant.product_template_variant_value_ids.some((vv) =>
                     vv.name.toLowerCase().includes(searchWord)
                 )
@@ -301,6 +329,10 @@ export class ProductTemplate extends Base {
 
     get productDescriptionMarkup() {
         return this.public_description ? markup(this.public_description) : "";
+    }
+
+    get canBeDisplayed() {
+        return this.active && this.available_in_pos;
     }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);

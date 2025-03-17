@@ -1,6 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
 import {
-    defineActions,
     defineModels,
     getService,
     makeMockEnv,
@@ -23,85 +22,6 @@ class IrUiView extends models.Model {
 
 defineModels([TakeFive, IrUiView]);
 
-test("evaluate actionmenus", async () => {
-    defineActions([
-        {
-            id: 1,
-            name: "Fist Action",
-            res_model: "take.five",
-            search_view_id: [false, "search"],
-            views: [[99, "list"]],
-            binding_model_id: "take.five",
-            binding_view_types: "list",
-        },
-        {
-            id: 2, // not binded action
-            name: "Second Action",
-            res_model: "take.five",
-            search_view_id: [false, "search"],
-            views: [[99, "list"]],
-        },
-        {
-            id: 3,
-            name: "Third Action",
-            res_model: "take.five",
-            views: [[99, "list"]],
-            binding_model_id: "anoter.model",
-            binding_view_types: "list",
-        },
-        {
-            id: 4,
-            name: "Fist Invisible Action",
-            res_model: "take.five",
-            search_view_id: [false, "search"],
-            views: [[99, "list"]],
-            binding_model_id: "take.five",
-            binding_view_types: "list",
-            binding_invisible: true,
-        },
-        {
-            id: 5,
-            name: "Invisible with context",
-            res_model: "take.five",
-            search_view_id: [false, "search"],
-            views: [[99, "list"]],
-            binding_model_id: "take.five",
-            binding_view_types: "list",
-            binding_invisible: "companies.active_id == 1",
-        },
-        {
-            id: 6,
-            name: "Visible with context",
-            res_model: "take.five",
-            search_view_id: [false, "search"],
-            views: [[99, "list"]],
-            binding_model_id: "take.five",
-            binding_view_types: "list",
-            binding_invisible: "companies.active_id == 2",
-        },
-    ]);
-    await makeMockEnv();
-    const res = await getService("view").loadViews(
-        {
-            resModel: "take.five",
-            views: [[99, "list"]],
-        },
-        { loadActionMenus: true }
-    );
-    expect(res.views.list.actionMenus.action).toEqual([
-        {
-            binding_view_types: "list",
-            id: 1,
-            name: "Fist Action",
-        },
-        {
-            binding_invisible: "companies.active_id == 2",
-            binding_view_types: "list",
-            id: 6,
-            name: "Visible with context",
-        },
-    ]);
-});
 test("stores calls in cache in success", async () => {
     expect.assertions(1);
     onRpc("get_views", () => {

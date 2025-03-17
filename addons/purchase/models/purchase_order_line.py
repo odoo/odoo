@@ -137,7 +137,7 @@ class PurchaseOrderLine(models.Model):
             line.qty_invoiced = qty
 
             # compute qty_to_invoice
-            if line.order_id.state in ['purchase', 'done']:
+            if line.order_id.state == 'purchase':
                 if line.product_id.purchase_method == 'purchase':
                     line.qty_to_invoice = line.product_qty - line.qty_invoiced
                 else:
@@ -220,9 +220,9 @@ class PurchaseOrderLine(models.Model):
         return super(PurchaseOrderLine, self).write(values)
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_purchase_or_done(self):
+    def _unlink_except_purchase(self):
         for line in self:
-            if line.order_id.state in ['purchase', 'done']:
+            if line.order_id.state == 'purchase':
                 state_description = {state_desc[0]: state_desc[1] for state_desc in self._fields['state']._description_selection(self.env)}
                 raise UserError(_('Cannot delete a purchase order line which is in state “%s”.', state_description.get(line.state)))
 
@@ -369,11 +369,6 @@ class PurchaseOrderLine(models.Model):
             if not line.name or line.name in default_names:
                 product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
-
-    @api.depends('product_id')
-    def _compute_product_uom_id(self):
-        for line in self:
-            line.product_uom_id = line.product_id.seller_ids.filtered(lambda s: s.partner_id == line.partner_id).product_uom_id or line.product_id.uom_id if line.product_id else False
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
@@ -538,7 +533,7 @@ class PurchaseOrderLine(models.Model):
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
 
-        price_unit = seller.price if seller else product_id.standard_price
+        price_unit = (seller.product_uom_id._compute_price(seller.price, product_uom) if product_uom else seller.price) if seller else product_id.standard_price
         price_unit = self.env['account.tax']._fix_tax_included_price_company(
             price_unit, product_taxes, taxes, company_id)
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
@@ -558,9 +553,9 @@ class PurchaseOrderLine(models.Model):
 
         return {
             'name': name,
-            'product_qty': uom_po_qty,
+            'product_qty': product_qty if product_uom else uom_po_qty,
             'product_id': product_id.id,
-            'product_uom_id': seller.product_uom_id.id or product_uom.id,
+            'product_uom_id': product_uom.id or seller.product_uom_id.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
             'tax_ids': [(6, 0, taxes.ids)],

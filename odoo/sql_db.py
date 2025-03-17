@@ -31,6 +31,7 @@ from werkzeug import urls
 import odoo
 
 from . import tools
+from .release import MIN_PG_VERSION
 from .tools import SQL
 from .tools.func import frame_codeinfo, locked
 from .tools.misc import Callbacks, real_time
@@ -787,6 +788,8 @@ class ConnectionPool:
         except psycopg2.Error:
             _logger.info('Connection to the database failed')
             raise
+        if result.server_version < MIN_PG_VERSION * 10000:
+            warnings.warn(f"Postgres version is {result.server_version}, lower than minimum required {MIN_PG_VERSION * 10000}")
         result._pool_in_use = True
         self._connections.append(result)
         self._debug('Create new connection backend PID %d', result.get_backend_pid())

@@ -20,18 +20,8 @@ class MailingTestCustomer(models.Model):
         for mailing in self.filtered(lambda rec: not rec.email_from and rec.customer_id):
             mailing.email_from = mailing.customer_id.email
 
-    def _message_get_default_recipients(self):
-        """ Default recipient checks for 'partner_id', here the field is named
-        'customer_id'. """
-        default_recipients = super()._message_get_default_recipients()
-        for record in self:
-            if record.customer_id:
-                default_recipients[record.id] = {
-                    'email_cc': False,
-                    'email_to': False,
-                    'partner_ids': record.customer_id.ids,
-                }
-        return default_recipients
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return ['customer_id']
 
 
 class MailingTestSimple(models.Model):
@@ -69,18 +59,8 @@ class MailingTestBlacklist(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
 
-    def _message_get_default_recipients(self):
-        """ Default recipient checks for 'partner_id', here the field is named
-        'customer_id'. """
-        default_recipients = super()._message_get_default_recipients()
-        for record in self:
-            if record.customer_id:
-                default_recipients[record.id] = {
-                    'email_cc': False,
-                    'email_to': False,
-                    'partner_ids': record.customer_id.ids,
-                }
-        return default_recipients
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return ['customer_id']
 
 
 class MailingTestOptout(models.Model):
@@ -97,6 +77,9 @@ class MailingTestOptout(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
 
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return ['customer_id']
+
     def _mailing_get_opt_out_list(self, mailing):
         res_ids = mailing._get_recipients()
         opt_out_contacts = set(self.search([
@@ -104,19 +87,6 @@ class MailingTestOptout(models.Model):
             ('opt_out', '=', True)
         ]).mapped('email_normalized'))
         return opt_out_contacts
-
-    def _message_get_default_recipients(self):
-        """ Default recipient checks for 'partner_id', here the field is named
-        'customer_id'. """
-        default_recipients = super()._message_get_default_recipients()
-        for record in self:
-            if record.customer_id:
-                default_recipients[record.id] = {
-                    'email_cc': False,
-                    'email_to': False,
-                    'partner_ids': record.customer_id.ids,
-                }
-        return default_recipients
 
 
 class MailingTestPartner(models.Model):

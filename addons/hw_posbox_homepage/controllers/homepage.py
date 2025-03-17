@@ -4,7 +4,7 @@ import json
 import logging
 import netifaces
 import platform
-import requests
+import re
 import subprocess
 import threading
 import time
@@ -13,7 +13,7 @@ from itertools import groupby
 from pathlib import Path
 
 from odoo import http
-from odoo.addons.hw_drivers.tools import helpers, wifi
+from odoo.addons.hw_drivers.tools import helpers, route, wifi
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
@@ -72,7 +72,8 @@ class IotBoxOwlHomePage(http.Controller):
 
     @http.route('/hw_posbox_homepage/iot_logs', auth='none', type='http', cors='*')
     def get_iot_logs(self):
-        with open("/var/log/odoo/odoo-server.log", encoding="utf-8") as file:
+        logs_path = "/var/log/odoo/odoo-server.log" if platform.system() == 'Linux' else Path().absolute().parent.joinpath('odoo.log')
+        with open(logs_path, encoding="utf-8") as file:
             return json.dumps({
                 'status': 'success',
                 'logs': file.read(),
@@ -146,7 +147,8 @@ class IotBoxOwlHomePage(http.Controller):
             'name': device.device_name,
             'value': str(device.data['value']),
             'type': device.device_type,
-            'identifier': device.device_identifier
+            'identifier': device.device_identifier,
+            'connection': device.device_connection,
         } for device in iot_devices.values()]
         device_type_key = lambda device: device['type']
         grouped_devices = {
@@ -155,7 +157,8 @@ class IotBoxOwlHomePage(http.Controller):
         }
 
         six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
-        network_qr_codes = wifi.generate_network_qr_codes()
+        network_qr_codes = wifi.generate_network_qr_codes() if platform.system() == 'Linux' else {}
+        odoo_server_url = helpers.get_odoo_server_url() or ''
 
         return json.dumps({
             'db_uuid': helpers.get_conf('db_uuid'),
@@ -164,8 +167,9 @@ class IotBoxOwlHomePage(http.Controller):
             'ip': helpers.get_ip(),
             'mac': helpers.get_mac_address(),
             'devices': grouped_devices,
-            'server_status': helpers.get_odoo_server_url() or 'Not Configured',
+            'server_status': odoo_server_url,
             'pairing_code': connection_manager.pairing_code,
+            'pairing_code_expired': connection_manager.pairing_code_expired and not odoo_server_url,
             'six_terminal': six_terminal,
             'is_access_point_up': platform.system() == 'Linux' and wifi.is_access_point(),
             'network_interfaces': network_interfaces,
@@ -174,8 +178,8 @@ class IotBoxOwlHomePage(http.Controller):
             'is_certificate_ok': is_certificate_ok,
             'certificate_details': certificate_details,
             'wifi_ssid': helpers.get_conf('wifi_ssid'),
-            'qr_code_wifi' : network_qr_codes['qr_wifi'],
-            'qr_code_url' : network_qr_codes['qr_url'],
+            'qr_code_wifi' : network_qr_codes.get('qr_wifi'),
+            'qr_code_url' : network_qr_codes.get('qr_url'),
         })
 
     @http.route('/hw_posbox_homepage/wifi', auth="none", type="http", cors='*')
@@ -183,12 +187,6 @@ class IotBoxOwlHomePage(http.Controller):
         return json.dumps({
             'currentWiFi': wifi.get_current(),
             'availableWiFi': wifi.get_available_ssids(),
-        })
-
-    @http.route('/hw_posbox_homepage/generate_password', auth="none", type="http", cors='*')
-    def generate_password(self):
-        return json.dumps({
-            'password': helpers.generate_password(),
         })
 
     @http.route('/hw_posbox_homepage/version_info', auth="none", type="http", cors='*')
@@ -300,6 +298,13 @@ class IotBoxOwlHomePage(http.Controller):
 
         return res_payload
 
+    @route.protect
+    @http.route('/hw_posbox_homepage/generate_password', auth="none", type="jsonrpc", methods=["POST"], cors='*')
+    def generate_password(self):
+        return {
+            'password': helpers.generate_password(),
+        }
+
     @http.route('/hw_posbox_homepage/enable_ngrok', auth="none", type="jsonrpc", methods=['POST'], cors='*')
     def enable_remote_connection(self, auth_token):
         if subprocess.call(['pgrep', 'ngrok']) == 1:
@@ -311,8 +316,42 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Ngrok tunnel is now enabled',
         }
 
+    @http.route('/hw_posbox_homepage/update_hostname', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    def update_hostname(self, hostname):
+        """Update the hostname of the IoT Box.
+
+        :param hostname: new hostname to set
+        """
+        current_hostname = helpers.get_hostname()
+        if not hostname or platform.system() != 'Linux' or hostname == current_hostname:
+            return {
+                'status': 'failure',
+                'message': 'Hostname is not valid or already set.',
+            }
+
+        # Sanitize the hostname
+        hostname = re.sub(r'[^a-zA-Z0-9-]', '', hostname).encode('ascii')
+
+        with helpers.writable():
+            try:
+                subprocess.run(
+                    ['sudo', 'tee', '/root_bypass_ramdisks/etc/hostname'], input=hostname, check=True
+                ) # this is used exclusively for an elevated-privileges write to a file
+                subprocess.run(
+                    ['sudo', 'sed', '-i', f's/\\b{current_hostname}/{hostname.decode("ascii")}/g', '/root_bypass_ramdisks/etc/hosts'],
+                    check=True,
+                )
+                subprocess.run(['sudo', 'reboot'], check=False)  # Reboot to apply the new hostname
+            except subprocess.CalledProcessError:
+                _logger.exception("Failed to update hostname")
+                return {
+                    'status': 'failure',
+                    'message': 'Failed to update hostname, please try again.',
+                }
+
+
     @http.route('/hw_posbox_homepage/connect_to_server', auth="none", type="jsonrpc", methods=['POST'], cors='*')
-    def connect_to_odoo_server(self, token=False, iotname=False):
+    def connect_to_odoo_server(self, token):
         if token:
             try:
                 if len(token.split('|')) == 4:
@@ -335,10 +374,6 @@ class IotBoxOwlHomePage(http.Controller):
                     'status': 'failure',
                     'message': 'Failed to write server configuration files on IoT. Please try again.',
                 }
-
-        if iotname and platform.system() == 'Linux' and iotname != helpers.get_hostname():
-            subprocess.run([file_path(
-                'iot_box_image/configuration/rename_iot.sh'), iotname], check=False)
 
         # 1 sec delay for IO operations (save_conf_server)
         helpers.odoo_restart(1)

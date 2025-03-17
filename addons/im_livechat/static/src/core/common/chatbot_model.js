@@ -2,18 +2,27 @@ import { AND, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 
 export class Chatbot extends Record {
     static id = AND("script", "thread");
-    static MESSAGE_DELAY = 1500;
+    static MESSAGE_DELAY = 400;
+    static TYPING_DELAY = 500;
     // Time to wait without user input before considering a multi line step as
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
-    static MULTILINE_STEP_DEBOUNCE_DELAY_TOUR = 500;
 
+    forwarded;
     isTyping = false;
+    isProcessingAnswer = false;
     script = Record.one("chatbot.script");
-    currentStep = Record.one("ChatbotStep");
+    currentStep = Record.one("ChatbotStep", {
+        onUpdate() {
+            if (this.currentStep?.operatorFound) {
+                this.forwarded = true;
+            }
+        },
+    });
     steps = Record.many("ChatbotStep");
     thread = Record.one("Thread", {
         inverse: "chatbot",
@@ -38,20 +47,57 @@ export class Chatbot extends Record {
      */
     _processAnswerDebounced = Record.attr(null, {
         compute() {
-            return debounce(
-                this._processAnswer,
-                this.script.isLivechatTourRunning
-                    ? Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY_TOUR
-                    : Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY
-            );
+            return debounce(this._processAnswer, Chatbot.MULTILINE_STEP_DEBOUNCE_DELAY);
         },
     });
+
+    /**
+     * Start the chatbot. Either from the beginning if the user just started the
+     * session or from where we left off if the session was restored after a
+     * page load.
+     */
+    async start() {
+        if (this.completed) {
+            return;
+        }
+        if (this.thread.isLastMessageFromCustomer) {
+            await this.processAnswer(this.thread.newestPersistentOfAllMessage);
+        }
+        if (!this.currentStep?.expectAnswer || this.currentStep?.completed) {
+            this._runUntilUserInputStep();
+        }
+    }
+
+    stop() {
+        clearTimeout(this.nextStepTimeout);
+    }
+
+    async restart() {
+        if (!this.completed) {
+            return;
+        }
+        const { store_data, message_id } = await rpc("/chatbot/restart", {
+            channel_id: this.thread.id,
+            chatbot_script_id: this.script.id,
+        });
+        this.store.insert(store_data, { html: true });
+        this.thread.messages.push(this.store["mail.message"].get(message_id));
+        if (this.currentStep) {
+            this.currentStep.isLast = false;
+            this.thread.livechat_active = true;
+        }
+        this.start();
+    }
 
     /**
      * @param {import("models").Message} message
      */
     async processAnswer(message) {
-        if (this.thread.notEq(message.thread) || !this.currentStep?.expectAnswer) {
+        if (
+            this.forwarded ||
+            this.thread.notEq(message.thread) ||
+            !this.currentStep?.expectAnswer
+        ) {
             return;
         }
         if (this.currentStep.type === "free_input_multi") {
@@ -59,9 +105,10 @@ export class Chatbot extends Record {
         } else {
             await this._processAnswer(message);
         }
+        this.isProcessingAnswer = false;
     }
 
-    async triggerNextStep() {
+    async _triggerNextStep() {
         if (this.currentStep) {
             await this._simulateTyping();
         }
@@ -91,8 +138,13 @@ export class Chatbot extends Record {
         return (
             (this.currentStep?.isLast &&
                 (!this.currentStep.expectAnswer || this.currentStep?.completed)) ||
-            this.currentStep?.operatorFound
+            this.currentStep?.operatorFound ||
+            !this.thread.livechat_active
         );
+    }
+
+    get canRestart() {
+        return this.completed && !this.currentStep?.operatorFound;
     }
 
     /**
@@ -116,19 +168,39 @@ export class Chatbot extends Record {
         } else {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
+            this.currentStep.selectedAnswer = null;
         }
+    }
+
+    /**
+     * Trigger chat bot steps recursively until the script is completed or a user
+     * input is required.
+     */
+    async _runUntilUserInputStep() {
+        await this._triggerNextStep();
+        if (
+            !this.currentStep ||
+            this.completed ||
+            (this.currentStep.expectAnswer && !this.currentStep.completed)
+        ) {
+            return;
+        }
+        this.nextStepTimeout = browser.setTimeout(
+            async () => this._runUntilUserInputStep(),
+            Chatbot.TYPING_DELAY
+        );
     }
 
     /**
      * Simulate the typing of the chatbot.
      */
-    async _simulateTyping() {
+    async _simulateTyping(duration = Chatbot.MESSAGE_DELAY) {
         this.isTyping = true;
         await new Promise((res) =>
             setTimeout(() => {
                 this.isTyping = false;
                 res();
-            }, Chatbot.MESSAGE_DELAY)
+            }, duration)
         );
     }
 
@@ -148,6 +220,9 @@ export class Chatbot extends Record {
             stepCompleted = await this._processAnswerQuestionSelection(message);
         }
         this.currentStep.completed = stepCompleted;
+        if (this.currentStep.completed) {
+            await this._runUntilUserInputStep();
+        }
     }
 
     async _delayThenProcessAnswerAgain(message) {
@@ -173,8 +248,19 @@ export class Chatbot extends Record {
             const nextURL = new URL(answer.redirect_link, window.location.href);
             isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
         }
+        const redirects = JSON.parse(
+            expirableStorage.getItem("im_livechat.chatbot_redirect") ?? "[]"
+        );
         const targetURL = new URL(answer.redirect_link, window.location.origin);
-        const redirectionAlreadyDone = targetURL.href === location.href;
+        const redirectionAlreadyDone =
+            targetURL.href === location.href || redirects.includes(message.id);
+        redirects.push(message.id);
+        const ONE_DAY_TTL = 60 * 60 * 24;
+        expirableStorage.setItem(
+            "im_livechat.chatbot_redirect",
+            JSON.stringify([...new Set(redirects)]),
+            ONE_DAY_TTL
+        );
         if (!redirectionAlreadyDone) {
             browser.location.assign(answer.redirect_link);
         }
@@ -197,15 +283,6 @@ export class Chatbot extends Record {
             this.thread.messages.add(message);
         }
         return success;
-    }
-
-    /**
-     * Restart the chatbot script.
-     */
-    restart() {
-        if (this.currentStep) {
-            this.currentStep.isLast = false;
-        }
     }
 }
 Chatbot.register();

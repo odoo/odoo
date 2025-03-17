@@ -11,6 +11,7 @@ export const CW_LIVECHAT_STEP = {
 const chatWindowPatch = {
     setup() {
         super.setup(...arguments);
+        /** @type {undefined|"CONFIRM_CLOSE"|"FEEDBACK"} */
         this.livechatStep = CW_LIVECHAT_STEP.NONE;
     },
     close(options = {}) {
@@ -40,6 +41,10 @@ const chatWindowPatch = {
                 }
                 this.actionsDisabled = true;
                 this.livechatStep = CW_LIVECHAT_STEP.CONFIRM_CLOSE;
+                if (!isSelfVisitor && this.thread.channel_member_ids.length > 2) {
+                    super.close(...arguments);
+                    break;
+                }
                 if (!this.hubAsOpened) {
                     this.open({ focus: true });
                 }
@@ -47,7 +52,7 @@ const chatWindowPatch = {
             }
             case CW_LIVECHAT_STEP.CONFIRM_CLOSE: {
                 this.actionsDisabled = false;
-                if (this.thread.livechatVisitorMember?.persona?.eq(this.store.self)) {
+                if (isSelfVisitor) {
                     this.open({ focus: true, notifyState: this.thread?.state !== "open" });
                     this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;
                 } else {
@@ -57,13 +62,10 @@ const chatWindowPatch = {
                 break;
             }
             case CW_LIVECHAT_STEP.FEEDBACK: {
+                this.livechatStep = CW_LIVECHAT_STEP.NONE;
                 super.close(...arguments);
                 break;
             }
-        }
-        if (this.livechatStep !== CW_LIVECHAT_STEP.CONFIRM_CLOSE) {
-            this.store.env.services["im_livechat.livechat"]?.leave();
-            this.store.env.services["im_livechat.chatbot"]?.stop();
         }
     },
 };

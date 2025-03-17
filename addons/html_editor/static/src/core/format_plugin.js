@@ -1,14 +1,16 @@
 import { Plugin } from "../plugin";
-import { isBlock } from "../utils/blocks";
-import { hasAnyNodesColor } from "@html_editor/utils/color";
+import { closestBlock, isBlock } from "../utils/blocks";
 import { cleanTextNode, splitTextNode, unwrapContents } from "../utils/dom";
 import {
     areSimilarElements,
     isContentEditable,
+    isEmptyTextNode,
     isSelfClosingElement,
     isTextNode,
     isVisibleTextNode,
+    isZwnbsp,
     isZWS,
+    previousLeaf,
 } from "../utils/dom_info";
 import { childNodes, closestElement, descendants, selectElements } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
@@ -17,6 +19,7 @@ import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
+import { isFakeLineBreak } from "../utils/dom_state";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -46,25 +49,25 @@ export class FormatPlugin extends Plugin {
         user_commands: [
             {
                 id: "formatBold",
-                title: _t("Toggle bold"),
+                description: _t("Toggle bold"),
                 icon: "fa-bold",
                 run: this.formatSelection.bind(this, "bold"),
             },
             {
                 id: "formatItalic",
-                title: _t("Toggle italic"),
+                description: _t("Toggle italic"),
                 icon: "fa-italic",
                 run: this.formatSelection.bind(this, "italic"),
             },
             {
                 id: "formatUnderline",
-                title: _t("Toggle underline"),
+                description: _t("Toggle underline"),
                 icon: "fa-underline",
                 run: this.formatSelection.bind(this, "underline"),
             },
             {
                 id: "formatStrikethrough",
-                title: _t("Toggle strikethrough"),
+                description: _t("Toggle strikethrough"),
                 icon: "fa-strikethrough",
                 run: this.formatSelection.bind(this, "strikeThrough"),
             },
@@ -86,7 +89,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "removeFormat",
-                title: (sel, nodes) =>
+                description: (sel, nodes) =>
                     nodes && this.hasAnyFormat(nodes)
                         ? _t("Remove Format")
                         : _t("Selection has no format"),
@@ -99,39 +102,44 @@ export class FormatPlugin extends Plugin {
             { hotkey: "control+i", commandId: "formatItalic" },
             { hotkey: "control+u", commandId: "formatUnderline" },
             { hotkey: "control+5", commandId: "formatStrikethrough" },
+            { hotkey: "control+space", commandId: "removeFormat" },
         ],
         toolbar_groups: withSequence(20, { id: "decoration" }),
         toolbar_items: [
             {
                 id: "bold",
                 groupId: "decoration",
+                namespaces: ["compact", "expanded"],
                 commandId: "formatBold",
                 isActive: isFormatted(this, "bold"),
             },
             {
                 id: "italic",
                 groupId: "decoration",
+                namespaces: ["compact", "expanded"],
                 commandId: "formatItalic",
                 isActive: isFormatted(this, "italic"),
             },
             {
                 id: "underline",
                 groupId: "decoration",
+                namespaces: ["compact", "expanded"],
                 commandId: "formatUnderline",
                 isActive: isFormatted(this, "underline"),
             },
             {
                 id: "strikethrough",
                 groupId: "decoration",
+                namespaces: ["compact", "expanded"],
                 commandId: "formatStrikethrough",
                 isActive: isFormatted(this, "strikeThrough"),
             },
-            {
+            withSequence(20, {
                 id: "remove_format",
                 groupId: "decoration",
                 commandId: "removeFormat",
                 isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
-            },
+            }),
         ],
         /** Handlers */
         beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
@@ -181,12 +189,15 @@ export class FormatPlugin extends Plugin {
     isSelectionFormat(format, traversedNodes = this.dependencies.selection.getTraversedNodes()) {
         const selectedNodes = traversedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
-        return selectedNodes.length && selectedNodes.every((n) => isFormatted(n, this.editable));
+        return (
+            selectedNodes.length &&
+            selectedNodes.every(
+                (node) =>
+                    isZwnbsp(node) || isEmptyTextNode(node) || isFormatted(node, this.editable)
+            )
+        );
     }
 
-    // @todo: issues:
-    // - the calls to hasAnyColor should probably be replaced by calls to predicates
-    //   registered as resources (e.g. by the ColorPlugin).
     hasAnyFormat(traversedNodes) {
         for (const format of Object.keys(formatsSpecs)) {
             if (
@@ -196,9 +207,8 @@ export class FormatPlugin extends Plugin {
                 return true;
             }
         }
-        return (
-            hasAnyNodesColor(traversedNodes, "color") ||
-            hasAnyNodesColor(traversedNodes, "backgroundColor")
+        return traversedNodes.some((node) =>
+            this.getResource("has_format_predicates").some((predicate) => predicate(node))
         );
     }
 
@@ -238,7 +248,9 @@ export class FormatPlugin extends Plugin {
                 .filter(
                     (n) =>
                         ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
-                            n.nodeName === "BR") &&
+                            (n.nodeName === "BR" &&
+                                (isFakeLineBreak(n) ||
+                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
                         isContentEditable(n)
                 )
         );

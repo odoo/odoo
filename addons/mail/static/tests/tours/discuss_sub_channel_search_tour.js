@@ -1,4 +1,4 @@
-import { contains, scroll } from "@web/../tests/utils";
+import { contains, dragenterFiles, dropFiles, scroll } from "@web/../tests/utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
@@ -88,6 +88,49 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
                     });
                 }
             },
+        },
+    ],
+});
+
+registry.category("web_tour.tours").add("create_thread_for_attachment_without_body", {
+    steps: () => [
+        {
+            content: "Open general channel",
+            trigger: '.o-mail-DiscussSidebarChannel-itemName:contains("general")',
+            run: "click",
+        },
+        {
+            content: "Drop a file",
+            trigger: ".o-mail-Discuss-main",
+            async run() {
+                const files = [new File(["hi there"], "file2.txt", { type: "text/plain" })];
+                await dragenterFiles(".o-mail-Discuss-main", files);
+                await dropFiles(".o-Dropzone", files);
+            },
+        },
+        {
+            content: "Click on send button",
+            trigger: ".o-mail-Composer-mainActions [title='Send']",
+            run: "click",
+        },
+        {
+            content: "Hover on attachment",
+            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("file2.txt")',
+            run: "hover",
+        },
+        {
+            content: "Click on expand button",
+            trigger: '.o-mail-Message [title="Expand"]',
+            run: "click",
+        },
+        {
+            content: "Create a new thread",
+            trigger: '.o-dropdown-item:contains("Create Thread")',
+            run: "click",
+        },
+        {
+            content: "Check a new thread is created",
+            trigger: '.o-mail-Discuss:contains("New Thread")',
         },
     ],
 });

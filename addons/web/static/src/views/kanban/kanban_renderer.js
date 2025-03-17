@@ -13,15 +13,7 @@ import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import {
-    Component,
-    onPatched,
-    onWillDestroy,
-    onWillPatch,
-    useEffect,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, onWillDestroy, useEffect, useRef, useState } from "@odoo/owl";
 import { evaluateExpr } from "@web/core/py_js/py";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
@@ -206,13 +198,13 @@ export class KanbanRenderer extends Component {
             { area: () => this.rootRef.el }
         );
 
-        useHotkey(
-            "space",
-            ({ target }) => {
-                this.handleRecordSelection(target);
-            },
-            { area: () => this.rootRef.el }
-        );
+        useHotkey("space", ({ target }) => this.onSpaceKeyPress(target), {
+            area: () => this.rootRef.el,
+        });
+
+        useHotkey("shift+space", ({ target }) => this.onSpaceKeyPress(target, true), {
+            area: () => this.rootRef.el,
+        });
 
         const arrowsOptions = { area: () => this.rootRef.el, allowRepeat: true };
         if (this.env.searchModel) {
@@ -229,14 +221,6 @@ export class KanbanRenderer extends Component {
         useHotkey("ArrowDown", ({ area }) => this.focusNextCard(area, "down"), arrowsOptions);
         useHotkey("ArrowLeft", ({ area }) => this.focusNextCard(area, "left"), arrowsOptions);
         useHotkey("ArrowRight", ({ area }) => this.focusNextCard(area, "right"), arrowsOptions);
-
-        let previousScrollTop = 0;
-        onWillPatch(() => {
-            previousScrollTop = this.rootRef.el.scrollTop;
-        });
-        onPatched(() => {
-            this.rootRef.el.scrollTop = previousScrollTop;
-        });
         const handleAltKeyDown = (ev) => {
             if (ev.key === "Alt") {
                 this.state.selectionAvailable = true;
@@ -402,12 +386,6 @@ export class KanbanRenderer extends Component {
         }));
     }
 
-    handleRecordSelection(target) {
-        if (target.closest(".o_kanban_selection_active") !== null) {
-            target.click();
-        }
-    }
-
     /**
      * @param {string} id
      * @returns {boolean}
@@ -451,20 +429,13 @@ export class KanbanRenderer extends Component {
     }
 
     async validateQuickCreate(recordId, mode, group) {
-        this.props.quickCreateState.groupId = false;
-        if (mode === "add") {
-            this.props.quickCreateState.groupId = group.id;
-        }
         const record = await group.addExistingRecord(recordId, true);
-        group.model.bus.trigger("group-updated", {
-            group: group,
-            withProgressBars: true,
-        });
         if (mode === "edit") {
             await this.props.openRecord(record);
         } else {
             this.props.progressBarState?.updateCounts(group);
         }
+        this.props.quickCreateState.groupId = mode === "add" ? group.id : false;
     }
 
     cancelQuickCreate() {
@@ -547,6 +518,13 @@ export class KanbanRenderer extends Component {
             await this.props.list.resequence(dataGroupId, refId);
         } finally {
             this.toggleProcessing(dataGroupId, false);
+        }
+    }
+
+    onSpaceKeyPress(target, isRange) {
+        if (target.classList.contains("o_kanban_record")) {
+            const record = this.props.list.records.find((e) => e.id === target.dataset.id);
+            this.toggleSelection(record, isRange);
         }
     }
 

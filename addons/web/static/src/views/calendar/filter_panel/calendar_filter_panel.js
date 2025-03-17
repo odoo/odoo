@@ -54,6 +54,7 @@ export class CalendarFilterPanel extends Component {
                 this.props.model.createFilter(section.fieldName, option.value);
             },
             value: "",
+            class: "mt-1",
         };
     }
 
@@ -65,15 +66,16 @@ export class CalendarFilterPanel extends Component {
         const records = await this.orm.call(resModel, "name_search", [], {
             name: request,
             operator: "ilike",
-            args: domain,
+            domain: domain,
             limit: 8,
-            context: {},
+            context: section.context,
         });
 
         const options = records.map((result) => ({
             value: result[0],
             label: result[1],
             model: resModel,
+            avatarField: section.avatar.field,
         }));
 
         if (records.length > 7) {
@@ -100,9 +102,9 @@ export class CalendarFilterPanel extends Component {
         if (request.length) {
             const nameGets = await this.orm.call(resModel, "name_search", [], {
                 name: request,
-                args: domain,
+                domain: domain,
                 operator: "ilike",
-                context: {},
+                context: section.context,
             });
             dynamicFilters.push({
                 description: _t("Quick search: %s", request),
@@ -115,7 +117,7 @@ export class CalendarFilterPanel extends Component {
             noCreate: true,
             multiSelect: true,
             resModel,
-            context: {},
+            context: section.context,
             domain,
             onSelected: (resId) => this.props.model.createFilter(section.fieldName, resId),
             dynamicFilters,
@@ -135,7 +137,7 @@ export class CalendarFilterPanel extends Component {
     }
 
     isAllActive(section) {
-        let active = true;
+        let active = !!section.filters.length;
         for (const filter of section.filters) {
             if (filter.type !== "all" && !filter.active) {
                 active = false;
@@ -168,9 +170,7 @@ export class CalendarFilterPanel extends Component {
     }
 
     toggleSection(section) {
-        if (section.canCollapse) {
-            this.state.collapsed[section.fieldName] = !this.state.collapsed[section.fieldName];
-        }
+        this.state.collapsed[section.fieldName] = !this.state.collapsed[section.fieldName];
     }
 
     isSectionCollapsed(section) {
@@ -178,27 +178,20 @@ export class CalendarFilterPanel extends Component {
     }
 
     onFilterInputChange(section, filter, ev) {
-        this.props.model.updateFilters(section.fieldName, {
-            [filter.value]: ev.target.checked,
-        });
+        this.props.model.updateFilters(section.fieldName, [filter], ev.target.checked);
+        this.render();
     }
 
     onAllFilterInputChange(section, ev) {
-        const filters = {};
-        for (const filter of section.filters) {
-            if (filter.type !== "all") {
-                filters[filter.value] = ev.target.checked;
-            }
+        this.props.model.updateFilters(section.fieldName, section.filters, ev.target.checked);
+        this.render();
+    }
+
+    onFilterRemoveBtnClick(section, filter, ev) {
+        if (!ev.currentTarget.dataset.unlinked) {
+            ev.currentTarget.dataset.unlinked = true;
+            this.props.model.unlinkFilter(section.fieldName, filter.recordId);
+            this.render();
         }
-        this.props.model.updateFilters(section.fieldName, filters);
-    }
-
-    onFilterRemoveBtnClick(section, filter) {
-        this.props.model.unlinkFilter(section.fieldName, filter.recordId);
-    }
-
-    onFieldChanged(fieldName, filterValue) {
-        this.state.fieldRev += 1;
-        this.props.model.createFilter(fieldName, filterValue);
     }
 }

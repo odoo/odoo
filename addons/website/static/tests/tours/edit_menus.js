@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 import {
     clickOnEditAndWaitEditMode,
     clickOnExtraMenuItem,
@@ -341,8 +343,11 @@ registerWebsitePreviewTour('edit_menus', {
     },
     ...clickOnEditAndWaitEditMode(),
     {
+        trigger: ":iframe main section.s_media_list .s_media_list_item:eq(2) h3:contains(post)",
+    },
+    {
         content: "Open nested menu item",
-        trigger: ':iframe .top_menu .nav-item:contains("Home"):nth-child(2) .dropdown-toggle',
+        trigger: ':iframe .o_top_fixed_element .nav-item:contains("Home"):nth-child(2) .dropdown-toggle',
         run: "click",
     },
     {

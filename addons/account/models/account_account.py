@@ -148,8 +148,10 @@ class AccountAccount(models.Model):
         if field_expr == 'code':
             return self.with_company(self.env.company.root_id).sudo()._field_to_sql(alias, 'code_store', query, flush)
         if field_expr == 'placeholder_code':
+            # The placeholder_code is defined as the account's code in the first active company to
+            # which the account belongs.
             query.add_join(
-                'JOIN',
+                'LEFT JOIN',
                 'account_first_company',
                 SQL(
                     """(
@@ -165,21 +167,23 @@ class AccountAccount(models.Model):
                       ORDER BY rel.account_account_id, company_id
                     )""",
                     authorized_company_ids=self.env.user._get_company_ids(),
+                    to_flush=self._fields['company_ids'],
                 ),
                 SQL('account_first_company.account_id = %(account_id)s', account_id=SQL.identifier(alias, 'id')),
             )
 
-            # Can't have spaces because of how stupidly the `Model._read_group_orderby` method is written
-            # see https://github.com/odoo/odoo/blob/2a3466e8f86bc08594391658e08ba3416fb8307b/odoo/models.py#L2222
             return SQL(
-                "COALESCE("
-                "%(code_store)s->>%(active_company_root_id)s,"
-                "%(code_store)s->>%(account_first_company_root_id)s||'('||%(account_first_company_name)s||')'"
-                ")",
+                """
+                    COALESCE(
+                        %(code_store)s->>%(active_company_root_id)s,
+                        %(code_store)s->>%(account_first_company_root_id)s || ' (' || %(account_first_company_name)s || ')'
+                    )
+                """,
                 code_store=SQL.identifier(alias, 'code_store'),
-                active_company_root_id=self.env.company.root_id.id,
+                active_company_root_id=str(self.env.company.root_id.id),
                 account_first_company_name=SQL.identifier('account_first_company', 'company_name'),
                 account_first_company_root_id=SQL.identifier('account_first_company', 'root_company_id'),
+                to_flush=self._fields['code_store'],
             )
 
         return super()._field_to_sql(alias, field_expr, query, flush)
@@ -409,11 +413,11 @@ class AccountAccount(models.Model):
                     record.placeholder_code = f'{code} ({company.name})'
 
     def _search_placeholder_code(self, operator, value):
-        if operator != '=like':
+        if operator != '=ilike':
             raise NotImplementedError
         query = Query(self.env, 'account_account')
         placeholder_code_sql = self.env['account.account']._field_to_sql('account_account', 'placeholder_code', query)
-        query.add_where(SQL("%s LIKE %s", placeholder_code_sql, value))
+        query.add_where(SQL("%s ILIKE %s", placeholder_code_sql, value))
         return [('id', 'in', query)]
 
     @api.depends_context('company')
@@ -425,7 +429,7 @@ class AccountAccount(models.Model):
     def _search_account_root(self, operator, value):
         if operator in ['=', 'child_of']:
             root = self.env['account.root'].browse(value)
-            return [('placeholder_code', '=like', root.name + ('' if operator == '=' and not root.parent_id else '%'))]
+            return [('placeholder_code', '=ilike', root.name + ('' if operator == '=' and not root.parent_id else '%'))]
         raise NotImplementedError
 
     def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
@@ -808,7 +812,7 @@ class AccountAccount(models.Model):
         return self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type)
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100) -> list[tuple[int, str]]:
+    def name_search(self, name='', domain=None, operator='ilike', limit=100) -> list[tuple[int, str]]:
         if (
             not name
             and (partner := self.env.context.get('partner_id'))
@@ -818,7 +822,7 @@ class AccountAccount(models.Model):
             records = self.sudo().browse(ordered_accounts)
             records.fetch(['display_name'])
             return [(record.id, record.display_name) for record in records]
-        return super().name_search(name, args, operator, limit)
+        return super().name_search(name, domain, operator, limit)
 
     @api.model
     def _search_display_name(self, operator, value):
@@ -1012,6 +1016,9 @@ class AccountAccount(models.Model):
             for account in self:
                 if self.env['account.move.line'].search_count([('account_id', '=', account.id), ('currency_id', 'not in', (False, vals['currency_id']))]):
                     raise UserError(_('You cannot set a currency on this account as it already has some journal entries having a different foreign currency.'))
+
+        if vals.get('deprecated') and self.env["account.tax.repartition.line"].search_count([('account_id', 'in', self.ids)], limit=1):
+            raise UserError(_("You cannot deprecate an account that is used in a tax distribution."))
 
         res = super(AccountAccount, self.with_context(defer_account_code_checks=True)).write(vals)
 

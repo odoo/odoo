@@ -8,6 +8,7 @@ import {
     keyDown,
     keyUp,
     leave,
+    on,
     pointerDown,
     press,
     queryAll,
@@ -16,6 +17,7 @@ import {
     queryOne,
     queryText,
     resize,
+    scroll,
     setInputFiles,
 } from "@odoo/hoot-dom";
 import {
@@ -78,6 +80,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { FileInput } from "@web/core/file_input/file_input";
 
+import { browser } from "@web/core/browser/browser";
 import { currencies } from "@web/core/currency";
 import { registry } from "@web/core/registry";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
@@ -90,7 +93,6 @@ import { kanbanView } from "@web/views/kanban/kanban_view";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
 import { WebClient } from "@web/webclient/webclient";
-import { browser } from "@web/core/browser/browser";
 
 const { IrAttachment } = webModels;
 
@@ -1799,8 +1801,8 @@ test("quick create record without quick_create_view", async () => {
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -1868,8 +1870,8 @@ test("quick create record with quick_create_view", async () => {
         "get_views", // form view in quick create
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
-        "web_read", // read the created record
         "onchange", // new quick create
+        "web_read", // read the created record
     ]);
 });
 
@@ -2108,8 +2110,8 @@ test("quick create record in grouped on m2o (no quick_create_view)", async () =>
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2176,8 +2178,8 @@ test("quick create record in grouped on m2o (with quick_create_view)", async () 
         "get_views", // form view in quick create
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2221,8 +2223,8 @@ test("quick create record in grouped on m2m (no quick_create_view)", async () =>
         "web_search_read", // initial search_read (second column)
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2270,8 +2272,8 @@ test("quick create record in grouped on m2m in the None column", async () => {
         "web_search_read", // read records when unfolding 'None'
         "onchange", // quick create
         "name_create", // should perform a name_create to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2324,8 +2326,8 @@ test("quick create record in grouped on m2m (field not in template)", async () =
         "get_views", // get form view
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
-        "web_read", // read the created record
         "onchange", // reopen the quick create automatically
+        "web_read", // read the created record
     ]);
 });
 
@@ -2384,8 +2386,8 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
         "get_views", // get form view
         "onchange", // quick create
         "web_save", // should perform a web_save to create the record
-        "web_read",
         "onchange",
+        "web_read",
     ]);
 });
 
@@ -2576,7 +2578,7 @@ test("quick create record with onchange of field marked readonly", async () => {
     expect.verifySteps(["onchange"]);
 
     await validateKanbanRecord();
-    expect.verifySteps(["web_save", "web_read", "onchange"]);
+    expect.verifySteps(["web_save", "onchange", "web_read"]);
 });
 
 test("quick create record and change state in grouped mode", async () => {
@@ -3378,9 +3380,13 @@ test("quick create several records in a row", async () => {
     });
 });
 
-test("quick create is disabled until record is created and read", async () => {
-    const def = new Deferred();
-    onRpc("web_read", () => def);
+test("quick create is disabled until record is created and onchange is done", async () => {
+    let webSaveDef;
+    let onchangeDef;
+    let webReadDef;
+    onRpc("web_save", () => webSaveDef);
+    onRpc("onchange", () => onchangeDef);
+    onRpc("web_read", () => webReadDef);
 
     await mountView({
         type: "kanban",
@@ -3406,6 +3412,9 @@ test("quick create is disabled until record is created and read", async () => {
     expect(".o_kanban_quick_create").toHaveCount(1, { message: "the quick create should be open" });
 
     await editKanbanRecordQuickCreateInput("display_name", "new partner 1");
+    webSaveDef = new Deferred();
+    onchangeDef = new Deferred();
+    webReadDef = new Deferred();
     await validateKanbanRecord();
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
@@ -3415,7 +3424,27 @@ test("quick create is disabled until record is created and read", async () => {
         message: "quick create should be disabled",
     });
 
-    def.resolve();
+    webSaveDef.resolve();
+    await animationFrame();
+
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
+        message: "first column should still contain one record",
+    });
+    expect(".o_kanban_quick_create.o_disabled").toHaveCount(1, {
+        message: "quick create should be disabled",
+    });
+
+    onchangeDef.resolve();
+    await animationFrame();
+
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
+        message: "first column should still contain one record",
+    });
+    expect(".o_kanban_quick_create.o_disabled").toHaveCount(0, {
+        message: "quick create should be enabled",
+    });
+
+    webReadDef.resolve();
     await animationFrame();
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2, {
@@ -6355,10 +6384,10 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
         "has_group",
         "onchange",
         "name_create",
+        "onchange",
         "web_read",
         "read_progress_bar",
         "web_read_group",
-        "onchange",
     ]);
 });
 
@@ -7618,9 +7647,7 @@ test("rendering date and datetime (value)", async () => {
     });
 
     expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText("01/25/2017");
-    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText(
-        "12/12/2016 11:55:05"
-    );
+    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText("12/12/2016 11:55");
 });
 
 test("rendering date and datetime (raw value)", async () => {
@@ -8780,9 +8807,9 @@ test("column progressbars on quick create properly update counter", async () => 
         "web_search_read",
         "onchange",
         "name_create",
+        "onchange",
         "web_read",
         "read_progress_bar",
-        "onchange",
     ]);
 });
 
@@ -9630,10 +9657,10 @@ test("column progressbars on quick create with quick_create_view", async () => {
         "get_views",
         "onchange",
         "web_save",
+        "onchange",
         "web_read",
         "read_progress_bar",
         "web_read_group",
-        "onchange",
     ]);
 });
 
@@ -9706,17 +9733,17 @@ test("progressbars and active filter with quick_create_view", async () => {
         "get_views",
         "onchange",
         "web_save",
+        "onchange",
         "web_read",
         "read_progress_bar",
         "web_read_group",
         "web_read_group",
-        "onchange",
         "web_save",
+        "onchange",
         "web_read",
         "read_progress_bar",
         "web_read_group",
         "web_read_group",
-        "onchange",
     ]);
 });
 
@@ -12690,26 +12717,26 @@ test("scroll on group unfold and progressbar click", async () => {
         "has_group",
         "web_search_read",
     ]);
-    queryOne(".o_content").scrollTo = (params) => {
-        expect.step("scrolled");
-        expect(params.top).toBe(0);
-    };
+    queryOne(".o_content").style.maxHeight = "80px";
+    on(".o_content", "scroll", () => expect.step("scrolled"));
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanProgressBars(0)[0]).click();
 
     expect.verifySteps([
+        "scrolled",
         "web_read_group",
         "web_search_read",
         "read_progress_bar",
         "web_read_group",
         "web_read_group",
-        "scrolled",
     ]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanColumn(1)).click();
 
-    expect.verifySteps(["web_search_read", "scrolled"]);
+    expect.verifySteps(["scrolled", "web_search_read"]);
 });
 
 test.tags("desktop");
@@ -12808,6 +12835,8 @@ test("action button in controlPanel with display='always'", async () => {
 
 test.tags("desktop");
 test("Keep scrollTop when loading records with load more", async () => {
+    Partner._records[0].bar = false;
+    Partner._records[1].bar = false;
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -12822,14 +12851,12 @@ test("Keep scrollTop when loading records with load more", async () => {
         groupBy: ["bar"],
         limit: 1,
     });
-    queryOne(".o_kanban_renderer").style.overflow = "scroll";
-    queryOne(".o_kanban_renderer").style.height = "500px";
     const clickKanbanLoadMoreButton = queryFirst(".o_kanban_load_more button");
     clickKanbanLoadMoreButton.scrollIntoView();
-    const previousScrollTop = queryOne(".o_kanban_renderer").scrollTop;
+    const previousScrollTop = queryOne(".o_content").scrollTop;
     await contains(clickKanbanLoadMoreButton).click();
     expect(previousScrollTop).not.toBe(0, { message: "Should not have the scrollTop value at 0" });
-    expect(queryOne(".o_kanban_renderer").scrollTop).toBe(previousScrollTop);
+    expect(queryOne(".o_content").scrollTop).toBe(previousScrollTop);
 });
 
 test("Kanban: no reset of the groupby when a non-empty column is deleted", async () => {
@@ -13608,4 +13635,36 @@ test("selection can be enabled by long touch with drag & drop enabled", async ()
     expect(".o_record_selected").toHaveCount(2);
     await contains(".o_kanban_record:nth-of-type(1)").click();
     expect(".o_record_selected").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("selection can be enabled by pressing 'space' key", async () => {
+    Product._records[1].fold = true;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    await press("ArrowDown");
+    await press("Space");
+    await animationFrame();
+    expect(".o_selection_box").toHaveCount(1);
+    await press("ArrowDown");
+    await press("Space");
+    await animationFrame();
+    expect(".o_record_selected").toHaveCount(2);
+    await press("ArrowDown");
+    await press("ArrowDown");
+    await keyDown("Shift");
+    await press("Space");
+    await animationFrame();
+    expect(".o_record_selected").toHaveCount(4);
 });

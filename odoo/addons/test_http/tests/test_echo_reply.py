@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from http import HTTPStatus
 
 from odoo.http import Request
-from odoo.tests import tagged
-from odoo.tests.common import new_test_user
+from odoo.tests import Like, new_test_user, tagged
 from odoo.tools import mute_logger
 from odoo.addons.test_http.controllers import CT_JSON
 
@@ -74,7 +74,12 @@ class TestHttpEchoReplyJsonNoDB(TestHttpBase):
     @mute_logger('odoo.http')
     def test_echojson2_http_post_nodb(self):
         res = self.nodb_url_open('/test_http/echo-json', data={'race': 'Asgard'})  # POST
-        self.assertIn("Bad Request", res.text)
+        self.assertEqual(res.text, Like("""
+            ...Request inferred type is compatible with...http...but...
+            /test_http/echo-json...is type=...json...
+        """))
+        self.assertEqual(res.status_code, HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(res.headers.get('Accept'), "application/json, application/json-rpc")
 
     def test_echojson3_bad_json(self):
         payload = 'some non json garbage'
@@ -174,7 +179,12 @@ class TestHttpEchoReplyJsonWithDB(TestHttpBase):
     @mute_logger('odoo.http')
     def test_echojson2_http_post_db(self):
         res = self.db_url_open('/test_http/echo-json', data={'race': 'Asgard'})  # POST
-        self.assertIn("Bad Request", res.text)
+        self.assertEqual(res.text, Like("""
+            ...Request inferred type is compatible with...http...but...
+            /test_http/echo-json...is type=...json...
+        """))
+        self.assertEqual(res.status_code, HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(res.headers.get('Accept'), "application/json, application/json-rpc")
 
     def test_echojson3_context_db(self):
         payload = json.dumps({

@@ -148,63 +148,6 @@ class TestRatingMixin(TestRatingCommon):
         self.assertEqual(record_rating.rating_avg, 3, "The average should be equal to 3")
 
 
-@tagged('rating', 'mail_performance', 'post_install', '-at_install')
-class TestRatingPerformance(TestRatingCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.RECORD_COUNT = 100
-        cls.partners = cls.env['res.partner'].sudo().create([
-            {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)}
-            for idx in range(cls.RECORD_COUNT)])
-
-    def apply_ratings(self, rate):
-        for record in self.record_ratings:
-            access_token = record._rating_get_access_token()
-            record.rating_apply(rate, token=access_token)
-        self.flush_tracking()
-
-    def create_ratings(self, model):
-        self.record_ratings = self.env[model].create([{
-            'customer_id': self.partners[idx].id,
-            'name': 'Test Rating',
-            'user_id': self.user_admin.id,
-        } for idx in range(self.RECORD_COUNT)])
-        self.flush_tracking()
-
-    @users('employee')
-    @warmup
-    def test_rating_last_value_perfs(self):
-        with self.assertQueryCount(employee=1213):
-            self.create_ratings('mail.test.rating.thread')
-
-        with self.assertQueryCount(employee=1603):
-            self.apply_ratings(1)
-
-        with self.assertQueryCount(employee=1402):
-            self.apply_ratings(5)
-
-    @users('employee')
-    @warmup
-    def test_rating_last_value_perfs_with_rating_mixin(self):
-
-        with self.assertQueryCount(employee=1316):
-            self.create_ratings('mail.test.rating')
-
-        with self.assertQueryCount(employee=1705):
-            self.apply_ratings(1)
-
-        with self.assertQueryCount(employee=1604):
-
-            self.apply_ratings(5)
-
-        with self.assertQueryCount(employee=1):
-            self.record_ratings._compute_rating_last_value()
-            vals = (val == 5 for val in self.record_ratings.mapped('rating_last_value'))
-            self.assertTrue(all(vals), "The last rating is kept.")
-
-
 @tagged("rating", "rating_portal")
 class TestRatingRoutes(HttpCase, TestRatingCommon):
     @classmethod

@@ -5,10 +5,10 @@
 """
 from __future__ import annotations
 
+import datetime
 import itertools
 import logging
 import sys
-import threading
 import time
 import typing
 import traceback
@@ -71,19 +71,12 @@ def load_data(env: Environment, idref, mode: str, kind: str, package: ModuleNode
         return files
 
     filename = None
-    try:
-        if kind in ('demo', 'test'):
-            threading.current_thread().testing = True
-        for filename in _get_files_of_kind(kind):
-            _logger.info("loading %s/%s", package.name, filename)
-            noupdate = False
-            if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
-                noupdate = True
-            tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
-    finally:
-        if kind in ('demo', 'test'):
-            threading.current_thread().testing = False
-
+    for filename in _get_files_of_kind(kind):
+        _logger.info("loading %s/%s", package.name, filename)
+        noupdate = False
+        if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+            noupdate = True
+        tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
     return bool(filename)
 
 
@@ -291,6 +284,7 @@ def load_module_graph(
             if suite.countTestCases():
                 if not needs_update:
                     registry._setup_models__(env.cr)
+                registry.check_null_constraints(env.cr)
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
                 test_results = loader.run_suite(suite)
@@ -495,7 +489,7 @@ def load_modules(
             _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
 
         # STEP 3.6: apply remaining constraints in case of an upgrade
-        registry.finalize_constraints()
+        registry.finalize_constraints(cr)
 
         # STEP 4: Finish and cleanup installations
         if registry.updated_modules:
@@ -509,6 +503,12 @@ def load_modules(
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(registry.updated_modules)
+            # Cleanup cron
+            vacuum_cron = env.ref('base.autovacuum_job', raise_if_not_found=False)
+            if vacuum_cron:
+                # trigger after a small delay to give time for assets to regenerate
+                vacuum_cron._trigger(at=datetime.datetime.now() + datetime.timedelta(minutes=1))
+
             env.flush_all()
 
         # STEP 5: Uninstall modules to remove
@@ -547,8 +547,12 @@ def load_modules(
         #   - module C is loaded and extends model M;
         #   - module B and C depend on A but not on each other;
         # The changes introduced by module C are not taken into account by the upgrade of B.
+        if update_module:
+            # We need to fix custom fields for which we have dropped the not-null constraint.
+            cr.execute("""SELECT DISTINCT model FROM ir_model_fields WHERE state = 'manual'""")
+            models_to_check.update(model_name for model_name, in cr.fetchall() if model_name in registry)
         if models_to_check:
-            registry.init_models(cr, list(models_to_check), {'models_to_check': True})
+            registry.init_models(cr, list(models_to_check), {'models_to_check': True, 'update_custom_fields': True})
 
         # STEP 6: verify custom views on every model
         if update_module:
@@ -572,6 +576,9 @@ def load_modules(
         for model in env.values():
             model._register_hook()
         env.flush_all()
+
+        # STEP 10: check that we can trust nullable columns
+        registry.check_null_constraints(cr)
 
 
 def reset_modules_state(db_name: str) -> None:

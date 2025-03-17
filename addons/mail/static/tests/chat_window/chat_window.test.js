@@ -554,10 +554,8 @@ test("chat window should open when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", async () => {
+        asyncStep("init_messaging");
     });
     await start();
     await waitForSteps(["init_messaging"]);
@@ -1045,4 +1043,19 @@ test("getting focus of chat window through tab key should jump to new message se
         ".o-mail-Message:contains(message_20)",
         ".o-mail-ChatWindow:eq(0) .o-mail-Thread"
     );
+});
+
+test("Ctrl+k opens the @ command palette", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create([
+        {
+            name: "General",
+            channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        },
+    ]);
+    setupChatHub({ opened: channelId });
+    await start();
+    await focus(".o-mail-ChatWindow", { text: "General" });
+    triggerHotkey("control+k");
+    await contains(".o_command_palette_search", { text: "@" });
 });

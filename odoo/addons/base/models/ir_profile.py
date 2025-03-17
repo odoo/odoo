@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -8,10 +7,11 @@ import logging
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.misc import str2bool
+from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.profiler import make_session
 from odoo.tools.speedscope import Speedscope
 
@@ -47,7 +47,9 @@ class IrProfile(models.Model):
     def _gc_profile(self):
         # remove profiles older than 30 days
         domain = [('create_date', '<', fields.Datetime.now() - datetime.timedelta(days=30))]
-        return self.sudo().search(domain).unlink()
+        records = self.sudo().search(domain, limit=GC_UNLINK_LIMIT)
+        records.unlink()
+        return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
 
     @api.depends('init_stack_trace')
     def _compute_speedscope(self):
@@ -73,7 +75,7 @@ class IrProfile(models.Model):
         init_stack_trace = self[0].init_stack_trace
         for record in self:
             if record.init_stack_trace != init_stack_trace:
-                raise UserError(_('All profiles must have the same initial stack trace to be displayed together.'))
+                raise UserError(self.env._('All profiles must have the same initial stack trace to be displayed together.'))
         sp = Speedscope(init_stack_trace=json.loads(init_stack_trace))
         for profile in self:
             if (params['sql_no_gap_profile'] or params['sql_density_profile'] or params['combined_profile']) and profile.sql:
@@ -140,7 +142,7 @@ class IrProfile(models.Model):
                             'target': 'new',
                             'views': [[False, 'form']],
                         }
-                raise UserError(_('Profiling is not enabled on this database. Please contact an administrator.'))
+                raise UserError(self.env._('Profiling is not enabled on this database. Please contact an administrator.'))
             if not request.session.get('profile_session'):
                 request.session['profile_session'] = make_session(self.env.user.name)
                 request.session['profile_expiration'] = limit

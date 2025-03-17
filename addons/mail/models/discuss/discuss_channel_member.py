@@ -299,9 +299,15 @@ class DiscussChannelMember(models.Model):
 
     def _rtc_join_call(self, store: Store = None, check_rtc_session_ids=None, camera=False):
         self.ensure_one()
-        check_rtc_session_ids = (check_rtc_session_ids or []) + self.rtc_session_ids.ids
+        session_domain = []
+        if self.partner_id:
+            session_domain = [("partner_id", "=", self.partner_id.id)]
+        elif self.guest_id:
+            session_domain = [("guest_id", "=", self.guest_id.id)]
+        user_sessions = self.search(session_domain).rtc_session_ids
+        check_rtc_session_ids = (check_rtc_session_ids or []) + user_sessions.ids
         self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
-        self.rtc_session_ids.unlink()
+        user_sessions.unlink()
         rtc_session = self.env['discuss.channel.rtc.session'].create({'channel_member_id': self.id, 'is_camera_on': camera})
         current_rtc_sessions, outdated_rtc_sessions = self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
         ice_servers = self.env["mail.ice.server"]._get_ice_servers()
@@ -318,16 +324,19 @@ class DiscussChannelMember(models.Model):
                 "Rtc",
                 {
                     "iceServers": ice_servers or False,
-                    "selfSession": Store.One(rtc_session),
+                    "localSession": Store.One(rtc_session),
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
-        if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type != "channel":
-            self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
-            self._rtc_invite_members()
+        if len(self.channel_id.rtc_session_ids) == 1:
+            body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
+            message = self.channel_id.message_post(body=body, message_type="notification")
+            self.channel_id.last_call_message_id = message
+            if self.channel_id.channel_type != "channel":
+                self._rtc_invite_members()
 
-    def _join_sfu(self, ice_servers=None):
-        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD:
+    def _join_sfu(self, ice_servers=None, force=False):
+        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD and not force:
             if self.channel_id.sfu_channel_uuid:
                 self.channel_id.sfu_channel_uuid = None
                 self.channel_id.sfu_server_url = None
@@ -389,6 +398,13 @@ class DiscussChannelMember(models.Model):
             self.rtc_session_ids.unlink()
         else:
             self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
+        if not self.channel_id.rtc_session_ids and self.channel_id.last_call_message_id:
+            # deducing information about the end of call through write_date
+            self.channel_id._message_update_content(
+                self.channel_id.last_call_message_id,
+                self.channel_id.last_call_message_id.body,
+                strict=False
+            )
 
     def _rtc_sync_sessions(self, check_rtc_session_ids=None):
         """Synchronize the RTC sessions for self channel member.
@@ -567,9 +583,12 @@ class DiscussChannelMember(models.Model):
             ],
         )
 
+    def _get_html_link_title(self):
+        return self.partner_id.name if self.partner_id else self.guest_id.name
+
     def _get_html_link(self, *args, for_persona=False, **kwargs):
         if not for_persona:
             return self._get_html_link(*args, **kwargs)
         if self.partner_id:
-            return self.partner_id._get_html_link(title=f"@{self.partner_id.name}")
+            return self.partner_id._get_html_link(title=f"@{self._get_html_link_title()}")
         return Markup("<strong>%s</strong>") % self.guest_id.name

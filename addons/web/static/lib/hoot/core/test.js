@@ -47,20 +47,17 @@ export class Test extends Job {
         return this.runFnString;
     }
 
+    get duration() {
+        return this.results.reduce((acc, result) => acc + result.duration, 0);
+    }
+
     /** @returns {import("./expect").CaseResult | null} */
     get lastResults() {
         return this.results.at(-1);
     }
 
-    /**
-     * @param {() => MaybePromise<void>} fn
-     */
-    setRunFn(fn) {
-        this.run = fn ? async () => fn() : null;
-        if (fn) {
-            this.formatted = false;
-            this.runFnString = fn.toString();
-        }
+    cleanup() {
+        this.run = null;
     }
 
     /**
@@ -108,5 +105,20 @@ export class Test extends Job {
         }
 
         return lines.join("\n");
+    }
+
+    reset() {
+        this.run = this.run.bind(this);
+    }
+
+    /**
+     * @param {() => MaybePromise<void>} fn
+     */
+    setRunFn(fn) {
+        this.run = fn ? async () => fn() : null;
+        if (fn) {
+            this.formatted = false;
+            this.runFnString = fn.toString();
+        }
     }
 }

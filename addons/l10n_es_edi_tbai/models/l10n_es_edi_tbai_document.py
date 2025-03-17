@@ -112,14 +112,12 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         if not self.company_id.vat:
             return _("Please configure the Tax ID on your company for TicketBAI.")
 
-        if not values['is_sale'] :
-            if self.company_id._l10n_es_freelancer():
-                if not self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', False):
-                    return _("In order to use Ticketbai Batuz for freelancers, you will need to configure the "
-                             "Epigrafe or Main Activity.  In this version, you need to go in debug mode to "
-                             "Settings > Technical > System Parameters and set the parameter 'l10n_es_edi_tbai.epigrafe'"
-                             "to your epigrafe number. You can find them in %s",
-                             "https://www.batuz.eus/fitxategiak/batuz/lroe/batuz_lroe_lista_epigrafes_v1_0_3.xlsx")
+        if self.company_id._l10n_es_freelancer() and not self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', False):
+            return _("In order to use Ticketbai Batuz for freelancers, you will need to configure the "
+                        "Epigrafe or Main Activity.  In this version, you need to go in debug mode to "
+                        "Settings > Technical > System Parameters and set the parameter 'l10n_es_edi_tbai.epigrafe'"
+                        "to your epigrafe number. You can find them in %s",
+                        "https://www.batuz.eus/fitxategiak/batuz/lroe/batuz_lroe_lista_epigrafes_v1_0_3.xlsx")
 
         if values['is_sale'] and not self.is_cancel:
             if any(not base_line['tax_ids'] for base_line in values['base_lines']):
@@ -340,7 +338,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'doc': self,
             **self._get_header_values(),
             **self._get_sender_values(),
-            **(self._get_recipient_values(values['partner']) if values['partner'] and not self.is_cancel or not values['is_sale'] else {}),
+            **(self._get_recipient_values(values['partner'], values["is_simplified"]) if values['partner'] and not self.is_cancel or not values['is_sale'] else {}),
             'datetime_now': datetime.now(tz=timezone('Europe/Madrid')),
             'format_date': lambda d: datetime.strftime(d, '%d-%m-%Y'),
             'format_time': lambda d: datetime.strftime(d, '%H:%M:%S'),
@@ -387,7 +385,11 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'sender': sender,
         }
 
-    def _get_recipient_values(self, partner):
+    def _get_recipient_values(self, partner, is_simplified=False):
+        # TicketBAI accept recipient data for simplified invoices,
+        # but only if the partner has a VAT number
+        if is_simplified and not partner.vat:
+            return {}
         recipient_values = {
             'partner': partner,
             'partner_address': ', '.join(filter(None, [partner.street, partner.street2, partner.city])),

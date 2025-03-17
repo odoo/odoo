@@ -8,11 +8,12 @@ from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
 from odoo.tools.misc import limited_field_access_token, mute_logger
 from odoo.addons.bus.models.bus import json_dump
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 
 
 @tagged("post_install", "-at_install")
-class ChatbotCase(chatbot_common.ChatbotCase):
+class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
     def test_chatbot_duplicate(self):
         """ In this test we make sure that 'triggering_answer_ids' are correctly duplicated and
@@ -56,7 +57,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             'chatbot_script_id': self.chatbot_script.id,
             'channel_id': self.livechat_channel.id,
         })
-        discuss_channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        discuss_channel = self.env["discuss.channel"].browse(data["channel_id"])
 
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_dispatch)
 
@@ -124,7 +125,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             },
         )
         discuss_channel = (
-            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+            self.env["discuss.channel"].sudo().browse(data["channel_id"])
         )
         self.assertEqual(discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id)
         discuss_channel.add_members(partner_ids=self.env.user.partner_id.ids)
@@ -149,7 +150,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             },
         )
         discuss_channel = (
-            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+            self.env["discuss.channel"].sudo().browse(data["channel_id"])
         )
         self.step_forward_operator._process_step_forward_operator(discuss_channel)
         self.assertEqual(
@@ -174,7 +175,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
         def get_forward_op_bus_params():
             messages = self.env["mail.message"].search([], order="id desc", limit=3)
             # only data relevant to the test are asserted for simplicity
-            transfer_message_data = Store(messages[2]).get_result()
+            transfer_message_data = Store(messages[1]).get_result()
             transfer_message_data["mail.message"][0].update(
                 {
                     "author": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
@@ -185,7 +186,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                 }
             )
             transfer_message_data["mail.thread"][0]["display_name"] = "Testing Bot"
-            joined_message_data = Store(messages[1]).get_result()
+            joined_message_data = Store(messages[0]).get_result()
             joined_message_data["mail.message"][0].update(
                 {
                     "author": {"id": self.partner_employee.id, "type": "partner"},
@@ -196,17 +197,6 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                 }
             )
             joined_message_data["mail.thread"][0]["display_name"] = "Testing Bot"
-            left_message_data = Store(messages[0]).get_result()
-            left_message_data["mail.message"][0].update(
-                {
-                    "author": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
-                    "body": '<div class="o_mail_notification">left the channel</div>',
-                    # thread not renamed yet at this step
-                    "default_subject": "Testing Bot",
-                    "record_name": "Testing Bot",
-                }
-            )
-            left_message_data["mail.thread"][0]["display_name"] = "Testing Bot"
             member_emp = discuss_channel.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.partner_employee
             )
@@ -218,8 +208,8 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                     ).get_result()
                 )
             )
-            channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[2].id
-            channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[2].id
+            channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
+            channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["is_pinned"] = True
             channel_data_join["discuss.channel"][0]["livechat_operator_id"] = {
                 "id": self.chatbot_script.operator_partner_id.id,
@@ -264,9 +254,8 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                     (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id, "members"),
-                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "res.partner", self.chatbot_script.operator_partner_id.id),
+                    (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
@@ -298,7 +287,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                                     "id": member_emp.id,
                                     "message_unread_counter": 0,
                                     "message_unread_counter_bus_id": 0,
-                                    "new_message_separator": messages[0].id,
+                                    "new_message_separator": messages[0].id + 1,
                                     "persona": {"id": self.partner_employee.id, "type": "partner"},
                                     "syncUnread": True,
                                     "thread": {
@@ -351,14 +340,14 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                                     "create_date": fields.Datetime.to_string(
                                         member_emp.create_date
                                     ),
-                                    "fetched_message_id": messages[1].id,
+                                    "fetched_message_id": messages[0].id,
                                     "id": member_emp.id,
                                     "is_bot": False,
                                     "last_seen_dt": fields.Datetime.to_string(
                                         member_emp.last_seen_dt
                                     ),
                                     "persona": {"id": self.partner_employee.id, "type": "partner"},
-                                    "seen_message_id": messages[1].id,
+                                    "seen_message_id": messages[0].id,
                                     "thread": {
                                         "id": discuss_channel.id,
                                         "model": "discuss.channel",
@@ -392,10 +381,6 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                         "payload": {
                             "discuss.channel": [{"id": discuss_channel.id, "is_pinned": True}]
                         },
-                    },
-                    {
-                        "type": "discuss.channel/new_message",
-                        "payload": {"data": left_message_data, "id": discuss_channel.id},
                     },
                     {
                         "type": "mail.record/insert",

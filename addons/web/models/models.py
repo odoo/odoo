@@ -47,6 +47,15 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
+    def web_name_search(self, name, specification, domain=None, operator='ilike', limit=100):
+        id_name_pairs = self.name_search(name, domain, operator, limit)
+        if len(specification) == 1 and 'display_name' in specification:
+            return [{ 'id': id, 'display_name': name } for id, name in id_name_pairs]
+        records = self.browse([id for id, _ in id_name_pairs])
+        return records.web_read(specification)
+
+    @api.model
+    @api.readonly
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         records = self.search_fetch(domain, specification.keys(), offset=offset, limit=limit, order=order)
         values_records = records.web_read(specification)
@@ -300,6 +309,9 @@ class Base(models.AbstractModel):
                 or a string `'field:granularity'`. Right now, the only supported granularities
                 are `'day'`, `'week'`, `'month'`, `'quarter'` or `'year'`, and they only make sense for
                 date/datetime fields.
+                Additionally integer date parts are also supported:
+                `'year_number'`, `'quarter_number'`, `'month_number'`, `'iso_week_number'`, `'day_of_year'`, `'day_of_month'`,
+                'day_of_week', 'hour_number', 'minute_number' and 'second_number'.
         :param list aggregates: list of aggregates specification.
                 Each element is `'field:agg'` (aggregate field with aggregation function `'agg'`).
                 The possible aggregation functions are the ones provided by

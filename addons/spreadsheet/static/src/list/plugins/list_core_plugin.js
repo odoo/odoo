@@ -1,9 +1,5 @@
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { helpers } from "@odoo/o-spreadsheet";
-import { _t } from "@web/core/l10n/translation";
-import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
-import { sprintf } from "@web/core/utils/strings";
-import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { Domain } from "@web/core/domain";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
@@ -25,9 +21,6 @@ const { getMaxObjectId } = helpers;
  * @property {string} id
  * @property {string} dataSourceId
  * @property {ListDefinition} definition
- * @property {Object} fieldMatching
- *
- * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  */
 
 export class ListCorePlugin extends OdooCorePlugin {
@@ -39,8 +32,6 @@ export class ListCorePlugin extends OdooCorePlugin {
         "getListName",
         "getNextListId",
         "isExistingList",
-        "getListFieldMatch",
-        "getListFieldMatching",
     ]);
     constructor(config) {
         super(config);
@@ -48,14 +39,6 @@ export class ListCorePlugin extends OdooCorePlugin {
         this.nextId = 1;
         /** @type {Object.<string, List>} */
         this.lists = {};
-
-        globalFiltersFieldMatchers["list"] = {
-            getIds: () => this.getters.getListIds(),
-            getDisplayName: (listId) => this.getters.getListName(listId),
-            getTag: (listId) => sprintf(_t("List #%s"), listId),
-            getFieldMatching: (listId, filterId) => this.getListFieldMatching(listId, filterId),
-            getModel: (listId) => this.getListDefinition(listId).model,
-        };
     }
 
     allowDispatch(cmd) {
@@ -90,11 +73,6 @@ export class ListCorePlugin extends OdooCorePlugin {
                     return CommandResult.ListIdNotFound;
                 }
                 break;
-            case "ADD_GLOBAL_FILTER":
-            case "EDIT_GLOBAL_FILTER":
-                if (cmd.list) {
-                    return checkFilterFieldMatching(cmd.list);
-                }
         }
         return CommandResult.Success;
     }
@@ -153,15 +131,6 @@ export class ListCorePlugin extends OdooCorePlugin {
                 this.history.update("lists", cmd.listId, "definition", cmd.list);
                 break;
             }
-            case "ADD_GLOBAL_FILTER":
-            case "EDIT_GLOBAL_FILTER":
-                if (cmd.list) {
-                    this._setListFieldMatching(cmd.filter.id, cmd.list);
-                }
-                break;
-            case "REMOVE_GLOBAL_FILTER":
-                this._onFilterDeletion(cmd.id);
-                break;
         }
     }
 
@@ -183,14 +152,6 @@ export class ListCorePlugin extends OdooCorePlugin {
      */
     getListName(id) {
         return this.lists[id].definition.name;
-    }
-
-    /**
-     * @param {string} id
-     * @returns {string}
-     */
-    getListFieldMatch(id) {
-        return this.lists[id].fieldMatching;
     }
 
     /**
@@ -248,49 +209,12 @@ export class ListCorePlugin extends OdooCorePlugin {
     // Private
     // ---------------------------------------------------------------------
 
-    /**
-     * Get the current FieldMatching on a list
-     *
-     * @param {string} listId
-     * @param {string} filterId
-     */
-    getListFieldMatching(listId, filterId) {
-        return this.lists[listId].fieldMatching[filterId];
-    }
-
-    /**
-     * Sets the current FieldMatching on a list
-     *
-     * @param {string} filterId
-     * @param {Record<string,FieldMatching>} listFieldMatches
-     */
-    _setListFieldMatching(filterId, listFieldMatches) {
+    _addList(id, definition) {
         const lists = { ...this.lists };
-        for (const [listId, fieldMatch] of Object.entries(listFieldMatches)) {
-            lists[listId].fieldMatching[filterId] = fieldMatch;
-        }
-        this.history.update("lists", lists);
-    }
-
-    _onFilterDeletion(filterId) {
-        const lists = { ...this.lists };
-        for (const listId in lists) {
-            this.history.update("lists", listId, "fieldMatching", filterId, undefined);
-        }
-    }
-
-    _addList(id, definition, fieldMatching = undefined) {
-        const lists = { ...this.lists };
-        if (!fieldMatching) {
-            const model = definition.metaData.resModel;
-            fieldMatching = this.getters.getFieldMatchingForModel(model);
-        }
         lists[id] = {
             id,
             definition,
-            fieldMatching,
         };
-
         this.history.update("lists", lists);
     }
 
@@ -398,7 +322,7 @@ export class ListCorePlugin extends OdooCorePlugin {
                     actionXmlId: list.actionXmlId,
                     name: list.name,
                 };
-                this._addList(id, definition, list.fieldMatching);
+                this._addList(id, definition);
             }
         }
         this.nextId = data.listNextId || getMaxObjectId(this.lists) + 1;
@@ -413,7 +337,6 @@ export class ListCorePlugin extends OdooCorePlugin {
         for (const id in this.lists) {
             data.lists[id] = JSON.parse(JSON.stringify(this.getListDefinition(id)));
             data.lists[id].domain = new Domain(data.lists[id].domain).toJson();
-            data.lists[id].fieldMatching = this.lists[id].fieldMatching;
         }
         data.listNextId = this.nextId;
     }

@@ -3,7 +3,6 @@
 
 import configparser
 import contextlib
-import crypt
 import datetime
 from enum import Enum
 from functools import cache, wraps
@@ -16,6 +15,7 @@ from OpenSSL import crypto
 import os
 from pathlib import Path
 import platform
+import re
 import requests
 import secrets
 import socket
@@ -32,6 +32,9 @@ from odoo.tools.misc import file_path
 
 lock = Lock()
 _logger = logging.getLogger(__name__)
+
+if platform.system() == 'Linux':
+    import crypt
 
 
 class Orientation(Enum):
@@ -710,3 +713,19 @@ def reset_log_level():
             'log_handler': ':WARNING',
             'log_level': 'warn',
         })
+
+
+def _get_raspberry_pi_model():
+    """Returns the Raspberry Pi model number (e.g. 4) as an integer
+    Returns 0 if the model can't be determined, or -1 if called on Windows
+
+    :rtype: int
+    """
+    if platform.system() == 'Windows':
+        return -1
+    with open('/proc/device-tree/model', 'r', encoding='utf-8') as model_file:
+        match = re.search(r'Pi (\d)', model_file.read())
+        return int(match[1]) if match else 0
+
+
+raspberry_pi_model = _get_raspberry_pi_model()

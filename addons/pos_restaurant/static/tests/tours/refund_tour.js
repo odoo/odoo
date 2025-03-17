@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             Dialog.confirm("Open Register"),
 
             // Create first order and pay it
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2"),
             ProductScreen.clickDisplayedProduct("Water", true, "1"),
@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             ReceiptScreen.clickNextOrder(),
 
             // Go to another table and refund one of the products
-            FloorScreen.clickTable("104"),
+            FloorScreen.clickTable("4"),
             ProductScreen.orderIsEmpty(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),

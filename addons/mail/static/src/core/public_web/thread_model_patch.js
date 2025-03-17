@@ -44,6 +44,12 @@ patch(Thread.prototype, {
                         chatWindow.fold();
                     }
                 }
+                if (
+                    this.store.env.services["multi_tab"].isOnMainTab() &&
+                    this.store.settings.messageSound
+                ) {
+                    this.store.env.services["mail.sound_effects"].play("new-message");
+                }
             }
             this.store.env.services["mail.out_of_focus"].notify(message, this);
         }
@@ -101,7 +107,7 @@ patch(Thread.prototype, {
             router.replaceState({ active_id: undefined });
         }
         if (this.model === "discuss.channel" && this.is_pinned) {
-            return this.store.env.services.orm.silent.call(
+            await this.store.env.services.orm.silent.call(
                 "discuss.channel",
                 "channel_pin",
                 [this.id],
@@ -109,8 +115,9 @@ patch(Thread.prototype, {
             );
         }
     },
-    askLeaveConfirmation(body) {
-        return new Promise((resolve) => {
+    /** @param {string} body */
+    async askLeaveConfirmation(body) {
+        await new Promise((resolve) => {
             this.store.env.services.dialog.add(ConfirmationDialog, {
                 body: body,
                 confirmLabel: _t("Leave Conversation"),
@@ -118,20 +125,5 @@ patch(Thread.prototype, {
                 cancel: () => {},
             });
         });
-    },
-    async leaveChannel({ force = false } = {}) {
-        if (this.channel_type !== "group" && this.create_uid === this.store.self.userId && !force) {
-            await this.askLeaveConfirmation(
-                _t("You are the administrator of this channel. Are you sure you want to leave?")
-            );
-        }
-        if (this.channel_type === "group" && !force) {
-            await this.askLeaveConfirmation(
-                _t(
-                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
-                )
-            );
-        }
-        this.leave();
     },
 });

@@ -123,7 +123,7 @@ export class RecordAutocomplete extends Component {
         const domain = this.getDomain();
         return this.orm.call(this.props.resModel, "name_search", [], {
             name,
-            args: domain,
+            domain: domain,
             limit,
             context: this.props.context || {},
         });

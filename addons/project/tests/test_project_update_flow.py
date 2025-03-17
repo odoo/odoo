@@ -111,3 +111,31 @@ class TestProjectUpdate(TestProjectCommon):
             .execute()
         panel_data = self.project_pigs.get_panel_data()
         self.assertNotIn('milestones', panel_data, 'Since the "Milestones" feature is globally disabled, the "Milestones" section is not loaded.')
+
+    def test_project_update_reflects_task_changes(self):
+        """
+        Check if the project update reflects according to the task changes or not.
+            Steps:
+            1) Create a project update
+            2) Check the task count, closetask, and closed task percentag
+            3) Move Task1 to the Done stage
+            4) Repeat steps 1 and 2
+            5) Move Task2 to the Canceled stage
+            6) Create a new task
+            7) Repeat steps 1 and 2
+        """
+        def create_project_update_view():
+            update_form = Form(self.env['project.update'].with_context({'default_project_id': self.project_pigs.id}))
+            update_form.name = "Test"
+            project_update = update_form.save()
+            return [project_update.task_count, project_update.closed_task_count, project_update.closed_task_percentage]
+
+        project_update_data_list = create_project_update_view()
+        self.assertListEqual(project_update_data_list, [self.project_pigs.task_count, 0, 0])
+        self.task_1.state = '1_done'
+        project_update_data_list = create_project_update_view()
+        self.assertListEqual(project_update_data_list, [self.project_pigs.task_count, 1, 50])
+        self.task_2.state = '1_canceled'
+        self.task_2.copy()
+        project_update_data_list = create_project_update_view()
+        self.assertListEqual(project_update_data_list, [self.project_pigs.task_count, 2, 67])

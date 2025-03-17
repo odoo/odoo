@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
             ProductScreen.addOrderline("Coca-Cola", "1", "2", "2.0"),
@@ -57,7 +57,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 
             // Split the order of table 2 again
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickControlButton("Split"),
 
             SplitBillScreen.clickOrderline("Water"),
@@ -91,6 +91,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             ProductScreen.addOrderline("Coca-Cola", "1", "2.0"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
+            Chrome.isSynced(),
             ProductScreen.clickControlButton("Split"),
 
             SplitBillScreen.clickOrderline("Water"),
@@ -100,7 +101,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             SplitBillScreen.clickButton("Split"),
             ProductScreen.totalAmountIs("4.0"),
             Chrome.clickOrders(),
-            TicketScreen.selectOrder("102B"),
+            TicketScreen.selectOrder("2B"),
             TicketScreen.loadSelectedOrder(),
             Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),
             Order.hasLine({ productName: "Water", quantity: "1" }),

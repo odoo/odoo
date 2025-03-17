@@ -67,7 +67,7 @@ test("text filter with range", async function () {
 test("relational filter with domain", async function () {
     onRpc("partner", "name_search", ({ kwargs }) => {
         expect.step("name_search");
-        expect(kwargs.args).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", []]]);
+        expect(kwargs.domain).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", []]]);
     });
     const env = await makeMockEnv();
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
@@ -87,7 +87,7 @@ test("relational filter with domain", async function () {
 test("relational filter with a contextual domain", async function () {
     onRpc("partner", "name_search", ({ kwargs }) => {
         expect.step("name_search");
-        expect(kwargs.args).toEqual([
+        expect(kwargs.domain).toEqual([
             "&",
             ["user_ids", "in", [user.userId]],
             "!",
@@ -107,4 +107,18 @@ test("relational filter with a contextual domain", async function () {
     await click(".o_multi_record_selector input");
     await animationFrame();
     expect.verifySteps(["name_search"]);
+});
+
+test("boolean filter", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "boolean",
+        label: "Boolean Filter",
+    });
+    await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
+    await contains("input").click();
+    await contains("a:first").click();
+    expect(model.getters.getGlobalFilterValue("42")).toEqual([true], { message: "value is set" });
 });

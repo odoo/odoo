@@ -20,7 +20,6 @@ automatic lead generation, full Online support, ...
         'payment_demo',
         'website_event_booth_sale_exhibitor',
         'website_event_exhibitor',
-        'website_event_meet',
         'website_event_sale',
         'website_event_track',
         'website_event_track_live',
@@ -39,5 +38,6 @@ automatic lead generation, full Online support, ...
             'test_event_full/static/src/js/tests/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

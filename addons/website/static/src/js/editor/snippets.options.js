@@ -2095,6 +2095,32 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         return this._addSlide();
     },
 
+    /**
+     * Add a custom class if all controllers are hidden.
+     */
+    toggleControllers() {
+        const carouselEl = this.$target[0].closest(".carousel");
+        const indicatorsWrapEl = carouselEl.querySelector(".carousel-indicators");
+        const areControllersHidden = carouselEl.classList.contains("s_carousel_arrows_hidden") && indicatorsWrapEl.classList.contains("s_carousel_indicators_hidden");
+        carouselEl.classList.toggle("s_carousel_controllers_hidden", areControllersHidden);
+    },
+
+    /**
+     * Toggle card images.
+     */
+    toggleCardImg(previewMode, widgetValue, params) {
+        const carouselEl = this.$target[0].closest(".carousel");
+        if (widgetValue) {
+            const cardEls = carouselEl.querySelectorAll(".card");
+            for (const cardEl of cardEls) {
+                const imageWrapperEl = renderToElement("website.s_carousel_cards.imageWrapper");
+                cardEl.insertAdjacentElement("afterbegin", imageWrapperEl);
+            }
+        } else {
+            carouselEl.querySelectorAll("figure").forEach(el => el.remove());
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -2187,7 +2213,29 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
             this.$bsTarget.carousel(direction);
         });
     },
+    /**
+     * @override
+     */
+    async selectClass(previewMode, widgetValue, params) {
+        // Prevent the "Controllers" option from being "centered" when
+        // arrows and indicators are displayed
+        await this._super(...arguments);
+        if (["arrows_opt", "indicators_opt"].includes(params.name)) {
+            const carouselEl = this.$target[0].closest(".carousel");
+            // FIXME need to migrate s_carousel_intro_controllers_row
+            const controllersEl = carouselEl.querySelector(".o_horizontal_controllers_row");
+            const indicatorsEl = carouselEl.querySelector(".carousel-indicators");
 
+            const hasHiddenArrows = carouselEl.classList.contains("s_carousel_arrows_hidden");
+            const hasHiddenIndicators = indicatorsEl.classList.contains(
+                "s_carousel_indicators_hidden"
+            );
+
+            const contentBetween = !hasHiddenIndicators && !hasHiddenArrows;
+            controllersEl.classList.toggle("justify-content-between", contentBetween);
+            controllersEl.classList.toggle("justify-content-center", !contentBetween);
+        }
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -2271,7 +2319,6 @@ options.registry.CarouselItem = options.Class.extend({
         this.$targetCarousel = this.$target.closest(".carousel");
         this.$indicators = this.$carousel.find('.carousel-indicators');
         this.$controls = this.$carousel.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
-        this.carouselOptionName = this.$carousel[0].classList.contains("s_carousel_intro") ? "CarouselIntro" : "Carousel";
 
         var leftPanelEl = this.$overlay.data('$optionsSection')[0];
         var titleTextEl = leftPanelEl.querySelector('we-title > span');
@@ -2323,7 +2370,7 @@ options.registry.CarouselItem = options.Class.extend({
     addSlideItem(previewMode, widgetValue, params) {
         return new Promise(resolve => {
             this.trigger_up("option_update", {
-                optionName: this.carouselOptionName,
+                optionName: "Carousel",
                 name: "add_slide",
                 data: {
                     onSuccess: () => resolve(),
@@ -2347,7 +2394,7 @@ options.registry.CarouselItem = options.Class.extend({
             // Go to the previous slide.
             await new Promise(resolve => {
                 this.trigger_up("option_update", {
-                    optionName: this.carouselOptionName,
+                    optionName: "Carousel",
                     name: "slide",
                     data: {
                         direction: "prev",
@@ -2373,7 +2420,7 @@ options.registry.CarouselItem = options.Class.extend({
         const direction = widgetValue === "left" ? "prev" : "next";
         return new Promise(resolve => {
             this.trigger_up("option_update", {
-                optionName: this.carouselOptionName,
+                optionName: "Carousel",
                 name: "slide",
                 data: {
                     direction: direction,
@@ -3006,6 +3053,55 @@ options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
     pageOptionName: 'footer_visible',
     showOptionWidgetName: 'hide_footer_page_opt',
     shownValue: 'shown',
+});
+
+options.registry.FooterTemplateSelector = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Enables the footer view and its corresponding copyright view to match
+     * content width
+     *
+     * @override
+     */
+    customizeWebsiteViews: async function (previewMode, widgetValue, params) {
+        await rpc("/website/update_footer_template", {
+            'template_key': widgetValue,
+            'possible_values': this._getDataKeysFromPossibleValues(params.possibleValues),
+        });
+    },
+});
+
+options.registry.ContainerWidthFooter = options.registry.ContainerWidth.extend({
+    /**
+     * @override
+     */
+    start() {
+        this._copyrightAlreadyUpdated = false;
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Make sure views are enabled only once (required due to the apply-to).
+     *
+     * @override
+     */
+    async customizeWebsiteViews(previewMode, widgetValue, params) {
+        // TODO: When new API available, update 'data-apply-to' to avoid
+        // customize-website-views to be called for all elements, just once.
+        if (this._copyrightAlreadyUpdated || previewMode) {
+            return;
+        }
+        this._copyrightAlreadyUpdated = true;
+        return this._super(...arguments);
+    },
 });
 
 /**
@@ -4429,8 +4525,8 @@ options.registry.GalleryElement = options.Class.extend({
      * @see this.selectClass for parameters
      */
     position(previewMode, widgetValue, params) {
-        const carouselOptionName = this.$target[0].parentNode.parentNode.classList.contains("s_carousel_intro") ? "CarouselIntro" : "Carousel";
-        const optionName = this.$target[0].classList.contains("carousel-item") ? carouselOptionName
+        const optionName = this.$target[0].classList.contains("carousel-item")
+            ? "Carousel"
             : "GalleryImageList";
         const itemEl = this.$target[0];
         this.trigger_up("option_update", {

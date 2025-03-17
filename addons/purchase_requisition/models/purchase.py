@@ -76,6 +76,9 @@ class PurchaseOrder(models.Model):
             self.date_order = fields.Datetime.now()
 
         # Create PO lines if necessary
+        # Do not clobber existing lines if the PO is already confirmed
+        if self.state != 'draft':
+            return
         order_lines = []
         for line in requisition.line_ids:
             # Compute name
@@ -211,7 +214,7 @@ class PurchaseOrder(models.Model):
         po_alternatives = self | self.alternative_po_ids
 
         for line in po_alternatives.order_line:
-            if not line.product_qty or not line.price_total_cc or line.state in ['cancel', 'purchase', 'done']:
+            if not line.product_qty or not line.price_total_cc or line.state in ['cancel', 'purchase']:
                 continue
 
             # if no best price line => no best price unit line either
@@ -300,7 +303,7 @@ class PurchaseOrderLine(models.Model):
         super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
 
     def action_clear_quantities(self):
-        zeroed_lines = self.filtered(lambda l: l.state not in ['cancel', 'purchase', 'done'])
+        zeroed_lines = self.filtered(lambda l: l.state not in ['cancel', 'purchase'])
         zeroed_lines.write({'product_qty': 0})
         if len(self) > len(zeroed_lines):
             return {

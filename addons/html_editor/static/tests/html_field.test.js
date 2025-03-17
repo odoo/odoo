@@ -16,7 +16,7 @@ import {
     queryAllTexts,
     queryOne,
     waitFor,
-    waitUntil,
+    waitForNone,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
@@ -40,6 +40,8 @@ import { FormController } from "@web/views/form/form_controller";
 import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
 import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
+import { unformat } from "./_helpers/format";
+import { expandToolbar } from "./_helpers/toolbar";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -111,6 +113,11 @@ beforeEach(() => {
         onEditorLoad(editor) {
             htmlEditor = editor;
             return super.onEditorLoad(...arguments);
+        },
+        getConfig() {
+            const config = super.getConfig();
+            config.Plugins = config.Plugins.filter((Plugin) => Plugin.id !== "editorVersion");
+            return config;
         },
     });
 });
@@ -907,7 +914,7 @@ test("link preview in Link Popover", async () => {
     });
     // Move selection outside to discard
     setSelectionInHtmlField(".test_target");
-    await waitUntil(() => !document.querySelector(".o-we-linkpopover"), { timeout: 500 });
+    await waitForNone(".o-we-linkpopover", { root: document, timeout: 500 });
     expect(".o-we-linkpopover").toHaveCount(0);
     expect(".test_target a").toHaveText("This website");
 
@@ -954,21 +961,21 @@ test("html field with a placeholder", async () => {
     });
 
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<div class="o-paragraph o-we-hint" placeholder="test"><br></div>',
+        '<div class="o-paragraph o-we-hint" o-we-hint-text="test"><br></div>',
         { type: "html" }
     );
 
     setSelectionInHtmlField("div.o-paragraph");
     await tick();
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<div class="o-paragraph o-we-hint" placeholder="Type &quot;/&quot; for commands"><br></div>',
+        '<div class="o-paragraph o-we-hint" o-we-hint-text="Type &quot;/&quot; for commands"><br></div>',
         { type: "html" }
     );
 
     moveSelectionOutsideEditor();
     await tick();
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<div class="o-paragraph o-we-hint" placeholder="test"><br></div>',
+        '<div class="o-paragraph o-we-hint" o-we-hint-text="test"><br></div>',
         { type: "html" }
     );
 });
@@ -1182,7 +1189,7 @@ test("codeview is available when option is active and in debug mode", async () =
     });
     const node = queryOne(".odoo-editor-editable p");
     setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     expect(".o-we-toolbar button[name='codeview']").toHaveCount(1);
 });
 
@@ -1204,7 +1211,7 @@ test("enable/disable codeview with editor toolbar", async () => {
     // Switch to code view
     const node = queryOne(".odoo-editor-editable p");
     setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await contains(".o-we-toolbar button[name='codeview']").click();
     expect("[name='txt'] .odoo-editor-editable").toHaveClass("d-none");
     expect("[name='txt'] textarea").toHaveValue("<p>first</p>");
@@ -1239,7 +1246,7 @@ test("edit and enable/disable codeview with editor toolbar", async () => {
     // Switch to code view
     const node = queryOne(".odoo-editor-editable p");
     setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
-    await waitFor(".o-we-toolbar");
+    await expandToolbar();
     await contains(".o-we-toolbar button[name='codeview']").click();
     expect("[name='txt'] textarea").toHaveValue("<p>Hello first</p>");
 
@@ -1374,7 +1381,7 @@ describe("sandbox", () => {
     });
 
     function htmlDocumentTextTemplate(text, color) {
-        return `
+        return unformat(`
         <html>
             <head>
                 <style>
@@ -1387,7 +1394,7 @@ describe("sandbox", () => {
                 ${text}
             </body>
         </html>
-        `;
+        `);
     }
 
     test("sandboxed preview display and editing", async () => {

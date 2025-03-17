@@ -32,5 +32,6 @@ The actual till still requires one user but an unlimited number of employees can
             'pos_hr/static/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

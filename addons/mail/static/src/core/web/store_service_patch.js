@@ -1,9 +1,13 @@
 import { Record } from "@mail/core/common/record";
-import { Store } from "@mail/core/common/store_service";
+import { Store, storeService } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
+
+patch(storeService, {
+    dependencies: [...storeService.dependencies, "lazy_session"],
+});
 
 /** @type {import("models").Store} */
 const StorePatch = {
@@ -11,6 +15,7 @@ const StorePatch = {
         super.setup(...arguments);
         this.activityCounter = 0;
         this.activity_counter_bus_id = 0;
+        /** @type {Object[]} */
         this.activityGroups = Record.attr([], {
             onUpdate() {
                 this.onUpdateActivityGroups();
@@ -29,10 +34,23 @@ const StorePatch = {
         this.starred = Record.one("Thread");
         this.history = Record.one("Thread");
     },
-    async initialize() {
-        this.fetchStoreData("failures");
-        this.fetchStoreData("systray_get_activities");
-        await super.initialize(...arguments);
+    /**
+     * Override to initialise using the lazy_session to initialise the webclient part
+     */
+    _fetchStoreDataDebounced() {
+        if (!this.fetchParams.includes("init_messaging")) {
+            return super._fetchStoreDataDebounced();
+        }
+        this.env.services["lazy_session"].getValue("store_data", (storeData) => {
+            const result = this.insert(storeData);
+            // if the "init_messaging" isn't the only param
+            this.fetchParams = this.fetchParams.filter((param) => param !== "init_messaging");
+            if (this.fetchParams.length > 0) {
+                return super._fetchStoreDataDebounced();
+            }
+            this.fetchDeferred.resolve(result);
+            this.resetFetchState();
+        });
     },
     onStarted() {
         super.onStarted(...arguments);
@@ -62,6 +80,11 @@ const StorePatch = {
         }
     },
     onUpdateActivityGroups() {},
+    /**
+     * @param {string} resModel
+     * @param {number[]} resIds
+     * @param {number|undefined} defaultActivityTypeId
+     */
     async scheduleActivity(resModel, resIds, defaultActivityTypeId = undefined) {
         const context = {
             active_model: resModel,
@@ -71,7 +94,7 @@ const StorePatch = {
                 ? { default_activity_type_id: defaultActivityTypeId }
                 : {}),
         };
-        return new Promise((resolve) =>
+        await new Promise((resolve) =>
             this.env.services.action.doAction(
                 {
                     type: "ir.actions.act_window",
@@ -89,6 +112,10 @@ const StorePatch = {
             )
         );
     },
+    /**
+     * @param {object} param0
+     * @param {{ type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<import("models").Activity> }} param0.data
+     */
     _onActivityBroadcastChannelMessage({ data }) {
         switch (data.type) {
             case "INSERT":
@@ -133,6 +160,7 @@ const StorePatch = {
         }
         return false;
     },
+    /** @param {import("models").Thread} fromThread */
     onLinkFollowed(fromThread) {},
 };
 patch(Store.prototype, StorePatch);

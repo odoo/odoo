@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     insertText,
+    openDiscuss,
     start,
     startServer,
     triggerHotkey,
@@ -130,4 +131,36 @@ test("only partners with dedicated users will be displayed in command palette", 
     await contains(".o_command_name", { text: "Create Channel" });
     await contains(".o_command_name", { text: "Create Chat" });
     await contains(".o_command_name", { text: "Portal", count: 0 });
+});
+
+test("hide conversations in recent if they have mentions", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: serverState.odoobotId }),
+        ],
+        channel_type: "chat",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        model: "discuss.channel",
+        res_id: channelId,
+        body: "@OdooBot",
+    });
+    await start();
+    triggerHotkey("control+k");
+    await insertText(".o_command_palette_search input", "@", { replace: true });
+    await contains(".o_command_category span.fw-bold", { text: "Mentions" });
+    await contains(".o_command_palette .o_command_category .o_command_name", {
+        text: "OdooBot",
+        count: 1,
+    });
+});
+
+test("Ctrl-K opens @ command palette in discuss app", async () => {
+    await start();
+    await openDiscuss();
+    triggerHotkey("control+k");
+    await contains(".o_command_palette_search", { text: "@" });
 });

@@ -12,8 +12,8 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 from odoo import api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.addons.resource.models.utils import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools.date_intervals import float_to_time, HOURS_PER_DAY
 from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.misc import format_date
 from odoo.tools.translate import _
@@ -80,10 +80,12 @@ class HrLeave(models.Model):
 
         lt = self.env['hr.leave.type']
         if self.env.context.get('holiday_status_display_name', True) and 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
-            lt = self.env['hr.leave.type'].search(['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)], limit=1, order='sequence')
+            domain = ['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)]
+            if defaults.get('request_unit_hours'):
+                domain.append(('request_unit', '=', 'hour'))
+            lt = self.env['hr.leave.type'].search(domain, limit=1, order='sequence')
             if lt:
                 defaults['holiday_status_id'] = lt.id
-                defaults['request_unit_custom'] = False
 
         if 'request_date_from' in fields_list and 'request_date_from' not in defaults:
             defaults['request_date_from'] = fields.Date.today()
@@ -742,6 +744,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         holidays._check_validity()
+        self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
 
         for holiday in holidays:
             if not self._context.get('leave_fast_create'):
@@ -793,6 +796,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         result = super().write(values)
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
             self._check_validity()
+            self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
                 if employee_id:
@@ -818,6 +822,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     def unlink(self):
         self.sudo()._post_leave_cancel()
+        self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
 
     def copy_data(self, default=None):

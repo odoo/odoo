@@ -128,7 +128,6 @@ export const datetimePickerService = {
                     if (activeElement !== inputEl) {
                         inputEl.focus();
                     }
-
                     setInputFocus(inputEl);
                 };
 

@@ -378,6 +378,12 @@ class IrMail_Server(models.Model):
         self.ensure_one()
         return self.test_smtp_connection(autodetect_max_email_size=True)
 
+    @classmethod
+    def _disable_send(cls):
+        """Whether to disable sending e-mails"""
+        # no e-mails during testing or when registry is initializing
+        return modules.module.current_test or cls.pool._init
+
     def connect(self, host=None, port=None, user=None, password=None, encryption=None,
                 smtp_from=None, ssl_certificate=None, ssl_private_key=None, smtp_debug=False, mail_server_id=None,
                 allow_archived=False):
@@ -403,8 +409,8 @@ class IrMail_Server(models.Model):
            longer raised.
         """
         # Do not actually connect while running in test mode
-        if modules.module.current_test:
-            return
+        if self._disable_send():
+            return None
         mail_server = smtp_encryption = None
         if mail_server_id:
             mail_server = self.sudo().browse(mail_server_id)
@@ -617,7 +623,11 @@ class IrMail_Server(models.Model):
         if attachments:
             for (fname, fcontent, mime) in attachments:
                 maintype, subtype = mime.split('/') if mime and '/' in mime else ('application', 'octet-stream')
-                msg.add_attachment(fcontent, maintype, subtype, filename=fname)
+                if maintype == 'message' and subtype == 'rfc822':
+                    #  Use binary encoding for "message/rfc822" attachments (see RFC 2046 Section 5.2.1)
+                    msg.add_attachment(fcontent, maintype, subtype, filename=fname, cte='binary')
+                else:
+                    msg.add_attachment(fcontent, maintype, subtype, filename=fname)
         return msg
 
     @api.model
@@ -817,7 +827,7 @@ class IrMail_Server(models.Model):
         smtp_from, smtp_to_list, message = self._prepare_email_message(message, smtp)
 
         # Do not actually send emails in testing mode!
-        if modules.module.current_test:
+        if self._disable_send():
             _test_logger.debug("skip sending email in test mode")
             return message['Message-Id']
 

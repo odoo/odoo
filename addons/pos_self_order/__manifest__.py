@@ -4,10 +4,11 @@
     'version': '1.0',
     "summary": "Addon for the POS App that allows customers to view the menu on their smartphone.",
     "category": "Sales/Point Of Sale",
-    "depends": ["pos_restaurant", "http_routing"],
+    "depends": ["pos_restaurant", "http_routing", "link_tracker"],
     "auto_install": ["pos_restaurant"],
     "data": [
         "security/ir.model.access.csv",
+        "data/preset_data.xml",
         "views/pos_self_order.index.xml",
         "views/qr_code.xml",
         "views/pos_category_views.xml",
@@ -78,7 +79,8 @@
             "point_of_sale/static/src/app/models/related_models.js",
             "point_of_sale/static/src/app/services/data_service.js",
             "point_of_sale/static/src/app/models/**/*",
-            "pos_restaurant/static/src/app/models/restaurant_table.js"
+            "pos_restaurant/static/src/app/models/restaurant_table.js",
+            "point_of_sale/static/src/app/utils/numbers.js",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [
@@ -87,5 +89,6 @@
             "point_of_sale/static/tests/generic_helpers/numpad_util.js",
         ],
     },
+    "author": "Odoo S.A.",
     "license": "LGPL-3",
 }

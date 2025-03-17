@@ -1,5 +1,7 @@
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
+import { waitFor } from "@odoo/hoot-dom";
+const { DateTime } = luxon;
 
 export function confirmPopup() {
     return [Dialog.confirm()];
@@ -113,4 +115,42 @@ export function clickOrders() {
 }
 export function clickRegister() {
     return { trigger: ".pos-leftheader .register-label", run: "click" };
+}
+export function waitRequest() {
+    return [
+        {
+            trigger: "body",
+            content: "Wait loading is finished if it is shown",
+            timeout: 15000,
+            async run() {
+                let isLoading = false;
+                try {
+                    isLoading = await waitFor("body:has(.fa-circle-o-notch)", { timeout: 2000 });
+                } catch {
+                    /* fa-circle-o-notch will certainly never appears :'( */
+                }
+                if (isLoading) {
+                    await waitFor("body:not(:has(.fa-circle-o-notch))", { timeout: 10000 });
+                }
+            },
+        },
+    ];
+}
+
+export function isSynced() {
+    return {
+        content: "Check if the request is proceeded",
+        trigger: negate(".fa-spin", ".status-buttons"),
+    };
+}
+
+export function freezeDateTime(millis) {
+    return [
+        {
+            trigger: "body",
+            run: () => {
+                DateTime.now = () => DateTime.fromMillis(millis);
+            },
+        },
+    ];
 }

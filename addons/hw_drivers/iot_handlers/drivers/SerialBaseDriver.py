@@ -65,7 +65,7 @@ class SerialDriver(Driver):
         :type device: str
         """
 
-        super(SerialDriver, self).__init__(identifier, device)
+        super().__init__(identifier, device)
         self._actions.update({
             'get_status': self._push_status,
         })
@@ -107,7 +107,7 @@ class SerialDriver(Driver):
                 self._actions[data['action']](data)
                 time.sleep(self._protocol.commandDelay)
             except Exception:
-                msg = _(f'An error occurred while performing action "{data}" on "{self.device_name}"')
+                msg = f'An error occurred while performing action "{data}" on "{self.device_name}"'
                 _logger.exception(msg)
                 self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
                 self._push_status()

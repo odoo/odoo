@@ -12,11 +12,12 @@ from random import randint
 
 from odoo.http import request
 from odoo import models, fields, api, exceptions, _
-from odoo.addons.resource.models.utils import Intervals
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
 from odoo.tools import convert, format_duration, format_time, format_datetime
+from odoo.tools.date_intervals import Intervals
+from odoo.tools.float_utils import float_compare
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -50,6 +51,7 @@ class HrAttendance(models.Model):
                                                   ('approved', "Approved"),
                                                   ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True)
     validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', store=True, readonly=False, tracking=True)
+    no_validated_overtime_hours = fields.Boolean(compute='_compute_no_validated_overtime_hours')
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True, aggregator=None)
     in_country_name = fields.Char(string="Country", help="Based on IP Address", readonly=True)
@@ -147,6 +149,10 @@ class HrAttendance(models.Model):
 
         for attendance in no_validation:
             attendance.validated_overtime_hours = attendance.overtime_hours
+
+    @api.depends('validated_overtime_hours')
+    def _compute_no_validated_overtime_hours(self):
+        self.no_validated_overtime_hours = not float_compare(self.validated_overtime_hours, 0.0, precision_digits=5)
 
     @api.depends('employee_id')
     def _compute_overtime_status(self):
@@ -677,7 +683,8 @@ class HrAttendance(models.Model):
     def _cron_auto_check_out(self):
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
-             ('employee_id.company_id.auto_check_out', '=', True)]
+             ('employee_id.company_id.auto_check_out', '=', True),
+             ('employee_id.resource_calendar_id.flexible_hours', '=', False)]
         )
 
         if not to_verify:
@@ -725,7 +732,9 @@ class HrAttendance(models.Model):
 
         technical_attendances_vals = []
         absent_employees = self.env['hr.employee'].search([('id', 'not in', checked_in_employees.ids),
-                                                           ('company_id', 'in', companies.ids)])
+                                                           ('company_id', 'in', companies.ids),
+                                                           ('resource_calendar_id.flexible_hours', '=', False)])
+
         for emp in absent_employees:
             local_day_start = pytz.utc.localize(yesterday).astimezone(pytz.timezone(emp._get_tz()))
             technical_attendances_vals.append({

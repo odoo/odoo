@@ -1,4 +1,4 @@
-import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { expect, getFixture, test } from "@odoo/hoot";
 import {
     clear,
     click,
@@ -76,7 +76,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
-import { cookie } from "@web/core/browser/cookie";
 import { currencies } from "@web/core/currency";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
@@ -89,8 +88,6 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { ListController } from "@web/views/list/list_controller";
 import { WebClient } from "@web/webclient/webclient";
-
-describe.current.tags("desktop");
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 
@@ -1437,50 +1434,6 @@ test(`invisible column based on the context are correctly displayed`, async () =
     expect(`th:not(.o_list_record_selector)`).toHaveAttribute("data-name", "foo");
 });
 
-test(`invisible column based on the company evalContext are correctly displayed`, async () => {
-    cookie.set("cids", "3-1");
-    serverState.companies = [
-        {
-            id: 1,
-            name: "Company 1",
-            sequence: 1,
-            parent_id: false,
-            child_ids: [],
-            country_code: "BE",
-        },
-        {
-            id: 2,
-            name: "Company 2",
-            sequence: 2,
-            parent_id: false,
-            child_ids: [],
-            country_code: "PE",
-        },
-        {
-            id: 3,
-            name: "Company 3",
-            sequence: 3,
-            parent_id: false,
-            child_ids: [],
-            country_code: "AR",
-        },
-    ];
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<list>
-                    <field name="date" column_invisible="not companies.has(companies.active_ids, 'country_code', 'PE')"/>
-                    <field name="foo" column_invisible="companies.has(companies.active_ids, 'country_code', 'PE')"/>
-                    <field name="bar" column_invisible="not companies.has(companies.active_ids, 'country_code', 'PE')"/>
-                </list>`,
-    });
-
-    expect(`th:not(.o_list_record_selector)`).toHaveCount(1, {
-        message: "should have 1 th for checkbox, 1 th for foo",
-    });
-    expect(`th:not(.o_list_record_selector)`).toHaveAttribute("data-name", "foo");
-});
-
 test(`invisible column based on the context are correctly displayed in o2m`, async () => {
     Foo._fields.foo_o2m = fields.One2many({ relation: "foo" });
 
@@ -1674,6 +1627,7 @@ test(`multi_edit: clicking on a readonly field switches the focus to the next ed
     expect(`.o_field_widget[name=foo] input`).toBeFocused();
 });
 
+test.tags("desktop");
 test(`save a record with an required field computed by another`, async () => {
     Foo._onChanges = {
         foo(record) {
@@ -2417,6 +2371,48 @@ test(`enabling archive in list when groupby m2m field`, async () => {
     });
 });
 
+test.tags("desktop");
+test(`enabling archive in list when groupby m2m field and multi selecting the same record`, async () => {
+    onRpc("has_group", () => false);
+    onRpc("action_archive", ({ args }) => {
+        expect.step("action_archive");
+        expect(args[0]).toEqual([1], {
+            message: "the archive action rpc should only contain unique ids in arguments",
+        });
+    });
+    // add active field on foo model and make all records active
+    Foo._fields.active = fields.Boolean({ default: true });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="m2m" widget="many2many_tags"/>
+            </list>
+        `,
+        actionMenus: {},
+        groupBy: ["m2m"],
+    });
+    await contains(`.o_group_name:eq(0)`).click(); // open group "Value 1"
+    await contains(`.o_group_name:eq(1)`).click(); // open group "Value 2"
+    // Check for the initial number of records
+    expect(`.o_data_row`).toHaveCount(5, { message: "Checking initial number of records" });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click(); // select first record
+    await contains(`.o_data_row:eq(3) .o_list_record_selector input`).click(); // select the same record in another group
+    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+
+    await toggleMenuItem("Archive"); // toggle archive action
+    await contains(`.modal-footer .btn-primary`).click(); // confirm the archive action
+    // check that after archive the record is removed from both 2nd and 3rd groups
+    expect(`.o_data_row`).toHaveCount(3, {
+        message: "record should be archived from both the groups",
+    });
+    expect.verifySteps(["action_archive"]);
+});
+
 test(`enabling duplicate in list when groupby m2m field`, async () => {
     onRpc("has_group", () => false);
     // add active field on foo model and make all records active
@@ -2451,6 +2447,47 @@ test(`enabling duplicate in list when groupby m2m field`, async () => {
     expect(`.o_data_row`).toHaveCount(7, {
         message: "record should be duplicated in both the groups",
     });
+});
+
+test.tags("desktop");
+test(`enabling duplicate in list when groupby m2m field and multi selecting the same record`, async () => {
+    onRpc("has_group", () => false);
+    onRpc("copy", ({ args }) => {
+        expect.step("copy");
+        expect(args[0]).toEqual([1], {
+            message: "the copy rpc should only contain unique ids in arguments",
+        });
+    });
+    // add active field on foo model and make all records active
+    Foo._fields.active = fields.Boolean({ default: true });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="m2m" widget="many2many_tags"/>
+            </list>
+        `,
+        actionMenus: {},
+        groupBy: ["m2m"],
+    });
+    await contains(`.o_group_name:eq(0)`).click(); // open group "Value 1"
+    await contains(`.o_group_name:eq(1)`).click(); // open group "Value 2"
+    // Check for the initial number of records
+    expect(`.o_data_row`).toHaveCount(5, { message: "Checking initial number of records" });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click(); // select first record
+    await contains(`.o_data_row:eq(3) .o_list_record_selector input`).click(); // select the same record in another group
+    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+
+    await toggleMenuItem("Duplicate"); // toggle duplicate action
+    // check that after duplicate the record is duplicated in both 2nd and 3rd groups
+    expect(`.o_data_row`).toHaveCount(7, {
+        message: "record should be duplicated in both the groups",
+    });
+    expect.verifySteps(["copy"]);
 });
 
 test(`enabling delete in list when groupby m2m field`, async () => {
@@ -2488,6 +2525,48 @@ test(`enabling delete in list when groupby m2m field`, async () => {
     expect(`.o_data_row`).toHaveCount(3, {
         message: "record should be deleted from both the groups",
     });
+});
+
+test.tags("desktop");
+test(`enabling delete in list when groupby m2m field and multi selecting the same record`, async () => {
+    onRpc("has_group", () => false);
+    onRpc("unlink", ({ args }) => {
+        expect.step("unlink");
+        expect(args[0]).toEqual([1], {
+            message: "the unlink rpc should only contain unique ids in arguments",
+        });
+    });
+    // add active field on foo model and make all records active
+    Foo._fields.active = fields.Boolean({ default: true });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="m2m" widget="many2many_tags"/>
+            </list>
+        `,
+        actionMenus: {},
+        groupBy: ["m2m"],
+    });
+    await contains(`.o_group_name:eq(0)`).click(); // open group "Value 1"
+    await contains(`.o_group_name:eq(1)`).click(); // open group "Value 2"
+    // Check for the initial number of records
+    expect(`.o_data_row`).toHaveCount(5, { message: "Checking initial number of records" });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click(); // select first record
+    await contains(`.o_data_row:eq(3) .o_list_record_selector input`).click(); // select the same record in another group
+    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+
+    await toggleMenuItem("Delete"); // toggle delete action
+    await contains(`.modal-footer .btn-primary`).click(); // confirm the delete action
+    // check that after delete the record is deleted in both 2nd and 3rd groups
+    expect(`.o_data_row`).toHaveCount(3, {
+        message: "record should be deleted from both the groups",
+    });
+    expect.verifySteps(["unlink"]);
 });
 
 test(`enabling unarchive in list when groupby m2m field`, async () => {
@@ -2532,6 +2611,55 @@ test(`enabling unarchive in list when groupby m2m field`, async () => {
     expect(`.o_data_row`).toHaveCount(2, {
         message: "record should be unarchived from both the groups",
     });
+});
+
+test.tags("desktop");
+test(`enabling unarchive in list when groupby m2m field and multi selecting the same record`, async () => {
+    onRpc("has_group", () => false);
+    onRpc("action_unarchive", ({ args }) => {
+        expect.step("action_unarchive");
+        expect(args[0]).toEqual([1], {
+            message: "the unarchive action rpc should only contain unique ids in arguments",
+        });
+    });
+    // add active field on foo model and make all records active
+    Foo._fields.active = fields.Boolean({ default: true });
+    // creating archived records
+    Foo._records = [
+        { id: 1, foo: "First record", m2m: [1, 2], active: false },
+        { id: 2, foo: "Second record", m2m: [1, 2], active: false },
+    ];
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="m2m" widget="many2many_tags"/>
+            </list>
+        `,
+        actionMenus: {},
+        groupBy: ["m2m"],
+        // apply the filter to show only records with active = false
+        domain: [["active", "=", false]],
+    });
+
+    await contains(`.o_group_name:eq(0)`).click(); // open first group
+    await contains(`.o_group_name:eq(1)`).click(); // open second group
+    // Check for the initial number of records
+    expect(`.o_data_row`).toHaveCount(4, { message: "Checking initial number of records" });
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click(); // select first record
+    await contains(`.o_data_row:eq(2) .o_list_record_selector input`).click(); // select the same record in another group
+    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+
+    await toggleMenuItem("Unarchive"); // toggle unarchive action
+    // check that after unarchive the record is unarchived in both 1st and 2nd groups
+    expect(`.o_data_row`).toHaveCount(2, {
+        message: "record should be unarchived from both the groups",
+    });
+    expect.verifySteps(["action_unarchive"]);
 });
 
 test(`add record in list grouped by m2m`, async () => {
@@ -2615,6 +2743,44 @@ test(`editing a record should change same record in other groups when grouped by
     await contains(`.o_data_row .o_list_char input`).edit("xyz");
     await contains(`.o_list_view`).click();
     expect(queryAllTexts(`.o_list_char`)).toEqual(["xyz", "blip", "blip", "xyz", "blip"]);
+});
+
+test.tags("desktop");
+test(`selecting the same record on different groups and editing it when grouping by m2m field`, async () => {
+    onRpc("write", ({ args }) => {
+        expect.step("write");
+        expect(args[0]).toEqual([1], {
+            message: "the write rpc should only contain unique ids in arguments",
+        });
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo"/>
+                <field name="m2m" widget="many2many_tags"/>
+            </list>
+        `,
+        groupBy: ["m2m"],
+    });
+
+    await contains(`.o_group_header`).click(); // open Value 1 group
+    await contains(`.o_group_header:eq(1)`).click(); // open Value 2 group
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "blip", "yop", "blip"]);
+
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click(); // select first record
+    await contains(`.o_data_row:eq(3) .o_list_record_selector input`).click(); // select the same record in another group
+    await contains(`.o_data_row .o_data_cell`).click();
+    await contains(`.o_data_row .o_list_char input`).edit("xyz");
+    await contains(`.o_list_view`).click();
+    expect(`.modal`).toHaveCount(1);
+
+    await contains(`.modal .modal-footer .btn-primary`).click();
+    expect(`.modal`).toHaveCount(0);
+    expect(queryAllTexts(`.o_list_char`)).toEqual(["xyz", "blip", "blip", "xyz", "blip"]);
+    expect.verifySteps(["write"]);
 });
 
 test(`change a record field in readonly should change same record in other groups when grouped by m2m field`, async () => {
@@ -5011,8 +5177,6 @@ test(`custom delete confirmation dialog`, async () => {
 });
 
 test(`deleting record which throws UserError should close confirmation dialog`, async () => {
-    expect.errors(1);
-
     onRpc("unlink", () => {
         throw makeServerError({ message: "Odoo Server Error" });
     });
@@ -5030,9 +5194,12 @@ test(`deleting record which throws UserError should close confirmation dialog`, 
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1, { message: "should have open the confirmation dialog" });
 
+    expect.errors(1);
+
     await contains(`.modal footer button.btn-primary`).click();
-    await waitFor(".modal");
-    expect(`.modal .modal-title`).toHaveText("Invalid Operation");
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+
+    expect.verifyErrors(["Odoo Server Error"]);
 });
 
 test.tags("desktop");
@@ -5151,6 +5318,13 @@ test(`duplicate all records`, async () => {
     await selectAllRecords();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Duplicate");
+
+    // A confirmation dialog should appear when duplicating multiple records.
+    expect(`.modal`).toHaveCount(1);
+    expect(`.modal-body`).toHaveText(
+        "Are you sure that you want to duplicate all the selected records?"
+    );
+    await contains(`.modal footer button.btn-primary`).click();
 
     // Final state: there should be 8 records
     expect(`tbody tr`).toHaveCount(8, { message: "should have 8 rows" });
@@ -6742,7 +6916,7 @@ test(`empty list with sample data`, async () => {
     expect(cells[5]).toMatch(/\d{2}\/\d{2}\/\d{4}/, {
         message: "Date field should have the right format",
     });
-    expect(cells[6]).toMatch(/\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}/, {
+    expect(cells[6]).toMatch(/\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}/, {
         message: "Datetime field should have the right format",
     });
 
@@ -7837,7 +8011,7 @@ test(`simple list with date and datetime`, async () => {
     expect(`.o_data_row .o_data_cell:eq(0)`).toHaveText("01/25/2017", {
         message: "should have formatted the date",
     });
-    expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("12/12/2016 12:55:05", {
+    expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("12/12/2016 12:55", {
         message: "should have formatted the datetime",
     });
 });
@@ -11133,8 +11307,6 @@ test(`editable list view: many2one with readonly modifier`, async () => {
 
 test.tags("desktop");
 test(`editable list view: multi edition server error handling`, async () => {
-    expect.errors(1);
-
     onRpc("write", () => {
         throw makeServerError();
     });
@@ -11153,8 +11325,11 @@ test(`editable list view: multi edition server error handling`, async () => {
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_selected_row [name=foo] input`).edit("abc");
     await contains(`.o_list_view`).click();
+
+    expect.errors(1);
     await contains(`.modal .btn-primary`).click();
-    // Server error: if there was a crash manager, there would be an open error at this point...
+    expect.verifyErrors(["RPC_ERROR"]);
+
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("yop", {
         message: "first cell should have discarded any change",
     });
@@ -11548,6 +11723,7 @@ test(`editable list with fields with readonly modifier`, async () => {
     expect(`.o_selected_row .o_field_many2one input`).toBeFocused();
 });
 
+test.tags("desktop");
 test(`editable form alongside html field: click out to unselect the row`, async () => {
     Bar._fields.name = fields.Char();
 
@@ -14308,6 +14484,7 @@ test(`list view with optional fields and async rendering`, async () => {
     expect(`.o-dropdown--menu input:checked`).toHaveCount(1);
 });
 
+test.tags("desktop");
 test(`change the viewType of the current action`, async () => {
     defineActions([
         {
@@ -15696,9 +15873,31 @@ test(`view widgets are rendered in list view`, async () => {
     expect(queryAllTexts`.test_widget`).toEqual(["true", "true", "true", "false"]);
 });
 
-test(`edit a record then select another record with a throw error when saving`, async () => {
-    expect.errors(1);
+test(`view widget with options in list view`, async () => {
+    class TestWidget extends Component {
+        static template = xml`<div class="test_widget" t-esc="props.x"/>`;
+        static props = ["*"];
+    }
+    registry.category("view_widgets").add("test_widget", {
+        component: TestWidget,
+        extractProps: ({ options }) => ({
+            x: options.x,
+        }),
+    });
 
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <widget name="test_widget" options="{'x': 'y'}"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts`.test_widget`).toEqual(["y", "y", "y", "y"]);
+});
+
+test(`edit a record then select another record with a throw error when saving`, async () => {
     onRpc("web_save", () => {
         throw makeServerError({ message: "Can't write" });
     });
@@ -15712,8 +15911,10 @@ test(`edit a record then select another record with a throw error when saving`, 
     await contains(`[name=foo] input`).edit("plop", { confirm: false });
     expect(`[name=foo] input`).toHaveCount(1);
 
+    expect.errors(1);
     await contains(`.o_data_cell:eq(0)`).click();
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(`.o_error_dialog`).toHaveCount(1);
 
     await contains(`.o_error_dialog .btn-primary.o-default-button`).click();
@@ -15795,9 +15996,9 @@ test(`Search more in a many2one`, async () => {
 
 test.tags("desktop");
 test(`view's context is passed down as evalContext`, async () => {
-    onRpc("name_search", ({ kwargs }) => {
-        expect.step(`name_search`);
-        expect(kwargs.args).toEqual([["someField", "=", "some_value"]]);
+    onRpc("web_name_search", ({ kwargs }) => {
+        expect.step(`web_name_search`);
+        expect(kwargs.domain).toEqual([["someField", "=", "some_value"]]);
     });
 
     await mountView({
@@ -15814,7 +16015,7 @@ test(`view's context is passed down as evalContext`, async () => {
     });
     await contains(`.o_data_row:eq(0) td.o_list_many2one`).click();
     await contains(`.o_field_many2one_selection .o-autocomplete--input`).click();
-    expect.verifySteps(["name_search"]);
+    expect.verifySteps(["web_name_search"]);
 });
 
 test(`list view with default_group_by`, async () => {
@@ -16208,7 +16409,7 @@ test(`Properties: datetime`, async () => {
     await contains(`.o_field_datetime input`).click();
     await contains(getPickerCell("19")).click();
     await contains(`.o_list_button_save`).click();
-    expect(`.o_field_cell.o_datetime_cell:eq(0)`).toHaveText("12/19/2022 12:12:00");
+    expect(`.o_field_cell.o_datetime_cell:eq(0)`).toHaveText("12/19/2022 12:12");
     expect.verifySteps(["web_save"]);
 });
 
@@ -16968,7 +17169,7 @@ test(`context keys not passed down the stack and not to fields`, async () => {
     expect.verifySteps([
         {
             model: "bar",
-            method: "name_search",
+            method: "web_name_search",
             context: { lang: "en", tz: "taht", uid: 7, allowed_company_ids: [1] },
         },
     ]);
@@ -17006,7 +17207,7 @@ test(`search nested many2one field with early option selection`, async () => {
     defineModels([Parent]);
 
     const deferred = new Deferred();
-    onRpc("name_search", () => deferred);
+    onRpc("web_name_search", () => deferred);
 
     await mountView({
         resModel: "parent",
@@ -17308,7 +17509,8 @@ test("two pages, go page 2, record deleted meanwhile (grouped case)", async () =
     expect(".o_group_header .o_pager").toHaveCount(0);
 });
 
-test.tags("desktop")("select records range with shift click on several page", async () => {
+test.tags("desktop");
+test("select records range with shift click on several page", async () => {
     await mountView({
         resModel: "foo",
         type: "list",

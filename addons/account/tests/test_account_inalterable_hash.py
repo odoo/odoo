@@ -1,3 +1,5 @@
+from contextlib import closing
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.models import Model
 from odoo.tests import Form, tagged
@@ -353,11 +355,11 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         self.company_data['default_journal_sale'].restrict_mode_hash_table = True
 
-        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."):
             move3.button_hash()
 
         move1.button_hash()  # Afterwards move2 is a hole at the beginning of the unhashed part of the chain [move1 (hashed), move2, move3]
-        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. A gap has been detected in the sequence."):
             move3.button_hash()
 
         with self._skip_hash_moves():
@@ -491,7 +493,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
                 'fiscalyear_lock_date',
                 'sale_lock_date',
         ]:
-            with self.subTest(lock_date_field=lock_date_field), self.env.cr.savepoint() as sp:
+            with self.subTest(lock_date_field=lock_date_field), closing(self.env.cr.savepoint()):
                 move1 = self.init_invoice('out_invoice', self.partner_a, "2024-01-01", amounts=[1000], post=True)
                 move2 = self.init_invoice('out_invoice', self.partner_a, "2024-01-02", amounts=[1000], post=True)
                 move3 = self.init_invoice('out_invoice', self.partner_a, "2024-01-03", amounts=[1000], post=True)
@@ -527,8 +529,6 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
                     self.assertNotEqual(move.inalterable_hash, False)
                 self.company_data['default_journal_sale'].restrict_mode_hash_table = True  # to run integrity check
                 self._verify_integrity(move5, "Entries are correctly hashed", move1, move5)
-
-                sp.close()  # Rollback to ensure all subtests start in the same situation
 
     def test_retroactive_hashing_before_current(self):
         """Test that we hash entries before the current recordset of moves, not the ones after"""
@@ -591,7 +591,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         moves_v3_pre_restrict_mode[-1]._hash_moves(raise_if_no_document=False)  # Shouldn't raise
         self.assertFalse(moves_v3_pre_restrict_mode[-1].inalterable_hash)
 
-        with self.assertRaisesRegex(UserError, "This move could not be locked either because.*"), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "This move could not be locked either because.*"):
             moves_v3_pre_restrict_mode.button_hash()
 
         # Test that we allow holes that are not in the moves_to_hash and
@@ -674,8 +674,46 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         })
         unreconciled_move = unreconciled_bank_statement_line.move_id
         unreconciled_move.journal_id.restrict_mode_hash_table = True
-        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. All entries have to be reconciled."), self.env.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. All entries have to be reconciled."):
             unreconciled_move.button_hash()
+
+    def test_account_move_unhashed_entries(self):
+        """
+        Test that when _get_chain_info is called with early_stop=True (e.g., when checking if a journal has unhashed
+        entries), no error is raised and the right value is returned based on whether there are unhashed documents.
+        """
+        sales_journal = self.company_data['default_journal_sale']
+        # Create a move before the journal is set to 'Hash on post', allowing to test if the journal has unhashed entries.
+        self._init_and_post([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000]}])
+        sales_journal.restrict_mode_hash_table = True
+        # There should be unhashed entries in the sales journal until another move is posted
+        self.assertTrue(sales_journal._get_moves_to_hash(include_pre_last_hash=False, early_stop=True))
+        self._init_and_post([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000]}])
+        # After posting one entry, sales journal shouldn't have unhashed entries
+        self.assertFalse(sales_journal._get_moves_to_hash(include_pre_last_hash=False, early_stop=True))
+
+    def test_account_group_account_secured(self):
+        """
+        Test that user is not granted the group account secured if only entries from a journal without 'Hash on Post' is
+        secured. Once entries from a journal without 'Hash on Post' are secured, the user is granted the access rights.
+        """
+        group_account_secured = self.env.ref('account.group_account_secured')
+        # `group_account_secured` can be by default in user groups (e.g. l10n_de)
+        group_account_secured_in_user_groups = group_account_secured in self.env.user.group_ids.all_implied_ids
+        self.company_data['default_journal_sale'].restrict_mode_hash_table = True
+        move = self._init_and_post([{'partner': self.partner_a, 'date': '2023-01-01', 'amounts': [1000]}])
+        self.assertNotEqual(move.inalterable_hash, False)
+        # Unless `group_account_secured` was by default in user groups, user shouldn't be granted access rights since
+        # only moves from a journal with 'Hash on Post' have been secured
+        if not group_account_secured_in_user_groups:
+            self.assertFalse(group_account_secured in self.env.user.group_ids.all_implied_ids)
+
+        # Once moves from a journal without 'Hash on Post' is secured, user should be granted secured group access rights
+        in_invoice = self.init_invoice("in_invoice", self.partner_a, "2023-01-01", amounts=[1000], post=True)
+        wizard = self.env['account.secure.entries.wizard'].create({'hash_date': '2023-01-02'})
+        wizard.action_secure_entries()
+        self.assertNotEqual(in_invoice.inalterable_hash, False)
+        self.assertTrue(group_account_secured in self.env.user.group_ids.all_implied_ids)
 
     def test_wizard_hashes_all_journals(self):
         """
@@ -785,13 +823,12 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         self.assertEqual(wizard.move_to_hash_ids, moves_v4)
 
         # We can still hash the remaining moves
-        with self.subTest(msg="Hash the remaining moves"), self.env.cr.savepoint() as sp:
+        with self.subTest(msg="Hash the remaining moves"), closing(self.env.cr.savepoint()):
             wizard.action_secure_entries()
             for move in moves_v3_pre_restrict_mode:
                 self.assertFalse(move.inalterable_hash)
             for move in moves_v4:
                 self.assertNotEqual(move.inalterable_hash, False)
-            sp.close()  # Rollback
 
         # We can ignore the moves by setting the hard lock date:
         self.assertEqual(wizard.max_hash_date, fields.Date.from_string("2023-12-31"))

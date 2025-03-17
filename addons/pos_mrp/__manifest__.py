@@ -14,5 +14,6 @@ This is a link module between Point of Sale and Mrp.
     'depends': ['point_of_sale', 'mrp'],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

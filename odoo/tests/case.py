@@ -248,6 +248,22 @@ class TestCase(_TestCase):
             except Exception:
                 cls.tearDown_exceptions.append(sys.exc_info())
 
+    @property
+    def canonical_tag(self):
+        module = self.__module__
+        for prefix in ('odoo.addons.', 'odoo.upgrade.'):
+            if module.startswith(prefix):
+                module = module[len(prefix):]
+
+        module = module.replace('.', '/')
+        return f'/{module}.py:{self.__class__.__name__}.{self._testMethodName}'
+
+    def get_log_metadata(self):
+        metadata = {
+            'canonical_tag': self.canonical_tag,
+        }
+        return metadata
+
 
 class _SubTest(TestCase):
 

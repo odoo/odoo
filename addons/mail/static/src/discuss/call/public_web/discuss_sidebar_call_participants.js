@@ -90,8 +90,15 @@ export class DiscussSidebarCallParticipants extends Component {
      */
     avatarClass(persona) {
         return persona.currentRtcSession?.isActuallyTalking
-            ? "o-mail-DiscussSidebarCallParticipants-avatar o-isTalking shadow"
+            ? "o-mail-DiscussSidebarCallParticipants-avatar o-isTalking"
             : "";
+    }
+
+    onClickAvatarStack() {
+        if (this.compact) {
+            return;
+        }
+        this.state.expanded = true;
     }
 
     get title() {

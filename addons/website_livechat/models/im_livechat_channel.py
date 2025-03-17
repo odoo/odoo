@@ -23,5 +23,6 @@ class Im_LivechatChannel(models.Model):
                 operator = discuss_channel.livechat_operator_id
                 operator_name = operator.user_livechat_username or operator.name
                 discuss_channel._close_livechat_session(cancel=True, operator=operator_name)
+                discuss_channel.is_pending_chat_request = False
 
         return discuss_channel_vals

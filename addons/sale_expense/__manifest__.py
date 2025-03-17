@@ -30,5 +30,6 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
             'sale_expense/static/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

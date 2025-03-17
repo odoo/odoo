@@ -513,7 +513,7 @@ describe("with selection collapsed", () => {
                 <ul>
                     <li>a</li>
                 </ul>
-                <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`)
+                <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`)
         );
     });
     test("should not crash when outdenting a list item with invisible nodes", async () => {

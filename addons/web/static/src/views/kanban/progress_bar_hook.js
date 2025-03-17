@@ -214,7 +214,7 @@ class ProgressBarState {
         this._updateProgressBar();
         if (this._aggregateFields.length) {
             this._updateAggregates();
-            this.updateAggreagteGroup(group);
+            this.updateAggregateGroup(group);
         }
 
         // If the selected bar is empty, remove the selection
@@ -225,7 +225,7 @@ class ProgressBarState {
         }
     }
 
-    updateAggreagteGroup(group) {
+    updateAggregateGroup(group) {
         if (group && this.activeBars[group.serverValue]) {
             const { bars } = this.getGroupInfo(group);
             this._updateAggregateGroup(group, bars, this.activeBars[group.serverValue]);
@@ -345,8 +345,8 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
         });
     };
     const onRootLoaded = model.hooks.onRootLoaded;
-    model.hooks.onRootLoaded = async () => {
-        await onRootLoaded();
+    model.hooks.onRootLoaded = async (root) => {
+        await onRootLoaded(root);
         return prom;
     };
 

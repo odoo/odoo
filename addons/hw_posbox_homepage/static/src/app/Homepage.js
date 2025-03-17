@@ -2,6 +2,7 @@
 
 import { SingleData } from "./components/SingleData.js";
 import { FooterButtons } from "./components/FooterButtons.js";
+import { HostnameDialog } from "./components/dialog/HostnameDialog.js";
 import { ServerDialog } from "./components/dialog/ServerDialog.js";
 import { WifiDialog } from "./components/dialog/WifiDialog.js";
 import useStore from "./hooks/useStore.js";
@@ -18,6 +19,7 @@ export class Homepage extends Component {
     static components = {
         SingleData,
         FooterButtons,
+        HostnameDialog,
         ServerDialog,
         WifiDialog,
         UpdateDialog,
@@ -60,7 +62,7 @@ export class Homepage extends Component {
         );
         if (wifiInterface) {
             return this.state.data.is_access_point_up
-                ? "No internet connection - click on \"Configure\""
+                ? 'No internet connection - click on "Configure"'
                 : `Wi-Fi: ${wifiInterface.ssid}`;
         }
         return "Not Connected";
@@ -142,7 +144,7 @@ export class Homepage extends Component {
             </div>
             <SingleData t-if="!store.base.is_access_point_up" name="'Name'" value="state.data.hostname" icon="'fa-id-card'">
 				<t t-set-slot="button">
-					<ServerDialog t-if="this.store.isLinux" />
+					<HostnameDialog t-if="this.store.isLinux" />
 				</t>
 			</SingleData>
             <SingleData t-if="store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
@@ -162,7 +164,8 @@ export class Homepage extends Component {
 					<ServerDialog />
 				</t>
 			</SingleData>
-            <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up" name="'Pairing Code'" value="state.data.pairing_code" icon="'fa-code'"/>
+            <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up" name="'Pairing Code'" value="state.data.pairing_code + ' - Enter this code in the IoT app in your Odoo database'" icon="'fa-code'"/>
+            <SingleData t-if="state.data.pairing_code_expired" name="'Pairing Code'" value="'Code has expired - restart the IoT Box to generate a new one'" icon="'fa-code'"/>
             <SingleData  t-if="store.advanced and !store.base.is_access_point_up" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
                 <t t-set-slot="button">
                     <SixDialog />

@@ -7,13 +7,13 @@ from lxml import etree
 
 from odoo import fields, Command
 from odoo.addons.survey.tests import common
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import users
 
 
-class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
+class TestSurveyInvite(common.TestSurveyCommon, MailCase):
 
     def setUp(self):
         res = super(TestSurveyInvite, self).setUp()
@@ -198,11 +198,14 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
     @users('survey_manager')
     def test_survey_invite_email_from(self):
         # Verifies whether changing the value of the "email_from" field reflects on the receiving end.
+        # by default avoid rendering restriction complexity
+        self.env['ir.config_parameter'].sudo().set_param('mail.restrict.template.rendering', False)
+
         action = self.survey.action_send_survey()
         action['context']['default_send_email'] = True
         invite_form = Form.from_action(self.env, action)
         invite_form.partner_ids.add(self.survey_user.partner_id)
-        invite_form.template_id.write({'email_from':'{{ object.partner_id.email_formatted }}'})
+        invite_form.template_id.write({'email_from': '{{ object.partner_id.email_formatted }}'})
         invite = invite_form.save()
         with self.mock_mail_gateway():
             invite.action_invite()

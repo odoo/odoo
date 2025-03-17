@@ -73,22 +73,6 @@ class ResPartner(models.Model):
     def _mail_get_partners(self, introspect_fields=False):
         return dict((partner.id, partner) for partner in self)
 
-    def _message_add_suggested_recipients(self, primary_email=False):
-        email_to_lst, partners = super()._message_add_suggested_recipients(primary_email)
-        partners += self
-        return email_to_lst, partners
-
-    def _message_get_default_recipients(self):
-        return {
-            r.id:
-            {
-                'partner_ids': [r.id],
-                'email_to': False,
-                'email_cc': False,
-            }
-            for r in self
-        }
-
     # ------------------------------------------------------------
     # ORM
     # ------------------------------------------------------------
@@ -217,9 +201,9 @@ class ResPartner(models.Model):
                 }
                 for name in names if name not in partners.mapped('email') and name not in (ban_emails or [])
             ]
-            # create partners once
+            # create partners once, avoid current user being followers of those
             if tocreate_vals_list:
-                partners += self.create(tocreate_vals_list)
+                partners += self.with_context(mail_create_nosubscribe=True).create(tocreate_vals_list)
 
         # sort partners (already ordered based on search)
         if sort_key:

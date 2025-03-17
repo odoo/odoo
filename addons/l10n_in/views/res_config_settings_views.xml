@@ -42,7 +42,8 @@
                             <setting name="india_production_setting"
                                      company_dependent="1"
                                      string="Production Environment"
-                                     help="Activate this to start using Indian services in the production environment.">
+                                     help="Activate this to start using Indian services in the production environment."
+                                     groups="base.group_no_one">
                                 <field name="l10n_in_edi_production_env"/>
                                 <div class='mt8'
                                     invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not l10n_in_gstin_status_feature and not module_l10n_in_ewaybill and not l10n_in_gst_efiling_feature)">

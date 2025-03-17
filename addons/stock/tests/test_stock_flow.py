@@ -2572,7 +2572,8 @@ class TestStockFlowPostInstall(TestStockCommon):
         delivery.move_ids.picked = True
         delivery.button_validate()
 
-        self.assertEqual(sn.last_delivery_partner_id, partner)
+        sn.invalidate_recordset(fnames=['partner_ids'])
+        self.assertEqual(sn.partner_ids[0], partner)
 
     def test_several_sm_with_same_product_and_backorders(self):
         picking = self.env['stock.picking'].create({

@@ -135,6 +135,9 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: ".o_list_button_save",
     run: "click",
 }, {
+    trigger: ".o_list_button_add",
+    content: "Make sure the milestone is saved before continuing",
+}, {
     trigger: "td[data-tooltip='New milestone'] + td",
     run: "click",
 }, {

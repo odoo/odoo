@@ -5,7 +5,7 @@
             <table>
                 <tr t-if="o.name">
                     <td t-if="o.state == 'draft'">Request for Quotation No.:</td>
-                    <td t-elif="o.state in {'sent', 'to approve', 'purchase', 'done'}">Purchase Order No.:</td>
+                    <td t-elif="o.state in {'sent', 'to approve', 'purchase'}">Purchase Order No.:</td>
                     <td t-elif="o.state == 'cancel'">Cancelled Purchase Order No.:</td>
                     <td><t t-out="o.name"/></td>
                 </tr>
@@ -47,7 +47,7 @@
     <template id="report_common_purchase_din5008_template_document_title">
         <span t-if="o and o._name == 'purchase.order'">
             <t t-if="o.state in {'draft', 'sent', 'to approve'}">Request for Quotation</t>
-            <t t-elif="o.state in {'purchase', 'done'}">Purchase Order</t>
+            <t t-elif="o.state == 'purchase'">Purchase Order</t>
             <t t-elif="o.state == 'cancel'">Cancelled Purchase Order</t>
         </span>
     </template>

@@ -11,38 +11,38 @@ export class IconPlugin extends Plugin {
         user_commands: [
             {
                 id: "resizeIcon1",
-                title: _t("Icon size 1x"),
+                description: _t("Resize icon 1x"),
                 run: () => this.resizeIcon({ size: "1" }),
             },
             {
                 id: "resizeIcon2",
-                title: _t("Icon size 2x"),
+                description: _t("Resize icon 2x"),
                 run: () => this.resizeIcon({ size: "2" }),
             },
             {
                 id: "resizeIcon3",
-                title: _t("Icon size 3x"),
+                description: _t("Resize icon 3x"),
                 run: () => this.resizeIcon({ size: "3" }),
             },
             {
                 id: "resizeIcon4",
-                title: _t("Icon size 4x"),
+                description: _t("Resize icon 4x"),
                 run: () => this.resizeIcon({ size: "4" }),
             },
             {
                 id: "resizeIcon5",
-                title: _t("Icon size 5x"),
+                description: _t("Resize icon 5x"),
                 run: () => this.resizeIcon({ size: "5" }),
             },
             {
                 id: "toggleSpinIcon",
-                title: _t("Toggle icon spin"),
+                description: _t("Toggle icon spin"),
                 icon: "fa-play",
                 run: this.toggleSpinIcon.bind(this),
             },
             {
                 id: "replaceIcon",
-                title: _t("Replace icon"),
+                description: _t("Replace icon"),
                 run: this.openIconDialog.bind(this),
             },
         ],
@@ -60,29 +60,23 @@ export class IconPlugin extends Plugin {
             },
         ],
         toolbar_groups: [
-            withSequence(1, {
-                id: "icon_color",
-                namespace: "icon",
-            }),
-            withSequence(1, {
-                id: "icon_size",
-                namespace: "icon",
-            }),
-            withSequence(3, { id: "icon_spin", namespace: "icon" }),
-            withSequence(3, { id: "icon_replace", namespace: "icon" }),
+            withSequence(1, { id: "icon_color", namespaces: ["icon"] }),
+            withSequence(1, { id: "icon_size", namespaces: ["icon"] }),
+            withSequence(3, { id: "icon_spin", namespaces: ["icon"] }),
+            withSequence(3, { id: "icon_replace", namespaces: ["icon"] }),
         ],
         toolbar_items: [
             {
                 id: "icon_forecolor",
                 groupId: "icon_color",
-                title: _t("Font Color"),
+                description: _t("Select Font Color"),
                 Component: ColorSelector,
                 props: this.dependencies.color.getPropsForColorSelector("foreground"),
             },
             {
                 id: "icon_backcolor",
                 groupId: "icon_color",
-                title: _t("Background Color"),
+                description: _t("Select Background Color"),
                 Component: ColorSelector,
                 props: this.dependencies.color.getPropsForColorSelector("background"),
             },

@@ -29,7 +29,7 @@ def make_efactura_request(session, company, endpoint, method, params, data=None)
                'Authorization': f'Bearer {company.l10n_ro_edi_access_token}'}
 
     try:
-        response = session.request(method=method, url=url, params=params, data=data, headers=headers, timeout=10)
+        response = session.request(method=method, url=url, params=params, data=data, headers=headers, timeout=60)
     except requests.HTTPError as e:
         return {'error': str(e)}
     if response.status_code == 204:
@@ -37,6 +37,8 @@ def make_efactura_request(session, company, endpoint, method, params, data=None)
     if response.status_code == 400:
         error_json = response.json()
         return {'error': error_json['message']}
+    if response.status_code == 401:
+        return {'error': _('Access token is unauthorized.')}
     if response.status_code == 403:
         return {'error': _('Access token is forbidden.')}
     if response.status_code == 500:

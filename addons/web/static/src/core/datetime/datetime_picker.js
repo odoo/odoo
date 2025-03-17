@@ -1,16 +1,10 @@
 import { Component, onWillRender, onWillUpdateProps, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import {
-    MAX_VALID_DATE,
-    MIN_VALID_DATE,
-    clampDate,
-    is24HourFormat,
-    isInRange,
-    isMeridiemFormat,
-    today,
-} from "../l10n/dates";
+import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";
 import { ensureArray } from "../utils/arrays";
+import { TimePicker } from "@web/core/time_picker/time_picker";
+import { Time } from "@web/core/l10n/time";
 
 const { DateTime, Info } = luxon;
 
@@ -135,12 +129,6 @@ const toWeekItem = (weekDayItems) => ({
     number: weekDayItems[3].range[0].weekNumber,
     days: weekDayItems,
 });
-
-// Time constants
-const HOURS = numberRange(0, 24).map((hour) => [hour, String(hour)]);
-const MINUTES = numberRange(0, 60).map((minute) => [minute, String(minute || 0).padStart(2, "0")]);
-const SECONDS = [...MINUTES];
-const MERIDIEMS = ["AM", "PM"];
 
 /**
  * Precision levels
@@ -356,6 +344,7 @@ export class DateTimePicker extends Component {
     };
 
     static template = "web.DateTimePicker";
+    static components = { TimePicker };
 
     //-------------------------------------------------------------------------
     // Getters
@@ -381,8 +370,6 @@ export class DateTimePicker extends Component {
     //-------------------------------------------------------------------------
 
     setup() {
-        this.availableHours = HOURS;
-        this.availableMinutes = MINUTES;
         /** @type {PrecisionLevel[]} */
         this.allowedPrecisionLevels = [];
         /** @type {Item[]} */
@@ -395,7 +382,7 @@ export class DateTimePicker extends Component {
             focusDate: null,
             /** @type {DateTime | null} */
             hoveredDate: null,
-            /** @type {[number, number, number][]} */
+            /** @type {Time[]} */
             timeValues: [],
             /** @type {PrecisionLevel} */
             precision: this.props.minPrecision,
@@ -415,9 +402,6 @@ export class DateTimePicker extends Component {
         this.values = ensureArray(props.value).map((value) =>
             value && !value.isValid ? null : value
         );
-        this.availableHours = HOURS;
-        this.availableMinutes = MINUTES.filter((minute) => !(minute[0] % props.rounding));
-        this.availableSeconds = props.rounding ? [] : SECONDS;
         this.allowedPrecisionLevels = this.filterPrecisionLevels(
             props.minPrecision,
             props.maxPrecision
@@ -435,24 +419,9 @@ export class DateTimePicker extends Component {
             throw new Error(`DateTimePicker error: given "maxDate" comes before "minDate".`);
         }
 
-        const timeValues = this.values.map((val, index) => [
-            index === 1 && !this.values[1]
-                ? (val || DateTime.local()).hour + 1
-                : (val || DateTime.local()).hour,
-            val?.minute || 0,
-            val?.second || 0,
-        ]);
-        if (props.range) {
-            this.state.timeValues = timeValues;
-        } else {
-            this.state.timeValues = [];
-            this.state.timeValues[props.focusedDateIndex] = timeValues[props.focusedDateIndex];
-        }
-
+        this.state.timeValues = this.getTimeValues(props);
         this.shouldAdjustFocusDate = !props.range;
         this.adjustFocus(this.values, props.focusedDateIndex);
-        this.handle12HourSystem();
-        this.state.timeValues = this.state.timeValues.map((timeValue) => timeValue.map(String));
     }
 
     onWillRender() {
@@ -562,35 +531,27 @@ export class DateTimePicker extends Component {
         return result;
     }
 
-    getTimeValues(valueIndex) {
-        let [hour, minute, second] = this.state.timeValues[valueIndex].map(Number);
-        if (
-            this.is12HourFormat &&
-            this.meridiems &&
-            this.state.timeValues[valueIndex][3] === "PM"
-        ) {
-            hour += 12;
-        }
-        return [hour, minute, second];
-    }
+    /**
+     * @param {DateTimePickerProps} props
+     */
+    getTimeValues(props) {
+        const timeValues = this.values.map((val, index) =>
+            new Time({
+                hour:
+                    index === 1 && !this.values[1]
+                        ? (val || DateTime.local()).hour + 1
+                        : (val || DateTime.local()).hour,
+                minute: val?.minute || 0,
+                second: val?.second || 0,
+            })
+        );
 
-    handle12HourSystem() {
-        if (isMeridiemFormat()) {
-            this.meridiems = MERIDIEMS.map((m) => [m, m]);
-            for (const timeValues of this.state.timeValues) {
-                if (timeValues) {
-                    timeValues.push(MERIDIEMS[Math.floor(timeValues[0] / 12) || 0]);
-                }
-            }
-        }
-        this.is12HourFormat = !is24HourFormat();
-        if (this.is12HourFormat) {
-            this.availableHours = [[0, HOURS[12][1]], ...HOURS.slice(1, 12)];
-            for (const timeValues of this.state.timeValues) {
-                if (timeValues) {
-                    timeValues[0] %= 12;
-                }
-            }
+        if (props.range) {
+            return timeValues;
+        } else {
+            const values = [];
+            values[props.focusedDateIndex] = timeValues[props.focusedDateIndex];
+            return values;
         }
     }
 
@@ -624,10 +585,11 @@ export class DateTimePicker extends Component {
     }
 
     /**
-     * Happens when an hour or a minute (or AM/PM if can apply) is selected.
      * @param {number} valueIndex
+     * @param {Time} newTime
      */
-    selectTime(valueIndex) {
+    onTimeChange(valueIndex, newTime) {
+        this.state.timeValues[valueIndex] = newTime;
         const value = this.values[valueIndex] || today();
         this.validateAndSelect(value, valueIndex, "time");
     }
@@ -648,7 +610,7 @@ export class DateTimePicker extends Component {
 
         if (this.props.type === "datetime") {
             // Adjusts result according to the current time values
-            const [hour, minute, second] = this.getTimeValues(valueIndex);
+            const { hour, minute, second } = this.state.timeValues[valueIndex];
             result[valueIndex] = result[valueIndex].set({ hour, minute, second });
         }
         if (!isInRange(result[valueIndex], [this.minDate, this.maxDate])) {

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged, TransactionCase
 from odoo import fields, api, SUPERUSER_ID, Command
 from odoo.tools import mute_logger
@@ -439,6 +440,39 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         next_move.action_post()
         self.assertMoveName(next_move, '00000001-G 0002/2017')
 
+    def test_journal_override_sequence_regex_year(self):
+        """Override the sequence regex with a year syntax not matching the draft invoice name"""
+        move = self.create_move(date='2020-01-01')
+        move.journal_id.sequence_override_regex = (
+            '^'
+            r'(?P<prefix1>.*?)'
+            r'(?P<year>(?:(?<=\D)|(?<=^))\d{4})?'
+            r'(?P<prefix2>(?<=\d{4}).*?)?'
+            r'(?P<seq>\d{0,9})'
+            r'(?P<suffix>\D*?)'
+            '$'
+        )
+
+        # check if the default year_range regex is not used
+        next_move = self.create_move(date='2020-01-01', name='MISC/2020/21/00001')
+        next_move.action_post()
+        self.assertEqual(next_move.name, 'MISC/2020/21/00001')
+
+        # check the next sequence
+        next_move = self.create_move(date='2020-01-01')
+        next_move.action_post()
+        self.assertEqual(next_move.name, 'MISC/2020/21/00002')
+
+        # check for another year
+        next_move = self.create_move(date='2021-01-01')
+        next_move.action_post()
+        self.assertEqual(next_move.name, 'MISC/2021/21/00001')
+
+        # check if year is correctly extracted
+        with self.assertRaises(ValidationError):
+            self.create_move(date='2022-01-01', name='MISC/2021/22/00001', post=True) # year does not match
+        self.create_move(date='2022-01-01', name='MISC/2022/22/00001', post=True)  # fix the year in the name
+
     def test_journal_sequence_ordering(self):
         """Entries are correctly sorted when posting multiple at once."""
         self.test_move.name = 'XMISC/2016/00001'
@@ -467,7 +501,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertMoveName(copies[5], 'XMISC/2019/00004')
 
         # Can't have twice the same name
-        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'), self.env.cr.savepoint():
+        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'):
             copies[0].name = 'XMISC/2019/00001'
 
         # Lets remove the order by date

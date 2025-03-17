@@ -7,8 +7,6 @@ import { patch } from "@web/core/utils/patch";
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        /** @type {typeof import("@mail/discuss/call/common/rtc_session_model").RtcSession} */
-        this["discuss.channel.rtc.session"] = undefined;
         this.rtc = Record.one("Rtc", {
             compute() {
                 return {};

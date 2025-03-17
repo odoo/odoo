@@ -75,7 +75,6 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             case "EDIT_GLOBAL_FILTER":
             case "REMOVE_GLOBAL_FILTER":
             case "SET_GLOBAL_FILTER_VALUE":
-            case "CLEAR_GLOBAL_FILTER_VALUE":
                 this._addDomains();
                 break;
             case "UPDATE_ODOO_LIST":

@@ -10,5 +10,6 @@
             'test_apikeys/static/tests/apikey_flow.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

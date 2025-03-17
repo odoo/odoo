@@ -5,22 +5,9 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class ChatWindow extends Record {
     static id = "thread";
-    /** @type {Object<number, import("models").ChatWindow} */
-    static records = {};
-    /** @returns {import("models").ChatWindow} */
-    static get(data) {
-        return super.get(data);
-    }
-    /**
-     * @template T
-     * @param {T} data
-     * @returns {T extends any[] ? import("models").ChatWindow[] : import("models").ChatWindow}
-     */
-    static insert(data) {
-        return super.insert(...arguments);
-    }
 
     actionsDisabled = false;
+    bypassCompact = false;
     thread = Record.one("Thread");
     autofocus = 0;
     jumpToNewMessage = 0;
@@ -69,6 +56,7 @@ export class ChatWindow extends Record {
         this.store.chatHub.folded.delete(this);
         this.store.chatHub.folded.unshift(this);
         this.store.chatHub.save();
+        this.bypassCompact = false;
     }
 
     async open({ focus = false, notifyState = true, jumpToNewMessage = false } = {}) {

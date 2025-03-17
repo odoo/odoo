@@ -2,6 +2,7 @@
 
 from odoo import models, fields, tools, _
 from odoo.tools import is_html_empty
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailActivity(models.Model):
@@ -23,6 +24,7 @@ class MailActivity(models.Model):
             'default_user_id': self.user_id.id,
             'initial_date': self.date_deadline,
             'default_calendar_event_id': self.calendar_event_id.id,
+            'orig_activity_ids': self.ids,
         }
         return action
 
@@ -48,3 +50,6 @@ class MailActivity(models.Model):
         res = self.unlink()
         events.unlink()
         return res
+
+    def _to_store_defaults(self):
+        return super()._to_store_defaults() + [Store.One("calendar_event_id", [])]

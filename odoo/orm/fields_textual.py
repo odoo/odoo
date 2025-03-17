@@ -26,10 +26,13 @@ if typing.TYPE_CHECKING:
     from .models import BaseModel
     from odoo.tools import Query
 
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable
+
 
 class BaseString(Field[str | typing.Literal[False]]):
     """ Abstract class for string fields. """
-    translate = False                   # whether the field is translated
+    translate: bool | Callable[[Callable[[str], str], str], str] = False  # whether the field is translated
     size = None                         # maximum size of values (deprecated)
     is_text = True
     falsy_value = ''
@@ -370,7 +373,7 @@ class Char(BaseString):
     :type translate: bool or callable
     """
     type = 'char'
-    trim = True                         # whether value is trimmed (only by web client)
+    trim: bool = True                   # whether value is trimmed (only by web client)
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
@@ -408,7 +411,7 @@ class Char(BaseString):
             and model._fields[model._rec_name].base_field.translate
             and 'lang' not in depends_context
         ):
-            depends_context.append('lang')
+            depends_context = [*depends_context, 'lang']
 
         return depends, depends_context
 
@@ -448,16 +451,16 @@ class Html(BaseString):
     type = 'html'
     _column_type = ('text', 'text')
 
-    sanitize = True                     # whether value must be sanitized
-    sanitize_overridable = False        # whether the sanitation can be bypassed by the users part of the `base.group_sanitize_override` group
-    sanitize_tags = True                # whether to sanitize tags (only a white list of attributes is accepted)
-    sanitize_attributes = True          # whether to sanitize attributes (only a white list of attributes is accepted)
-    sanitize_style = False              # whether to sanitize style attributes
-    sanitize_form = True                # whether to sanitize forms
-    sanitize_conditional_comments = True  # whether to kill conditional comments. Otherwise keep them but with their content sanitized.
-    sanitize_output_method = 'html'     # whether to sanitize using html or xhtml
-    strip_style = False                 # whether to strip style attributes (removed and therefore not sanitized)
-    strip_classes = False               # whether to strip classes attributes
+    sanitize: bool = True                     # whether value must be sanitized
+    sanitize_overridable: bool = False        # whether the sanitation can be bypassed by the users part of the `base.group_sanitize_override` group
+    sanitize_tags: bool = True                # whether to sanitize tags (only a white list of attributes is accepted)
+    sanitize_attributes: bool = True          # whether to sanitize attributes (only a white list of attributes is accepted)
+    sanitize_style: bool = False              # whether to sanitize style attributes
+    sanitize_form: bool = True                # whether to sanitize forms
+    sanitize_conditional_comments: bool = True  # whether to kill conditional comments. Otherwise keep them but with their content sanitized.
+    sanitize_output_method: str = 'html'      # whether to sanitize using html or xhtml
+    strip_style: bool = False                 # whether to strip style attributes (removed and therefore not sanitized)
+    strip_classes: bool = False               # whether to strip classes attributes
 
     def _get_attrs(self, model_class, name):
         # called by _setup_attrs__(), working together with BaseString._setup_attrs__()

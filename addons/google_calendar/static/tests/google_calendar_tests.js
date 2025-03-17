@@ -1,7 +1,8 @@
-import { click, getFixture, patchDate, makeDeferred, nextTick} from "@web/../tests/helpers/utils";
+import { click, getFixture, patchDate, patchWithCleanup, makeDeferred, nextTick} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { patchUserWithCleanup } from "@web/../tests/helpers/mock_services";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { CalendarModel } from "@web/views/calendar/calendar_model";
 
 let target;
 let serverData;
@@ -81,6 +82,9 @@ QUnit.module('Google Calendar', {
                 return uid;
             },
         });
+        patchWithCleanup(CalendarModel, {
+            DEBOUNCED_LOAD_DELAY: 0,
+        });
     }
 }, function () {
 
@@ -129,7 +133,8 @@ QUnit.module('Google Calendar', {
             },
         });
         // select the partner filter
-        await click(target.querySelector('.o_calendar_filter_item[data-value=all] input'));
+        await click(target.querySelector('.o_calendar_filter_items_checkall input'));
+        await nextTick();
         // sync_data was called a first time without filter, event from google calendar was created twice
         assert.containsN(target, '.fc-event', 4, "should display 4 events on the month");
 
@@ -138,6 +143,7 @@ QUnit.module('Google Calendar', {
         await click(target.querySelector('.o_view_scale_selector .dropdown-toggle'));
         await click(target.querySelector('.o_scale_button_month'));
         await click(target.querySelector('.o_calendar_button_today'));
+        await nextTick();
 
         assert.verifySteps([
             '/google_calendar/sync_data',

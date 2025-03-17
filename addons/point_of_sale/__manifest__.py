@@ -17,6 +17,7 @@
         'data/pos_note_data.xml',
         'data/point_of_sale_tour.xml',
         'data/mail_template_data.xml',
+        'data/ir_config_parameter_data.xml',
         'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_close_session_wizard.xml',
@@ -103,6 +104,7 @@
             'point_of_sale/static/src/proxy_trap.js',
             'point_of_sale/static/src/lazy_getter.js',
             'point_of_sale/static/src/app/services/data_service.js',
+            'point_of_sale/static/src/app/utils/numbers.js',
 
             'point_of_sale/static/src/app/utils/html-to-image.js',
             'point_of_sale/static/src/app/services/render_service.js',
@@ -181,6 +183,7 @@
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
+            'point_of_sale/static/src/customer_display/utils.js',
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
             ("include", "point_of_sale.base_tests"),
@@ -243,5 +246,6 @@
             'point_of_sale/static/tests/pos/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

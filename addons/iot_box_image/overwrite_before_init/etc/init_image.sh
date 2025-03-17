@@ -24,7 +24,7 @@ echo "export XAUTHORITY=/run/lightdm/pi/xauthority" >> /home/pi/.bashrc
 echo "export XAUTHORITY=/run/lightdm/root/:0" >> ~/.bashrc
 # Aliases
 echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo='sudo systemctl stop odoo; sudo /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo='sudo systemctl stop odoo; sudo -u odoo /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
@@ -43,18 +43,19 @@ odoo_help() {
   echo ' Welcome to Odoo IoT Box tools'
   echo '-------------------------------'
   echo ''
-  echo 'odoo                Starts/Restarts Odoo server manually (not through odoo.service)'
-  echo 'odoo_logs           Displays Odoo server logs in real time'
-  echo 'odoo_conf           Displays Odoo configuration file content'
-  echo 'write_mode          Enables system write mode'
-  echo 'read_mode           Switches system to read-only mode'
-  echo 'install             Bypasses ramdisks to allow package installation'
-  echo 'blackbox            Lists all serial connected devices'
-  echo 'odoo_start          Starts Odoo service'
-  echo 'odoo_stop           Stops Odoo service'
-  echo 'odoo_restart        Restarts Odoo service'
-  echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
-  echo 'devtools            Enables/Disables specific functions for development (more help with devtools help)'
+  echo 'odoo                  Starts/Restarts Odoo server manually (not through odoo.service)'
+  echo 'odoo_logs             Displays Odoo server logs in real time'
+  echo 'odoo_conf             Displays Odoo configuration file content'
+  echo 'write_mode            Enables system write mode'
+  echo 'read_mode             Switches system to read-only mode'
+  echo 'install               Bypasses ramdisks to allow package installation'
+  echo 'blackbox              Lists all serial connected devices'
+  echo 'odoo_start            Starts Odoo service'
+  echo 'odoo_stop             Stops Odoo service'
+  echo 'odoo_restart          Restarts Odoo service'
+  echo 'odoo_dev <branch>     Resets Odoo on the specified branch from odoo-dev repository'
+  echo 'odoo_origin <branch>  Resets Odoo on the specified branch from the odoo repository'
+  echo 'devtools              Enables/Disables specific functions for development (more help with devtools help)'
   echo ''
   echo 'Odoo IoT online help: <https://www.odoo.com/documentation/master/applications/general/iot.html>'
 }
@@ -71,6 +72,22 @@ odoo_dev() {
   sudo git remote add dev https://github.com/odoo-dev/odoo.git
   sudo git fetch dev \$1 --depth=1 --prune
   sudo git reset --hard dev/\$1
+  sudo chown -R odoo:odoo /home/pi/odoo
+  cd \$pwd
+}
+
+odoo_origin() {
+  if [ -z \"\$1\" ]; then
+    odoo_help
+    return
+  fi
+  write_mode
+  pwd=\$(pwd)
+  cd /home/pi/odoo
+  sudo git config --global --add safe.directory /home/pi/odoo
+  sudo git remote set-url origin https://github.com/odoo/odoo.git  # ensure odoo repository
+  sudo git fetch origin \$1 --depth=1 --prune
+  sudo git reset --hard origin/\$1
   sudo chown -R odoo:odoo /home/pi/odoo
   cd \$pwd
 }
@@ -129,6 +146,10 @@ devtools() {
 
 source ~/.bashrc
 source /home/pi/.bashrc
+
+# Change default hostname from 'raspberrypi' to 'iotbox'
+echo iotbox | tee /etc/hostname
+sed -i 's/\braspberrypi/iotbox/g' /etc/hosts
 
 apt-get update
 
@@ -202,15 +223,27 @@ systemctl disable hostapd.service
 systemctl disable cups-browsed.service
 systemctl enable odoo.service
 
+# ========= BOOT FILE CONFIGURATION =========
+# Related documentation:
+# https://www.raspberrypi.com/documentation/computers/legacy_config_txt.html
+BOOT_CONFIG_FILE="/boot/config.txt"
+
 # disable overscan in /boot/config.txt, we can't use
 # overwrite_after_init because it's on a different device
 # (/dev/mmcblk0p1) and we don't mount that afterwards.
 # This option disables any black strips around the screen
 # cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
-echo "disable_overscan=1" >> /boot/config.txt
+echo "disable_overscan=1" >> ${BOOT_CONFIG_FILE}
+
+# Allow to detect displays after boot
+echo "hdmi_force_hotplug=1" >> ${BOOT_CONFIG_FILE} # HDMI output mode will be used, even if no HDMI monitor is detected
+echo "​hdmi_force_mode=1" >> ${BOOT_CONFIG_FILE} # Allow forced options below
+echo "hdmi_group=0" >> ${BOOT_CONFIG_FILE} # Automatically detect hdmi group
+echo "hdmi_mode=16" >> ${BOOT_CONFIG_FILE} # 1080p 60Hz 16:9
+echo "hdmi_ignore_edid=0xa5000080" >> ${BOOT_CONFIG_FILE} # safeguard against invalid display EDID
 
 # Use the fkms driver instead of the legacy one (RPI3 requires this)
-sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' /boot/config.txt
+sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' ${BOOT_CONFIG_FILE}
 
 # create dirs for ramdisks
 create_ramdisk_dir () {

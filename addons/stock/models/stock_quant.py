@@ -12,7 +12,7 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.osv import expression
-from odoo.tools import SQL, check_barcode_encoding, format_list, groupby
+from odoo.tools import SQL, check_barcode_encoding, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -1049,18 +1049,16 @@ class StockQuant(models.Model):
 
         quant = None
         if quants:
-            # see _acquire_one_job for explanations
-            self._cr.execute("SELECT id FROM stock_quant WHERE id IN %s ORDER BY lot_id LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED", [tuple(quants.ids)])
-            stock_quant_result = self._cr.fetchone()
-            if stock_quant_result:
-                quant = self.browse(stock_quant_result[0])
+            # quants are already ordered in _gather
+            # lock the first available
+            quant = quants.try_lock_for_update(allow_referencing=True, limit=1)
 
         if quant:
             vals = {'in_date': in_date}
             if quantity:
                 vals['quantity'] = quant.quantity + quantity
             if reserved_quantity:
-                vals['reserved_quantity'] = quant.reserved_quantity + reserved_quantity
+                vals['reserved_quantity'] = max(0, quant.reserved_quantity + reserved_quantity)
             quant.write(vals)
         else:
             vals = {
@@ -1113,6 +1111,41 @@ class StockQuant(models.Model):
         quants.sudo().unlink()
 
     @api.model
+    def _clean_reservations(self):
+        reserved_quants = self.env['stock.quant']._read_group(
+            [('reserved_quantity', '!=', 0)],
+            ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
+            ['reserved_quantity:sum', 'id:recordset'],
+        )
+        reserved_move_lines = self.env['stock.move.line']._read_group(
+            [
+                ('state', 'in', ['assigned', 'partially_available', 'waiting', 'confirmed']),
+                ('quantity_product_uom', '!=', 0),
+                ('product_id.is_storable', '=', True),
+            ],
+            ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
+            ['quantity_product_uom:sum'],
+        )
+        reserved_move_lines = {
+            (product, location, lot, package, owner): reserved_quantity
+            for product, location, lot, package, owner, reserved_quantity in reserved_move_lines
+        }
+        for product, location, lot, package, owner, reserved_quantity, quants in reserved_quants:
+            ml_reserved_qty = reserved_move_lines.get((product, location, lot, package, owner), 0)
+            if location.should_bypass_reservation():
+                quants._update_reserved_quantity(product, location, -reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
+            elif float_compare(reserved_quantity, ml_reserved_qty, precision_rounding=product.uom_id.rounding) != 0:
+                quants._update_reserved_quantity(product, location, ml_reserved_qty - reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
+            if ml_reserved_qty:
+                del reserved_move_lines[(product, location, lot, package, owner)]
+
+        for (product, location, lot, package, owner), reserved_quantity in reserved_move_lines.items():
+            if location.should_bypass_reservation():
+                continue
+            else:
+                self.env['stock.quant']._update_reserved_quantity(product, location, reserved_quantity, lot_id=lot, package_id=package, owner_id=owner)
+
+    @api.model
     def _merge_quants(self):
         """ In a situation where one transaction is updating a quant via
         `_update_available_quantity` and another concurrent one calls this function with the same
@@ -1124,7 +1157,7 @@ class StockQuant(models.Model):
                         dupes AS (
                             SELECT min(id) as to_update_quant_id,
                                 (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
-                                SUM(reserved_quantity) as reserved_quantity,
+                                GREATEST(0, SUM(reserved_quantity)) as reserved_quantity,
                                 SUM(inventory_quantity) as inventory_quantity,
                                 SUM(quantity) as quantity,
                                 MIN(in_date) as in_date
@@ -1162,6 +1195,7 @@ class StockQuant(models.Model):
     @api.model
     def _quant_tasks(self):
         self._merge_quants()
+        self._clean_reservations()
         self._unlink_zero_quants()
 
     @api.model
@@ -1247,7 +1281,7 @@ class StockQuant(models.Model):
         return self
 
     @api.model
-    def _get_quants_action(self, domain=None, extend=False):
+    def _get_quants_action(self, extend=False):
         """ Returns an action to open (non-inventory adjustment) quant view.
         Depending of the context (user have right to be inventory mode or not),
         the list view will be editable or readonly.
@@ -1260,23 +1294,8 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {})
         ctx['inventory_report_mode'] = True
         ctx.pop('group_by', None)
-        action = {
-            'name': _('Locations'),
-            'view_mode': 'list,form',
-            'res_model': 'stock.quant',
-            'type': 'ir.actions.act_window',
-            'context': ctx,
-            'domain': domain or [],
-            'help': """
-                <p class="o_view_nocontent_empty_folder">{}</p>
-                <p>{}</p>
-                """.format(_('No Stock On Hand'),
-                           _('This analysis gives you an overview of the current stock level of your products.')),
-        }
 
-        target_action = self.env.ref('stock.dashboard_open_quants', False)
-        if target_action:
-            action['id'] = target_action.id
+        action = self.env['ir.actions.act_window']._for_xml_id('stock.stock_quant_action')
 
         form_view = self.env.ref('stock.view_stock_quant_form_editable').id
         if self.env.context.get('inventory_mode') and self.env.user.has_group('stock.group_stock_manager'):
@@ -1288,6 +1307,7 @@ class StockQuant(models.Model):
                 (action['view_id'], 'list'),
                 (form_view, 'form'),
             ],
+            'context': ctx,
         })
         if extend:
             action.update({
@@ -1299,6 +1319,8 @@ class StockQuant(models.Model):
                     (self.env.ref('stock.stock_quant_view_graph').id, 'graph'),
                 ],
             })
+        # It's mainly define in the server action in order to call _get_quants_action when using the url
+        action['path'] = "stock-locations"
         return action
 
     def _get_gs1_barcode(self, gs1_quantity_rules_ai_by_uom=False):
@@ -1447,7 +1469,7 @@ class StockQuant(models.Model):
                                 'before its corresponding receipt operation is validated. In this case the issue will be solved '
                                 'automatically once all steps are completed. Otherwise, the serial number should be corrected to '
                                 'prevent inconsistent data.',
-                                serial_number=lot_id.name, location_list=format_list(self.env, sn_locations.mapped('display_name')))
+                                serial_number=lot_id.name, location_list=sn_locations.mapped('display_name'))
 
                 elif source_location_id and source_location_id not in sn_locations:
                     # using an existing SN in the wrong location
@@ -1467,14 +1489,14 @@ class StockQuant(models.Model):
                                     'Source location for this move will be changed to %(recommended_location)s',
                                     serial_number=lot_id.name,
                                     source_location=source_location_id.display_name,
-                                    other_locations=format_list(self.env, sn_locations.mapped('display_name')),
+                                    other_locations=sn_locations.mapped('display_name'),
                                     recommended_location=recommended_location.display_name)
                     else:
                         message = _('Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n'
                                     'Please correct this to prevent inconsistent data.',
                                     serial_number=lot_id.name,
                                     source_location=source_location_id.display_name,
-                                    other_locations=format_list(self.env, sn_locations.mapped('display_name')))
+                                    other_locations=sn_locations.mapped('display_name'))
                         recommended_location = None
         return message, recommended_location
 
@@ -1539,10 +1561,11 @@ class StockQuantPackage(models.Model):
         for package in self:
             package.location_id = False
             package.company_id = False
-            if package.quant_ids:
-                package.location_id = package.quant_ids[0].location_id
-                if all(q.company_id == package.quant_ids[0].company_id for q in package.quant_ids):
-                    package.company_id = package.quant_ids[0].company_id
+            quants = package.quant_ids.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_uom_id.rounding) > 0)
+            if quants:
+                package.location_id = quants[0].location_id
+                if all(q.company_id == quants[0].company_id for q in package.quant_ids):
+                    package.company_id = quants[0].company_id
 
     @api.depends('quant_ids.owner_id')
     def _compute_owner_id(self):

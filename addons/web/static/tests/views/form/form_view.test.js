@@ -4,6 +4,7 @@ import {
     click,
     hover,
     manuallyDispatchProgrammaticEvent,
+    middleClick,
     press,
     queryAll,
     queryAllAttributes,
@@ -56,7 +57,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
 import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
@@ -1168,58 +1168,6 @@ test(`invisible fields are properly hidden`, async () => {
     expect(`.o_field_widget[name="child_ids"]`).toHaveCount(0);
 });
 
-test(`invisible, required and readonly using company evalContext`, async () => {
-    Partner._records[0].int_field = 3;
-    cookie.set("cids", "3-1");
-    serverState.companies = [
-        {
-            id: 1,
-            name: "Company 1",
-            sequence: 1,
-            parent_id: false,
-            child_ids: [],
-            country_code: "BE",
-        },
-        {
-            id: 2,
-            name: "Company 2",
-            sequence: 2,
-            parent_id: false,
-            child_ids: [],
-            country_code: "PE",
-        },
-        {
-            id: 3,
-            name: "Company 3",
-            sequence: 3,
-            parent_id: false,
-            child_ids: [],
-            country_code: "AR",
-        },
-    ];
-
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
-            <form>
-                <sheet>
-                    <field name="int_field" invisible="1"/>
-                    <group>
-                        <field name="foo" required="companies.has(companies.active_ids, 'country_code', 'BE')"/>
-                    </group>
-                    <field name="name" readonly="companies.has(companies.active_id, 'country_code', 'AR')"/>
-                    <field name="child_ids" invisible="not companies.has(int_field, 'country_code', 'PE')"/>
-                </sheet>
-            </form>
-        `,
-        resId: 1,
-    });
-    expect(`.o_field_widget[name=foo]`).toHaveClass("o_required_modifier");
-    expect(`.o_field_widget[name=name]`).toHaveClass("o_readonly_modifier");
-    expect(`.o_field_widget[name="child_ids"]`).toHaveCount(0);
-});
-
 test(`correctly copy attributes to compiled labels`, async () => {
     await mountView({
         resModel: "partner",
@@ -1714,15 +1662,8 @@ test(`reset local state when switching to another view`, async () => {
 test.tags("desktop");
 test(`trying to leave an invalid form view should not change the navbar`, async () => {
     defineMenus([
-        {
-            id: "root",
-            children: [
-                { id: 1, children: [], name: "App0", appID: 1, xmlid: "menu_1", actionID: 1 },
-                { id: 2, children: [], name: "App1", appID: 2, xmlid: "menu_2", actionID: 2 },
-            ],
-            name: "root",
-            appID: "root",
-        },
+        { id: 1, name: "App0", actionID: 1 },
+        { id: 2, name: "App1", actionID: 2 },
     ]);
 
     defineActions([
@@ -5877,8 +5818,6 @@ test(`switching to non-existing record`, async () => {
 
 test.tags("desktop");
 test(`switching to non-existing record on desktop`, async () => {
-    expect.errors(1);
-
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5889,7 +5828,9 @@ test(`switching to non-existing record on desktop`, async () => {
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(3);
 
+    expect.errors(1);
     await contains(`.o_pager_next`).click();
+    expect.verifyErrors([Error]);
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(2);
 
@@ -6543,12 +6484,12 @@ test(`onchanges on date(time) fields`, async () => {
         resId: 1,
     });
     expect(`.o_field_widget[name=date] input`).toHaveValue("01/25/2017");
-    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2016 12:55:05");
+    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2016 12:55");
 
     // trigger the onchange
     await contains(`.o_field_widget[name="foo"] input`).edit("coucou");
     expect(`.o_field_widget[name=date] input`).toHaveValue("12/12/2021");
-    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2021 12:55:05");
+    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2021 12:55");
 });
 
 test(`onchanges are not sent for invalid values`, async () => {
@@ -7730,7 +7671,6 @@ test(`autofocus first visible field`, async () => {
 
 test(`on a touch screen, fields are not focused`, async () => {
     mockTouch(true);
-    after(() => mockTouch(false));
 
     await mountView({
         type: "form",
@@ -8316,10 +8256,19 @@ test(`default_order on x2many embedded view`, async () => {
         "My little Foo Value",
     ]);
 
-    // client-side sort on edit
+    // no client-side sort after edit
     await contains(`.o_data_row:eq(1) .o_data_cell:eq(0)`).click();
     await contains(`.modal .o_field_widget[name=foo] input`).edit("zzz");
     await contains(`.modal-footer .o_form_button_save`).click();
+    expect(queryAllTexts`.o_data_row .o_data_cell:nth-child(2)`).toEqual([
+        "zop",
+        "zzz",
+        "xop",
+        "My little Foo Value",
+    ]);
+
+    // server-side sort post save
+    await contains(`.o_form_button_save`).click();
     expect(queryAllTexts`.o_data_row .o_data_cell:nth-child(2)`).toEqual([
         "zzz",
         "zop",
@@ -8330,9 +8279,9 @@ test(`default_order on x2many embedded view`, async () => {
 
 test.tags("desktop");
 test(`action context is used when evaluating domains`, async () => {
-    onRpc("name_search", ({ kwargs }) => {
-        expect.step("name_search");
-        expect(kwargs.args[0]).toEqual(["id", "in", [45, 46, 47]]);
+    onRpc("web_name_search", ({ kwargs }) => {
+        expect.step("web_name_search");
+        expect(kwargs.domain[0]).toEqual(["id", "in", [45, 46, 47]]);
     });
     await mountView({
         resModel: "partner",
@@ -8346,7 +8295,7 @@ test(`action context is used when evaluating domains`, async () => {
         context: { product_ids: [45, 46, 47] },
     });
     await contains(`.o_field_widget[name="parent_id"] input`).click();
-    expect.verifySteps(["name_search"]);
+    expect.verifySteps(["web_name_search"]);
 });
 
 test(`form rendering with groups with col/colspan`, async () => {
@@ -9036,8 +8985,8 @@ test(`context is correctly passed after save & new in FormViewDialog`, async () 
         list: `<list><field name="display_name"/></list>`,
     };
 
-    onRpc("name_search", ({ kwargs }) => {
-        expect.step("name_search");
+    onRpc("web_name_search", ({ kwargs }) => {
+        expect.step("web_name_search");
         expect(kwargs.context.color).toBe(4);
     });
     await mountView({
@@ -9051,14 +9000,14 @@ test(`context is correctly passed after save & new in FormViewDialog`, async () 
 
     // set a value on the m2o and click save & new
     await contains(`.o_field_many2one[name="partner_type_id"] input`).click();
-    expect.verifySteps(["name_search"]);
+    expect.verifySteps(["web_name_search"]);
 
     await contains(`.dropdown .dropdown-item:contains(gold)`).click();
     await contains(`.modal-footer .o_form_button_save_new`).click();
 
     // set a value on the m2o
     await contains(`.o_field_many2one[name="partner_type_id"] input`).click();
-    expect.verifySteps(["name_search"]);
+    expect.verifySteps(["web_name_search"]);
 
     await contains(`.dropdown .dropdown-item:contains(silver)`).click();
     await contains(`.modal-footer .o_form_button_save`).click();
@@ -9367,6 +9316,39 @@ test(`Can switch to form view on inline tree`, async () => {
 
     await contains(`td.o_list_record_open_form_view`).click();
     expect.verifySteps(["doAction"]);
+});
+
+test(`x2many field, open form view in new window`, async () => {
+    mockService("action", {
+        doAction(params, options) {
+            if (options?.newWindow) {
+                expect.step("opened in a new window");
+                return;
+            }
+            super.doAction(params);
+        },
+        loadState() {},
+    });
+    Partner._records[0].child_ids = [2];
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="child_ids">
+                    <list editable="top" open_form_view="1">
+                        <field name="foo"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`td.o_list_record_open_form_view`).toHaveCount(1);
+
+    await middleClick("td.o_list_record_open_form_view");
+    await animationFrame();
+    expect.verifySteps(["opened in a new window"]);
 });
 
 test(`can toggle column in x2many in sub form view`, async () => {
@@ -10118,11 +10100,15 @@ test(`"bare" buttons in template should not trigger button click`, async () => {
 test(`form view with inline list view with optional fields and local storage mock`, async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            expect.step(`getItem ${key}`);
+            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+                expect.step(`getItem ${key}`);
+            }
             return super.getItem(key);
         },
         setItem(key, value) {
-            expect.step(`setItem ${key} to ${value}`);
+            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+                expect.step(`setItem ${key} to ${value}`);
+            }
             return super.setItem(key, value);
         },
     });
@@ -10145,8 +10131,6 @@ test(`form view with inline list view with optional fields and local storage moc
 
     const localStorageKey = "partner,form,123456789,child_ids,list,bar,foo";
     expect.verifySteps([
-        "getItem web.emoji.frequent",
-        "getItem pwaService.installationState",
         `getItem optional_fields,${localStorageKey}`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);
@@ -10175,11 +10159,15 @@ test.tags("desktop");
 test(`form view with list_view_ref with optional fields and local storage mock`, async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            expect.step(`getItem ${key}`);
+            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+                expect.step(`getItem ${key}`);
+            }
             return super.getItem(key);
         },
         setItem(key, value) {
-            expect.step(`setItem ${key} to ${value}`);
+            if (["optional_fields", "debug_open_view"].some((word) => key.startsWith(word))) {
+                expect.step(`setItem ${key} to ${value}`);
+            }
             return super.setItem(key, value);
         },
     });
@@ -10210,8 +10198,6 @@ test(`form view with list_view_ref with optional fields and local storage mock`,
 
     const localStorageKey = "partner,form,123456789,child_ids,list,bar,foo";
     expect.verifySteps([
-        "getItem web.emoji.frequent",
-        "getItem pwaService.installationState",
         `getItem optional_fields,${localStorageKey}`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);
@@ -10344,6 +10330,7 @@ test("resequence list lines when previous resequencing crashed", async () => {
         "tbody.ui-sortable tr:nth-child(2)"
     );
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(getNames()).toEqual(["first line", "second line"]);
 
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(
@@ -10468,6 +10455,33 @@ test(`company_dependent field in form view, not in multi company group`, async (
     expect(`.o-tooltip .o-tooltip--help`).toHaveText("this is a tooltip");
 });
 
+test(`no 'oh snap' error when clicking on a save button`, async () => {
+    expect.errors(1);
+
+    onRpc("web_save", () => {
+        throw makeServerError({ message: "Some business message" });
+    });
+    onRpc(({ method }) => expect.step(method));
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <button name="do_it" type="object" string="Do it"/>
+                <field name="name"/>
+            </form>
+        `,
+    });
+    expect.verifySteps(["get_views", "onchange"]);
+
+    await contains(`.o_form_button_save`).click();
+    await animationFrame();
+    expect.verifyErrors(["Some business message"]);
+    expect.verifySteps(["web_save"]);
+    expect(`.o_error_dialog`).toHaveCount(1);
+    expect(`.o_form_error_dialog`).toHaveCount(0);
+});
+
 test(`no 'oh snap' error when clicking on a view button`, async () => {
     expect.errors(1);
 
@@ -10491,7 +10505,7 @@ test(`no 'oh snap' error when clicking on a view button`, async () => {
     await animationFrame();
     expect.verifyErrors(["Some business message"]);
     expect.verifySteps(["web_save"]);
-    expect(`.modal`).toHaveCount(1);
+    expect(`.o_error_dialog`).toHaveCount(1);
     expect(`.o_form_error_dialog`).toHaveCount(0);
 });
 
@@ -10529,6 +10543,7 @@ test(`no 'oh snap' error in form view in dialog`, async () => {
     await animationFrame();
     expect(`.modal`).toHaveCount(2);
     expect(`.o_error_dialog`).toHaveCount(1);
+    expect(`.o_form_error_dialog`).toHaveCount(0);
 });
 
 test(`field "length" with value 0: can apply onchange`, async () => {

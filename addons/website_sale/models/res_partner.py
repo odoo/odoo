@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, models
+from odoo.http import request
 
 
 class ResPartner(models.Model):
@@ -26,10 +27,20 @@ class ResPartner(models.Model):
                 ),
             }}
 
-    def _can_be_edited_by_current_customer(self, sale_order, address_type):
-        self.ensure_one()
-        children_partner_ids = self.env['res.partner']._search([
-            ('id', 'child_of', sale_order.partner_id.commercial_partner_id.id),
-            ('type', 'in', ('invoice', 'delivery', 'other')),
-        ])
-        return self == sale_order.partner_id or self.id in children_partner_ids
+    def _get_current_partner(self, order_sudo=False, **kwargs):
+        """ Override `portal` to get current partner from order_sudo if user is not signed up. """
+        if order_sudo:
+            return (
+                (not order_sudo._is_anonymous_cart() and order_sudo.partner_id)
+                or self.env['res.partner'] # Avoid returning public user's partner
+            )
+        return super()._get_current_partner(order_sudo=order_sudo, **kwargs)
+
+    def _get_frontend_writable_fields(self):
+        """ Override `portal` to make website whitelist fields writable in portal address. """
+        frontend_writable_fields = super()._get_frontend_writable_fields()
+        frontend_writable_fields.update(
+            self.env['ir.model']._get('res.partner')._get_form_writable_fields().keys()
+        )
+
+        return frontend_writable_fields

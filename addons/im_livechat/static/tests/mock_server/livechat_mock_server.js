@@ -75,11 +75,10 @@ async function get_session(request) {
                 makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
             ),
             name: channelVals["name"],
-            open_chat_window: true,
             scrollUnread: false,
             state: "open",
         });
-        return store.get_result();
+        return { store_data: store.get_result(), channel_id: -1 };
     }
     const channelId = DiscussChannel.create(channelVals);
     DiscussChannel._find_or_create_persona_for_channel(channelId, "Visitor");
@@ -94,10 +93,9 @@ async function get_session(request) {
     store.add(DiscussChannel.browse(channelId));
     store.add(DiscussChannel.browse(channelId), {
         isLoaded: true,
-        open_chat_window: true,
         scrollUnread: false,
     });
-    return store.get_result();
+    return { store_data: store.get_result(), channel_id: channelId };
 }
 
 registerRoute("/im_livechat/visitor_leave_session", visitor_leave_session);

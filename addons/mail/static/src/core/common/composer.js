@@ -6,6 +6,7 @@ import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { prettifyMessageContent } from "@mail/utils/common/format";
+import { htmlJoin } from "@mail/utils/common/html";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
@@ -17,6 +18,7 @@ import {
     Component,
     markup,
     onMounted,
+    onWillUnmount,
     useChildSubEnv,
     useEffect,
     useRef,
@@ -28,6 +30,7 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { createElementWithContent } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { escape } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
@@ -94,13 +97,11 @@ export class Composer extends Component {
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.composerActions = useComposerActions();
-        this.OR_PRESS_SEND_KEYBIND = markup(
-            _t("or press %(send_keybind)s", {
-                send_keybind: this.sendKeybinds
-                    .map((key) => `<samp>${escape(key)}</samp>`)
-                    .join(" + "),
-            })
-        );
+        this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
+            send_keybind: markup(
+                this.sendKeybinds.map((key) => `<samp>${escape(key)}</samp>`).join(" + ")
+            ),
+        });
         this.store = useService("mail.store");
         this.attachmentUploader = useAttachmentUploader(
             this.thread ?? this.props.composer.message.thread,
@@ -213,6 +214,9 @@ export class Composer extends Component {
                 this.restoreContent();
             }
         });
+        onWillUnmount(() => {
+            this.props.composer.isFocused = false;
+        });
     }
 
     get areAllActionsDisabled() {
@@ -287,7 +291,7 @@ export class Composer extends Component {
                 ),
                 close_save: markup("</a>"),
             };
-            return this.props.mode === "extended"
+            return this.env.inChatter
                 ? _t(
                       "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
                       tags
@@ -307,7 +311,7 @@ export class Composer extends Component {
     }
 
     get sendKeybinds() {
-        return this.props.mode === "extended" ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
+        return this.env.inChatter ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
     }
 
     get showComposerAvatar() {
@@ -469,7 +473,7 @@ export class Composer extends Component {
                 if (this.props.messageEdition && composer.text === "") {
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
-                        this.props.messageEdition.editingMessage = messageToEdit;
+                        this.props.messageEdition.enterEditMode(messageToEdit);
                     }
                 }
                 break;
@@ -478,7 +482,7 @@ export class Composer extends Component {
                     ev.preventDefault();
                     return;
                 }
-                const shouldPost = this.props.mode === "extended" ? ev.ctrlKey : !ev.shiftKey;
+                const shouldPost = this.env.inChatter ? ev.ctrlKey : !ev.shiftKey;
                 if (!shouldPost) {
                     return;
                 }
@@ -533,7 +537,7 @@ export class Composer extends Component {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
         });
-        let default_body = await prettifyMessageContent(body, validMentions);
+        let default_body = await prettifyMessageContent(body, { validMentions });
         if (!default_body) {
             const composer = toRaw(this.props.composer);
             // Reset signature when recovering an empty body.
@@ -541,18 +545,18 @@ export class Composer extends Component {
         }
         let signature = this.store.self.signature;
         if (signature) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(signature, 'text/html');
-            const divElement = document.createElement('div');
-            divElement.setAttribute('data-o-mail-quote', '1');
-            const br = document.createElement("br");
-            const textNode = document.createTextNode("-- ");
-            divElement.append(textNode, br, ...doc.body.childNodes);
-            signature = divElement.outerHTML;
+            const divElement = document.createElement("div");
+            divElement.setAttribute("data-o-mail-quote", "1");
+            divElement.append(
+                document.createTextNode("-- "),
+                document.createElement("br"),
+                ...createElementWithContent("div", signature).childNodes
+            );
+            signature = markup(divElement.outerHTML);
         }
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
-            this.props.composer.emailAddSignature ? markup(signature) : ""
+            this.props.composer.emailAddSignature ? signature : ""
         );
         const context = {
             default_attachment_ids: attachmentIds,
@@ -614,11 +618,16 @@ export class Composer extends Component {
         this.state.isFullComposerOpen = true;
     }
 
+    /**
+     * @param {string|ReturnType<markup>} defaultBody
+     * @param {string|ReturnType<markup>} [signature=""]
+     * @returns {ReturnType<markup>}
+     */
     formatDefaultBodyForFullComposer(defaultBody, signature = "") {
         if (signature) {
-            defaultBody = `${defaultBody}<br>${signature}`;
+            defaultBody = htmlJoin(defaultBody, markup("<br>"), signature);
         }
-        return `<div>${defaultBody}</div>`; // as to not wrap in <p> by html_sanitize
+        return htmlJoin(markup("<div>"), defaultBody, markup("</div>")); // as to not wrap in <p> by html_sanitize
     }
 
     clear() {
@@ -734,7 +743,10 @@ export class Composer extends Component {
         } else {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: composer.message,
-                onConfirm: () => this.message.remove(),
+                onConfirm: () => {
+                    this.message.remove();
+                    this.props.onDiscardCallback?.();
+                },
                 prompt: _t("Are you sure you want to delete this message?"),
             });
         }

@@ -4,7 +4,7 @@ from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import SQL
 from odoo.addons.mail.tools.discuss import Store
-
+from odoo.fields import Domain
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -35,12 +35,10 @@ class ResPartner(models.Model):
     def _search_for_channel_invite(self, store: Store, search_term, channel_id=None, limit=30):
         domain = expression.AND(
             [
-                expression.OR(
-                    [
-                        [("name", "ilike", search_term)],
-                        [("email", "ilike", search_term)],
-                    ]
-                ),
+                expression.OR([
+                    [("name", "ilike", search_term)],
+                    [("email", "ilike", search_term)],
+                ]),
                 [('id', '!=', self.env.user.partner_id.id)],
                 [("active", "=", True)],
                 [("user_ids", "!=", False)],

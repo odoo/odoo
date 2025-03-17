@@ -4,13 +4,13 @@
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import Form
 from odoo.tests.common import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestTracking(AccountTestInvoicingCommon, MailCommon):
+class TestTracking(AccountTestInvoicingCommon, MailCase):
 
     @classmethod
     def default_env_context(cls):

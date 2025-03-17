@@ -320,7 +320,7 @@ export class SearchBar extends Component {
         }
         const limitToFetch = this.state.subItemsLimits[searchItem.id] + 1;
         const options = await this.orm.call(relation, "name_search", [], {
-            args: domain,
+            domain: domain,
             operator: nameSearchOperator,
             context: { ...this.env.searchModel.globalContext, ...field.context },
             limit: limitToFetch,
@@ -626,6 +626,7 @@ export class SearchBar extends Component {
             hotkeys: {
                 arrowright: {
                     bypassEditableProtection: true,
+                    allowRepeat: false,
                     isAvailable: (navigator) => {
                         const focusedItem = this.items[navigator.activeItemIndex];
                         return (
@@ -676,7 +677,7 @@ export class SearchBar extends Component {
                     },
                 },
             },
-            onEnabled: (items) => items[0]?.setActive(),
+            onEnabled: (navigator) => navigator.items[0]?.setActive(),
         };
     }
 

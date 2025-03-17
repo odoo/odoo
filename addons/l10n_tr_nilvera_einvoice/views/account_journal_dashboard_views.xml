@@ -12,7 +12,7 @@
                 </xpath>
 
                 <xpath expr="//t[@id='account.JournalBodySalePurchase']//div" position="inside">
-                    <t t-if="record.l10n_tr_nilvera_api_key.raw_value">
+                    <t t-if="record.l10n_tr_nilvera_api_key and record.l10n_tr_nilvera_api_key.raw_value">
                         <t t-if="journal_type == 'sale'">
                             <div class="w-100">
                                 <a type="object" name="l10n_tr_nilvera_get_message_status" groups="account.group_account_invoice">Fetch Nilvera invoice status</a>

@@ -15,7 +15,7 @@ from psycopg2.extras import Json
 from odoo import api, fields, models, tools, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list, lazy_property, split_every, sql, unique, OrderedSet, SQL
+from odoo.tools import lazy_property, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 from odoo.tools.translate import _, LazyTranslate
 
@@ -921,7 +921,7 @@ class IrModelFields(models.Model):
             if not uninstalling:
                 raise UserError(_(
                     "Cannot rename/delete fields that are still present in views:\nFields: %(fields)s\nView: %(view)s",
-                    fields=format_list(self.env, [str(f) for f in fields]),
+                    fields=fields,
                     view=view.name,
                 ))
             else:
@@ -2411,6 +2411,8 @@ class IrModelData(models.Model):
                 ('model', '=', records._name),
                 ('res_id', 'in', records.ids),
             ])
+            cloc_exclude_data = ref_data.filtered(lambda imd: imd.module == '__cloc_exclude__')
+            ref_data -= cloc_exclude_data
             records -= records.browse((ref_data - module_data).mapped('res_id'))
             if not records:
                 return
@@ -2439,6 +2441,7 @@ class IrModelData(models.Model):
             _logger.info('Deleting %s', records)
             try:
                 with self._cr.savepoint():
+                    cloc_exclude_data.unlink()
                     records.unlink()
             except Exception:
                 if len(records) <= 1:

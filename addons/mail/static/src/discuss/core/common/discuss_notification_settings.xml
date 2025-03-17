@@ -39,6 +39,14 @@
                     </button>
                 </t>
             </div>
+            <hr class="o-discuss-separator my-1"/>
+            <label class="cursor-pointer d-flex align-items-center my-1">
+                <h5>Message sound</h5>
+                <div class="flex-grow-1"/>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="store.settings.messageSound" t-on-change="onChangeMessageSound"/>
+                </div>
+            </label>
         </div>
     </t>
 </templates>

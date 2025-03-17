@@ -7,8 +7,7 @@ from pytz import timezone
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
-
-from .utils import timezone_datetime, make_aware, Intervals
+from odoo.tools.date_intervals import Intervals, make_aware, timezone_datetime
 
 
 class ResourceResource(models.Model):

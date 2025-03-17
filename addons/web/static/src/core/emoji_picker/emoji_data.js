@@ -13704,6 +13704,7 @@ const _getEmojisData5 = () => `{
     ],
     "name": "` + _t("high voltage") + `",
     "shortcodes": [
+        ":zap:",
         ":high_voltage:"
     ]
 },

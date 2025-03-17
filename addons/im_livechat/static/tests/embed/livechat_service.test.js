@@ -2,8 +2,7 @@ import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
-import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import {
     click,
     contains,
@@ -18,7 +17,6 @@ import { describe, test } from "@odoo/hoot";
 import {
     asyncStep,
     Command,
-    mountWithCleanup,
     onRpc,
     serverState,
     waitForSteps,
@@ -60,7 +58,6 @@ test("persisted session history", async () => {
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
-    await mountWithCleanup(LivechatButton);
     await contains(".o-mail-Message-content", { text: "Old message in history" });
 });
 
@@ -75,7 +72,6 @@ test("previous operator prioritized", async () => {
     pyEnv["im_livechat.channel"].write([livechatChannelId], { user_ids: [Command.link(userId)] });
     expirableStorage.setItem("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
     await start({ authenticateAs: false });
-    await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message-author", { text: "John Doe" });
 });
@@ -85,14 +81,18 @@ test("Only necessary requests are made when creating a new chat", async () => {
     const livechatChannelId = await loadDefaultEmbedConfig();
     const operatorPartnerId = serverState.partnerId;
     onRpcBefore((route, args) => {
-        if (!route.includes("assets")) {
+        if (!route.includes("assets") && !route.includes("lazy_session_info")) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
     });
     await start({ authenticateAs: false });
-    await mountWithCleanup(LivechatButton);
     await contains(".o-livechat-LivechatButton");
-    await waitForSteps([`/im_livechat/init - {"channel_id":${livechatChannelId}}`]);
+    await waitForSteps([
+        `/mail/action - ${JSON.stringify({
+            fetch_params: [["init_livechat", livechatChannelId]],
+            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
+        })}`,
+    ]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
     await waitForSteps([
@@ -115,19 +115,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
             previous_operator_id: operatorPartnerId,
             persisted: true,
         })}`,
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures", // called because mail/core/web is loaded in test bundle
-                "systray_get_activities", // called because mail/core/web is loaded in test bundle
-                "init_messaging",
-            ],
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
-            },
-        })}`,
         `/mail/message/post - ${JSON.stringify({
             post_data: {
                 body: "Hello!",
@@ -142,7 +129,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 tz: "taht",
                 uid: serverState.userId,
                 allowed_company_ids: [1],
-                temporary_id: 0.81,
+                temporary_id: 0.8200000000000001,
             },
         })}`,
     ]);

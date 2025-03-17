@@ -101,26 +101,42 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
                          not be returned in the read method")
 
     def test_groups_on_embedded_action(self):
-        arbitrary_group = self.env['res.groups'].create({
+        # Create user groups with implied permissions
+        nested_arbitrary_group = self.env['res.groups'].create({
             'name': 'arbitrary_group',
             'implied_ids': [(6, 0, [self.ref('base.group_user')])],
         })
-        embedded_action_custo = self.env['ir.embedded.actions'].create({
-            'name': 'EmbeddedActionCusto',
-            'parent_res_model': 'res.partner',
-            'parent_action_id': self.parent_action.id,
-            'action_id': self.action_2.id,
-            'groups_ids': [(6, 0, [arbitrary_group.id])]
+        arbitrary_group = self.env['res.groups'].create({
+            'name': 'arbitrary_group',
+            'implied_ids': [(6, 0, [nested_arbitrary_group.id])],
         })
+        embedded_action1, embedded_action2 = self.env['ir.embedded.actions'].create([
+            {
+                'name': 'EmbeddedActionCusto',
+                'parent_res_model': 'res.partner',
+                'parent_action_id': self.parent_action.id,
+                'action_id': self.action_2.id,
+                'groups_ids': [(6, 0, [nested_arbitrary_group.id])],
+            },
+            {
+                'name': 'EmbeddedActionCusto2',
+                'parent_res_model': 'res.partner',
+                'parent_action_id': self.parent_action.id,
+                'action_id': self.action_2.id,
+                'groups_ids': [(6, 0, [arbitrary_group.id])],
+            }
+        ])
         res = self.get_embedded_actions_ids(self.parent_action)
         self.assertEqual(len(res), 2, "There should be 2 embedded records linked to the parent action")
         self.assertTrue(self.embedded_action_1.id in res and self.embedded_action_2.id in res, "The correct embedded actions\
                         should be in embedded_actions")
         self.env.user.write({'group_ids': [(4, arbitrary_group.id)]})
         res = self.get_embedded_actions_ids(self.parent_action)
-        self.assertEqual(len(res), 3, "There should be 3 embedded records linked to the parent action")
-        self.assertTrue(self.embedded_action_1.id in res and self.embedded_action_2.id in res and embedded_action_custo.id in res, "The correct embedded actions\
-                        should be in embedded_actions")
+        self.assertEqual(len(res), 4, "There should be 4 embedded records linked to the parent action")
+        self.assertTrue(
+            self.embedded_action_1.id in res and self.embedded_action_2.id in res and embedded_action1.id in res and embedded_action2.id in res,
+            "The correct embedded actions should be in embedded_actions",
+        )
 
     def test_create_embedded_action_with_action_and_python_method(self):
         embedded_action1, embedded_action2 = self.env['ir.embedded.actions'].create([

@@ -55,6 +55,7 @@ have real delivered quantities in sales orders.
             ('remove', 'sale_timesheet/static/tests/tours/**/*'),
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'post_init_hook': '_sale_timesheet_post_init',
 }

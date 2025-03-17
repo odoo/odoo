@@ -9,7 +9,8 @@ import { FormRenderer } from "@web/views/form/form_renderer";
 import { Component } from "@odoo/owl";
 
 /**
- * This widget is only used for the 'group_ids' field of the 'res.users' form view,
+ * This widget is only used for the 'group_ids' field of the 'res.users'
+ * form view or the 'implied_ids' field of the 'res.groups' form view,
  * in order to vizualize and configure access rights.
  */
 export class ResUserGroupIdsField extends Component {
@@ -20,6 +21,9 @@ export class ResUserGroupIdsField extends Component {
     setup() {
         this.sections = this.props.record.data.view_group_hierarchy;
         this.categories = this.sections.map((section) => section.categories).flat();
+        this.groupIdsInCategories = Object.values(this.categories)
+            .map((c) => c.groups.map((g) => g[0]))
+            .flat();
 
         this.fields = {};
         for (const category of this.categories) {
@@ -43,11 +47,14 @@ export class ResUserGroupIdsField extends Component {
                 </group>
             </t>`;
         this.archInfo = new FormArchParser().parse(parseXML(arch), models, "main");
+        this.hooks = {
+            onRecordChanged: this.onRecordChanged.bind(this),
+        };
     }
 
     get values() {
         const values = {};
-        const ids = this.props.record.data.group_ids.currentIds;
+        const ids = this.props.record.data[this.props.name].currentIds;
         for (const category of this.categories) {
             values[this.getFieldName(category)] =
                 category.groups.find((g) => ids.includes(g[0]))?.[0] || false;
@@ -61,7 +68,11 @@ export class ResUserGroupIdsField extends Component {
 
     onRecordChanged(_, values) {
         const groupIds = Object.values(values).filter((groupId) => groupId);
-        return this.props.record.update({ group_ids: [x2ManyCommands.set(groupIds)] });
+        const groupIdsNotInCategories = this.props.record.data.group_ids.currentIds.filter(
+            (id) => !this.groupIdsInCategories.includes(id)
+        );
+        const allGroupIds = groupIdsNotInCategories.concat(groupIds);
+        return this.props.record.update({ group_ids: [x2ManyCommands.set(allGroupIds)] });
     }
 }
 

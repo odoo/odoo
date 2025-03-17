@@ -17,11 +17,11 @@ So this module is to get the warehouse address if the bill is created from Purch
     'version': '1.0',
 
     'depends': [
-        'l10n_in_purchase',
         'l10n_in_stock',
         'purchase_stock'
     ],
 
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -231,5 +231,9 @@ class PaymentTransaction(models.Model):
             payment_id = self.source_transaction_id.payment_id
             if payment_id:
                 payment_id.message_post(body=message, author_id=author.id)
-        for invoice in self.invoice_ids:
+        for invoice in self._get_invoices_to_notify():
             invoice.message_post(body=message, author_id=author.id)
+
+    def _get_invoices_to_notify(self):
+        """ Return the invoices on which to log payment-related messages. """
+        return self.invoice_ids

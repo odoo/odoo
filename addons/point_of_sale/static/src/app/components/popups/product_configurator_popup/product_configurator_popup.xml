@@ -89,7 +89,7 @@
         <div>
             <t t-set="is_custom" t-value="false"/>
 
-            <ul class="color_attribute_list d-flex gap-3">
+            <ul class="color_attribute_list d-flex gap-3 p-0">
                 <li t-foreach="props.attribute.values()" t-as="value" t-key="value.id" class="color_attribute_list_item">
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == props.selected.id)"/>
                     <t t-set="img_style" t-value="value.image ? 'background:url(/web/image/product.template.attribute.value/' + value.id + '/image); background-size:cover;' : ''"/>
@@ -147,8 +147,8 @@
     </t>
 
     <t t-name="point_of_sale.ProductConfiguratorPopup">
-        <Dialog title.translate="Attribute selection">
-            <ProductInfoBanner productTemplate="props.productTemplate" product="this.product" />
+        <Dialog title="title">
+            <ProductInfoBanner t-if="showInfoBanner" productTemplate="props.productTemplate" product="this.product" />
             <div t-ref="input-area">
                 <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
                     <span>This option or combination of options is not available</span>

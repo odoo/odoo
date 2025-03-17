@@ -22,4 +22,8 @@ export class ActionpadWidget extends Component {
         this.pos = usePos();
         this.ui = useService("ui");
     }
+
+    get currentOrder() {
+        return this.pos.getOrder();
+    }
 }

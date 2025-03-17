@@ -2,8 +2,10 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
-import { isVisibleTextNode } from "@html_editor/utils/dom_info";
+import { isParagraphRelatedElement, isVisibleTextNode } from "@html_editor/utils/dom_info";
 import {
+    ancestors,
+    childNodes,
     closestElement,
     createDOMPathGenerator,
     descendants,
@@ -20,6 +22,7 @@ import { FontSelector } from "./font_selector";
 import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
+import { FontSizeSelector } from "./font_size_selector";
 
 export const fontItems = [
     {
@@ -161,15 +164,13 @@ export class FontPlugin extends Plugin {
             withSequence(10, {
                 id: "font",
             }),
-            withSequence(29, {
-                id: "font-size",
-            }),
         ],
         toolbar_items: [
-            {
+            withSequence(10, {
                 id: "font",
                 groupId: "font",
-                title: _t("Font style"),
+                namespaces: ["compact", "expanded"],
+                description: _t("Select font style"),
                 Component: FontSelector,
                 props: {
                     getItems: () => fontItems,
@@ -179,29 +180,37 @@ export class FontPlugin extends Plugin {
                             tagName: item.tagName,
                             extraClass: item.extraClass,
                         });
-                        this.updateFontParams();
+                        this.updateFontSelectorParams();
                     },
                 },
-            },
-            {
+            }),
+            withSequence(20, {
                 id: "font-size",
-                groupId: "font-size",
-                title: _t("Font size"),
-                Component: FontSelector,
+                groupId: "font",
+                namespaces: ["compact", "expanded"],
+                description: _t("Select font size"),
+                Component: FontSizeSelector,
                 props: {
                     getItems: () => this.fontSizeItems,
                     getDisplay: () => this.fontSize,
+                    onFontSizeInput: (size) => {
+                        this.dependencies.format.formatSelection("fontSize", {
+                            formatProps: { size },
+                            applyStyle: true,
+                        });
+                        this.updateFontSizeSelectorParams();
+                    },
                     onSelected: (item) => {
                         this.dependencies.format.formatSelection("setFontSizeClassName", {
                             formatProps: { className: item.className },
                             applyStyle: true,
                         });
-                        this.updateFontParams();
+                        this.updateFontSizeSelectorParams();
                     },
                 },
-            },
+            }),
         ],
-        powerbox_categories: withSequence(30, { id: "format", name: _t("Format") }),
+        powerbox_categories: withSequence(5, { id: "format", name: _t("Format") }),
         powerbox_items: [
             {
                 categoryId: "format",
@@ -220,11 +229,11 @@ export class FontPlugin extends Plugin {
                 commandId: "setTagParagraph",
             },
             {
-                categoryId: "structure",
+                categoryId: "format",
                 commandId: "setTagQuote",
             },
             {
-                categoryId: "structure",
+                categoryId: "format",
                 commandId: "setTagPre",
             },
         ],
@@ -241,9 +250,18 @@ export class FontPlugin extends Plugin {
 
         /** Handlers */
         input_handlers: this.onInput.bind(this),
-        selectionchange_handlers: this.updateFontParams.bind(this),
-        post_undo_handlers: this.updateFontParams.bind(this),
-        post_redo_handlers: this.updateFontParams.bind(this),
+        selectionchange_handlers: [
+            this.updateFontSelectorParams.bind(this),
+            this.updateFontSizeSelectorParams.bind(this),
+        ],
+        post_undo_handlers: [
+            this.updateFontSelectorParams.bind(this),
+            this.updateFontSizeSelectorParams.bind(this),
+        ],
+        post_redo_handlers: [
+            this.updateFontSelectorParams.bind(this),
+            this.updateFontSizeSelectorParams.bind(this),
+        ],
 
         /** Overrides */
         split_element_block_overrides: [
@@ -253,6 +271,9 @@ export class FontPlugin extends Plugin {
         ],
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
+
+        /** Processors */
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
     };
 
     setup() {
@@ -340,6 +361,10 @@ export class FontPlugin extends Plugin {
                 closestBlockNode.remove();
             }
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            const dir = closestBlockNode.getAttribute("dir") || closestPre.getAttribute("dir");
+            if (dir) {
+                baseContainer.setAttribute("dir", dir);
+            }
             closestPre.after(baseContainer);
             fillEmpty(baseContainer);
             this.dependencies.selection.setCursorStart(baseContainer);
@@ -377,6 +402,10 @@ export class FontPlugin extends Plugin {
                 closestBlockNode.remove();
             }
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            const dir = closestBlockNode.getAttribute("dir") || closestQuote.getAttribute("dir");
+            if (dir) {
+                baseContainer.setAttribute("dir", dir);
+            }
             closestQuote.after(baseContainer);
             fillEmpty(baseContainer);
             this.dependencies.selection.setCursorStart(baseContainer);
@@ -405,6 +434,10 @@ export class FontPlugin extends Plugin {
                 !descendants(newElement).some(isVisibleTextNode)
             ) {
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                const dir = newElement.getAttribute("dir");
+                if (dir) {
+                    baseContainer.setAttribute("dir", dir);
+                }
                 newElement.replaceWith(baseContainer);
                 baseContainer.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(baseContainer);
@@ -473,8 +506,36 @@ export class FontPlugin extends Plugin {
             this.dependencies.dom.setTag({ tagName: headingToBe });
         }
     }
-    updateFontParams() {
+
+    updateFontSelectorParams() {
         this.font.displayName = this.fontName;
+    }
+
+    updateFontSizeSelectorParams() {
         this.fontSize.displayName = this.fontSizeName;
+    }
+
+    processContentForClipboard(clonedContents, selection) {
+        const commonAncestorElement = closestElement(selection.commonAncestorContainer);
+        if (commonAncestorElement && !isBlock(clonedContents.firstChild)) {
+            // Get the list of ancestor elements starting from the provided
+            // commonAncestorElement up to the block-level element.
+            const blockEl = closestBlock(commonAncestorElement);
+            const ancestorsList = [
+                commonAncestorElement,
+                ...ancestors(commonAncestorElement, blockEl),
+            ];
+            // Wrap rangeContent with clones of their ancestors to keep the styles.
+            for (const ancestor of ancestorsList) {
+                // Keep the formatting by keeping inline ancestors and paragraph
+                // related ones like headings etc.
+                if (!isBlock(ancestor) || isParagraphRelatedElement(ancestor)) {
+                    const clone = ancestor.cloneNode();
+                    clone.append(...childNodes(clonedContents));
+                    clonedContents.appendChild(clone);
+                }
+            }
+        }
+        return clonedContents;
     }
 }

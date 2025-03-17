@@ -1,27 +1,35 @@
 import { registry } from "@web/core/registry";
-import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { _t } from "@web/core/l10n/translation";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import {
+    buildM2OFieldDescription,
+    extractM2OFieldProps,
+    m2oSupportedOptions,
+    Many2OneField,
+} from "@web/views/fields/many2one/many2one_field";
+import { Component } from "@odoo/owl";
 
-export class Many2OneFieldWithPlaceholderField extends Many2OneField {
+export class Many2OneFieldWithPlaceholderField extends Component {
+    static template = "point_of_sale.Many2OneFieldWithPlaceholderField";
+    static components = { Many2One };
     static props = {
         ...Many2OneField.props,
         placeholderField: { type: String, optional: true },
     };
 
-    get Many2XAutocompleteProps() {
+    get m2oProps() {
         return {
-            ...super.Many2XAutocompleteProps,
+            ...computeM2OProps(this.props),
             placeholder:
                 this.props.record.data[this.props.placeholderField] || this.props.placeholder,
         };
     }
 }
 
-export const many2OneFieldWithPlaceholderField = {
-    ...many2OneField,
-    component: Many2OneFieldWithPlaceholderField,
+registry.category("fields").add("many2one_with_placeholder_field", {
+    ...buildM2OFieldDescription(Many2OneFieldWithPlaceholderField),
     supportedOptions: [
-        ...many2OneField.supportedOptions,
+        ...m2oSupportedOptions,
         {
             label: _t("Placeholder field"),
             name: "placeholder_field",
@@ -30,12 +38,8 @@ export const many2OneFieldWithPlaceholderField = {
     ],
     extractProps(params, dynamicInfo) {
         return {
-            ...many2OneField.extractProps(params, dynamicInfo),
+            ...extractM2OFieldProps(params, dynamicInfo),
             placeholderField: params.options.placeholder_field,
         };
     },
-};
-
-registry
-    .category("fields")
-    .add("many2one_with_placeholder_field", many2OneFieldWithPlaceholderField);
+});

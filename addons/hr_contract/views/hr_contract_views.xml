@@ -455,4 +455,11 @@
             parent="menu_human_resources_configuration_contract"
             sequence="5"
             groups="hr.group_hr_manager"/>
+
+        <record id="hr.menu_view_hr_contract_type" model="ir.ui.menu">
+            <field name="parent_id" ref="menu_human_resources_configuration_contract"/>
+            <field name="sequence" eval="6"/>
+            <field name="active" eval="True"/>
+        </record>
+
 </odoo>

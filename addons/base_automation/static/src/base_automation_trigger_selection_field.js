@@ -25,7 +25,7 @@ const OPT_GROUPS = [
     },
     {
         group: { sequence: 40, key: "custom", name: _t("Custom") },
-        triggers: ["on_create_or_write", "on_unlink", "on_change"],
+        triggers: ["on_create", "on_create_or_write", "on_unlink", "on_change"],
     },
     {
         group: { sequence: 50, key: "external", name: _t("External") },
@@ -37,7 +37,7 @@ const OPT_GROUPS = [
     },
     {
         group: { sequence: 60, key: "deprecated", name: _t("Deprecated (do not use)") },
-        triggers: ["on_create", "on_write"],
+        triggers: ["on_write"],
     },
 ];
 

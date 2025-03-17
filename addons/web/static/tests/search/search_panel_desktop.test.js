@@ -819,9 +819,6 @@ test("concurrency: single category", async () => {
     const compPromise = mountWithSearch(TestComponent, {
         resModel: "partner",
         searchViewId: false,
-        context: {
-            searchpanel_default_company_id: [5],
-        },
     });
 
     // Case 1: search panel is awaited to build the query with search defaults
@@ -3006,4 +3003,71 @@ test("hide search panel if there is no records", async () => {
 
     expect(`.o_search_panel_sidebar`).toHaveCount(1);
     expect(`.o_search_panel`).toHaveCount(0);
+});
+
+test("many2one: select one, hierarchize and depth", async () => {
+    Company._records = [
+        { id: 1, name: "L0" },
+        { id: 2, name: "L1", parent_id: 1 },
+        { id: 3, name: "L2", parent_id: 2 },
+        { id: 4, name: "L3_1", parent_id: 3 },
+        { id: 5, name: "L3_2", parent_id: 3 },
+        { id: 6, name: "L_4_1", parent_id: 4 },
+        { id: 7, name: "L_4_2", parent_id: 5 },
+    ];
+    Partner._records[0].company_id = 6;
+    Partner._records[1].company_id = 7;
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <searchpanel>
+                    <field name="company_id" depth="3"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+
+    await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+    });
+    expect(`.o_search_panel_field .o_search_panel_category_value`).toHaveCount(6);
+    expect(`.o_toggle_fold > i`).toHaveCount(5);
+
+    await contains(`.o_search_panel_category_value header:contains(L3_2)`).click();
+    expect(`.o_search_panel_field .o_search_panel_category_value`).toHaveCount(7);
+    expect(`.o_toggle_fold > i`).toHaveCount(5);
+});
+
+test("many2one: select one, hierarchize and depth and search_default", async () => {
+    Company._records = [
+        { id: 1, name: "L0" },
+        { id: 2, name: "L1", parent_id: 1 },
+        { id: 3, name: "L2", parent_id: 2 },
+        { id: 4, name: "L3_1", parent_id: 3 },
+        { id: 5, name: "L3_2", parent_id: 3 },
+        { id: 6, name: "L_4_1", parent_id: 4 },
+        { id: 7, name: "L_4_2", parent_id: 5 },
+    ];
+    Partner._records[0].company_id = 6;
+    Partner._records[1].company_id = 7;
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <searchpanel>
+                    <field name="company_id" depth="2"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+
+    await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+        context: {
+            searchpanel_default_company_id: 6,
+        },
+    });
+    expect(`.o_search_panel_field .o_search_panel_category_value`).toHaveCount(7);
+    expect(`.o_toggle_fold > i`).toHaveCount(5);
 });

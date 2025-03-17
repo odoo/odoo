@@ -1,8 +1,8 @@
-import { expect, test } from "@odoo/hoot";
-import { setupEditor, testEditor } from "../_helpers/editor";
-import { pointerDown, pointerUp, waitUntil } from "@odoo/hoot-dom";
-import { tick } from "@odoo/hoot-mock";
 import { leftPos, rightPos } from "@html_editor/utils/position";
+import { expect, test } from "@odoo/hoot";
+import { pointerDown, pointerUp, waitForNone } from "@odoo/hoot-dom";
+import { tick } from "@odoo/hoot-mock";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
 
 /**
@@ -93,11 +93,11 @@ test("should insert a paragraph before the table, then one after it", async () =
     const table = el.querySelector("table");
     await simulateMouseClick(table, true);
     expect(getContent(el)).toBe(
-        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p><table></table>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><table></table>`
     );
     await simulateMouseClick(table);
     expect(getContent(el)).toBe(
-        `<p><br></p><table></table><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        `<p><br></p><table></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 
@@ -108,7 +108,7 @@ test("should have collapsed selection when mouse down on a table cell", async ()
     );
     const lastCell = el.querySelector("td:last-child");
     pointerDown(lastCell);
-    await waitUntil(() => !document.querySelector(".o-we-toolbar"));
+    await waitForNone(".o-we-toolbar");
     const selection = document.getSelection();
     expect(selection.isCollapsed).toBe(true);
 });

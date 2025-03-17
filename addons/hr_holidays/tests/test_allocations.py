@@ -298,7 +298,7 @@ class TestAllocations(TestHrHolidaysCommon):
         shown correctly in the dropdown menu or not
         :return:
         """
-        leave_type = self.env.ref('hr_holidays.holiday_status_comp')
+        leave_type = self.env.ref('hr_holidays.leave_type_compensatory_days')
         allocation = self.env['hr.leave.allocation'].sudo().create({
             'name': 'Alloc',
             'employee_id': self.employee.id,
@@ -320,11 +320,15 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_to': date(2024, 12, 31)
         })
         second_allocation.action_approve()
+
+        # _compute_leaves depends on the context that is getting cleared
+        self.env['hr.leave.type'].invalidate_model(['max_leaves', 'leaves_taken', 'virtual_remaining_leaves'])
         result = self.env['hr.leave.type'].with_context(
             employee_id=self.employee.id,
+            leave_date_from='2024-08-18 06:00:00',  # for _compute_leaves
             default_date_from='2024-08-18 06:00:00',
             default_date_to='2024-08-18 15:00:00'
-        ).name_search(args=[['id', '=', leave_type.id]])
+        ).name_search(domain=[['id', '=', leave_type.id]])
         self.assertEqual(result[0][1], 'Compensatory Days (9 remaining out of 9 days)')
 
     def test_allocation_hourly_leave_type(self):
@@ -346,7 +350,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'request_unit': 'hour',
         })
 
-        with Form(self.env['hr.leave.allocation']) as allocation_form:
+        with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
             allocation_form.allocation_type = 'regular'
             allocation_form.employee_id = employee
             allocation_form.holiday_status_id = leave_type
@@ -354,3 +358,34 @@ class TestAllocations(TestHrHolidaysCommon):
             allocation = allocation_form.save()
 
         self.assertEqual(allocation.number_of_hours_display, 10.0)
+
+    def test_automatic_allocation_type(self):
+        """
+        Make sure that an allocation with an accrual plan imported will automatically set the allocation_type to 'accrual'
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Hourly Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+        })
+
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Alloc with accrual plan',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'accrual_plan_id': accrual_plan.id,
+        })
+
+        self.assertEqual(allocation.allocation_type, 'accrual')
+
+        allocation.update({
+            'accrual_plan_id': False,
+        })
+
+        self.assertEqual(allocation.allocation_type, 'regular')

@@ -1,4 +1,4 @@
-import { presenceService } from "@bus/services/presence_service";
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import {
     click,
     contains,
@@ -14,12 +14,11 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { press, queryFirst } from "@odoo/hoot-dom";
+import { click as hootClick, press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
-    mockService,
     serverState,
     waitForSteps,
     withUser,
@@ -111,19 +110,21 @@ test("keep new message separator until user goes back to the thread", async () =
     await contains(".o-mail-Thread");
     await contains(".o-mail-Message", { text: "hello" });
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New" });
-    await click(".o-mail-DiscussSidebar-item", { text: "History" });
+    await hootClick(document.body); // Force "focusin" back on the textarea
+    await hootClick(".o-mail-Composer-input");
+    await waitNotifications([
+        "mail.record/insert",
+        (n) => n["discuss.channel.member"][0].new_message_separator,
+    ]);
+    await hootClick(".o-mail-DiscussSidebar-item:contains(History)");
     await contains(".o-mail-Discuss-threadName", { value: "History" });
-    await click(".o-mail-DiscussSidebar-item", { text: "test" });
+    await hootClick(".o-mail-DiscussSidebar-item:contains(test)");
     await contains(".o-mail-Discuss-threadName", { value: "test" });
     await contains(".o-mail-Message", { text: "hello" });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
 });
 
 test("show new message separator on receiving new message when out of odoo focus", async () => {
-    mockService("presence", () => ({
-        ...presenceService.start(),
-        isOdooFocused: () => false,
-    }));
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
     const userId = pyEnv["res.users"].create({
@@ -251,20 +252,19 @@ test("show new message separator when message is received while chat window is c
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (JSON.stringify(args.fetch_params).includes("discuss.channel")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
+    });
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
+        asyncStep("init_messaging");
     });
     setupChatHub({ opened: [channelId] });
     await start();
     await waitForSteps([
+        "init_messaging",
         `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures",
-                "systray_get_activities",
-                "init_messaging",
-                ["discuss.channel", [channelId]],
-            ],
+            fetch_params: [["discuss.channel", [channelId]]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);

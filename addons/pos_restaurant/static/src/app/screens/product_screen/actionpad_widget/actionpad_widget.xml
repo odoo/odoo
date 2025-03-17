@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('actionpad')]/div/button[last()]" position="before">
+        <xpath expr="//div[hasclass('actionpad')]//button[hasclass('mobile-more-button')]" position="before">
             <button t-if="pos.config.module_pos_restaurant and !this.currentOrder._isRefundOrder()"
                     class="btn btn-secondary btn-lg flex-shrink-0 border-0" t-on-click="()=>this.pos.addCourse()">
                 <span>Course</span>
@@ -30,7 +30,7 @@
                             <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
                                 <div class="d-flex align-items-center justify-content-between small" t-att-class="{ 'gap-2' : !(displayCategoryCount.length > 2) }">
                                     <label class="text-truncate"><t t-esc="categoryCountLine.name"/></label>
-                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
+                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="this.env.utils.formatProductQty(categoryCountLine.count, false)"/></label>
                                 </div>
                             </t>
                         </t>

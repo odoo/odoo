@@ -101,9 +101,7 @@ class Turtle extends models.Model {
 
 defineModels([Partner, PartnerType, Turtle]);
 
-onRpc("has_group", () => {
-    return true;
-});
+onRpc("has_group", () => true);
 
 test.tags("desktop");
 test("Many2ManyTagsField with and without color on desktop", async () => {
@@ -384,8 +382,8 @@ test("Many2ManyTagsField view a domain on desktop", async () => {
     });
     Partner._records[0].timmy = [12];
     PartnerType._records.push({ id: 99, name: "red", color: 8 });
-    onRpc("name_search", (args) => {
-        expect(args.kwargs.args).toEqual([["id", "<", 50]]);
+    onRpc("web_name_search", (args) => {
+        expect(args.kwargs.domain).toEqual([["id", "<", 50]]);
     });
 
     await mountView({
@@ -781,7 +779,7 @@ test("Many2ManyTagsField keeps focus when being edited", async () => {
     expect(".o_field_many2many_tags input").toBeFocused();
 });
 
-test("Many2ManyTagsField: tags title attribute", async () => {
+test("Many2ManyTagsField: tags data-tooltip attribute", async () => {
     Turtle._records[0].partner_ids = [2];
 
     await mountView({
@@ -797,7 +795,7 @@ test("Many2ManyTagsField: tags title attribute", async () => {
             </form>`,
     });
 
-    expect(".o_field_many2many_tags .o_tag.badge").toHaveAttribute("title", "second record");
+    expect(".o_field_many2many_tags .o_tag.badge").toHaveAttribute("data-tooltip", "second record");
 });
 
 test("Many2ManyTagsField: toggle colorpicker with multiple tags", async () => {
@@ -820,13 +818,13 @@ test("Many2ManyTagsField: toggle colorpicker with multiple tags", async () => {
     await contains(".o_field_many2many_tags .badge").click();
     expect(".o_colorlist").toHaveCount(1);
 
-    await contains(".o_field_many2many_tags [title=silver]").click();
+    await contains(".o_field_many2many_tags [data-tooltip=silver]").click();
     expect(".o_colorlist").toHaveCount(1);
 
-    await contains(".o_field_many2many_tags [title=silver]").click();
+    await contains(".o_field_many2many_tags [data-tooltip=silver]").click();
     expect(".o_colorpicker").toHaveCount(0);
 
-    await contains(".o_field_many2many_tags [title=silver]").click();
+    await contains(".o_field_many2many_tags [data-tooltip=silver]").click();
     expect(".o_colorlist").toHaveCount(1);
 
     await contains(getFixture()).click();
@@ -1284,7 +1282,11 @@ test("Many2ManyTagsField: conditional create/delete actions on desktop", async (
     });
     await runAllTimers();
 
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(2);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li.o_m2o_dropdown_option`)).toEqual([
+        'Create "Something that does not exist"',
+        "Search More...",
+        "Create and edit...",
+    ]);
 
     // set turtle_bar false -> create and delete actions are no longer available
     await contains('.o_field_widget[name="turtle_bar"] input:eq(0)').click();
@@ -1553,8 +1555,11 @@ test("Many2ManyTagsField with option 'no_quick_create' set to true on desktop", 
         confirm: false,
     });
     await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveClass(
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(2);
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option:eq(0)").toHaveClass(
+        "o_m2o_dropdown_option_search_more"
+    );
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option:eq(1)").toHaveClass(
         "o_m2o_dropdown_option_create_edit"
     );
     await clickFieldDropdownItem("timmy", "Create and edit...");
@@ -1608,7 +1613,7 @@ test("Many2ManyTagsField with option 'no_create' set to true on desktop", async 
         confirm: false,
     });
     await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(0);
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
     expect(".o-autocomplete.dropdown li.o_m2o_no_result").toHaveCount(1);
 });
 
@@ -1624,17 +1629,17 @@ test("Many2ManyTagsField with attribute 'can_create' set to false on desktop", a
         confirm: false,
     });
     await runAllTimers();
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(0);
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
 });
 
 test.tags("desktop");
 test("Many2ManyTagsField with arch context in form view on desktop", async () => {
-    onRpc("name_search", async (args) => {
+    onRpc("web_name_search", async (args) => {
         const result = await args.parent();
         if (args.kwargs.context.append_coucou) {
             expect.step("name search with context given");
             for (const res of result) {
-                res[1] += " coucou";
+                res.display_name += " coucou";
             }
         }
         return result;
@@ -1693,12 +1698,12 @@ test("Many2ManyTagsField with arch context in form view on mobile", async () => 
 
 test.tags("desktop");
 test("Many2ManyTagsField with arch context in list view on desktop", async () => {
-    onRpc("name_search", async (args) => {
+    onRpc("web_name_search", async (args) => {
         const result = await args.parent();
         if (args.kwargs.context.append_coucou) {
             expect.step("name search with context given");
             for (const res of result) {
-                res[1] += " coucou";
+                res.display_name += " coucou";
             }
         }
         return result;
@@ -1759,11 +1764,11 @@ test("Many2ManyTagsField with arch context in list view on mobile", async () => 
 });
 
 test.tags("desktop");
-test("Many2ManyTagsField doesn't use virtualId for 'name_search' on desktop", async () => {
-    onRpc("name_search", ({ kwargs }) => {
-        expect.step("name_search");
+test("Many2ManyTagsField doesn't use virtualId for 'web_name_search' on desktop", async () => {
+    onRpc("web_name_search", ({ kwargs }) => {
+        expect.step("web_name_search");
         // no virtualId in domain
-        expect(kwargs.args).toEqual([]);
+        expect(kwargs.domain).toEqual([]);
     });
     await mountView({
         type: "form",
@@ -1791,11 +1796,11 @@ test("Many2ManyTagsField doesn't use virtualId for 'name_search' on desktop", as
     expect("[name='turtles'] .o_data_row").toHaveCount(2);
 
     await contains("[name='turtles'] input").click();
-    expect.verifySteps(["name_search"]);
+    expect.verifySteps(["web_name_search"]);
 });
 
 test.tags("mobile");
-test("Many2ManyTagsField doesn't use virtualId for 'name_search' on mobile", async () => {
+test("Many2ManyTagsField doesn't use virtualId for 'web_name_search' on mobile", async () => {
     onRpc("web_search_read", ({ args }) => {
         expect.step("web_search_read");
         // no virtualId in domain
@@ -1937,12 +1942,12 @@ test("Many2ManyTagsField with edit_tags option", async () => {
 });
 
 test("Many2ManyTagsField with edit_tags option overrides color edition", async () => {
-    expect.assertions(4);
+    expect.assertions(9);
 
     PartnerType._views = {
         form: `<form><field name="name"/><field name="color"/></form>`,
     };
-    Partner._records[0].timmy = [12];
+    Partner._records[0].timmy = [12, 14];
 
     onRpc("get_formview_id", ({ args }) => {
         expect(args[0]).toEqual([12], {
@@ -1964,6 +1969,9 @@ test("Many2ManyTagsField with edit_tags option overrides color edition", async (
         resId: 1,
     });
 
+    expect(".o_field_widget[name=timmy] .o_badge").toHaveCount(2);
+    expect(queryAllTexts(".o_field_widget[name=timmy] .o_badge")).toEqual(["gold", "silver"]);
+
     // Click to try to open form view dialog
     expect(".o_dialog").toHaveCount(0);
     await contains(".o_tag.badge").click();
@@ -1972,6 +1980,10 @@ test("Many2ManyTagsField with edit_tags option overrides color edition", async (
     // Edit name of tag
     await fieldInput("name").edit("new");
     await clickSave();
+
+    expect(".o_field_widget[name=timmy] .o_badge").toHaveCount(2);
+    expect(queryAllTexts(".o_field_widget[name=timmy] .o_badge")).toEqual(["new", "silver"]);
+    expect(".o_form_status_indicator_buttons").not.toBeVisible();
 });
 
 test.tags("mobile");
@@ -1992,4 +2004,82 @@ test("Many2ManyTagsField placeholder should be empty on mobile", async () => {
         arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
     });
     expect("#timmy_0").not.toHaveAttribute("placeholder");
+});
+
+test.tags("desktop");
+test("search typeahead", async () => {
+    onRpc("web_name_search", () => expect.step("web_name_search"));
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="timmy" widget="many2many_tags" options="{ 'search_threshold': 3 }"/></form>`,
+    });
+
+    await contains(".o_field_widget[name=timmy] input").click();
+    await runAllTimers();
+    expect.verifySteps([]);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "Search More...",
+        "Start typing 3 characters",
+    ]);
+
+    await contains(".o_field_widget[name=timmy] input").edit("g", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps([]);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        'Create "g"',
+        "Search More...",
+        "Create and edit...",
+        "Start typing 3 characters",
+    ]);
+
+    await contains(".o_field_widget[name=timmy] input").edit("go", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps([]);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        'Create "go"',
+        "Search More...",
+        "Create and edit...",
+        "Start typing 3 characters",
+    ]);
+
+    await contains(".o_field_widget[name=timmy] input").edit("gol", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps(["web_name_search"]);
+    expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
+        "gold",
+        'Create "gol"',
+        "Search More...",
+        "Create and edit...",
+    ]);
+});
+
+test.tags("desktop");
+test("Many2ManyTagsField: press backspace multiple times to remove tag", async () => {
+    Partner._records[0].timmy = [12, 14];
+    Partner._fields.timmy.onChange = () => {};
+
+    const def = new Deferred();
+    onRpc("onchange", ({ args }) => {
+        expect.step(`onchange ${JSON.stringify(args[1].timmy)}`);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_many2many_tags .badge").toHaveCount(2);
+
+    await contains(".o_field_many2many_tags .badge:eq(1)").click();
+    press("BackSpace");
+    press("BackSpace");
+    def.resolve();
+    await animationFrame();
+    expect(".o_field_many2many_tags .badge").toHaveCount(1);
+    expect.verifySteps(["onchange [[3,14]]"]);
 });

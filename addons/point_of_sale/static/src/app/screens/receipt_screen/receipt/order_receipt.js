@@ -51,7 +51,7 @@ export class OrderReceipt extends Component {
     }
 
     doesAnyOrderlineHaveTaxLabel() {
-        return this.order.lines.some((line) => line.taxGroupLabels);
+        return this.order.lines?.some((line) => line.taxGroupLabels);
     }
 
     getPortalURL() {

@@ -15,7 +15,10 @@ class LivechatChatbotScriptController(http.Controller):
             return None
         chatbot_language = chatbot._get_chatbot_language()
         message = discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)
-        return Store(message, for_current_user=True).get_result()
+        return {
+            "message_id": message.id,
+            "store_data": Store(message, for_current_user=True).get_result(),
+        }
 
     @http.route("/chatbot/answer/save", type="jsonrpc", auth="public")
     @add_guest_to_context
@@ -44,6 +47,12 @@ class LivechatChatbotScriptController(http.Controller):
         next_step = False
         # sudo: chatbot.script.step - visitor can access current step of the script
         if current_step := discuss_channel.sudo().chatbot_current_step_id:
+            if (
+                current_step.is_forward_operator
+                and discuss_channel.livechat_operator_id
+                != current_step.chatbot_script_id.operator_partner_id
+            ):
+                return None
             chatbot = current_step.chatbot_script_id
             domain = [
                 ("author_id", "!=", chatbot.operator_partner_id.id),
@@ -59,6 +68,8 @@ class LivechatChatbotScriptController(http.Controller):
                 next_step = chatbot.script_step_ids[:1]
 
         if not next_step:
+            # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow
+            discuss_channel.sudo().livechat_active = False
             return None
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
@@ -68,7 +79,7 @@ class LivechatChatbotScriptController(http.Controller):
         store.add_model_values(
             "ChatbotStep",
             {
-                "id": (next_step.id, discuss_channel.id),
+                "id": (next_step.id, posted_message.id),
                 "isLast": next_step._is_last_step(discuss_channel),
                 "message": posted_message.id,
                 "operatorFound": next_step.is_forward_operator
@@ -80,7 +91,7 @@ class LivechatChatbotScriptController(http.Controller):
             "Chatbot",
             {
                 "currentStep": {
-                    "id": (next_step.id, discuss_channel.id),
+                    "id": (next_step.id, posted_message.id),
                     "scriptStep": next_step.id,
                     "message": posted_message.id,
                 },

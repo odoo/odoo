@@ -141,7 +141,7 @@ QUnit.module("Fields", (hooks) => {
             "get_views",
             "onchange",
             "onchange",
-            "name_search",
+            "web_name_search",
             "name_create",
             "get_single_product_variant",
         ]);

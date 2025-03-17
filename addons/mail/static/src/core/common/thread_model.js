@@ -18,12 +18,6 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class Thread extends Record {
     static id = AND("model", "id");
-    /** @type {Object.<string, import("models").Thread>} */
-    static records = {};
-    /** @returns {import("models").Thread} */
-    static get(data) {
-        return super.get(data);
-    }
     /**
      * @param {string} localId
      * @returns {string}
@@ -34,10 +28,6 @@ export class Thread extends Record {
         }
         // Transform "Thread,<model> AND <id>" to "<model>_<id>""
         return localId.split(",").slice(1).join("_").replace(" AND ", "_");
-    }
-    /** @returns {import("models").Thread|import("models").Thread[]} */
-    static insert(data) {
-        return super.insert(...arguments);
     }
     static async getOrFetch(data, fieldNames = []) {
         let thread = this.get(data);
@@ -66,6 +56,14 @@ export class Thread extends Record {
     model;
     allMessages = Record.many("mail.message", {
         inverse: "thread",
+    });
+    storeAsAllChannels = Record.one("Store", {
+        compute() {
+            if (this.model === "discuss.channel") {
+                return this.store;
+            }
+        },
+        eager: true,
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
@@ -188,6 +186,7 @@ export class Thread extends Record {
     mainAttachment = Record.one("ir.attachment");
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
+    messageInEdition = Record.one("mail.message", { inverse: "threadAsInEdition" });
     /**
      * Contains continuous sequence of messages to show in message list.
      * Messages are ordered from older to most recent.
@@ -323,6 +322,7 @@ export class Thread extends Record {
 
     get allowCalls() {
         return (
+            !this.isTransient &&
             this.typesAllowingCalls.includes(this.channel_type) &&
             !this.correspondent?.persona.eq(this.store.odoobot)
         );
@@ -708,14 +708,14 @@ export class Thread extends Record {
     /** @param {Object} [options] */
     open(options) {}
 
-    async openChatWindow({ focus = false, fromMessagingMenu } = {}) {
+    async openChatWindow({ focus = false, fromMessagingMenu, bypassCompact } = {}) {
         const thread = await this.store.Thread.getOrFetch(this);
         if (!thread) {
             return;
         }
         await this.store.chatHub.initPromise;
         const cw = this.store.ChatWindow.insert(
-            assignDefined({ thread: this }, { fromMessagingMenu })
+            assignDefined({ thread: this }, { fromMessagingMenu, bypassCompact })
         );
         cw.open({ focus: focus });
         if (isMobileOS()) {
@@ -809,13 +809,12 @@ export class Thread extends Record {
             if (parentId) {
                 tmpData.parentMessage = this.store["mail.message"].get(parentId);
             }
-            const prettyContent = await prettifyMessageContent(
-                body,
-                this.store.getMentionsFromText(body, {
+            const prettyContent = await prettifyMessageContent(body, {
+                validMentions: this.store.getMentionsFromText(body, {
                     mentionedChannels,
                     mentionedPartners,
-                })
-            );
+                }),
+            });
             tmpMsg = this.store["mail.message"].insert(
                 {
                     ...tmpData,
@@ -873,6 +872,22 @@ export class Thread extends Record {
                 this.messages.splice(afterIndex - 1, 0, message);
             }
         }
+    }
+
+    async leaveChannel({ force = false } = {}) {
+        if (this.channel_type !== "group" && this.create_uid === this.store.self.userId && !force) {
+            await this.askLeaveConfirmation(
+                _t("You are the administrator of this channel. Are you sure you want to leave?")
+            );
+        }
+        if (this.channel_type === "group" && !force) {
+            await this.askLeaveConfirmation(
+                _t(
+                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
+                )
+            );
+        }
+        this.leave();
     }
 }
 

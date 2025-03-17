@@ -63,7 +63,7 @@ export function useAssignUserCommand() {
         component._pendingRpc?.abort(false);
         component._pendingRpc = orm.call(component.relation, "name_search", [], {
             name: value,
-            args: domain,
+            domain: domain,
             operator: "ilike",
             limit: 80,
             context,

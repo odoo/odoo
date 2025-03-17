@@ -155,7 +155,7 @@ class TestWebsiteSaleProductConfigurator(
         # Check the name of the created sale order line
         new_sale_order = self.env['sale.order'].search([]) - old_sale_order
         new_order_line = new_sale_order.order_line
-        self.assertEqual(new_order_line.name, 'Short (TEST) (M always, M dynamic)\n\nNever attribute size: M never\nNever attribute size custom: Yes never custom: TEST')
+        self.assertEqual(new_order_line.name, 'Short (TEST) (M always, M dynamic)\nNever attribute size: M never\nNever attribute size custom: Yes never custom: TEST')
 
     def test_product_configurator_force_dialog(self):
         """ Test that the product configurator is shown if forced. """
@@ -423,9 +423,7 @@ class TestWebsiteSaleProductConfigurator(
 
     def test_product_configurator_strikethrough_price(self):
         """ Test that the product configurator displays the strikethrough price correctly. """
-        self.env.ref('base.group_public').implied_ids += (
-            self.env.ref('website_sale.group_product_price_comparison')
-        )
+        self.env['res.config.settings'].create({'group_product_price_comparison': True}).execute()
         self.website.show_line_subtotals_tax_selection = 'tax_included'
         tax = self.env['account.tax'].create({'name': "Tax", 'amount': 10})
         optional_product = self.env['product.template'].create({

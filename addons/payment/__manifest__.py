@@ -49,5 +49,6 @@
             'payment/static/tests/payment_wizard_copy_clipboard_field_tests.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

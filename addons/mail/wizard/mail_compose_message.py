@@ -499,14 +499,19 @@ class MailComposeMessage(models.TransientModel):
             else:
                 composer.reply_to = False
 
-    @api.depends('model')
+    @api.depends('model', 'reply_to')
     def _compute_reply_to_force_new(self):
         """ If model does not inherit from MailThread, avoid replies to be
         considered as thread updates, they will instead follow the routing
-        rules (alias, ...). """
-        self.filtered(
+        rules (alias, ...). Other models by default collect replies in the
+        same thread, unless a reply_to is forced, usually either throuh a
+        template, either because of mailing mode. """
+        non_thread = self.filtered(
             lambda composer: not composer.model or not composer.model_is_thread
-        ).reply_to_force_new = True
+        )
+        non_thread.reply_to_force_new = True
+        for composer in (self - non_thread):
+            composer.reply_to_force_new = bool(composer.reply_to)
 
     @api.depends('reply_to_force_new')
     def _compute_reply_to_mode(self):
@@ -516,6 +521,8 @@ class MailComposeMessage(models.TransientModel):
     def _inverse_reply_to_mode(self):
         for composer in self:
             composer.reply_to_force_new = composer.reply_to_mode == 'new'
+            if composer.reply_to_mode != 'new':
+                composer.reply_to = False
 
     @api.depends('composition_mode', 'model', 'parent_id', 'res_domain',
                  'res_ids', 'template_id')
@@ -537,6 +544,7 @@ class MailComposeMessage(models.TransientModel):
                 rendered_values = composer._generate_template_for_composer(
                     res_ids,
                     {'email_cc', 'email_to', 'partner_ids'},
+                    allow_suggested=composer.message_type == 'comment',
                     find_or_create_partners=True,
                 )[res_ids[0]]
                 if rendered_values.get('partner_ids'):
@@ -1014,7 +1022,7 @@ class MailComposeMessage(models.TransientModel):
             'message_type': 'email_outgoing' if email_mode else self.message_type,
             'parent_id': self.parent_id.id,
             'record_name': False if email_mode else self.record_name,
-            'reply_to_force_new': self.reply_to_force_new,
+            'reply_to_force_new': self.reply_to_force_new and bool(self.reply_to),  # if manually voided, fallback on thread-based reply-to computation
             'subtype_id': subtype_id,
         }
         # specific to mass mailing mode
@@ -1120,6 +1128,7 @@ class MailComposeMessage(models.TransientModel):
                  'report_template_ids',
                  'scheduled_date',
                 ],
+                allow_suggested=self.composition_mode == 'comment' and not self.composition_batch and self.message_type == 'comment',
                 find_or_create_partners=self.env.context.get("mail_composer_force_partners", True),
             )
             for res_id in res_ids:
@@ -1184,11 +1193,12 @@ class MailComposeMessage(models.TransientModel):
                 recipient_ids_all = set(mail_values.pop('partner_ids', [])) | set(self.partner_ids.ids)
                 mail_values['recipient_ids'] = [(4, pid) for pid in recipient_ids_all]
 
-            # when having no specific reply_to -> fetch rendered email_from
-            if email_mode:
-                reply_to = reply_to_values.get(res_id)
-                if not reply_to:
-                    reply_to = mail_values.get('email_from', False)
+            # when having no specific reply_to -> fetch rendered email_from in mailing mode
+            # and don't add anything in comment mode
+            reply_to = reply_to_values.get(res_id)
+            if not reply_to and email_mode:
+                reply_to = mail_values.get('email_from', False)
+            if reply_to:
                 mail_values['reply_to'] = reply_to
 
             # body: render layout in email mode (comment mode is managed by the
@@ -1278,6 +1288,8 @@ class MailComposeMessage(models.TransientModel):
                         'force_email_lang': self.lang,
                     } if not email_mode else {}
                 ),
+                # do not send void reply_to, force only given value
+                **({'reply_to': self.reply_to} if self.reply_to else {}),
             }
             for res_id in res_ids
         }
@@ -1343,12 +1355,16 @@ class MailComposeMessage(models.TransientModel):
         return mail_values_dict
 
     def _generate_template_for_composer(self, res_ids, render_fields,
+                                        allow_suggested=False,
                                         find_or_create_partners=True):
         """ Generate values based on template and relevant values for the
         mail.compose.message wizard.
 
         :param list res_ids: list of record IDs on which template is rendered;
         :param list render_fields: list of fields to render on template;
+        :param boolean allow_suggested: when computing default recipients,
+          include suggested recipients in addition to minimal defaults
+          (see ``Template._generate_template_recipients``);
         :param boolean find_or_create_partners: transform emails into partners
           (see ``Template._generate_template_recipients``);
 
@@ -1375,6 +1391,8 @@ class MailComposeMessage(models.TransientModel):
         template_values = self.template_id._generate_template(
             res_ids,
             template_fields,
+            # monorecord comment mode -> ok to use suggested instead of defaults
+            recipients_allow_suggested=allow_suggested,
             find_or_create_partners=find_or_create_partners,
         )
 
@@ -1543,6 +1561,8 @@ class MailComposeMessage(models.TransientModel):
                 self[composer_fname] = self.template_id._generate_template(
                     rendering_res_ids,
                     {template_fname},
+                    # monorecord comment -> ok to use suggested recipients
+                    recipients_allow_suggested=self.message_type == 'comment',
                 )[rendering_res_ids[0]][template_fname]
             else:
                 self[composer_fname] = self.template_id[template_fname]

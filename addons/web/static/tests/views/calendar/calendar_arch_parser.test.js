@@ -1,12 +1,14 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { FAKE_FIELDS } from "./calendar_test_helpers";
 
+import { parseXML } from "@web/core/utils/xml";
 import { CalendarArchParser } from "@web/views/calendar/calendar_arch_parser";
 
 describe.current.tags("headless");
 
 const parser = new CalendarArchParser();
 const DEFAULT_ARCH_RESULTS = {
+    aggregate: undefined,
     canCreate: true,
     canDelete: true,
     canEdit: true,
@@ -23,6 +25,7 @@ const DEFAULT_ARCH_RESULTS = {
     isDateHidden: false,
     isTimeHidden: false,
     monthOverflow: true,
+    multiCreateView: null,
     popoverFieldNodes: {},
     scale: "week",
     scales: ["day", "week", "month", "year"],
@@ -31,7 +34,7 @@ const DEFAULT_ARCH_RESULTS = {
 };
 
 function parseArch(arch) {
-    return parser.parse(arch, { fake: { fields: FAKE_FIELDS } }, "fake");
+    return parser.parse(parseXML(arch), { fake: { fields: FAKE_FIELDS } }, "fake");
 }
 
 function parseWith(attrs) {

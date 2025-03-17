@@ -23,5 +23,6 @@ by choosing product variants quantity through a Grid Entry.
             'sale_product_matrix/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

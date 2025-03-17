@@ -57,6 +57,7 @@ class MailingTrace(models.Model):
     _order = 'create_date DESC'
 
     trace_type = fields.Selection([('mail', 'Email')], string='Type', default='mail', required=True)
+    is_test_trace = fields.Boolean('Generated for testing')
     # mail data
     mail_mail_id = fields.Many2one('mail.mail', string='Mail', index='btree_not_null')
     mail_mail_id_int = fields.Integer(

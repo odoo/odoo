@@ -10,7 +10,6 @@ import { ButtonBox } from "@web/views/form/button_box/button_box";
 import { InnerGroup, OuterGroup } from "@web/views/form/form_group/form_group";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
-import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
@@ -67,9 +66,6 @@ export class FormRenderer extends Component {
         this.state = useState({}); // Used by Form Compiler
         this.templates = useViewCompiler(Compiler || FormCompiler, templates);
         useSubEnv({ model: record.model });
-        useBounceButton(useRef("compiled_view_root"), (target) => {
-            return !record.isInEdition && !!target.closest(".oe_title, .o_inner_group");
-        });
         this.uiService = useService("ui");
         this.onResize = useDebounced(this.render, 200);
         onMounted(() => browser.addEventListener("resize", this.onResize));

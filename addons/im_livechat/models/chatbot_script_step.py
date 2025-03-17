@@ -387,7 +387,7 @@ class ChatbotScriptStep(models.Model):
             if bot_member := channel_sudo.channel_member_ids.filtered(
                 lambda m: m.partner_id == self.chatbot_script_id.operator_partner_id
             ):
-                channel_sudo._action_unfollow(partner=bot_member.partner_id)
+                channel_sudo._action_unfollow(partner=bot_member.partner_id, post_leave_message=False)
             # finally, rename the channel to include the operator's name
             channel_sudo.write(
                 {
@@ -403,6 +403,24 @@ class ChatbotScriptStep(models.Model):
                         ]
                     )
                 }
+            )
+            step_message = next((
+                # sudo - chatbot.message.id: visitor can access chat bot messages.
+                m.mail_message_id for m in discuss_channel.sudo().chatbot_message_ids.sorted("id")
+                if m.script_step_id == self
+                and m.mail_message_id.author_id == self.chatbot_script_id.operator_partner_id
+            ), self.env["mail.message"])
+            store = Store()
+            discuss_channel._bus_send_store(
+                store.add_model_values(
+                    "ChatbotStep",
+                    {
+                        "id": (self.id, step_message.id),
+                        "scriptStep": self.id,
+                        "message": step_message.id,
+                        "operatorFound": True,
+                    },
+                )
             )
             channel_sudo._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)

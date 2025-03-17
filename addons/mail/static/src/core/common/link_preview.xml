@@ -34,7 +34,7 @@
                     </a>
                 </div>
             </div>
-            <t t-if="props.deletable" t-call="mail.LinkPreview.aside">
+            <t t-if="props.delete" t-call="mail.LinkPreview.aside">
                 <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
             </t>
         </div>
@@ -45,7 +45,7 @@
             <a t-if="props.linkPreview.imageUrl" t-att-href="props.linkPreview.imageUrl" target="_blank">
                 <img class="h-auto w-auto rounded" t-att-src="props.linkPreview.imageUrl" t-on-load="onImageLoaded"/>
             </a>
-            <t t-if="props.deletable" t-call="mail.LinkPreview.aside">
+            <t t-if="props.delete" t-call="mail.LinkPreview.aside">
                 <t t-set="className" t-value="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'"/>
             </t>
         </div>
@@ -71,7 +71,7 @@
                 <div t-if="!state.videoLoaded" class="o-mail-LinkPreviewVideo-videoWrap h-100 w-100" t-on-click="() => state.startVideo = true"><t t-call="mail.LinkPreviewVideo.preview"/></div>
                 <iframe t-if="state.startVideo" t-att-src="props.linkPreview.videoURL" class="h-100 w-100" t-att-class="{'d-none': !state.videoLoaded}" allow="autoplay" frameborder="0" allowFullScreen="true" t-ref="video"/>
             </div>
-            <t t-if="props.deletable" t-call="mail.LinkPreview.aside">
+            <t t-if="props.delete" t-call="mail.LinkPreview.aside">
                 <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
             </t>
         </div>

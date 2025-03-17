@@ -142,7 +142,7 @@ export default class DevicesSynchronisation {
     processDeletedRecords(deletedRecords) {
         for (const [model, ids] of Object.entries(deletedRecords)) {
             const records = this.models[model].readMany(ids);
-            this.models[model].deleteMany(records, { silent: true });
+            this.models[model].deleteMany(records.filter(Boolean), { silent: true });
         }
     }
 

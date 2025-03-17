@@ -7,7 +7,7 @@ from operator import itemgetter
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, format_list, groupby
+from odoo.tools import float_compare, groupby
 from odoo.tools.image import is_image_size_above
 from odoo.tools.misc import unique
 
@@ -217,9 +217,9 @@ class ProductProduct(models.Model):
         )
 
         duplicates_as_str = "\n".join(
-            _(
+            self.env._(
                 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s",
-                barcode=barcode, product_list=format_list(self.env, duplicate_products._filtered_access('read').mapped('display_name')),
+                barcode=barcode, product_list=duplicate_products._filtered_access('read').mapped('display_name'),
             )
             for barcode, duplicate_products in products_by_barcode
         )
@@ -590,14 +590,14 @@ class ProductProduct(models.Model):
         return combine(domains)
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
         if not name:
-            return super().name_search(name, args, operator, limit)
+            return super().name_search(name, domain, operator, limit)
         # search progressively by the most specific attributes
         positive_operators = ['=', 'ilike', '=ilike', 'like', '=like']
         is_positive = operator not in expression.NEGATIVE_TERM_OPERATORS
         products = self.browse()
-        domain = args or []
+        domain = domain or []
         if operator in positive_operators:
             products = self.search_fetch(expression.AND([domain, [('default_code', '=', name)]]), ['display_name'], limit=limit) \
                 or self.search_fetch(expression.AND([domain, [('barcode', '=', name)]]), ['display_name'], limit=limit)

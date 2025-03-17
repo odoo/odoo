@@ -1,26 +1,24 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
-from odoo import api, fields, models, tools, _, Command
-from odoo.exceptions import MissingError, ValidationError, AccessError, UserError
-from odoo.fields import Domain
-from odoo.tools import frozendict
+import base64
+import contextlib
+import json
+import logging
+import re
+from collections import defaultdict
+from functools import reduce
+from operator import getitem
+
+import requests
+from pytz import timezone
+
+from odoo import api, fields, models, tools
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
+from odoo.fields import Command, Domain
+from odoo.tools import _, frozendict
+from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
-from odoo.tools.float_utils import float_compare
-from odoo.http import request
-import base64
-from collections import defaultdict
-from functools import partial, reduce
-import logging
-from operator import getitem
-import requests
-import json
-import re
-import contextlib
-
-from pytz import timezone
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -76,10 +74,6 @@ class IrActionsActions(models.Model):
                                      ('report', 'Report')],
                                     required=True, default='action')
     binding_view_types = fields.Char(default='list,form')
-    binding_invisible = fields.Char(
-        string="Invisible attribute",
-        help="Python expression, when evaluated as true, the action isn't shown in the action menu.",
-    )
 
     @api.constrains('path')
     def _check_path(self):
@@ -203,7 +197,7 @@ class IrActionsActions(models.Model):
         for action_id, action_model, binding_type in cr.fetchall():
             try:
                 action = self.env[action_model].sudo().browse(action_id)
-                fields = ['name', 'binding_view_types', 'binding_invisible']
+                fields = ['name', 'binding_view_types']
                 for field in ('group_ids', 'res_model', 'sequence', 'domain'):
                     if field in action._fields:
                         fields.append(field)
@@ -840,15 +834,15 @@ class IrActionsServer(models.Model):
                 action.webhook_sample_payload = False
                 continue
             payload = {
-                'id': 1,
+                '_id': 1,
                 '_model': self.model_id.model,
-                '_name': action.name,
+                '_action': f'{action.name}(#{action.id})',
             }
             if self.model_id:
                 sample_record = self.env[self.model_id.model].with_context(active_test=False).search([], limit=1)
                 for field in action.webhook_field_ids:
                     if sample_record:
-                        payload['id'] = sample_record.id
+                        payload['_id'] = sample_record.id
                         payload.update(sample_record.read(self.webhook_field_ids.mapped('name'), load=None)[0])
                     else:
                         payload[field.name] = WEBHOOK_SAMPLE_VALUES[field.ttype] if field.ttype in WEBHOOK_SAMPLE_VALUES else WEBHOOK_SAMPLE_VALUES[None]
@@ -883,26 +877,11 @@ class IrActionsServer(models.Model):
     def _get_runner(self):
         multi = True
         t = self.env.registry[self._name]
-        fn = getattr(t, f'_run_action_{self.state}_multi', None)\
-          or getattr(t, f'run_action_{self.state}_multi', None)
+        fn = getattr(t, f'_run_action_{self.state}_multi', None)
         if not fn:
             multi = False
-            fn = getattr(t, f'_run_action_{self.state}', None)\
-              or getattr(t, f'run_action_{self.state}', None)
-        if fn and fn.__name__.startswith('run_action_'):
-            fn = partial(fn, self)
+            fn = getattr(t, f'_run_action_{self.state}', None)
         return fn, multi
-
-    def _register_hook(self):
-        super()._register_hook()
-
-        for cls in self.env.registry[self._name].mro():
-            for symbol in vars(cls).keys():
-                if symbol.startswith('run_action_'):
-                    _logger.warning(
-                        "RPC-public action methods are deprecated, found %r (in class %s.%s)",
-                        symbol, cls.__module__, cls.__name__
-                    )
 
     def create_action(self):
         """ Create a contextual action for each server action. """
@@ -1022,7 +1001,7 @@ class IrActionsServer(models.Model):
             'env': self.env,
             'model': model,
             # Exceptions
-            'UserError': odoo.exceptions.UserError,
+            'UserError': UserError,
             # record
             'record': record,
             'records': records,
@@ -1101,7 +1080,7 @@ class IrActionsServer(models.Model):
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_self = action.with_context(active_ids=[active_id], active_id=active_id)
-                    eval_context["env"].context = run_self._context
+                    eval_context['env'] = eval_context['env'](context=run_self.env.context)
                     res = runner(run_self, eval_context=eval_context)
             else:
                 _logger.warning(

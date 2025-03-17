@@ -6,9 +6,9 @@ from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools.date_intervals import HOURS_PER_DAY
 from odoo.tools.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
 
@@ -83,7 +83,7 @@ class HrLeaveAllocation(models.Model):
         'Duration (days)', compute='_compute_number_of_days_display',
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
     number_of_hours_display = fields.Float(
-        'Duration (hours)', compute='_compute_number_of_hours_display', store=True,
+        'Duration (hours)', default_export_compatible=True, compute='_compute_number_of_hours_display', store=True,
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
     duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
@@ -119,7 +119,7 @@ class HrLeaveAllocation(models.Model):
     ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
-        compute="_compute_accrual_plan_id", store=True, readonly=False, tracking=True,
+        compute="_compute_accrual_plan_id", inverse="_inverse_accrual_plan_id", store=True, readonly=False, tracking=True,
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
@@ -150,11 +150,7 @@ class HrLeaveAllocation(models.Model):
             return _(
                 '%(name)s (%(duration)s hour(s))',
                 name=self.holiday_status_id.name,
-                duration=self.number_of_days * (
-                    self.employee_id.sudo().resource_calendar_id.hours_per_day
-                    or self.holiday_status_id.company_id.resource_calendar_id.hours_per_day
-                    or HOURS_PER_DAY
-                ),
+                duration=self.number_of_days * self.employee_id._get_hours_per_day(self.date_from),
             )
         return _(
             '%(name)s (%(duration)s day(s))',
@@ -210,10 +206,7 @@ class HrLeaveAllocation(models.Model):
     @api.depends('number_of_days')
     def _compute_number_of_hours_display(self):
         for allocation in self:
-            hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day \
-                            or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day \
-                            or HOURS_PER_DAY
-            allocation.number_of_hours_display = allocation.number_of_days * hours_per_day
+            allocation.number_of_hours_display = (allocation.number_of_days * allocation.employee_id._get_hours_per_day(allocation.date_from))
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
     def _compute_duration_display(self):
@@ -266,10 +259,7 @@ class HrLeaveAllocation(models.Model):
             if allocation_unit != 'hour':
                 allocation.number_of_days = allocation.number_of_days_display
             else:
-                hours_per_day = allocation.employee_id.sudo().resource_calendar_id.hours_per_day\
-                    or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day\
-                    or HOURS_PER_DAY
-                allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
+                allocation.number_of_days = allocation.number_of_hours_display / allocation.employee_id._get_hours_per_day(allocation.date_from)
 
     @api.depends('holiday_status_id', 'allocation_type')
     def _compute_accrual_plan_id(self):
@@ -286,6 +276,10 @@ class HrLeaveAllocation(models.Model):
             if allocation.allocation_type == 'accrual' and not allocation.accrual_plan_id:
                 if allocation.holiday_status_id:
                     allocation.accrual_plan_id = accruals_dict.get(allocation.holiday_status_id.id, [False])[0]
+
+    def _inverse_accrual_plan_id(self):
+        for allocation in self:
+            allocation.allocation_type = "accrual" if allocation.accrual_plan_id else "regular"
 
     def _get_request_unit(self):
         self.ensure_one()
@@ -320,10 +314,9 @@ class HrLeaveAllocation(models.Model):
         days_to_add = self._process_accrual_plan_level(
             current_level, period_start, self.lastcall, period_end, self.nextcall)
         if current_level.cap_accrued_time_yearly:
-            hours_per_day = self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY
             maximum_leave_yearly = current_level.maximum_leave_yearly\
                 if current_level.added_value_type != 'hour'\
-                else current_level.maximum_leave_yearly / hours_per_day
+                else current_level.maximum_leave_yearly / self.employee_id._get_hours_per_day(self.date_from)
             yearly_remaining_amount = maximum_leave_yearly - self.yearly_accrued_amount
             days_to_add = min(days_to_add, yearly_remaining_amount)
         if current_level.cap_accrued_time:
@@ -376,7 +369,7 @@ class HrLeaveAllocation(models.Model):
                 [self.employee_id.id]['hours']
         else:
             planned_worked = worked
-        left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
+        left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt, calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
             domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
         if level.frequency == 'hourly':
             if level.accrual_plan_id.is_based_on_worked_time:
@@ -399,7 +392,7 @@ class HrLeaveAllocation(models.Model):
             added_value = level.added_value
         # Convert time in hours to time in days in case the level is encoded in hours
         if level.added_value_type == 'hour':
-            added_value = added_value / (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            added_value = added_value / self.employee_id._get_hours_per_day(self.date_from)
         period_prorata = 1
         if (start_period != start_date or end_period != end_date) and not level.accrual_plan_id.is_based_on_worked_time:
             period_days = (end_period - start_period)
@@ -415,7 +408,7 @@ class HrLeaveAllocation(models.Model):
         """
 
         date_to = date_to or fields.Date.today()
-        already_accrued = {allocation.id: allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start' for allocation in self}
+        already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
@@ -426,7 +419,10 @@ class HrLeaveAllocation(models.Model):
             # even if the value doesn't change. This is the best performance atm.
             first_level = level_ids[0]
             first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
-            leaves_taken = allocation.leaves_taken if allocation.holiday_status_id.request_unit in ["day", "half_day"] else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            if allocation.holiday_status_id.request_unit in ["day", "half_day"]:
+                leaves_taken = allocation.leaves_taken
+            else:
+                leaves_taken = allocation.leaves_taken / allocation.employee_id._get_hours_per_day(allocation.date_from)
             allocation.already_accrued = already_accrued[allocation.id]
             # first time the plan is run, initialize nextcall and take carryover / level transition into account
             if not allocation.nextcall:
@@ -455,7 +451,10 @@ class HrLeaveAllocation(models.Model):
                 if not current_level:
                     break
                 if current_level.cap_accrued_time:
-                    current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "day" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                    if current_level.added_value_type == "day":
+                        current_level_maximum_leave = current_level.maximum_leave
+                    else:
+                        current_level_maximum_leave = current_level.maximum_leave / allocation.employee_id._get_hours_per_day(allocation.date_from)
                 nextcall = current_level._get_next_date(allocation.nextcall)
                 # Since _get_previous_date returns the given date if it corresponds to a call date
                 # this will always return lastcall except possibly on the first call
@@ -509,7 +508,10 @@ class HrLeaveAllocation(models.Model):
                         allocated_days_left = allocation.number_of_days - leaves_taken
                         allocation_max_days = 0 # default if unused_accrual are lost
                         if current_level.action_with_unused_accruals == 'maximum':
-                            postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                            if current_level.added_value_type == 'day':
+                                postpone_max_days = current_level.postpone_max_days
+                            else:
+                                postpone_max_days = current_level.postpone_max_days / allocation.employee_id._get_hours_per_day(allocation.date_from)
                             allocation_max_days = min(postpone_max_days, allocated_days_left)
                         allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
                     allocation.expiring_carryover_days = allocation.number_of_days
@@ -554,7 +556,7 @@ class HrLeaveAllocation(models.Model):
                             allocation.last_executed_carryover_date = carryover_date
                             allocated_days_left = allocation.number_of_days - leaves_taken
                             postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' \
-                                else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                                else current_level.postpone_max_days / allocation.employee_id._get_hours_per_day(allocation.date_from)
                             allocated_days_left = allocation.number_of_days - leaves_taken
                             allocation_max_days = 0 # default if unused_accrual are lost
                             if current_level.action_with_unused_accruals == 'maximum':
@@ -579,7 +581,10 @@ class HrLeaveAllocation(models.Model):
                 current_level = level_start.get(allocation.actual_lastcall) or current_level or allocation.accrual_plan_id.level_ids[0]
                 period_start = current_level._get_previous_date(allocation.actual_lastcall)
                 if current_level.cap_accrued_time:
-                    current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "day" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                    if current_level.added_value_type == "day":
+                        current_level_maximum_leave = current_level.maximum_leave
+                    else:
+                        current_level_maximum_leave = current_level.maximum_leave / allocation.employee_id._get_hours_per_day(allocation.date_from)
                 if allocation.actual_lastcall in {period_start, allocation.date_from} | set(level_start.keys()):
                     allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, allocation.nextcall)
                     allocation.already_accrued = True
@@ -726,8 +731,8 @@ class HrLeaveAllocation(models.Model):
                 .get(allocation.holiday_status_id, {}).get('excess_days', {})
             previous_excess = dict(previous_consumed_leaves[1]).get(allocation.employee_id, {}) \
                 .get(allocation.holiday_status_id, {}).get('excess_days', {})
-            total_current_excess = sum(map(lambda leave_date: leave_date['amount'], current_excess.values()))
-            total_previous_excess = sum(map(lambda leave_date: leave_date['amount'], previous_excess.values()))
+            total_current_excess = sum(leave_date['amount'] for leave_date in current_excess.values() if not leave_date['is_virtual'])
+            total_previous_excess = sum(leave_date['amount'] for leave_date in previous_excess.values() if not leave_date['is_virtual'])
 
             if total_current_excess <= total_previous_excess:
                 continue

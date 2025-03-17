@@ -42,6 +42,12 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         })
         return vals
 
+    def _get_country_vals(self, country):
+        # EXTENDS account.edi.xml.ubl_21
+        vals = super()._get_country_vals(country)
+        vals['name'] = country.with_context(lang='tr_TR').name
+        return vals
+
     def _get_partner_party_identification_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_party_identification_vals_list(partner)
@@ -57,7 +63,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_address_vals(partner)
         vals.update({
-            'city_subdivision_name ': partner.state_id.name,
+            'city_subdivision_name ': partner.city,
+            'city_name': partner.state_id.name,
             'country_subentity': False,
             'country_subentity_code': False,
         })

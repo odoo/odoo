@@ -26,7 +26,7 @@ class WebsiteEventController(http.Controller):
     # EVENT LIST
     # ------------------------------------------------------------
 
-    def _get_events_search_options(self, **post):
+    def _get_events_search_options(self, slug_tags, **post):
         return {
             'displayDescription': False,
             'displayDetail': False,
@@ -35,14 +35,14 @@ class WebsiteEventController(http.Controller):
             'displayImage': False,
             'allowFuzzy': not post.get('noFuzzy'),
             'date': post.get('date'),
-            'tags': post.get('tags'),
+            'tags': slug_tags or post.get('tags'),
             'type': post.get('type'),
             'country': post.get('country'),
         }
 
-    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_event, readonly=True)
-    def events(self, page=1, **searches):
-        if searches.get('tags', '[]').count(',') > 0 and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
+    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>', '/event/tags/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=sitemap_event)
+    def events(self, page=1, slug_tags=None, **searches):
+        if (slug_tags or searches.get('tags', '[]').count(',') > 0) and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
             # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
             # This permanent redirect is placed to instruct the bots that this page is no longer valid
@@ -65,7 +65,7 @@ class WebsiteEventController(http.Controller):
 
         step = 12  # Number of events per page
 
-        options = self._get_events_search_options(**searches)
+        options = self._get_events_search_options(slug_tags, **searches)
         order = 'date_begin'
         if searches.get('date', 'upcoming') == 'old':
             order = 'date_begin desc'
@@ -100,7 +100,7 @@ class WebsiteEventController(http.Controller):
                 'country_id': g_country and (g_country.id, g_country.sudo().display_name),
             })
 
-        search_tags = event_details['search_tags']
+        search_tags = self._extract_searched_event_tags(searches, slug_tags)
         current_date = event_details['current_date']
         current_type = None
         current_country = None
@@ -119,10 +119,14 @@ class WebsiteEventController(http.Controller):
             step=step,
             scope=5)
 
-        keep = QueryURL('/event', **{
+        keep = QueryURL('/event', ['tags'],
+            tags=slug_tags,
+            **{
             key: value for key, value in searches.items() if (
-                key == 'search' or
-                (value != 'upcoming' if key == 'date' else value != 'all'))
+                key != 'tags' and (
+                    key == 'search' or
+                    (value != 'upcoming' if key == 'date' else value != 'all'))
+                )
             })
 
         searches['search'] = fuzzy_search_term or search
@@ -140,7 +144,8 @@ class WebsiteEventController(http.Controller):
             'pager': pager,
             'searches': searches,
             'search_tags': search_tags,
-            'keep': keep,
+            'keep_event_url': keep,
+            'slugify_tags': self._slugify_tags,
             'search_count': event_count,
             'original_search': fuzzy_search_term and search,
             'website': website
@@ -158,11 +163,16 @@ class WebsiteEventController(http.Controller):
             'event': event,
         }
 
+        base_page_name = page
         if '.' not in page:
             page = 'website_event.%s' % page
 
         view = request.env["website.event.menu"].sudo().search([
-            ("event_id", "=", event.id), ("view_id.key", "ilike", page)], limit=1).view_id
+            ("event_id", "=", event.id),
+            '|',
+              ("view_id.key", "ilike", page),
+              ("view_id.key", "ilike", f'website_event.{event.name}-{base_page_name.split("/")[-1]}'),
+        ], limit=1).view_id
 
         try:
             # Every event page view should have its own SEO.
@@ -279,7 +289,6 @@ class WebsiteEventController(http.Controller):
         :param form_details: posted data from frontend registration form, like
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
-        form_details.pop("recaptcha_token_response", None)
         allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
@@ -293,7 +302,7 @@ class WebsiteEventController(http.Controller):
         # goal is to use the answer to the first question of every 'type' (aka name / phone / email / company name)
         already_handled_fields_data = {}
         for key, value in form_details.items():
-            if not value:
+            if not value or '-' not in key:
                 continue
 
             key_values = key.split('-')
@@ -303,6 +312,9 @@ class WebsiteEventController(http.Controller):
                 if field_name not in registration_fields:
                     continue
                 registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
+                continue
+
+            if len(key_values) != 3:
                 continue
 
             registration_index, question_type, question_id = key_values
@@ -422,14 +434,45 @@ class WebsiteEventController(http.Controller):
         month = babel.dates.get_month_names('abbreviated', locale=get_lang(event.env).code)[start_date.month]
         return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-" + end_date.strftime("%e")) or ""))
 
-    def _extract_searched_event_tags(self, searches):
+    def _extract_searched_event_tags(self, searches, slug_tags):
         tags = request.env['event.tag']
-        if searches.get('tags'):
-            try:
-                tag_ids = literal_eval(searches['tags'])
-            except:
-                pass
-            else:
-                # perform a search to filter on existing / valid tags implicitely + apply rules on color
-                tags = request.env['event.tag'].search([('id', 'in', tag_ids)])
+        if slug_tags:
+            tags = self._event_search_tags_slug(slug_tags)
+        elif 'tags' in searches:
+            tags = self._event_search_tags_ids(searches['tags'])
         return tags
+
+    def _slugify_tags(self, tag_ids, toggle_tag_id=None):
+        """ Prepares a comma separated slugified tags for the sake of readable URLs.
+
+        :param toggle_tag_id: add the tag being clicked to the already
+          selected tags as well as in URL; if tag is already selected
+          by the user it is removed from the selected tags (and so from the URL);
+        """
+        tag_ids = list(tag_ids)
+        if toggle_tag_id and toggle_tag_id in tag_ids:
+            tag_ids.remove(toggle_tag_id)
+        elif toggle_tag_id:
+            tag_ids.append(toggle_tag_id)
+
+        return ','.join(request.env['ir.http']._slug(tag_id) for tag_id in request.env['event.tag'].browse(tag_ids)) or ''
+
+    def _event_search_tags_ids(self, search_tags):
+        """ Input: %5B4%5D """
+        EventTag = request.env['event.tag']
+        try:
+            tag_ids = literal_eval(search_tags or '')
+        except Exception:  # noqa: BLE001
+            return EventTag
+
+        return EventTag.search([('id', 'in', tag_ids)]) if tag_ids else EventTag
+
+    def _event_search_tags_slug(self, search_tags):
+        """ Input: event-1,event-2 """
+        EventTag = request.env['event.tag']
+        try:
+            tag_ids = list(filter(None, [request.env['ir.http']._unslug(tag)[1] for tag in (search_tags or '').split(',')]))
+        except Exception:  # noqa: BLE001
+            return EventTag
+
+        return EventTag.search([('id', 'in', tag_ids)]) if tag_ids else EventTag

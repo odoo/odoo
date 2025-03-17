@@ -27,11 +27,10 @@ Odoo Web tours.
             'web/static/lib/hoot-dom/**/*',
         ],
         'web.assets_unit_tests': [
-            'web_tour/static/tests/tour_automatic.test.js',
-            'web_tour/static/tests/tour_interactive.test.js',
-            'web_tour/static/tests/tour_recorder.test.js',
+            'web_tour/static/tests/*.test.js',
         ],
     },
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

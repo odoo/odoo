@@ -290,14 +290,14 @@ class TestPartner(TransactionCaseWithUserDemo):
         ns_res = self.env['res.partner'].name_search('Vlad', operator='ilike')
         self.assertEqual(set(i[0] for i in ns_res), set((test_partner | test_user.partner_id).ids))
 
-        ns_res = self.env['res.partner'].name_search('Vlad', args=[('user_ids.email', 'ilike', 'vlad')])
+        ns_res = self.env['res.partner'].name_search('Vlad', domain=[('user_ids.email', 'ilike', 'vlad')])
         self.assertEqual(set(i[0] for i in ns_res), set(test_user.partner_id.ids))
 
         # Check a partner may be searched when current user has no access but sudo is used
         public_user = self.env.ref('base.public_user')
         with self.assertRaises(AccessError):
             test_partner.with_user(public_user).check_access('read')
-        ns_res = self.env['res.partner'].with_user(public_user).sudo().name_search('Vlad', args=[('user_ids.email', 'ilike', 'vlad')])
+        ns_res = self.env['res.partner'].with_user(public_user).sudo().name_search('Vlad', domain=[('user_ids.email', 'ilike', 'vlad')])
         self.assertEqual(set(i[0] for i in ns_res), set(test_user.partner_id.ids))
 
     def test_partner_merge_wizard_dst_partner_id(self):
@@ -616,7 +616,7 @@ class TestPartnerAddressCompany(TransactionCase):
         test_partner_company.write({'company_id': False})
         self.assertFalse(test_user.partner_id.company_id.id, "If the company_id is deleted from the partner company, it should be propagated to its children")
 
-        with self.assertRaises(UserError, msg="You should not be able to update the company_id of the partner company if the linked user of a child partner is not an allowed to be assigned to that company"), self.cr.savepoint():
+        with self.assertRaises(UserError, msg="You should not be able to update the company_id of the partner company if the linked user of a child partner is not an allowed to be assigned to that company"):
             test_partner_company.write({'company_id': company_2.id})
 
     def test_display_address_missing_key(self):

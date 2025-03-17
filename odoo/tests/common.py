@@ -59,7 +59,7 @@ from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.modules.registry import Registry
 from odoo.service import security
-from odoo.sql_db import BaseCursor, Cursor
+from odoo.sql_db import BaseCursor, Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
@@ -418,6 +418,7 @@ class BaseCase(case.TestCase):
     def with_user(self, login):
         """ Change user for a given test, like with self.with_user() ... """
         old_uid = self.uid
+        old_env = self.env
         try:
             user = self.env['res.users'].sudo().search([('login', '=', login)])
             assert user, "Login %s not found" % login
@@ -428,7 +429,7 @@ class BaseCase(case.TestCase):
         finally:
             # back
             self.uid = old_uid
-            self.env = self.env(user=self.uid)
+            self.env = old_env
 
     @contextmanager
     def debug_mode(self):
@@ -815,8 +816,6 @@ class Approx:  # noqa: PLW1641
         return self.cmp(self.value, other) == 0
 
 
-savepoint_seq = itertools.count()
-
 
 class TransactionCase(BaseCase):
     """ Test class in which all test methods are run in a single transaction,
@@ -940,9 +939,8 @@ class TransactionCase(BaseCase):
         # flush everything in setUpClass before introducing a savepoint
         self.env.flush_all()
 
-        self._savepoint_id = next(savepoint_seq)
-        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
-        self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+        savepoint = Savepoint(self.cr)
+        self.addCleanup(savepoint.close)
 
     @contextmanager
     def enter_registry_test_mode(self):
@@ -2012,17 +2010,27 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, **kw):
-        """ Test js code running in the browser
-        - optionnally log as 'login'
-        - load page given by url_path
-        - wait for ready object to be available
-        - eval(code) inside the page
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+        """ Test JavaScript code running in the browser.
 
-        To signal success test do: console.log() with the expected success signal ("test successful" by default)
-        To signal test failure raise an exception or call console.error with a message.
-        Test will stop when a failure occurs if error_checker is not defined or returns True for this message
+        To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
+        To signal test failure raise an exception or call `console.error` with a message.
+        Test will stop when a failure occurs if `error_checker` is not defined or returns `True` for this message
 
+        :param string url_path: URL path to load the browser page on
+        :param string code: JavaScript code to be executed
+        :param string ready: JavaScript object to wait for before proceeding with the test
+        :param string login: logged in user which will execute the test. e.g. 'admin', 'demo'
+        :param int timeout: maximum time to wait for the test to complete (in seconds). Default is 60 seconds
+        :param dict cookies: dictionary of cookies to set before loading the page
+        :param error_checker: function to filter failures out. 
+            If provided, the function is called with the error log message, and if it returns `False` the log is ignored and the test continue
+            If not provided, every error log triggers a failure
+        :param bool watch: open a new browser window to watch the test execution
+        :param string success_signal: string signal to wait for to consider the test successful
+        :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour. 
+            The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
+        :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -2083,6 +2091,18 @@ class HttpCase(TransactionCase):
             if cookies:
                 for name, value in cookies.items():
                     browser.set_cookie(name, value, '/', HOST)
+
+            cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING') # used by dedicated runbot builds
+            cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
+
+            if cpu_throttling:
+                assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
+                timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
+                _logger.log(
+                    logging.INFO if cpu_throttling_os else logging.WARNING,
+                    'CPU throttling mode is only suitable for local testing - ' \
+                    'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
+                browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
 
             browser.navigate_to(url, wait_stop=not bool(ready))
 
@@ -2225,11 +2245,10 @@ def warmup(func, *args, **kwargs):
     self.env.invalidate_all()
     # run once to warm up the caches
     self.warm = False
-    self.cr.execute('SAVEPOINT test_warmup')
-    func(*args, **kwargs)
-    self.env.flush_all()
+    with contextlib.closing(self.cr.savepoint(flush=False)):
+        func(*args, **kwargs)
+        self.env.flush_all()
     # run once for real
-    self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
     self.env.invalidate_all()
     self.warm = True
     func(*args, **kwargs)

@@ -51,8 +51,8 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         search terms and user roles, considering user access rights.
         """
         david = self.employee_emp
-        holiday_status_sick = self.env.ref('hr_holidays.holiday_status_sl')
-        holiday_status_3_days = self.env.ref('hr_holidays.holiday_status_cl')
+        holiday_status_sick = self.env.ref('hr_holidays.leave_type_sick_time_off')
+        holiday_status_3_days = self.env.ref('hr_holidays.leave_type_paid_time_off')
 
         this_monday = date.today() - timedelta(days=date.today().weekday())
         next_monday = this_monday + timedelta(weeks=1)

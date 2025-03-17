@@ -1,12 +1,8 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
-import {
-    computePriceForcePriceInclude,
-    getTaxesAfterFiscalPosition,
-} from "@point_of_sale/app/models/utils/tax_utils";
+import { computePriceForcePriceInclude } from "@point_of_sale/app/models/utils/tax_utils";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -295,6 +291,14 @@ patch(PosOrder.prototype, {
             ) {
                 continue;
             }
+            if (
+                claimedReward.reward.program_id.program_type === "coupons" &&
+                this.lines.find(
+                    (rewardline) => rewardline.reward_id?.id === claimedReward.reward.id
+                )
+            ) {
+                continue;
+            }
             this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
         }
     },
@@ -358,14 +362,16 @@ patch(PosOrder.prototype, {
     _getPointsCorrection(program) {
         const rewardLines = this.lines.filter((line) => line.is_reward_line);
         let res = 0;
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
         for (const rule of program.rule_ids) {
             for (const line of rewardLines) {
                 const reward = line.reward_id;
                 if (this._validForPointsCorrection(reward, line, rule)) {
                     if (rule.reward_point_mode === "money") {
-                        res -= roundPrecision(
-                            rule.reward_point_amount * line.getPriceWithTax(),
-                            0.01
+                        res -= ProductPrice.round(
+                            rule.reward_point_amount * line.getPriceWithTax()
                         );
                     } else if (rule.reward_point_mode === "unit") {
                         res += rule.reward_point_amount * line.getQuantity();
@@ -478,6 +484,9 @@ patch(PosOrder.prototype, {
      * @returns {Object} Containing the points gained per program
      */
     pointsForPrograms(programs) {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
         pointsForProgramsCountedRules = {};
         const orderLines = this.getOrderlines();
         const linesPerRule = {};
@@ -600,10 +609,9 @@ patch(PosOrder.prototype, {
                             ) {
                                 continue;
                             }
-                            const pointsPerUnit = roundPrecision(
+                            const pointsPerUnit = ProductPrice.round(
                                 (rule.reward_point_amount * line.getPriceWithTax()) /
-                                    line.getQuantity(),
-                                0.01
+                                    line.getQuantity()
                             );
                             if (pointsPerUnit > 0) {
                                 splitPoints.push(
@@ -627,10 +635,7 @@ patch(PosOrder.prototype, {
                         points += rule.reward_point_amount;
                     } else if (rule.reward_point_mode === "money") {
                         // NOTE: unlike in sale_loyalty this performs a round half-up instead of round down
-                        points += roundPrecision(
-                            rule.reward_point_amount * orderedProductPaid,
-                            0.01
-                        );
+                        points += ProductPrice.round(rule.reward_point_amount * orderedProductPaid);
                     } else if (rule.reward_point_mode === "unit") {
                         points += rule.reward_point_amount * totalProductQty;
                     }
@@ -740,6 +745,13 @@ patch(PosOrder.prototype, {
             const points = this._getRealCouponPoints(couponProgram.coupon_id);
             for (const reward of program.reward_ids) {
                 if (points < reward.required_points) {
+                    continue;
+                }
+                // Skip if the reward program is of type 'coupons' and there is already an reward orderline linked to the current reward to avoid multiple reward apply
+                if (
+                    reward.program_id.program_type === "coupons" &&
+                    this.lines.find((rewardline) => rewardline.reward_id?.id === reward.id)
+                ) {
                     continue;
                 }
                 if (auto && this.uiState.disabledRewards.has(reward.id)) {
@@ -1139,65 +1151,6 @@ patch(PosOrder.prototype, {
             ];
         }
 
-        if (
-            rewardAppliesTo === "order" &&
-            ["per_point", "per_order"].includes(reward.discount_mode)
-        ) {
-            const rewardLineValues = [
-                {
-                    product_id: discountProduct,
-                    price_unit: -Math.min(maxDiscount, discountable),
-                    qty: 1,
-                    reward_id: reward,
-                    is_reward_line: true,
-                    coupon_id: coupon_id,
-                    points_cost: pointCost,
-                    reward_identifier_code: rewardCode,
-                    tax_ids: [],
-                },
-            ];
-
-            let rewardTaxes = reward.tax_ids;
-            if (rewardTaxes.length > 0) {
-                if (this.fiscal_position_id) {
-                    rewardTaxes = getTaxesAfterFiscalPosition(
-                        rewardTaxes,
-                        this.fiscal_position_id,
-                        this.models
-                    );
-                }
-
-                // Check for any order line where its taxes exactly match rewardTaxes
-                const matchingLines = this.getOrderlines().filter(
-                    (line) =>
-                        !line.is_delivery &&
-                        line.tax_ids.length === rewardTaxes.length &&
-                        line.tax_ids.every((tax_id) => rewardTaxes.includes(tax_id))
-                );
-
-                if (matchingLines.length == 0) {
-                    return _t("No product is compatible with this promotion.");
-                }
-
-                const untaxedAmount = matchingLines.reduce(
-                    (sum, line) => sum + line.getPriceWithoutTax(),
-                    0
-                );
-                // Discount amount should not exceed total untaxed amount of the matching lines
-                rewardLineValues[0].price_unit = Math.max(
-                    -untaxedAmount,
-                    rewardLineValues[0].price_unit
-                );
-
-                rewardLineValues[0].tax_ids = rewardTaxes;
-            }
-            // Discount amount should not exceed the untaxed amount on the order
-            if (Math.abs(rewardLineValues[0].price_unit) > this.amount_untaxed) {
-                rewardLineValues[0].price_unit = -this.amount_untaxed;
-            }
-            return rewardLineValues;
-        }
-
         const discountFactor = discountable ? Math.min(1, maxDiscount / discountable) : 1;
         const result = Object.entries(discountablePerTax).reduce((lst, entry) => {
             // Ignore 0 price lines
@@ -1245,6 +1198,9 @@ patch(PosOrder.prototype, {
      * @returns {Integer} Available quantity to be given as reward for the given product
      */
     _computeUnclaimedFreeProductQty(reward, coupon_id, product, remainingPoints) {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
         let claimed = 0;
         let available = 0;
         let shouldCorrectRemainingPoints = false;
@@ -1295,9 +1251,8 @@ patch(PosOrder.prototype, {
                         if (rule.reward_point_mode === "order") {
                             orderPoints += rule.reward_point_amount;
                         } else if (rule.reward_point_mode === "money") {
-                            factor += roundPrecision(
-                                rule.reward_point_amount * product.lst_price,
-                                0.01
+                            factor += ProductPrice.round(
+                                rule.reward_point_amount * product.lst_price
                             );
                         } else if (rule.reward_point_mode === "unit") {
                             factor += rule.reward_point_amount;
@@ -1397,9 +1352,8 @@ patch(PosOrder.prototype, {
         return [
             {
                 product_id: reward.discount_line_product_id,
-                price_unit: -roundDecimals(
-                    product.getPrice(this.pricelist_id, freeQuantity, 0, false, product),
-                    this.currency.decimal_places
+                price_unit: -this.currency.round(
+                    product.getPrice(this.pricelist_id, freeQuantity, 0, false, product)
                 ),
                 tax_ids: product.taxes_id,
                 qty: freeQuantity,

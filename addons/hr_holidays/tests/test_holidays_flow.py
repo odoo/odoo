@@ -260,10 +260,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'request_date_to': date.today() + relativedelta(day=10),
             'employee_id': self.ref('hr.employee_admin'),
         }
-        with mute_logger('odoo.sql_db'):
-            with self.assertRaises(IntegrityError):
-                with self.cr.savepoint():
-                    self.env['hr.leave'].create(leave_vals)
+        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
+            self.env['hr.leave'].create(leave_vals)
 
         leave_vals = {
             'name': 'Sick Time Off',
@@ -274,10 +272,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         }
         leave = self.env['hr.leave'].create(leave_vals)
 
-        with mute_logger('odoo.sql_db'):
-            with self.assertRaises(IntegrityError):  # No ValidationError
-                with self.cr.savepoint():
-                    leave.write({
-                        'request_date_from': date.today() + relativedelta(day=11),
-                        'request_date_to': date.today() + relativedelta(day=10),
-                    })
+        with mute_logger('odoo.sql_db'), self.assertRaises(IntegrityError):
+            leave.write({
+                'request_date_from': date.today() + relativedelta(day=11),
+                'request_date_to': date.today() + relativedelta(day=10),
+            })

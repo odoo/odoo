@@ -2,8 +2,8 @@ import { registry } from "@web/core/registry";
 import { constructFullProductName, uuidv4, constructAttributeString } from "@point_of_sale/utils";
 import { Base } from "./related_models";
 import { parseFloat } from "@web/views/fields/parsers";
-import { formatFloat, roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numbers";
-import { roundCurrency, formatCurrency } from "./utils/currency";
+import { formatFloat } from "@web/core/utils/numbers";
+import { formatCurrency } from "./utils/currency";
 import { _t } from "@web/core/l10n/translation";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { getTaxesAfterFiscalPosition } from "@point_of_sale/app/models/utils/tax_utils";
@@ -60,8 +60,7 @@ export class PosOrderline extends Base {
     }
 
     get preparationKey() {
-        const note = this.getNote();
-        return `${this.uuid} - ${note}`;
+        return this.uuid;
     }
 
     get quantityStr() {
@@ -72,14 +71,14 @@ export class PosOrderline extends Base {
 
         if (unit) {
             if (unit.rounding) {
-                const decimals = this.models["decimal.precision"].find(
+                const ProductUnit = this.models["decimal.precision"].find(
                     (dp) => dp.name === "Product Unit"
-                ).digits;
+                );
 
                 if (this.qty % 1 === 0) {
                     unitPart = this.qty.toFixed(0);
                 } else {
-                    const formatted = formatFloat(this.qty, { digits: [69, decimals] });
+                    const formatted = formatFloat(this.qty, { digits: [69, ProductUnit.digits] });
                     const parts = formatted.split(decimalPoint);
                     unitPart = parts[0] + decimalPoint;
                     decimalPart = parts[1] || "";
@@ -247,20 +246,12 @@ export class PosOrderline extends Base {
                 };
             }
         }
-        const unit = this.product_id.uom_id;
-        if (unit) {
-            if (unit.rounding) {
-                const decimals = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit"
-                ).digits;
-                const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
-                this.qty = roundPrecision(quant, rounding);
-            } else {
-                this.qty = roundPrecision(quant, 1);
-            }
-        } else {
-            this.qty = quant;
-        }
+
+        const rounder =
+            this.product_id.uom_id ||
+            this.models["decimal.precision"].find((dp) => dp.name === "Product Unit");
+
+        this.qty = rounder.round(quant);
 
         // just like in sale.order changing the qty will recompute the unit price
         if (!keep_price && this.price_type === "original") {
@@ -299,12 +290,10 @@ export class PosOrderline extends Base {
     }
 
     canBeMergedWith(orderline) {
-        const productPriceUnit = this.models["decimal.precision"].find(
+        const ProductPrice = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"
-        ).digits;
-        const price = window.parseFloat(
-            roundDecimals(this.price_unit || 0, productPriceUnit).toFixed(productPriceUnit)
         );
+        const price = ProductPrice.round(this.price_unit || 0);
         const product = orderline.getProduct();
         let order_line_price = product.getPrice(
             orderline.order_id.pricelist_id,
@@ -313,7 +302,7 @@ export class PosOrderline extends Base {
             false,
             product
         );
-        order_line_price = roundDecimals(order_line_price, this.currency.decimal_places);
+        order_line_price = this.currency.round(order_line_price);
 
         const isSameCustomerNote =
             (Boolean(orderline.getCustomerNote()) === false &&
@@ -327,7 +316,7 @@ export class PosOrderline extends Base {
             this.isPosGroupable() &&
             // don't merge discounted orderlines
             this.getDiscount() === 0 &&
-            floatIsZero(price - order_line_price - orderline.getPriceExtra(), this.currency) &&
+            this.currency.isZero(price - order_line_price - orderline.getPriceExtra()) &&
             !this.isLotTracked() &&
             this.full_product_name === orderline.full_product_name &&
             isSameCustomerNote &&
@@ -389,24 +378,23 @@ export class PosOrderline extends Base {
     }
 
     setUnitPrice(price) {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
         const parsed_price = !isNaN(price)
             ? price
             : isNaN(parseFloat(price))
             ? 0
             : parseFloat("" + price);
-        this.price_unit = roundDecimals(
-            parsed_price || 0,
-            this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
-        );
+        this.price_unit = ProductPrice.round(parsed_price || 0);
         this.setDirty();
     }
 
     getUnitPrice() {
-        const digits = this.models["decimal.precision"].find(
+        const ProductPrice = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"
-        ).digits;
-        // round and truncate to mimic _symbol_set behavior
-        return window.parseFloat(roundDecimals(this.price_unit || 0, digits).toFixed(digits));
+        );
+        return ProductPrice.round(this.price_unit || 0);
     }
 
     get unitDisplayPrice() {
@@ -434,11 +422,8 @@ export class PosOrderline extends Base {
         }
     }
     getBasePrice() {
-        const rounding = this.currency.rounding;
-
-        return roundPrecision(
-            this.getUnitPrice() * this.getQuantity() * (1 - this.getDiscount() / 100),
-            rounding
+        return this.currency.round(
+            this.getUnitPrice() * this.getQuantity() * (1 - this.getDiscount() / 100)
         );
     }
 
@@ -634,15 +619,6 @@ export class PosOrderline extends Base {
     getComboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
         return allLines.reduce((total, line) => total + line.getBasePrice() / line.qty, 0);
-    }
-
-    getOldUnitDisplayPrice() {
-        return (
-            this.displayDiscountPolicy() === "without_discount" &&
-            roundCurrency(this.unitDisplayPrice, this.currency) <
-                roundCurrency(this.getTaxedlstUnitPrice(), this.currency) &&
-            this.getTaxedlstUnitPrice()
-        );
     }
 
     getPriceString() {

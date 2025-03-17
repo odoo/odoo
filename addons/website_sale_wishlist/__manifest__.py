@@ -24,5 +24,6 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
             'website_sale_wishlist/static/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

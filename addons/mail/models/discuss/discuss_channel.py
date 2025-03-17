@@ -68,6 +68,7 @@ class DiscussChannel(models.Model):
     sfu_channel_uuid = fields.Char(groups="base.group_system")
     sfu_server_url = fields.Char(groups="base.group_system")
     rtc_session_ids = fields.One2many('discuss.channel.rtc.session', 'channel_id', groups="base.group_system")
+    last_call_message_id = fields.Many2one("mail.message", string="Message of last call start")
     is_member = fields.Boolean("Is Member", compute="_compute_is_member", search="_search_is_member", compute_sudo=True)
     # sudo: discuss.channel - sudo for performance, self member can be accessed on accessible channel
     self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", compute_sudo=True)
@@ -120,7 +121,7 @@ class DiscussChannel(models.Model):
             raise ValidationError(
                 _(
                     "Cannot create %(channels)s: initial message should belong to parent channel.",
-                    channels=format_list(self.env, failing_channels.mapped("name")),
+                    channels=failing_channels.mapped("name"),
                 )
             )
 
@@ -138,7 +139,7 @@ class DiscussChannel(models.Model):
             raise ValidationError(
                 _(
                     "Cannot create %(channels)s: parent should not be a sub-channel and should be of type 'channel' or 'group'. The sub-channel should have the same type as the parent.",
-                    channels=format_list(self.env, failing_channels.mapped("name")),
+                    channels=failing_channels.mapped("name"),
                 ),
             )
 
@@ -353,7 +354,7 @@ class DiscussChannel(models.Model):
             raise UserError(
                 _(
                     "Cannot change initial message nor parent channel of: %(channels)s.",
-                    channels=format_list(self.env, self.mapped("name")),
+                    channels=self.mapped("name"),
                 )
             )
         if "group_public_id" in vals:
@@ -361,7 +362,7 @@ class DiscussChannel(models.Model):
                 raise UserError(
                     self.env._(
                         "Cannot change authorized group of sub-channel: %(channels)s.",
-                        channels=format_list(self.env, failing_channels.mapped("name")),
+                        channels=failing_channels.mapped("name"),
                     )
                 )
         def get_vals(channel):
@@ -437,7 +438,7 @@ class DiscussChannel(models.Model):
     def action_unfollow(self):
         self._action_unfollow(self.env.user.partner_id)
 
-    def _action_unfollow(self, partner=None, guest=None):
+    def _action_unfollow(self, partner=None, guest=None, post_leave_message=True):
         self.ensure_one()
         self.message_unsubscribe(partner.ids)
         custom_store = Store(
@@ -452,13 +453,14 @@ class DiscussChannel(models.Model):
         if not member:
             (partner or guest)._bus_send_store(custom_store)
             return
-        notification = Markup('<div class="o_mail_notification">%s</div>') % _(
-            "left the channel"
-        )
-        # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
-        member.channel_id.sudo().message_post(
-            body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
-        )
+        if post_leave_message:
+            notification = Markup('<div class="o_mail_notification">%s</div>') % _(
+                "left the channel"
+            )
+            # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
+            member.channel_id.sudo().message_post(
+                body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
+            )
         # send custom store after message_post to avoid is_pinned reset to True
         member._bus_send_store(custom_store)
         member.unlink()
@@ -1228,7 +1230,7 @@ class DiscussChannel(models.Model):
                 "channel_member_ids": [Command.create({"partner_id": self.env.user.partner_id.id})],
                 "channel_type": self.channel_type,
                 "from_message_id": message.id,
-                "name": name or (message.body.striptags()[:30] if message else _("New Thread")),
+                "name": name or (message.body.striptags()[:30] if message.body else _("New Thread")),
                 "parent_channel_id": self.id,
             }
         )
@@ -1260,11 +1262,7 @@ class DiscussChannel(models.Model):
         """ Return 'limit'-first channels' id, name, channel_type and authorizedGroupFullName fields such that the
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
-        domain = expression.AND([
-                        [('name', 'ilike', search)],
-                        [('channel_type', '=', 'channel')],
-                        [('channel_partner_ids', 'in', [self.env.user.partner_id.id])]
-                    ])
+        domain = [("name", "ilike", search), ("channel_type", "=", "channel")]
         channels = self.search(domain, limit=limit)
         return [{
             'authorizedGroupFullName': channel.group_public_id.full_name,
@@ -1347,7 +1345,8 @@ class DiscussChannel(models.Model):
             "%(new_line)sType %(bold_start)s@username%(bold_end)s to mention someone, and grab their attention."
             "%(new_line)sType %(bold_start)s#channel%(bold_end)s to mention a channel."
             "%(new_line)sType %(bold_start)s/command%(bold_end)s to execute a command."
-            "%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned response in your message.",
+            "%(new_line)sType %(bold_start)s::shortcut%(bold_end)s to insert a canned response in your message."
+            "%(new_line)sType %(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message.",
             bold_start=Markup("<b>"),
             bold_end=Markup("</b>"),
             new_line=Markup("<br>"),

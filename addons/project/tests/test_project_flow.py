@@ -1,10 +1,10 @@
 from .test_project_base import TestProjectCommon
 from odoo import Command
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.exceptions import AccessError
 
 
-class TestProjectFlow(TestProjectCommon, MailCommon):
+class TestProjectFlow(TestProjectCommon, MailCase):
 
     def test_project_process_project_manager_duplicate(self):
         pigs = self.project_pigs.with_user(self.user_projectmanager)
@@ -310,7 +310,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         })
         # Tag name_search should not raise Error if project_id is False
         task.tag_ids.with_context(project_id=task.project_id.id).name_search(
-            args=["!", ["id", "in", []]])
+            domain=["!", ["id", "in", []]])
 
     def test_copy_project_with_default_name(self):
         """ Test the new project after the duplication got the exepected name
@@ -406,3 +406,21 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         self.project_pigs.stage_id = stage.id
         project_copy = self.project_pigs.with_context(default_stage_id=stage.id).copy()
         self.assertNotEqual(project_copy.stage_id, self.project_pigs.stage_id, 'Copied project should have lowest sequence stage')
+
+    def test_project_task_copy_without_archive_user(self):
+        self.user_projectuser.action_archive()
+        task = self.task_1.copy()
+        self.assertFalse(task.user_ids)
+        task_b = self.task_2.copy({
+            'name': 'Task B',
+            'user_ids': [Command.set([self.user_projectuser.id, self.user_projectmanager.id])],
+        })
+        self.assertEqual(self.user_projectuser + self.user_projectmanager, task_b.user_ids)
+
+    def test_project_sub_task_copy_without_archive_user(self):
+        self.task_1.write({
+            'child_ids': [self.task_2.id]
+        })
+        self.user_projectmanager.action_archive()
+        task_1_copy = self.task_1.copy()
+        self.assertFalse(task_1_copy.child_ids.user_ids)

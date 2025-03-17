@@ -657,7 +657,6 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice3 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice1 + invoice2 + invoice3)
         self.assertEqual(wizard.move_ids, invoice1 + invoice2 + invoice3)
-        self.assertTrue(wizard.alerts and 'account_pdf_exist' in wizard.alerts)
         self.assertEqual(wizard.summary_data, {
             'manual': {'count': 2, 'label': 'Manually'},
             'email': {'count': 1, 'label': 'by Email'},
@@ -1096,3 +1095,24 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard.action_send_and_print()
         self.assertTrue(invoice.is_move_sent)
         self.assertTrue(invoice.invoice_pdf_report_id)
+
+    def test_get_sending_settings(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
+        
+        expected_results = {
+            'sending_methods': ['email'],
+            'invoice_edi_format': False,
+            'extra_edis': [],
+            'pdf_report': self.env.ref('account.account_invoices'),
+            'author_user_id': self.env.user.id,
+            'author_partner_id': self.env.user.partner_id.id,
+            'mail_template': self.env.ref('account.email_template_edi_invoice'),
+            'mail_lang': 'en_US',
+            'mail_body': wizard.body,
+            'mail_subject': 'company_1_data Invoice (Ref INV/2019/00001)',
+            'mail_partner_ids': invoice.partner_id.ids,
+            'mail_attachments_widget': [{'id': 'placeholder_INV_2019_00001.pdf', 'name': 'INV_2019_00001.pdf', 'mimetype': 'application/pdf', 'placeholder': True}],
+        }
+        results = wizard._get_sending_settings()
+        self.assertDictEqual(results, expected_results)

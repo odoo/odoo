@@ -102,6 +102,10 @@ class AccountMove(models.Model):
         return self.journal_id.sequence_override_regex or super()._sequence_yearly_regex
 
     @property
+    def _sequence_year_range_regex(self):
+        return self.journal_id.sequence_override_regex or super()._sequence_year_range_regex
+
+    @property
     def _sequence_fixed_regex(self):
         return self.journal_id.sequence_override_regex or super()._sequence_fixed_regex
 
@@ -754,13 +758,19 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('move_type')
+    @api.depends('move_type', 'partner_id')
     def _compute_invoice_default_sale_person(self):
         # We want to modify the sale person only when we don't have one and if the move type corresponds to this condition
         # If the move doesn't correspond, we remove the sale person
         for move in self:
             if move.is_sale_document(include_receipts=True):
-                move.invoice_user_id = move.invoice_user_id or self.env.user
+                if move.partner_id:
+                    move.invoice_user_id = (
+                        move.invoice_user_id
+                        or move.partner_id.user_id
+                        or move.partner_id.commercial_partner_id.user_id
+                        or self.env.user
+                    )
             else:
                 move.invoice_user_id = False
 
@@ -1961,7 +1971,13 @@ class AccountMove(models.Model):
                 move.move_type in ('in_invoice', 'in_refund')
                 AND (
                    move.ref = duplicate_move.ref
-                   AND (move.invoice_date = duplicate_move.invoice_date OR move.state = 'draft')
+                   AND (
+                       move.invoice_date IS NULL
+                       OR
+                       duplicate_move.invoice_date IS NULL
+                       OR
+                       date_part('year', move.invoice_date) = date_part('year', duplicate_move.invoice_date)
+                   )
                 )
             """)
             to_query.append((in_moves, in_moves_sql_condition))
@@ -2617,7 +2633,7 @@ class AccountMove(models.Model):
                 or not self.invoice_date
                 or reference_date <= self.invoice_payment_term_id._get_last_discount_date(self.invoice_date)
             ) \
-            and not (payment_terms.matched_debit_ids + payment_terms.matched_credit_ids)
+            and not (payment_terms.sudo().matched_debit_ids + payment_terms.sudo().matched_credit_ids)
 
     # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION
@@ -3461,7 +3477,7 @@ class AccountMove(models.Model):
             # Disallow modifying readonly fields on a posted move
             move_state = vals.get('state', move.state)
             unmodifiable_fields = (
-                'invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id', 'partner_bank_id',
+                'invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id',
                 'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
             readonly_fields = [val for val in vals if val in unmodifiable_fields]
             if not self._context.get('skip_readonly_check') and move_state == "posted" and readonly_fields:
@@ -4422,14 +4438,20 @@ class AccountMove(models.Model):
 
                 except RedirectWarning:
                     raise
-                except Exception:
+                except Exception as e:
                     message = _(
                         "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)",
                         file_name=file_data['filename'],
                         decoder=decoder.__name__,
                     )
-                    current_invoice.sudo().message_post(body=message)
                     _logger.exception(message)
+                    if isinstance(e, UserError):
+                        message = Markup("%s<br/><br/>%s<br/>%s") % (
+                            message,
+                            _("This specific error occurred during the import:"),
+                            str(e),
+                        )
+                    current_invoice.sudo().message_post(body=message)
 
             passed_file_data_list.append(file_data)
             close_file(file_data)
@@ -5283,7 +5305,10 @@ class AccountMove(models.Model):
             and not self.abnormal_amount_warning
             and not self.restrict_mode_hash_table
         ):
-            self.action_post()
+            if self.duplicated_ref_ids:
+                self.message_post(body=_("Auto-post was disabled on this invoice because a potential duplicate was detected."))
+            else:
+                self.action_post()
 
     def _show_autopost_bills_wizard(self):
         if (
@@ -5385,7 +5410,7 @@ class AccountMove(models.Model):
 
     def action_switch_move_type(self):
         if any(move.posted_before for move in self):
-            raise ValidationError(_("You cannot switch the type of a posted document."))
+            raise ValidationError(_("You cannot switch the type of a document which has been posted once."))
         if any(move.move_type == "entry" for move in self):
             raise ValidationError(_("This action isn't available for this document."))
 
@@ -5628,6 +5653,7 @@ class AccountMove(models.Model):
         if any(move.state != 'draft' for move in self):
             raise UserError(_("Only draft journal entries can be cancelled."))
 
+        self.payment_ids.state = "canceled"
         self.write({'auto_post': 'no', 'state': 'cancel'})
 
     def action_toggle_block_payment(self):
@@ -6267,8 +6293,9 @@ class AccountMove(models.Model):
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         # EXTENDS mail mail.thread
+        custom_values = custom_values or {}
         # Add custom behavior when receiving a new invoice through the mail's gateway.
-        if (custom_values or {}).get('move_type', 'entry') not in ('out_invoice', 'in_invoice', 'entry'):
+        if custom_values.get('move_type', 'entry') not in ('out_invoice', 'in_invoice', 'entry'):
             return super().message_new(msg_dict, custom_values=custom_values)
 
         self = self.with_context(skip_is_manually_modified=True)  # noqa: PLW0642
@@ -6317,7 +6344,7 @@ class AccountMove(models.Model):
             'invoice_source_email': from_mail_addresses[0],
             'partner_id': partners and partners[0].id or False,
         }
-        move_ctx = self.with_context(default_move_type=custom_values['move_type'], default_journal_id=custom_values['journal_id'])
+        move_ctx = self.with_context(default_move_type=custom_values.get('move_type', 'entry'), default_journal_id=custom_values.get('journal_id'))
         move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
         move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
 
@@ -6566,4 +6593,4 @@ class AccountMove(models.Model):
 
         :returns: True if commit is acceptable, False otherwise.
         """
-        return not tools.config['test_enable'] and not modules.module.current_test
+        return not modules.module.current_test

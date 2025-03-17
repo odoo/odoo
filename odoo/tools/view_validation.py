@@ -24,7 +24,6 @@ IGNORED_IN_EXPRESSION = {
     'self',
     'uid',
     'context',
-    'companies',
     'context_today',
     'allowed_company_ids',
     'current_company_id',
@@ -244,6 +243,8 @@ def get_expression_field_names(expression):
                     ignore 'parent.truc' and 'parent.truc.id')
     :return: set(str)
     """
+    if not expression:
+        return set()
     item_ast = ast.parse(expression.strip(), mode='eval').body
     contextual_values = _get_expression_contextual_values(item_ast)
 

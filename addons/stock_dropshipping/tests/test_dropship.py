@@ -100,7 +100,7 @@ class TestDropship(common.TransactionCase):
                 line.product_id = self.dropship_product
                 line.product_uom_qty = 200
                 line.price_unit = 1.00
-                line.route_id = self.dropshipping_route
+                line.route_ids = self.dropshipping_route
         sale_order_drp_shpng = so_form.save()
 
         # Confirm sales order
@@ -187,8 +187,8 @@ class TestDropship(common.TransactionCase):
         self.assertEqual(sale_order.picking_ids.move_ids.partner_id, customer)
 
     def test_dropshipped_lot_last_delivery(self):
-        """ Check if the `last_delivery_partner_id` of a `stock.lot` is computed correctly
-            in case the last delivery is a dropship transfer
+        """ Check if the partner_id of a `stock.lot` is computed correctly
+            in case the delivery is a dropship transfer
         """
         # Create a sale order
         sale_order = self.env['sale.order'].create({
@@ -207,7 +207,8 @@ class TestDropship(common.TransactionCase):
         sale_order.picking_ids.button_validate()
         self.assertEqual(sale_order.picking_ids.state, 'done')
         self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.name, '123')
-        self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.last_delivery_partner_id, self.customer)
+        sale_order.picking_ids.move_line_ids.lot_id.invalidate_recordset(fnames=['partner_ids'])
+        self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.partner_ids[0], self.customer)
 
     def test_sol_reserved_qty_wizard_dropship(self):
         """
@@ -268,7 +269,7 @@ class TestDropship(common.TransactionCase):
             with so_form.order_line.new() as line:
                 line.product_id = self.dropship_product
                 line.product_uom_qty = 1
-                line.route_id = self.dropshipping_route
+                line.route_ids = self.dropshipping_route
         sale_order_drp_shpng = so_form.save()
         sale_order_drp_shpng.action_confirm()
 
@@ -283,7 +284,7 @@ class TestDropship(common.TransactionCase):
             with so_form.order_line.new() as line:
                 line.product_id = self.dropship_product
                 line.product_uom_qty = 2
-                line.route_id = self.dropshipping_route
+                line.route_ids = self.dropshipping_route
         sale_order_drp_shpng = so_form.save()
         sale_order_drp_shpng.action_confirm()
 

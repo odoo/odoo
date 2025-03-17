@@ -32,7 +32,11 @@
                         <t t-else="" t-esc="thread.displayName"/>
                     </t>
                     <t t-set-slot="body">
-                        <t t-esc="message?.inlineBody or message?.subtype_description" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
+                        <t t-if="message?.hasOnlyAttachments">
+                            <i class="fa me-1" t-att-class="message.previewIcon"/>
+                            <t t-out="message.previewText" />
+                        </t>
+                        <span t-else="" t-esc="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
                     </t>
                     <t t-set-slot="icon">
                         <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" member="thread.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>

@@ -1,16 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 from collections import defaultdict
 from os.path import join as opj
-import operator
 import re
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.osv import expression
 
 MENU_ITEM_SEPARATOR = "/"
 NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
@@ -42,7 +39,6 @@ class IrUiMenu(models.Model):
                                          ('ir.actions.client', 'ir.actions.client')])
 
     web_icon_data = fields.Binary(string='Web Icon Image', attachment=True)
-    web_invisible = fields.Char(string="Invisible", help="Python expression, when evaluated as true, the menu isn't shown.")
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
@@ -72,7 +68,7 @@ class IrUiMenu(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if self._has_cycle():
-            raise ValidationError(_('Error! You cannot create recursive menus.'))
+            raise ValidationError(self.env._('Error! You cannot create recursive menus.'))
 
     @api.model
     @tools.ormcache('frozenset(self.env.user._get_group_ids())', 'debug')
@@ -237,7 +233,7 @@ class IrUiMenu(models.Model):
         blacklisted_menu_ids = self._load_menus_blacklist()
         visible_menus = self.search_fetch(
             [('id', 'not in', blacklisted_menu_ids)],
-            ['name', 'parent_id', 'action', 'web_icon', 'web_invisible'],
+            ['name', 'parent_id', 'action', 'web_icon'],
         )._filter_visible_menus()
 
         children_dict = defaultdict(list)  # {parent_id: []} / parent_id == False for root menus
@@ -290,7 +286,6 @@ class IrUiMenu(models.Model):
                 'web_icon': menu.web_icon,
                 'web_icon_data': attachment['datas'].decode() if attachment else False,
                 'web_icon_data_mimetype': attachment['mimetype'] if attachment else False,
-                'web_invisible': menu.web_invisible,
                 'xmlid': xmlids.get(menu_id, ""),
             }
 

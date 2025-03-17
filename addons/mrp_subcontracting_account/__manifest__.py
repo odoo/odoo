@@ -11,6 +11,7 @@ This bridge module allows to manage subcontracting with valuation.
     'depends': ['mrp_subcontracting', 'mrp_account'],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'data': [
         'security/mrp_subcontracting_account_security.xml',

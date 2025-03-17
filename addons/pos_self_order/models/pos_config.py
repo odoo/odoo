@@ -232,7 +232,11 @@ class PosConfig(models.Model):
 
     def _get_self_order_url(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()
-        return url_quote(self.get_base_url() + self._get_self_order_route(table_id))
+        long_url = self.get_base_url() + self._get_self_order_route(table_id)
+        return self.env['link.tracker'].search_or_create([{
+            'url': long_url,
+            'title': f"Self Order {self.name}" if not table_id else f"Self Order {self.name} - Table id {table_id}",
+        }]).short_url
 
     def preview_self_order_app(self):
         self.ensure_one()
@@ -257,7 +261,7 @@ class PosConfig(models.Model):
 
     def _load_self_data_models(self):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
-            'res.currency', 'product.template', 'product.product', 'pos.category', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
+            'res.currency', 'pos.category', 'product.template', 'product.product',  'product.combo', 'product.combo.item', 'res.company', 'account.tax',
             'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
             'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
@@ -377,20 +381,3 @@ class PosConfig(models.Model):
             'module_pos_restaurant': True,
             'self_ordering_mode': 'kiosk',
         })
-
-    @api.model
-    def load_onboarding_restaurant_scenario(self, with_demo_data=True):
-        res = super().load_onboarding_restaurant_scenario(with_demo_data)
-        preset_ids = self.get_record_by_ref([
-            'pos_restaurant.pos_takein_preset',
-            'pos_restaurant.pos_takeout_preset',
-            'pos_restaurant.pos_delivery_preset',
-        ])
-        presets = self.env['pos.preset'].browse(preset_ids)
-        stack = ['table', 'counter', 'delivery']
-        for preset in presets:
-            preset.write({
-                'available_in_self': True,
-                'service_at': stack.pop(0),
-            })
-        return res

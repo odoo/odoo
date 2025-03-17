@@ -477,11 +477,11 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             })
 
     def test_intracomm_bill_with_early_payment_included(self):
-        tax_tags = self.env['account.account.tag'].create({
+        tax_tags = self.env['account.account.tag'].create([{
             'name': f'tax_tag_{i}',
             'applicability': 'taxes',
             'country_id': self.env.company.account_fiscal_country_id.id,
-        } for i in range(6))
+        } for i in range(6)])
 
         intracomm_tax = self.env['account.tax'].create({
             'name': 'tax20',

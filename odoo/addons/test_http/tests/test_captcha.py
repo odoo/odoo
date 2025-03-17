@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+from http import HTTPStatus
 from unittest.mock import patch
 
 from odoo import http
@@ -30,7 +31,8 @@ class TestCaptcha(HttpCase):
     def test_post_invalid(self):
         with self.patch_captcha_valid(False):
             res = self.url_open('/web/login', data={'csrf_token': http.Request.csrf_token(self), 'login': '_', 'password': '_'})
-            self.assertEqual(res.status_code, 400)
+            self.assertEqual(res.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)
+            self.assertIn("CAPTCHA test", res.text)
 
     def test_get_valid(self):
         res = self.url_open('/web/login')

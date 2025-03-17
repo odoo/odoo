@@ -28,8 +28,9 @@ import {
     status,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
-import { omit, pick, shallowEqual } from "@web/core/utils/objects";
 import { zip } from "@web/core/utils/arrays";
+import { isHtmlEmpty } from "@web/core/utils/html";
+import { omit, pick, shallowEqual } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import { exprToBoolean } from "@web/core/utils/strings";
 
@@ -72,6 +73,7 @@ const actionRegistry = registry.category("actions");
  * @property {ViewType} [viewType]
  * @property {"replaceCurrentAction" | "replacePreviousAction"} [stackPosition]
  * @property {number} [index]
+ * @property {boolean} [newWindow]
  */
 
 export async function clearUncommittedChanges(env) {
@@ -391,6 +393,7 @@ export function makeActionManager(env, router = _router) {
      */
     function _preprocessAction(action, context = {}) {
         try {
+            delete action._originalAction;
             action._originalAction = JSON.stringify(action);
         } catch {
             // do nothing, the action might simply not be serializable
@@ -399,12 +402,10 @@ export function makeActionManager(env, router = _router) {
         const domain = action.domain || [];
         action.domain =
             typeof domain === "string"
-                ? evaluateExpr(domain, Object.assign({}, user.evalContext, action.context))
+                ? evaluateExpr(domain, Object.assign({}, user.context, action.context))
                 : domain;
         if (action.help) {
-            const htmlHelp = document.createElement("div");
-            htmlHelp.innerHTML = action.help;
-            if (!htmlHelp.innerText.trim()) {
+            if (isHtmlEmpty(action.help)) {
                 delete action.help;
             }
         }
@@ -478,6 +479,9 @@ export function makeActionManager(env, router = _router) {
         let actionRequest = null;
         const storedAction = browser.sessionStorage.getItem("current_action");
         const lastAction = JSON.parse(storedAction || "{}");
+        // If this method is called because of a company switch, the
+        // stored allowed_company_ids is incorrect.
+        delete lastAction.context?.allowed_company_ids;
         if (lastAction.help) {
             lastAction.help = markup(lastAction.help);
         }
@@ -516,8 +520,10 @@ export function makeActionManager(env, router = _router) {
                     [lastAction.id, lastAction.path, lastAction.xml_id]
                         .filter(Boolean)
                         .includes(state.action) &&
-                    lastAction.context?.active_id === context.active_id &&
-                    shallowEqual(lastAction.context?.active_ids, context.active_ids)
+                    (!lastAction.context?.active_id ||
+                        lastAction.context?.active_id === context.active_id) &&
+                    (!lastAction.context?.active_ids ||
+                        shallowEqual(lastAction.context?.active_ids, context.active_ids))
                 ) {
                     actionRequest = lastAction;
                 } else {
@@ -545,11 +551,6 @@ export function makeActionManager(env, router = _router) {
                 // This is a window action on a multi-record view => restores it from
                 // the session storage
                 if (lastAction.res_model === state.model) {
-                    if (lastAction.context) {
-                        // If this method is called because of a company switch, the
-                        // stored allowed_company_ids is incorrect.
-                        delete lastAction.context.allowed_company_ids;
-                    }
                     actionRequest = lastAction;
                     options.viewType = state.view_type;
                 }

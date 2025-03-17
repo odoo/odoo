@@ -10,19 +10,31 @@ from odoo.addons.website.models import ir_http
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    allow_out_of_stock_order = fields.Boolean(string='Continue selling when out-of-stock', default=True)
+    allow_out_of_stock_order = fields.Boolean(string="Continue selling when out-of-stock", default=True)
 
-    available_threshold = fields.Float(string='Show Threshold', default=5.0)
-    show_availability = fields.Boolean(string='Show availability Qty', default=False)
+    available_threshold = fields.Float(string="Show Threshold", default=5.0)
+    show_availability = fields.Boolean(string="Show availability Qty", default=False)
     out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
 
     def _is_sold_out(self):
-        return self.is_storable and self.product_variant_id._is_sold_out()
+        """Return whether the product is sold out (no available quantity).
+
+        If a product inventory is not tracked, or if it's allowed to be sold regardless
+        of availabilities, the product is never considered sold out.
+
+        Note: only checks the availability of the first variant of the template.
+
+        :return: whether the product can still be sold
+        :rtype: bool
+        """
+        if not self.is_storable or self.allow_out_of_stock_order:
+            return False
+        return self.product_variant_id._is_sold_out()
 
     def _website_show_quick_add(self):
         return (
             super()._website_show_quick_add()
-            and (self.allow_out_of_stock_order or not self._is_sold_out())
+            and not self._is_sold_out()
         )
 
     def _get_additionnal_combination_info(self, product_or_template, quantity, date, website):
@@ -44,13 +56,20 @@ class ProductTemplate(models.Model):
             free_qty = website._get_product_available_qty(product_sudo)
             has_stock_notification = (
                 product_sudo._has_stock_notification(self.env.user.partner_id)
-                or request and product_sudo.id in request.session.get(
-                    'product_with_stock_notification_enabled', set())
+                or (
+                    request
+                    and product_sudo.id in request.session.get(
+                        'product_with_stock_notification_enabled', set()
+                    )
+                )
             )
             stock_notification_email = request and request.session.get('stock_notification_email', '')
+            cart_quantity = 0.0
+            if not product_sudo.allow_out_of_stock_order:
+                cart_quantity = request.cart._get_cart_qty(product_sudo.id)
             res.update({
                 'free_qty': free_qty,
-                'cart_qty': product_sudo._get_cart_qty(request.cart),
+                'cart_qty': cart_quantity,
                 'uom_name': product_sudo.uom_id.name,
                 'uom_rounding': product_sudo.uom_id.rounding,
                 'show_availability': product_sudo.show_availability,
@@ -90,11 +109,10 @@ class ProductTemplate(models.Model):
             and product_or_template.is_storable
             and not product_or_template.allow_out_of_stock_order
         ):
-            available_qty = website._get_product_available_qty(
-                product_or_template.sudo(), **kwargs
-            ) if product_or_template.is_product_variant else 0
-            cart_quantity = product_or_template._get_cart_qty(
-                request.cart
-            ) if product_or_template.is_product_variant else 0
+            available_qty = cart_quantity = 0.0
+            if product_or_template.is_product_variant:
+                product = product_or_template
+                available_qty = website._get_product_available_qty(product.sudo(), **kwargs)
+                cart_quantity = request.cart._get_cart_qty(product.id)
             data['free_qty'] = available_qty - cart_quantity
         return data

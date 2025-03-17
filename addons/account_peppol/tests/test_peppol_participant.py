@@ -99,10 +99,10 @@ class TestPeppolParticipant(TransactionCase):
 
     @contextmanager
     def _set_context(self, other_context):
-        previous_context = self.env.context
-        self.env.context = dict(previous_context, **other_context)
-        yield self
-        self.env.context = previous_context
+        cls = self.__class__
+        env = cls.env(context=dict(cls.env.context, **other_context))
+        with patch.object(cls, "env", env):
+            yield
 
     def test_create_participant_missing_data(self):
         # creating a participant without eas/endpoint/document should not be possible
@@ -110,7 +110,7 @@ class TestPeppolParticipant(TransactionCase):
             'peppol_eas': False,
             'peppol_endpoint': False,
         })
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError):
             wizard.button_register_peppol_participant()
 
     def test_create_success_sender(self):
@@ -155,8 +155,8 @@ class TestPeppolParticipant(TransactionCase):
         # if we reject the participant
         company = self.env.company
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
-
         with self._set_context({'participant_state': 'rejected'}):
+            wizard = wizard.with_env(self.env)
             wizard.button_register_peppol_participant()
             company.account_peppol_proxy_state = 'smp_registration'
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
@@ -167,7 +167,7 @@ class TestPeppolParticipant(TransactionCase):
         # should not be possible to create a duplicate participant
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
         wizard.button_register_peppol_participant()
-        with self.assertRaises(IntegrityError), self.cr.savepoint():
+        with self.assertRaises(IntegrityError):
             wizard.account_peppol_proxy_state = 'not_registered'
             wizard.button_register_peppol_participant()
 

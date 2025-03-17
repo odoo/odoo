@@ -6,6 +6,10 @@
             <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
         </record>
 
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('product.group_product_manager'))]"/>
+        </record>
+
         <!-- Expensable products -->
         <record id="expense_product" model="product.product">
             <field name="name">Restaurant Expenses</field>
@@ -591,6 +595,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('product.desk_organizer'),
                         'extra_price': 0,
@@ -612,6 +617,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('product.product_product_3'),
                         'extra_price': 0,
@@ -629,6 +635,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('product.product_product_11'),
                         'extra_price': 0,

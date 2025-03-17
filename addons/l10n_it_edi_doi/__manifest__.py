@@ -22,6 +22,7 @@
         'views/sale_ir_actions_report_templates.xml',
         'views/sale_order_views.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'post_init_hook': '_l10n_it_edi_doi_post_init',
 }

@@ -28,5 +28,6 @@ Allows users to create custom dashboard.
             'board/static/tests/**/*.test.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

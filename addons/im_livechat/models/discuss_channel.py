@@ -113,7 +113,10 @@ class DiscussChannel(models.Model):
         self.browse(empty_channel_ids).unlink()
 
     def execute_command_history(self, **kwargs):
-        self._bus_send("im_livechat.history_command", {"id": self.id})
+        self._bus_send(
+            "im_livechat.history_command",
+            {"id": self.id, "partner_id": self.env.user.partner_id.id},
+        )
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor left the conversation.')
@@ -287,6 +290,8 @@ class DiscussChannel(models.Model):
     def _chatbot_restart(self, chatbot_script):
         # sudo: discuss.channel - visitor can clear current step to restart the script
         self.sudo().chatbot_current_step_id = False
+        # sudo: discuss.channel - visitor can reactivate livechat
+        self.sudo().livechat_active = True
         # sudo: chatbot.message - visitor can clear chatbot messages to restart the script
         self.sudo().chatbot_message_ids.unlink()
         return self._chatbot_post_message(
@@ -300,9 +305,12 @@ class DiscussChannel(models.Model):
     def _types_allowing_unfollow(self):
         return super()._types_allowing_unfollow() + ["livechat"]
 
-    def _action_unfollow(self, partner=None, guest=None):
-        if partner and self.channel_type == "livechat" and len(self.channel_member_ids) <= 2:
-            # sudo: discuss.channel - last operator left the conversation, state must be updated
-            self.sudo().livechat_active = False
-            self._bus_send_store(Store(self, "livechat_active"))
-        super()._action_unfollow(partner, guest)
+    def _action_unfollow(self, partner=None, guest=None, post_leave_message=True):
+        super()._action_unfollow(partner, guest, post_leave_message)
+        # sudo - discuss.channel: user just left but we need to close the live
+        # chat if the last operator left.
+        channel_sudo = self.sudo()
+        if channel_sudo.livechat_active and len(channel_sudo.channel_member_ids) == 1:
+            # sudo: discuss.channel - last operator left the conversation, state must be updated.
+            channel_sudo.livechat_active = False
+            self._bus_send_store(self, "livechat_active")

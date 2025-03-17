@@ -10,7 +10,7 @@ class HrDepartureWizard(models.TransientModel):
     def _get_default_departure_date(self):
         if len(active_ids := self.env.context.get('active_ids', [])) == 1:
             employee = self.env['hr.employee'].browse(active_ids[0])
-            departure_date = employee._get_departure_date()
+            departure_date = employee and employee._get_departure_date()
         else:
             departure_date = False
 

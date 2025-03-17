@@ -19,7 +19,6 @@ class TestResUsers(TransactionCase):
             return self.env['res.users'].create(vals)
 
         # Get Default User Template and define expected outputs for each privacy update test.
-        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
         privacy_and_output = [
             (False, 'public'),
             ('public', 'public'),
@@ -27,9 +26,9 @@ class TestResUsers(TransactionCase):
             ('confidential', 'confidential')
         ]
         for (privacy, expected_output) in privacy_and_output:
-            # Update privacy of Default User Template (required field).
+            # Update default privacy.
             if privacy:
-                default_user.write({'calendar_default_privacy': privacy})
+                self.env['ir.config_parameter'].set_param("calendar.default_privacy", privacy)
 
             # If Calendar Default Privacy isn't defined in vals: get the privacy from Default User Template.
             username = 'test_%s_%s' % (str(privacy), expected_output)

@@ -15,5 +15,6 @@
         'views/report_invoice.xml',
     ],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

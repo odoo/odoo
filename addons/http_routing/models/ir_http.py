@@ -537,27 +537,19 @@ class IrHttp(models.AbstractModel):
         code = 500  # default code
         values = dict(
             exception=exception,
-            traceback=traceback.format_exc(),
+            traceback=''.join(traceback.format_exception(exception)),
         )
-        if isinstance(exception, exceptions.AccessDenied):
-            code = 403
-        elif isinstance(exception, exceptions.UserError):
-            values['error_message'] = exception.args[0]
-            code = 400
-            if isinstance(exception, exceptions.AccessError):
-                code = 403
 
-        elif isinstance(exception, QWebException):
+        if isinstance(exception, QWebException):
             values.update(qweb_exception=exception)
+            exception = exception.__cause__ or exception.__context__
 
-            if isinstance(exception.__context__, exceptions.UserError):
-                code = 400
-                values['error_message'] = exception.__context__.args[0]
-                if isinstance(exception.__context__, exceptions.AccessError):
-                    code = 403
-
+        elif isinstance(exception, exceptions.UserError):
+            code = exception.http_status
+            values['error_message'] = exception.args[0]
         elif isinstance(exception, werkzeug.exceptions.HTTPException):
             code = exception.code
+            values['error_message'] = exception.description
 
         values.update(
             status_message=werkzeug.http.HTTP_STATUS_CODES.get(code, ''),
@@ -573,7 +565,12 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_error_html(cls, env, code, values):
-        return code, env['ir.ui.view']._render_template('http_routing.%s' % code, values)
+        try:
+            return code, env['ir.ui.view']._render_template('http_routing.%s' % code, values)
+        except ValueError:
+            if str(code)[0] == '4':
+                return code, env['ir.ui.view']._render_template('http_routing.4xx', values)
+            raise
 
     @classmethod
     def _handle_error(cls, exception):
@@ -608,6 +605,7 @@ class IrHttp(models.AbstractModel):
         try:
             code, html = cls._get_error_html(request.env, code, values)
         except Exception:
+            _logger.exception("Couldn't render a template for http status %s", code)
             code, html = 418, request.env['ir.ui.view']._render_template('http_routing.http_error', values)
 
         response = Response(html, status=code, content_type='text/html;charset=utf-8')
