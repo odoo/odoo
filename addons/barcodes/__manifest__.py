@@ -16,8 +16,9 @@
             'barcodes/static/src/**/*',
         ],
         'web.tests_assets': ['barcodes/static/tests/legacy/helpers.js'],
-        'web.qunit_suite_tests': ['barcodes/static/tests/legacy/basic/**/*_test.js'],
-        'web.assets_unit_tests': ['barcodes/static/tests/*.test.js'],
+        'web.assets_unit_tests': [
+            'barcodes/static/tests/*.test.js',
+        ],
     },
     'license': 'LGPL-3',
 }
