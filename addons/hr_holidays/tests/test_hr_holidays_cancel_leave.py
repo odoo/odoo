@@ -20,7 +20,7 @@ class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
 
         cls.hr_leave_type = cls.env['hr.leave.type'].with_user(cls.user_hrmanager).create({
             'name': 'Time Off Type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         cls.holiday = cls.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).with_user(cls.user_employee).create({
             'name': 'Time Off 1',

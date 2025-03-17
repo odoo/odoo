@@ -66,7 +66,7 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
             'request_unit': 'day',
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.employees = cls.env['hr.employee'].create([{

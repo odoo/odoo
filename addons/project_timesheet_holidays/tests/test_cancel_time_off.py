@@ -35,7 +35,7 @@ class TestCancelTimeOff(TransactionCase):
         })
         cls.generic_time_off_type = cls.env['hr.leave.type'].create({
             'name': 'Generic Time Off',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
         })

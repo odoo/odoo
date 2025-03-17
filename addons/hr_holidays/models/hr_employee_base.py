@@ -48,7 +48,7 @@ class HrEmployeeBase(models.AbstractModel):
         data = self.env['hr.leave.allocation']._read_group([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.active', '=', True),
-            ('holiday_status_id.requires_allocation', '=', 'yes'),
+            ('holiday_status_id.requires_allocation', '=', True),
             ('state', '=', 'validate'),
             ('date_from', '<=', current_date),
             '|',
@@ -69,7 +69,7 @@ class HrEmployeeBase(models.AbstractModel):
             employee_remaining_leaves = 0
             employee_max_leaves = 0
             for leave_type in leaves_taken[employee]:
-                if leave_type.requires_allocation == 'no' or not leave_type.show_on_dashboard:
+                if not leave_type.requires_allocation or leave_type.hide_on_dashboard:
                     continue
                 for allocation in leaves_taken[employee][leave_type]:
                     if allocation and allocation.date_from <= current_date\

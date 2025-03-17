@@ -21,7 +21,7 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Unlimited',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         cls.rd_dept.manager_id = False
         cls.hr_dept.manager_id = False
@@ -41,25 +41,25 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         cls.lt_no_validation = cls.env['hr.leave.type'].create({
             'name': 'Validation = no_validation',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.lt_validation_hr = cls.env['hr.leave.type'].create({
             'name': 'Validation = HR',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.lt_validation_manager = cls.env['hr.leave.type'].create({
             'name': 'Validation = manager',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.lt_validation_both = cls.env['hr.leave.type'].create({
             'name': 'Validation = both',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.confirm_status = [
@@ -724,7 +724,7 @@ class TestMultiCompany(TestHrHolidaysCommon):
             'name': 'Unlimited - Company New',
             'company_id': cls.new_company.id,
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         cls.employee_emp.company_id = cls.new_company
         cls.rd_dept.manager_id = False

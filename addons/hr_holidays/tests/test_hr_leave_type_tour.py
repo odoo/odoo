@@ -56,19 +56,19 @@ class TestHrLeaveTypeTour(HttpCase):
 
         leave_type.create({
             'name': 'leave_type_1',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'hr',
             'country_id': company_1.country_id.id
         })
         leave_type.create({
             'name': 'leave_type_2',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'hr',
             'company_id': company_2.id
         })
         leave_type.create({
             'name': 'leave_type_3',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'hr'
         })
         self.start_tour('/web', 'hr_leave_type_tour', login="admin", step_delay=500)

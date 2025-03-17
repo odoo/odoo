@@ -45,7 +45,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
         self.hr_leave_type_with_ts = self.env['hr.leave.type'].sudo().create({
             'name': 'Time Off Type with timesheet generation',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         # HR Officer allocates some leaves to the employee 1

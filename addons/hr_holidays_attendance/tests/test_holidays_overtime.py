@@ -37,14 +37,14 @@ class TestHolidaysOvertime(TransactionCase):
         cls.leave_type_no_alloc = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation No Allocation',
             'company_id': cls.company.id,
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'overtime_deductible': True,
         })
         cls.leave_type_employee_allocation = cls.env['hr.leave.type'].create({
             'name': 'Overtime Compensation Employee Allocation',
             'company_id': cls.company.id,
-            'requires_allocation': 'yes',
-            'employee_requests': 'yes',
+            'requires_allocation': True,
+            'employee_requests': True,
             'allocation_validation_type': 'hr',
             'overtime_deductible': True,
         })
@@ -182,8 +182,8 @@ class TestHolidaysOvertime(TransactionCase):
             leave_type = self.env['hr.leave.type'].sudo().create({
                 'name': 'Overtime Compensation Employee Allocation',
                 'company_id': self.company.id,
-                'requires_allocation': 'yes',
-                'employee_requests': 'yes',
+                'requires_allocation': True,
+                'employee_requests': True,
                 'allocation_validation_type': 'hr',
                 'overtime_deductible': False,
             })

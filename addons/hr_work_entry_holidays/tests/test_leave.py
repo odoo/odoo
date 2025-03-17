@@ -181,13 +181,13 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
         leave_type_paid, leave_type_unpaid = self.env['hr.leave.type'].create([{
             'name': 'Paid leave type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'request_unit': 'hour',
             'work_entry_type_id': entry_type_paid.id,
         },
         {
             'name': 'Unpaid leave type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'request_unit': 'hour',
             'work_entry_type_id': entry_type_unpaid.id,
         }])

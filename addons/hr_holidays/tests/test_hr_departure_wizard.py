@@ -22,7 +22,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'time_type': 'leave',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
     def test_departure_without_leave_and_allocation_employee(self):

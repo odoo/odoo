@@ -23,7 +23,7 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Bank Holiday',
             'responsible_ids': [Command.link(cls.env.ref('base.user_admin').id)],
             'company_id': cls.company.id,
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.paid_time_off = cls.env['hr.leave.type'].create({
@@ -31,7 +31,7 @@ class TestCompanyLeave(TransactionCase):
             'request_unit': 'day',
             'leave_validation_type': 'both',
             'company_id': cls.company.id,
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
 
         cls.employee = cls.env['hr.employee'].create({

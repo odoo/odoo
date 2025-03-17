@@ -40,31 +40,31 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         cls.holidays_type_1 = LeaveType.create({
             'name': 'NotLimitedHR',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'hr',
         })
         cls.holidays_type_2 = LeaveType.create({
             'name': 'Limited',
-            'requires_allocation': 'yes',
-            'employee_requests': 'yes',
+            'requires_allocation': True,
+            'employee_requests': True,
             'leave_validation_type': 'hr',
         })
         cls.holidays_type_3 = LeaveType.create({
             'name': 'TimeNotLimited',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'manager',
         })
 
         cls.holidays_type_4 = LeaveType.create({
             'name': 'Limited with 2 approvals',
-            'requires_allocation': 'yes',
-            'employee_requests': 'yes',
+            'requires_allocation': True,
+            'employee_requests': True,
             'leave_validation_type': 'both',
         })
         cls.holidays_support_document = LeaveType.create({
             'name': 'Time off with support document',
             'support_document': True,
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'no_validation',
         })
 
@@ -532,7 +532,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Sick',
             'request_unit': 'hour',
             'leave_validation_type': 'both',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         leave1 = self.env['hr.leave'].create({
             'name': 'Sick 1 week during christmas snif',
@@ -1041,8 +1041,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         """
         leave_type_A = self.env['hr.leave.type'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
             'name': 'Type A',
-            'requires_allocation': 'yes',
-            'employee_requests': 'yes',
+            'requires_allocation': True,
+            'employee_requests': True,
             'leave_validation_type': 'hr',
         })
 
@@ -1089,7 +1089,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             leave_type = LeaveType.with_context(tracking_disable=True).create({
                 'name': leave_validation_type.capitalize(),
                 'leave_validation_type': leave_validation_type,
-                'requires_allocation': 'no',
+                'requires_allocation': False,
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
             })
             current_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
@@ -1286,7 +1286,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(allocation.state, 'validate')
 
         search_domain = ['|',
-                        ['requires_allocation', '=', 'no'],
+                        ['requires_allocation', '=', False],
                         '&',
                             ['has_valid_allocation', '=', True],
                             '&',
@@ -1302,8 +1302,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_holiday_type_allocation_requirement_edit(self):
         # Does not raise an error since no leave of this type exists yet
-        self.holidays_type_2.requires_allocation = 'no'
-        self.assertEqual(self.holidays_type_2.requires_allocation, 'no', 'Allocations should no longer be required')
+        self.holidays_type_2.requires_allocation = False
+        self.assertFalse(self.holidays_type_2.requires_allocation, 'Allocations should no longer be required')
 
         self.env['hr.leave'].create({
             'name': 'Test leave',
@@ -1315,7 +1315,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
 
         with self.assertRaises(UserError):
-            self.holidays_type_2.requires_allocation = 'yes'
+            self.holidays_type_2.requires_allocation = True
 
     def test_activity_update_with_time_off_officer(self):
         """ Test activity creation flow when approval settings involve Time Off Officer and Employee's Approver. """

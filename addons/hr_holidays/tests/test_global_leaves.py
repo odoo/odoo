@@ -145,7 +145,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'time_type': 'leave',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         self.employee_emp.resource_calendar_id = self.calendar_1.id
 
