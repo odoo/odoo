@@ -192,7 +192,7 @@ class Repair(models.Model):
             if (repair.product_id and repair.lot_id and repair.lot_id.product_id != repair.product_id) or not repair.product_id:
                 repair.lot_id = False
 
-    @api.depends('user_id', 'company_id')
+    @api.depends('company_id')
     def _compute_picking_type_id(self):
         picking_type_by_company = self._get_picking_type()
         for ro in self:
