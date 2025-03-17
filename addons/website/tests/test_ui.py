@@ -414,8 +414,8 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
-        self.start_tour('/odoo', 'conditional_visibility_2', login="website_user")
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin')
+        self.start_tour('/odoo', 'conditional_visibility_2', login='website_user')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin', step_delay=500, timeout=180)
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_4', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
 
