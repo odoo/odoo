@@ -4,15 +4,9 @@
         <field name="model">hr.leave.allocation.generate.multi.wizard</field>
         <field name="arch" type="xml">
             <form string="Generate time off allocations for multiple employees">
-                <div id="title" class="oe_title">
-                    <h2>
-                        <field name="name" class="w-100" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/>
-                    </h2>
-                </div>
-                <group>
                     <group>
-                        <field name="allocation_mode" string="Mode"/>
-                        <field name="employee_ids" invisible="allocation_mode != 'employee'" required="allocation_mode == 'employee'" widget="many2many_avatar_employee"/>
+                        <field name="allocation_mode" string="Grant"/>
+                        <field name="employee_ids" invisible="allocation_mode != 'employee'" widget="many2many_avatar_employee" placeholder="All Employees"/>
                         <field name="company_id" invisible="allocation_mode != 'company'"/>
                         <field name="department_id" invisible="allocation_mode != 'department'" required="allocation_mode == 'department'"/>
                         <field name="category_id" invisible="allocation_mode != 'category'" required="allocation_mode == 'category'"/>
@@ -42,11 +36,10 @@
                             <span class="ml8" invisible="request_unit == 'hour'">Days</span>
                             <span class="ml8" invisible="request_unit != 'hour'">Hours</span>
                         </div>
-                    </group>
                 </group>
                 <field name="notes" placeholder="Add a reason..." nolabel="1"/>
                 <footer>
-                    <button name="action_generate_allocations" type="object" class="btn-primary" string="Create Allocations" accesskey="c"/>
+                    <button name="action_generate_allocations" type="object" class="btn-primary" string="Allocate Time Off" accesskey="c"/>
                     <button special="cancel" string="Discard" close="1" accesskey="j" />
                 </footer>
             </form>
@@ -54,7 +47,7 @@
     </record>
 
     <record id="action_hr_leave_allocation_generate_multi_wizard" model="ir.actions.act_window">
-        <field name="name">Multiple Requests</field>
+        <field name="name">New Group Allocation</field>
         <field name="res_model">hr.leave.allocation.generate.multi.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
