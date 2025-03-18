@@ -5,7 +5,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
-import { TimeOffCalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
+import { TimeOffCalendarSidePanel } from "./calendar_side_panel/calendar_side_panel";
 import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
 import { useLeaveCancelWizard } from "../hooks";
 import { EventBus, useSubEnv } from "@odoo/owl";
@@ -13,7 +13,7 @@ import { EventBus, useSubEnv } from "@odoo/owl";
 export class TimeOffCalendarController extends CalendarController {
     static components = {
         ...CalendarController.components,
-        FilterPanel: TimeOffCalendarFilterPanel,
+        CalendarSidePanel: TimeOffCalendarSidePanel,
     };
     static template = "hr_holidays.CalendarController";
     setup() {
@@ -26,13 +26,6 @@ export class TimeOffCalendarController extends CalendarController {
 
     get employeeId() {
         return this.model.employeeId;
-    }
-
-    get filterPanelProps() {
-        return {
-            ...super.filterPanelProps,
-            employee_id: this.employeeId,
-        };
     }
 
     newTimeOffRequest() {
