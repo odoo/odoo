@@ -775,6 +775,15 @@ class AccountPayment(models.Model):
         for payment in self:
             payment.display_name = payment.move_id.name if payment.move_id.name != '/' else _('Draft Payment')
 
+    def _message_mail_after_hook(self, mails):
+        for payment, mail in zip(self, mails):
+            if (
+                not payment.message_main_attachment_id
+                and (attachments_to_link := mail.attachment_ids.filtered(lambda a: a.res_model == 'mail.message'))
+            ):
+                attachments_to_link.write({'res_model': self._name, 'res_id': payment.id})
+        return super()._message_mail_after_hook(mails)
+
     # -------------------------------------------------------------------------
     # SYNCHRONIZATION account.payment <-> account.move
     # -------------------------------------------------------------------------
