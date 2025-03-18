@@ -1146,6 +1146,47 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(len(replenishments), 1)
         self.assertEqual(replenishments[0]['summary']['name'], purchase.name)
 
+    def test_cancel_mo_with_mto_purchase_component(self):
+        # Enable MTO route for Component
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        route_buy = self.warehouse.buy_pull_id.route_id
+        route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.rule_ids.procure_method = "make_to_order"
+        self.component_a.write({
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id},
+            )],
+            'route_ids': [
+                Command.link(route_buy.id),
+                Command.link(route_mto.id),
+            ],
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.component_b.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.component_a.id,
+                    'product_qty': 2.0,
+                }),
+            ],
+        })
+        with Form(self.env['mrp.production']) as prod_form:
+            prod_form.product_id = self.component_b
+            prod_form.bom_id = bom
+            prod_form.product_qty = 3
+            production = prod_form.save()
+        production.action_confirm()
+        self.assertEqual(production.purchase_order_count, 1)
+        purchase = production.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id
+        self.assertEqual(len(purchase), 1)
+        # Cancel the MO and check that an activity was created on the PO
+        self.assertFalse(purchase.activity_ids)
+        production.action_cancel()
+        self.assertEqual(production.state, 'cancel')
+        self.assertEqual(len(purchase.activity_ids), 1)
+
     def test_total_cost_share_rounded_to_precision(self):
         kit, compo01, compo02 = self.env['product.product'].create([{
             'name': name,
