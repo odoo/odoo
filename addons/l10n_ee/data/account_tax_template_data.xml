@@ -262,6 +262,39 @@
         ]"/>
     </record>
 
+    <!-- Sales of Services 13% -->
+    <record id="l10n_ee_vat_out_13_s" model="account.tax.template">
+        <field name="sequence">66</field>
+        <field name="name">13% S</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="description">13%</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
+        <field name="chart_template_id" ref="l10nee_chart_template"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_2_2_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_ee_201204'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_line_2_2_tag')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_ee_201204'),
+            }),
+        ]"/>
+    </record>
+
     <!-- Sales of Goods 0% -->
     <record id="l10n_ee_vat_out_0_g" model="account.tax.template">
         <field name="sequence">70</field>
@@ -840,6 +873,35 @@
         ]"/>
     </record>
 
+    <!-- Purchase of Services 13% -->
+    <record id="l10n_ee_vat_in_13_s" model="account.tax.template">
+        <field name="sequence">225</field>
+        <field name="name">13% S</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="description">13%</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
+        <field name="chart_template_id" ref="l10nee_chart_template"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, { 'repartition_type': 'base' }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_ee_201201'),
+                'plus_report_expression_ids': [ref('tax_report_line_5_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, { 'repartition_type': 'base' }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_ee_201201'),
+                'minus_report_expression_ids': [ref('tax_report_line_5_tag')],
+            }),
+        ]"/>
+    </record>
+
     <!-- Purchase of Goods 0% -->
     <record id="l10n_ee_vat_in_0_g" model="account.tax.template">
         <field name="sequence">230</field>
@@ -1395,6 +1457,53 @@
         <field name="description">22%</field>
         <field name="active" eval="False"/>
         <field name="tax_group_id" ref="tax_group_vat_22"/>
+        <field name="chart_template_id" ref="l10nee_chart_template"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, { 'repartition_type': 'base' }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_ee_201201'),
+                'plus_report_expression_ids': [
+                    ref('tax_report_line_5_1_tag'),
+                ],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_ee_201204'),
+                'minus_report_expression_ids': [ref('tax_report_line_4_1_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, { 'repartition_type': 'base' }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_ee_201201'),
+                'minus_report_expression_ids': [
+                    ref('tax_report_line_5_1_tag'),
+                ],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_ee_201204'),
+                'plus_report_expression_ids': [ref('tax_report_line_4_1_tag')],
+            }),
+        ]"/>
+    </record>
+
+    <!-- Import 13% (KMS §38 - Reverse Charge) -->
+    <record id="l10n_ee_vat_in_13_imp_kms_38" model="account.tax.template">
+        <field name="sequence">312</field>
+        <field name="name">13% EX KMS §38</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="description">13% EX KMS §38</field>
+        <field name="active" eval="False"/>
+        <field name="tax_group_id" ref="tax_group_vat_13"/>
         <field name="chart_template_id" ref="l10nee_chart_template"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, { 'repartition_type': 'base' }),
