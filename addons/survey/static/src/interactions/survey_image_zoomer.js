@@ -3,10 +3,10 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 export const SurveyImageZoomer = publicWidget.Widget.extend({
     template: 'survey.survey_image_zoomer',
     events: {
-        'wheel .o_survey_img_zoom_image': '_onImgScroll',
-        'click': '_onZoomerClick',
-        'click .o_survey_img_zoom_in_btn': '_onZoomInClick',
-        'click .o_survey_img_zoom_out_btn': '_onZoomOutClick',
+        'wheel .o_survey_img_zoom_image': 'onImageScroll',
+        'click': 'onZoomerClick',
+        'click .o_survey_img_zoom_in_btn': 'onZoomInClick',
+        'click .o_survey_img_zoom_out_btn': 'onZoomOutClick',
     },
     /**
      * @override
@@ -35,25 +35,24 @@ export const SurveyImageZoomer = publicWidget.Widget.extend({
 
     /**
      * Zoom in/out image on scrolling
-     *
-     * @private
-     * @param {WheelEvent} e
+     * @param {WheelEvent} ev
      */
-    _onImgScroll(e) {
-        e.preventDefault();
-        if (e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
-            this._addZoomSteps(1);
+    onImageScroll(ev) {
+        ev.preventDefault();
+        ev = ev.originalEvent;
+        if (ev.wheelDelta > 0 || ev.detail < 0) {
+            this.addZoomSteps(1);
         } else {
-            this._addZoomSteps(-1);
+            this.addZoomSteps(-1);
         }
     },
+
     /**
      * Allow user to close by clicking anywhere (mobile...). Destroying the modal
      * without using 'hide' would leave a modal-open in the view.
-     * @private
      * @param {Event} e
      */
-     _onZoomerClick(e) {
+    onZoomerClick(e) {
         e.preventDefault();
         this.$el.modal('hide');
     },
@@ -61,17 +60,17 @@ export const SurveyImageZoomer = publicWidget.Widget.extend({
      * @private
      * @param {Event} e
      */
-    _onZoomInClick(e) {
+    onZoomInClick(e) {
         e.stopPropagation();
-        this._addZoomSteps(1);
+        this.addZoomSteps(1);
     },
     /**
      * @private
      * @param {Event} e
      */
-    _onZoomOutClick(e) {
+    onZoomOutClick(e) {
         e.stopPropagation();
-        this._addZoomSteps(-1);
+        this.addZoomSteps(-1);
     },
 
     //--------------------------------------------------------------------------
@@ -80,14 +79,12 @@ export const SurveyImageZoomer = publicWidget.Widget.extend({
 
     /**
      * Zoom in / out the image by changing the scale by the given number of steps.
-     *
-     * @private
      * @param {integer} zoomStepNumber - Number of zoom steps applied to the scale of
      * the image. It can be negative, in order to zoom out. Step is set to 0.1.
      */
-     _addZoomSteps(zoomStepNumber) {
-        const image = this.el.querySelector('.o_survey_img_zoom_image');
-        const body = this.el.querySelector('.o_survey_img_zoom_body');
+    addZoomSteps(zoomStepNumber) {
+        const image = this.el.querySelector(".o_survey_img_zoom_image");
+        const body = this.el.querySelector(".o_survey_img_zoom_body");
         const imageWidth = image.clientWidth;
         const imageHeight = image.clientHeight;
         const bodyWidth = body.clientWidth;
