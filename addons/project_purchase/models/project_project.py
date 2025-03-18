@@ -152,7 +152,7 @@ class Project(models.Model):
                     self.env['purchase.order.line']._query_analytic_accounts(),
                 )
             )
-            query_string, query_param = query.select('"purchase_order_line".id', 'qty_invoiced', 'qty_to_invoice', 'product_qty', 'price_subtotal', 'purchase_order_line.currency_id', '"purchase_order_line".analytic_distribution')
+            query_string, query_param = query.select('"purchase_order_line".id', 'qty_invoiced', 'qty_to_invoice', 'product_qty', 'price_subtotal', 'date_order', 'purchase_order_line.currency_id', '"purchase_order_line".analytic_distribution')
             self._cr.execute(query_string, query_param)
             purchase_order_line_read = [{
                 **pol,
@@ -168,7 +168,7 @@ class Project(models.Model):
                 for pol_read in purchase_order_line_read:
                     purchase_order_line_invoice_line_ids.extend(pol_read['invoice_lines'].ids)
                     currency = self.env['res.currency'].browse(pol_read['currency_id']).with_prefetch(currency_ids)
-                    price_subtotal = currency._convert(pol_read['price_subtotal'], self.currency_id, self.company_id)
+                    price_subtotal = currency._convert(pol_read['price_subtotal'], self.currency_id, self.company_id, pol_read['date_order'].date())
                     price_subtotal_unit = price_subtotal / pol_read['product_qty'] if pol_read['product_qty'] else 0.0
                     # an analytic account can appear several time in an analytic distribution with different repartition percentage
                     analytic_contribution = sum(

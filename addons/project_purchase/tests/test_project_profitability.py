@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from freezegun import freeze_time
 
 from odoo import Command
 from odoo.tests import tagged
@@ -529,6 +530,49 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         self.assertEqual(float_compare(-self.product_a.standard_price * analytic_contribution * 3.6, items['data'][1]['billed'], 2), 0)
         self.assertEqual(0.0, items['total']['to_bill'])
         self.assertEqual(float_compare(-self.product_a.standard_price * analytic_contribution * 3.6 - self.product_order.standard_price * analytic_contribution * 3.6, items['total']['billed'], 2), 0)
+
+    def test_multi_currency_rates(self):
+        """Check that project profitability uses the currency rate at the time of the purchase to convert to the project's currency"""
+        project = self.env['project.project'].create({'name': 'new project'})
+        project._create_analytic_account()
+        account = project.analytic_account_id
+        foreign_company = self.company_data_2['company']
+        foreign_company.currency_id = self.foreign_currency
+
+        old_rate, new_rate = self.env['res.currency.rate'].create([{
+            'name': '2020-01-01',
+            'rate': 4,
+            'currency_id': self.foreign_currency.id,
+            'company_id': self.env.company.id,
+        },
+        {
+            'name': '2022-01-01',
+            'rate': 3,
+            'currency_id': self.foreign_currency.id,
+            'company_id': self.env.company.id,
+        }])
+
+        with freeze_time('2021-01-01'):
+            purchase_order_foreign = self.env['purchase.order'].create({
+                "name": "A foreign purchase order",
+                "partner_id": self.partner_a.id,
+                "company_id": foreign_company.id,
+                "order_line": [Command.create({
+                    "analytic_distribution": {account.id: 100},
+                    "product_id": self.product_order.id,
+                    "product_qty": 1,
+                    "price_unit": self.product_order.standard_price,
+                    "currency_id": self.foreign_currency.id,
+                }),
+                ],
+            })
+            purchase_order_foreign.button_confirm()
+            purchase_order_foreign.order_line.flush_recordset()
+            self._create_invoice_for_po(purchase_order_foreign)
+
+        with freeze_time('2023-01-01'):
+            items = project._get_profitability_items(with_action=False)['costs']
+            self.assertAlmostEqual(items['data'][0]['billed'], -self.product_order.standard_price / old_rate.rate, places=1)
 
     def _create_invoice_for_po(self, purchase_order):
         purchase_order.action_create_invoice()
