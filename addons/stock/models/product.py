@@ -636,17 +636,6 @@ class Product(models.Model):
     def _count_returned_sn_products(self, sn_lot):
         return 0
 
-    def filter_has_routes(self):
-        """ Return products with route_ids
-            or whose categ_id has total_route_ids.
-        """
-        products_with_routes = self.env['product.product']
-        # retrieve products with route_ids
-        products_with_routes += self.search([('id', 'in', self.ids), ('route_ids', '!=', False)])
-        # retrive products with categ_ids having routes
-        products_with_routes += self.search([('id', 'in', (self - products_with_routes).ids), ('categ_id.total_route_ids', '!=', False)])
-        return products_with_routes
-
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
