@@ -14,14 +14,6 @@ export class GridColumnsOptionPlugin extends Plugin {
         ],
         builder_actions: this.getActions(),
         system_classes: ["o_we_padding_highlight"],
-        on_clone_handlers: ({ cloneEl }) => {
-            if (cloneEl.matches(".o_we_padding_highlight")) {
-                cloneEl.classList.remove("o_we_padding_highlight");
-            }
-            cloneEl.querySelectorAll(".o_we_padding_highlight").forEach((el) => {
-                el.classList.remove("o_we_padding_highlight");
-            });
-        },
     };
 
     getActions() {
@@ -29,18 +21,18 @@ export class GridColumnsOptionPlugin extends Plugin {
         return {
             get setGridColumnsPadding() {
                 const styleAction = builderActions.getAction("styleAction");
-                const removeHighlightClass = ({ target: editingElement }) => {
+                const removePaddingPreview = ({ target: editingElement }) => {
                     editingElement.classList.remove("o_we_padding_highlight");
-                    editingElement.removeEventListener("animationend", removeHighlightClass);
+                    editingElement.removeEventListener("animationend", removePaddingPreview);
                 };
                 return {
                     ...styleAction,
                     apply: (...args) => {
                         const { editingElement } = args[0];
-                        removeHighlightClass({ target: editingElement });
+                        removePaddingPreview({ target: editingElement });
                         styleAction.apply(...args);
                         editingElement.classList.add("o_we_padding_highlight");
-                        editingElement.addEventListener("animationend", removeHighlightClass);
+                        editingElement.addEventListener("animationend", removePaddingPreview);
                     },
                 };
             },

@@ -25,6 +25,8 @@ export class ClonePlugin extends Plugin {
 
     setup() {
         this.overlayTarget = null;
+        this.ignoredClasses = new Set(this.getResource("system_classes"));
+        this.ignoredAttrs = new Set(this.getResource("system_attributes"));
     }
 
     getActions() {
@@ -66,6 +68,7 @@ export class ClonePlugin extends Plugin {
         // TODO snippet_will_be_cloned ?
         // TODO cleanUI resource for each option
         const cloneEl = el.cloneNode(true);
+        this.cleanElement(cloneEl);
         el.insertAdjacentElement(position, cloneEl);
         this.dependencies["builder-options"].updateContainers(cloneEl);
         this.dispatchTo("on_clone_handlers", { cloneEl: cloneEl, originalEl: el });
@@ -74,5 +77,18 @@ export class ClonePlugin extends Plugin {
         }
         // TODO snippet_cloned ?
         return cloneEl;
+    }
+
+    cleanElement(toCleanEl) {
+        this.ignoredClasses.forEach((ignoredClass) => {
+            [toCleanEl, ...toCleanEl.querySelectorAll(`.${ignoredClass}`)].forEach((el) =>
+                el.classList.remove(ignoredClass)
+            );
+        });
+        this.ignoredAttrs.forEach((ignoredAttr) => {
+            [toCleanEl, ...toCleanEl.querySelectorAll(`[${ignoredAttr}]`)].forEach((el) =>
+                el.removeAttribute(ignoredAttr)
+            );
+        });
     }
 }
