@@ -89,18 +89,18 @@ registry.category("services").add("website_edit", {
             patches.push(
                 patch(Colibri.prototype, {
                     setupInteraction() {
-                        historyCallbacks.ignoreDOMChanges(() => {
+                        historyCallbacks.ignoreDOMMutations(() => {
                             super.setupInteraction();
                         });
                     },
                     destroyInteraction() {
-                        historyCallbacks.ignoreDOMChanges(() => {
+                        historyCallbacks.ignoreDOMMutations(() => {
                             super.destroyInteraction();
                         });
                     },
                     protectSyncAfterAsync(interaction, name, fn) {
                         fn = super.protectSyncAfterAsync(interaction, name, fn);
-                        return (...args) => historyCallbacks.ignoreDOMChanges(() => fn(...args));
+                        return (...args) => historyCallbacks.ignoreDOMMutations(() => fn(...args));
                     },
                     addListener(target, event, fn, options) {
                         fn = fn.bind(this.interaction);
@@ -112,17 +112,17 @@ registry.category("services").add("website_edit", {
                             delete options?.keepInHistory;
                         }
                         let stealthFn = fn;
-                        if (historyCallbacks.ignoreDOMChanges && !fn.isHandler && stealth) {
+                        if (historyCallbacks.ignoreDOMMutations && !fn.isHandler && stealth) {
                             stealthFn = (...args) =>
-                                historyCallbacks.ignoreDOMChanges(() => fn(...args));
+                                historyCallbacks.ignoreDOMMutations(() => fn(...args));
                         }
                         return super.addListener(target, event, stealthFn, options);
                     },
                     applyAttr(...args) {
-                        historyCallbacks.ignoreDOMChanges(() => super.applyAttr(...args));
+                        historyCallbacks.ignoreDOMMutations(() => super.applyAttr(...args));
                     },
                     applyTOut(...args) {
-                        historyCallbacks.ignoreDOMChanges(() => super.applyTOut(...args));
+                        historyCallbacks.ignoreDOMMutations(() => super.applyTOut(...args));
                     },
                 })
             );

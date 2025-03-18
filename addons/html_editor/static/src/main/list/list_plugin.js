@@ -1045,7 +1045,7 @@ export class ListPlugin extends Plugin {
 
     handleListPlaceholderPosition(el) {
         if (el.tagName === "LI" && el.style.listStylePosition === "inside") {
-            this.dependencies.history.ignoreDOMChanges(() => {
+            this.dependencies.history.ignoreDOMMutations(() => {
                 const rangeEl = document.createElement("range-el");
                 el.prepend(rangeEl);
                 el.style.listStylePosition = "";
