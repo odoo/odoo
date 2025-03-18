@@ -33,6 +33,7 @@ class ResourceCalendarAttendance(models.Model):
     duration_days = fields.Float(compute='_compute_duration_days', string='Duration (days)', store=True, readonly=False)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
     day_period = fields.Selection([
+        ('full_day', 'Full Day'),
         ('morning', 'Morning'),
         ('lunch', 'Break'),
         ('afternoon', 'Afternoon')], required=True, default='morning')
@@ -78,6 +79,8 @@ class ResourceCalendarAttendance(models.Model):
         for attendance in self:
             if attendance.day_period == 'lunch':
                 attendance.duration_days = 0
+            elif attendance.day_period == 'full_day':
+                attendance.duration_days = 1
             else:
                 attendance.duration_days = 0.5 if attendance.duration_hours <= attendance.calendar_id.hours_per_day * 3 / 4 else 1
 

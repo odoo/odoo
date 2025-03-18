@@ -362,6 +362,8 @@ class HrContract(models.Model):
         })
         utc = pytz.timezone('UTC')
         for contract in self:
+            if contract.resource_calendar_id.flexible_hours:
+                continue
             contract_tz = (contract.resource_calendar_id or contract.employee_id.resource_calendar_id).tz
             tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
             contract_start = tz.localize(fields.Datetime.to_datetime(contract.date_start)).astimezone(utc).replace(tzinfo=None)
