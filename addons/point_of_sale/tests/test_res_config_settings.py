@@ -122,3 +122,18 @@ class TestConfigureShops(TestPoSCommon):
 
         self.assertTrue(second_id not in pos_config.payment_method_ids.ids)
         self.assertTrue(len(pos_config.payment_method_ids) == 2)
+
+    def test_write_default_and_available_presets_on_multiple_pos_configs(self):
+        preset = self.env['pos.preset'].create({'name': 'Preset 1'})
+
+        pos_config1 = self.env['pos.config'].create({'name': 'Shop 1', 'module_pos_restaurant': False})
+        pos_config2 = self.env['pos.config'].create({'name': 'Shop 2', 'module_pos_restaurant': False})
+        pos_config3 = self.env['pos.config'].create({'name': 'Shop 3', 'module_pos_restaurant': False})
+
+        pos_configs = pos_config1 | pos_config2 | pos_config3
+
+        pos_configs.write({
+            'use_presets': True,
+            'available_preset_ids': [(6, 0, [preset.id])],
+            'default_preset_id': preset.id,
+        })
