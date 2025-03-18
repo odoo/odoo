@@ -29,6 +29,27 @@ class SaleOrderLine(models.Model):
             ('company_id', 'in', [False, self.env.company.id]),
         ]
 
+    def _get_default_sale_order_values(self):
+        partner_id = self.env.context.get('default_partner_id')
+        project_id = self.env.context.get('link_to_project')
+        so_create_values = {
+            'partner_id': partner_id,
+            'company_id': self.env.context.get('default_company_id') or self.env.company.id,
+        }
+        sale_order = None
+        if project_id:
+            try:
+                project_so = self.env['project.project'].browse(project_id).sale_order_id
+                project_so.check_access_rule('write')
+                sale_order = project_so
+            except AccessError:
+                pass
+            if not sale_order:
+                so_create_values['project_ids'] = [Command.link(project_id)]
+        if not sale_order:
+            sale_order = self.env['sale.order'].create(so_create_values)
+        return {'order_id': sale_order.id}
+
     def default_get(self, fields):
         res = super().default_get(fields)
         if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
@@ -41,26 +62,7 @@ class SaleOrderLine(models.Model):
                     del res['order_id']
 
             if 'order_id' in fields and not res.get('order_id'):
-                assert (partner_id := self.env.context.get('default_partner_id'))
-                project_id = self.env.context.get('link_to_project')
-                sale_order = None
-                so_create_values = {
-                    'partner_id': partner_id,
-                    'company_id': self.env.context.get('default_company_id') or self.env.company.id,
-                }
-                if project_id:
-                    try:
-                        project_so = self.env['project.project'].browse(project_id).sale_order_id
-                        project_so.check_access_rule('write')
-                        sale_order = project_so
-                    except AccessError:
-                        pass
-                    if not sale_order:
-                        so_create_values['project_ids'] = [Command.link(project_id)]
-
-                if not sale_order:
-                    sale_order = self.env['sale.order'].create(so_create_values)
-                default_values['order_id'] = sale_order.id
+                default_values.update(self._get_default_sale_order_values())
             if product_name := self.env.context.get('sol_product_name') or self.env.context.get('default_name'):
                 product = self.env['product.product'].search(self._get_product_from_sol_name_domain(product_name), limit=1)
                 if product:
