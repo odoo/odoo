@@ -10,8 +10,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         # EXTENDS 'l10n_my_edi'
         vals = super()._export_invoice_vals(invoice)
 
-        # For self billed documents (when sending in_xxx entries to the platform) the supplier and customer are unversed.
-        if vals['vals']['document_type_code'] in ('11', '12', '13'):
+        # For self billed documents (when sending in_xxx entries to the platform) the supplier and customer are reversed.
+        if self._is_self_billed(vals['vals']['document_type_code']):
             vals['vals']['accounting_supplier_party_vals']['party_vals'] = self._get_partner_party_vals(invoice.partner_id, role='supplier')
             vals['vals']['accounting_customer_party_vals']['party_vals'] = self._get_partner_party_vals(invoice.company_id.partner_id, role='customer')
             # /!\ For the company (regular invoices) it is the field on res.company that is used, and not the one on res.partner.
@@ -20,10 +20,25 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 'industry_classification_code_attrs': {'name': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.name},
                 'industry_classification_code': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.code,
             })
+        # Sometimes, a foreign customer is also a supplier.
+        # To avoid needing to change the Generic TIN depending on what you do with your commercial partner, we will automatically switch
+        # depending on the context.
+        if self._is_self_billed(vals['vals']['document_type_code']):
+            other_party = vals["vals"]["accounting_supplier_party_vals"]["party_vals"]
+            opposite_generic_tin = 'EI00000000020'
+            expected_generic_tin = 'EI00000000030'
+        else:
+            other_party = vals["vals"]["accounting_customer_party_vals"]["party_vals"]
+            opposite_generic_tin = 'EI00000000030'
+            expected_generic_tin = 'EI00000000020'
+        # Switch the generic tin to the correct one when it makes sense (For example when a supplier has the buyer generic tin set)
+        for identification_val in other_party['party_identification_vals']:
+            if identification_val.get('id_attrs', {}).get('schemeID') == 'TIN' and identification_val.get('id') == opposite_generic_tin:
+                identification_val['id'] = expected_generic_tin
         return vals
 
     def _get_delivery_vals_list(self, invoice):
-        # OVERRIDE 'l10n_my_edy'
+        # OVERRIDE 'l10n_my_edi'
         customer = invoice.company_id.partner_id if invoice.is_purchase_document() else invoice.partner_id
         return [{
             'accounting_delivery_party_vals': self._l10n_my_edi_get_delivery_party_vals(customer),
@@ -50,14 +65,24 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     @api.model
     def _l10n_my_edi_get_document_type_code(self, invoice):
         """ Override the super method to include self billed documents. """
-        # OVERRIDE 'l10n_my_edy'
+        # OVERRIDE 'l10n_my_edi'
         super()._l10n_my_edi_get_document_type_code(invoice)
 
         if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id:
             code = '03' if invoice.move_type == 'out_invoice' else '13'
             return code, invoice.debit_origin_id
         elif invoice.move_type in ('out_refund', 'in_refund'):
-            code = '02' if invoice.move_type == 'out_refund' else '12'
+            # We consider a credit note a refund if it is paid and fully reconciled with a payment or bank transaction.
+            payment_terms = invoice.line_ids.filtered(lambda aml: aml.display_type == 'payment_term')
+            counterpart_amls = payment_terms.matched_debit_ids.debit_move_id + payment_terms.matched_credit_ids.credit_move_id
+            counterpart_move_type = 'out_invoice' if invoice.move_type == 'out_refund' else 'out_refund'
+            has_payments = bool(counterpart_amls.move_id.filtered(lambda move: move.move_type != counterpart_move_type))
+            is_paid = invoice.payment_state == invoice._get_invoice_in_payment_state()
+            if is_paid and has_payments:
+                code = '04' if invoice.move_type == 'out_refund' else '14'
+            else:
+                code = '02' if invoice.move_type == 'out_refund' else '12'
+
             return code, invoice.reversed_entry_id
         else:
             code = '01' if invoice.move_type == 'out_invoice' else '11'
@@ -72,3 +97,10 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'item_classification_attrs': {'listID': 'CLASS'},
         }]
         return vals
+
+    @api.model
+    def _is_self_billed(self, document_code):
+        """ Small helper which returns True if a document code is for self billing.
+        To avoid repeating the check multiple time, risking to forget to update one or the other.
+        """
+        return document_code in {"11", "12", "13", "14"}

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Macro } from "@web/core/macro";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, press } from "@odoo/hoot-dom";
 import {
     contains,
@@ -14,13 +14,12 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-describe.current.tags("desktop");
-
-async function simulateBarCode(barcode) {
-    for (const code of barcode) {
-        await press(code);
+async function simulateBarCode(chars) {
+    for (const char of chars) {
+        await press(char);
     }
 }
+
 class Product extends models.Model {
     name = fields.Char({ string: "Product name" });
     int_field = fields.Integer({ string: "Integer" });
@@ -50,6 +49,7 @@ beforeEach(() => {
     });
 });
 
+test.tags("desktop");
 test("Button with barcode_trigger", async () => {
     mockService("action", {
         doActionButton: (data) => {
@@ -80,6 +80,7 @@ test("Button with barcode_trigger", async () => {
     expect.verifySteps(["do_something"]);
 });
 
+test.tags("desktop");
 test("Two buttons with same barcode_trigger and the same string and action", async () => {
     mockService("action", {
         doActionButton: (data) => {
@@ -109,6 +110,7 @@ test("Two buttons with same barcode_trigger and the same string and action", asy
     expect.verifySteps(["do_something"]);
 });
 
+test.tags("desktop");
 test("edit, save and cancel buttons", async () => {
     onRpc("web_save", () => expect.step("save"));
     await mountView({
@@ -136,6 +138,7 @@ test("edit, save and cancel buttons", async () => {
     expect.verifySteps([]);
 });
 
+test.tags("desktop");
 test("pager buttons", async () => {
     await mountView({
         type: "form",

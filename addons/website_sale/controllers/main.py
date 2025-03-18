@@ -705,6 +705,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         pass
                     redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
             request.session['website_sale_current_pl'] = pricelist.id
+            request.session['website_sale_selected_pl_id'] = pricelist.id
             order_sudo = request.website.sale_get_order()
             if order_sudo:
                 order_sudo._cart_update_pricelist(pricelist_id=pricelist.id)
@@ -720,12 +721,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 return request.redirect("%s?code_not_available=1" % redirect)
 
             request.session['website_sale_current_pl'] = pricelist_sudo.id
+            request.session['website_sale_selected_pl_id'] = pricelist_sudo.id
             order_sudo = request.website.sale_get_order()
             if order_sudo:
                 order_sudo._cart_update_pricelist(pricelist_id=pricelist_sudo.id)
         else:
             # Reset the pricelist if empty promo code is given
             request.session.pop('website_sale_current_pl', None)
+            request.session.pop('website_sale_selected_pl_id', None)
             order_sudo = request.website.sale_get_order()
             if order_sudo:
                 pl_before = order_sudo.pricelist_id

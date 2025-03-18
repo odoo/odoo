@@ -149,3 +149,19 @@ registry.category("web_tour.tours").add("self_order_language_changes", {
         Utils.checkLanguageIsAvailable("French"),
     ],
 });
+
+registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Office Combo"),
+        ProductPage.clickProduct("Desk Organizer"),
+        {
+            trigger: `.page-buttons :disabled:contains("Next")`,
+        },
+        ...ProductPage.setupAttribute([
+            { name: "Size", value: "M" },
+            { name: "Fabric", value: "Leather" },
+        ]),
+        Utils.clickBtn("Add to cart"),
+    ],
+});

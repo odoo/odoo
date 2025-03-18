@@ -34,6 +34,7 @@ export class ComboPage extends Component {
             showQtyButtons: false,
             editMode: false,
             qty: 1,
+            selectedValues: this.env.selectedValues,
         });
 
         onWillUnmount(() => {
@@ -58,6 +59,17 @@ export class ComboPage extends Component {
         return this.selfOrder.models["product.template.attribute.value"].filter((c) =>
             attrValIds.includes(c.id)
         );
+    }
+
+    isEveryValueSelected() {
+        return Object.values(this.state.selectedValues).every((value) => value);
+    }
+
+    isArchivedCombination() {
+        const variantAttributeValueIds = Object.values(this.state.selectedValues)
+            .filter((attr) => typeof attr !== "object")
+            .map((attr) => Number(attr));
+        return this.props.product._isArchivedCombination(variantAttributeValueIds);
     }
 
     resetState() {
