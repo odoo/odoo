@@ -904,7 +904,7 @@ class AccountMove(models.Model):
     def _compute_name_placeholder(self):
         for move in self:
             if (not move.name or move.name == '/') and not move._get_last_sequence():
-                sequence_format_string, sequence_format_values = move._get_sequence_format_param(move._get_starting_sequence())
+                sequence_format_string, sequence_format_values = move._get_next_sequence_format()
                 sequence_format_values['seq'] = sequence_format_values['seq'] + 1
                 move.name_placeholder = sequence_format_string.format(**sequence_format_values)
             else:
