@@ -205,7 +205,7 @@
                                     <b t-if="sale_order.payment_term_id" t-field="sale_order.payment_term_id.note"/>
                                     <t t-call="portal.signature_form">
                                         <t t-set="call_url" t-value="sale_order.get_portal_url(suffix='/accept')"/>
-                                        <t t-set="default_name" t-value="sale_order.partner_id.name"/>
+                                        <t t-set="default_name" t-value="sale_order.partner_id.name or sale_order.partner_id.commercial_partner_id.name"/>
                                     </t>
                                 </main>
                             </form>
