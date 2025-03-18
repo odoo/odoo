@@ -277,5 +277,10 @@ registry.category("web_tour.tours").add("LotTour", {
             inLeftSide({
                 trigger: ".info-list:not(:contains('SN 3'))",
             }),
+            // Check auto assign lot number if there is only one available option
+            ProductScreen.clickDisplayedProduct("Product B"),
+            inLeftSide({
+                trigger: ".info-list:contains('Lot Number 1001')",
+            }),
         ].flat(),
 });
