@@ -1080,6 +1080,53 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour("PosLoyalty2DiscountsSpecificGlobal")
 
+    def test_specific_product_discount_with_global_discount(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        self.discount_product = self.env["product.product"].create({
+            "name": "Discount Product",
+            "type": "service",
+            "list_price": 0,
+            "available_in_pos": True,
+        })
+
+        self.main_pos_config2 = self.main_pos_config.copy({
+            'module_pos_discount': True,
+            'discount_product_id': self.discount_product.id,
+            'discount_pc': 50,
+        })
+
+        self.product_a = self.env['product.product'].create({
+            'name': "Product A",
+            'is_storable': True,
+            'list_price': 80,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        self.env['loyalty.program'].create({
+            'name': 'Discount on Specific Products',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'minimum_qty': 0
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 40,
+                'discount_mode': 'per_order',
+                'discount_applicability': 'specific',
+                'discount_product_ids': [Command.set(self.product_a.ids)],
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config2.id)],
+        })
+
+        self.main_pos_config2.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("PosLoyaltySpecificProductDiscountWithGlobalDiscount", pos_config=self.main_pos_config2)
+
     def test_point_per_money_spent(self):
         """Test the point per $ spent feature"""
         LoyaltyProgram = self.env['loyalty.program']
