@@ -112,7 +112,7 @@ export class Overlay {
                     close: this.close.bind(this),
                     isOverlayOpen: this.isOverlayOpen.bind(this),
                     history: {
-                        ignoreDOMChanges: this.plugin.dependencies.history.ignoreDOMChanges,
+                        ignoreDOMMutations: this.plugin.dependencies.history.ignoreDOMMutations,
                     },
                 }),
                 {
