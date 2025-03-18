@@ -1227,8 +1227,8 @@ export class Rtc extends Record {
         if (camera) {
             await this.toggleVideo("camera");
         }
-        await this.resetMicAudioTrack({ force: audio });
         await this._initConnection();
+        await this.resetMicAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
             return;
         }
