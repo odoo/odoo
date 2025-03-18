@@ -159,6 +159,7 @@ class PosOrder(models.Model):
 
         if pos_line.sale_order_origin_id:
             origin_line = pos_line.sale_order_line_id
+            inv_line_vals["name"] = origin_line.name
             origin_line._set_analytic_distribution(inv_line_vals)
 
         return inv_line_vals
