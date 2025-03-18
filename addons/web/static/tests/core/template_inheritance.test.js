@@ -17,7 +17,7 @@ function _applyInheritance(arch, inherits, url = "test/url") {
 }
 
 test("warn when contains(@class, ...)", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     patchWithCleanup(console, {
         warn(msg) {
             expect.step(msg);

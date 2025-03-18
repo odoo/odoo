@@ -95,7 +95,7 @@ async function makeExpressionEditor(params = {}) {
 defineModels([Partner, Product, Team, Player, Country, Stage]);
 
 beforeEach(() => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
 });
 
 test("rendering of truthy values", async () => {
@@ -120,7 +120,7 @@ test("rendering of falsy values", async () => {
 });
 
 test("rendering of 'expr'", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     await makeExpressionEditor({ expression: "expr" });
     expect(getTreeEditorContent()).toEqual([
         { value: "all", level: 0 },
@@ -178,7 +178,7 @@ test("copy a complex condition", async () => {
 });
 
 test("change path, operator and value", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     await makeExpressionEditor({ expression: `bar != "blabla"` });
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
@@ -343,7 +343,7 @@ test("rendering of if else", async () => {
 });
 
 test("check condition by default when creating a new rule", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     Partner._fields.country_id = fields.Char({ string: "Country ID" });
     await makeExpressionEditor({ expression: "expr" });
     await contains("a[role='button']").click();
@@ -377,7 +377,7 @@ test("render false and true leaves", async () => {
 });
 
 test("no field of type properties in model field selector", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     Partner._fields.properties = fields.Properties({
         string: "Properties",
         definition_record: "product_id",
@@ -404,7 +404,7 @@ test("no field of type properties in model field selector", async () => {
 });
 
 test("no special fields in fields", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     await makeExpressionEditor({
         expression: `bar`,
         fieldFilters: ["foo", "bar", "properties"],

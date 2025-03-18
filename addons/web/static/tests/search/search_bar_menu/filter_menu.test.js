@@ -728,7 +728,7 @@ test("Add a custom filter", async () => {
 });
 
 test("Add a custom filter containing an expression", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
 
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -753,7 +753,7 @@ test("Add a custom filter containing an expression", async () => {
 });
 
 test("Add a custom filter containing a between operator", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
 
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -776,7 +776,7 @@ test("Add a custom filter containing a between operator", async () => {
 });
 
 test("consistent display of ! in debug mode", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
 
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
@@ -849,7 +849,7 @@ test("display of is (not) (not) set in facets", async () => {
 });
 
 test("Add a custom filter: notification on invalid domain", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     mockService("notification", {
         add(message, options) {
             expect.step("notification");
@@ -875,7 +875,7 @@ test("Add a custom filter: notification on invalid domain", async () => {
 });
 
 test("display names in facets", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     Partner._records = [
         { id: 1, name: "John" },
         { id: 2, name: "David" },
@@ -913,7 +913,7 @@ test("display names in facets", async () => {
 });
 
 test("display names in facets (with a property)", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     Partner._records = [{ id: 1, name: "John" }];
 
     onRpc("/web/domain/validate", () => true);
@@ -1042,7 +1042,7 @@ test("group by properties", async () => {
 });
 
 test("shorten descriptions of long lists", async function () {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     onRpc("/web/domain/validate", () => true);
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",
