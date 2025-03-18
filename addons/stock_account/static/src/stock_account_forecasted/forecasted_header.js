@@ -19,6 +19,17 @@ patch(Parent.prototype, {
             target: 'current',
             context: context,
         });
+    },
+
+    _getActionContext() {
+        const context = { ...this.context };
+        const templates = this.props.docs.product_templates_ids;
+        if (templates) {
+            context.search_default_product_tmpl_id = templates;
+        } else {
+            context.search_default_product_id = this.props.docs.product_variants_ids;
+        }
+        return context;
     }
 });
 
