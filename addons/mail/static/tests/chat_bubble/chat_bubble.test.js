@@ -307,6 +307,8 @@ test("Can close all chat windows at once", async () => {
     await hover(".o-mail-ChatHub-hiddenBtn");
     await click("button.fa.fa-ellipsis-h[title='Chat Options']");
     await click("button.o-mail-ChatHub-option", { text: "Close all conversations" });
+    await contains(".modal-title", { text: "Close all conversations" });
+    await click(".modal-footer .btn-danger", { text: "Yes" });
     await contains(".o-mail-ChatBubble", { count: 0 });
     assertChatHub({});
 });

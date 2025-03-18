@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.CloseAllConfirmation">
+        <Dialog size="'md'" title="props.title">
+            <p class="text-prewrap" t-out="props.message"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-danger" t-on-click.stop="onClickConfirm" data-hotkey="q">
+                    <i class="fa fa-fw fa-check"/>Yes
+                </button>
+                <button class="btn btn-secondary" t-on-click.stop="props.close" data-hotkey="x">
+                    <i class="fa fa-fw fa-times"/>Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
