@@ -46,7 +46,6 @@ const EDIT_CLICK_TYPE = {
 /**
  * @typedef {Object} Props
  * @property {import("models").Composer} composer
- * @property {import("@mail/utils/common/hooks").MessageEdition} [messageEdition]
  * @property {'compact'|'normal'|'extended'} [mode] default: 'normal'
  * @property {'message'|'note'|false} [type] default: false
  * @property {string} [placeholder]
@@ -81,7 +80,6 @@ export class Composer extends Component {
         "mode?",
         "placeholder?",
         "dropzoneRef?",
-        "messageEdition?",
         "className?",
         "sidebar?",
         "type?",
@@ -165,9 +163,6 @@ export class Composer extends Component {
                 },
                 () => this.allowUpload
             );
-        }
-        if (this.props.messageEdition) {
-            this.props.messageEdition.composerOfThread = this;
         }
         useChildSubEnv({ inComposer: true });
         useEffect(
@@ -472,10 +467,10 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         switch (ev.key) {
             case "ArrowUp":
-                if (this.props.messageEdition && composer.text === "") {
+                if (!this.env.inChatter && composer.text === "") {
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
-                        this.props.messageEdition.enterEditMode(messageToEdit);
+                        messageToEdit.enterEditMode(this.props.composer.thread);
                     }
                 }
                 break;
