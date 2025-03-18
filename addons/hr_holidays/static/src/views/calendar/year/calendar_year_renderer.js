@@ -2,7 +2,7 @@ import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar
 
 import { useService } from "@web/core/utils/hooks";
 import { useMandatoryDays } from "../../hooks";
-import { useCalendarPopover } from "@web/views/calendar/hooks";
+import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { TimeOffCalendarYearPopover } from "./calendar_year_popover";
 
 export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
@@ -70,7 +70,9 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         const classesToAdd = super.eventClassNames(...arguments);
         const record = this.props.model.records[event.id];
         if (record && record.request_date_from_period) {
-            record.request_date_from_period === "am" ? classesToAdd.push("o_event_half_left") : classesToAdd.push("o_event_half_right");
+            record.request_date_from_period === "am"
+                ? classesToAdd.push("o_event_half_left")
+                : classesToAdd.push("o_event_half_right");
         }
         return classesToAdd;
     }
