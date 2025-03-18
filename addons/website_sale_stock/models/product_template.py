@@ -55,6 +55,16 @@ class ProductTemplate(models.Model):
                 'free_qty': 0,
                 'cart_qty': 0,
             })
+        if product_or_template.type == 'combo':
+            # The max quantity of a combo product is the max quantity of its combo with the lowest
+            # max quantity. If none of the combos has a max quantity, then the combo product also
+            # has no max quantity.
+            max_quantities = [
+                max_quantity for combo in product_or_template.combo_ids
+                if (max_quantity := combo._get_max_quantity(website)) is not None
+            ]
+            if max_quantities:
+                res['max_combo_quantity'] = min(max_quantities)
 
         return res
 
@@ -69,7 +79,7 @@ class ProductTemplate(models.Model):
         :param datetime date: The date to use to compute prices.
         :param res.currency currency: The currency to use to compute prices.
         :param product.pricelist pricelist: The pricelist to use to compute prices.
-        :param dict kwargs: Locally unused data passed to `super` and `_get_product_available_qty`.
+        :param dict kwargs: Locally unused data passed to `super` and `_get_max_quantity`.
         :rtype: dict
         :return: A dict containing additional data about the specified product.
         """
@@ -77,16 +87,8 @@ class ProductTemplate(models.Model):
             product_or_template, date, currency, pricelist, **kwargs
         )
 
-        if (
-            (website := ir_http.get_request_website())
-            and product_or_template.is_storable
-            and not product_or_template.allow_out_of_stock_order
-        ):
-            available_qty = website._get_product_available_qty(
-                product_or_template.sudo(), **kwargs
-            ) if product_or_template.is_product_variant else 0
-            cart_quantity = product_or_template._get_cart_qty(
-                website
-            ) if product_or_template.is_product_variant else 0
-            data['free_qty'] = available_qty - cart_quantity
+        if (website := ir_http.get_request_website()) and product_or_template.is_product_variant:
+            max_quantity = product_or_template._get_max_quantity(website, **kwargs)
+            if max_quantity is not None:
+                data['free_qty'] = max_quantity
         return data

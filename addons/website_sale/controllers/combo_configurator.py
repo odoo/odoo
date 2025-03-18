@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import _
 from odoo.exceptions import UserError
 from odoo.http import request, route
@@ -43,22 +44,37 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
     ):
         """ Add the provided combo product and selected combo items to the cart.
 
-        :param int combo_product_id: The combo product to add, as a `product.template` id.
+        :param int combo_product_id: The combo product to add, as a `product.product` id.
         :param int quantity: The quantity to add.
         :param list(dict) selected_combo_items: The selected combo items to add.
         :param dict kwargs: Locally unused data passed to `_cart_update`.
         :rtype: dict
         :return: A dict containing information about the cart update.
         """
+        if not selected_combo_items:
+            raise UserError(_("A combo product can't be empty. Please select at least one option."))
+
         order_sudo = request.website.sale_get_order(force_create=True)
         if order_sudo.state != 'draft':
             request.session['sale_order_id'] = None
             order_sudo = request.website.sale_get_order(force_create=True)
 
+        combo_quantity, warning = order_sudo._verify_updated_quantity(
+            request.env['sale.order.line'], combo_product_id, quantity, **kwargs
+        )
+        # A combo product and its items should have the same quantity (by design). So, if the
+        # requested quantity isn't available for one or more combo items, we should lower the
+        # quantity of the combo product and its items to the maximum available quantity of the
+        # combo item with the least available quantity.
+        for combo_item in selected_combo_items:
+            combo_item_quantity, warning = order_sudo._verify_updated_quantity(
+                request.env['sale.order.line'], combo_item['product_id'], quantity, **kwargs
+            )
+            combo_quantity = min(combo_quantity, combo_item_quantity)
+
         values = order_sudo._cart_update(
             product_id=combo_product_id,
-            line_id=False,  # Always create a new line for combo products.
-            set_qty=quantity,
+            set_qty=combo_quantity,
             **kwargs,
         )
         line_ids = [values['line_id']]
@@ -67,8 +83,7 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
             for combo_item in selected_combo_items:
                 item_values = order_sudo._cart_update(
                     product_id=combo_item['product_id'],
-                    line_id=False,
-                    set_qty=quantity,
+                    set_qty=combo_quantity,
                     product_custom_attribute_values=combo_item['product_custom_attribute_values'],
                     no_variant_attribute_value_ids=[
                         int(value_id) for value_id in combo_item['no_variant_attribute_value_ids']
