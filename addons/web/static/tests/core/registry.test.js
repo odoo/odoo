@@ -164,7 +164,7 @@ test("can recursively open sub registry", () => {
 });
 
 test("can validate the values from a schema", () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     const schema = { name: String, age: { type: Number, optional: true } };
     const friendsRegistry = new Registry();
     friendsRegistry.addValidation(schema);
@@ -179,7 +179,7 @@ test("can validate the values from a schema", () => {
 });
 
 test("can validate by adding a schema after the registry is filled", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     const schema = { name: String };
     const friendsRegistry = new Registry();
     expect(() => friendsRegistry.add("jean", { name: 999 })).not.toThrow();
@@ -187,7 +187,7 @@ test("can validate by adding a schema after the registry is filled", async () =>
 });
 
 test("can validate subclassess", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     const schema = { component: { validate: (c) => c.prototype instanceof Component } };
     const widgetRegistry = new Registry();
     widgetRegistry.addValidation(schema);
