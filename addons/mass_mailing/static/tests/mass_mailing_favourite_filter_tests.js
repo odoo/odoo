@@ -1,7 +1,6 @@
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import * as testUtils from "@web/../tests/helpers/utils";
 import weTestUtils from "@web_editor/../tests/test_utils";
-import * as dsHelpers from "@web/../tests/core/domain_selector_tests";
 
 let fixture;
 let serverData;
@@ -377,7 +376,8 @@ QUnit.module('favorite filter widget', (hooks) => {
             "should show icon to save the filter because domain is set in the mailing");
 
         // If domain is not set on mailing and no filter available, both drop-down and icon container are hidden
-        await dsHelpers.clickOnButtonDeleteNode(fixture);
+        
+        await testUtils.click(fixture.querySelector(".o_tree_editor_node_control_panel > button:nth-child(3)"));
         assert.isNotVisible(fixture.querySelector('.o_field_mailing_filter .o_input_dropdown'),
             "should not display drop-down because there is still no filter available to select from");
         assert.isNotVisible(fixture.querySelector('.o_mass_mailing_filter_container'),
@@ -400,7 +400,7 @@ QUnit.module('favorite filter widget', (hooks) => {
         assert.isNotVisible(fixture.querySelector('.o_mass_mailing_save_filter_container'),
             "should not have option to save filter if filter is selected");
 
-        await dsHelpers.clickOnButtonAddNewRule(fixture);
+        await testUtils.click(fixture.querySelector(".o_tree_editor_node_control_panel > button:nth-child(1)"));
         await testUtils.nextTick();
         assert.isVisible(fixture.querySelector('.o_mass_mailing_save_filter_container'),
             "should have option to save filter because mailing domain is changed");
