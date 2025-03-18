@@ -22,6 +22,7 @@ class WebsiteSaleCollect(WebsiteSale):
                 order_sudo.partner_shipping_id.zip
                 or res.get('selected_wh_location', {}).get('zip_code')
                 or request.geoip.postal.code
+                or ''  # String expected for the widget.
             )
         return res
 
