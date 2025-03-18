@@ -208,7 +208,7 @@ test("Can see records on PIVOT cells", async function () {
         },
     };
     mockService("action", fakeActionService);
-    const { env, model } = await createSpreadsheetWithPivot();
+    const { env, model } = await createSpreadsheetWithPivot({ pivotType: "static" });
     const firstSheetId = model.getters.getActiveSheetId();
 
     async function checkCells(cells) {
@@ -269,7 +269,7 @@ test("Can see records on PIVOT cells", async function () {
 });
 
 test("Cannot see records of pivot formula without value", async function () {
-    const { env, model } = await createSpreadsheetWithPivot();
+    const { env, model } = await createSpreadsheetWithPivot({ pivotType: "static" });
     expect(getCellFormula(model, "B3")).toBe(
         `=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",1)`
     );
