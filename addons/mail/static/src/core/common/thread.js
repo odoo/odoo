@@ -2,7 +2,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/core/common/record";
-import { useMessageEdition, useVisible } from "@mail/utils/common/hooks";
+import { useVisible } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -33,7 +33,6 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
  * @property {boolean} [isInChatWindow=false]
  * @property {number} [jumpPresent=0]
  * @property {number} [jumpToNewMessage=0]
- * @property {import("@mail/utils/common/hooks").MessageEdition} [messageEdition]
  * @property {"asc"|"desc"} [order="asc"]
  * @property {import("models").Thread} thread
  * @property {string} [searchTerm]
@@ -48,7 +47,6 @@ export class Thread extends Component {
         "jumpPresent?",
         "jumpToNewMessage?",
         "thread",
-        "messageEdition?",
         "order?",
         "scrollRef?",
         "showEmptyMessage?",
@@ -80,7 +78,6 @@ export class Thread extends Component {
             scrollTop: null,
         });
         this.lastJumpPresent = this.props.jumpPresent;
-        this.messageEdition = this.props.messageEdition ?? useMessageEdition();
         this.orm = useService("orm");
         /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageHighlight>|null} */
         this.messageHighlight = this.env.messageHighlight

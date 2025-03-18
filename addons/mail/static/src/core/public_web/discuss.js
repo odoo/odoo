@@ -6,7 +6,7 @@ import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
-import { useMessageEdition, useMessageHighlight } from "@mail/utils/common/hooks";
+import { useMessageHighlight } from "@mail/utils/common/hooks";
 
 import { Component, useRef, useState, useExternalListener, useEffect, useSubEnv } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -39,7 +39,6 @@ export class Discuss extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.messageHighlight = useMessageHighlight();
-        this.messageEdition = useMessageEdition();
         this.contentRef = useRef("content");
         this.root = useRef("root");
         this.state = useState({ jumpThreadPresent: 0 });
