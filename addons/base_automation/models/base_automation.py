@@ -416,6 +416,7 @@ class BaseAutomation(models.Model):
 
     @api.onchange('trigger')
     def _onchange_trigger(self):
+        self.ensure_one()
         field = (
             self._get_trigger_specific_field()
             if self.trigger not in TIME_TRIGGERS
