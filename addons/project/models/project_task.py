@@ -1563,7 +1563,10 @@ class ProjectTask(models.Model):
         return res
 
     def _creation_subtype(self):
-        return self.env.ref('project.mt_task_new')
+        if self.parent_id:
+            return self.env.ref('project.mt_subtask_new')
+        else:
+            return self.env.ref('project.mt_task_new')
 
     def _creation_message(self):
         self.ensure_one()
