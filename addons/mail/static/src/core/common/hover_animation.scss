@@ -1,0 +1,89 @@
+$ha-popAnimation-duration: 0.2s;
+
+.o-discuss-HoverAnimation-popEffect {
+
+    &:not(:has(.o-discuss-HoverAnimationTarget)),
+    & .o-discuss-HoverAnimationTarget {
+        filter: grayscale(80%);
+        transform: scale(1);
+        transition: transform $ha-popAnimation-duration cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    &.o-discuss-HoverAnimation-active {
+
+        &:not(:has(.o-discuss-HoverAnimationTarget)),
+        & .o-discuss-HoverAnimationTarget {
+            filter: unset;
+        }
+    }
+
+    @for $i from 1 through 5 {
+        $scale-value: 1 + ($i * 0.10);
+
+        &.o-ha-intensity-#{$i}.o-discuss-HoverAnimation-active {
+
+            &:not(:has(.o-discuss-HoverAnimationTarget)),
+            & .o-discuss-HoverAnimationTarget {
+                transform: scale(#{$scale-value});
+            }
+        }
+    }
+}
+
+$ha-wobbleAnimation-duration: 0.6s;
+
+@for $i from 1 through 5 {
+    $rotation: $i * 4deg;
+
+    .o-discuss-HoverAnimation-wobbleEffect.o-ha-intensity-#{$i}.o-discuss-HoverAnimation-active {
+
+        &:not(:has(.o-discuss-HoverAnimationTarget)),
+        & .o-discuss-HoverAnimationTarget {
+            animation: ha-wobbleAnimation-#{$i} $ha-wobbleAnimation-duration linear;
+        }
+    }
+
+    @keyframes ha-wobbleAnimation-#{$i} {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        25% {
+            transform: rotate($rotation);
+        }
+
+        50% {
+            transform: rotate(-$rotation);
+        }
+
+        75% {
+            transform: rotate($rotation);
+        }
+
+        100% {
+            transform: rotate(0deg);
+        }
+    }
+}
+
+$ha-rotateAnimation-base-duration: 1s;
+
+@for $i from 1 through 5 {
+    $duration: $ha-rotateAnimation-base-duration - (($i - 1) * 0.1s);
+
+    .o-discuss-HoverAnimation-rotateEffect.o-ha-intensity-#{$i}.o-discuss-HoverAnimation-active {
+        &:not(:has(.o-discuss-HoverAnimationTarget)), & .o-discuss-HoverAnimationTarget {
+            animation: ha-rotateAnimation $duration cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+    }
+}
+
+@keyframes ha-rotateAnimation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

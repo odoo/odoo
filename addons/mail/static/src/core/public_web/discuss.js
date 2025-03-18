@@ -1,6 +1,7 @@
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { Composer } from "@mail/core/common/composer";
 import { CountryFlag } from "@mail/core/common/country_flag";
+import { HoverAnimation, HoverAnimationTarget } from "@mail/core/common/hover_animation";
 import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
@@ -34,6 +35,8 @@ export class Discuss extends Component {
         AutoresizeInput,
         CountryFlag,
         DiscussSidebar,
+        HoverAnimation,
+        HoverAnimationTarget,
         Thread,
         ThreadIcon,
         Composer,

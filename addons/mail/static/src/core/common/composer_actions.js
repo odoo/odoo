@@ -1,3 +1,5 @@
+import { EmojiButton } from "@mail/core/common/emoji_button";
+
 import { toRaw, useComponent, useEffect, useRef, useState } from "@odoo/owl";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 
@@ -77,14 +79,15 @@ composerActionsRegistry
         sequenceQuick: 30,
     })
     .add("add-emoji", {
-        icon: "fa fa-smile-o",
         isPicker: true,
         pickerName: _t("Emoji"),
-        name: _t("Add Emojis"),
-        onClick: (component, action, ev) => {
-            pickerOnClick(component, action, ev);
-            markEventHandled(ev, "Composer.onClickAddEmoji");
-        },
+        component: EmojiButton,
+        componentProps: (component, action) => ({
+            onClick(ev) {
+                pickerOnClick(component, action, ev);
+                markEventHandled(ev, "Composer.onClickAddEmoji");
+            },
+        }),
         setup: (action) => {
             const component = useComponent();
             pickerSetup(action, () =>
@@ -149,6 +152,8 @@ composerActionsRegistry
 
 function transformAction(component, id, action) {
     return {
+        animation: action.animation,
+        animationIntensity: action.animationIntensity,
         get btnClass() {
             return typeof action.btnClass === "function"
                 ? action.btnClass(component)

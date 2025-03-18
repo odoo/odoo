@@ -149,7 +149,8 @@
 
 <t t-name="mail.Composer.quickAction">
     <t t-if="action.component" t-component="action.component" t-props="action.componentProps"/>
-    <t t-else="" t-call="mail.Composer.quickActionButton"/>
+    <HoverAnimation t-elif="action.animation" animation="action.animation" intensity="action.animationIntensity"><t t-call="mail.Composer.quickActionButton"/></HoverAnimation>
+    <t t-else=""><t t-call="mail.Composer.quickActionButton"/></t>
 </t>
 
 <t t-name="mail.Composer.quickActionButton">

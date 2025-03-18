@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.HoverAnimation">
+       <div t-attf-class="o-discuss-HoverAnimation-{{props.animation}}Effect o-ha-intensity-{{props.intensity}}" t-att-class="{'o-discuss-HoverAnimation-active': state.isHover}" t-ref="root"><t t-slot="default"/></div>
+    </t>
+    <t t-name="mail.HoverAnimationTarget">
+        <div class="o-discuss-HoverAnimationTarget"><t t-slot="default"/></div>
+    </t>
+</templates>

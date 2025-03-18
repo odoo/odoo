@@ -113,7 +113,7 @@
 
 <t t-name="mail.Discuss.action">
     <button class="btn px-1 btn-group-item btn-secondary bg-inherit m-0 border-0" t-attf-class="{{ action.isActive ? 'o-isActive' : '' }}" t-att-disabled="action.disabledCondition" t-att-title="action.name" t-att-name="action.id" t-on-click="() => action.onSelect()">
-        <i t-if="action.iconLarge" t-att-class="action.iconLarge"/> <span t-if="action.text" t-esc="action.text"/>
+        <i t-if="action.iconLarge" t-att-class="action.iconLarge"/><span t-if="action.text" t-esc="action.text"/>
     </button>
 </t>
 

@@ -1,6 +1,7 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
+import { HoverAnimation } from "@mail/core/common/hover_animation";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
@@ -63,6 +64,7 @@ export class Composer extends Component {
         Dropdown,
         DropdownItem,
         FileUploader,
+        HoverAnimation,
         NavigableList,
     };
     static defaultProps = {

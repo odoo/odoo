@@ -9,6 +9,8 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { useGifPicker } from "./gif_picker";
 
 composerActionsRegistry.add("add-gif", {
+    animation: "wobble",
+    animationIntensity: 2,
     condition: (component) =>
         (component.store.hasGifPickerFeature || component.store.self.isAdmin) &&
         !component.env.inChatter &&
