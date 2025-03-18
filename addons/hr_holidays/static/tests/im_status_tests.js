@@ -28,19 +28,22 @@ QUnit.test("change icon on change partner im_status for leave variants", async (
 
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: pyEnv.currentPartnerId,
-        im_status: "offline",
+        im_status: "leave_offline",
+        presence_status: "offline",
     });
     await contains(".o-mail-ImStatus .fa-plane[title='Out of office']");
 
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: pyEnv.currentPartnerId,
-        im_status: "away",
+        im_status: "leave_away",
+        presence_status: "away",
     });
     await contains(".o-mail-ImStatus .fa-plane[title='Idle']");
 
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: pyEnv.currentPartnerId,
-        im_status: "online",
+        im_status: "leave_online",
+        presence_status: "online",
     });
     await contains(".o-mail-ImStatus .fa-plane[title='Online']");
 });

@@ -38,15 +38,18 @@ export const imStatusService = {
         };
 
         bus_service.addEventListener("connect", () => updateBusPresence(), { once: true });
-        bus_service.subscribe("bus.bus/im_status_updated", async ({ partner_id, im_status }) => {
-            if (session.is_public || !partner_id || partner_id !== user.partnerId) {
-                return;
+        bus_service.subscribe(
+            "bus.bus/im_status_updated",
+            async ({ partner_id, presence_status }) => {
+                if (session.is_public || !partner_id || partner_id !== user.partnerId) {
+                    return;
+                }
+                const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
+                if (presence_status === "offline" || (presence_status === "away" && isOnline)) {
+                    this.updateBusPresence();
+                }
             }
-            const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
-            if (im_status === "offline" || (im_status === "away" && isOnline)) {
-                this.updateBusPresence();
-            }
-        });
+        );
         presence.bus.addEventListener("presence", () => {
             if (lastSentInactivity >= AWAY_DELAY) {
                 this.updateBusPresence();
