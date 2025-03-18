@@ -63,7 +63,10 @@
             <th t-if="not groupby == 'timesheet_invoice_id'">Invoice</th>
         </th>
         <xpath expr="//tbody//td[hasclass('text-end')]" position="before">
-            <td t-if="not groupby == 'so_line' and timesheets[0].env['account.analytic.line']._show_portal_timesheets()"><span t-field="timesheet.so_line" t-att-title="timesheet.so_line.display_name"></span></td>
+            <td t-if="not groupby == 'so_line' and timesheets[0].env['account.analytic.line']._show_portal_timesheets()">
+                <span t-if="timesheet.so_line" t-field="timesheet.so_line" t-att-title="timesheet.so_line.display_name"></span>
+                <span t-else="" class="text-muted">Non-billable</span>
+            </td>
             <td t-if="not groupby == 'timesheet_invoice_id'"><span t-field="timesheet.timesheet_invoice_id" t-att-title="timesheet.timesheet_invoice_id.display_name"></span></td>
         </xpath>
     </template>
