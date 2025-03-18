@@ -1074,6 +1074,7 @@ actual arch.
             debug = node.attrib.pop('__debug__') == 'True'
             if debug != is_debug:
                 node.attrib['invisible'] = '1'
+                node.attrib['column_invisible'] = '1'
         return tree
 
     def _postprocess_view(self, node, model_name, editable=True, node_info=None, **options):
