@@ -1,16 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Endpoints of the API.
-# See https://docs.adyen.com/api-explorer/#/CheckoutService/v67/overview for Checkout API
+# See https://docs.adyen.com/api-explorer/#/CheckoutService/v71/overview for Checkout API
 # See https://docs.adyen.com/api-explorer/#/Recurring/v49/overview for Recurring API
 API_ENDPOINT_VERSIONS = {
     '/disable': 49,                 # Recurring API
-    '/paymentMethods': 67,          # Checkout API
-    '/payments': 67,                # Checkout API
-    '/payments/details': 67,        # Checkout API
-    '/payments/{}/cancels': 67,     # Checkout API
-    '/payments/{}/captures': 67,    # Checkout API
-    '/payments/{}/refunds': 67,     # Checkout API
+    '/paymentMethods': 71,          # Checkout API
+    '/payments': 71,                # Checkout API
+    '/payments/details': 71,        # Checkout API
+    '/payments/{}/cancels': 71,     # Checkout API
+    '/payments/{}/captures': 71,    # Checkout API
+    '/payments/{}/refunds': 71,     # Checkout API
 }
 
 # Adyen-specific mapping of currency codes in ISO 4217 format to the number of decimals.
