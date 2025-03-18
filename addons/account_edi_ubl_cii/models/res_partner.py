@@ -46,7 +46,7 @@ class ResPartner(models.Model):
             ('9914', "Austria UID"),
             ('9915', "Austria VOKZ"),
             ('0208', "Belgian Company Registry"),
-            ('9925', "Belgian VAT number"),
+            ('9925', "Belgian VAT"),
             ('9924', "Bosnia and Herzegovina VAT"),
             ('9926', "Bulgaria VAT"),
             ('9934', "Croatia VAT"),
