@@ -34,7 +34,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
     def test_get_additional_combination_info_max_combo_quantity_with_max(self):
         product_a = self._create_product(is_storable=True, allow_out_of_stock_order=False)
         product_b = self._create_product(is_storable=True, allow_out_of_stock_order=False)
-        product_c = self._create_product(is_storable=True)
+        product_c = self._create_product(is_storable=True, allow_out_of_stock_order=True)
         self.env['stock.quant'].create([
             {
                 'product_id': product_a.id,
@@ -67,7 +67,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         self.assertEqual(combination_info['max_combo_quantity'], 2)
 
     def test_get_additional_combination_info_max_combo_quantity_without_max(self):
-        product = self._create_product(is_storable=True)
+        product = self._create_product(is_storable=True, allow_out_of_stock_order=True)
         combo = self.env['product.combo'].create({
             'name': "Test combo", 'combo_item_ids': [Command.create({'product_id': product.id})]
         })
