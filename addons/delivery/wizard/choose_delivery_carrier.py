@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 class ChooseDeliveryCarrier(models.TransientModel):
     _name = 'choose.delivery.carrier'
+    _inherit = ['pickup.location.mixin']
     _description = 'Delivery Carrier Selection Wizard'
 
     def _get_default_weight_uom(self):
@@ -15,9 +16,11 @@ class ChooseDeliveryCarrier(models.TransientModel):
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', required=True)
     carrier_id = fields.Many2one(
         'delivery.carrier',
-        string="Shipping Method",
+        string="Shipping Carrier",
         required=True,
     )
+    delivery_method = fields.Selection(related='carrier_id.delivery_method')
+    state = fields.Selection(related='order_id.state')
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
     delivery_price = fields.Float()
     display_price = fields.Float(string='Cost', readonly=True)
@@ -28,6 +31,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     delivery_message = fields.Text(readonly=True)
     total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', readonly=False)
     weight_uom_name = fields.Char(readonly=True, default=_get_default_weight_uom)
+    delivery_address_id = fields.Many2one('res.partner', string="Pickup Point")
 
     @api.onchange('carrier_id', 'total_weight')
     def _onchange_carrier_id(self):
@@ -92,4 +96,14 @@ class ChooseDeliveryCarrier(models.TransientModel):
         self.order_id.write({
             'recompute_delivery_price': False,
             'delivery_message': self.delivery_message,
+            'delivery_address_id': self.delivery_address_id.id,
         })
+
+    def _set_pickup_location(self, pickup_location_data):
+        super()._set_pickup_location(pickup_location_data)
+        # When opening a dialog from another dialog, the first one gets closed
+        # We need to return an action to open the first dialog again
+        action = self.order_id.action_open_delivery_wizard()
+        del action['context']
+        action['res_id'] = self.id
+        return action

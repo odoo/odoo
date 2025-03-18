@@ -9,7 +9,8 @@ from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _name = 'stock.picking'
+    _inherit = ['stock.picking', 'pickup.location.mixin']
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -18,6 +19,9 @@ class StockPicking(models.Model):
         for package in self:
             package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
+    delivery_address_id = fields.Many2one('res.partner', string='Delivery Address', compute='_compute_delivery_address_id',
+                                          store=True, readonly=False, help="Delivery address for current picking.", tracking=True)
+    delivery_method = fields.Selection(related='carrier_id.delivery_method')
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier", check_company=True)
@@ -28,6 +32,13 @@ class StockPicking(models.Model):
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
+
+    @api.depends('partner_id', 'delivery_method')
+    def _compute_delivery_address_id(self):
+        for picking in self:
+            if picking.delivery_method == 'classic':
+                picking.delivery_address_id = picking.partner_id.id
+
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
@@ -209,3 +220,12 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
+
+    def _get_unavailable_lines(self, wh_id):
+        unavailable_moves = self.env['stock.move']
+        for sm in self.move_ids:
+            if sm.is_storable:
+                product_free_qty = sm.product_id.with_context(warehouse_id=wh_id).free_qty
+                if sm.product_uom_qty > product_free_qty:
+                    unavailable_moves |= sm
+        return unavailable_moves
