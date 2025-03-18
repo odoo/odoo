@@ -495,6 +495,7 @@ class Website(models.Model):
         request.session.pop('sale_order_id', None)
         request.session.pop('website_sale_current_pl', None)
         request.session.pop('website_sale_cart_quantity', None)
+        request.session.pop('website_sale_selected_pl_id', None)
 
     @api.model
     def action_dashboard_redirect(self):
