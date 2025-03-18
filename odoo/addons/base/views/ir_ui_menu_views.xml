@@ -10,6 +10,7 @@
                                 <field name="name"/>
                                 <field name="parent_id" groups="base.group_no_one"/>
                                 <field name="sequence" groups="base.group_no_one"/>
+                                <field name="group_ids" string="Visibility" widget="many2many_tags"/>
                             </group>
                             <group groups="base.group_no_one">
                                 <field name="complete_name"/>
@@ -19,9 +20,6 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Visibility" name="access_rights">
-                                <field name="group_ids"/>
-                            </page>
                             <page string="Submenus" name="submenus" groups="base.group_no_one">
                                 <!-- Note: make sure you have 'ir.ui.menu.full_list'
                                     in the context to see all submenus! -->

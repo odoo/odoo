@@ -1279,7 +1279,7 @@ class MailingMailing(models.Model):
             }
 
         random_tip = self.env['digest.tip'].search(
-            [('group_id.category_id', '=', self.env.ref('base.module_category_marketing_email_marketing').id)]
+            [('group_id.privilege_id', '=', self.env.ref('mass_mailing.res_groups_privilege_email_marketing').id)]
         )
         if random_tip:
             random_tip = random.choice(random_tip).tip_description

@@ -1,14 +1,15 @@
-
 from odoo import api, fields, models, tools
 
 
 class ResGroups(models.Model):
     _inherit = 'res.groups'
-    _order = 'category_id, sequence, name, id'
+    _order = 'privilege_id, sequence, name, id'
 
     sequence = fields.Integer(string='Sequence')
-    visible = fields.Boolean(related='category_id.visible', readonly=True)
-    color = fields.Integer(string='Color Index')
+    privilege_id = fields.Many2one('res.groups.privilege', string='Privilege', index=True)
+
+    _name_uniq = models.Constraint("UNIQUE (privilege_id, name)",
+        'The name of the group must be unique within a group privilege!')
 
     # Field used for the widget to define the default group.
 
@@ -26,14 +27,14 @@ class ResGroups(models.Model):
                 'name': section.name,
                 'categories': [
                     {
-                        'id': category.id,
-                        'name': category.name,
-                        'description': category.description,
+                        'id': privilege.id,
+                        'name': privilege.name,
+                        'description': privilege.description,
                         'groups': [[group.id, group.name]
-                                   for group in category.group_ids.sorted(lambda g: (len(g.all_implied_ids & category.group_ids), g.sequence, g.id))]
-                    } for category in section.child_ids.sorted(lambda c: c.sequence) if category.group_ids
+                                   for group in privilege.group_ids.sorted(lambda g: (len(g.all_implied_ids & privilege.group_ids), g.sequence, g.id))]
+                    } for privilege in section.privilege_ids.sorted(lambda p: p.sequence) if privilege.group_ids
                 ]
-            } for section in self.env['ir.module.category'].search([('parent_id', '=', False), ('child_ids.group_ids', '!=', False)], order="sequence")
+            } for section in self.env['ir.module.category'].search([('parent_id', '=', False), ('privilege_ids.group_ids', '!=', False)], order="sequence")
         ]
 
 

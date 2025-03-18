@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record model="ir.module.category" id="base.module_category_marketing_surveys">
-            <field name="description">Helps you manage your survey for review of different users.</field>
+        <record model="res.groups.privilege" id="res_groups_privilege_surveys">
+            <field name="name">Surveys</field>
             <field name="sequence">20</field>
+            <field name="category_id" ref="base.module_category_marketing"/>
         </record>
 
         <!-- Survey users -->
         <record model="res.groups" id="group_survey_user">
             <field name="name">User</field>
             <field name="sequence">10</field>
-            <field name="category_id" ref="base.module_category_marketing_surveys"/>
+            <field name="privilege_id" ref="res_groups_privilege_surveys"/>
         </record>
 
         <!-- Survey managers -->
         <record model="res.groups" id="group_survey_manager">
             <field name="name">Administrator</field>
             <field name="sequence">20</field>
-            <field name="category_id" ref="base.module_category_marketing_surveys"/>
+            <field name="privilege_id" ref="res_groups_privilege_surveys"/>
             <field name="implied_ids" eval="[(4, ref('group_survey_user'))]"/>
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>

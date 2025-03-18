@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <odoo>
-        <record id="module_category_im_livechat" model="ir.module.category">
+        <record model="res.groups.privilege" id="res_groups_privilege_live_chat">
             <field name="name">Live Chat</field>
-            <field name="sequence" eval="20" />
+            <field name="sequence">20</field>
+            <field name="category_id" ref="base.module_category_website"/>
         </record>
 
         <record id="im_livechat_group_user" model="res.groups">
             <field name="name">User</field>
             <field name="sequence">10</field>
-            <field name="category_id" ref="base.module_category_website_live_chat"/>
+            <field name="privilege_id" ref="res_groups_privilege_live_chat"/>
             <field name="comment">The user will be able to join support channels.</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
@@ -17,7 +18,7 @@
             <field name="name">Administrator</field>
             <field name="sequence">20</field>
             <field name="comment">The user will be able to delete support channels.</field>
-            <field name="category_id" ref="base.module_category_website_live_chat"/>
+            <field name="privilege_id" ref="res_groups_privilege_live_chat"/>
             <field name="implied_ids" eval="[(4, ref('im_livechat.im_livechat_group_user')), (4, ref('mail.group_mail_canned_response_admin'))]"/>
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>

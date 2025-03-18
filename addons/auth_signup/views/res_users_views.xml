@@ -24,10 +24,10 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="state" widget="badge"
+                <list position="inside">
+                    <field name="state" widget="badge" optional="hide"
                         decoration-info="state == 'new'" decoration-success="state == 'active'"/>
-                </xpath>
+                </list>
             </field>
         </record>
 

@@ -60,7 +60,6 @@ class ResConfigSettings(models.TransientModel):
         if not default_group:
             default_group = self.env['res.groups'].create({
                 'name': _('Default access for new users'),
-                'category_id': self.env.ref('base.module_category_hidden').id,
             })
             self.env['ir.model.data'].create({
                 'name': 'default_user_group',
