@@ -2185,6 +2185,7 @@ test("onClose should be called only once with right parameters", async () => {
         infos: { cantaloupe: "island" },
     });
     expect.verifySteps(["onClose"]);
+    await animationFrame();
     expect(".modal").toHaveCount(0);
 });
 
