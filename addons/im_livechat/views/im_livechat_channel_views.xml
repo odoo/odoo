@@ -74,7 +74,7 @@
                         <field name="rating_count" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="object" name="action_view_chatbot_scripts" icon="fa-android"
-                                invisible="chatbot_script_count == 0">
+                                invisible="chatbot_script_count == 0" groups="im_livechat.im_livechat_group_manager">
                                 <field string="Chatbots" name="chatbot_script_count" widget="statinfo"/>
                             </button>
                             <button class="oe_stat_button" type="action" invisible="nbr_channel == 0" name="%(discuss_channel_action_from_livechat_channel)d" icon="fa-comments">
@@ -304,7 +304,7 @@
             name="Chatbots"
             parent="livechat_config"
             action="chatbot_script_action"
-            groups="im_livechat_group_user"
+            groups="im_livechat_group_manager"
             sequence="20"/>
 
     </data>
