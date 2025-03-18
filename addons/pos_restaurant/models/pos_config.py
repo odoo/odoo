@@ -112,11 +112,11 @@ class PosConfig(models.Model):
             'pos_restaurant.food',
             'pos_restaurant.drinks',
         ])
-        default_preset = self.env.ref('pos_restaurant.pos_takein_preset', False) or self.env['pos.preset'].search([('identification', '=', 'none')], limit=1)
         presets = self.get_record_by_ref([
+            'pos_restaurant.pos_takein_preset',
             'pos_restaurant.pos_takeout_preset',
             'pos_restaurant.pos_delivery_preset',
-        ])
+        ]) + self.env['pos.preset'].search([]).ids
         config = self.env['pos.config'].create({
             'name': _('Restaurant'),
             'company_id': self.env.company.id,
@@ -126,9 +126,9 @@ class PosConfig(models.Model):
             'iface_available_categ_ids': restaurant_categories,
             'iface_splitbill': True,
             'module_pos_restaurant': True,
-            'use_presets': True if default_preset else False,
-            'default_preset_id': default_preset.id if default_preset else False,
-            'available_preset_ids': [(6, 0, ([default_preset.id] + presets) if default_preset else presets)],
+            'use_presets': True if presets else False,
+            'default_preset_id': presets[0] if presets else False,
+            'available_preset_ids': [(6, 0, presets)],
         })
         self.env['ir.model.data']._update_xmlids([{
             'xml_id': self._get_suffixed_ref_name(ref_name),
