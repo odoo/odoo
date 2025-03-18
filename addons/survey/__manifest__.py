@@ -71,7 +71,6 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/js/survey_breadcrumb.js',
             'survey/static/src/js/survey_form.js',
             'survey/static/src/js/survey_preload_image_mixin.js',
-            'survey/static/src/js/survey_print.js',
             'survey/static/src/js/survey_result.js',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
@@ -114,6 +113,7 @@ sent mails with personal token for the invitation of the survey.
         ],
         'web.assets_frontend': [
             'survey/static/src/js/tours/survey_tour.js',
+            'survey/static/src/interactions/*',
         ],
     },
     'author': 'Odoo S.A.',
