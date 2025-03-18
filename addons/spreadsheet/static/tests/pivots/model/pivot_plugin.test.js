@@ -155,14 +155,14 @@ test("can get a pivotId from cell formula (Mix of test scenarios above)", async 
 
 test("Can remove a pivot with undo after editing a cell", async function () {
     const { model } = await createSpreadsheetWithPivot();
-    expect(getCellContent(model, "B1").startsWith("=PIVOT.HEADER")).toBe(true);
+    expect(getCellContent(model, "A1").startsWith("=PIVOT(")).toBe(true);
     setCellContent(model, "G10", "should be undoable");
     model.dispatch("REQUEST_UNDO");
     expect(getCellContent(model, "G10")).toBe("");
     // 2 REQUEST_UNDO because of the AUTORESIZE feature
     model.dispatch("REQUEST_UNDO");
     model.dispatch("REQUEST_UNDO");
-    expect(getCellContent(model, "B1")).toBe("");
+    expect(getCellContent(model, "A1")).toBe("");
     expect(model.getters.getPivotIds().length).toBe(0);
 });
 
@@ -261,25 +261,25 @@ test("Can delete pivot", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     model.dispatch("REMOVE_PIVOT", { pivotId });
     expect(model.getters.getPivotIds().length).toBe(0);
-    const B4 = getEvaluatedCell(model, "B4");
-    expect(B4.message).toBe(`There is no pivot with id "1"`);
-    expect(B4.value).toBe(`#ERROR`);
+    const A1 = getEvaluatedCell(model, "A1");
+    expect(A1.message).toBe(`There is no pivot with id "1"`);
+    expect(A1.value).toBe(`#ERROR`);
 });
 
 test("Can undo/redo a delete pivot", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
-    const value = getEvaluatedCell(model, "B4").value;
+    const value = getEvaluatedCell(model, "A1").value;
     model.dispatch("REMOVE_PIVOT", { pivotId });
     model.dispatch("REQUEST_UNDO");
     await animationFrame();
     expect(model.getters.getPivotIds().length).toBe(1);
-    let B4 = getEvaluatedCell(model, "B4");
-    expect(B4.value).toBe(value);
+    let A1 = getEvaluatedCell(model, "A1");
+    expect(A1.value).toBe(value);
     model.dispatch("REQUEST_REDO");
     expect(model.getters.getPivotIds().length).toBe(0);
-    B4 = getEvaluatedCell(model, "B4");
-    expect(B4.message).toBe(`There is no pivot with id "1"`);
-    expect(B4.value).toBe(`#ERROR`);
+    A1 = getEvaluatedCell(model, "A1");
+    expect(A1.message).toBe(`There is no pivot with id "1"`);
+    expect(A1.value).toBe(`#ERROR`);
 });
 
 test("Format header displays an error for non-existing field", async function () {
@@ -704,6 +704,7 @@ test("pivot grouped by char field which represents numbers", async function () {
                     <field name="name" type="row"/>
                     <field name="probability" type="measure"/>
                 </pivot>`,
+        pivotType: "static",
     });
     expect(getCell(model, "A3").content).toBe('=PIVOT.HEADER(1,"name","000111")');
     expect(getCell(model, "A4").content).toBe('=PIVOT.HEADER(1,"name","111")');
@@ -977,6 +978,7 @@ test("Can group by many2many field ", async () => {
                 <field name="tag_ids" type="row"/>
                 <field name="probability" type="measure"/>
             </pivot>`,
+        pivotType: "static",
     });
     expect(getCellFormula(model, "A3")).toBe('=PIVOT.HEADER(1,"tag_ids",42)');
     expect(getCellFormula(model, "A4")).toBe('=PIVOT.HEADER(1,"tag_ids",67)');
@@ -1114,7 +1116,7 @@ test("PIVOT day are correctly formatted at evaluation", async function () {
                     <field name="probability" type="measure"/>
                 </pivot>`,
     });
-    expect(getEvaluatedCell(model, "B1").format).toBe("dd mmm yyyy");
+    expect(getEvaluatedCell(model, "B1").format).toBe("dd mmm yyyy* ");
     expect(getEvaluatedCell(model, "B1").value).toBe(42474);
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("14 Apr 2016");
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00");
@@ -1230,7 +1232,7 @@ test("PIVOT week are correctly formatted at evaluation", async function () {
                     <field name="probability" type="measure"/>
                 </pivot>`,
     });
-    expect(getEvaluatedCell(model, "B1").format).toBe(undefined);
+    expect(getEvaluatedCell(model, "B1").format).toBe("@* ");
     expect(getEvaluatedCell(model, "B1").value).toBe("W15 2016");
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("W15 2016");
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00");
@@ -1268,7 +1270,7 @@ test("PIVOT month are correctly formatted at evaluation", async function () {
                     <field name="probability" type="measure"/>
                 </pivot>`,
     });
-    expect(getEvaluatedCell(model, "B1").format).toBe("mmmm yyyy");
+    expect(getEvaluatedCell(model, "B1").format).toBe("mmmm yyyy* ");
     expect(getEvaluatedCell(model, "B1").value).toBe(42461);
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("April 2016");
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00");
@@ -1306,7 +1308,7 @@ test("PIVOT quarter are correctly formatted at evaluation", async function () {
                     <field name="probability" type="measure"/>
                 </pivot>`,
     });
-    expect(getEvaluatedCell(model, "B1").format).toBe(undefined);
+    expect(getEvaluatedCell(model, "B1").format).toBe("@* ");
     expect(getEvaluatedCell(model, "B1").value).toBe("Q2 2016");
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("Q2 2016");
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00");
@@ -1322,7 +1324,7 @@ test("PIVOT year are correctly formatted at evaluation", async function () {
                     <field name="probability" type="measure"/>
                 </pivot>`,
     });
-    expect(getEvaluatedCell(model, "B1").format).toBe("0");
+    expect(getEvaluatedCell(model, "B1").format).toBe("0* ");
     expect(getEvaluatedCell(model, "B1").value).toBe(2016);
     expect(getEvaluatedCell(model, "B1").formattedValue).toBe("2016");
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00");
@@ -1339,8 +1341,8 @@ test("PIVOT.HEADER formulas are correctly formatted at evaluation", async functi
                     <field name="foo" type="measure"/>
                 </pivot>`,
     });
-    expect(getEvaluatedCell(model, "A3").format).toBe("#,##0.00");
-    expect(getEvaluatedCell(model, "B1").format).toBe("dd mmm yyyy");
+    expect(getEvaluatedCell(model, "A3").format).toBe("#,##0.00* ");
+    expect(getEvaluatedCell(model, "B1").format).toBe("dd mmm yyyy* ");
     expect(getEvaluatedCell(model, "B2").format).toBe(undefined);
 });
 
@@ -1355,7 +1357,7 @@ test("can edit pivot domain with UPDATE_ODOO_PIVOT_DOMAIN", async () => {
     });
     expect(model.getters.getPivotCoreDefinition(pivotId).domain).toEqual([["foo", "in", [55]]]);
     await waitForDataLoaded(model);
-    expect(getCellValue(model, "B4")).toBe("");
+    expect(getCellValue(model, "B4")).toBe(null);
     model.dispatch("REQUEST_UNDO");
     await waitForDataLoaded(model);
     expect(model.getters.getPivotCoreDefinition(pivotId).domain).toEqual([]);
@@ -1364,7 +1366,7 @@ test("can edit pivot domain with UPDATE_ODOO_PIVOT_DOMAIN", async () => {
     model.dispatch("REQUEST_REDO");
     expect(model.getters.getPivotCoreDefinition(pivotId).domain).toEqual([["foo", "in", [55]]]);
     await waitForDataLoaded(model);
-    expect(getCellValue(model, "B4")).toBe("");
+    expect(getCellValue(model, "B4")).toBe(null);
 });
 
 test("can edit pivot domain with UPDATE_PIVOT", async () => {
@@ -1380,7 +1382,7 @@ test("can edit pivot domain with UPDATE_PIVOT", async () => {
     });
     expect(model.getters.getPivotCoreDefinition(pivotId).domain).toEqual([["foo", "in", [55]]]);
     await waitForDataLoaded(model);
-    expect(getCellValue(model, "B4")).toBe("");
+    expect(getCellValue(model, "B4")).toBe(null);
     model.dispatch("REQUEST_UNDO");
     await waitForDataLoaded(model);
     expect(model.getters.getPivotCoreDefinition(pivotId).domain).toEqual([]);
@@ -1389,7 +1391,7 @@ test("can edit pivot domain with UPDATE_PIVOT", async () => {
     model.dispatch("REQUEST_REDO");
     expect(model.getters.getPivotCoreDefinition(pivotId).domain).toEqual([["foo", "in", [55]]]);
     await waitForDataLoaded(model);
-    expect(getCellValue(model, "B4")).toBe("");
+    expect(getCellValue(model, "B4")).toBe(null);
 });
 
 test("updating a pivot without changing anything rejects the command", async () => {
@@ -1518,6 +1520,7 @@ test("Load pivot spreadsheet with models that cannot be accessed", async functio
                 throw makeServerError({ description: "ya done!" });
             }
         },
+        pivotType: "static",
     });
     let headerCell;
     let cell;
@@ -2041,11 +2044,11 @@ test("Can change display type of a measure", async function () {
     });
     // prettier-ignore
     expect(getFormattedValueGrid(model, "A1:D5")).toEqual({
-        A1: "",       B1: "xphone",       C1: "xpad",         D1: "Total",
-        A2: "",       B2: "Probability",  C2: "Probability",  D2: "Probability",
-        A3: "No",     B3: "",             C3: "15.00",        D3: "15.00",
-        A4: "Yes",    B4: "10.00",        C4: "106.00",       D4: "116.00",
-        A5: "Total",  B5: "10.00",        C5: "121.00",       D5: "131.00",
+        A1: "(#1) Partner Pivot", B1: "xphone",       C1: "xpad",         D1: "Total",
+        A2: "",                   B2: "Probability",  C2: "Probability",  D2: "Probability",
+        A3: "No",                 B3: "",             C3: "15.00",        D3: "15.00",
+        A4: "Yes",                B4: "10.00",        C4: "106.00",       D4: "116.00",
+        A5: "Total",              B5: "10.00",        C5: "121.00",       D5: "131.00",
     });
 
     const pivotId = model.getters.getPivotIds()[0];
@@ -2054,11 +2057,11 @@ test("Can change display type of a measure", async function () {
 
     // prettier-ignore
     expect(getFormattedValueGrid(model, "A1:D5")).toEqual({
-        A1: "",       B1: "xphone",       C1: "xpad",         D1: "Total",
-        A2: "",       B2: "Probability",  C2: "Probability",  D2: "Probability",
-        A3: "No",     B3: "0.00%",        C3: "11.45%",       D3: "11.45%",
-        A4: "Yes",    B4: "7.63%",        C4: "80.92%",       D4: "88.55%",
-        A5: "Total",  B5: "7.63%",        C5: "92.37%",       D5: "100.00%",
+        A1: "(#1) Partner Pivot", B1: "xphone",       C1: "xpad",         D1: "Total",
+        A2: "",                   B2: "Probability",  C2: "Probability",  D2: "Probability",
+        A3: "No",                 B3: "0.00%",        C3: "11.45%",       D3: "11.45%",
+        A4: "Yes",                B4: "7.63%",        C4: "80.92%",       D4: "88.55%",
+        A5: "Total",              B5: "7.63%",        C5: "92.37%",       D5: "100.00%",
     });
 
     updatePivotMeasureDisplay(model, pivotId, "probability:avg", {
@@ -2070,10 +2073,10 @@ test("Can change display type of a measure", async function () {
 
     // prettier-ignore
     expect(getFormattedValueGrid(model, "A1:D5")).toEqual({
-        A1: "",       B1: "xphone",       C1: "xpad",         D1: "Total",
-        A2: "",       B2: "Probability",  C2: "Probability",  D2: "Probability",
-        A3: "No",     B3: "",             C3: "100.00%",      D3: "100.00%",
-        A4: "Yes",    B4: "",             C4: "706.67%",      D4: "773.33%",
-        A5: "Total",  B5: "",             C5: "",             D5: "",
+        A1: "(#1) Partner Pivot", B1: "xphone",       C1: "xpad",         D1: "Total",
+        A2: "",                   B2: "Probability",  C2: "Probability",  D2: "Probability",
+        A3: "No",                 B3: "",             C3: "100.00%",      D3: "100.00%",
+        A4: "Yes",                B4: "",             C4: "706.67%",      D4: "773.33%",
+        A5: "Total",              B5: "",             C5: "",             D5: "",
     });
 });

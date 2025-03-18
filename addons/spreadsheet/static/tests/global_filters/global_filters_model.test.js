@@ -1168,6 +1168,7 @@ test("pivot headers won't change when adding a filter ", async function () {
                     <field name="product_id" type="row"/>
                     <field name="probability" type="measure"/>
                 </pivot>`,
+        pivotType: "static",
     });
     expect(getCellValue(model, "A3")).toBe("xphone");
     expect(getCellValue(model, "A4")).toBe("xpad");
