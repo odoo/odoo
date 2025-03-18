@@ -9,7 +9,14 @@
                 !isComboQuantityAllowed(state.quantity + 1)
             </attribute>
         </QuantityButtons>
-        <button name="sale_combo_configurator_confirm_button" position="attributes">
+        <button name="website_sale_combo_configurator_continue_button" position="attributes">
+            <attribute
+                name="t-att-disabled"
+                add="!isComboQuantityAllowed(state.quantity)"
+                separator=" || "
+            />
+        </button>
+        <button name="website_sale_combo_configurator_checkout_button" position="attributes">
             <attribute
                 name="t-att-disabled"
                 add="!isComboQuantityAllowed(state.quantity)"
