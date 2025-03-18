@@ -1,37 +1,26 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 import { resizeTextArea } from "@web/core/utils/autoresize";
 
-publicWidget.registry.SurveyPrintWidget = publicWidget.Widget.extend({
-    selector: '.o_survey_print',
-    events: {
-        'click .o_survey_user_results_print': '_onPrintUserResultsClick',
-    },
+export class SurveyPrint extends Interaction {
+    static selector = ".o_survey_print";
 
-    //--------------------------------------------------------------------------
-    // Widget
-    //--------------------------------------------------------------------------
+    dynamicContent = {
+        ".o_survey_user_results_print": { "t-on-click": this.onPrintUserResultsClick },
+    };
 
-    /**
-    * @override
-    */
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            // Will allow the textarea to resize if any carriage return instead of showing scrollbar.
-            self.$('textarea').each(function () {
-                resizeTextArea(this);
-            });
+    start() {
+        // Will allow the textarea to resize if any carriage return instead of showing scrollbar.
+        document.querySelectorAll('textarea').forEach((textarea) => {
+            resizeTextArea(textarea);
         });
-    },
+    }
 
-    // -------------------------------------------------------------------------
-    // Handlers
-    // -------------------------------------------------------------------------
-
-    _onPrintUserResultsClick: function () {
+    onPrintUserResultsClick() {
         window.print();
-    },
+    }
+}
 
-});
-
-export default publicWidget.registry.SurveyPrintWidget;
+registry
+    .category("public.interactions")
+    .add("survey.survey_print", SurveyPrint);
