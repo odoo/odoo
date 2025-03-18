@@ -68,7 +68,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         profits_domain = withholdings_domain + [('l10n_ar_tax_type', 'in', ['earnings', 'earnings_scale'])]
         sequence = self.env['ir.sequence'].create({
-                'name': tax.invoice_label or 'Retención de Ganancias',
+                "name": "Retención de Ganancias",
                 'prefix': '%(year)s-',
                 'padding': 8,
                 'number_increment': 1,
@@ -84,7 +84,7 @@ class AccountChartTemplate(models.AbstractModel):
         res = super()._load(template_code, company, install_demo)
         company = company or self.env.company
         if company.chart_template in ('ar_ri', 'ar_ex', 'ar_base'):
-            self.sudo()._add_wh_taxes(company)
+            self.sudo()._l10n_ar_add_wth_sequences(company)
         return res
 
     @api.model
@@ -95,7 +95,7 @@ class AccountChartTemplate(models.AbstractModel):
             template_code = company.chart_template
             ChartTemplate = self.env['account.chart.template'].with_company(company)
             data = {
-                model: ChartTemplate._parse_csv(template_code, model, module='l10n_ar_withholding')
+                model: self._parse_csv(template_code, model, module='l10n_ar_withholding')
                 for model in [
                     'account.account',
                     'account.tax.group',
