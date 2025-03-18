@@ -57,11 +57,11 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
             cert_name = 'araba_1234.p12'
             cert_password = '1234'
         elif agency == 'bizkaia':
-            cert_name = 'Bizkaia-IZDesa2021.p12'
-            cert_password = 'IZDesa2021'
+            cert_name = 'Bizkaia-Iz3np32024.p12'
+            cert_password = 'Iz3np32024'
         elif agency == 'gipuzkoa':
-            cert_name = 'gipuzkoa_IZDesa2021.p12'
-            cert_password = 'IZDesa2021'
+            cert_name = 'gipuzkoa_Iz3np32024.p12'
+            cert_password = 'Iz3np32024'
         else:
             raise ValueError("Unknown tax agency: " + agency)
 
