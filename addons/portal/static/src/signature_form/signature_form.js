@@ -26,7 +26,11 @@ class SignatureForm extends Component {
             error: false,
             success: false,
         });
-        this.signature = useState({ name: this.props.defaultName });
+        this.signature = useState({
+            name: this.props.defaultName,
+            getSignatureImage: () => "",
+            resetSignature: () => {},
+        });
         this.nameAndSignatureProps = {
             signature: this.signature,
             fontColor: this.props.fontColor || "black",
