@@ -64,7 +64,3 @@ export class InstagramPage extends Interaction {
 registry
     .category("public.interactions")
     .add("website.instagram_page", InstagramPage);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.instagram_page", { Interaction: InstagramPage });
