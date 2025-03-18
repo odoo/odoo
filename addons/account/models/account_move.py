@@ -312,10 +312,17 @@ class AccountMove(models.Model):
     delivery_date = fields.Date(
         string='Delivery Date',
         copy=False,
+<<<<<<< saas-17.4
         store=True,
         compute='_compute_delivery_date',
         precompute=True,
         readonly=False,
+||||||| 24776c8a16eea38b4e227e17271dc8fedc7f806c
+        store=True,
+        compute='_compute_delivery_date',
+=======
+        compute='_compute_delivery_date', store=True, readonly=False,
+>>>>>>> 7d82de197ab342267d0a1e950e43b556aca45c77
     )
     show_delivery_date = fields.Boolean(compute='_compute_show_delivery_date')
     invoice_payment_term_id = fields.Many2one(
