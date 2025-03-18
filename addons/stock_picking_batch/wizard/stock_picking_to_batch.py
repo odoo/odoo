@@ -28,17 +28,26 @@ class StockPickingToBatch(models.TransientModel):
                 'picking_type_id': pickings[0].picking_type_id.id,
                 'description': self.description,
             })
+            notification_title = _('The following batch transfer has been created')
         else:
             batch = self.batch_id
+            notification_title = _('The following batch transfer has been updated')
 
         pickings.write({'batch_id': batch.id})
         # you have to set some pickings to batch before confirm it.
         if self.mode == 'new' and not self.is_create_draft:
             batch.action_confirm()
         return {
-            'name': _('Batch Transfer'),
-            'view_mode': 'form',
-            'res_model': 'stock.picking.batch',
-            'type': 'ir.actions.act_window',
-            'res_id': batch.id,
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': notification_title,
+                'message': '%s',
+                'links': [{
+                    'label': batch.name,
+                    'url': f'/odoo/action-stock_picking_batch.stock_picking_batch_action/{batch.id}',
+                }],
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
         }
