@@ -27,7 +27,7 @@ export class MediaVideo extends Interaction {
             iframeEl = this.generateIframe();
         }
 
-        if (iframeEl.hasAttribute('src')) {
+        if (iframeEl?.hasAttribute("src")) {
             const promise = setupAutoplay(iframeEl.getAttribute('src'), !!this.el.dataset.needCookiesApproval);
             if (promise) {
                 this.waitFor(promise).then(this.protectSyncAfterAsync(() => triggerAutoplay(iframeEl)));
@@ -55,7 +55,7 @@ export class MediaVideo extends Interaction {
         // 'data-oe-expression' one (the latter is used as a workaround in 10.0
         // system but should obviously be reviewed in master).
 
-        let src = escape(this.el.getAttribute('oe-expression') || this.el.getAttribute('src'));
+        let src = escape(this.el.getAttribute("data-oe-expression") || this.el.getAttribute("data-src"));
         // Validate the src to only accept supported domains we can trust
 
         let m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
@@ -80,7 +80,7 @@ export class MediaVideo extends Interaction {
         iframeEl.allowFullscreen = "allowfullscreen";
         iframeEl.ariaLabel = _t("Media video");
         this.insert(iframeEl);
-        this.services.website_cookies.manageIframeSrc(this.el, src);
+        this.services.website_cookies.manageIframeSrc(iframeEl, src);
         return iframeEl;
     }
 }
