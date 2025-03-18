@@ -96,7 +96,6 @@ export class ColorPlugin extends Plugin {
      */
     getPropsForColorSelector(type) {
         const mode = type === "foreground" ? "color" : "backgroundColor";
-        const title = type === "foreground" ? _t("Font Color") : _t("Background Color");
         return {
             type,
             mode,
@@ -126,11 +125,11 @@ export class ColorPlugin extends Plugin {
         Object.assign(this.selectedColors, this.getElementColors(el));
     }
 
-    getElementColors(element) {
-        const elStyle = getComputedStyle(element);
+    getElementColors(el) {
+        const elStyle = getComputedStyle(el);
         const backgroundImage = elStyle.backgroundImage;
         const hasGradient = isColorGradient(backgroundImage);
-        const hasTextGradientClass = element.classList.contains("text-gradient");
+        const hasTextGradientClass = el.classList.contains("text-gradient");
 
         let backgroundColor = elStyle.backgroundColor;
         const activeTab = document
