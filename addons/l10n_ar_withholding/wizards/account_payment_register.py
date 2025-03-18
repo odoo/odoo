@@ -40,7 +40,7 @@ class AccountPaymentRegister(models.TransientModel):
                     address = addresses
                 else:
                     address = rec.partner_id
-            rec.l10n_ar_fiscal_position_id = self.env['account.fiscal.position'].with_company(rec.company_id)._get_fiscal_position(
+            rec.l10n_ar_fiscal_position_id = self.env['account.fiscal.position'].with_company(rec.company_id).with_context(l10n_ar_withholding=True)._get_fiscal_position(
                 address)
 
     @api.depends('l10n_latam_move_check_ids.amount', 'amount', 'l10n_ar_net_amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')

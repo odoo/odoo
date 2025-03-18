@@ -26,3 +26,8 @@ class AccountFiscalPosition(models.Model):
                 partner_tax = fp_tax._get_missing_taxes(partner, date)
             taxes |= partner_tax
         return taxes
+
+    def _get_fpos_ranking_functions(self, partner):
+        if not self._context.get('l10n_ar_withholding') or self.env.company.country_id.code != "AR":
+            return super()._get_fpos_ranking_functions(partner)
+        return [('l10n_ar_tax_ids', lambda fpos: (any(tax.tax_type == 'withholding' for tax in fpos.l10n_ar_tax_ids)))] + super()._get_fpos_ranking_functions(partner)
