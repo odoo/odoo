@@ -306,19 +306,7 @@ class SequenceMixin(models.AbstractModel):
         :param field_name: the field that contains the sequence.
         """
         self.ensure_one()
-        last_sequence = self._get_last_sequence()
-        new = not last_sequence
-        if new:
-            last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
-
-        format_string, format_values = self._get_sequence_format_param(last_sequence)
-        sequence_number_reset = self._deduce_sequence_number_reset(last_sequence)
-        if new:
-            date_start, date_end, forced_year_start, forced_year_end = self._get_sequence_date_range(sequence_number_reset)
-            format_values['seq'] = 0
-            format_values['year'] = self._truncate_year_to_length(forced_year_start or date_start.year, format_values['year_length'])
-            format_values['year_end'] = self._truncate_year_to_length(forced_year_end or date_end.year, format_values['year_end_length'])
-            format_values['month'] = self[self._sequence_date_field].month
+        format_string, format_values = self._get_next_sequence_format()
 
         self.flush_recordset()
         with self.env.cr.savepoint(flush=False) as sp:
@@ -339,6 +327,31 @@ class SequenceMixin(models.AbstractModel):
         self._compute_split_sequence()
         self.flush_recordset(['sequence_prefix', 'sequence_number'])
         self.modified([self._sequence_field])
+
+    def _get_next_sequence_format(self):
+        """Get the next sequence format and its values.
+
+        This method retrieves the last used sequence and determines the next sequence format based on it.
+        If there is no previous sequence, it initializes a new sequence using the starting sequence format.
+
+        :return tuple(format_string, format_values):
+            - format_string (str): the string on which we should call .format()
+            - format_values (dict): the dict of values to format `format_string`
+        """
+        last_sequence = self._get_last_sequence()
+        new = not last_sequence
+        if new:
+            last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
+
+        format_string, format_values = self._get_sequence_format_param(last_sequence)
+        sequence_number_reset = self._deduce_sequence_number_reset(last_sequence)
+        if new:
+            date_start, date_end, forced_year_start, forced_year_end = self._get_sequence_date_range(sequence_number_reset)
+            format_values['seq'] = 0
+            format_values['year'] = self._truncate_year_to_length(forced_year_start or date_start.year, format_values['year_length'])
+            format_values['year_end'] = self._truncate_year_to_length(forced_year_end or date_end.year, format_values['year_end_length'])
+            format_values['month'] = self[self._sequence_date_field].month
+        return format_string, format_values
 
     def _is_last_from_seq_chain(self):
         """Tells whether or not this element is the last one of the sequence chain.
