@@ -1,4 +1,5 @@
 import logging
+import pytz
 
 from odoo import api, fields, models
 from odoo.addons.event.models.event_mail import _INTERVALS
@@ -28,8 +29,11 @@ class EventMailRegistration(models.Model):
     def _compute_scheduled_date(self):
         for mail_slot in self.filtered('event_slot_id'):
             scheduler = mail_slot.scheduler_id
+            tz = pytz.timezone(self.env.user.tz or 'UTC')
             if scheduler.interval_type in ('before_event', 'after_event_start'):
-                date, sign = mail_slot.event_slot_id.start_datetime, (scheduler.interval_type == 'before_event' and -1) or 1
+                date = pytz.utc.localize(mail_slot.event_slot_id.start_datetime).astimezone(tz).replace(tzinfo=None)
+                sign = (scheduler.interval_type == 'before_event' and -1) or 1
             else:
-                date, sign = mail_slot.event_slot_id.end_datetime, (scheduler.interval_type == 'after_event' and 1) or -1
-            mail_slot.scheduled_date = date.replace(microsecond=0) + _INTERVALS[scheduler.interval_unit](sign *scheduler.interval_nbr) if date else False
+                date = pytz.utc.localize(mail_slot.event_slot_id.end_datetime).astimezone(tz).replace(tzinfo=None)
+                sign = (scheduler.interval_type == 'after_event' and 1) or -1
+            mail_slot.scheduled_date = date.replace(microsecond=0) + _INTERVALS[scheduler.interval_unit](sign * scheduler.interval_nbr) if date else False

@@ -9,6 +9,7 @@ from unittest.mock import patch
 from odoo import exceptions
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
+from odoo.addons.event.models.event_mail import EventMail
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, users, warmup
 from odoo.tools import formataddr, mute_logger
@@ -648,12 +649,13 @@ class TestMailSchedule(EventMailCommon):
                     }),
                 ],
             })
+        # Verify datetimes in UTC
         self.assertEqual(
             test_event.slot_ids.mapped('start_datetime'),
-            [datetime(2021, 3, 23, 8, 0, 0), datetime(2021, 3, 24, 8, 0, 0)])
+            [datetime(2021, 3, 23, 7, 0, 0), datetime(2021, 3, 24, 7, 0, 0)])
         self.assertEqual(
             test_event.slot_ids.mapped('end_datetime'),
-            [datetime(2021, 3, 23, 18, 0, 0), datetime(2021, 3, 24, 18, 0, 0)])
+            [datetime(2021, 3, 23, 17, 0, 0), datetime(2021, 3, 24, 17, 0, 0)])
 
         # create some registrations (even wrong registrations without slot)
         with self.mock_datetime_and_now(self.reference_now):
@@ -692,7 +694,6 @@ class TestMailSchedule(EventMailCommon):
 
         # execute cron to run scheduler on first slot
         slot1_before_oneday = datetime(2021, 3, 23, 8, 0, 0) - relativedelta(days=1)
-        EventMail = type(self.env['event.mail'])
         exec_origin = EventMail._execute_event_based_for_registrations
         with patch.object(
             EventMail, '_execute_event_based_for_registrations', autospec=True, wraps=EventMail, side_effect=exec_origin,
