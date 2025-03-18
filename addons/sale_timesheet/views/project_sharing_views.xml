@@ -12,7 +12,7 @@
             </xpath>
             <xpath expr="//field[@name='timesheet_ids']/list/field[@name='unit_amount']" position="before">
                 <field name="timesheet_invoice_id" column_invisible="True"/>
-                <field name="so_line"
+                <field name="so_line" widget="so_line_field"
                     column_invisible="not parent.allow_billable"
                     context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
                     optional="hide"/>

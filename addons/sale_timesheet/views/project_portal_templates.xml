@@ -14,7 +14,8 @@
         <xpath expr="//tr/td[t[@t-esc='timesheet.name']]" position="after">
             <td  t-if="display_sol">
 	        <t t-if="timesheet.so_line.order_id.access_url and so_accessible"><a t-att-href="'%s' % timesheet.so_line.order_id.access_url"><t t-out="timesheet.so_line.display_name"/></a></t>
-		<t t-else=""><t t-out="timesheet.so_line.display_name"/></t>
+		    <t t-elif="timesheet.so_line.display_name" t-out="timesheet.so_line.display_name"></t>
+            <span t-else="" class="text-muted">Non-billable</span>
 	    </td>
         </xpath>
         <xpath expr="//div[@name='allocated_time']" position="after">
