@@ -90,31 +90,33 @@ class FacebookOptionPlugin extends Plugin {
         }
     }
 
-    loadAndSetEmptyLink(nodes) {
+    async loadAndSetEmptyLink(nodes) {
+        // TODO: look in shared cache with social info: was SocialMediaOption.getDbSocialValuesCache()
         if (this.facebookUrl) {
             this.setEmptyLink(nodes);
             return;
         }
         // Fetches the default url for facebook page from website config
-        this.services.orm
-            .searchRead("website", [], ["social_facebook"], { limit: 1 })
-            .then((res) => {
-                if (res && res[0].social_facebook) {
-                    this.facebookUrl = res[0].social_facebook;
+        const res = this.services.orm.read(
+            "website",
+            [this.services.website.currentWebsite.id],
+            ["social_facebook"]
+        );
+        if (res && res[0].social_facebook) {
+            this.facebookUrl = res[0].social_facebook;
 
-                    // WARNING: the call to disableObserver and enableObserver are very dangerous,
-                    // and should be avoided in most cases (if you think you need those, ask html_editor team)
-                    this.dependencies.history.disableObserver();
-                    const hasChanged = this.setEmptyLink(nodes);
-                    this.dependencies.history.enableObserver();
+            // WARNING: the call to ignoreDOMMutations is very dangerous,
+            // and should be avoided in most cases (if you think you need those, ask html_editor team)
+            const hasChanged = this.dependencies.history.ignoreDOMMutations(() =>
+                this.setEmptyLink(nodes)
+            );
 
-                    if (hasChanged) {
-                        const commonAncestor = getCommonAncestor(nodes, this.editable);
-                        this.dispatchTo("content_manually_updated_handlers", commonAncestor);
-                        this.config.onChange({ isPreviewing: false });
-                    }
-                }
-            });
+            if (hasChanged) {
+                const commonAncestor = getCommonAncestor(nodes, this.editable);
+                this.dispatchTo("content_manually_updated_handlers", commonAncestor);
+                this.config.onChange({ isPreviewing: false });
+            }
+        }
     }
 
     setEmptyLink(nodes) {

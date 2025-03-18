@@ -316,7 +316,7 @@ export class HistoryPlugin extends Plugin {
     ignoreDOMMutations(callback) {
         const enableObserver = this.disableObserver();
         try {
-            callback();
+            return callback();
         } finally {
             enableObserver();
         }
