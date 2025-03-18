@@ -85,7 +85,6 @@ export class Message extends Component {
         "isInChatWindow?",
         "onParentMessageClick?",
         "message",
-        "messageEdition?",
         "previousMessage?",
         "squashed?",
         "thread?",
@@ -100,7 +99,6 @@ export class Message extends Component {
         super.setup();
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
-            isEditing: false,
             isHovered: false,
             isClicked: false,
             expandOptions: false,
@@ -130,12 +128,6 @@ export class Message extends Component {
             message: this.props.message,
             alignedRight: this.isAlignedRight,
         });
-        useEffect(
-            (editingMessage) => {
-                this.state.isEditing = this.props.message.eq(editingMessage);
-            },
-            () => [this.props.messageEdition?.editingMessage]
-        );
         onMounted(() => {
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
@@ -187,11 +179,11 @@ export class Message extends Component {
         );
         useEffect(
             () => {
-                if (!this.state.isEditing) {
+                if (!this.message.composer) {
                     this.prepareMessageBody(this.messageBody.el);
                 }
             },
-            () => [this.state.isEditing, this.message.richBody]
+            () => [this.message.composer, this.message.richBody]
         );
     }
 
@@ -211,7 +203,7 @@ export class Message extends Component {
             "px-1": this.props.isInChatWindow,
             "opacity-50": this.props.thread?.composer.replyToMessage?.notEq(this.props.message),
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
-            "o-editing": this.state.isEditing,
+            "o-editing": this.props.message.composer,
         };
     }
 
@@ -395,7 +387,7 @@ export class Message extends Component {
     }
 
     exitEditMode() {
-        this.props.messageEdition.exitEditMode();
+        this.message.exitEditMode(this.props.thread);
     }
 
     onClickNotification(ev) {
@@ -430,7 +422,6 @@ export class Message extends Component {
                 message: this.props.message,
                 thread: this.props.thread,
                 isFirstMessage: this.props.isFirstMessage,
-                messageEdition: this.props.messageEdition,
                 openReactionMenu: () => this.openReactionMenu(),
                 state: this.state,
             },

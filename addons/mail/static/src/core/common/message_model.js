@@ -509,6 +509,32 @@ export class Message extends Record {
         }
     }
 
+    /** @param {import("models").Thread} thread the thread where the message is being viewed when starting edition */
+    enterEditMode(thread) {
+        const text = convertBrToLineBreak(this.body);
+        if (thread?.messageInEdition) {
+            thread.messageInEdition.composer = undefined;
+        }
+        this.composer = {
+            mentionedPartners: this.recipients,
+            text,
+            selection: {
+                start: text.length,
+                end: text.length,
+                direction: "none",
+            },
+        };
+    }
+
+    /** @param {import("models").Thread} thread the thread where the message is being viewed when stopping edition */
+    exitEditMode(thread) {
+        const threadAsInEdition = this.threadAsInEdition;
+        this.composer = undefined;
+        if (threadAsInEdition && threadAsInEdition.eq(thread)) {
+            threadAsInEdition.composer.autofocus++;
+        }
+    }
+
     async react(content) {
         this.store.insert(
             await rpc(
