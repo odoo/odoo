@@ -29,8 +29,6 @@ class AccountMove(models.Model):
         copy=False,
         tracking=True,
         readonly=True,
-        store=True,
-        compute="_compute_l10n_in_edi_status",
     )
     l10n_in_edi_attachment_id = fields.Many2one(
         comodel_name='ir.attachment',
@@ -62,12 +60,6 @@ class AccountMove(models.Model):
     l10n_in_edi_error = fields.Html(readonly=True, copy=False)
 
     # E-Invoice compute
-    @api.depends('state')
-    def _compute_l10n_in_edi_status(self):
-        self.filtered(
-            lambda m: m.state == 'posted' and m._l10n_in_check_einvoice_eligible()
-        ).l10n_in_edi_status = 'to_send'
-
     def _compute_l10n_in_edi_content(self):
         for move in self:
             move.l10n_in_edi_content = (
@@ -114,10 +106,21 @@ class AccountMove(models.Model):
         self.with_context(l10n_in_edi_force_cancel=True).button_request_cancel()
 
     def button_draft(self):
-        self.filtered(lambda m: m.l10n_in_edi_error).l10n_in_edi_error = False
+        for move in self:
+            if move.l10n_in_edi_status == 'to_send':
+                # Avoid resetting sent and cancelled invoices
+                move.l10n_in_edi_status = False
+            if move.l10n_in_edi_error:
+                move.l10n_in_edi_error = False
         return super().button_draft()
 
     # Business Methods
+    def _post(self, soft=True):
+        # EXTENDS 'account'
+        res = super()._post(soft=soft)
+        self.filtered(lambda m: m._l10n_in_check_einvoice_eligible()).l10n_in_edi_status = 'to_send'
+        return res
+
     def _l10n_in_edi_need_cancel_request(self):
         self.ensure_one()
         return (
@@ -168,6 +171,7 @@ class AccountMove(models.Model):
         partners = set(self._get_l10n_in_seller_buyer_party().values())
         for partner in partners:
             if partner_validation := partner._l10n_in_edi_strict_error_validation():
+                self.l10n_in_edi_error = Markup("<br>").join(partner_validation)
                 return partner_validation
         self._l10n_in_lock_invoice()
         generate_json = self._l10n_in_edi_generate_invoice_json()
