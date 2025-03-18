@@ -22,6 +22,6 @@ class TestWebsiteSaleStockProductProduct(HttpCase, WebsiteSaleStockCommon):
             self.assertEqual(product._get_max_quantity(self.website), 2)
 
     def test_get_max_quantity_without_max(self):
-        product = self._create_product(is_storable=True)
+        product = self._create_product(is_storable=True, allow_out_of_stock_order=True)
 
         self.assertIsNone(product._get_max_quantity(self.website))

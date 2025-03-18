@@ -39,7 +39,7 @@ class TestWebsiteSaleStockProductCombo(HttpCase, WebsiteSaleStockCommon):
 
     def test_get_max_quantity_without_max(self):
         product_a = self._create_product(is_storable=True, allow_out_of_stock_order=False)
-        product_b = self._create_product(is_storable=True)
+        product_b = self._create_product(is_storable=True, allow_out_of_stock_order=True)
         self.env['stock.quant'].create({
             'product_id': product_a.id,
             'location_id': self.warehouse.lot_stock_id.id,

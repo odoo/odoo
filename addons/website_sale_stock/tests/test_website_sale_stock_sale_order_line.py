@@ -56,7 +56,7 @@ class TestWebsiteSaleStockSaleOrderLine(HttpCase, WebsiteSaleStockCommon):
             self.assertEqual(combo_item_line_a._get_max_line_qty(), 5)
 
     def test_get_max_line_qty_without_max(self):
-        product = self._create_product(is_storable=True)
+        product = self._create_product(is_storable=True, allow_out_of_stock_order=True)
         combo = self.env['product.combo'].create({
             'name': "Test combo", 'combo_item_ids': [Command.create({'product_id': product.id})]
         })
