@@ -54,21 +54,28 @@ export const SEE_RECORD_LIST = async (position, env, newWindow) => {
     );
 };
 
+export function hasOdooListFunction(position, getters) {
+    const cell = getters.getCorrespondingFormulaCell(position);
+    return (
+        cell &&
+        cell.isFormula &&
+        getNumberOfListFormulas(cell.compiledFormula.tokens) === 1 &&
+        getFirstListFunction(cell.compiledFormula.tokens).functionName === "ODOO.LIST"
+    );
+}
+
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
  * @param {import("@spreadsheet").OdooGetters} getters
  * @returns {boolean}
  */
 export const SEE_RECORD_LIST_VISIBLE = (position, getters) => {
+    position = getters.getMainCellPosition(position);
     const evaluatedCell = getters.getEvaluatedCell(position);
-    const cell = getters.getCorrespondingFormulaCell(position);
     return !!(
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
         evaluatedCell.value !== "" &&
-        cell &&
-        cell.isFormula &&
-        getNumberOfListFormulas(cell.compiledFormula.tokens) === 1 &&
-        getFirstListFunction(cell.compiledFormula.tokens).functionName === "ODOO.LIST"
+        hasOdooListFunction(position, getters)
     );
 };
