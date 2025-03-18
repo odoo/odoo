@@ -3,8 +3,89 @@
 
 <t t-name="web.ResUserGroupIdsField">
     <Record fields="fields" fieldNames="Object.keys(fields)" values="values" onRecordChanged.bind="onRecordChanged" t-slot-scope="data">
-        <FormRenderer record="data.record" archInfo="archInfo"/>
+        <FormRenderer Compiler="FormCompiler" record="data.record" archInfo="archInfo"/>
     </Record>
+</t>
+
+<t t-name="web.ResUserGroupIdsSelectionField">
+    <t t-set="display_implied" t-value="isDebug &amp;&amp; !!exclusivelyImplied"/>
+    <div t-attf-class="o_group_placeholder {{display_implied ? 'o_is_implied' : ''}}" t-esc="(display_implied ? stringImpliedBy : string) || '&#160;'"/>
+    <t t-call="web.SelectionField"/>
+    <span class="o_group_button fa fa-caret-down"/>
+    <button
+        t-if="isDebug || disjoints"
+        t-on-click="onClickInfoButton"
+        t-attf-class="o_group_info_button btn btn-link fa {{value ? 'o_has_value' : ''}} {{display_implied ? 'o_is_implied' : ''}} {{disjoints ? 'o_has_disjoints fa-exclamation-triangle link-danger' : 'fa-info-circle'}}"
+        t-att-style="infoGroup || disjoints ? '' : 'visibility: hidden;'"
+        t-att-name="props.name"
+        type="button"
+        tabindex="-1"/>
+</t>
+
+<t t-name="web.ResUserGroupIdsSwitchField" t-inherit="web.ResUserGroupIdsSelectionField" t-inherit-mode="primary">
+    <xpath expr="t[@t-call]" position="replace">
+        <div class="o_group_switch o_input" t-on-click="onClickSwitch" t-esc="'&#160;'"/>
+    </xpath>
+    <xpath expr="//span" position="attributes">
+        <attribute name="class">o_group_button fa fa-exchange</attribute>
+    </xpath>
+</t>
+
+<t t-name="web.ResGroupsInformationPopover">
+    <div class="res_group_info_popover">
+        <div t-if="group">
+            <span t-if="group.privilege" class="o_label fw-bold" t-out="group.privilege.name"/>
+            <span t-else="" class="o_label">Group</span>
+            <div>
+                <a class="fw-bold" t-attf-href="/odoo/res.groups/{{group.id}}" t-out="group.name"/>
+            </div>
+        </div>
+        <div t-if="group?.comment">
+            <span class="o_label">Comment</span>
+            <div t-out="group.comment"/>
+        </div>
+        <div t-if="impliedBy?.length">
+            <span class="o_label">Implied by</span>
+            <div>
+                <div t-foreach="impliedBy" t-as="group" t-key="group.id">
+                    - <t t-out="(group.privilege ? group.privilege?.name + '/' : '') + group.name"/>
+                </div>
+            </div>
+        </div>
+        <div t-if="impliesFromCurrent?.length">
+            <span class="o_label">Exclusively implies</span>
+            <div>
+                <t t-foreach="impliesFromCurrent" t-as="group" t-key="group.id">
+                    <div t-if="group.privilege" t-out="'- ' + group.privilege.name + '/' + group.name"/>
+                </t>
+                <t t-foreach="impliesFromCurrent" t-as="group" t-key="group.id">
+                    <div t-if="!group.privilege" t-out="'- ' + group.name"/>
+                </t>
+            </div>
+        </div>
+        <div t-if="implies?.length">
+            <span class="o_label">Jointly implies</span>
+            <div>
+                <t t-foreach="implies" t-as="group" t-key="group.id">
+                    <div t-if="group.privilege" class="text-muted" t-out="'- ' + group.privilege.name + '/' + group.name"/>
+                </t>
+                <t t-foreach="implies" t-as="group" t-key="group.id">
+                    <div t-if="!group.privilege &amp;&amp; state.showGroupWithoutPrivilege" class="text-muted" t-out="'- ' + group.name"/>
+                </t>
+                <div t-if="!state.showGroupWithoutPrivilege">
+                    <a href="#" t-on-click="showExtraGroups">View extra groups</a>
+                </div>
+            </div>
+        </div>
+        <div t-if="props.disjoints.length">
+            <span class="o_label text-danger">Incompatibility</span>
+            <div>
+                <t t-foreach="props.disjoints" t-as="group" t-key="group.id">
+                    <div t-out="'- ' + (group.privilege ? group.privilege?.name + '/' : '') + group.name"/>
+                </t>
+            </div>
+        </div>
+    </div>
 </t>
 
 </templates>

@@ -198,10 +198,10 @@
                             <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
                                 <field string="Groups" name="groups_count" widget="statinfo"/>
                             </button>
-                            <button name="action_show_accesses" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list">
+                            <button name="action_show_accesses" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-lock">
                                 <field string="Access Rights" name="accesses_count" widget="statinfo"/>
                             </button>
-                            <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list-ul">
+                            <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-lock">
                                 <field string="Record Rules" name="rules_count" widget="statinfo"/>
                             </button>
                         </div>
@@ -245,56 +245,7 @@
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
                                     <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                                 </group>
-                                <group>
-                                    <field name="group_ids" widget="res_user_group_ids" nolabel="1" colspan="2"/>
-                                </group>
-                            </page>
-                            <page name="technical_access_rights" string="Technical Access Rights" groups="base.group_no_one">
-                                <group string="Multi Companies" invisible="companies_count &lt;= 1">
-                                    <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
-                                    <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
-                                </group>
-                                <group string="Groups">
-                                    <group>
-                                        <label for="group_ids" string="Selected groups"/>
-                                        <field name="group_ids" colspan="2" nolabel="1" context="{'search_default_filter_visible_category': 1}">
-                                            <list string="Selected groups" default_order="category_id,name"
-                                                    decoration-success="id in parent.view_visible_implied_group_ids"
-                                                    decoration-warning="id in parent.view_all_disjoint_group_ids"
-                                                    decoration-danger="id in parent.view_disjoint_group_ids">
-                                                <field name="category_id"/>
-                                                <field name="name"/>
-                                                <field name="comment" optional="show"/>
-                                                <field name="implied_ids" widget="many2many_tags" optional="hide"/>
-                                                <field name="disjoint_ids" widget="many2many_tags" optional="hide"/>
-                                            </list>
-                                        </field>
-                                    </group>
-                                    <group>
-                                        <label for="view_visible_implied_group_ids" colspan="2"/>
-                                        <field name="view_visible_implied_group_ids" colspan="2" nolabel="1">
-                                            <list string="Implied groups" default_order="category_id,name"
-                                                    decoration-it="set(implied_by_ids).difference(parent.view_visible_implied_group_ids).intersection(parent.group_ids)"
-                                                    decoration-success="id in parent.group_ids"
-                                                    decoration-warning="id in parent.view_all_disjoint_group_ids"
-                                                    decoration-danger="id in parent.view_disjoint_group_ids">
-                                                <field name="category_id"/>
-                                                <field name="name"/>
-                                                <field name="comment" optional="hide"/>
-                                                <field name="implied_by_ids" widget="many2many_tags" optional="hide"/>
-                                                <field name="disjoint_ids" widget="many2many_tags" optional="hide"/>
-                                            </list>
-                                        </field>
-                                        <field name="view_show_technical_groups"/>
-                                    </group>
-                                    <group>
-                                        <div class="o_stat_info" colspan="2">
-                                            <div class="text-muted">The <span class="text-success">colored groups</span> are already implied by another group.</div>
-                                            <div class="text-muted">The <span class="text-danger">colored groups</span> are disjoint and cannot be selected at the same time.</div>
-                                            <div class="text-muted">The <span class="fst-italic">italic groups</span> are directly implied by one of the selected groups.</div>
-                                        </div>
-                                    </group>
-                                </group>
+                                <field name="group_ids" widget="res_user_group_ids" nolabel="1" colspan="2"/>
                             </page>
                             <page string="Preferences" name="preferences">
                                 <group>
