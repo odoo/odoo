@@ -174,6 +174,8 @@ const deepSerialization = (
             }
             if (typeof recordId === "number" && recordId >= 0) {
                 result[fieldName] = record[fieldName].id;
+            } else if (record[fieldName] === undefined) {
+                result[fieldName] = false;
             }
             continue;
         }
