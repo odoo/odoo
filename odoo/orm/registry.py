@@ -558,10 +558,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
             return self._is_modifying_relations[field]
         except KeyError:
             result = field in self._field_triggers and bool(
-                field.relational or self.field_inverses[field] or any(
-                    dep.relational or self.field_inverses[dep]
-                    for dep in self.get_dependent_fields(field)
-                )
+                (
+                    (field.relational or self.field_inverses[field]) and
+                    (field.type != 'one2many' or not field.store)
+                ) or
+                any(dep.relational or self.field_inverses[dep] for dep in self.get_dependent_fields(field))
             )
             self._is_modifying_relations[field] = result
             return result

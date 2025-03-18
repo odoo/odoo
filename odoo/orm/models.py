@@ -4118,7 +4118,10 @@ class BaseModel(metaclass=MetaModel):
             # res.partner includes display_name. The computation of display_name
             # is then done too soon because the parent_id was not yet written.
             # (`test_01_website_reset_password_tour`)
-            self.modified(vals)
+            self.modified([
+                field.name for field, __ in field_values
+                if field.type != 'one2many' or not field.store  # already done into `One2Many.write`
+            ])
 
             if self._parent_store and self._parent_name in vals:
                 self.flush_model([self._parent_name])

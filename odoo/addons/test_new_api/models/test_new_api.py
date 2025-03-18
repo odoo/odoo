@@ -2317,3 +2317,27 @@ class Test_New_ApiCreatePerformance(models.Model):
     _name = _description = 'test_new_api.create.performance.line'
 
     perf_id = fields.Many2one('test_new_api.create.performance')
+
+
+class Test_New_ApiModifiedPerformance(models.Model):
+
+    _name = _description = 'test_new_api.modified.performance'
+    _log_access = False
+
+    line_ids = fields.One2many('test_new_api.modified.performance.line', 'perf_id')
+    nb_value_change = fields.Float(compute='_compute_nb_value_change', store=True)
+
+    @api.depends('line_ids.value')
+    def _compute_nb_value_change(self):
+        for rec in self:
+            rec.nb_value_change += 1
+
+
+class Test_New_ApiModifiedPerformanceLine(models.Model):
+
+    _name = _description = 'test_new_api.modified.performance.line'
+    _log_access = False
+
+    name = fields.Char()
+    perf_id = fields.Many2one('test_new_api.modified.performance')
+    value = fields.Float()

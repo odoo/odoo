@@ -5168,3 +5168,27 @@ class TestModifiedPerformance(TransactionCase):
         self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
         self.assertEqual(self.modified_line_a.total_price_quantity, 35)
         self.assertEqual(self.modified_line_a.total_price, 7)
+
+    def test_performance_one2many_command(self):
+        # warmup ir.default
+        self.env['test_new_api.modified.performance'].create({'line_ids': [Command.create({'name': 'warmup'})]})
+
+        # 1 for create parent, 1 create lines and 1 to update compute store sum_value
+        with self.assertQueryCount(3):
+            parent = self.env['test_new_api.modified.performance'].create({
+                'line_ids': [
+                    Command.create({'name': 'L1', 'value': 1}),
+                    Command.create({'name': 'L2', 'value': 2}),
+                ]
+            })
+
+        self.assertEqual(parent.nb_value_change, 1)
+
+        parent.invalidate_recordset()
+
+        # 1 for fetching one2many (see One2Many.write_real)
+        # 1 for the update of the line
+        with self.assertQueryCount(2):
+            parent.write({'line_ids': [Command.update(parent.line_ids[0].id, {'name': "test"})]})
+
+        self.assertEqual(parent.nb_value_change, 1)
