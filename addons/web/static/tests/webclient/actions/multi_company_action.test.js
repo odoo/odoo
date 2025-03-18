@@ -14,6 +14,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 class Partner extends models.Model {
     _name = "res.partner";
@@ -94,3 +95,31 @@ test("open record withtout the correct company (doAction)", async () => {
         message: "url should contain the information of the doAction",
     });
 });
+
+test.tags("desktop");
+test("form view in dialog shows wrong company error", async () => {
+    expect.errors(1);
+    cookie.set("cids", "1");
+
+    onRpc("web_read", () => {
+        throw makeServerError({
+            type: "AccessError",
+            message: "Wrong Company",
+            context: { suggested_company: { id: 2, display_name: "Company 2" } },
+        });
+    });
+    onRpc("has_group", () => true);
+    Partner._views["list,false"] = `<list><field name="display_name"/></list>`;
+
+    await mountWebClient();
+
+    getService("dialog").add(FormViewDialog, {
+        resModel: "res.partner",
+        resId: 1,
+    });
+    await animationFrame();
+    expect.verifyErrors(['Error: The following error occurred in onWillStart: "Wrong Company"']);
+    expect(cookie.get("cids")).toBe("1"); // cookies were not modified
+    expect.verifySteps([]); // don't reload
+});
+
