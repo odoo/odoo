@@ -3,7 +3,8 @@
 {
     'name': 'Argentina - Payment Withholdings',
     'version': "1.0",
-    'description': """Argentina - Perceptions & Payment Withholdings.""",
+    'summary': """Argentina - Perceptions & Payment Withholdings.""",
+    'description': """Allows to use different kind of perceptions and register withholdings during the payment of an invoice.""",
     'author': 'ADHOC SA',
     'countries': ['ar'],
     'category': 'Accounting/Localizations',
