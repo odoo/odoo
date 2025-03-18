@@ -35,17 +35,22 @@ class ProviderGelato(models.Model):
             return False
         return super()._is_available_for_order(order)
 
-    def available_carriers(self, partner, order):
+    def available_carriers(self, partner, source):
         """ Override of `delivery` to filter out regular delivery methods from Gelato orders and
         Gelato delivery methods from non-Gelato orders.
 
         :param res.partner partner: The partner to check.
-        :param sale.order order: The current order.
+        :param sale.order or stock.picking source: The current order or stock transfer.
         :return: The available delivery methods.
         :rtype: delivery.carrier
         """
-        available_delivery_methods = super().available_carriers(partner, order)
-        is_gelato_order = any(order.order_line.product_id.mapped('gelato_product_uid'))
+        available_delivery_methods = super().available_carriers(partner, source)
+        if source._name == 'sale.order':
+            is_gelato_order = any(source.order_line.product_id.mapped('gelato_product_uid'))
+        elif source._name == 'stock.picking':
+            is_gelato_order = any(source.move_ids.product_id.mapped('gelato_product_uid'))
+        else:
+            raise UserError(_("Invalid source document type"))
         if is_gelato_order:
             return available_delivery_methods.filtered(lambda m: m.delivery_type == 'gelato')
         else:
