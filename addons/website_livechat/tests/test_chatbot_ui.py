@@ -116,8 +116,8 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         self.start_tour("/", "website_livechat_chatbot_after_reload_tour")
 
     def test_chatbot_test_page_tour(self):
-        bob_operator = tests.new_test_user(self.env, login="bob_user", groups="im_livechat.im_livechat_group_user,base.group_user")
-        self.livechat_channel.user_ids += bob_operator
+        bob_manager = tests.new_test_user(self.env, login="bob_user", groups="im_livechat.im_livechat_group_manager,base.group_user")
+        self.livechat_channel.user_ids += bob_manager
         test_page_url = f"/chatbot/{'-'.join(self.chatbot_script.title.split(' '))}-{self.chatbot_script.id}/test"
         self.start_tour(test_page_url, "website_livechat_chatbot_test_page_tour", login="bob_user")
 
