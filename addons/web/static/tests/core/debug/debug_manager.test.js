@@ -25,7 +25,7 @@ import {
     makeDialogMockEnv,
 } from "@web/../tests/web_test_helpers";
 import { Component, xml } from "@odoo/owl";
-import { queryOne, queryAll, queryAllTexts, click } from "@odoo/hoot-dom";
+import { queryOne, queryAll, queryAllTexts, click, queryAllProperties } from "@odoo/hoot-dom";
 
 class DebugMenuParent extends Component {
     static template = xml`<DebugMenu/>`;
@@ -696,5 +696,78 @@ describe("DebugMenu", () => {
         expect(".breadcrumb-item").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveText("Partner");
+    });
+
+    test("set defaults: settings default value with a very long value", async () => {
+        serverState.debug = "1";
+
+        const fooValue = "12".repeat(250);
+        const argSteps = [];
+
+        onRpc("ir.default", "set", async (args) => {
+            argSteps.push(args.args);
+            return true;
+        });
+
+        class Partner extends models.Model {
+            _name = "partner";
+
+            foo = fields.Char();
+
+            _records = [
+                {
+                    id: 1,
+                    display_name: "p1",
+                    foo: fooValue,
+                },
+            ];
+
+            _views = {
+                form: `
+                    <form>
+                        <field name="foo"/>
+                    </form>`,
+                search: "<search/>",
+            };
+        }
+
+        class IrUiView extends models.Model {
+            _name = "ir.ui.view";
+
+            name = fields.Char();
+            model = fields.Char();
+
+            _records = [{ id: 18 }];
+        }
+
+        defineModels([Partner, IrUiView]);
+
+        await mountWithCleanup(WebClient);
+
+        await getService("action").doAction({
+            name: "Partners",
+            res_model: "partner",
+            res_id: 1,
+            type: "ir.actions.act_window",
+            views: [[18, "form"]],
+        });
+        await contains(".o_debug_manager button").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();
+        expect(".modal").toHaveCount(1);
+
+        expect(queryAllTexts`.modal #formview_default_fields option`).toEqual([
+            "",
+            "Foo = 121212121212121212121212121212121212121212121212121212121...",
+        ]);
+
+        expect(queryAllProperties(".modal #formview_default_fields option", "value")).toEqual([
+            "",
+            "foo",
+        ]);
+
+        await contains(".modal #formview_default_fields").select("foo");
+        await contains(".modal .modal-footer button:nth-child(2)").click();
+        expect(".modal").toHaveCount(0);
+        expect(argSteps).toEqual([["partner", "foo", fooValue, true, true, false]]);
     });
 });
