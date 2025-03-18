@@ -60,7 +60,6 @@ export class CalendarController extends Component {
         Renderer: Function,
         archInfo: Object,
         buttonTemplate: String,
-        session: { type: Object, optional: true },
         itemCalendarProps: { type: Object, optional: true },
     };
 
@@ -375,7 +374,6 @@ export class CalendarController extends Component {
 
     async setScale(scale) {
         await this.model.load({ scale });
-        browser.sessionStorage.setItem("calendar-scale", this.model.scale);
     }
 
     toggleWeekendVisibility() {
