@@ -47,6 +47,7 @@ export class HrOrgChart extends Component {
 
         this.state = useState({'employee_id': null});
         this.lastParent = null;
+        this.lastEmployeeId = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
         onWillStart(async () => {
@@ -54,13 +55,13 @@ export class HrOrgChart extends Component {
             // the widget is either dispayed in the context of a hr.employee form or a res.users form
             this.state.employee_id = this.employee.employee_ids !== undefined ? this.employee.employee_ids.resIds[0] : this.props.record.resId;
             this.state.parent_id = this.employee.parent_id?.[0] || this.employee.employee_parent_id?.[0];
-            this.original_employee_id = this.state.employee_id;
         });
 
         useRecordObserver(async (record) => {
-            this.state.employee_id = this.original_employee_id;
             const newParentId = record.data.parent_id?.[0] || false;
-            if (this.lastParent !== newParentId) {
+            const newEmployeeId = record.data.id || false;
+            this.state.employee_id = newEmployeeId;
+            if (this.lastParent !== newParentId || this.lastEmployeeId !== newEmployeeId) {
                 await this.fetchEmployeeData(this.state.employee_id, newParentId, true);
             }
             this.lastParent = newParentId;
