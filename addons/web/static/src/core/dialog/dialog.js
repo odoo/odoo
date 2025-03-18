@@ -140,6 +140,6 @@ export class Dialog extends Component {
         if (this.data.dismiss) {
             await this.data.dismiss();
         }
-        return this.data.close();
+        return this.data.close({ dismiss: true });
     }
 }
