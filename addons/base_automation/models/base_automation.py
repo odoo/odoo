@@ -365,7 +365,7 @@ class BaseAutomation(models.Model):
             if automation.trigger == "on_create_or_write":
                 automation.trigger_field_ids |= automation._get_filter_domain_fields()
                 continue
-            self._onchange_trigger()
+            automation._onchange_trigger()
 
     @api.depends('model_id')
     def _compute_trigger(self):
@@ -373,6 +373,7 @@ class BaseAutomation(models.Model):
 
     @api.onchange('trigger')
     def _onchange_trigger(self):
+        self.ensure_one()
         field = (
             self._get_trigger_specific_field()
             if self.trigger not in TIME_TRIGGERS
