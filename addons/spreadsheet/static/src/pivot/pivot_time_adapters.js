@@ -115,7 +115,8 @@ const odooMonthAdapter = {
         };
     },
     toFunctionValue(normalizedValue) {
-        return `"${normalizedValue}"`;
+        const jsDate = toJsDate(normalizedValue, DEFAULT_LOCALE);
+        return `DATE(${jsDate.getFullYear()}, ${jsDate.getMonth() + 1}, 1)`;
     },
     normalizeServerValue(groupBy, field, readGroupResult) {
         const firstOfTheMonth = getGroupStartingDay(field, groupBy, readGroupResult);
