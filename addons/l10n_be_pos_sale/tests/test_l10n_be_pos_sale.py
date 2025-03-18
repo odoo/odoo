@@ -68,6 +68,34 @@ class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('PosSettleOrderIsInvoice', login="accountman")
 
+    def test_pos_branch_company_access(self):
+        self.product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'consu',
+            'available_in_pos': True,
+        })
+
+        branch = self.env['res.company'].create({
+            'name': 'Branch 1',
+            'parent_id': self.env.company.id,
+        })
+
+        self.env.cr.precommit.run()
+        self.pos_user.company_ids = [Command.link(branch.id)]
+
+        bank_payment_method = self.bank_payment_method.copy()
+        bank_payment_method.company_id = branch.id
+
+        b_pos_config = self.env['pos.config'].with_company(branch).create({
+            'name': 'Main',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_journal_id': self.company_data['default_journal_sale'].id,
+            'payment_method_ids': [(4, bank_payment_method.id)],
+        })
+
+        b_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % b_pos_config.id, 'test_pos_branch_company_access', login="pos_user")
+
 
 @odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
 class TestPoSSaleL10NBeNormalCompany(TestPointOfSaleHttpCommon):
