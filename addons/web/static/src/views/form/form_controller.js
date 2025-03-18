@@ -219,7 +219,11 @@ export class FormController extends Component {
 
         onError((error) => {
             const suggestedCompany = error.cause?.data?.context?.suggested_company;
-            if (error.cause?.data?.name === "odoo.exceptions.AccessError" && suggestedCompany) {
+            if (
+                error.cause?.data?.name === "odoo.exceptions.AccessError" &&
+                suggestedCompany &&
+                !this.env.inDialog
+            ) {
                 this.env.pushStateBeforeReload();
                 const activeCompanyIds = user.activeCompanies.map((c) => c.id);
                 activeCompanyIds.push(suggestedCompany.id);
