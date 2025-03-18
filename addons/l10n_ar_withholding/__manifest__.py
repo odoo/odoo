@@ -26,7 +26,10 @@
         'data/earnings_table_data.xml',
     ],
     'demo': [
-        'demo/res_partner_demo.xml',
+        "demo/account_fiscal_position_demo.xml",
+        "demo/account_tax_demo.xml",
+        "demo/res_partner_demo.xml",
+        "demo/account_move_demo.xml",
     ],
     'installable': True,
     'post_init_hook': '_l10n_ar_wth_post_init',

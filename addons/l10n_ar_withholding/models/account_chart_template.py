@@ -1,5 +1,8 @@
 from odoo import models, api
 from odoo.addons.account.models.chart_template import template
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountChartTemplate(models.AbstractModel):
@@ -83,3 +86,26 @@ class AccountChartTemplate(models.AbstractModel):
         if company.chart_template in ('ar_ri', 'ar_ex', 'ar_base'):
             self.sudo()._add_wh_taxes(company)
         return res
+
+    @api.model
+    def _l10n_ar_wth_post_init(self):
+        template_codes = ['ar_ri', 'ar_ex', 'ar_base']
+        ar_companies = self.env['res.company'].search([('chart_template', 'in', template_codes), ('parent_id', '=', False)])
+        for company in ar_companies:
+            template_code = company.chart_template
+            ChartTemplate = self.env['account.chart.template'].with_company(company)
+            data = {
+                model: ChartTemplate._parse_csv(template_code, model, module='l10n_ar_withholding')
+                for model in [
+                    'account.account',
+                    'account.tax.group',
+                    'account.tax',
+                ]
+            }
+            ChartTemplate._deref_account_tags(template_code, data['account.tax'])
+            ChartTemplate._pre_reload_data(company, {}, data)
+            ChartTemplate._load_data(data)
+            company.l10n_ar_tax_base_account_id = ChartTemplate.ref('base_tax_account')
+
+            if self.env.ref('base.module_l10n_ar_withholding').demo:
+                self.env['account.chart.template']._post_load_demo_data(company)
