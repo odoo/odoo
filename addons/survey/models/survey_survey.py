@@ -982,7 +982,7 @@ class Survey(models.Model):
 
             score_position = 0
             for leaderboard_item in leaderboard:
-                question_score = question_scores.get(leaderboard_item['id'], 0)
+                question_score = abs(round(question_scores.get(leaderboard_item['id'], 0), 2))
                 leaderboard_item.update({
                     'updated_score': leaderboard_item['scoring_total'],
                     'scoring_total': leaderboard_item['scoring_total'] - question_score,
