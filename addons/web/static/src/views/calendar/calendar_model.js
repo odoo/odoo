@@ -502,27 +502,22 @@ export class CalendarModel extends Model {
         const avoidValues = {};
 
         for (const [fieldName, filterSection] of Object.entries(data.filterSections)) {
-            // Skip "all" filters because they do not affect the domain
-            const filterAll = filterSection.filters.find((f) => f.type === "all");
-            if (!(filterAll && filterAll.active)) {
-                const filterSectionInfo = this.meta.filtersInfo[fieldName];
-
-                // Loop over subfilters to complete authorizedValues
-                for (const filter of filterSection.filters) {
-                    if (filterSectionInfo.writeResModel) {
-                        if (!authorizedValues[fieldName]) {
-                            authorizedValues[fieldName] = [];
+            const filterSectionInfo = this.meta.filtersInfo[fieldName];
+            // Loop over subfilters to complete authorizedValues
+            for (const filter of filterSection.filters) {
+                if (filterSectionInfo.writeResModel) {
+                    if (!authorizedValues[fieldName]) {
+                        authorizedValues[fieldName] = [];
+                    }
+                    if (filter.active) {
+                        authorizedValues[fieldName].push(filter.value);
+                    }
+                } else {
+                    if (!filter.active) {
+                        if (!avoidValues[fieldName]) {
+                            avoidValues[fieldName] = [];
                         }
-                        if (filter.active) {
-                            authorizedValues[fieldName].push(filter.value);
-                        }
-                    } else {
-                        if (!filter.active) {
-                            if (!avoidValues[fieldName]) {
-                                avoidValues[fieldName] = [];
-                            }
-                            avoidValues[fieldName].push(filter.value);
-                        }
+                        avoidValues[fieldName].push(filter.value);
                     }
                 }
             }
