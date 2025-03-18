@@ -165,7 +165,7 @@ export class HistoryPlugin extends Plugin {
             { hotkey: "control+shift+z", commandId: "historyRedo" },
         ],
         start_edition_handlers: () => {
-            this.enableObserver(true);
+            this.enableObserver();
             this.reset(this.config.content);
         },
     };
@@ -180,8 +180,7 @@ export class HistoryPlugin extends Plugin {
             this.stageSelection();
         });
         this.observer = new MutationObserver(this.handleNewRecords.bind(this));
-        this.isObserverInit = false;
-        this.ignoreDOMChangesDepth = 0;
+        this.enableObserverCallbacks = new Set();
         this._cleanups.push(() => this.observer.disconnect());
         this.clean();
     }
@@ -276,56 +275,50 @@ export class HistoryPlugin extends Plugin {
         return step;
     }
 
-    enableObserver(initObserver = false) {
-        if (initObserver) {
-            this.isObserverInit = true;
-        } else {
-            // Don't count initial enableObserver, it is not accompanied by a disableObserver
-            this.ignoreDOMChangesDepth--;
+    enableObserver() {
+        if (this.enableObserverCallbacks.size > 0) {
+            return;
         }
-
-        if (this.isObserverInit && this.ignoreDOMChangesDepth === 0) {
-            this.observer.observe(this.editable, {
-                childList: true,
-                subtree: true,
-                attributes: true,
-                attributeOldValue: true,
-                characterData: true,
-                characterDataOldValue: true,
-            });
-        }
+        this.observer.observe(this.editable, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeOldValue: true,
+            characterData: true,
+            characterDataOldValue: true,
+        });
     }
-
+    /**
+     * Disable the mutation observer.
+     *
+     * /!\ This method should be used with extreme caution. Not observing some
+     * mutations could lead to mutations that are impossible to undo/redo.
+     */
     disableObserver() {
-        if (this.isObserverInit && this.ignoreDOMChangesDepth === 0) {
-            this.handleObserverRecords();
-            this.observer.disconnect();
-        }
-        this.ignoreDOMChangesDepth++;
+        const enableObserver = () => {
+            this.enableObserverCallbacks.delete(enableObserver);
+            this.enableObserver();
+        };
+        this.enableObserverCallbacks.add(enableObserver);
+        this.handleObserverRecords();
+        this.observer.disconnect();
+        return enableObserver;
     }
 
     /**
-     * Execute {@link callback} while DOM observer is disabled.
+     * Execute {@link callback} while the MutationObserver is disabled.
+     *
+     * /!\ This method should be used with extreme caution. Not observing some
+     * mutations could lead to mutations that are impossible to undo/redo.
      *
      * @param {Function} callback
-     * @return {ReturnType<callback>}
      */
     ignoreDOMChanges(callback) {
-        this.disableObserver();
-        let result;
-        let isResultPromise;
+        const enableObserver = this.disableObserver();
         try {
-            result = callback();
-            isResultPromise = result?.finally;
-            return isResultPromise
-                ? result.finally(() => {
-                      this.enableObserver();
-                  })
-                : result;
+            callback();
         } finally {
-            if (!isResultPromise) {
-                this.enableObserver();
-            }
+            enableObserver();
         }
     }
 
