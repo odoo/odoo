@@ -10,6 +10,7 @@ class AccountMove(models.Model):
     pos_order_ids = fields.One2many('pos.order', 'account_move')
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
 
+    @api.depends('tax_cash_basis_created_move_ids')
     def _compute_always_tax_exigible(self):
         super()._compute_always_tax_exigible()
         # The pos closing move does not create caba entries (anymore); we set the tax values directly on the closing move.
