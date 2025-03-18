@@ -140,7 +140,6 @@ export function makeActionManager(env, router = _router) {
     const keepLast = new KeepLast();
     let id = 0;
     let controllerStack = [];
-    let dialogCloseProm;
     let actionCache = {};
     let dialog = null;
     let nextDialog = null;
@@ -309,14 +308,14 @@ export function makeActionManager(env, router = _router) {
      *
      * @return {Function|undefined} When there was a dialog, returns its onClose callback for propagation to next dialog.
      */
-    function _removeDialog() {
+    async function _removeDialog() {
         if (dialog) {
             const { onClose, remove } = dialog;
+            await onClose?.();
             dialog = null;
             // Remove the dialog from the dialog_service.
             // The code is well enough designed to avoid falling in a function call loop.
             remove();
-            return onClose;
         }
     }
 
@@ -871,15 +870,11 @@ export function makeActionManager(env, router = _router) {
             controller.embeddedActions = embeddedActions;
         };
         controller.config.historyBack = () => {
-            if (dialog) {
-                _executeCloseAction();
+            const previousController = controllerStack[controllerStack.length - 2];
+            if (previousController) {
+                restore(previousController.jsId);
             } else {
-                const previousController = controllerStack[controllerStack.length - 2];
-                if (previousController) {
-                    restore(previousController.jsId);
-                } else {
-                    env.bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
-                }
+                env.bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
             }
         };
 
@@ -977,11 +972,7 @@ export function makeActionManager(env, router = _router) {
             }
             onMounted() {
                 if (action.target === "new") {
-                    dialogCloseProm = new Promise((_r) => {
-                        dialogCloseResolve = _r;
-                    }).then(() => {
-                        dialogCloseProm = undefined;
-                    });
+                    dialog?.remove();
                     dialog = nextDialog;
                 } else {
                     controller.getGlobalState = () => {
@@ -1042,21 +1033,15 @@ export function makeActionManager(env, router = _router) {
                 actionDialogProps.size = size;
             }
             actionDialogProps.footer = action.context.footer ?? actionDialogProps.footer;
-            const onClose = _removeDialog();
             removeDialogFn = env.services.dialog.add(ActionDialog, actionDialogProps, {
-                onClose: () => {
-                    const onClose = _removeDialog();
-                    if (onClose) {
-                        onClose();
-                    }
-                },
+                onClose: () => _removeDialog(),
             });
             if (nextDialog) {
                 nextDialog.remove();
             }
             nextDialog = {
                 remove: removeDialogFn,
-                onClose: onClose || options.onClose,
+                onClose: dialog?.onClose || options.onClose,
             };
             return currentActionProm;
         }
@@ -1397,18 +1382,11 @@ export function makeActionManager(env, router = _router) {
         return doAction(nextAction, options);
     }
 
-    async function _executeCloseAction(params = {}) {
-        let onClose;
+    function _executeCloseAction(params = {}) {
         if (dialog) {
-            onClose = _removeDialog();
-        } else {
-            onClose = params.onClose;
+            return _removeDialog(params.onCloseInfo);
         }
-        if (onClose) {
-            await onClose(params.onCloseInfo);
-        }
-
-        return dialogCloseProm;
+        return params.onClose?.(params.onCloseInfo); // || Promise.resolve(); // JPP: I think we need this in the case params.onclose is empty !
     }
 
     // ---------------------------------------------------------------------------

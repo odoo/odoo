@@ -283,13 +283,11 @@ export class FormController extends Component {
             beforeVisibilityChange: () => this.beforeVisibilityChange(),
             beforeLeave: () => this.beforeLeave(),
             beforeUnload: (ev) => this.beforeUnload(ev),
-            getLocalState: () => {
-                return {
-                    activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
-                    modelState: this.model.exportState(),
-                    resId: this.model.root.resId,
-                };
-            },
+            getLocalState: () => ({
+                activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
+                modelState: this.model.exportState(),
+                resId: this.model.root.resId,
+            }),
         });
         useDebugCategory("form", { component: this });
 
@@ -654,8 +652,12 @@ export class FormController extends Component {
         if (this.props.onDiscard) {
             this.props.onDiscard(this.model.root);
         }
-        if (this.model.root.isNew || this.env.inDialog) {
-            this.env.config.historyBack();
+        if (this.model.root.isNew) {
+            if (this.env.inDialog) {
+                this.env.dialogData.close();
+            } else {
+                this.env.config.historyBack();
+            }
         }
     }
 
