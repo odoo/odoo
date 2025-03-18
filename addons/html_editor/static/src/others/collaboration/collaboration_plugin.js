@@ -122,7 +122,7 @@ export class CollaborationPlugin extends Plugin {
     onExternalHistorySteps(newSteps) {
         let stepIndex = 0;
         let selectionData;
-        this.dependencies.history.ignoreDOMChanges(() => {
+        this.dependencies.history.ignoreDOMMutations(() => {
             selectionData = this.dependencies.selection.getSelectionData();
 
             const steps = this.dependencies.history.getHistorySteps();
