@@ -24,6 +24,23 @@ class ProductProduct(models.Model):
                 return sum(cart._get_common_product_lines(product=self).mapped('product_uom_qty'))
         return 0
 
+    def _get_max_quantity(self, website, **kwargs):
+        """ The max quantity of a product is the difference between the quantity that's free to use
+        and the quantity that's already been added to the cart.
+
+        Note: self.ensure_one()
+
+        :param website website: The website for which to compute the max quantity.
+        :return: The max quantity of the product.
+        :rtype: float | None
+        """
+        self.ensure_one()
+        if self.is_storable and not self.allow_out_of_stock_order:
+            free_qty = website._get_product_available_qty(self.sudo(), **kwargs)
+            cart_qty = self._get_cart_qty(website)
+            return free_qty - cart_qty
+        return None
+
     def _is_sold_out(self):
         self.ensure_one()
         if not self.is_storable:
