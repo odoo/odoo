@@ -39,6 +39,10 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
 
         this.__onSelectionChange = ev => {
             this._toggleAnimatedTextButton();
+            if (this.options.enableTranslation) {
+                this._$toolbarContainer[0].querySelector('#create-link').classList.add("d-none");
+            }
+
         };
         this.$body[0].ownerDocument.addEventListener('selectionchange', this.__onSelectionChange);
 
