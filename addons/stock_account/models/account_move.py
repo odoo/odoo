@@ -16,6 +16,12 @@ class AccountMove(models.Model):
             if move.sudo().line_ids.stock_valuation_layer_ids:
                 move.show_reset_to_draft_button = False
 
+    def _compute_edi_show_cancel_button(self):
+        super()._compute_edi_show_cancel_button()
+        for move in self:
+            if move.sudo().line_ids.stock_valuation_layer_ids:
+                move.edi_show_cancel_button = False
+
     # -------------------------------------------------------------------------
     # OVERRIDE METHODS
     # -------------------------------------------------------------------------
