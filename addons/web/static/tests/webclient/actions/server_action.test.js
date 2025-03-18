@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     defineActions,
     defineModels,
@@ -57,9 +58,10 @@ test("can execute server actions from db ID", async () => {
             views: [[1, "kanban"]],
         },
     ]);
-    onRpc("/web/action/run", async () => {
-        return 1; // execute action 1
-    });
+    onRpc(
+        "/web/action/run",
+        async () => 1 // execute action 1
+    );
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -92,9 +94,7 @@ test("handle server actions returning false", async function (assert) {
             views: [[false, "form"]],
         },
     ]);
-    onRpc("/web/action/run", async () => {
-        return false;
-    });
+    onRpc("/web/action/run", async () => false);
     stepAllNetworkCalls();
     await mountWithCleanup(WebClient);
     // execute an action in target="new"
@@ -108,6 +108,7 @@ test("handle server actions returning false", async function (assert) {
 
     // execute a server action that returns false
     await getService("action").doAction(2);
+    await animationFrame();
     expect(".o_technical_modal").toHaveCount(0, { message: "should have closed the modal" });
     expect.verifySteps([
         "/web/webclient/translations",
@@ -128,15 +129,13 @@ test("action with html help returned by a server action", async () => {
             type: "ir.actions.server",
         },
     ]);
-    onRpc("/web/action/run", async () => {
-        return {
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "kanban"]],
-            help: "<p>I am not a helper</p>",
-            domain: [[0, "=", 1]],
-        };
-    });
+    onRpc("/web/action/run", async () => ({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+        help: "<p>I am not a helper</p>",
+        domain: [[0, "=", 1]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
