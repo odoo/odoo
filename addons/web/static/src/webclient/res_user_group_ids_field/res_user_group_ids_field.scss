@@ -1,0 +1,106 @@
+.o_field_res_user_group_ids {
+    width: 100%;
+    .o_inner_group {
+        flex-basis: 50%;
+        &.col-lg-24 {
+            flex-basis: 100%;
+            grid-template-columns: fit-content(300px) minmax(0, 1fr) fit-content(300px) minmax(0, 1fr);
+        }
+        .o_wrap_label {
+            min-width: 120px;
+        }
+    }
+    button {
+        padding-right: 0 !important;
+    }
+    .o_group_info_button {
+        opacity: 0.2;
+        color: rgba(55, 65, 81, 0.76);
+        z-index: 1;
+        &.o_has_value.o_has_disjoints {
+            opacity: 1;
+        }
+    }
+    .o_field_res_user_group_ids_field_selection, .o_field_res_user_group_ids_field_switch {
+        display: flex;
+        position: relative;
+        min-width: 240px;
+        select, .o_group_button {
+            cursor: pointer;
+            z-index: 1;
+        }
+        .o_group_button {
+            padding: 3px 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .o_group_button.fa-caret-down {
+            padding-right: 2px;
+        }
+        select {
+            display: none;
+            opacity: 0;
+        }
+        .o_group_switch {
+            display: none;
+            z-index: 1;
+        }
+        button.o_has_disjoints.o_is_implied {
+            opacity: 1;
+        }
+        .o_group_placeholder, .o_group_switch {
+            padding-top: 1px;
+            width: 100%;
+            cursor: pointer;
+            text-overflow: ellipsis;
+            text-wrap: nowrap;
+            overflow: hidden;
+        }
+        .o_group_placeholder.o_is_implied {
+            opacity: 0.4;
+            font-style: italic;
+        }
+        &:hover {
+            .o_input {
+                border: 0;
+            }
+            .o_group_placeholder {
+                width: calc(100% - 22px);
+                position: absolute;
+                padding-right: 26px;
+                border: var(--border-width) solid var(--o-input-border-color);
+                border-width: 0 0 var(--border-width) 0;
+            }
+            select , .o_group_switch {
+                display: block;
+            }
+            .o_group_button {
+                opacity: 1;
+            }
+            .o_group_info_button {
+                opacity: 1;
+                color: var(--btn-color);
+            }
+        }
+    }
+}
+
+.res_group_info_popover {
+    width: 420px;
+    padding: 10px;
+    &> div {
+        display: flex;
+        grid-template-columns: fit-content(80px) minmax(0, 1fr);
+        flex-direction: row;
+        padding: .25rem 1rem;
+        .o_label {
+            max-width: 30%;
+            min-width: 30%;
+            margin-right: 10px;
+        }
+        div {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+    }
+}
