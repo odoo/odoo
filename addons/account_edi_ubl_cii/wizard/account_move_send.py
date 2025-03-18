@@ -257,7 +257,6 @@ class AccountMoveSend(models.TransientModel):
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                 <cbc:ID>{escape(filename)}</cbc:ID>
-                <cbc:IssueDate>{invoice.invoice_date}</cbc:IssueDate>
                 {doc_type_node}
                 <cac:Attachment>
                     <cbc:EmbeddedDocumentBinaryObject
