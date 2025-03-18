@@ -4,6 +4,7 @@ import logging
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
+import markupsafe
 from datetime import datetime
 
 _logger = logging.getLogger(__name__)
@@ -66,13 +67,15 @@ class AccountPaymentRegister(models.TransientModel):
         sign = 1
         if self.partner_type == 'supplier':
             sign = -1
+        withholding_refs = ''
         for line in self.l10n_ar_withholding_ids:
             if not line.name:
                 if line.tax_id.l10n_ar_withholding_sequence_id:
                     line.name = line.tax_id.l10n_ar_withholding_sequence_id.next_by_id()
                 else:
                     raise UserError(_('Please enter withholding number for tax %s') % line.tax_id.name)
-            dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
+            dummy, account_id, tax_repartition_line_id, withholding_ref = line._tax_compute_all_helper()
+            withholding_refs += withholding_ref
             balance = self.company_currency_id.round(line.amount * conversion_rate)
             # create withholding amount applied move line only if amount != 0
             payment_vals['write_off_line_vals'].append({
@@ -107,6 +110,7 @@ class AccountPaymentRegister(models.TransientModel):
                 'amount_currency': -base_amount,
             })
 
+        payment_vals['withholding_refs'] = withholding_refs
         return payment_vals
 
     def _get_conversion_rate(self):
@@ -135,3 +139,12 @@ class AccountPaymentRegister(models.TransientModel):
         if self.l10n_ar_withholding_ids and not self.payment_method_line_id.payment_account_id:
             raise ValidationError(_("A payment cannot have withholding if the payment method has no outstanding accounts"))
         return super().action_create_payments()
+
+    def _init_payments(self, to_process, edit_mode=False):
+        withholding_refs = None
+        if to_process and to_process[0].get('create_vals', {}).get('withholding_refs'):
+            withholding_refs = to_process[0]['create_vals'].pop('withholding_refs')
+        payments = super()._init_payments(to_process, edit_mode=edit_mode)
+        if withholding_refs:
+            payments.message_post(body=markupsafe.Markup(_('Withholding computation detail: <ul>%s</ul>') % withholding_refs))
+        return payments

@@ -73,7 +73,11 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
         tax_account_id = taxes_res['taxes'][0]['account_id']
         tax_repartition_line_id = taxes_res['taxes'][0]['tax_repartition_line_id']
 
+        ref = ''
         if self.tax_id.l10n_ar_tax_type in ['earnings', 'earnings_scale']:
+            f = self.currency_id.format
+            if net_amount <= 0:
+                ref = f"{f(self.base_amount)} + {f(same_period_base)} - {f(self.tax_id.l10n_ar_non_taxable_amount)} = {f(self.base_amount + same_period_base - self.tax_id.l10n_ar_non_taxable_amount)} (no corresponde aplicar)"
             # if it is earnings scale we calculate according to the scale.
             if self.tax_id.l10n_ar_tax_type == 'earnings_scale':
                 escala = self.env['l10n_ar.earnings.scale.line'].search([
@@ -82,13 +86,21 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
                     ('to_amount', '>', net_amount),
                 ], limit=1)
                 tax_amount = ((net_amount - escala.excess_amount) * escala.percentage / 100) + escala.fixed_amount
+                # for eg. (1000000.0 + 0.0 - 7870.0 - 1231231) * 7.0 % + 1231231 - 0.0
+                ref = (
+                    ref
+                    or f"({f(self.base_amount)} + {f(same_period_base)} - {f(self.tax_id.l10n_ar_non_taxable_amount)} - {f(escala.excess_amount)}) * {escala.percentage}% + {f(escala.fixed_amount)} - {f(same_period_withholdings)}"
+                )
+            else:
+                # for eg. (1000000.0 + 0.0 - 7870.0) * 7.0% - 0.0
+                ref = f"({f(self.base_amount)} + {f(same_period_base)} - {f(self.tax_id.l10n_ar_non_taxable_amount)}) * {self.tax_id.amount}% - {f(same_period_withholdings)}"
             # deduct withholdings from the same period
             tax_amount -= same_period_withholdings
 
         l10n_ar_minimum_threshold = self.tax_id.l10n_ar_minimum_threshold
         if l10n_ar_minimum_threshold > tax_amount:
             tax_amount = 0.0
-        return tax_amount, tax_account_id, tax_repartition_line_id
+        return tax_amount, tax_account_id, tax_repartition_line_id, '<li>%s: %s</li>' % (self.tax_id.name, ref)
 
     @api.depends('base_amount', 'tax_id')
     def _compute_amount(self):
