@@ -1994,7 +1994,7 @@ class IrModelAccess(models.Model):
               FROM ir_model_access a
               JOIN ir_model m ON (a.model_id = m.id)
               JOIN res_groups g ON (a.group_id = g.id)
-         LEFT JOIN ir_module_category c ON (c.id = g.category_id)
+         LEFT JOIN res_groups_privilege c ON (c.id = g.privilege_id)
              WHERE m.model = %s
                AND a.active = TRUE
                AND a.perm_{access_mode} = TRUE

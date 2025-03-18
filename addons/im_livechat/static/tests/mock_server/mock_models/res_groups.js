@@ -6,6 +6,7 @@ export class ResGroups extends webModels.ResGroups {
         {
             id: serverState.groupLivechatId,
             name: "Livechat User",
+            privilege_id: false,
         },
     ];
 }

@@ -26,14 +26,11 @@ class ResGroups(models.Model):
     menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
     view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
     comment = fields.Text(translate=True)
-    category_id = fields.Many2one('ir.module.category', string='Application', index=True)
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
     share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
     api_key_duration = fields.Float(string='API Keys maximum duration days',
         help="Determines the maximum duration of an api key created by a user belonging to this group.")
 
-    _name_uniq = models.Constraint("UNIQUE (category_id, name)",
-        'The name of the group must be unique within an application!')
     _check_api_key_duration = models.Constraint(
         'CHECK(api_key_duration >= 0)',
         'The api key duration cannot be a negative value.',
@@ -65,7 +62,8 @@ class ResGroups(models.Model):
     implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
         string='Implied Groups', help='Users of this group are also implicitly part of those groups')
     all_implied_ids = fields.Many2many('res.groups', string='Transitively Implied Groups', recursive=True,
-        compute='_compute_all_implied_ids', compute_sudo=True, search='_search_all_implied_ids')
+        compute='_compute_all_implied_ids', compute_sudo=True, search='_search_all_implied_ids',
+        help="The group itself with all its implied groups.")
     implied_by_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'hid', 'gid',
         string='Implying Groups', help="Users in those groups are implicitly part of this group.")
     all_implied_by_ids = fields.Many2many('res.groups', string='Transitively Implying Groups', recursive=True,
@@ -109,43 +107,39 @@ class ResGroups(models.Model):
             if implied_group.id in self.ids:
                 raise ValidationError(self.env._('You cannot delete a group linked with a settings field.'))
 
-    @api.depends('category_id.name', 'name')
+    @api.depends('privilege_id.name', 'name')
+    @api.depends_context('short_display_name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
         for group, group1 in zip(self, self.sudo()):
-            if group1.category_id:
-                group.full_name = '%s / %s' % (group1.category_id.name, group1.name)
+            if group1.privilege_id and not self.env.context.get('short_display_name'):
+                group.full_name = '%s / %s' % (group1.privilege_id.name, group1.name)
             else:
                 group.full_name = group1.name
 
     def _search_full_name(self, operator, operand):
+        if Domain.is_negative_operator(operator):
+            return NotImplemented
+
         lst = True
-        if isinstance(operand, bool):
-            return Domain('name', operator, operand)
         if isinstance(operand, str):
             lst = False
             operand = [operand]
-        where_domains = []
-        is_negative = Domain.is_negative_operator(operator)
+
+        where_domains = [Domain('name', operator, operand)]
         for group in operand:
+            if not group:
+                continue
             values = [v for v in group.split('/') if v]
             group_name = values.pop().strip()
-            category_name = '/'.join(values).strip() if values else group_name
+            privilege_name = '/'.join(values).strip() if values else group_name
             group_domain = Domain('name', operator, [group_name] if lst else group_name)
-            category_ids = self.env['ir.module.category'].sudo()._search(
-                Domain('name', operator, [category_name] if lst else category_name))
-            category_domain = Domain('category_id', 'in', category_ids)
-            if is_negative and not values:
-                category_domain |= Domain('category_id', '=', False)
-            if is_negative == (not values):
-                where = group_domain & category_domain
-            else:
-                where = group_domain | category_domain
-            where_domains.append(where)
-        if is_negative:
-            return Domain.AND(where_domains)
-        else:
-            return Domain.OR(where_domains)
+            privilege_ids = self.env['res.groups.privilege'].sudo()._search(
+                Domain('name', operator, [privilege_name] if lst else privilege_name))
+            privilege_domain = Domain('privilege_id', 'in', privilege_ids)
+            where_domains.append(group_domain | privilege_domain)
+
+        return Domain.OR(where_domains)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):

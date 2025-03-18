@@ -13,13 +13,13 @@ class ResGroups(models.Model):
         # Overridden in order to remove 'Show Full Accounting Features' and
         # 'Show Full Accounting Features - Readonly' in the 'res.users' form view to prevent confusion
         group_account_user = self.env.ref('account.group_account_user', raise_if_not_found=False)
-        if group_account_user and group_account_user.category_id.xml_id == 'base.module_category_hidden':
+        if group_account_user and not group_account_user.privilege_id:
             domain += [('id', '!=', group_account_user.id)]
         group_account_readonly = self.env.ref('account.group_account_readonly', raise_if_not_found=False)
-        if group_account_readonly and group_account_readonly.category_id.xml_id == 'base.module_category_hidden':
+        if group_account_readonly and not group_account_readonly.privilege_id:
             domain += [('id', '!=', group_account_readonly.id)]
         group_account_basic = self.env.ref('account.group_account_basic', raise_if_not_found=False)
-        if group_account_basic and group_account_basic.category_id.xml_id == 'base.module_category_hidden':
+        if group_account_basic and not group_account_basic.privilege_id:
             domain += [('id', '!=', group_account_basic.id)]
         return super().get_application_groups(domain)
 
