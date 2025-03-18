@@ -1,8 +1,9 @@
+import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { BackgroundPositionOverlay } from "@html_builder/plugins/background_option/background_position_overlay";
 import { expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
-import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 
 defineWebsiteModels();
 
@@ -119,7 +120,9 @@ async function dragAndDropBgImage() {
     await contains("button[data-action-id='backgroundPositionOverlay']").click();
 
     const sectionOverlaySelector = ".overlay .o_overlay_background section";
-    expect(".overlay .o_overlay_background section").not.toHaveStyle("backgroundPosition");
+    await waitFor(sectionOverlaySelector);
+    // TODO wait for HOOT toHaveStyle fix bug
+    // expect(sectionOverlaySelector).not.toHaveStyle("backgroundPosition");
     const dragActions = await contains(sectionOverlaySelector).drag({
         position: { x: 199, y: 199 },
     });
@@ -160,7 +163,8 @@ test("open the media dialog to toggle the image background but do not choose an 
     expect(".modal").toBeDisplayed();
 });
 
-test("remove the background image of a snippet", async () => {
+// TODO FIX HOOT toHaveStyle
+test.todo("remove the background image of a snippet", async () => {
     await setupWebsiteBuilder(`
         <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
             <div class="o_we_shape o_web_editor_Connections_01">
@@ -168,6 +172,7 @@ test("remove the background image of a snippet", async () => {
             </div>
         </section>`);
     await contains(":iframe section").click();
+    expect(":iframe section").toHaveStyle("backgroundImage");
     await contains("[data-action-id='toggleBgImage']").click();
     expect(":iframe section").not.toHaveStyle("backgroundImage");
 });

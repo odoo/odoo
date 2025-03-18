@@ -97,6 +97,7 @@ export class BuilderColorPicker extends Component {
         const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent();
         this.colorButton = useRef("colorButton");
         this.state = state;
+        this.state.defaultTab = "solid"; // TODO: select the correct tab based on the color
         useColorPicker(
             "colorButton",
             {

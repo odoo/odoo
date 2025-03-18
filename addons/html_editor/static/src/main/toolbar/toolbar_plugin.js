@@ -315,11 +315,11 @@ export class ToolbarPlugin extends Plugin {
     }
 
     updateToolbarVisibility(selectionData) {
+        this.updateNamespace();
         if (this.config.disableFloatingToolbar) {
             return;
         }
 
-        this.updateNamespace();
         if (this.shouldBeVisible(selectionData)) {
             // Open toolbar or update its position
             const props = { toolbar: this.getToolbarInfo(), class: "shadow rounded my-2" };

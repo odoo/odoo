@@ -154,10 +154,10 @@ test("should apply transparent color if no color is defined", async () => {
     await contains(".we-bg-options-container .o_we_color_preview").click();
     await contains(".o-overlay-item button:contains('Custom')").click();
     expect.verifySteps(["getValue"]);
-    expect(".o-overlay-item .o_hex_input").toHaveValue("#FFFFFF");
+    expect(".o-overlay-item .o_hex_input").toHaveValue("#FFFFFF00");
     expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
     await contains(".o-overlay-item .o_color_pick_area").click({ top: "50%", left: "50%" });
-    expect(".o-overlay-item .o_hex_input").not.toHaveValue("#FFFFFF");
+    expect(".o-overlay-item .o_hex_input").not.toHaveValue("#FFFFFF00");
     expect(":iframe .test-options-target").toHaveAttribute("data-color");
     expect.verifySteps(["getValue"]);
 });

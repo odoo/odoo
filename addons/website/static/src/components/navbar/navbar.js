@@ -55,7 +55,7 @@ patch(NavBar.prototype, {
      * @override
      */
     get systrayItems() {
-        if (this.websiteService.currentWebsite) {
+        if (this.shouldDisplayWebsiteSystray) {
             const websiteItems = websiteSystrayRegistry
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))
