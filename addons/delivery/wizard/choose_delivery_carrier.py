@@ -17,6 +17,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         'delivery.carrier',
         string="Shipping Method",
         required=True,
+        domain="[('id', 'in', available_carrier_ids)]",
     )
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
     delivery_price = fields.Float()

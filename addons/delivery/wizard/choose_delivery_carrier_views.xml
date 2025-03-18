@@ -5,10 +5,9 @@
         <field name="model">choose.delivery.carrier</field>
         <field name="arch" type="xml">
             <form>
-                <field name='available_carrier_ids' invisible="1"/>
                 <group>
                     <group>
-                        <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]"/>
+                        <field name="carrier_id"/>
                         <label name="carried_weight_label" for="total_weight" groups="uom.group_uom"/>
                         <div name="carried_weight" class="o_row" groups="uom.group_uom">
                             <field name="total_weight"/>

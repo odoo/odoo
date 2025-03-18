@@ -20,7 +20,8 @@ class StockPicking(models.Model):
 
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
-    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", check_company=True)
+    allowed_carrier_ids = fields.Many2many('delivery.carrier', compute='_compute_allowed_carrier_ids')
+    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="[('id', 'in', allowed_carrier_ids)]", check_company=True)
     weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.", compute_sudo=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
@@ -28,6 +29,12 @@ class StockPicking(models.Model):
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
+
+    @api.depends('partner_id', 'carrier_id.max_weight', 'carrier_id.max_volume', 'carrier_id.must_have_tag_ids', 'carrier_id.excluded_tag_ids', 'move_ids.product_id.product_tag_ids', 'move_ids.product_id.weight', 'move_ids.product_id.volume')
+    def _compute_allowed_carrier_ids(self):
+        for picking in self:
+            carriers = self.env['delivery.carrier'].search(self.env['delivery.carrier']._check_company_domain(picking.company_id))
+            picking.allowed_carrier_ids = carriers.available_carriers(picking.partner_id, picking) if picking.partner_id else carriers
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
