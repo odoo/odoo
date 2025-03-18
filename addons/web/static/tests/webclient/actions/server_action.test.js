@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     defineActions,
     defineModels,
@@ -115,6 +116,7 @@ test("handle server actions returning false", async function (assert) {
 
     // execute a server action that returns false
     await getService("action").doAction(2);
+    await animationFrame();
     expect(".o_technical_modal").toHaveCount(0, { message: "should have closed the modal" });
     expect.verifySteps([
         "/web/webclient/translations",
