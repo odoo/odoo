@@ -18,7 +18,9 @@
                     </div>
                 </div>
                 <DatePicker t-if="props.mode === CALENDAR_MODES.filter and showDatePicker" t-props="datePickerProps" />
-                <FilterPanel t-props="filterPanelProps" />
+                <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
+                    <FilterSection model="props.model" section="section"/>
+                </t>
             </div>
         </div>
     </t>

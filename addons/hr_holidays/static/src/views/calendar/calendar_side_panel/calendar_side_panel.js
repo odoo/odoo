@@ -5,12 +5,12 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
 import { useService } from "@web/core/utils/hooks";
 import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
-import { TimeOffCalendarFilterPanel } from "../filter_panel/calendar_filter_panel";
+import { TimeOffCalendarFilterSection } from "../filter_section/calendar_filter_section";
 
 export class TimeOffCalendarSidePanel extends CalendarSidePanel {
     static components = {
         ...CalendarSidePanel.components,
-        FilterPanel: TimeOffCalendarFilterPanel,
+        FilterSection: TimeOffCalendarFilterSection,
     };
     static template = "hr_holidays.TimeOffCalendarSidePanel";
 
