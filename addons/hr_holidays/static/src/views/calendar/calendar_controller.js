@@ -2,7 +2,6 @@ import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { Dropdown, DropdownItem } from "@web/core/dropdown/dropdown";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
@@ -13,9 +12,7 @@ import { EventBus, useSubEnv } from "@odoo/owl";
 
 export class TimeOffCalendarController extends CalendarController {
     static components = {
-        ...TimeOffCalendarController.components,
-        Dropdown,
-        DropdownItem,
+        ...CalendarController.components,
         FilterPanel: TimeOffCalendarFilterPanel,
     };
     static template = "hr_holidays.CalendarController";

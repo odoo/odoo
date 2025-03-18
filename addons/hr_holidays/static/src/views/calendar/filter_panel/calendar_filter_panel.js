@@ -10,7 +10,7 @@ import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
     static template = "hr_holidays.CalendarFilterPanel";
     static components = {
-        ...TimeOffCalendarFilterPanel.components,
+        ...CalendarFilterPanel.components,
         TimeOffCardMobile,
     };
     static props = {
