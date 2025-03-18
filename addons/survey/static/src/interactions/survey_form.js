@@ -17,6 +17,7 @@ import {
     serializeDate,
 } from "@web/core/l10n/dates";
 import { resizeTextArea } from "@web/core/utils/autoresize";
+import { redirect } from "@web/core/utils/urls";
 const { DateTime } = luxon;
 
 var isMac = navigator.platform.toUpperCase().includes('MAC');
@@ -24,12 +25,12 @@ var isMac = navigator.platform.toUpperCase().includes('MAC');
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloadImageMixin, {
     selector: '.o_survey_form',
     events: {
-        'change .o_survey_lang_selector': '_onChangeLanguage',
-        'change .o_survey_form_choice_item': '_onChangeChoiceItem',
-        'click .o_survey_matrix_btn': '_onMatrixBtnClick',
-        'click input[type="radio"]': '_onRadioChoiceClick',
-        'click button[type="submit"]': '_onSubmit',
-        'click .o_survey_choice_img img': '_onChoiceImgClick',
+        'change .o_survey_lang_selector': 'onLanguageChange',
+        'change .o_survey_form_choice_item': 'onChoiceItemChange',
+        'click .o_survey_matrix_btn': 'onMatrixButtonClick',
+        'click input[type="radio"]': 'onRadioChoiceClick',
+        'click button[type="submit"]': 'onSubmit',
+        'click .o_survey_choice_img img': 'onChoiceImageClick',
         'focusin .form-control': '_updateEnterButtonText',
         'focusout .form-control': '_updateEnterButtonText'
     },
@@ -81,7 +82,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             //to be updated at the same time
             self.$surveyProgress = $('.o_survey_progress_wrapper');
             self.$surveyNavigation = $('.o_survey_navigation_wrapper');
-            self.$surveyNavigation.find('.o_survey_navigation_submit').on('click', self._onSubmit.bind(self));
+            self.$surveyNavigation.find('.o_survey_navigation_submit').on('click', self.onSubmit.bind(self));
 
             self.$('button[type="submit"]').removeClass('disabled');
         });
@@ -136,7 +137,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         if (event.key === "Enter" || event.key === "ArrowRight") {  // Enter or arrow-right: go Next
             event.preventDefault();
             if (!this.preventEnterSubmit) {
-                this._submitForm({
+                this.submitForm({
                     isFinish: this.el.querySelectorAll('button[value="finish"]').length !== 0,
                     nextSkipped: this.el.querySelectorAll('button[value="next_skipped"]').length !== 0 ? event.key === "Enter" : false,
                 });
@@ -165,10 +166,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      * - It is not the last question of the survey,
      * - The question is not waiting for a comment (with "Other" answer),
      *
-     * @param event
+     * @param {Event} ev
      */
-    _onChangeChoiceItem: function (event) {
-        const $target = $(event.currentTarget);
+    onChoiceItemChange(ev) {
+        const $target = $(ev.currentTarget);
         const $choiceItemGroup = $target.closest('.o_survey_form_choice');
 
         // Update survey button to "continue" if the current page/question is the last (without accounting for
@@ -193,18 +194,23 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             }
         }
 
-        this._applyCommentAreaVisibility($choiceItemGroup);
-        const isQuestionComplete = this._checkConditionalQuestionsConfiguration($target, $choiceItemGroup);
-        if (isQuestionComplete && this.options.usersCanGoBack) {
-            const isLastQuestion = this.$('button[value="finish"]').length !== 0;
-            if (!isLastQuestion) {
-                const questionHasComment = $target.hasClass('o_survey_js_form_other_comment') || $target
-                    .closest('.o_survey_form_choice')
-                    .find('.o_survey_comment').length !== 0;
-                if (!questionHasComment) {
-                    this._submitForm({'nextSkipped': $choiceItemGroup.data('isSkippedQuestion')});
-                }
-            }
+        this.applyCommentAreaVisibility($choiceItemGroup);
+        const isQuestionComplete = this.checkConditionalQuestionsConfiguration($target, $choiceItemGroup);
+        // if the question is complete, not the last and does not have a comment, we can automatically continue to the next one
+        if (!isQuestionComplete || !this.options.usersCanGoBack) {
+            return;
+        }
+        const isLastQuestion = this.$('button[value="finish"]').length !== 0;
+        if (isLastQuestion) {
+            return;
+        }
+        const questionHasComment = $target.hasClass('o_survey_js_form_other_comment') || $target
+            .closest('.o_survey_form_choice')
+            .find('.o_survey_comment').length !== 0;
+        if (!questionHasComment) {
+            this.submitForm({
+                nextSkipped: $choiceItemGroup.data('isSkippedQuestion'),
+            });
         }
     },
 
@@ -213,10 +219,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      * Starts a widget opening a dialog to display the now zoomable image.
      * this.imgZoomer is the zoomer widget linked to the survey form, if any.
      *
-     * @private
      * @param {Event} ev
      */
-    _onChoiceImgClick: function (ev) {
+    onChoiceImageClick(ev) {
         if (!uiUtils.isSmall()) {
             // On large screen, it prevents the answer to be selected as the user only want to enlarge the image.
             // We don't do it on small device as it can be hard to click outside the picture to select the answer.
@@ -231,16 +236,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     /**
      * Invert the related input's "checked" property.
      * This will tick or untick the option (based on the previous state).
-     *
-     * @param {MouseEvent} event
-     * @returns
      */
-    _onMatrixBtnClick: function (event) {
+    onMatrixButtonClick(ev) {
         if (this.readonly) {
             return;
         }
 
-        var $target = $(event.currentTarget);
+        var $target = $(ev.currentTarget);
         var $input = $target.find('input');
         $input.prop("checked", !$input.prop("checked")).trigger('change');
     },
@@ -259,11 +261,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      * - When it's ticked, we simply add the class (the browser will set the "checked" property
      *   to true).
      * - When it's unticked, we manually set the "checked" property of the element to "false".
-     *   We also trigger the 'change' event to go into '_onChangeChoiceItem'.
-     *
-     * @param {MouseEvent} event
+     *   We also trigger the 'change' event to go into 'onChoiceItemChange'.
      */
-    _onRadioChoiceClick: function (event) {
+    onRadioChoiceClick(event) {
         var $target = $(event.currentTarget);
         if ($target.hasClass("o_survey_form_choice_item_selected")) {
             $target.prop("checked", false).removeClass("o_survey_form_choice_item_selected");
@@ -275,28 +275,28 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         }
     },
 
-    _onSubmit(event) {
-        event.preventDefault();
-        const target = event.currentTarget;
-        if (target.value === 'previous') {
-            this._submitForm({ previousPageId: parseInt(target.dataset['previousPageId']) });
-        } else if (target.value === 'next_skipped') {
-            this._submitForm({ nextSkipped: true });
-        } else if (target.value === 'finish' && !this.options.sessionInProgress) {
+    onSubmit(ev) {
+        ev.preventDefault();
+        const target = ev.currentTarget;
+        if (target.value === "previous") {
+            this.submitForm({ previousPageId: parseInt(target.dataset.previousPageId) });
+        } else if (target.value === "next_skipped") {
+            this.submitForm({ nextSkipped: true });
+        } else if (target.value === "finish" && !this.options.sessionInProgress) {
             // Adding pop-up before the survey is submitted when not in live session
             this.call("dialog", "add", ConfirmationDialog, {
                 title: _t("Submit confirmation"),
                 body: _t("Are you sure you want to submit the survey?"),
                 confirmLabel: _t("Submit"),
                 confirm: () => {
-                    this._submitForm({ isFinish: true });
+                    this.submitForm({ isFinish: true });
                 },
                 cancel: () => {},
             });
-        } else if (target.value === 'finish') {
-            this._submitForm({ isFinish: true });
+        } else if (target.value === "finish") {
+            this.submitForm({ isFinish: true });
         } else {
-            this._submitForm({});
+            this.submitForm({});
         }
     },
 
@@ -318,7 +318,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     },
 
     _onBreadcrumbClick: function (event) {
-        this._submitForm({'previousPageId': event.data.previousPageId});
+        this.submitForm({'previousPageId': event.data.previousPageId});
     },
 
     /**
@@ -369,12 +369,16 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         this._goToNextPage({ isFinish: true });
     },
 
-    _onChangeLanguage() {
-        const lang_code = document.querySelector('.o_survey_lang_selector[name="lang_code"]').value;
-        const pathname = document.location.pathname;
-        const indexOfSurvey = pathname.indexOf("/survey/");
+    onLanguageChange() {
+        const languageCode = this.el.querySelector(
+            ".o_survey_lang_selector[name='lang_code']"
+        ).value;
+        const pathName = document.location.pathname;
+        const indexOfSurvey = pathName.indexOf("/survey/");
         if (indexOfSurvey >= 0) {
-            document.location = `/${lang_code}${pathname.substring(indexOfSurvey)}`;
+            const url = new URL(window.location.href);
+            url.pathname = `/${languageCode}${pathName.substring(indexOfSurvey)}`;
+            redirect(url.href);
         }
     },
 
@@ -390,7 +394,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         this.$(".o_lang_selector:visible").fadeOut(400);
         this.preventEnterSubmit = false;
         this.readonly = false;
-        this._nextScreen(
+        this.nextScreen(
             rpc(`/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`),
             {
                 initTimer: true,
@@ -403,52 +407,50 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     // -------------------------------------------------------------------------
 
     /**
-    * This function will send a json rpc call to the server to
-    * - start the survey (if we are on start screen)
-    * - submit the answers of the current page
-    * Before submitting the answers, they are first validated to avoid latency from the server
-    * and allow a fade out/fade in transition of the next question.
-    *
-    * @param {Array} [options]
-    * @param {Integer} [options.previousPageId] navigates to page id
-    * @param {Boolean} [options.skipValidation] skips JS validation
-    * @param {Boolean} [options.initTime] will force the re-init of the timer after next
-    *   screen transition
-    * @param {Boolean} [options.isFinish] fades out breadcrumb and timer
-    * @private
-    */
-    _submitForm: async function (options) {
-        var params = {};
+     * This function will send a json rpc call to the server to
+     * - start the survey (if we are on start screen)
+     * - submit the answers of the current page
+     * Before submitting the answers, they are first validated to avoid latency from the server
+     * and allow a fade out/fade in transition of the next question.
+     *
+     * @param {Array} [options]
+     * @param {Integer} [options.previousPageId] navigates to page id
+     * @param {Boolean} [options.skipValidation] skips JS validation
+     * @param {Boolean} [options.initTime] will force the re-init of the timer after next
+     *   screen transition
+     * @param {Boolean} [options.isFinish] fades out breadcrumb and timer
+     */
+    async submitForm(options = {}) {
+        const params = {};
         if (options.previousPageId) {
             params.previous_page_id = options.previousPageId;
         }
         if (options.nextSkipped) {
             params.next_skipped_page_or_question = true;
         }
-        var route = "/survey/submit";
+        let route = "/survey/submit";
 
         if (this.options.isStartScreen) {
             params.lang_code = document.querySelector(
-                '.o_survey_lang_selector[name="lang_code"]'
+                ".o_survey_lang_selector[name='lang_code']"
             ).value;
             route = "/survey/begin";
             // Hide survey title in 'page_per_question' layout: it takes too much space
-            if (this.options.questionsLayout === 'page_per_question') {
+            if (this.options.questionsLayout === "page_per_question") {
                 this.$('.o_survey_main_title').fadeOut(400);
             }
             this.$(".o_survey_lang_selector").fadeOut(400);
         } else {
-            var $form = this.$("form.o_survey-fill-form");
-            var formData = new FormData($form[0]);
-
+            const $form = this.$("form.o_survey-fill-form");
+            const formData = new FormData($form[0]);
             if (!options.skipValidation) {
                 // Validation pre submit
-                if (!this._validateForm($form, formData)) {
+                if (!this.validateForm($form, formData)) {
                     return;
                 }
             }
 
-            this._prepareSubmitValues(formData, params);
+            this.prepareSubmitValues(formData, params);
         }
 
         // prevent user from submitting more times using enter key
@@ -466,23 +468,29 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             params
         );
 
-        if (!this.options.isStartScreen && this.options.scoringType == 'scoring_with_answers_after_page') {
+        if (
+            !this.options.isStartScreen &&
+            this.options.scoringType == 'scoring_with_answers_after_page'
+        ) {
             const [correctAnswers] = await submitPromise;
-            if (Object.keys(correctAnswers).length && document.querySelector('.js_question-wrapper')) {
-                this._showCorrectAnswers(correctAnswers, submitPromise, options);
+            if (
+                Object.keys(correctAnswers).length &&
+                document.querySelector('.js_question-wrapper')
+            ) {
+                this.showCorrectAnswers(correctAnswers, submitPromise, options);
                 return;
             }
         }
-        this._nextScreen(submitPromise, options);
+        this.nextScreen(submitPromise, options);
     },
 
     /**
      * Will fade out / fade in the next screen based on passed promise and options.
      *
      * @param {Promise} nextScreenPromise
-     * @param {Object} options see '_submitForm' for details
+     * @param {Object} options see 'submitForm' for details
      */
-    _nextScreen: async function (nextScreenPromise, options) {
+    async nextScreen(nextScreenPromise, options) {
         var resolveFadeOut;
         var fadeOutPromise = new Promise(function (resolve, reject) {resolveFadeOut = resolve;});
 
@@ -518,7 +526,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     /**
      * Handle server side validation and display eventual error messages.
      *
-     * @param {Object} options see '_submitForm' for details
+     * @param {Object} options see 'submitForm' for details
      */
     _onNextScreenDone: function (options) {
         var self = this;
@@ -543,7 +551,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
             if (result.survey_navigation && this.$surveyNavigation.length !== 0) {
                 this.$surveyNavigation.html(result.survey_navigation);
-                this.$surveyNavigation.find('.o_survey_navigation_submit').on('click', self._onSubmit.bind(self));
+                this.$surveyNavigation.find('.o_survey_navigation_submit').on('click', self.onSubmit.bind(self));
             }
 
             // Hide timer if end screen (if page_per_question in case of conditional questions)
@@ -605,18 +613,16 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     // VALIDATION TOOLS
     // -------------------------------------------------------------------------
     /**
-    * Validation is done in frontend before submit to avoid latency from the server.
-    * If the validation is incorrect, the errors are displayed before submitting and
-    * fade in / out of submit is avoided.
-    *
-    * Each question type gets its own validation process.
-    *
-    * There is a special use case for the 'required' questions, where we use the constraint
-    * error message that comes from the question configuration ('constr_error_msg' field).
-    *
-    * @private
-    */
-    _validateForm: function ($form, formData) {
+     * Validation is done in frontend before submit to avoid latency from the server.
+     * If the validation is incorrect, the errors are displayed before submitting and
+     * fade in / out of submit is avoided.
+     *
+     * Each question type gets its own validation process.
+     *
+     * There is a special use case for the 'required' questions, where we use the constraint
+     * error message that comes from the question configuration ('constr_error_msg' field).
+     */
+    validateForm($form, formData) {
         var self = this;
         var errors = {};
         var validationEmailMsg = _t("This answer must be an email address.");
@@ -751,37 +757,33 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     // PREPARE SUBMIT TOOLS
     // -------------------------------------------------------------------------
     /**
-    * For each type of question, extract the answer from inputs or textarea (comment or answer)
-    *
-    *
-    * @private
-    * @param {Event} event
-    */
-    _prepareSubmitValues: function (formData, params) {
+     * For each type of question, extract the answer from inputs or textarea (comment or answer)
+     */
+    prepareSubmitValues(formData, params) {
         var self = this;
-        formData.forEach(function (value, key) {
+        for (const [key, value] of formData) {
             switch (key) {
-                case 'csrf_token':
-                case 'token':
-                case 'page_id':
-                case 'question_id':
+                case "csrf_token":
+                case "token":
+                case "page_id":
+                case "question_id":
                     params[key] = value;
                     break;
             }
-        });
+        }
 
         // Get all question answers by question type
         this.$('[data-question-type]').each(function () {
             switch ($(this).data('questionType')) {
-                case 'text_box':
-                case 'char_box':
+                case "text_box":
+                case "char_box":
                     params[this.name] = this.value;
                     break;
-                case 'numerical_box':
+                case "numerical_box":
                     params[this.name] = this.value;
                     break;
-                case 'date':
-                case 'datetime':{
+                case "date":
+                case "datetime":{
                     const [parse, serialize] =
                         $(this).data("questionType") === "date"
                             ? [parseDate, serializeDate]
@@ -790,55 +792,55 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     params[this.name] = date ? serialize(date) : "";
                     break;
                 }
-                case 'scale':
-                case 'simple_choice_radio':
-                case 'multiple_choice':
-                    params = self._prepareSubmitChoices(params, $(this), $(this).data('name'));
+                case "scale":
+                case "simple_choice_radio":
+                case "multiple_choice":
+                    params = self.prepareSubmitChoices(params, $(this), $(this).data('name'));
                     break;
-                case 'matrix':
-                    params = self._prepareSubmitAnswersMatrix(params, $(this));
+                case "matrix":
+                    params = self.prepareSubmitAnswersMatrix(params, $(this));
                     break;
             }
         });
     },
     /**
-    *   Prepare choice answer before submitting form.
-    *   If the answer is not the 'comment selection' (=Other), calls the _prepareSubmitAnswer method to add the answer to the params
-    *   If there is a comment linked to that question, calls the _prepareSubmitComment method to add the comment to the params
-    */
-    _prepareSubmitChoices: function (params, $parent, questionId) {
+     *   Prepare choice answer before submitting form.
+     *   If the answer is not the 'comment selection' (=Other), calls the prepareSubmitAnswer method to add the answer to the params
+     *   If there is a comment linked to that question, calls the prepareSubmitComment method to add the comment to the params
+     */
+    prepareSubmitChoices(params, $parent, questionId) {
         var self = this;
         $parent.find('input:checked').each(function () {
             if (this.value !== '-1') {
-                params = self._prepareSubmitAnswer(params, questionId, this.value);
+                params = self.prepareSubmitAnswer(params, questionId, this.value);
             }
         });
-        params = self._prepareSubmitComment(params, $parent, questionId, false);
+        params = self.prepareSubmitComment(params, $parent, questionId, false);
         return params;
     },
 
 
     /**
-    *   Prepare matrix answers before submitting form.
-    *   This method adds matrix answers one by one and add comment if any to a params key,value like :
-    *   params = { 'matrixQuestionId' : {'rowId1': [colId1, colId2,...], 'rowId2': [colId1, colId3, ...], 'comment': comment }}
-    */
-    _prepareSubmitAnswersMatrix: function (params, $matrixTable) {
+     *   Prepare matrix answers before submitting form.
+     *   This method adds matrix answers one by one and add comment if any to a params key,value like :
+     *   params = { 'matrixQuestionId' : {'rowId1': [colId1, colId2,...], 'rowId2': [colId1, colId3, ...], 'comment': comment }}
+     */
+    prepareSubmitAnswersMatrix(params, $matrixTable) {
         var self = this;
         $matrixTable.find('input:checked').each(function () {
-            params = self._prepareSubmitAnswerMatrix(params, $matrixTable.data('name'), $(this).data('rowId'), this.value);
+            params = self.prepareSubmitAnswerMatrix(params, $matrixTable.data('name'), $(this).data('rowId'), this.value);
         });
-        params = self._prepareSubmitComment(params, $matrixTable.closest('.js_question-wrapper'), $matrixTable.data('name'), true);
+        params = this.prepareSubmitComment(params, $matrixTable.closest('.js_question-wrapper'), $matrixTable.data('name'), true);
         return params;
     },
 
     /**
-    *   Prepare answer before submitting form if question type is matrix.
-    *   This method regroups answers by question and by row to make an object like :
-    *   params = { 'matrixQuestionId' : { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] } }
-    */
-    _prepareSubmitAnswerMatrix: function (params, questionId, rowId, colId, isComment) {
-        var value = questionId in params ? params[questionId] : {};
+     *   Prepare answer before submitting form if question type is matrix.
+     *   This method regroups answers by question and by row to make an object like :
+     *   params = { 'matrixQuestionId' : { 'rowId1' : [colId1, colId2,...], 'rowId2' : [colId1, colId3, ...] } }
+     */
+    prepareSubmitAnswerMatrix(params, questionId, rowId, colId, isComment) {
+        const value = questionId in params ? params[questionId] : {};
         if (isComment) {
             value['comment'] = colId;
         } else {
@@ -853,12 +855,12 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     },
 
     /**
-    *   Prepare answer before submitting form (any kind of answer - except Matrix -).
-    *   This method regroups answers by question.
-    *   Lonely answer are directly assigned to questionId. Multiple answers are regrouped in an array:
-    *   params = { 'questionId1' : lonelyAnswer, 'questionId2' : [multipleAnswer1, multipleAnswer2, ...] }
-    */
-    _prepareSubmitAnswer: function (params, questionId, value) {
+     *   Prepare answer before submitting form (any kind of answer - except Matrix -).
+     *   This method regroups answers by question.
+     *   Lonely answer are directly assigned to questionId. Multiple answers are regrouped in an array:
+     *   params = { 'questionId1' : lonelyAnswer, 'questionId2' : [multipleAnswer1, multipleAnswer2, ...] }
+     */
+    prepareSubmitAnswer(params, questionId, value) {
         if (questionId in params) {
             if (params[questionId].constructor === Array) {
                 params[questionId].push(value);
@@ -872,20 +874,20 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     },
 
     /**
-    *   Prepare comment before submitting form.
-    *   This method extract the comment, encapsulate it in a dict and calls the _prepareSubmitAnswer methods
-    *   with the new value. At the end, the result looks like :
-    *   params = { 'questionId1' : {'comment': commentValue}, 'questionId2' : [multipleAnswer1, {'comment': commentValue}, ...] }
-    */
-    _prepareSubmitComment: function (params, $parent, questionId, isMatrix) {
+     *   Prepare comment before submitting form.
+     *   This method extract the comment, encapsulate it in a dict and calls the prepareSubmitAnswer methods
+     *   with the new value. At the end, the result looks like :
+     *   params = { 'questionId1' : {'comment': commentValue}, 'questionId2' : [multipleAnswer1, {'comment': commentValue}, ...] }
+     */
+    prepareSubmitComment(params, $parent, questionId, isMatrix) {
         var self = this;
         $parent.find('textarea').each(function () {
             if (this.value) {
                 var value = {'comment': this.value};
                 if (isMatrix) {
-                    params = self._prepareSubmitAnswerMatrix(params, questionId, this.name, this.value, true);
+                    params = self.prepareSubmitAnswerMatrix(params, questionId, this.name, this.value, true);
                 } else {
-                    params = self._prepareSubmitAnswer(params, questionId, value);
+                    params = self.prepareSubmitAnswer(params, questionId, value);
                 }
             }
         });
@@ -994,7 +996,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             });
             this.surveyTimerWidget.attachTo($timer);
             this.surveyTimerWidget.on('time_up', this, function (ev) {
-                self._submitForm({
+                self.submitForm({
                     'skipValidation': true,
                     'isFinish': !this.options.sessionInProgress
                 });
@@ -1015,13 +1017,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     // -------------------------------------------------------------------------
 
     /**
-    * Checks, if the 'other' choice is checked. Applies only if the comment count as answer.
-    *   If not checked : Clear the comment textarea, hide and disable it
-    *   If checked : enable the comment textarea, show and focus on it
-    *
-    * @param {JQuery<HTMLElement>} $choiceItemGroup
-    */
-    _applyCommentAreaVisibility: function ($choiceItemGroup) {
+     * Checks, if the 'other' choice is checked. Applies only if the comment count as answer.
+     *   If not checked : Clear the comment textarea, hide and disable it
+     *   If checked : enable the comment textarea, show and focus on it
+     *
+     * @param {JQuery<HTMLElement>} $choiceItemGroup
+     */
+    applyCommentAreaVisibility($choiceItemGroup) {
         const $otherItem = $choiceItemGroup.find('.o_survey_js_form_other_comment');
         const $commentInput = $choiceItemGroup.find('textarea[type="text"]');
 
@@ -1088,7 +1090,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      * @param {JQuery<HTMLElement>} $choiceItemGroup
      * @returns {boolean} Whether the question is considered completed
      */
-    _checkConditionalQuestionsConfiguration: function ($target, $choiceItemGroup) {
+    checkConditionalQuestionsConfiguration($target, $choiceItemGroup) {
         let isQuestionComplete = false;
         const $matrixBtn = $target.closest('.o_survey_matrix_btn');
         if ($target.attr('type') === 'radio') {
@@ -1097,9 +1099,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 if ($target.is(':checked')) {
                     $matrixBtn.addClass('o_survey_selected');
                 }
-                if (this.options.questionsLayout === 'page_per_question') {
-                    var subQuestionsIds = $matrixBtn.closest('table').data('subQuestions');
-                    var completedQuestions = [];
+                if (this.options.questionsLayout === "page_per_question") {
+                    const subQuestionsIds = $matrixBtn.closest('table').data('subQuestions');
+                    const completedQuestions = [];
                     subQuestionsIds.forEach((id) => {
                         if (this.$('tr#' + id).find('input:checked').length !== 0) {
                             completedQuestions.push(id);
@@ -1111,7 +1113,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 const previouslySelectedAnswer = $choiceItemGroup.find('label.o_survey_selected');
                 previouslySelectedAnswer.removeClass('o_survey_selected');
                 const previouslySelectedAnswerId = previouslySelectedAnswer.find('input').val();
-                if (previouslySelectedAnswerId && this.options.questionsLayout !== 'page_per_question') {
+                if (
+                    previouslySelectedAnswerId &&
+                    this.options.questionsLayout !== "page_per_question"
+                ) {
                     this.selectedAnswers.splice(this.selectedAnswers.indexOf(parseInt(previouslySelectedAnswerId)), 1);
                 }
 
@@ -1120,21 +1125,21 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 const isNewSelection = newlySelectedAnswerId !== previouslySelectedAnswerId;
                 if (isNewSelection) {
                     newlySelectedAnswer.addClass('o_survey_selected');
-                    isQuestionComplete = this.options.questionsLayout === 'page_per_question';
+                    isQuestionComplete = this.options.questionsLayout === "page_per_question";
                     if (!isQuestionComplete) {
                         this.selectedAnswers.push(parseInt(newlySelectedAnswerId));
                     }
                 }
 
-                if (this.options.questionsLayout !== 'page_per_question') {
+                if (this.options.questionsLayout !== "page_per_question") {
                     const conditionalQuestionsToRecomputeVisibility = new Set(
                         (this.options.triggeredQuestionsByAnswer[previouslySelectedAnswerId] || [])
                             .concat(this.options.triggeredQuestionsByAnswer[newlySelectedAnswerId] || [])
                     )
-                    this._applyConditionalQuestionsVisibility(conditionalQuestionsToRecomputeVisibility)
+                    this.applyConditionalQuestionsVisibility(conditionalQuestionsToRecomputeVisibility)
                 }
             }
-        } else {  // $target.attr('type') === 'checkbox'
+        } else {
             if ($matrixBtn.length > 0) {
                 $matrixBtn.toggleClass('o_survey_selected', !$matrixBtn.hasClass('o_survey_selected'));
             } else {
@@ -1142,11 +1147,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 $label.toggleClass('o_survey_selected', !$label.hasClass('o_survey_selected'));
                 const answerId = $target.val();
 
-                if (this.options.questionsLayout !== 'page_per_question') {
+                if (this.options.questionsLayout !== "page_per_question") {
                     $label.hasClass('o_survey_selected')
                         ? this.selectedAnswers.push(parseInt(answerId))
                         : this.selectedAnswers.splice(this.selectedAnswers.indexOf(parseInt(answerId)), 1);
-                    this._applyConditionalQuestionsVisibility(this.options.triggeredQuestionsByAnswer[answerId]);
+                    this.applyConditionalQuestionsVisibility(this.options.triggeredQuestionsByAnswer[answerId]);
                 }
             }
         }
@@ -1160,19 +1165,20 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      *
      * @param {Number[] | String[] | Set | undefined} questionIds Conditional questions ids
      */
-    _applyConditionalQuestionsVisibility: function(questionIds) {
+    applyConditionalQuestionsVisibility(questionIds) {
         if (!questionIds || (!questionIds.length && !questionIds.size)) {
             return;
         }
         // Questions visibility
         for (const questionId of questionIds) {
-            const dependingQuestion = document.querySelector(`.js_question-wrapper[id="${questionId}"]`);
-            if (!dependingQuestion) {  // Could be on different page
+            const dependingQuestionEl = document.querySelector(`.js_question-wrapper[id="${questionId}"]`);
+            if (!dependingQuestionEl) {
+                // Could be on different page
                 continue;
             }
             const hasNoSelectedTriggers = !this.options.triggeringAnswersByQuestion[questionId]
                 .some(answerId => this.selectedAnswers.includes(parseInt(answerId)));
-            dependingQuestion.classList.toggle('d-none', hasNoSelectedTriggers);
+            dependingQuestion.classList.toggle("d-none", hasNoSelectedTriggers);
             if (hasNoSelectedTriggers) {
                 // Clear / Un-select all the input from the given question
                 // + propagate conditional hierarchy by triggering change on choice inputs.
@@ -1217,7 +1223,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     // ANSWERS TOOLS
     // -------------------------------------------------------------------------
 
-    _showCorrectAnswers: function(correctAnswers, submitPromise, options) {
+    showCorrectAnswers(correctAnswers, submitPromise, options) {
         // Display the correct answers
         Object.keys(correctAnswers).forEach(questionId => this._showQuestionAnswer(correctAnswers, questionId));
         // Make the form completely readonly
@@ -1231,7 +1237,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         const nextPageBtn = form.querySelector('button[id="next_page"]');
         nextPageBtn.classList.remove('d-none');
         nextPageBtn.addEventListener('click', () => {
-            this._nextScreen(submitPromise, options);
+            this.nextScreen(submitPromise, options);
         });
         // Replacing the original onKeyDown listener to block everything except for the
         // enter or arrow right key down events trigerring the next page display
@@ -1240,7 +1246,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 // Restore original keydown listener
                 document.removeEventListener('keydown', nextPageKeydownListener);
                 document.addEventListener('keydown', this.documentKeydownListener);
-                this._nextScreen(submitPromise, options);
+                this.nextScreen(submitPromise, options);
             }
         }
         document.removeEventListener('keydown', this.documentKeydownListener);
