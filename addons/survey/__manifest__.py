@@ -66,7 +66,6 @@ sent mails with personal token for the invitation of the survey.
             ('include', "web.chartjs_lib"),
             'survey/static/src/js/survey_image_zoomer.js',
             '/survey/static/src/xml/survey_image_zoomer_templates.xml',
-            'survey/static/src/js/survey_quick_access.js',
             'survey/static/src/js/survey_timer.js',
             'survey/static/src/js/survey_breadcrumb.js',
             'survey/static/src/js/survey_form.js',
@@ -81,6 +80,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_templates_form.scss',
             'survey/static/src/scss/survey_templates_results.scss',
             'survey/static/src/xml/survey_breadcrumb_templates.xml',
+            'survey/static/src/interactions/*',
         ],
         'survey.survey_user_input_session_assets': [
             'survey/static/src/js/survey_session_colors.js',
@@ -113,7 +113,6 @@ sent mails with personal token for the invitation of the survey.
         ],
         'web.assets_frontend': [
             'survey/static/src/js/tours/survey_tour.js',
-            'survey/static/src/interactions/*',
         ],
     },
     'author': 'Odoo S.A.',
