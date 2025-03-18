@@ -198,8 +198,16 @@ class AccountMove(models.Model):
     line_ids = fields.One2many(
         'account.move.line',
         'move_id',
-        string='Journal Items',
+        string='Account Move Line Items',
         copy=True,
+    )
+
+    journal_line_ids = fields.One2many(  # /!\ invoice_line_ids is just a subset of line_ids.
+        comodel_name='account.move.line',
+        inverse_name='move_id',
+        string='Journal Items',
+        copy=False,
+        domain=[('display_type', 'not in', ('line_section', 'line_note'))],
     )
 
     # === Payment fields === #
@@ -3140,7 +3148,7 @@ class AccountMove(models.Model):
         return new_moves
 
     def _sanitize_vals(self, vals):
-        if vals.get('invoice_line_ids') and vals.get('line_ids'):
+        if vals.get('invoice_line_ids') and vals.get('journal_line_ids'):
             # values can sometimes be in only one of the two fields, sometimes in
             # both fields, sometimes one field can be explicitely empty while the other
             # one is not, sometimes not...
@@ -3149,15 +3157,15 @@ class AccountMove(models.Model):
                 for command, line_id, *line_vals in vals['invoice_line_ids']
                 if command == Command.UPDATE
             }
-            for command, line_id, *line_vals in vals['line_ids']:
+            for command, line_id, *line_vals in vals['journal_line_ids']:
                 if command == Command.UPDATE and line_id in update_vals:
                     line_vals[0].update(update_vals.pop(line_id))
             for line_id, line_vals in update_vals.items():
-                vals['line_ids'] += [Command.update(line_id, line_vals)]
+                vals['journal_line_ids'] += [Command.update(line_id, line_vals)]
             for command, line_id, *line_vals in vals['invoice_line_ids']:
                 assert command not in (Command.SET, Command.CLEAR)
-                if [command, line_id, *line_vals] not in vals['line_ids']:
-                    vals['line_ids'] += [(command, line_id, *line_vals)]
+                if [command, line_id, *line_vals] not in vals['journal_line_ids']:
+                    vals['journal_line_ids'] += [(command, line_id, *line_vals)]
             del vals['invoice_line_ids']
         return vals
 
