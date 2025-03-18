@@ -31,6 +31,17 @@ class ProductTemplate(models.Model):
         if not self.env.context.get('website_sale_stock_get_quantity'):
             return res
 
+        if product_or_template.type == 'combo':
+            # The max quantity of a combo product is the max quantity of its combo with the lowest
+            # max quantity. If none of the combos has a max quantity, then the combo product also
+            # has no max quantity.
+            max_quantities = [
+                max_quantity for combo in product_or_template.combo_ids.sudo()
+                if (max_quantity := combo._get_max_quantity(website)) is not None
+            ]
+            if max_quantities:
+                res['max_combo_quantity'] = min(max_quantities)
+
         if not product_or_template.is_storable:
             return res
 
@@ -63,16 +74,6 @@ class ProductTemplate(models.Model):
                 'free_qty': 0,
                 'cart_qty': 0,
             })
-        if product_or_template.type == 'combo':
-            # The max quantity of a combo product is the max quantity of its combo with the lowest
-            # max quantity. If none of the combos has a max quantity, then the combo product also
-            # has no max quantity.
-            max_quantities = [
-                max_quantity for combo in product_or_template.combo_ids
-                if (max_quantity := combo._get_max_quantity(website)) is not None
-            ]
-            if max_quantities:
-                res['max_combo_quantity'] = min(max_quantities)
 
         return res
 

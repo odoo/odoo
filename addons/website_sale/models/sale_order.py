@@ -421,17 +421,21 @@ class SaleOrder(models.Model):
                 lambda sol: sol.product_id.id == product_id and sol.id == line_id
             )
 
+        product = self.env['product.product'].browse(product_id)
+        if product.type == 'combo':
+            return self.env['sale.order.line']
+
         domain = [
             ('product_id', '=', product_id),
             ('product_custom_attribute_value_ids', '=', False),
             ('linked_line_id', '=', linked_line_id),
+            ('combo_item_id', '=', False),
         ]
 
         filtered_sol = self.order_line.filtered_domain(domain)
         if not filtered_sol:
             return self.env['sale.order.line']
 
-        product = self.env['product.product'].browse(product_id)
         if product.product_tmpl_id._has_no_variant_attributes():
             filtered_sol = filtered_sol.filtered(
                 lambda sol:

@@ -34,7 +34,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
     def test_get_additional_combination_info_max_combo_quantity_with_max(self):
         product_a = self._create_product(is_storable=True, allow_out_of_stock_order=False)
         product_b = self._create_product(is_storable=True, allow_out_of_stock_order=False)
-        product_c = self._create_product(is_storable=True)
+        product_c = self._create_product(is_storable=True, allow_out_of_stock_order=True)
         self.env['stock.quant'].create([
             {
                 'product_id': product_a.id,
@@ -60,20 +60,24 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         self.cart.order_line = [Command.create({'product_id': product_a.id, 'product_uom_qty': 3})]
 
         with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
-            combination_info = self.env['product.template']._get_additionnal_combination_info(
+            combination_info = self.env['product.template'].with_context(
+                website_sale_stock_get_quantity=True
+            )._get_additionnal_combination_info(
                 combo_product, quantity=3, date=datetime(2000, 1, 1), website=self.website
             )
 
         self.assertEqual(combination_info['max_combo_quantity'], 2)
 
     def test_get_additional_combination_info_max_combo_quantity_without_max(self):
-        product = self._create_product(is_storable=True)
+        product = self._create_product(is_storable=True, allow_out_of_stock_order=True)
         combo = self.env['product.combo'].create({
             'name': "Test combo", 'combo_item_ids': [Command.create({'product_id': product.id})]
         })
         combo_product = self._create_product(type='combo', combo_ids=[Command.link(combo.id)])
 
-        combination_info = self.env['product.template']._get_additionnal_combination_info(
+        combination_info = self.env['product.template'].with_context(
+            website_sale_stock_get_quantity=True
+        )._get_additionnal_combination_info(
             combo_product, quantity=3, date=datetime(2000, 1, 1), website=self.website
         )
 
