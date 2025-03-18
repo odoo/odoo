@@ -169,7 +169,7 @@ class ResConfigSettings(models.TransientModel):
         help='Account for the difference amount after the expense discount has been granted',
         readonly=False,
         related='company_id.account_journal_early_pay_discount_loss_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('expense', 'income', 'income_other'))]",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('internal_group', '=', 'expense')]",
     )
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -177,7 +177,7 @@ class ResConfigSettings(models.TransientModel):
         help='Account for the difference amount after the income discount has been granted',
         readonly=False,
         related='company_id.account_journal_early_pay_discount_gain_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('internal_group', '=', 'income')]",
     )
 
     def set_values(self):
