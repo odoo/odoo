@@ -2410,14 +2410,14 @@ class MrpProduction(models.Model):
         def operation_key_values(record):
             return tuple(record[key] for key in ('company_id', 'name', 'workcenter_id'))
 
-        def filter_by_attributes(record):
-            product_attribute_ids = self.product_id.product_template_attribute_value_ids.ids
+        def filter_by_attributes(record, product=self.product_id):
+            product_attribute_ids = product.product_template_attribute_value_ids.ids
             return not record.bom_product_template_attribute_value_ids or\
                    any(att_val.id in product_attribute_ids for att_val in record.bom_product_template_attribute_value_ids)
 
         ratio = self._get_ratio_between_mo_and_bom_quantities(bom)
         _dummy, bom_lines = bom.explode(self.product_id, bom.product_qty)
-        bom_lines_by_id = {(line.id, line.product_id.id): (line, exploded_values['qty'] / exploded_values['original_qty']) for line, exploded_values in bom_lines if filter_by_attributes(line)}
+        bom_lines_by_id = {(line.id, line.product_id.id): (line, exploded_values['qty'] / exploded_values['original_qty']) for line, exploded_values in bom_lines if filter_by_attributes(line, exploded_values['product'])}
         bom_byproducts_by_id = {byproduct.id: byproduct for byproduct in bom.byproduct_ids.filtered(filter_by_attributes)}
         operations_by_id = {operation.id: operation for operation in bom.operation_ids.filtered(filter_by_attributes)}
 
