@@ -17,7 +17,7 @@ class AccountFiscalPositionL10nArTax(models.Model):
     # ponemos default a los selectio porque al ser requeridos si no se comporta raro y parece que elige uno por defecto
     # pero que no esta seleccionado
     webservice = fields.Selection(
-        [('agip', 'AGIP (Regimen General)'), ('rentas_cordoba', 'Rentas Cordoba')],
+        [('rentas_cordoba', 'Rentas Cordoba')],
     )
     tax_template_domain = fields.Char(compute='_compute_tax_template_domain')
     default_tax_id = fields.Many2one('account.tax', required=True)
@@ -101,17 +101,6 @@ class AccountFiscalPositionL10nArTax(models.Model):
             'ref': ref,
         })
         return tax
-
-    def _get_agip_data(self, partner, date, to_date):
-        # si es base en data demo devolvemos una alicuota demo para que no falle la demo data
-        if self.env.ref('base.user_demo', raise_if_not_found=False):
-            return (
-                2.5 if self.tax_type == 'withholding' else 3.0,
-                'VALOR DUMMY | dummy'
-            )
-        raise UserError(_(
-            'Falta configuración de credenciales de ADHOC para consulta de '
-            'Alícuotas de AGIP'))
 
     def _get_rentas_cordoba_data(self, partner, date, to_date):
         """ Obtener alícuotas desde app.rentascordoba.gob.ar
