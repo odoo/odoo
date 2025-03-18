@@ -32,50 +32,50 @@ publicWidget.registry.SurveyTimerWidget = publicWidget.Widget.extend({
     *
     * @override
     */
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.countDownDate = DateTime.fromISO(self.timer, { zone: "utc" }).plus({
-                minutes: self.timeLimitMinutes,
-            });
-            if (Math.abs(self.timeDifference) >= 500) {
-                self.countDownDate = self.countDownDate.plus({ milliseconds: self.timeDifference });
-            }
-            if (self.timeLimitMinutes <= 0 || self.countDownDate.diff(DateTime.utc()).seconds < 0) {
-                self.trigger_up('time_up');
-            } else {
-                self._updateTimer();
-                self.surveyTimerInterval = setInterval(self._updateTimer.bind(self), 1000);
-            }
+    async start() {
+        await this._super.apply(this, arguments);
+        this.countDownDate = DateTime.fromISO(this.timer, { zone: "utc" }).plus({
+            minutes: this.timeLimitMinutes,
         });
+        if (Math.abs(this.timeDifference) >= 500) {
+            this.countDownDate = this.countDownDate.plus({ milliseconds: this.timeDifference });
+        }
+        if (this.timeLimitMinutes <= 0 || this.countDownDate.diff(DateTime.utc()).seconds < 0) {
+            this.trigger_up("time_up");
+        } else {
+            this.updateTimer();
+            this.surveyTimerInterval = setInterval(this.updateTimer.bind(this), 1000);
+        }
     },
 
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
 
-    _formatTime: function (time) {
-        return time > 9 ? time : '0' + time;
+    formatTime(time) {
+        return time > 9 ? time : "0" + time;
     },
 
     /**
-    * This function is responsible for the visual update of the timer DOM every second.
-    * When the time runs out, it triggers a 'time_up' event to notify the parent widget.
-    *
-    * We use a diff in millis and not a second, that we round to the nearest second.
-    * Indeed, a difference of 999 millis is interpreted as 0 second by moment, which is problematic
-    * for our use case.
-    */
-    _updateTimer: function () {
-        var timeLeft = Math.round(this.countDownDate.diff(DateTime.utc()).milliseconds / 1000);
+     * This function is responsible for the visual update of the timer DOM every second.
+     * When the time runs out, it triggers a 'time_up' event to notify the parent widget.
+     *
+     * We use a diff in millis and not a second, that we round to the nearest second.
+     * Indeed, a difference of 999 millis is interpreted as 0 second by moment, which is problematic
+     * for our use case.
+     */
+    updateTimer() {
+        const timeLeft = Math.round(this.countDownDate.diff(DateTime.utc()).milliseconds / 1000);
 
         if (timeLeft >= 0) {
-            var timeLeftMinutes = parseInt(timeLeft / 60);
-            var timeLeftSeconds = timeLeft - (timeLeftMinutes * 60);
-            this.$el.text(this._formatTime(timeLeftMinutes) + ':' + this._formatTime(timeLeftSeconds));
+            const timeLeftMinutes = parseInt(timeLeft / 60);
+            const timeLeftSeconds = timeLeft - (timeLeftMinutes * 60);
+            this.$el.text(this.formatTime(timeLeftMinutes) + ":" + this.formatTime(timeLeftSeconds));
         } else {
-            clearInterval(this.surveyTimerInterval);
-            this.trigger_up('time_up');
+            if (this.surveyTimerInterval) {
+                clearInterval(this.surveyTimerInterval);
+            }
+            this.trigger_up("time_up");
         }
     },
 });
