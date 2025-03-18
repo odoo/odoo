@@ -100,7 +100,7 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
         l10n_ar_minimum_threshold = self.tax_id.l10n_ar_minimum_threshold
         if l10n_ar_minimum_threshold > tax_amount:
             tax_amount = 0.0
-        return tax_amount, tax_account_id, tax_repartition_line_id, '<li>%s: %s</li>' % (self.tax_id.name, ref)
+        return tax_amount, tax_account_id, tax_repartition_line_id, '<li>%s: %s</li>' % (self.tax_id.name, ref) if ref else ''
 
     @api.depends('base_amount', 'tax_id')
     def _compute_amount(self):

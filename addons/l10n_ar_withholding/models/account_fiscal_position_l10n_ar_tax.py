@@ -145,7 +145,7 @@ class AccountFiscalPositionL10nArTax(models.Model):
                 # Verificar que el comprobante tenga fecha dentro de la vigencia
                 from_date_date = fields.Date.from_string(dict_alic.get("CRD_FECHA_INICIO"))
                 to_date_date = fields.Date.from_string(dict_alic.get("CRD_FECHA_FIN"))
-                if not (from_date_date <= date_date <= to_date_date):
+                if not (from_date_date <= date <= to_date_date):
                     raise UserError(
                         'No se puede obtener automáticamente la alicuota para la '
                         'fecha %s. Por favor, ingrese la misma manualmente '
