@@ -663,8 +663,8 @@ class HrApplicant(models.Model):
                     applicant.job_id.no_of_recruitment += 1
         res = super().write(vals)
 
-        if self.pool_applicant_id and (not self.is_pool_applicant):
-            for applicant in self:
+        for applicant in self:
+            if applicant.pool_applicant_id and (not applicant.is_pool_applicant):
                 if 'email_from' in vals:
                     applicant.pool_applicant_id.email_from = vals['email_from']
                 if 'partner_phone' in vals:
