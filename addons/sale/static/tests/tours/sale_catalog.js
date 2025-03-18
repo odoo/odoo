@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('sale_catalog', {
     test: true,
-    checkDelay: 50,
     steps: () => [
         {
             content: "Create a new SO",
@@ -22,13 +21,18 @@ registry.category("web_tour.tours").add('sale_catalog', {
         },
         {
             content: "Select a customer from the dropdown",
-            trigger: ".dropdown-item",
+            trigger: ".o_field_res_partner_many2one .dropdown-item:not([id$='_loading']):first",
             run: 'click',
         },
         {
             content: "Open product catalog",
-            trigger: '.o_form_view button:contains("Catalog")',
+            trigger: 'button[name="action_add_from_catalog"]',
             run: 'click',
+        },
+        {
+            content: "Wait for the catalog to be loaded",
+            trigger: '.o_component_with_search_panel .o_kanban_renderer',
+            run: () => {},
         },
         {
             content: "Type 'Restricted' into the search bar",
@@ -36,8 +40,9 @@ registry.category("web_tour.tours").add('sale_catalog', {
             run: "text Restricted",
         },
         {
-            content: "Search for the product",
-            trigger: '.o_searchview_autocomplete .o_menu_item',
+            content: "Search in Product",
+            trigger: '.o_control_panel_actions .o_searchview_autocomplete .dropdown-item:first',
+            run: 'click',
         },
         {
             content: "Add the product to the SO",
