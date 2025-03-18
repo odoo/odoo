@@ -1160,7 +1160,7 @@ test("codeview is not available by default", async () => {
 });
 
 test("codeview is not available when not in debug mode", async () => {
-    patchWithCleanup(odoo, { debug: false });
+    patchWithCleanup(odoo, { debug: "" });
     await mountView({
         type: "form",
         resId: 1,
@@ -1177,7 +1177,7 @@ test("codeview is not available when not in debug mode", async () => {
 });
 
 test("codeview is available when option is active and in debug mode", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     await mountView({
         type: "form",
         resId: 1,
@@ -1194,7 +1194,7 @@ test("codeview is available when option is active and in debug mode", async () =
 });
 
 test("enable/disable codeview with editor toolbar", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     await mountView({
         type: "form",
         resId: 1,
@@ -1223,7 +1223,7 @@ test("enable/disable codeview with editor toolbar", async () => {
 });
 
 test("edit and enable/disable codeview with editor toolbar", async () => {
-    patchWithCleanup(odoo, { debug: true });
+    patchWithCleanup(odoo, { debug: "1" });
     onRpc("partner", "web_save", ({ args }) => {
         expect(args[1].txt).toBe("<div></div>");
         expect.step("web_save");
