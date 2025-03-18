@@ -2,34 +2,33 @@
 <odoo>
 <data>
 
-    <record model="ir.module.category" id="base.module_category_inventory_purchase">
-        <field name="description">Helps you manage your purchase-related processes such as requests for quotations, supplier bills, etc...</field>
+    <record model="res.groups.privilege" id="res_groups_privilege_purchase">
+        <field name="name">Purchase</field>
         <field name="sequence">8</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
     </record>
 
     <record id="group_purchase_user" model="res.groups">
         <field name="name">User</field>
         <field name="sequence">10</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-        <field name="category_id" ref="base.module_category_inventory_purchase"/>
+        <field name="privilege_id" ref="res_groups_privilege_purchase"/>
     </record>
 
     <record id="group_purchase_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="sequence">20</field>
-        <field name="category_id" ref="base.module_category_inventory_purchase"/>
+        <field name="privilege_id" ref="res_groups_privilege_purchase"/>
         <field name="implied_ids" eval="[(4, ref('group_purchase_user'))]"/>
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
     <record id="group_warning_purchase" model="res.groups">
         <field name="name">A warning can be set on a product or a customer (Purchase)</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record id="group_send_reminder" model="res.groups">
         <field name="name">Send an automatic reminder email to confirm delivery</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
 </data>

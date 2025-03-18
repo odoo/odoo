@@ -453,7 +453,7 @@ class TestFieldGroupFeedback(Feedback):
 
 Operation: read
 User: %s
-Groups: allowed for groups 'User types / Portal', 'Test Group'"""
+Groups: allowed for groups 'Role / Portal', 'Test Group'"""
     % self.user.id
         )
 
@@ -483,7 +483,7 @@ Groups: always forbidden""" % self.user.id
 
 Operation: write
 User: %s
-Groups: allowed for groups 'User types / Portal', 'Test Group'"""
+Groups: allowed for groups 'Role / Portal', 'Test Group'"""
     % self.user.id
         )
 
