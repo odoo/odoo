@@ -8,7 +8,7 @@ describe.current.tags("headless");
 
 const parser = new CalendarArchParser();
 const DEFAULT_ARCH_RESULTS = {
-    aggregate: undefined,
+    aggregate: null,
     canCreate: true,
     canDelete: true,
     canEdit: true,
@@ -46,7 +46,7 @@ function parseWith(attrs) {
 
 test(`throw if date_start is not set`, () => {
     expect(() => parseArch(`<calendar/>`)).toThrow(
-        `Calendar view has not defined "date_start" attribute.`
+        `Calendar view must define "date_start" attribute.`
     );
 });
 
@@ -177,8 +177,7 @@ test("scale", () => {
 });
 
 test("scales", () => {
-    expect(parseWith({ scales: "" }).scales).toEqual([]);
-
+    expect(parseWith({ scales: "" }).scales).toEqual(["day", "week", "month", "year"]);
     expect(parseWith({ scales: "day" }).scales).toEqual(["day"]);
     expect(parseWith({ scales: "day,week" }).scales).toEqual(["day", "week"]);
     expect(parseWith({ scales: "day,week,month" }).scales).toEqual(["day", "week", "month"]);

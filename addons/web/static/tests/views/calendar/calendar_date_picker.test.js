@@ -9,12 +9,10 @@ import {
     findComponent,
     models,
     mountView,
-    patchWithCleanup,
     preloadBundle,
 } from "@web/../tests/web_test_helpers";
 
 import { CalendarController } from "@web/views/calendar/calendar_controller";
-import { changeScale } from "./calendar_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -181,30 +179,4 @@ test(`Scale: today is correctly highlighted`, async () => {
     });
     expect(`.o_datetime_picker .o_today`).toHaveClass("o_selected");
     expect(`.o_datetime_picker .o_today`).toHaveText("4");
-});
-
-test(`Scale: scale default is fetched from sessionStorage`, async () => {
-    patchWithCleanup(sessionStorage, {
-        setItem(key, value) {
-            if (key === "calendar-scale") {
-                expect.step(`scale_${value}`);
-            }
-        },
-        getItem(key) {
-            if (key === "calendar-scale") {
-                return "month";
-            }
-        },
-    });
-
-    await mountView({
-        resModel: "event",
-        type: "calendar",
-        arch: `<calendar date_start="start"/>`,
-    });
-    expect(`.scale_button_selection`).toHaveText("Month");
-
-    await changeScale("year");
-    expect(`.scale_button_selection`).toHaveText("Year");
-    expect.verifySteps(["scale_year"]);
 });
