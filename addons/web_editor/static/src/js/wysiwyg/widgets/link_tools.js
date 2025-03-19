@@ -9,6 +9,7 @@ import {
 } from "@odoo/owl";
 import { normalizeCSSColor } from '@web/core/utils/colors';
 import { useService } from "@web/core/utils/hooks";
+import { isButton } from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 
 /**
  * Allows to customize link content and style.
@@ -595,5 +596,5 @@ export class LinkTools extends Link {
 }
 
 export function shouldUnlink(link, colorCombinationClass) {
-    return (!link.getAttribute("href") && !link.matches(".oe_unremovable")) && !colorCombinationClass;
+    return (!link.getAttribute("href") && !link.matches(".oe_unremovable")) && !colorCombinationClass && !isButton(link);
 }
