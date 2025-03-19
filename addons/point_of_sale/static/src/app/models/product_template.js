@@ -203,27 +203,7 @@ export class ProductTemplate extends Base {
                     (!rule.categ_id || rule.categ_id.id === product?.categ_id?.id)
             ) || [];
 
-        // We take in first assigned product rules instead of common one.
-        let commonRule = "";
-        let productVariantRule = "";
-        let productTemplateRule = "";
-        for (const rule of rules) {
-            if (!rule.product_id && !rule.product_tmpl_id) {
-                commonRule = rule;
-            }
-            if (rule.product_id?.id === product?.id) {
-                productVariantRule = rule;
-                break;
-            }
-            if (rule.product_tmpl_id?.id === productTmpl.id) {
-                // Prefer the rule with the highest `min_quantity`
-                if (!productTemplateRule || productTemplateRule.min_quantity < rule.min_quantity) {
-                    productTemplateRule = rule;
-                }
-            }
-        }
-
-        const rule = productVariantRule || productTemplateRule || commonRule;
+        const rule = rules.length && rules[0];
         if (!rule) {
             return price;
         }
