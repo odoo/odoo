@@ -2262,6 +2262,14 @@ export class PosStore extends WithLazyGetterTrap {
             return `${pm.name} (${fmtAmount})`;
         }
     }
+
+    orderDone(order) {
+        order.uiState.screen_data.value = "";
+        order.uiState.locked = true;
+        if (this.getOrder() === order) {
+            this.searchProductWord = "";
+        }
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
