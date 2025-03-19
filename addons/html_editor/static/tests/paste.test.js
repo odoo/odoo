@@ -1003,6 +1003,42 @@ describe("Unwrapping html element", () => {
             contentAfter: "<p>a</p><p><br></p><p><br></p><p>[]<br></p>",
         });
     });
+    test("should unwrap base container node when pasting on different empty node", async () => {
+        await testEditor({
+            contentBefore: "<h1>[]<br></h1>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, "<p>abc</p>");
+            },
+            contentAfter: "<h1>abc[]</h1>",
+        });
+        await testEditor({
+            contentBefore: "<h1>[]<br></h1>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, '<div class="o-paragraph">abc</div>');
+            },
+            contentAfter: "<h1>abc[]</h1>",
+        });
+        await testEditor({
+            contentBefore: "<h1>[]<br></h1>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(
+                    editor,
+                    '<p><font style="background-color: rgb(255, 0, 0);">abc</font></p>'
+                );
+            },
+            contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">abc</font>[]</h1>',
+        });
+        await testEditor({
+            contentBefore: "<h1>[]<br></h1>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(
+                    editor,
+                    '<div class="o-paragraph"><font style="background-color: rgb(255, 0, 0);">abc</font></div>'
+                );
+            },
+            contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">abc</font>[]</h1>',
+        });
+    });
 });
 
 describe("Complex html span", () => {
