@@ -1,10 +1,8 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
-import { defaultBuilderComponents } from "../core/default_builder_components";
-import { useDomState, useIsActiveItem } from "@html_builder/core/building_blocks/utils";
+import { useDomState, useIsActiveItem, useBuilderComponents } from "@html_builder/core/utils";
 
 export class DynamicSnippetOption extends Component {
     static template = "html_builder.DynamicSnippetOption";
-    static components = { ...defaultBuilderComponents };
     static props = {
         fetchDynamicFilters: Function,
         fetchDynamicFilterTemplates: Function,
@@ -12,6 +10,7 @@ export class DynamicSnippetOption extends Component {
     };
 
     setup() {
+        useBuilderComponents();
         this.isActiveItem = useIsActiveItem();
         // specify model name in subclasses to filter the list of available model record filters
         this.modelNameFilter = undefined;

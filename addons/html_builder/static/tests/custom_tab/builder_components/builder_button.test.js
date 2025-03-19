@@ -1,5 +1,4 @@
-import { useDomState } from "@html_builder/core/building_blocks/utils";
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { useBuilderComponents, useDomState } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, hover, runAllTimers } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
@@ -662,10 +661,8 @@ class SubTestOption extends Component {
         </BuilderContext>
     `;
     static props = {};
-    static components = {
-        ...defaultBuilderComponents,
-    };
     setup() {
+        useBuilderComponents();
         this.domState = useDomState((el) => ({
             applyTo: el.matches(".first") ? ".a" : ".b",
         }));
@@ -681,10 +678,10 @@ class TestOption extends Component {
     `;
     static props = {};
     static components = {
-        ...defaultBuilderComponents,
         SubTestOption,
     };
     setup() {
+        useBuilderComponents();
         this.domState = useDomState((el) => ({
             applyTo: el.matches(".secondCase") ? ".second" : ".first",
         }));

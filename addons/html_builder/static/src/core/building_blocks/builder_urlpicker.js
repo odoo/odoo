@@ -7,7 +7,7 @@ import {
     basicContainerBuilderComponentProps,
     useBuilderComponent,
     useInputBuilderComponent,
-} from "@html_builder/core/building_blocks/utils";
+} from "@html_builder/core/utils";
 import { Component, useEffect } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";

@@ -1,4 +1,4 @@
-import { classAction } from "@html_builder/core/plugins/core_builder_action_plugin";
+import { classAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";

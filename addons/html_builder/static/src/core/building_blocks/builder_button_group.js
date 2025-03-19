@@ -4,7 +4,7 @@ import {
     useVisibilityObserver,
     useApplyVisibility,
     useSelectableComponent,
-} from "./utils";
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 
 export class BuilderButtonGroup extends Component {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { delay } from "@odoo/hoot-dom";
-import { Operation } from "../src/core/plugins/operation";
+import { Operation } from "../src/core/operation";
 
 describe("Operation", () => {
     test("handle 3 concurrent cancellable operations (with delay)", async () => {

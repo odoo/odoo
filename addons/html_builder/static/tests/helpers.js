@@ -1,5 +1,5 @@
 import { Builder } from "@html_builder/builder";
-import { SetupEditorPlugin } from "@html_builder/core/plugins/setup_editor_plugin";
+import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";

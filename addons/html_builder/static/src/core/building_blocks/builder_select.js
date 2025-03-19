@@ -6,7 +6,7 @@ import {
     useVisibilityObserver,
     useApplyVisibility,
     useSelectableComponent,
-} from "./utils";
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 

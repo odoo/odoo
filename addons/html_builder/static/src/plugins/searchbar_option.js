@@ -1,20 +1,20 @@
 import {
+    useBuilderComponents,
     useDomState,
     useGetItemValue,
     useIsActiveItem,
-} from "@html_builder/core/building_blocks/utils";
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+} from "@html_builder/core/utils";
 import { Component } from "@odoo/owl";
 
 export class SearchbarOption extends Component {
     static template = "html_builder.SearchbarOption";
-    static components = { ...defaultBuilderComponents };
     static props = {
         getOrderByItems: Function,
         getDisplayItems: Function,
     };
 
     setup() {
+        useBuilderComponents();
         this.isActiveItem = useIsActiveItem();
         this.getItemValue = useGetItemValue();
 

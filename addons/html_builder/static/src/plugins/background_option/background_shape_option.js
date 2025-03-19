@@ -1,5 +1,4 @@
-import { useDomState, useIsActiveItem } from "@html_builder/core/building_blocks/utils";
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { useBuilderComponents, useDomState, useIsActiveItem } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { Component } from "@odoo/owl";
@@ -7,11 +6,9 @@ import { _t } from "@web/core/l10n/translation";
 
 export class BackgroundShapeOption extends Component {
     static template = "html_builder.BackgroundShapeOption";
-    static components = {
-        ...defaultBuilderComponents,
-    };
     static props = {};
     setup() {
+        useBuilderComponents();
         this.backgroundShapePlugin = this.env.editor.shared.backgroundShapeOption;
         this.isActiveItem = useIsActiveItem();
         this.toRatio = toRatio;

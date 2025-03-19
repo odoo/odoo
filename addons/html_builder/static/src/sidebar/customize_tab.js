@@ -1,6 +1,6 @@
 import { Component, useState } from "@odoo/owl";
 import { OptionsContainer } from "./option_container";
-import { useVisibilityObserver } from "../core/building_blocks/utils";
+import { useVisibilityObserver } from "../core/utils";
 import { CustomizeComponent } from "@html_builder/sidebar/customize_component";
 
 export class CustomizeTab extends Component {

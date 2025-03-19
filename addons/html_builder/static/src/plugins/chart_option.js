@@ -1,19 +1,18 @@
 import { Component, useState } from "@odoo/owl";
-import { useDomState, useIsActiveItem } from "@html_builder/core/building_blocks/utils";
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { useDomState, useIsActiveItem, useBuilderComponents } from "@html_builder/core/utils";
 import { _t } from "@web/core/l10n/translation";
 
 export const DATASET_KEY_PREFIX = "chart_dataset_";
 
 export class ChartOption extends Component {
     static template = "html_builder.ChartOption";
-    static components = { ...defaultBuilderComponents };
     static props = {
         isPieChart: Function,
         getColor: Function,
     };
 
     setup() {
+        useBuilderComponents();
         this.isActiveItem = useIsActiveItem();
 
         // Here for compatibility with previous versions (< 18.3).

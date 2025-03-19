@@ -1,13 +1,12 @@
-import { useDomState, useIsActiveItem } from "@html_builder/core/building_blocks/utils";
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { useBuilderComponents, useDomState, useIsActiveItem } from "@html_builder/core/utils";
 import { Component } from "@odoo/owl";
 
 export class CardImageOption extends Component {
     static template = "html_builder.CardImageOption";
-    static components = { ...defaultBuilderComponents };
     static props = {};
 
     setup() {
+        useBuilderComponents();
         this.state = useDomState((editingElement) => {
             const imageToWrapperRatio = this.getImageToWrapperRatio(editingElement);
             return {

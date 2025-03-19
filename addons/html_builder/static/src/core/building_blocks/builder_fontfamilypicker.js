@@ -6,7 +6,7 @@ import {
     useVisibilityObserver,
     useApplyVisibility,
     useSelectableComponent,
-} from "./utils";
+} from "../utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { BuilderSelect } from "./builder_select";
 import { BuilderSelectItem } from "./builder_select_item";

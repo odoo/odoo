@@ -7,7 +7,7 @@ import {
     getAllActionsAndOperations,
     useBuilderComponent,
     useDomState,
-} from "./utils";
+} from "../utils";
 import { isColorGradient } from "@web/core/utils/colors";
 
 // TODO replace by useInputBuilderComponent after extract unit by AGAU

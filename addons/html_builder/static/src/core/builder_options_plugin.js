@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
-import { isRemovable } from "./remove/remove_plugin";
-import { isClonable } from "./clone/clone_plugin";
+import { isRemovable } from "./remove_plugin";
+import { isClonable } from "./clone_plugin";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 

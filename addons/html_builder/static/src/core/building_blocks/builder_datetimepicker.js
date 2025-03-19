@@ -8,7 +8,7 @@ import {
     basicContainerBuilderComponentProps,
     useBuilderComponent,
     useInputBuilderComponent,
-} from "./utils";
+} from "../utils";
 
 const { DateTime } = luxon;
 

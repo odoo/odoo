@@ -1,11 +1,9 @@
 import { Component } from "@odoo/owl";
-import { defaultBuilderComponents } from "../core/default_builder_components";
-import { useDomState, useIsActiveItem } from "../core/building_blocks/utils";
+import { useDomState, useIsActiveItem, useBuilderComponents } from "../core/utils";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 export class AnimateOption extends Component {
     static template = "html_builder.AnimateOption";
-    static components = { ...defaultBuilderComponents };
     static props = {
         getDirectionsItems: Function,
         getEffectsItems: Function,
@@ -14,6 +12,7 @@ export class AnimateOption extends Component {
 
     setup() {
         this.isActiveItem = useIsActiveItem();
+        useBuilderComponents();
 
         const keeplast = new KeepLast();
         this.state = useDomState((editingElement) => {

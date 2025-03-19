@@ -1,10 +1,8 @@
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 import { DynamicSnippetCarouselOption } from "@html_builder/plugins/dynamic_snippet_carousel_option";
 import { onWillStart, useState } from "@odoo/owl";
 
 export class DynamicSnippetProductsOption extends DynamicSnippetCarouselOption {
     static template = "website_sale.DynamicSnippetProductsOption";
-    static components = { ...defaultBuilderComponents };
     static props = {
         ...DynamicSnippetCarouselOption.props,
         fetchCategories: Function,

@@ -1,5 +1,5 @@
 import { Builder } from "@html_builder/builder";
-import { SetupEditorPlugin } from "@html_builder/core/plugins/setup_editor_plugin";
+import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { EditInteractionPlugin } from "@html_builder/website_builder/plugins/edit_interaction_plugin";
 import { WebsiteSessionPlugin } from "@html_builder/website_builder/plugins/website_session_plugin";
 import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";

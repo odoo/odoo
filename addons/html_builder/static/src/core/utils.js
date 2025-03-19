@@ -694,3 +694,13 @@ function _shouldClean(comp, hasClean, isApplied) {
     const shouldClean = shouldToggle && hasClean && isApplied;
     return comp.props.inverseAction ? !shouldClean : shouldClean;
 }
+
+export function useBuilderComponents() {
+    const comp = useComponent();
+    const editor = comp.env.editor;
+    if (!comp.constructor.components) {
+        comp.constructor.components = {};
+    }
+    const Components = editor.shared.builderComponents.getComponents();
+    Object.assign(comp.constructor.components, Components);
+}
