@@ -167,9 +167,9 @@ export class Message extends Component {
                     const bodyEl = createElementWithContent(
                         "span",
                         this.state.showTranslation
-                            ? this.message.translationValue
-                            : this.props.messageSearch?.highlight(this.message.body) ??
-                                  this.message.body
+                            ? this.message.richTranslationValue
+                            : this.props.messageSearch?.highlight(this.message.richBody) ??
+                                  this.message.richBody
                     );
                     this.prepareMessageBody(bodyEl);
                     this.shadowRoot.appendChild(bodyEl);
@@ -180,9 +180,9 @@ export class Message extends Component {
             },
             () => [
                 this.state.showTranslation,
-                this.message.translationValue,
+                this.message.richTranslationValue,
                 this.props.messageSearch?.searchTerm,
-                this.message.body,
+                this.message.richBody,
             ]
         );
         useEffect(
@@ -191,7 +191,7 @@ export class Message extends Component {
                     this.prepareMessageBody(this.messageBody.el);
                 }
             },
-            () => [this.state.isEditing, this.message.body]
+            () => [this.state.isEditing, this.message.richBody]
         );
     }
 

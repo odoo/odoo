@@ -1,7 +1,7 @@
-import { Component, onMounted, onPatched, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { loadEmoji, loader, useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
+import { loadEmoji, useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -50,17 +50,6 @@ export class QuickReactionMenu extends Component {
             })
         );
         this.frequentEmojiService = useService("web.frequent.emoji");
-        this.state = useState({ emojiLoaded: Boolean(loader.loaded) });
-        if (!loader.loaded) {
-            loader.onEmojiLoaded(() => (this.state.emojiLoaded = true));
-        }
-        onMounted(() => {
-            void this.state.emojiLoaded;
-            if (!loader.loaded) {
-                loadEmoji();
-            }
-        });
-        onPatched(() => void this.state.emojiLoaded);
         useExternalListener(window, "keydown", async (ev) => {
             if (
                 !this.dropdown.isOpen ||
@@ -83,10 +72,13 @@ export class QuickReactionMenu extends Component {
     }
 
     getEmojiShortcode(emoji) {
-        return loader.loaded?.emojiValueToShortcode?.[emoji] ?? "?";
+        return this.store.emojiLoader.loaded?.emojiValueToShortcodes?.[emoji][0] ?? "?";
     }
 
     onClick() {
+        if (!this.store.emojiLoader.isLoaded) {
+            loadEmoji();
+        }
         this.picker.close();
         if (this.dropdown.isOpen) {
             this.dropdown.close();

@@ -59,7 +59,7 @@
                         >
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
-                                    <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
+                                    <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing or message.edited))">
                                         <MessageLinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" messageLinkPreviews="message.message_link_preview_ids"/>
                                         <t t-else="">
@@ -85,8 +85,8 @@
                                                     <t t-else="">
                                                         <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
-                                                        <t t-elif="state.showTranslation" t-out="message.translationValue"/>
-                                                        <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
+                                                        <t t-elif="state.showTranslation" t-out="message.richTranslationValue"/>
+                                                        <t t-elif="message.richBody" t-out="props.messageSearch?.highlight(message.richBody) ?? message.richBody"/>
                                                         <em t-if="message.edited" class="smaller fw-bold text-500"> (edited)</em>
                                                         <p class="fst-italic text-muted small" t-if="state.showTranslation">
                                                             <t t-if="message.translationSource" t-esc="translatedFromText"/>
@@ -201,7 +201,7 @@
 
 <t t-name="mail.Message.bodyAsNotification">
     <div class="o-mail-Message-body text-break mb-0 w-100" t-att-class="{'o-note': message.message_type == 'notification'}">
-        <t t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
+        <t t-out="props.messageSearch?.highlight(message.richBody) ?? message.richBody"/>
     </div>
 </t>
 

@@ -4,11 +4,13 @@ import {
     convertBrToLineBreak,
     htmlToTextContentInline,
     prettifyMessageContent,
+    wrapEmojisWithTitles,
 } from "@mail/utils/common/format";
 import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { stateToUrl } from "@web/core/browser/router";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -32,6 +34,22 @@ export class Message extends Record {
     attachment_ids = Record.many("ir.attachment", { inverse: "message" });
     author = Record.one("Persona");
     body = Record.attr("", { html: true });
+    richBody = Record.attr("", {
+        compute() {
+            if (!this.store.emojiLoader.loaded) {
+                loadEmoji();
+            }
+            return wrapEmojisWithTitles(this.body) ?? "";
+        },
+    });
+    richTranslationValue = Record.attr("", {
+        compute() {
+            if (!this.store.emojiLoader.loaded) {
+                loadEmoji();
+            }
+            return wrapEmojisWithTitles(this.translationValue) ?? "";
+        },
+    });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {DateTime} */
     date = Record.attr(undefined, { type: "datetime" });

@@ -12,6 +12,7 @@ import { Deferred, Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { browser } from "@web/core/browser/browser";
+import { loader } from "@web/core/emoji_picker/emoji_picker";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -82,6 +83,7 @@ export class Store extends BaseStore {
     });
     settings = Record.one("Settings");
     openInviteThread = Record.one("Thread");
+    emojiLoader = loader;
 
     fetchDeferred = new Deferred();
     /** @type {[string | [string, any]]} */
