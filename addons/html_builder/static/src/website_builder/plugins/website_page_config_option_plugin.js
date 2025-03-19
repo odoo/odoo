@@ -26,7 +26,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
 
     getActions() {
         return {
-            setWebsiteHeaderVisibilty: {
+            setWebsiteHeaderVisibility: {
                 apply: ({ editingElement, value: headerPositionValue }) => {
                     const lastValue = this.getVisibilityItem();
                     this.dependencies.history.applyCustomMutation({
