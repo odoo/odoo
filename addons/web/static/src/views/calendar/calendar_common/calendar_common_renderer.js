@@ -6,7 +6,6 @@ import { useBus } from "@web/core/utils/hooks";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
-import { CALENDAR_MODES } from "@web/views/calendar/calendar_modes";
 import { getColor } from "@web/views/calendar/colors";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
@@ -60,13 +59,9 @@ export class CalendarCommonRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
-        calendarMode: { type: String, optional: true },
+        sidePanelMode: String,
         multiCreateRecord: { type: Function, optional: true },
         multiDeleteRecords: { type: Function, optional: true },
-    };
-
-    static defaultProps = {
-        calendarMode: CALENDAR_MODES.filter,
     };
 
     setup() {

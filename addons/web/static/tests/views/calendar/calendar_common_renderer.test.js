@@ -11,6 +11,7 @@ import {
 } from "./calendar_test_helpers";
 
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
+import { SIDE_PANEL_MODES } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 
 const FAKE_PROPS = {
     model: FAKE_MODEL,
@@ -18,6 +19,7 @@ const FAKE_PROPS = {
     deleteRecord() {},
     editRecord() {},
     displayName: "Plop",
+    sidePanelMode: SIDE_PANEL_MODES.filter,
 };
 
 async function start(props = {}, target) {

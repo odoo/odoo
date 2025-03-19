@@ -20,7 +20,7 @@ export class CalendarRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: Function,
-        calendarMode: String,
+        sidePanelMode: String,
         multiCreateRecord: Function,
         multiDeleteRecords: Function,
     };

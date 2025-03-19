@@ -1,5 +1,5 @@
 import { useComponent, useEffect, useRef } from "@odoo/owl";
-import { CALENDAR_MODES } from "@web/views/calendar/calendar_modes";
+import { SIDE_PANEL_MODES } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 
 /**
  * Add a square selection into FullCalendar
@@ -11,7 +11,7 @@ export function useSquareSelection() {
 
     useEffect(
         (el, mode) => {
-            if (mode !== CALENDAR_MODES.filter) {
+            if (mode !== SIDE_PANEL_MODES.filter) {
                 component.fc.api.setOption("editable", false);
                 component.fc.api.setOption("selectable", false);
                 component.fc.api.setOption("dateClick", () => {});
@@ -24,7 +24,7 @@ export function useSquareSelection() {
 
             clearState();
 
-            if (mode !== CALENDAR_MODES.filter) {
+            if (mode !== SIDE_PANEL_MODES.filter) {
                 window.addEventListener("pointerdown", pointerDown);
                 window.addEventListener("pointermove", pointerMove);
                 window.addEventListener("pointerup", pointerUp);
@@ -37,7 +37,7 @@ export function useSquareSelection() {
                 };
             }
         },
-        () => [calendarRef.el, component.props.calendarMode]
+        () => [calendarRef.el, component.props.sidePanelMode]
     );
 
     function getElementIndex(element) {
@@ -130,7 +130,7 @@ export function useSquareSelection() {
     }
 
     async function onSquareSelection(currentSelectionElement) {
-        if (component.props.calendarMode === CALENDAR_MODES.add) {
+        if (component.props.sidePanelMode === SIDE_PANEL_MODES.add) {
             const dates = [];
             for (const element of currentSelectionElement) {
                 const date = luxon.DateTime.fromISO(element.dataset.date);
@@ -139,7 +139,7 @@ export function useSquareSelection() {
                 }
             }
             await component.props.multiCreateRecord(dates);
-        } else if (component.props.calendarMode === CALENDAR_MODES.delete) {
+        } else if (component.props.sidePanelMode === SIDE_PANEL_MODES.delete) {
             const ids = [];
             for (const element of currentSelectionElement) {
                 for (const event of [...element.querySelectorAll(".fc-event")]) {
