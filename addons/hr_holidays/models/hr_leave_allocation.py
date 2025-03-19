@@ -209,9 +209,11 @@ class HrLeaveAllocation(models.Model):
         for allocation in self:
             allocation.number_of_days_display = allocation.number_of_days
 
-    @api.depends('number_of_days')
+    @api.depends('number_of_days', 'employee_id')
     def _compute_number_of_hours_display(self):
         for allocation in self:
+            if not allocation.employee_id:
+                continue
             allocation.number_of_hours_display = (allocation.number_of_days * allocation.employee_id._get_hours_per_day(allocation.date_from))
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
