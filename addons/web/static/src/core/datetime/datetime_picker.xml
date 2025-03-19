@@ -25,27 +25,23 @@
                         </t>
                         <t t-foreach="week.days" t-as="itemInfo" t-key="itemInfo.id">
                             <t t-set="arInfo" t-value="getActiveRangeInfo(itemInfo)" />
-                            <t t-if="itemInfo.isOutOfRange">
-                                <div class="o_date_item_cell o_out_of_range o_cell_md" />
-                            </t>
-                            <t t-else="">
-                                <div
-                                    class="o_date_item_cell o_datetime_button o_center o_cell_md cursor-pointer"
-                                    t-att-class="{
-                                        'o_selected': arInfo.isSelected,
-                                        o_select_start: arInfo.isSelectStart,
-                                        o_select_end: arInfo.isSelectEnd,
-                                        o_highlighted: arInfo.isHighlighted,
-                                        'o_today fw-bolder text-decoration-underline': itemInfo.includesToday,
-                                        [itemInfo.extraClass]: true,
-                                    }"
-                                    t-att-disabled="!itemInfo.isValid"
-                                    t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
-                                    t-on-click="() => this.zoomOrSelect(itemInfo)"
-                                >
-                                    <t t-esc="itemInfo.label" />
-                                </div>
-                            </t>
+                            <div
+                                class="o_date_item_cell o_datetime_button o_center o_cell_md cursor-pointer"
+                                t-att-class="{
+                                    'o_out_of_range text-muted': itemInfo.isOutOfRange,
+                                    o_selected: arInfo.isSelected,
+                                    o_select_start: arInfo.isSelectStart,
+                                    o_select_end: arInfo.isSelectEnd,
+                                    o_highlighted: arInfo.isHighlighted,
+                                    'o_today fw-bolder text-decoration-underline': itemInfo.includesToday,
+                                    [itemInfo.extraClass]: true,
+                                }"
+                                t-att-disabled="!itemInfo.isValid"
+                                t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
+                                t-on-click="() => this.zoomOrSelect(itemInfo)"
+                            >
+                                <t t-esc="itemInfo.label" />
+                            </div>
                         </t>
                     </t>
                 </div>
@@ -65,7 +61,6 @@
                     </t>
                 </t>
             </div>
-
             <div t-attf-class="o_datetime_buttons {{ props.type === 'datetime' ? 'position-md-absolute h-100 end-0' : '' }}">
                 <t t-slot="buttons" />
             </div>
@@ -116,7 +111,7 @@
                 >
                     <t t-foreach="titles" t-as="title" t-key="title">
                         <strong
-                            t-attf-class="o_header_part fs-5 {{ props.range ? 'flex-basis-50' : 'flex-basis-100' }}"
+                            class="o_header_part fs-5"
                             t-esc="title"
                         />
                     </t>

@@ -10656,8 +10656,9 @@ test(`multi edit field with daterange widget`, async () => {
     await contains(`.o_data_row .o_data_cell .o_field_daterange input`).click();
 
     // change dates range
-    await contains(getPickerCell("16").at(0)).click();
-    await contains(getPickerCell("12").at(1)).click();
+    await contains(getPickerCell("16")).click();
+    await contains("button.o_next").click();
+    await contains(getPickerCell("12")).click();
 
     // Apply the changes
     await contains(`.o_list_view`).click();
