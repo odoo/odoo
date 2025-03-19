@@ -125,6 +125,7 @@ For more specific needs, you may also assign custom-defined actions
     ],
     'demo': [
         'demo/discuss_channel_demo.xml',
+        'demo/discuss/public_channel_demo.xml',
         "demo/mail_canned_response_demo.xml",
     ],
     'installable': True,
