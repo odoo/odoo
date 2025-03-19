@@ -4,14 +4,24 @@
         .o_kanban_record {
             width: 100%;
             margin: 0px;
-            .o_kanban_grouped {
-                display:none !important;
-            }
         }
     }
     &.o_kanban_grouped {
-        .o_kanban_detail_ungrouped {
-            display:none !important;
+        .row > div {
+            flex: 1 1 100% !important;
+            max-width: 100% !important;
+            margin: 8px 0 !important;
+
+            &.col-6 {
+                flex: 1 1 50% !important;
+                max-width: 50% !important;
+            }
+            &.d-none {
+                display: none !important; //forcing the d-none to override the d-lg or d-sm classes for grouped view
+            }
+            &.text-lg-end {
+                text-align: left !important; //overrides the text-lg-end for grouped view.
+            }
         }
     }
 }
@@ -21,7 +31,7 @@
     height: 16px;
 }
 
-.w_visitor_kanban_actions_ungrouped .btn {
+.w_visitor_kanban_actions .btn {
     margin: inherit;
     &:not(:last-child){
         margin-right: 0.25rem;

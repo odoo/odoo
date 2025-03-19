@@ -87,9 +87,8 @@
                 <field name="partner_image"/>
                 <templates>
                     <t t-name="card" class="p-0">
-                        <!-- displayed in ungrouped mode -->
                         <div class="o_kanban_detail_ungrouped row mx-0">
-                            <div class="col-lg-2 col-sm-8 col-12 py-0 my-2 my-lg-0">
+                            <div class="col-lg-2 col-sm-8 col-12 py-0 my-2">
                                 <div class="d-flex">
                                     <field t-if="record.partner_image.raw_value" name="partner_id" widget="image" options="{'preview_image': 'image_128', 'size': [54, 54]}" alt="Visitor" class="me-3"/>
                                     <img t-else=""
@@ -128,26 +127,7 @@
                                 </span>
                                 <div t-att-class="record.page_count.raw_value ? '' : 'text-muted'">Visited Pages</div>
                             </div>
-                            <div class="w_visitor_kanban_actions_ungrouped col-lg-3 col-sm-12 py-0 my-2 text-lg-end">
-                                <button name="action_send_mail" type="object"
-                                        class="btn btn-secondary" invisible="not email">
-                                        Email
-                                </button>
-                            </div>
-                        </div>
-                        <!-- displayed in grouped mode -->
-                        <div class="o_kanban_grouped p-2">
-                            <span class="fa fa-circle text-success float-end" t-if="record.is_connected.raw_value" aria-label="Online" title="Online"/>
-                            <span class="fa fa-circle text-danger float-end" t-else="" aria-label="Offline" title="Offline"/>
-                            <div class="d-flex">
-                                <field t-if="record.country_id.raw_value" name="country_flag" widget="image_url" class="o_country_flag" alt="Country"/>
-                                <field name="display_name" class="fw-bolder"/>
-                            </div>
-                            <div class="mb-2">Active <field name="time_since_last_action"/></div>
-                            <div t-if="record.page_count.raw_value">Last Page<field name="last_visited_page_id" class="float-end fw-bold"/></div>
-                            <div>Visits<field name="visit_count" class="float-end fw-bold"/></div>
-                            <div t-if="record.page_count.raw_value" id="o_page_count">Visited Pages<span class="float-end fw-bold"><field name="page_count"/></span></div>
-                            <div name="w_visitor_kanban_actions" class="d-flex gap-1">
+                            <div class="w_visitor_kanban_actions col-lg-3 col-sm-12 py-0 my-2 text-lg-end">
                                 <button name="action_send_mail" type="object"
                                         class="btn btn-secondary" invisible="not email">
                                         Email
