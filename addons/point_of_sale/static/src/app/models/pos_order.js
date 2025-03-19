@@ -823,6 +823,9 @@ export class PosOrder extends Base {
         this.assertEditable();
         this.partner_id = partner;
         this.updatePricelistAndFiscalPosition(partner);
+        if (partner.company_type == "company") {
+            this.setToInvoice(true);
+        }
     }
 
     getPartner() {
