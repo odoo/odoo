@@ -59,6 +59,7 @@ class TestTour(BaseCommon):
             "steps": [{
                 "content": "Click here",
                 "trigger": "button",
+                "tooltipPosition": "bottom",
                 "run": "click",
             }]
         })
