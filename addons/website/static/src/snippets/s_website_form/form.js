@@ -286,7 +286,7 @@ export class Form extends Interaction {
         }
 
         // Prepare form inputs
-        const formFields = [];
+        let formFields = [];
         new FormData(this.el).forEach((value, key) => {
             formFields.push({ name: key, value: value });
         });
@@ -303,6 +303,7 @@ export class Form extends Interaction {
                 index++;
             }
             outerIndex++;
+            formFields = formFields.filter(el => el.name != inputEl.name);
         }
 
         // Serialize form inputs into a single object
