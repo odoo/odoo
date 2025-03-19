@@ -30,8 +30,7 @@
             <field name="arch" type="xml">
                     <xpath expr="//group[@name='messaging']" position="after">
                         <field name="has_access_livechat" invisible="1"/>
-                        <group name="livechat" string="Livechat"
-                            invisible="not has_access_livechat">
+                        <group name="livechat" string="Livechat" invisible="not has_access_livechat" groups="im_livechat.im_livechat_group_user,base.group_erp_manager">
                             <field name="livechat_username"/>
                             <field name="livechat_lang_ids" string="Online Chat Language"
                                 options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"
