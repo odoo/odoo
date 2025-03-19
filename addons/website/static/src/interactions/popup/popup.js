@@ -102,6 +102,7 @@ export class Popup extends Interaction {
             // animations here, bypass the issue with ._hideModal().
             // Additionally, .hide() triggers `hide.bs.modal`, which triggers
             // onHideModal() and sets a cookie: we don't want that on destroy.
+            this.modalEl.classList.remove("show");
             this.bsModal._hideModal();
         });
     }
