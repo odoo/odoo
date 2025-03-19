@@ -3,7 +3,7 @@ import { x2ManyCommands } from "@web/core/orm_service";
 import { Dialog } from '@web/core/dialog/dialog';
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { parseInteger  } from "@web/views/fields/parsers";
+import { InvalidNumberError, parseFloat, parseInteger } from "@web/views/fields/parsers";
 import { getId } from "@web/model/relational_model/utils";
 import { Component, useRef, onMounted, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -24,6 +24,7 @@ export class GenerateDialog extends Component {
         this.totalReceived = useRef('totalReceived');
         this.keepLines = useRef('keepLines');
         this.lots = useRef('lots');
+        this.notification = useService("notification");
         this.orm = useService("orm");
         if (this.props.mode === 'generate') {
             if (this.isLotTracking) {
@@ -71,14 +72,28 @@ export class GenerateDialog extends Component {
 
     async _onGenerate() {
         let count;
+        let errorMessage;
         let qtyToProcess;
-        if (this.isLotTracking) {
-            count = parseFloat(this.nextSerialCount.el?.value || '0');
-            qtyToProcess = parseFloat(this.totalReceived.el?.value || this.props.move.data.product_qty);
-        } else {
-            count = parseInteger(this.nextSerialCount.el?.value || '0');
-            qtyToProcess = this.props.move.data.product_qty;
+        let next_serial_count = this.nextSerialCount.el?.value || '0';
+        try {
+            if (this.isLotTracking) {
+                errorMessage = _t("Invalid number provided for the quantity to be allocated per lot.");
+                count = parseFloat(next_serial_count);
+                qtyToProcess = parseFloat(this.totalReceived.el?.value || this.props.move.data.product_qty);
+            } else {
+                errorMessage = _t("The amount of serial numbers to be generated must be a whole number.");
+                count = parseInteger(next_serial_count);
+                qtyToProcess = this.props.move.data.product_qty;
+            }
+        } catch (error) {
+            if (error instanceof InvalidNumberError) {
+                return this.notification.add(errorMessage, {
+                    title: _t("Invalid number"),
+                    type: 'danger',
+                });
+            }
         }
+
         const move_line_vals = await this.orm.call("stock.move", "action_generate_lot_line_vals", [{
                 ...this.props.move.context,
                 default_product_id: this.props.move.data.product_id.id,
