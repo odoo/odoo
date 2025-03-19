@@ -124,7 +124,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if len(self.picking_ids) == 1:
             picking = self.picking_ids[0]
             incoterm_location = picking.sale_id.packaging_source_type if picking.sale_id else None
-            print("\n\n\n incorerm location====", incoterm_location)
             # Ensure site code & tenant code match the wizard
             site_code = self.site_code_id
             tenant_code = self.tenant_code_id
@@ -135,7 +134,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     ('site_code_id', '=', site_code.id),
                     ('tenant_code_id', '=', tenant_code.id)
                 ], limit=1)
-                print("\n\n\nn package boc============", package_box)
                 if package_box:
                     self.package_box_type_id = package_box.id
                     _logger.info(f"Package Box '{package_box.name}' selected based on Incoterm: {incoterm_location}")
@@ -188,7 +186,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         # ('site_code_id', '=', site_code.id),
                         # ('tenant_code_id', '=', tenant_code.id)
                     ], limit=1)
-                    print("\n\nn\ default===", default_package_box)
                     if default_package_box:
                         line.package_box_type_id = default_package_box.id
                         _logger.info(f"Default Package Box '{default_package_box.name}' assigned to line.")
@@ -299,6 +296,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                             WHERE id = %s
                         """
                     self.env.cr.execute(query, (new_state, picking.id))
+                    so_query = f"""
+                                    UPDATE sale_order SET pick_status= 'packed'
+                                    where id = %s
+                                    """
+                    self.env.cr.execute(so_query, (picking.sale_id.id,))
+                    _logger.info(f"Sale order {picking.sale_id.name} updated pick_status to 'packed'.")
 
                     #reload
                     picking._invalidate_cache(['current_state'])
@@ -323,6 +326,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         WHERE id = %s
                     """
                 self.env.cr.execute(query, (new_state, picking.id))
+                so_query = f"""
+                                UPDATE sale_order SET pick_status= 'packed'
+                                where id = %s
+                                """
+                self.env.cr.execute(so_query, (picking.sale_id.id,))
+                _logger.info(f"Sale order {picking.sale_id.name} updated pick_status to 'packed'.")
 
                 # reload
                 picking._invalidate_cache(['current_state'])
