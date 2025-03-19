@@ -10,7 +10,7 @@ export class GalleryElementOptionPlugin extends Plugin {
             withSequence(20, {
                 template: "html_builder.GalleryElementOption",
                 selector:
-                    ".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item",
+                    ".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item",
             }),
         ],
         builder_actions: this.getActions(),
