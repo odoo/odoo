@@ -378,13 +378,7 @@ class Base(models.AbstractModel):
         # find last relevant message
         messages = self.env['mail.message']
         if reply_discussion and 'message_ids' in self:
-            messages = self.message_ids.sorted(
-                lambda msg: (
-                    msg.message_type == 'email',              # incoming email = probably customer
-                    msg.message_type == 'comment',            # user input > other input
-                    msg.date, msg.id,                         # newer first
-                ), reverse=True,
-            )
+            messages = self._sort_suggested_messages(self.message_ids)
         # fetch answer-based recipients as well as author
         if reply_message or messages:
             for record in self:
@@ -467,6 +461,24 @@ class Base(models.AbstractModel):
                 })
             suggested_recipients[record.id] = recipients
         return suggested_recipients
+
+    def _sort_suggested_messages(self, messages):
+        """ Sort messages for suggestion. Keep only discussions: incoming email
+        or user comments, with subtype being 'comment' to exclude notes,
+        logs, trackings, ... then take the most recent one. If no matching
+        message is found, no suggested message is given, as other messages
+        should not trigger a 'reply-all' behavior.
+
+        Dedicated method to ease override and csutom behavior for filtering
+        and sorting messages in '_message_get_suggested_recipients' """
+        subtype_ids = self._creation_subtype().ids if hasattr(self, '_creation_subtype') else []
+        subtype_ids.append(self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'))
+        return messages.filtered(
+            lambda msg: (
+                msg.message_type in ('email', 'comment') and
+                msg.subtype_id.id in subtype_ids
+            )
+        ).sorted(lambda msg: (msg.date, msg.id), reverse=True)
 
     def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
                                             no_create=True, primary_email=False, additional_partners=None):
