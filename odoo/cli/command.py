@@ -18,6 +18,7 @@ COMMAND_NAME_RE = re.compile(r'^[a-z][a-z0-9_]*$', re.I)
 PROG_NAME = Path(sys.argv[0]).name
 commands = {}
 
+
 class CommandOpsMixin():
     allow_config_file = False
 
@@ -39,7 +40,14 @@ class CommandOpsMixin():
         return parsed_args
 
     @contextmanager
-    def build_env(self, db_name=None, update_module=False, min_log_level=None):
+    def build_env(
+        self,
+        db_name=None,
+        update_module=False,
+        install_modules=False,
+        upgrade_modules=False,
+        min_log_level=None
+    ):
         if min_log_level:
             logging.disable(min_log_level)
 
@@ -49,7 +57,12 @@ class CommandOpsMixin():
                 self.die("Please provide a single database in the config file.")
             db_name = db_names[0]
 
-        registry = Registry.new(db_name, update_module=update_module)
+        registry = Registry.new(
+            db_name,
+            update_module=update_module,
+            install_modules=install_modules or [],
+            upgrade_modules=upgrade_modules or [],
+        )
         with closing(registry.cursor()) as cr:
             yield odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
         if min_log_level:
