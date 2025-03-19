@@ -162,6 +162,7 @@ class GroupsTreeNode:
             node.count += count
 
         node.data = records.with_env(self._model.env).export_data(self._export_field_names).get('datas', [])
+        return records
 
 
 class ExportXlsxWriter:
@@ -572,8 +573,9 @@ class ExportFormat(object):
             # formatted_read_group returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.
             tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
+            records = Model.browse()
             for leaf in groups_data:
-                tree.insert_leaf(leaf)
+                records |= tree.insert_leaf(leaf)
 
             response_data = self.from_group_data(fields, columns_headers, tree)
         else:
@@ -581,6 +583,14 @@ class ExportFormat(object):
 
             export_data = records.export_data(field_names).get('datas', [])
             response_data = self.from_data(fields, columns_headers, export_data)
+
+        _logger.info(
+            "User %d exported %d %r records from %s. Fields: %s. %s: %s",
+            request.env.user.id, len(records.ids), records._name, request.httprequest.environ['REMOTE_ADDR'],
+            ','.join(field_names),
+            'IDs sample' if ids else 'Domain',
+            records.ids[:10] if ids else domain,
+        )
 
         # TODO: call `clean_filename` directly in `content_disposition`?
         return request.make_response(response_data,
