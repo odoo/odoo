@@ -32,7 +32,7 @@ class ProjectProject(models.Model):
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project', export_string_translation=False)
     remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Time Remaining', compute_sudo=True)
     is_project_overtime = fields.Boolean('Project in Overtime', compute='_compute_remaining_hours', search='_search_is_project_overtime', compute_sudo=True, export_string_translation=False)
-    allocated_hours = fields.Float(string='Allocated Time')
+    allocated_hours = fields.Float(string='Allocated Time', tracking=True)
     effective_hours = fields.Float(string='Time Spent', compute='_compute_remaining_hours', compute_sudo=True)
 
     def _compute_encode_uom_in_days(self):
