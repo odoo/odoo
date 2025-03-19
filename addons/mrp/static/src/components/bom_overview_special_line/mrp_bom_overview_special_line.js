@@ -14,7 +14,6 @@ export class BomOverviewSpecialLine extends Component {
                 operations: Boolean,
                 leadTimes: Boolean,
                 uom: Boolean,
-                attachments: Boolean,
             },
         },
         data: Object,
@@ -60,9 +59,5 @@ export class BomOverviewSpecialLine extends Component {
 
     get showUom() {
         return this.props.showOptions.uom;
-    }
-
-    get showAttachments() {
-        return this.data.has_attachments;
     }
 }

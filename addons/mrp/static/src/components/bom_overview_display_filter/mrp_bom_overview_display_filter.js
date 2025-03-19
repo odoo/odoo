@@ -18,7 +18,6 @@ export class BomOverviewDisplayFilter extends Component {
                 operations: Boolean,
                 leadTimes: Boolean,
                 uom: Boolean,
-                attachments: Boolean,
             },
         },
         changeDisplay: Function,

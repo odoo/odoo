@@ -27,7 +27,6 @@
             <span t-elif="props.type == 'byproducts'" t-esc="formatMonetary(data.byproducts_cost)"/>
         </td>
         <td name="prod_cost" t-if="showCosts" class="text-end"/>
-        <td t-if="showAttachments"/>
     </tr>
 
 </templates>
