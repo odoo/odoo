@@ -251,8 +251,14 @@ class Base(models.AbstractModel):
         for record in self:
             email_cc_lst, email_to_lst = [], []
             # main recipients (res.partner) (filter twice, otherwise prefetch is lost /shrug)
-            recipients_all = customers.get(record.id).filtered(lambda p: not p.is_public)
-            recipients = customers.get(record.id).filtered(lambda p: not p.is_public and p.email_normalized)
+            if all_tos:
+                # consider caller is going to filter / handle so don't filter anything
+                recipients_all = customers.get(record.id)
+                recipients = customers.get(record.id).filtered(lambda p: p.email_normalized)
+            else:
+                # pure default recipients, skip public
+                recipients_all = customers.get(record.id).filtered(lambda p: not p.is_public)
+                recipients = customers.get(record.id).filtered(lambda p: not p.is_public and p.email_normalized)
             # to computation
             email_to = primary_emails[record.id]
             if not email_to:
@@ -398,6 +404,7 @@ class Base(models.AbstractModel):
 
         # make a record-based list of emails to give to '_partner_find_from_emails'
         records_emails = {}
+        all_emails = set()
         for record in self:
             email_to_lst, partners = suggested[record.id]['email_to_lst'], suggested[record.id]['partners']
             # organize and deduplicate partners, exclude followers, keep ordering
@@ -408,10 +415,12 @@ class Base(models.AbstractModel):
                 e for email_input in email_to_lst for e in email_split_and_format(email_input)
                 if e and e.strip() and email_key(e) not in skip_emails_normalized
             ]
+            all_emails |= set(records_emails[record]) | set(partners.mapped('email_normalized'))
         # ban emails: never propose odoobot nor aliases
-        ban_emails = [self.env.ref('base.partner_root').email_normalized] + self.env['mail.alias'].sudo().search(
-            [('alias_full_name', 'in', [email_key(e) for values in records_emails.values() for e in values])]
-        ).mapped('alias_full_name')
+        ban_emails = [self.env.ref('base.partner_root').email_normalized]
+        ban_emails += self.env['mail.alias.domain'].sudo()._find_aliases(
+            [email_key(e) for e in all_emails if e and e.strip()]
+        )
         thread_recs = self if is_mail_thread else self.env['mail.thread']
         records_partners = thread_recs._partner_find_from_emails(
             records_emails,
@@ -426,7 +435,12 @@ class Base(models.AbstractModel):
         for record in self:
             followers = record.message_partner_ids if is_mail_thread else record.env['res.partner']
             partners = self.env['res.partner'].browse(tools.misc.unique(
-                p.id for p in (suggested[record.id]['partners'] + records_partners[record.id]) if p not in followers
+                p.id for p in (suggested[record.id]['partners'] + records_partners[record.id])
+                if (
+                    p not in followers and
+                    p.email_normalized not in ban_emails and
+                    not p.is_public
+                )
             ))
             email_to_lst = list(tools.misc.unique(
                 e for email_input in suggested[record.id]['email_to_lst'] for e in email_split_and_format(email_input)
