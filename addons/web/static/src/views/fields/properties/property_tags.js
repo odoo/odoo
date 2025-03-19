@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
 import { Component } from "@odoo/owl";
 
@@ -55,6 +56,10 @@ export class PropertyTags extends Component {
     setup() {
         this.notification = useService("notification");
         this.popover = usePopover(this.constructor.components.Popover);
+        this.onTagKeydown = useTagNavigation(
+            "propertyTags",
+            this.deleteTagByIndex.bind(this)
+        );
     }
 
     /* --------------------------------------------------------
@@ -310,6 +315,15 @@ export class PropertyTags extends Component {
 
         // close the color popover
         this.popover.close();
+    }
+
+    /**
+     * Delete tags by pressing backspace.
+     *
+     * @param {integer} index
+     */
+    deleteTagByIndex(index) {
+        this.onTagDelete(this.tagListItems[index].id);
     }
 }
 
