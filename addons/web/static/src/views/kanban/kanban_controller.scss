@@ -200,8 +200,9 @@
 
         > footer, > main > footer {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            column-gap: var(--Card-Footer-gap, #{map-get($spacers, 2)});
+            gap: var(--Card-Footer-gap, #{map-get($spacers, 2)});
             margin-top: auto;
             padding-top: var(--KanbanRecord-padding-v);
             font-size: var(--Card-Footer-font-size, .875rem);
