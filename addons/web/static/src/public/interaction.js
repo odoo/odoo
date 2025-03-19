@@ -198,7 +198,24 @@ export class Interaction {
      * Mechanism to handle context-specific protection of a specific
      * chunk of synchronous code after returning from an asynchronous one.
      * This should typically be used around code that follows an
-     * await waitFor(...).
+     * await this.waitFor(...).
+     *
+     * Example use-case: website builder's edit-mode disables the history
+     * observer to ignore the changes done by interactions.
+     *
+     * A listener involving async code would then look like this:
+     * async onClick() {
+     *     // Code before await is protected
+     *     const result = await this.waitFor(...);
+     *     // Code here is not protected anymore
+     *     // Render variables can be updated because updateContent will run
+     *     // after the handler in a protected state
+     *     this.stuffUsedByTAtt = result.stuffUsedByTAtt;
+     *     this.protectSyncAfterAsync(() => {
+     *         // Code here is protected again, DOM can be updated
+     *         doStuff(this.el);
+     *     });
+     * }
      */
     protectSyncAfterAsync(fn) {
         return this.__colibri__.protectSyncAfterAsync(this, "protectSyncAfterAsync", fn);
