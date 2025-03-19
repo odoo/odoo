@@ -19588,8 +19588,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "STOP_EDITION":
                     if (cmd.cancel) {
-                        this.cancelEditionAndActivateSheet();
                         this.resetContent();
+                        this.cancelEditionAndActivateSheet();
                     }
                     else {
                         this.stopEdition();
@@ -19604,8 +19604,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.replaceSelection(cmd.text);
                     break;
                 case "SELECT_FIGURE":
-                    this.cancelEditionAndActivateSheet();
                     this.resetContent();
+                    this.cancelEditionAndActivateSheet();
                     break;
                 case "ADD_COLUMNS_ROWS":
                     this.onAddElements(cmd);
@@ -19664,8 +19664,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const sheetIdExists = !!this.getters.tryGetSheet(this.sheetId);
                     if (!sheetIdExists && this.mode !== "inactive") {
                         this.sheetId = this.getters.getActiveSheetId();
-                        this.cancelEditionAndActivateSheet();
                         this.resetContent();
+                        this.cancelEditionAndActivateSheet();
                         this.ui.notifyUI({
                             type: "ERROR",
                             text: CELL_DELETED_MESSAGE,
@@ -32446,12 +32446,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 for (let c = 0; c < width; c++) {
                     const origin = rowCells[c];
                     const position = { col: col + c, row: row + r, sheetId: sheetId };
-                    // TODO: refactor this part. the "Paste merge" action is also executed with
-                    // MOVE_RANGES in pasteFromCut. Adding a condition on the operation type here
-                    // is not appropriate
-                    if (this.operation !== "CUT") {
-                        this.pasteMergeIfExist(origin.position, position);
-                    }
+                    this.pasteMergeIfExist(origin.position, position, this.operation);
                     this.pasteCell(origin, position, this.operation, clipboardOptions);
                     if (shouldPasteCF) {
                         this.dispatch("PASTE_CONDITIONAL_FORMAT", {
@@ -32530,13 +32525,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * If the origin position given is the top left of a merge, merge the target
          * position.
          */
-        pasteMergeIfExist(origin, target) {
+        pasteMergeIfExist(origin, target, operation) {
             let { sheetId, col, row } = origin;
             const { col: mainCellColOrigin, row: mainCellRowOrigin } = this.getters.getMainCellPosition(sheetId, col, row);
             if (mainCellColOrigin === col && mainCellRowOrigin === row) {
                 const merge = this.getters.getMerge(sheetId, col, row);
                 if (!merge) {
                     return;
+                }
+                if (operation === "CUT") {
+                    this.dispatch("REMOVE_MERGE", { sheetId, target: [merge] });
                 }
                 ({ sheetId, col, row } = target);
                 this.dispatch("ADD_MERGE", {
@@ -43761,9 +43759,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.64';
-    __info__.date = '2025-03-07T11:30:25.466Z';
-    __info__.hash = '20def15';
+    __info__.version = '16.0.65';
+    __info__.date = '2025-03-19T08:28:40.534Z';
+    __info__.hash = '4e495e9';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
