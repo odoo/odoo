@@ -1,5 +1,5 @@
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { useService } from "@web/core/utils/hooks";
@@ -27,6 +27,18 @@ export class OrderSummary extends Component {
             triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
             useWithBarcode: true,
         });
+        this.product = this.pos.config.discount_product_id;
+        this.lines = this.currentOrder?.lines;
+        useEffect(
+            () => {
+                if (this.lines.length === 1 && this.lines[0].full_product_name === "Discount") {
+                    this.lines
+                        .filter((line) => line.get_product() === this.product)
+                        .forEach((line) => line.delete());
+                }
+            },
+            () => [this.lines.length]
+        );
     }
 
     get currentOrder() {
