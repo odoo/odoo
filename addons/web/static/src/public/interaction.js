@@ -256,14 +256,18 @@ export class Interaction {
     /**
      * Debounces a function and makes sure it is cancelled upon destroy.
      */
-    debounced(fn, delay) {
+    debounced(fn, delay, options) {
         fn = this.__colibri__.protectSyncAfterAsync(this, "debounced", fn);
-        const debouncedFn = debounce(async (...args) => {
-            await fn.apply(this, args);
-            if (this.isReady && !this.isDestroyed) {
-                this.updateContent();
-            }
-        }, delay);
+        const debouncedFn = debounce(
+            async (...args) => {
+                await fn.apply(this, args);
+                if (this.isReady && !this.isDestroyed) {
+                    this.updateContent();
+                }
+            },
+            delay,
+            options
+        );
         this.registerCleanup(() => {
             debouncedFn.cancel();
         });
