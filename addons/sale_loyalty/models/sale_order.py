@@ -56,6 +56,7 @@ class SaleOrder(models.Model):
         loyalty_history_data = self.env['loyalty.history'].sudo()._read_group(
             domain=[
                 ('order_id', 'in', confirmed_so.ids),
+                ('order_model', '=', self._name),
             ],
             groupby=['order_id'],
             aggregates=['issued:sum', 'used:sum'],
