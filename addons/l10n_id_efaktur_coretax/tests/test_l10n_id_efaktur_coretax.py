@@ -539,7 +539,6 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             </xpath>
             '''
         )
-
         self.assertXmlTreeEqual(result_tree, expected_tree)
 
     def test_invoice_user_main_contact(self):
