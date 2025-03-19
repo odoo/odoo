@@ -140,22 +140,9 @@ const PRECISION_LEVELS = new Map()
         nextTitle: _t("Next month"),
         prevTitle: _t("Previous month"),
         step: { month: 1 },
-        getTitle: (date, { additionalMonth }) => {
-            const titles = [`${date.monthLong} ${date.year}`];
-            if (additionalMonth) {
-                const next = date.plus({ month: 1 });
-                titles.push(`${next.monthLong} ${next.year}`);
-            }
-            return titles;
-        },
-        getItems: (
-            date,
-            { additionalMonth, maxDate, minDate, showWeekNumbers, isDateValid, dayCellClass }
-        ) => {
+        getTitle: (date) => `${date.monthLong} ${date.year}`,
+        getItems: (date, { maxDate, minDate, showWeekNumbers, isDateValid, dayCellClass }) => {
             const startDates = [date];
-            if (additionalMonth) {
-                startDates.push(date.plus({ month: 1 }));
-            }
 
             /** @type {WeekItem[]} */
             const lastWeeks = [];
@@ -186,7 +173,7 @@ const PRECISION_LEVELS = new Map()
                             startOfNextWeek = day.plus({ day: 1 });
                         }
                         if (w === WEEKS_PER_MONTH - 1) {
-                            shouldAddLastWeek ||= !dayItem.isOutOfRange;
+                            shouldAddLastWeek = true;
                         }
                     }
 
@@ -404,7 +391,6 @@ export class DateTimePicker extends Component {
             props.maxPrecision
         );
 
-        this.additionalMonth = props.range && !this.env.isSmall;
         this.maxDate = parseLimitDate(props.maxDate, MAX_VALID_DATE);
         this.minDate = parseLimitDate(props.minDate, MIN_VALID_DATE);
         if (this.props.type === "date") {
@@ -426,7 +412,6 @@ export class DateTimePicker extends Component {
         const { focusDate, hoveredDate } = this.state;
         const precision = this.activePrecisionLevel;
         const getterParams = {
-            additionalMonth: this.additionalMonth,
             maxDate: this.maxDate,
             minDate: this.minDate,
             showWeekNumbers: showWeekNumbers ?? !range,
@@ -434,7 +419,7 @@ export class DateTimePicker extends Component {
             dayCellClass,
         };
 
-        this.title = precision.getTitle(focusDate, getterParams);
+        this.title = precision.getTitle(focusDate);
         this.items = precision.getItems(focusDate, getterParams);
 
         this.selectedRange = [...this.values];
@@ -456,18 +441,8 @@ export class DateTimePicker extends Component {
             return;
         }
 
-        let dateToFocus =
+        const dateToFocus =
             values[focusedDateIndex] || values[focusedDateIndex === 1 ? 0 : 1] || today();
-
-        if (
-            this.additionalMonth &&
-            focusedDateIndex === 1 &&
-            values[0] &&
-            values[1] &&
-            values[0].month !== values[1].month
-        ) {
-            dateToFocus = dateToFocus.minus({ month: 1 });
-        }
 
         this.shouldAdjustFocusDate = false;
         this.state.focusDate = this.clamp(dateToFocus.startOf("month"));
@@ -503,9 +478,9 @@ export class DateTimePicker extends Component {
      *      > range: current start date or current end date.
      * @param {DateItem} item
      */
-    getActiveRangeInfo({ isOutOfRange, range }) {
+    getActiveRangeInfo({ range }) {
         const result = {
-            isSelected: !isOutOfRange && isInRange(this.selectedRange, range),
+            isSelected: isInRange(this.selectedRange, range),
             isSelectStart: false,
             isSelectEnd: false,
             isHighlighted: isInRange(this.state.hoveredDate, range),

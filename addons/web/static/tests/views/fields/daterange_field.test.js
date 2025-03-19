@@ -91,9 +91,11 @@ test("Datetime field - interaction with the datepicker", async () => {
     expect(".o_datetime_picker").toBeDisplayed();
 
     expect(".o_date_item_cell.o_select_start").toHaveText("8");
+    await contains("button.o_next").click();
+    expect(".o_date_item_cell.o_select_end").toHaveText("13");
+
     let [timeInputStart, timeInputEnd] = queryAll(".o_time_picker_input");
     expect(timeInputStart).toHaveValue("15:30");
-    expect(".o_date_item_cell.o_select_end").toHaveText("13");
     expect(timeInputEnd).toHaveValue("5:30");
 
     await click(timeInputStart);
@@ -108,10 +110,12 @@ test("Datetime field - interaction with the datepicker", async () => {
 
     expect(".o_datetime_picker").toBeDisplayed();
 
+    expect(".o_date_item_cell.o_select_end").toHaveText("13");
+    await contains("button.o_previous").click();
     expect(".o_date_item_cell.o_select_start").toHaveText("8");
+
     [timeInputStart, timeInputEnd] = queryAll(".o_time_picker_input");
     expect(timeInputStart).toHaveValue("15:30");
-    expect(".o_date_item_cell.o_select_end").toHaveText("13");
     expect(timeInputEnd).toHaveValue("5:30");
 
     await click(timeInputStart);
@@ -157,8 +161,9 @@ test("Date field - interaction with the datepicker", async () => {
     expect(".o_select_end").toHaveText("8");
 
     // Change date
-    await contains(getPickerCell("16").at(0)).click(); // 2017-02-16
-    await contains(getPickerCell("12").at(1)).click(); // 2017-03-12
+    await contains(getPickerCell("16")).click(); // 2017-02-16
+    await contains("button.o_next").click();
+    await contains(getPickerCell("12")).click(); // 2017-03-12
 
     // Close picker
     await contains(".o_form_view").click();
@@ -173,12 +178,14 @@ test("Date field - interaction with the datepicker", async () => {
     datepicker = queryFirst(".o_datetime_picker");
 
     expect(datepicker).toBeDisplayed();
-    expect(".o_select_start").toHaveText("16");
     expect(".o_select_end").toHaveText("12");
+    await contains("button.o_previous").click();
+    expect(".o_select_start").toHaveText("16");
 
     // Change date
-    await contains(getPickerCell("13").at(0)).click();
-    await contains(getPickerCell("18").at(1)).click();
+    await contains(getPickerCell("13")).click();
+    await contains("button.o_next").click();
+    await contains(getPickerCell("18")).click();
     // Close picker
     await contains(".o_form_view").click();
 
@@ -467,7 +474,6 @@ test("initial empty date with optional end date", async () => {
 
     expect(".o_add_date").not.toBeVisible();
     await contains(".o_field_daterange input").focus();
-    await animationFrame();
     expect(".o_add_date").toBeVisible();
     expect(".o_add_date").toHaveText("Add start date");
 
@@ -478,43 +484,6 @@ test("initial empty date with optional end date", async () => {
         "03/12/2017 23:00",
         "03/13/2017 00:00",
     ]);
-});
-
-test.tags("desktop");
-test("select a range in the month on the right panel", async () => {
-    mockDate("2014-08-14 12:34:56", +0);
-
-    Partner._records[0].datetime = false;
-    Partner._records[0].datetime_end = "2017-03-13 00:00:00";
-
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
-            <form>
-                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
-            </form>`,
-        resId: 1,
-    });
-
-    expect(".o_add_date").not.toBeVisible();
-    await contains(".o_field_daterange input").focus();
-    expect(".o_add_date").toBeVisible();
-    expect(".o_add_date").toHaveText("Add start date");
-
-    // Add a start date
-    await contains(".o_add_date").click();
-
-    expect(queryAllValues(".o_field_daterange input")).toEqual([
-        "03/12/2017 23:00",
-        "03/13/2017 00:00",
-    ]);
-
-    await contains(getPickerCell("19").at(1)).click();
-    await contains(getPickerCell("9").at(1)).click();
-
-    // verify that the panels are not shifted
-    expect(queryAllTexts(".o_header_part")).toEqual(["March 2017", "April 2017"]);
 });
 
 test.tags("desktop");
@@ -550,10 +519,12 @@ test("Datetime field - open datepicker and switch page", async () => {
 
     // Start date: id=1
     expect(".o_select_start").toHaveText("8");
+    // End date: id=1
+    await contains("button.o_next").click();
+    expect(".o_select_end").toHaveText("13");
+
     let [timePickerStart, timePickerEnd] = queryAll(".o_time_picker_input");
     expect(timePickerStart).toHaveValue("15:30");
-    // End date: id=1
-    expect(".o_select_end").toHaveText("13");
     expect(timePickerEnd).toHaveValue("5:30");
 
     // Close picker
@@ -574,11 +545,12 @@ test("Datetime field - open datepicker and switch page", async () => {
 
     // Start date: id=2
     expect(".o_select_start").toHaveText("10");
+    // End date id=2
+    await contains("button.o_next").click();
+    expect(".o_select_end").toHaveText("15");
+
     [timePickerStart, timePickerEnd] = queryAll(".o_time_picker_input");
     expect(timePickerStart).toHaveValue("16:30");
-
-    // End date id=2
-    expect(".o_select_end").toHaveText("15");
     expect(timePickerEnd).toHaveValue("5:30");
 });
 
