@@ -1,0 +1,32 @@
+.o_crm_pls_tooltip {
+    .o_crm_pls_tooltip_wheel {
+        height: 60px;
+        min-width: 60px;
+        position: relative;
+        font-size: 11px;
+        circle {
+            transform: rotate(-90deg);
+            transform-origin: 30px 30px;
+            stroke: $link-color;
+            stroke-linecap: round;
+            &.o_crm_tooltip_wheel_bg_circle {
+                stroke: #ddd;
+            }
+        }
+        > * {
+            height: 60px;
+            width: 60px;
+        }
+    }
+    .o_crm_pls_tooltip_icon {
+        min-width: 15px;
+    }
+    .o_crm_pls_tooltip_footer {
+        font-size: 11px;
+    }
+}
+
+.o_crm_pls_tooltip_button {
+    height: 1.5rem;
+    vertical-align: sub;
+}

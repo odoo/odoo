@@ -70,8 +70,12 @@
                                     <label for="probability" class="d-inline-block"/>
                                     <button class="d-inline-block px-2 py-0 btn btn-link" name="action_set_automated_probability" type="object"
                                             invisible="is_automated_probability">
-                                        <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
+                                        <i class="fa fa-gear" role="img"
+                                            title="Update the value and switch to automatic probability"
+                                            aria-label="Update the value and switch to automatic probability"></i>
                                     </button>
+                                    <widget name="pls_tooltip_button" class="d-inline-block o_form_label py-0"
+                                        invisible="won_status != 'pending' or not is_automated_probability"/>
                                     <small class="d-inline-block opacity-50 h6 mb-0" invisible="is_automated_probability">
                                         <field class="mb-0" name="automated_probability" force_save="1"/> %
                                     </small>
