@@ -26,6 +26,9 @@
                 <field name="l10n_id_coretax_document" readonly="True"/>
             </xpath>
             <xpath expr="//field[@name='l10n_id_csv_created']" position="replace"/>
+            <xpath expr="//field[@name='tax_totals']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('state', '!=', 'draft'), '&amp;', ('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt')), ('quick_edit_mode', '=', False)], 'invisible': [('country_code', '=', 'ID')]}</attribute>
+            </xpath>
         </field>
     </record>
     <!-- Remove e-Faktur range menu to avoid user inputting it anymore -->
