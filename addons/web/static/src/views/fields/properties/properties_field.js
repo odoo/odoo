@@ -44,7 +44,7 @@ export class PropertiesField extends Component {
         this.popover = usePopover(PropertyDefinition, {
             closeOnClickAway: this.checkPopoverClose,
             popoverClass: "o_property_field_popover",
-            position: "top",
+            position: "right",
             onClose: () => this.onCloseCurrentPopover?.(),
             fixedPosition: true,
             arrow: false,
