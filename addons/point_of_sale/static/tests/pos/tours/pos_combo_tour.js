@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             ]),
             // check that you can select a customer which triggers a recomputation of the price
             ...ProductScreen.clickPartnerButton(),
-            ...ProductScreen.clickCustomer("Partner Test 1"),
+            ...ProductScreen.clickCustomer("Partner One"),
 
             // check that you can change the quantity of a combo product
             inLeftSide([

@@ -9,70 +9,46 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-
-            // Click on Configurable Chair product
-            ProductScreen.clickDisplayedProduct("Configurable Chair"),
-
-            // Cancel configuration, not product should be in order
+            ProductScreen.clickDisplayedProduct("Configurable 1"),
             Dialog.cancel(),
             ProductScreen.orderIsEmpty(),
-
-            // Click on Configurable Chair product
-            ProductScreen.clickDisplayedProduct("Configurable Chair"),
-
-            // Pick Color
+            ProductScreen.clickDisplayedProduct("Configurable 1"),
             ProductConfigurator.pickColor("Red"),
-
-            // Pick Radio
-            ProductConfigurator.pickSelect("Metal"),
-
-            // Pick Select
-            ProductConfigurator.pickRadio("Other"),
-
-            // Fill in custom attribute
+            ProductConfigurator.pickSelect("One"),
+            ProductConfigurator.pickRadio("Custom"),
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
-
-            // Confirm configuration
             Dialog.confirm(),
-
-            // Check that the product has been added to the order with correct attributes and price
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair",
+                "Configurable 1",
                 "1",
                 "11.0",
-                "Red, Metal, Fabrics: Other: Custom Fabric"
+                "Red, One, Radio: Custom: Custom Fabric"
             ),
-
             // Orderlines with the same attributes should be merged
-            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductScreen.clickDisplayedProduct("Configurable 1"),
             ProductConfigurator.pickColor("Red"),
-            ProductConfigurator.pickSelect("Metal"),
-            ProductConfigurator.pickRadio("Other"),
+            ProductConfigurator.pickSelect("One"),
+            ProductConfigurator.pickRadio("Custom"),
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair",
+                "Configurable 1",
                 "2",
                 "22.0",
-                "Red, Metal, Fabrics: Other: Custom Fabric"
+                "Red, One, Radio: Custom: Custom Fabric"
             ),
 
             // Orderlines with different attributes shouldn't be merged
-            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductScreen.clickDisplayedProduct("Configurable 1"),
             ProductConfigurator.pickColor("Blue"),
-            ProductConfigurator.pickSelect("Metal"),
-            ProductConfigurator.pickRadio("Leather"),
+            ProductConfigurator.pickSelect("One"),
+            ProductConfigurator.pickRadio("One"),
             Dialog.confirm(),
-            ProductScreen.selectedOrderlineHas(
-                "Configurable Chair",
-                "1",
-                "10.0",
-                "Blue, Metal, Leather"
-            ),
+            ProductScreen.selectedOrderlineHas("Configurable 1", "1", "10.0", "Blue, One, One"),
 
             // Inactive variant attributes should not be displayed
-            ProductScreen.clickDisplayedProduct("Configurable Chair"),
-            // Active: Other and Leather, Inactive: Wool
+            ProductScreen.clickDisplayedProduct("Configurable 1"),
+            // Active: Custom and One, Inactive: Wool
             ProductConfigurator.numberRadioOptions(2),
             Dialog.confirm(),
             Chrome.endTour(),

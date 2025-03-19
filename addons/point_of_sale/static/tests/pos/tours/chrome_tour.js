@@ -21,13 +21,13 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Chrome.clickMenuButton(),
 
             // Order 1 is at Product Screen
-            ProductScreen.addOrderline("Desk Pad", "1", "2", "2.0"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1", "2", "2.0"),
             Chrome.clickOrders(),
             TicketScreen.checkStatus("001", "Ongoing"),
 
             // Order 2 is at Payment Screen
             Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Monitor Stand", "3", "4", "12.0"),
+            ProductScreen.addOrderline("Product for pricelist 4", "3", "4", "12.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             Chrome.clickOrders(),
@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
 
             // Order 3 is at Receipt Screen
             Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Whiteboard Pen", "5", "6", "30.0"),
+            ProductScreen.addOrderline("Awesome Item", "5", "6", "30.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.validateButtonIsHighlighted(true),
@@ -47,10 +47,10 @@ registry.category("web_tour.tours").add("ChromeTour", {
             // Select order 1, should be at Product Screen
             TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
-            ProductScreen.productIsDisplayed("Desk Pad"),
+            ProductScreen.productIsDisplayed("Product for pricelist 5"),
             inLeftSide([
-                ...ProductScreen.clickLine("Desk Pad"),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "1", "2.0"),
+                ...ProductScreen.clickLine("Product for pricelist 5"),
+                ...ProductScreen.selectedOrderlineHasDirect("Product for pricelist 5", "1", "2.0"),
             ]),
 
             // Select order 2, should be at Payment Screen
@@ -103,9 +103,9 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Chrome.clickRegister(),
 
             // Invoice an order
-            ProductScreen.addOrderline("Whiteboard Pen", "5", "6"),
+            ProductScreen.addOrderline("Awesome Item", "5", "6"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickCustomer("Partner One"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
@@ -160,7 +160,7 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
             Utils.selectButton("Close Register"),
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Desk Pad", true, "1.0"),
+            ProductScreen.clickDisplayedProduct("Product for pricelist 5", true, "1.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),

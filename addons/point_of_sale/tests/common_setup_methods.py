@@ -32,7 +32,7 @@ def setup_product_combo_items(self):
     pos_category_1 = self.env["pos.category"].create({
         "name": "Category 1",
     })
-    pos_category_2 = self.env["pos.category"].create({ 
+    pos_category_2 = self.env["pos.category"].create({
         "name": "Category 2",
     })
     pos_category_3 = self.env["pos.category"].create({

@@ -7,30 +7,26 @@ import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 registry.category("web_tour.tours").add("BarcodeScanningTour", {
     steps: () =>
         [
-            // The following step is to make sure that the Chrome widget initialization ends
-            // If we try to use the barcode parser before its initiation, we will have
-            // some inconsistent JS errors:
-            // TypeError: Cannot read properties of undefined (reading 'parse_barcode')
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
             // Add a product with its barcode
             scan_barcode("0123456789"),
-            ProductScreen.selectedOrderlineHas("Monitor Stand"),
+            ProductScreen.selectedOrderlineHas("Quality Item"),
             scan_barcode("0123456789"),
-            ProductScreen.selectedOrderlineHas("Monitor Stand", 2),
+            ProductScreen.selectedOrderlineHas("Quality Item", 2),
 
             // Test "Prices product" EAN-13 `23.....{NNNDD}` barcode pattern
             scan_barcode("2305000000004"),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", 1, "0.00"),
+            ProductScreen.selectedOrderlineHas("Quality Thing", 1, "0.00"),
             scan_barcode("2305000123451"),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", 1, "123.45"),
+            ProductScreen.selectedOrderlineHas("Quality Thing", 1, "123.45"),
 
             // Test "Weighted product" EAN-13 `21.....{NNDDD}` barcode pattern
             scan_barcode("2100005000000"),
-            ProductScreen.selectedOrderlineHas("Wall Shelf Unit", 0, "0.00"),
+            ProductScreen.selectedOrderlineHas("Quality Article", 0, "0.00"),
             scan_barcode("2100005080002"),
-            ProductScreen.selectedOrderlineHas("Wall Shelf Unit", 8),
+            ProductScreen.selectedOrderlineHas("Quality Article", 8),
             Chrome.endTour(),
         ].flat(),
 });
@@ -42,16 +38,16 @@ registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
             Dialog.confirm("Open Register"),
 
             // Add the product with its barcode
-            scan_barcode("12345601"),
-            ProductScreen.selectedOrderlineHas("Packaging Product", 1),
-            scan_barcode("12345601"),
-            ProductScreen.selectedOrderlineHas("Packaging Product", 2),
+            scan_barcode("19971997"),
+            ProductScreen.selectedOrderlineHas("Quality Thing", 1),
+            scan_barcode("19971997"),
+            ProductScreen.selectedOrderlineHas("Quality Thing", 2),
 
             // Add the product packaging with its barcode
-            scan_barcode("12345610"),
-            ProductScreen.selectedOrderlineHas("Packaging Product", 12),
-            scan_barcode("12345610"),
-            ProductScreen.selectedOrderlineHas("Packaging Product", 22),
+            scan_barcode("19981998"),
+            ProductScreen.selectedOrderlineHas("Quality Thing", 12),
+            scan_barcode("19981998"),
+            ProductScreen.selectedOrderlineHas("Quality Thing", 22),
             Chrome.endTour(),
         ].flat(),
 });
@@ -64,21 +60,21 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
 
             // Add the Product 1 with GS1 barcode
             scan_barcode("0108431673020125100000001"),
-            ProductScreen.selectedOrderlineHas("Product 1"),
+            ProductScreen.selectedOrderlineHas("Awesome Article"),
             scan_barcode("0108431673020125100000001"),
-            ProductScreen.selectedOrderlineHas("Product 1", 2),
+            ProductScreen.selectedOrderlineHas("Awesome Article", 2),
 
             // Add the Product 2 with normal barcode
             scan_barcode("08431673020126"),
-            ProductScreen.selectedOrderlineHas("Product 2"),
+            ProductScreen.selectedOrderlineHas("Awesome Item"),
             scan_barcode("08431673020126"),
-            ProductScreen.selectedOrderlineHas("Product 2", 2),
+            ProductScreen.selectedOrderlineHas("Awesome Item", 2),
 
             // Add the Product 3 with normal barcode
             scan_barcode("3760171283370"),
-            ProductScreen.selectedOrderlineHas("Product 3"),
+            ProductScreen.selectedOrderlineHas("Awesome Thing"),
             scan_barcode("3760171283370"),
-            ProductScreen.selectedOrderlineHas("Product 3", 2),
+            ProductScreen.selectedOrderlineHas("Awesome Thing", 2),
             Chrome.endTour(),
         ].flat(),
 });
@@ -91,7 +87,7 @@ registry.category("web_tour.tours").add("BarcodeScanPartnerTour", {
 
             // scan the customer barcode
             scan_barcode("0421234567890"),
-            ProductScreen.customerIsSelected("John Doe"),
+            ProductScreen.customerIsSelected("Partner One"),
             Chrome.endTour(),
         ].flat(),
 });
