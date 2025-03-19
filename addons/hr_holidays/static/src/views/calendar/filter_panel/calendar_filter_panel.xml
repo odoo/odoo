@@ -11,7 +11,7 @@
                     <span class="align-middle"><img class="o_calendar_filter_line" src="/hr/static/src/img/icons/line.svg"/> Refused</span>
                 </div>
 
-                <div class="d-flex flex-column mt-4" t-if="leaveState.mandatoryDays.length">
+                <div class="d-flex flex-column mt-4 mandatory_day" t-if="leaveState.mandatoryDays.length">
                     <h5>Mandatory Days</h5>
                     <ul class="ps-0">
                         <li t-foreach="leaveState.mandatoryDays" t-as="mandatoryDay" t-key="mandatoryDay.id" class="mt-2 list-unstyled">

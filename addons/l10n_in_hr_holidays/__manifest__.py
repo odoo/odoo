@@ -10,9 +10,16 @@
     'depends': ['hr_holidays'],
     'auto_install': ['hr_holidays'],
     'data': [
+        'security/ir.model.access.csv',
         'views/hr_leave_views.xml',
         'views/hr_leave_type_views.xml',
+        'views/hr_leave_exceptional_day_views.xml',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'l10n_in_hr_holidays/static/src/**/*',
+        ],
+    },
 }
