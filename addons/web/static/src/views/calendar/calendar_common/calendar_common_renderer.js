@@ -53,7 +53,6 @@ export class CalendarCommonRenderer extends Component {
     static headerTemplate = "web.CalendarCommonRendererHeader";
     static props = {
         model: Object,
-        displayName: { type: String, optional: true },
         isWeekendVisible: { type: Boolean, optional: true },
         createRecord: Function,
         editRecord: Function,

@@ -24,8 +24,20 @@ export class CalendarRenderer extends Component {
         multiCreateRecord: Function,
         multiDeleteRecords: Function,
     };
-    get calendarComponent() {
+    get concreteRenderer() {
         return this.constructor.components[this.props.model.scale];
+    }
+    get concreteRendererProps() {
+        if (this.props.model.scale === "year") {
+            return {
+                model: this.props.model,
+                isWeekendVisible: this.props.isWeekendVisible,
+                createRecord: this.props.createRecord,
+                editRecord: this.props.editRecord,
+                deleteRecord: this.props.deleteRecord,
+            };
+        }
+        return this.props;
     }
     get calendarKey() {
         return `${this.props.model.scale}_${this.props.model.date.valueOf()}`;
