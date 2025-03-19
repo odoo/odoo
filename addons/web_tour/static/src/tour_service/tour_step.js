@@ -9,7 +9,7 @@ import { pick } from "@web/core/utils/objects";
  * @property {string} [id]
  * @property {HootSelector} trigger The node on which the action will be executed.
  * @property {string} [content] Description of the step.
- * @property {"top" | "botton" | "left" | "right"} [position] The position where the UI helper is shown.
+ * @property {"top" | "bottom" | "left" | "right"} [position] The position where the UI helper is shown.
  * @property {RunCommand} [run] The action to perform when trigger conditions are verified.
  * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
  * You can change this value to lengthen or shorten the time before the error occurs [ms].
