@@ -1,0 +1,33 @@
+.o_crm_pls_tooltip {
+    .o_crm_pls_tooltip_wheel {
+        height: 60px;
+        min-width: 60px;
+        font-size: 11px;
+        circle {
+            transform: rotate(-90deg);
+            transform-origin: 30px 30px;
+            stroke: $link-color;
+            &.o_crm_tooltip_wheel_bg_circle {
+                stroke: #ddd;
+            }
+        }
+        > * {
+            height: 60px;
+            width: 60px;
+        }
+    }
+    .o_crm_pls_tooltip_section_sample {
+        opacity: 0.5;
+    }
+
+    .o_crm_pls_tooltip_icon {
+        min-width: 15px;
+    }
+    .o_crm_pls_tooltip_footer {
+        font-size: 11px;
+    }
+}
+
+.o_crm_pls_tooltip_button img {
+    height: 1rem;
+}

@@ -1134,6 +1134,9 @@ class CrmLead(models.Model):
         return True
 
     def action_set_automated_probability(self):
+        """ Update the automated probability and align probability to that value """
+        self.ensure_one()
+        self._compute_probabilities()
         self.write({'probability': self.automated_probability})
 
     def action_set_won_rainbowman(self):
@@ -2165,69 +2168,19 @@ class CrmLead(models.Model):
         if not leads_values_dict:
             return lead_probabilities
 
-        # Get unique couples to search in frequency table and won leads.
-        leads_fields = set()  # keep unique fields, as a lead can have multiple tag_ids
-        won_leads = set()
+        result = self._pls_get_frequency_data(leads_values_dict)
         won_stage_ids = self.env['crm.stage'].search([('is_won', '=', True)]).ids
-        for lead_id, values in leads_values_dict.items():
-            for field, value in values['values']:
-                if field == 'stage_id' and value in won_stage_ids:
-                    won_leads.add(lead_id)
-                leads_fields.add(field)
-        leads_fields = sorted(leads_fields)
-        # get all variable related records from frequency table, no matter the team_id
-        frequencies = self.env['crm.lead.scoring.frequency'].search([('variable', 'in', list(leads_fields))], order="team_id asc, id")
-
-        # get all team_ids from frequencies
-        frequency_teams = frequencies.mapped('team_id')
-        frequency_team_ids = [team.id for team in frequency_teams]
-
-        # 1. Compute each variable value count individually
-        # regroup each variable to be able to compute their own probabilities
-        # As all the variable does not enter into account (as we reject unset values in the process)
-        # each value probability must be computed only with their own variable related total count
-        # special case: for lead for which team_id is not in frequency table or lead with no team_id,
-        # we consider all the records, independently from team_id (this is why we add a result[-1])
-        result = dict((team_id, dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)) for team_id in frequency_team_ids)
-        result[-1] = dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)
-        for frequency in frequencies:
-            field = frequency['variable']
-            value = frequency['value']
-
-            # To avoid that a tag take too much importance if its subset is too small,
-            # we ignore the tag frequencies if we have less than 50 won or lost for this tag.
-            if field == 'tag_id' and (frequency['won_count'] + frequency['lost_count']) < 50:
-                continue
-
-            if frequency.team_id:
-                team_result = result[frequency.team_id.id]
-                team_result[field][value] = {'won': frequency['won_count'], 'lost': frequency['lost_count']}
-                team_result[field]['won_total'] += frequency['won_count']
-                team_result[field]['lost_total'] += frequency['lost_count']
-
-            if value not in result[-1][field]:
-                result[-1][field][value] = {'won': 0, 'lost': 0}
-            result[-1][field][value]['won'] += frequency['won_count']
-            result[-1][field][value]['lost'] += frequency['lost_count']
-            result[-1][field]['won_total'] += frequency['won_count']
-            result[-1][field]['lost_total'] += frequency['lost_count']
-
-        # Get all won, lost and total count for all records in frequencies per team_id
-        for team_id in result:
-            result[team_id]['team_won'], \
-            result[team_id]['team_lost'], \
-            result[team_id]['team_total'] = self._pls_get_won_lost_total_count(result[team_id])
 
         save_team_id = None
         p_won, p_lost = 1, 1
         for lead_id, lead_values in leads_values_dict.items():
             # if stage_id is null, return 0 and bypass computation
-            lead_fields = [value[0] for value in lead_values.get('values', [])]
-            if not 'stage_id' in lead_fields:
+            stage_data = next((value for value in lead_values.get('values', {}) if value[0] == 'stage_id'), False)
+            if not stage_data:
                 lead_probabilities[lead_id] = 0
                 continue
             # if lead stage is won, return 100
-            elif lead_id in won_leads:
+            elif stage_data[1] in won_stage_ids:
                 lead_probabilities[lead_id] = 100
                 continue
 
@@ -2253,17 +2206,89 @@ class CrmLead(models.Model):
                 if value_result:
                     total_won = team_won if field == 'stage_id' else field_result['won_total']
                     total_lost = team_lost if field == 'stage_id' else field_result['lost_total']
-
                     # if one count = 0, we cannot compute lead probability
                     if not total_won or not total_lost:
                         continue
-                    s_lead_won *= value_result['won'] / total_won
-                    s_lead_lost *= value_result['lost'] / total_lost
+                    p_field_value_won = value_result['won'] / total_won
+                    p_field_value_lost = value_result['lost'] / total_lost
+                    s_lead_won *= p_field_value_won
+                    s_lead_lost *= p_field_value_lost
 
             # 3. Compute Probability to win
             probability = s_lead_won / (s_lead_won + s_lead_lost)
             lead_probabilities[lead_id] = min(max(round(100 * probability, 2), 0.01), 99.99)
+
         return lead_probabilities
+
+    def _pls_get_frequency_data(self, leads_values_dict, restrict_to_team=False):
+        ''' Helper method for the Naive Bayes computation. Based on leads_values_dict, which
+            should be the output of _pls_get_lead_pls_values, it will build the set of pls
+            fields, then based on them, fetch all necessary frequencies and prepare a result
+            dict aggregating the frequency lost/won counts for all values for those fields.
+
+            :param restrict_to_team: crm.team singleton. If given, attempt to restrict to this team only.
+                Will only happen if there are some corresponding frequencies found in the db. Otherwise,
+                we will still use every frequency, as we fallback on a generic case of aggregating all
+                of them instead.
+            :return: result: dictionary of won/lost counts build from all (field, value) couples
+                found in leads_values_dict, and totals, by team. See below for structure details.
+        '''
+        # Get unique couples to search in frequency table and won leads.
+        leads_fields = set()  # keep unique fields, as a lead can have multiple tag_ids
+        for lead_id, values in leads_values_dict.items():
+            for field, value in values['values']:
+                leads_fields.add(field)
+        leads_fields = sorted(leads_fields)
+        # get all variable related records from frequency table, no matter the team_id
+        frequencies = self.env['crm.lead.scoring.frequency'].search([('variable', 'in', list(leads_fields))], order="team_id asc, id")
+
+        # get all team_ids from frequencies
+        frequency_team_ids = [team.id for team in frequencies.mapped('team_id')]
+
+        # restrict to frequencies if restrict_to_team is set.
+        if restrict_to_team and restrict_to_team.id in frequency_team_ids:
+            frequency_team_ids = [restrict_to_team.id]
+            frequencies = frequencies.filtered(
+                lambda frequency: frequency.team_id == restrict_to_team
+            )
+
+        # 1. Compute each variable value count individually
+        # regroup each variable to be able to compute their own probabilities
+        # As all the variable does not enter into account (as we reject unset values in the process)
+        # each value probability must be computed only with their own variable related total count
+        # special case: for lead for which team_id is not in frequency table or lead with no team_id,
+        # we consider all the records, independently from team_id (this is why we add a result[-1])
+        result = dict((team_id, dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)) for team_id in frequency_team_ids)
+        result[-1] = dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)
+        for frequency in frequencies:
+            field = frequency['variable']
+            value = frequency['value']  # This is always a string
+
+            # To avoid that a tag take too much importance if its subset is too small,
+            # we ignore the tag frequencies if we have less than 50 won or lost for this tag.
+            if field == 'tag_id' and (frequency['won_count'] + frequency['lost_count']) < 50:
+                continue
+
+            if frequency.team_id:
+                team_result = result[frequency.team_id.id]
+                team_result[field][value] = {'won': frequency['won_count'], 'lost': frequency['lost_count']}
+                team_result[field]['won_total'] += frequency['won_count']
+                team_result[field]['lost_total'] += frequency['lost_count']
+
+            if value not in result[-1][field]:
+                result[-1][field][value] = {'won': 0, 'lost': 0}
+            result[-1][field][value]['won'] += frequency['won_count']
+            result[-1][field][value]['lost'] += frequency['lost_count']
+            result[-1][field]['won_total'] += frequency['won_count']
+            result[-1][field]['lost_total'] += frequency['lost_count']
+
+        # Get all won, lost and total count for all records in frequencies per team_id
+        for team_id in result:
+            result[team_id]['team_won'], \
+            result[team_id]['team_lost'], \
+            result[team_id]['team_total'] = self._pls_get_won_lost_total_count(result[team_id])
+
+        return result
 
     # ---------------------------------
     # PLS: Live Increment
@@ -2704,3 +2729,147 @@ class CrmLead(models.Model):
                         lead_values.append(('tag_id', tag.id))
                 leads_values_dict[lead.id] = {'values': lead_values, 'team_id': lead['team_id'].id}
             return leads_values_dict
+
+    # PLS Backend Tooltip
+    # -------------------
+
+    def _pls_get_naive_bayes_probabilities_for_tooltip(self):
+        """ This method does the naive bayes process for the singleton lead given in self. In addition, it will build
+            a list of scores in format (score, field, value) triplets, where score is a simple value that indicates
+            whether the impact of the couple (field, value) is positive (>.5) or negative (<.5). This is used in the
+            pls details tooltip opened from the form to give an insight on PLS most influent (field, value) couples
+            for this lead.
+
+            :return: tooltip_data, a dict containing up-to-date probability, and a the list of score triplets.
+        """
+        self.ensure_one()
+        tooltip_data = {
+            'probability': 0.0,
+            'scores': [],
+        }
+
+        leads_values_dict = self._pls_get_lead_pls_values()
+        if not leads_values_dict:
+            return tooltip_data
+
+        _lead_id, lead_values = next(iter(leads_values_dict.items()))
+        lead_fields = [value[0] for value in lead_values.get('values', {})]
+
+        result = self._pls_get_frequency_data(leads_values_dict, restrict_to_team=self.team_id)
+
+        if not 'stage_id' in lead_fields:
+            return tooltip_data
+        if self.stage_id.is_won:
+            tooltip_data['probability'] = 100.0
+            return tooltip_data
+
+        # team_id not in frequency Table -> convert to -1
+        lead_team_id = lead_values['team_id'] if lead_values['team_id'] in result else -1
+        team_won = result[lead_team_id]['team_won']
+        team_lost = result[lead_team_id]['team_lost']
+        team_total = result[lead_team_id]['team_total']
+        # if one count = 0, we cannot compute lead probability
+        if not team_won or not team_lost:
+            return tooltip_data
+        s_lead_won = team_won / team_total
+        s_lead_lost = team_lost / team_total
+
+        # 2. Compute won and lost score using each variable's individual probability
+        for field, value in lead_values['values']:
+            field_result = result.get(lead_team_id, {}).get(field)
+            value = value.origin if hasattr(value, 'origin') else value
+            value_result = field_result.get(str(value)) if field_result else False
+            if value_result:
+                total_won = team_won if field == 'stage_id' else field_result['won_total']
+                total_lost = team_lost if field == 'stage_id' else field_result['lost_total']
+                # if one count = 0, we cannot compute lead probability
+                if not total_won or not total_lost:
+                    continue
+                p_field_value_won = value_result['won'] / total_won
+                p_field_value_lost = value_result['lost'] / total_lost
+                s_lead_won *= p_field_value_won
+                s_lead_lost *= p_field_value_lost
+                score = (
+                    1 - p_field_value_lost if field == 'stage_id'
+                    else p_field_value_won / (p_field_value_won + p_field_value_lost)
+                )
+                tooltip_data['scores'].append((score, field, value))
+        # 3. Compute Probability to win
+        probability = s_lead_won / (s_lead_won + s_lead_lost)
+        tooltip_data['probability'] = min(max(round(100 * probability, 2), 0.01), 99.99)
+
+        return tooltip_data
+
+    def prepare_pls_tooltip_data(self):
+        '''
+            Compute and return all necessary information to render CrmPlsTooltip, displayed when
+            pressing the small AI button, located next to the label of probability when automated,
+            in the crm.lead form view. This method first replaces ids with display names of relational
+            fields before returning data, then also recomputes probabilities and writes them on self.
+
+            :returns dict: {
+                low_3_data: list of field-value couples for lowest 3 criterions, lowest first
+                probability: numerical value, used for display on tooltip
+                team_name: string, name of lead team if any
+                top_3_data: list of field-value couples for top 3 criterions, highest first
+            }
+        '''
+        self.ensure_one()
+        tooltip_data = self._pls_get_naive_bayes_probabilities_for_tooltip()
+        sorted_scores_with_name = []
+
+        # We want to display names in the tooltip, not ids.
+        # The last element in tuple is only used for tags to ensure same color in tooltip.
+        for score, field, value in sorted(tooltip_data['scores']):
+            # Skip nonsense results for phone and email states. May happen in a db having a few leads.
+            if field in ['phone_state', 'email_state']:
+                if value in [False, 'incorrect'] and tools.float_compare(score, 0.50, 2) > 0:
+                    continue
+                if value == 'correct' and tools.float_compare(score, 0.50, 2) < 0:
+                    continue
+            if field == 'tag_id':
+                tag = self.tag_ids.filtered(lambda tag: tag.id == value)
+                sorted_scores_with_name.append((score, field, tag.display_name, tag.color))
+            elif isinstance(self[field], models.BaseModel):
+                sorted_scores_with_name.append((score, field, self[field].display_name, False))
+            else:
+                sorted_scores_with_name.append((score, field, str(value), False))
+
+        # Update automated probability, as it may have changed since last computation
+        # -> avoids differences in display between tooltip and record. A 0.00 probability implies
+        # that the computation was not possible. Sample data will be used instead.
+        probability_values = {'automated_probability': tooltip_data['probability']}
+        if self.is_automated_probability:
+            probability_values['probability'] = tooltip_data['probability']
+        self.write(probability_values)
+
+        # Sample values if probability could not be computed. If it was, but if all scores
+        # were excluded above, a placeholder will be used instead in the tooltip.
+        if tools.float_is_zero(tooltip_data['probability'], 2):
+            sorted_scores_with_name = [
+                (.1, 'email_state', False, False),
+                (.2, 'tag_id', _('Exploration'), 4),
+                (.3, 'stage_id', _('New'), False),
+                (.7, 'phone_state', 'correct', False),
+                (.8, 'country_id', _('Belgium'), False),
+                (.9, 'tag_id', _('Consulting'), 3),
+            ]
+
+        return {
+            'low_3_data': [
+                {
+                    'field': element[1],
+                    'value': element[2],
+                    'color': element[3]
+                } for element in sorted_scores_with_name[:3] if tools.float_compare(element[0], 0.50, 2) < 0
+            ],
+            'probability': tooltip_data['probability'],
+            'team_name': self.team_id.display_name,
+            'top_3_data': [
+                {
+                    'field': element[1],
+                    'value': element[2],
+                    'color': element[3]
+                } for element in sorted_scores_with_name[::-1][:3] if tools.float_compare(element[0], 0.50, 2) > 0
+            ],
+        }
