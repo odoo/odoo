@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo noupdate="1">
     <record id="ppn_tag" model="account.account.tag">
         <field name="name">PPN - 08</field>
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.id"/>
     </record>
     <record id="tax_ST1" model="account.tax.template">
-        <field name="description">11%</field>
+        <field name="description">12%</field>
+        <field name="tax_group_id" ref="l10n_id.l10n_id_tax_group_non_luxury_goods"/>
         <field name="chart_template_id" ref="l10n_id_chart"/>
         <field name="type_tax_use">sale</field>
         <field name="name">11%</field>
@@ -34,8 +35,9 @@
         ]"/>
     </record>
     <record id="tax_PT1" model="account.tax.template">
-        <field name="description">11%</field>
+        <field name="description">12%</field>
         <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="l10n_id.l10n_id_tax_group_non_luxury_goods"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">11%</field>
         <field name="amount_type">percent</field>
@@ -64,6 +66,7 @@
     <record id="tax_ST0" model="account.tax.template">
         <field name="description">0%</field>
         <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="l10n_id.l10n_id_tax_group_0"/>
         <field name="type_tax_use">sale</field>
         <field name="name">0%</field>
         <field name="amount_type">percent</field>
@@ -86,6 +89,7 @@
     <record id="tax_ST2" model="account.tax.template">
         <field name="description">0%</field>
         <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="l10n_id.l10n_id_tax_group_exempt"/>
         <field name="type_tax_use">sale</field>
         <field name="name">Exempt</field>
         <field name="amount_type">percent</field>
@@ -108,6 +112,7 @@
     <record id="tax_PT2" model="account.tax.template">
         <field name="description">0%</field>
         <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="l10n_id.l10n_id_tax_group_exempt"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">Exempt</field>
         <field name="amount_type">percent</field>
@@ -130,6 +135,7 @@
     <record id="tax_PT0" model="account.tax.template">
         <field name="description">0%</field>
         <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="l10n_id.l10n_id_tax_group_0"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">0%</field>
         <field name="amount_type">percent</field>
@@ -152,6 +158,7 @@
     <record id="tax_ST3" model="account.tax.template">
         <field name="description">12%</field>
         <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="l10n_id.l10n_id_tax_group_luxury_goods"/>
         <field name="type_tax_use">sale</field>
         <field name="name">12%</field>
         <field name="amount_type">percent</field>
@@ -180,6 +187,7 @@
     <record id="tax_PT3" model="account.tax.template">
         <field name="description">12%</field>
         <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="tax_group_id" ref="l10n_id.l10n_id_tax_group_luxury_goods"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">12%</field>
         <field name="amount_type">percent</field>
