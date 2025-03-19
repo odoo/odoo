@@ -343,7 +343,7 @@ export class Rtc extends Record {
             connectionType: undefined,
             hasPendingRequest: false,
             channel: undefined,
-            logs: new Map(), // deprecated
+            logs: {},
             sendCamera: false,
             sendScreen: false,
             updateAndBroadcastDebounce: undefined,
@@ -1306,7 +1306,7 @@ export class Rtc extends Record {
                 state: session.connectionState,
                 audioError: session.audioError,
                 videoError: session.videoError,
-                sfuConsumers: this.network.getSfuConsumerStats(session.id),
+                sfuConsumers: this.network?.getSfuConsumerStats(session.id),
             };
             if (session.eq(this.selfSession)) {
                 sessionInfo.isSelf = true;
