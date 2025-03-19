@@ -347,9 +347,9 @@
                             <field name="value_field_to_show" invisible="1"/>
                             <field name="update_related_model_id" invisible="1"/>
                             <field name="update_field_type" invisible="1"/>
-                            <span invisible="evaluation_type != 'value' or not update_field_type == 'many2many'">by</span>
-                            <field name="update_m2m_operation" class="oe_inline" invisible="evaluation_type != 'value' or not update_field_type == 'many2many'" required="update_field_type == 'many2many'"/>
-                            <span invisible="evaluation_type != 'value' or update_field_type == 'many2many'">to</span>
+                            <span invisible="evaluation_type != 'value' or update_field_type not in ['one2many', 'many2many']">by</span>
+                            <field name="update_m2m_operation" class="oe_inline" invisible="evaluation_type != 'value' or update_field_type not in ['one2many', 'many2many']" required="update_field_type in ['one2many', 'many2many']"/>
+                            <span invisible="evaluation_type != 'value' or update_field_type in ['one2many', 'many2many']">to</span>
                             <field name="value" class="oe_inline" placeholder="Set a value..." invisible="update_field_id == False or value_field_to_show != 'value' or evaluation_type != 'value'" string="Custom Value"/>
                             <field name="resource_ref" class="oe_inline" placeholder="Choose a value..." string="Custom Value" options="{'model_field': 'update_related_model_id', 'no_create': True, 'no_open': True}" invisible=" update_field_id == False or value_field_to_show != 'resource_ref' or evaluation_type == 'equation' or update_m2m_operation == 'clear'"/>
                             <field name="selection_value" class="oe_inline" placeholder="Choose a value..." options="{'no_create': True, 'no_open': True}" invisible=" update_field_id == False or value_field_to_show != 'selection_value' or evaluation_type == 'equation'"/>
