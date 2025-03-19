@@ -1,9 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
 
 // TODO s_website_form, s_searchbar_input were added by extending xpath.
-const so_content_addition_selector = `blockquote, .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating, .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge, .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image, .s_cta_badge, .s_accordion, .s_searchbar_input, .s_website_form`;
+const so_content_addition_selector = `blockquote, .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating, .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge, .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image, .s_cta_badge, .s_accordion, .s_website_form, .s_searchbar_input, .s_rental_search, .s_card`;
 const card_parent_handlers =
-    ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div";
+    ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item";
 const special_cards_selector = `.s_card.s_timeline_card, div:is(${card_parent_handlers}) > .s_card`;
 
 // TODO need to split by addons
