@@ -346,4 +346,4 @@ class HrEmployee(models.Model):
         return (allocations_leaves_consumed, to_recheck_leaves_per_leave_type)
 
     def _get_hours_per_day(self, date_from):
-        return self._get_calendars(date_from)[self.id].hours_per_day
+        return self._get_calendars(date_from)[self.id].hours_per_day if self else 0
