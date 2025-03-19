@@ -3,6 +3,7 @@
 
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class UtmSource(models.Model):
@@ -15,6 +16,13 @@ class UtmSource(models.Model):
         'UNIQUE(name)',
         'The name must be unique',
     )
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_referral(self):
+        utm_source_referral = self.env.ref('utm.utm_source_referral', raise_if_not_found=False)
+        for record in self:
+            if record == utm_source_referral:
+                raise ValidationError(_("You cannot delete the 'Referral' UTM source record."))
 
     @api.model_create_multi
     def create(self, vals_list):
