@@ -82,6 +82,13 @@ export class Notification extends Record {
         );
     }
 
+    get statusClass() {
+        if (this.isFailure) {
+            return "text-danger opacity-75";
+        }
+        return "opacity-50";
+    }
+
     get statusIcon() {
         switch (this.notification_status) {
             case "process":
