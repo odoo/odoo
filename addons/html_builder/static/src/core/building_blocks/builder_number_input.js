@@ -4,7 +4,7 @@ import {
     basicContainerBuilderComponentProps,
     useInputBuilderComponent,
     useBuilderComponent,
-} from "./utils";
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 
 // TODO: use BuilderTextInputBase

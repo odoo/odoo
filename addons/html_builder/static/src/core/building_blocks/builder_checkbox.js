@@ -5,7 +5,7 @@ import {
     useClickableBuilderComponent,
     useDependencyDefinition,
     useDomState,
-} from "./utils";
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 
 export class BuilderCheckbox extends Component {

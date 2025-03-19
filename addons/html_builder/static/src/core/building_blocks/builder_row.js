@@ -4,7 +4,7 @@ import {
     useApplyVisibility,
     basicContainerBuilderComponentProps,
     useBuilderComponent,
-} from "./utils";
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { uniqueId } from "@web/core/utils/functions";
 

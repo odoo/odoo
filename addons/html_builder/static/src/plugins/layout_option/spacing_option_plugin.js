@@ -1,11 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { useBuilderComponents } from "@html_builder/core/utils";
 
 export class SpacingOption extends Component {
     static template = "html_builder.SpacingOption";
-    static components = { ...defaultBuilderComponents };
     static props = {
         level: { type: Number, optional: true },
         applyTo: { type: String, optional: true },
@@ -13,6 +12,9 @@ export class SpacingOption extends Component {
     static defaultProps = {
         level: 0,
     };
+    setup() {
+        useBuilderComponents();
+    }
 }
 class SpacingOptionPlugin extends Plugin {
     static id = "SpacingOption";

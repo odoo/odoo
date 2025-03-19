@@ -1,10 +1,10 @@
 import { Component, useRef, useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-import { basicContainerBuilderComponentProps } from "./utils";
+import { basicContainerBuilderComponentProps } from "../utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useCachedModel } from "@html_builder/core/plugins/cached_model_utils";
+import { useCachedModel } from "@html_builder/core/cached_model_utils";
 
 export class BasicMany2ManySearchInput extends Component {
     static template = "html_builder.BasicMany2ManySearchInput";

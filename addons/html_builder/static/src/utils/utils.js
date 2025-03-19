@@ -1,4 +1,4 @@
-import { DependencyManager } from "../core/plugins/dependency_manager";
+import { DependencyManager } from "../core/dependency_manager";
 import { useSubEnv } from "@odoo/owl";
 import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
 import { _t } from "@web/core/l10n/translation";

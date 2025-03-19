@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { classAction } from "../core/plugins/core_builder_action_plugin";
+import { classAction } from "../core/core_builder_action_plugin";
 
 class FontAwesomeOptionPlugin extends Plugin {
     static id = "fontAwesomeOptionPlugin";

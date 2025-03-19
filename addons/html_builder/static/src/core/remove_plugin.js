@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { resizeGrid } from "@html_builder/utils/grid_layout_utils";
-import { getVisibleSibling } from "../move/move_plugin";
+import { getVisibleSibling } from "./move_plugin";
 import { unremovableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
 import { isUnremovableQWebElement as qwebPluginPredicate } from "@html_editor/others/qweb_plugin";
 

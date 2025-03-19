@@ -18,25 +18,49 @@ import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
 // TODO Font family picker is actually website-specific
 import { BuilderFontFamilyPicker } from "./building_blocks/builder_fontfamilypicker";
 import { ModelMany2Many } from "./building_blocks/model_many2many";
+import { Plugin } from "@html_editor/plugin";
 
-export const defaultBuilderComponents = {
-    BuilderContext,
-    BuilderRow,
-    Dropdown,
-    DropdownItem,
-    BuilderButtonGroup,
-    BuilderButton,
-    BuilderTextInput,
-    BuilderNumberInput,
-    BuilderRange,
-    BuilderColorPicker,
-    BuilderSelect,
-    BuilderSelectItem,
-    BuilderCheckbox,
-    BasicMany2Many,
-    BuilderMany2Many,
-    ModelMany2Many,
-    BuilderDateTimePicker,
-    BuilderUrlPicker,
-    BuilderFontFamilyPicker,
-};
+export class BuilderComponentPlugin extends Plugin {
+    static id = "builderComponents";
+    static shared = ["getComponents"];
+
+    resources = {
+        builder_components: {
+            BuilderContext,
+            BuilderRow,
+            Dropdown,
+            DropdownItem,
+            BuilderButtonGroup,
+            BuilderButton,
+            BuilderTextInput,
+            BuilderNumberInput,
+            BuilderRange,
+            BuilderColorPicker,
+            BuilderSelect,
+            BuilderSelectItem,
+            BuilderCheckbox,
+            BasicMany2Many,
+            BuilderMany2Many,
+            ModelMany2Many,
+            BuilderDateTimePicker,
+            BuilderUrlPicker,
+            BuilderFontFamilyPicker,
+        },
+    };
+
+    setup() {
+        this.Components = {};
+        for (const r of this.getResource("builder_components")) {
+            for (const C in r) {
+                if (C in this.Components) {
+                    throw new Error(`Duplicated builder component: ${C}`);
+                }
+                this.Components[C] = r[C];
+            }
+        }
+    }
+
+    getComponents() {
+        return this.Components;
+    }
+}
