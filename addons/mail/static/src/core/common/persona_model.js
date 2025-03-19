@@ -31,7 +31,8 @@ export class Persona extends Record {
 
     /** @type {string} */
     avatar_128_access_token;
-    company_id = Record.one("res.company");
+    /** @type {string} */
+    commercial_company_name;
     /**
      * function = job position (Frenchism)
      *
