@@ -40,4 +40,19 @@
             </xpath>
         </field>
     </record>
+    <record id="l10n_in_edi_inherit_account_move_search_view" model="ir.ui.view">
+        <field name="name">l10n.in.edi.inherit.account.move.search</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='cancel']" position="after">
+                <separator/>
+                <filter name="l10n_in_edi_to_send" string="Indian E-Invoices To Send" domain="[('l10n_in_edi_status', '=', 'to_send')]"/>
+                <filter name="l10n_in_edi_error_move" string="Indian E-Invoices In Error" domain="[('l10n_in_edi_error', '!=', False)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='status']" position="after">
+                <filter name="groupby_l10n_in_edi_status" string="Indian E-invoice status" context="{'group_by' : 'l10n_in_edi_status'}"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
