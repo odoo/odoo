@@ -1343,14 +1343,21 @@ $-transition-duration: 200ms;
 .navbar .o_extra_menu_items > .show {
     > li {
         + li {
-            border-top: 1px solid map-get($grays, '200');
+            border-top: $border-width solid $border-color;
         }
         > a.dropdown-toggle {
-            color: inherit; // Useful when the toggle is active
+            background-color: $body-tertiary-bg;
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
-            
-            &:not(.active) {
-                background-color: map-get($grays, '200');
+
+            &.active {
+                color: inherit !important;
+            }
+        }
+        > .dropdown-menu {
+            border-radius: 0;
+
+            .dropdown-item {
+                padding-left: $dropdown-item-padding-x + map-get($spacers, 2);
             }
         }
         > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
@@ -1983,6 +1990,10 @@ $ribbon-padding: 100px;
 .o_search_result_item_detail {
     flex: 1;
     word-break: normal !important;
+
+    button:disabled {
+        color: inherit;
+    }
 }
 
 .o_cookies_bar_toggle {

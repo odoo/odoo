@@ -18,6 +18,7 @@ import {
     Component,
     markup,
     onMounted,
+    onWillUnmount,
     useChildSubEnv,
     useEffect,
     useRef,
@@ -196,6 +197,17 @@ export class Composer extends Component {
                 this.restoreContent();
             }
         });
+        onWillUnmount(() => {
+            this.props.composer.isFocused = false;
+        });
+        useEffect(
+            (composerThread, replyToThread) => {
+                if (replyToThread && replyToThread !== composerThread) {
+                    this.props.messageToReplyTo.cancel();
+                }
+            },
+            () => [this.props.composer.thread, this.props.messageToReplyTo?.thread]
+        );
     }
 
     get pickerSettings() {

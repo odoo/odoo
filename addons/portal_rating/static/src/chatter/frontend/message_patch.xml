@@ -8,7 +8,7 @@
                 </t>
             </div>
         </xpath>
-        <xpath expr="//div[hasclass('o-mail-Message-contentContainer')]" position="after">
+        <xpath expr="//*[@t-ref='messageContent']" position="inside">
             <!--Only possible if a rating is link to the message, for now we can't comment if no rating
                 is link to the message (because publisher comment data
                 is on the rating.rating model - one comment max) -->

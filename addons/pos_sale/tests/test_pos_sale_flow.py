@@ -790,6 +790,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentAmount', login="accountman")
         self.assertEqual(sale_order.amount_to_invoice, 80.0, "Downpayment amount not considered!")
+        self.assertEqual(sale_order.amount_invoiced, 20.0, "Downpayment amount not considered!")
 
         self.assertEqual(sale_order.order_line[2].price_unit, 20)
 
