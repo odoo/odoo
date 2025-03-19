@@ -18,7 +18,13 @@ export class SharedPopup extends Interaction {
         // ugly white bar.
         // tl;dr: this is keeping those 2 elements visibility synchronized.
         _root: {
-            "t-on-show.bs.modal": () => this.popupShown = true,
+            "t-on-show.bs.modal.noUpdate": () => {
+                this.popupShown = true;
+                // Combining noUpdate and `this.updateContent()` forces a
+                // repaint immediately to remove `.d-none` before the transition
+                // happens. Otherwise, the transition isn't visible.
+                this.updateContent();
+            },
             "t-on-shown.bs.modal": () => this.popupShown = true,
             "t-on-hidden.bs.modal": this.onModalHidden,
             "t-att-class": () => ({
