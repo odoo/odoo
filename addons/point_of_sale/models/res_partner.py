@@ -74,7 +74,8 @@ class ResPartner(models.Model):
     def _load_pos_data_fields(self, config_id):
         return [
             'id', 'name', 'street', 'street2', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
-            'barcode', 'write_date', 'property_product_pricelist', 'parent_name', 'pos_contact_address', 'invoice_emails', 'fiscal_position_id'
+            'barcode', 'write_date', 'property_product_pricelist', 'parent_name',
+            'pos_contact_address', 'invoice_emails', 'company_type', 'fiscal_position_id',
         ]
 
     def _compute_pos_order(self):
