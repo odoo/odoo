@@ -346,3 +346,26 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             partner_ids=self.operators[0].partner_id.ids
         )
         self.assertEqual(self_member.partner_id, self.operators[0].partner_id)
+
+    def test_livechat_operator_can_see_all_livechat_conversations_and_members(self):
+        bob_user = new_test_user(
+            self.env, "bob_user", groups="base.group_user,im_livechat.im_livechat_group_user"
+        )
+        livechat_session = self.env["discuss.channel"].create(
+            {
+                "channel_type": "livechat",
+                "livechat_operator_id": self.operators[0].partner_id.id,
+                "name": "test",
+            }
+        )
+        livechat_session.with_user(self.operators[0]).add_members(
+            partner_ids=self.operators[1].partner_id.ids
+        )
+        self.assertEqual(
+            self.env["discuss.channel"].with_user(bob_user).search([("id", "=", livechat_session.id)]),
+            livechat_session
+        )
+        self.assertEqual(
+            self.env["discuss.channel.member"].with_user(bob_user).search([("channel_id", "=", livechat_session.id)]),
+            livechat_session.channel_member_ids
+        )
