@@ -17,7 +17,7 @@ export class SoundEffects {
             "ptt-press": { defaultVolume: 0.1, path: "/mail/static/src/audio/ptt-press" },
             "ptt-release": { defaultVolume: 0.1, path: "/mail/static/src/audio/ptt-release" },
             "call-invitation": {
-                defaultVolume: 0.15,
+                defaultVolume: 0.5,
                 path: "/mail/static/src/audio/call-invitation",
             },
             "new-message": { defaultVolume: 1, path: "/mail/static/src/audio/new-message" },
