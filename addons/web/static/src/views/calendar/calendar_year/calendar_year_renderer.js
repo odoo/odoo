@@ -22,7 +22,7 @@ export class CalendarYearRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
-        calendarMode: { type: String, optional: true },
+        sidePanelMode: { type: String, optional: true },
         multiCreateRecord: { type: Function, optional: true },
         multiDeleteRecords: { type: Function, optional: true },
     };

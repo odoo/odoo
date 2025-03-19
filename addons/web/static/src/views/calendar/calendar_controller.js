@@ -10,8 +10,10 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useSetupAction } from "@web/search/action_hook";
 import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
 import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
-import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
-import { CALENDAR_MODES } from "@web/views/calendar/calendar_modes";
+import {
+    CalendarSidePanel,
+    SIDE_PANEL_MODES,
+} from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
@@ -95,7 +97,9 @@ export class CalendarController extends Component {
             showSideBar:
                 !this.env.isSmall &&
                 Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
-            mode: this.model.hasMultiCreate ? CALENDAR_MODES.add : CALENDAR_MODES.filter,
+            sidePanelMode: this.model.hasMultiCreate
+                ? SIDE_PANEL_MODES.add
+                : SIDE_PANEL_MODES.filter,
         });
 
         this.searchBarToggler = useSearchBarToggler();
@@ -176,7 +180,7 @@ export class CalendarController extends Component {
             ...this._baseRendererProps,
             model: this.model,
             isWeekendVisible: this.model.scale === "day" || this.state.isWeekendVisible,
-            calendarMode: this.state.mode,
+            sidePanelMode: this.state.sidePanelMode,
         };
     }
 
@@ -194,10 +198,10 @@ export class CalendarController extends Component {
         return {
             model: this.model,
             context: this.props.context,
-            mode: this.state.mode,
+            mode: this.state.sidePanelMode,
             setMode: (mode) => {
-                if (Object.values(CALENDAR_MODES).includes(mode)) {
-                    this.state.mode = mode;
+                if (Object.values(SIDE_PANEL_MODES).includes(mode)) {
+                    this.state.sidePanelMode = mode;
                 }
             },
         };
