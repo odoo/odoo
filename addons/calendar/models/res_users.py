@@ -77,11 +77,12 @@ class ResUsers(models.Model):
         When any user doesn't have its setting from ResUsersSettings defined, fallback to Default User Template's.
         """
         fallback_default_privacy = 'public'
-        if any(not user.res_users_settings_id.calendar_default_privacy for user in self):
+        # sudo: any user has access to other users calendar_default_privacy setting
+        if any(not user.sudo().res_users_settings_id.calendar_default_privacy for user in self):
             fallback_default_privacy = self._default_user_calendar_default_privacy()
 
         for user in self:
-            user.calendar_default_privacy = user.res_users_settings_id.calendar_default_privacy or fallback_default_privacy
+            user.calendar_default_privacy = user.sudo().res_users_settings_id.calendar_default_privacy or fallback_default_privacy
 
     def _inverse_calendar_res_users_settings(self):
         """

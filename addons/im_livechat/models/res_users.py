@@ -10,11 +10,25 @@ class ResUsers(models.Model):
     """
     _inherit = 'res.users'
 
-    livechat_username = fields.Char(string='Livechat Username', compute='_compute_livechat_username', inverse='_inverse_livechat_username', store=False)
-    livechat_lang_ids = fields.Many2many('res.lang', string='Livechat Languages', compute='_compute_livechat_lang_ids', inverse='_inverse_livechat_lang_ids', store=False)
+    livechat_username = fields.Char(
+        string="Livechat Username",
+        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
+        compute="_compute_livechat_username",
+        inverse="_inverse_livechat_username",
+        store=False,
+    )
+    livechat_lang_ids = fields.Many2many(
+        "res.lang",
+        string="Livechat Languages",
+        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
+        compute="_compute_livechat_lang_ids",
+        inverse="_inverse_livechat_lang_ids",
+        store=False,
+    )
     livechat_expertise_ids = fields.Many2many(
         "im_livechat.expertise",
         string="Live Chat Expertise",
+        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
         compute="_compute_livechat_expertise_ids",
         inverse="_inverse_livechat_expertise_ids",
         store=False,
@@ -42,7 +56,8 @@ class ResUsers(models.Model):
     @api.depends('res_users_settings_id.livechat_username')
     def _compute_livechat_username(self):
         for user in self:
-            user.livechat_username = user.res_users_settings_id.livechat_username
+            # sudo: livechat user can see the livechat username of any other user
+            user.livechat_username = user.sudo().res_users_settings_id.livechat_username
 
     def _inverse_livechat_username(self):
         for user in self:
@@ -52,7 +67,8 @@ class ResUsers(models.Model):
     @api.depends('res_users_settings_id.livechat_lang_ids')
     def _compute_livechat_lang_ids(self):
         for user in self:
-            user.livechat_lang_ids = user.res_users_settings_id.livechat_lang_ids
+            # sudo: livechat user can see the livechat languages of any other user
+            user.livechat_lang_ids = user.sudo().res_users_settings_id.livechat_lang_ids
 
     def _inverse_livechat_lang_ids(self):
         for user in self:
@@ -62,7 +78,8 @@ class ResUsers(models.Model):
     @api.depends("res_users_settings_id.livechat_expertise_ids")
     def _compute_livechat_expertise_ids(self):
         for user in self:
-            user.livechat_expertise_ids = user.res_users_settings_id.livechat_expertise_ids
+            # sudo: livechat user can see the livechat expertise of any other user
+            user.livechat_expertise_ids = user.sudo().res_users_settings_id.livechat_expertise_ids
 
     def _inverse_livechat_expertise_ids(self):
         for user in self:
