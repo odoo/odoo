@@ -297,3 +297,22 @@ registry.category("web_tour.tours").add("CashRoundingPayment", {
             ErrorPopup.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+        ].flat(),
+});

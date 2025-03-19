@@ -60,7 +60,7 @@ class StockMove(models.Model):
         price_unit_map = {
             move.id: (
                 move.unbuild_id.mo_id.move_finished_ids.stock_valuation_layer_ids.filtered(
-                    lambda svl: svl.product_id == move.unbuild_id.mo_id.product_id
+                    lambda svl: svl.product_id == move.product_id
                 )[0].unit_cost,
                 move.company_id.currency_id.round,
             )

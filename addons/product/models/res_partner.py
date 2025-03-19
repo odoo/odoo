@@ -47,3 +47,7 @@ class ResPartner(models.Model):
 
     def _commercial_fields(self):
         return super()._commercial_fields() + ['property_product_pricelist']
+
+    def _company_dependent_commercial_fields(self):
+        # property_product_pricelist is not a company_dependent field but technically behaves as one
+        return super()._company_dependent_commercial_fields() + ['property_product_pricelist']

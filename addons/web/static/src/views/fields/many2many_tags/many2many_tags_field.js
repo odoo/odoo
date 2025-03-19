@@ -11,6 +11,7 @@ import {
     useX2ManyCrud,
 } from "@web/views/fields/relational_utils";
 import { registry } from "@web/core/registry";
+import { Mutex } from "@web/core/utils/concurrency";
 import { standardFieldProps } from "../standard_field_props";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -69,6 +70,7 @@ export class Many2ManyTagsField extends Component {
             this.deleteTagByIndex.bind(this)
         );
         this.autoCompleteRef = useRef("autoComplete");
+        this.mutex = new Mutex();
 
         const { saveRecord, removeRecord } = useX2ManyCrud(
             () => this.props.record.data[this.props.name],
@@ -149,8 +151,11 @@ export class Many2ManyTagsField extends Component {
     }
 
     async deleteTagByIndex(index) {
-        const { id } = this.tags[index] || {};
-        this.deleteTag(id);
+        this.mutex.exec(() => {
+            if (this.tags[index]) {
+                return this.deleteTag(this.tags[index].id);
+            }
+        });
     }
 
     async deleteTag(id) {

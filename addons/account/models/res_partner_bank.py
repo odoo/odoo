@@ -291,7 +291,7 @@ class ResPartnerBank(models.Model):
         if ('acc_number' in vals or 'partner_id' in vals) and not should_allow_changes:
             raise UserError(_("You cannot modify the account number or partner of an account that has been trusted."))
 
-        if 'allow_out_payment' in vals and not self.user_has_groups('account.group_validate_bank_account'):
+        if 'allow_out_payment' in vals and not self.user_has_groups('account.group_validate_bank_account') and not self.env.su:
             raise UserError(_("You do not have the rights to trust or un-trust accounts."))
 
         res = super().write(vals)

@@ -251,8 +251,10 @@ class TestCase(_TestCase):
     @property
     def canonical_tag(self):
         module = self.__module__
-        if module.startswith('odoo.addons.'):
-            module = module[12:]
+        for prefix in ('odoo.addons.', 'odoo.upgrade.'):
+            if module.startswith(prefix):
+                module = module[len(prefix):]
+
         module = module.replace('.', '/')
         return f'/{module}.py:{self.__class__.__name__}.{self._testMethodName}'
 

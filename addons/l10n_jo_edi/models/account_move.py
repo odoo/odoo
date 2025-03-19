@@ -4,6 +4,7 @@ import uuid
 from werkzeug.urls import url_encode
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 JOFOTARA_URL = "https://backend.jofotara.gov.jo/core/invoices/"
 
@@ -27,6 +28,11 @@ class AccountMove(models.Model):
         copy=False,
         readonly=True,
         help="Jordan: Error details.",
+    )
+    l10n_jo_edi_computed_xml = fields.Binary(
+        string="Jordan E-Invoice computed XML File",
+        compute="_compute_l10n_jo_edi_computed_xml",
+        help="Jordan: technical field computing e-invoice XML data, useful at submission failure scenarios.",
     )
     l10n_jo_edi_xml_attachment_file = fields.Binary(
         string="Jordan E-Invoice XML File",
@@ -63,6 +69,24 @@ class AccountMove(models.Model):
         for invoice in self:
             if invoice.l10n_jo_edi_is_needed and not invoice.l10n_jo_edi_uuid:
                 invoice.l10n_jo_edi_uuid = uuid.uuid4()
+
+    def _compute_l10n_jo_edi_computed_xml(self):
+        for invoice in self:
+            xml_content = self.env['account.edi.xml.ubl_21.jo']._export_invoice(invoice)[0]
+            invoice.l10n_jo_edi_computed_xml = base64.b64encode(xml_content)
+
+    def download_l10n_jo_edi_computed_xml(self):
+        if error_message := self._l10n_jo_validate_config() or self._l10n_jo_validate_fields():
+            raise ValidationError(_("The following errors have to be fixed in order to create an XML:\n") + error_message)
+        params = url_encode({
+            'model': self._name,
+            'id': self.id,
+            'field': 'l10n_jo_edi_computed_xml',
+            'filename': self._l10n_jo_edi_get_xml_attachment_name(),
+            'mimetype': 'application/xml',
+            'download': 'true',
+        })
+        return {'type': 'ir.actions.act_url', 'url': '/web/content/?' + params, 'target': 'new'}
 
     def _l10n_jo_qr_code_src(self):
         self.ensure_one()
@@ -125,6 +149,7 @@ class AccountMove(models.Model):
             return _("Request failed: %s", response.content.decode())
         dict_response = response.json()
         self.l10n_jo_edi_qr = str(dict_response.get('EINV_QR', ''))
+        self.invoice_pdf_report_id.res_field = False
         self.env["ir.attachment"].create(
             {
                 "res_model": "account.move",
@@ -138,6 +163,8 @@ class AccountMove(models.Model):
             fnames=[
                 "l10n_jo_edi_xml_attachment_id",
                 "l10n_jo_edi_xml_attachment_file",
+                "invoice_pdf_report_id",
+                "invoice_pdf_report_file",
             ]
         )
 

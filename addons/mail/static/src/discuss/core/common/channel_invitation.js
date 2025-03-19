@@ -8,6 +8,7 @@ import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useSequential } from "@mail/utils/common/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 
 export class ChannelInvitation extends Component {
     static components = { ImStatus, ActionPanel };
@@ -32,6 +33,7 @@ export class ChannelInvitation extends Component {
             selectedPartners: [],
             searchResultCount: 0,
         });
+        this.debouncedFetchPartnersToInvite = useDebounced(this.fetchPartnersToInvite.bind(this), 250);
         onWillStart(() => {
             if (this.store.user) {
                 this.fetchPartnersToInvite();
@@ -65,7 +67,7 @@ export class ChannelInvitation extends Component {
 
     onInput() {
         this.searchStr = this.inputRef.el.value;
-        this.fetchPartnersToInvite();
+        this.debouncedFetchPartnersToInvite();
     }
 
     onClickSelectablePartner(partner) {

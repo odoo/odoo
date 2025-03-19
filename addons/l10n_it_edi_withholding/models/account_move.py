@@ -5,6 +5,7 @@ import logging
 from collections import namedtuple
 from markupsafe import Markup
 from odoo import _, api, fields, models
+from odoo.addons.l10n_it_edi.models.account_move import get_float
 
 _logger = logging.getLogger(__name__)
 
@@ -220,27 +221,13 @@ class AccountMove(models.Model):
             data_kind, data_text = data_kind_element[0].text.lower(), text_element[0].text.lower()
             if data_kind == 'cassa-prev' and ('enasarco' in data_text or 'tc07' in data_text):
                 number_element = other_data_element.xpath("./RiferimentoNumero")
-                if not number_element:
+                if not number_element or not price_subtotal:
                     continue
-
-                if price_subtotal:
-                    base_amount = price_subtotal
-                    target_lines = move_line_form
-                else:
-                    # In case it's found on a line with a price of 0.0,
-                    # ENASARCO pension fund contribution will be applied
-                    # on the total amount of the invoice instead.
-                    # When we do, then there is no need for the zero-priced line,
-                    # so we can unlink it.
-                    base_amount = move_line_form.move_id.amount_untaxed
-                    target_lines = move_line_form.move_id.invoice_line_ids - move_line_form
-                    move_line_form.unlink()
-
                 enasarco_amount = float(number_element[0].text)
-                enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / base_amount * 100)
+                enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / price_subtotal * 100)
                 domain = [('l10n_it_pension_fund_type', '=', 'TC07')] + type_tax_use_domain
                 if enasarco_tax := self._l10n_it_edi_search_tax_for_import(company, enasarco_percentage, domain, vat_only=False):
-                    target_lines.tax_ids |= enasarco_tax
+                    move_line_form.tax_ids |= enasarco_tax
                 else:
                     messages_to_log.append(Markup("%s<br/>%s") % (
                         _("Enasarco tax not found for line with description '%s'", move_line_form.name),
@@ -252,3 +239,47 @@ class AccountMove(models.Model):
                         move_line_form.tax_ids |= pension_fund_tax
 
         return messages_to_log
+
+    def _l10n_it_edi_import_invoice(self, invoice, data, is_new):
+        """ Handle the case where ENASARCO pension fund contribution should be applied on the invoice globally.
+        In this case, there should only be one element with ENASARCO and these conditions should be fulfilled:
+         - AliquotaIVA is defined
+         - PrezzoUnitario == 0.0
+         - a corresponding DatiRiepilogo with the same AliquotaIVA and a ImponibileImporto
+        """
+        res = super()._l10n_it_edi_import_invoice(invoice=invoice, data=data, is_new=is_new)
+        if not res:
+            return
+        self = res
+        tree = data['xml_tree']
+        global_enasarco_lines = []
+        for additional_data_element in tree.xpath('//AltriDatiGestionali'):
+            data_kind = additional_data_element.xpath('./TipoDato')[0].text.lower()
+            if data_kind == 'cassa-prev':
+                data_text = additional_data_element.xpath('./RiferimentoTesto')[0].text.lower()
+                if 'enasarco' in data_text or 'tc07' in data_text:
+                    parent_element = additional_data_element.xpath('..')[0]
+                    price_unit = get_float(parent_element, './PrezzoUnitario')
+                    if price_unit == 0.0:
+                        global_enasarco_lines.append(parent_element)
+
+        if len(global_enasarco_lines) == 1:
+            parent_element = global_enasarco_lines[0]
+            enasarco_amount = get_float(parent_element, './AltriDatiGestionali/RiferimentoNumero')
+            price_unit = get_float(parent_element, './PrezzoUnitario')
+            base_amount = self._get_l10_it_edi_get_taxable_amount_from_summary_data(parent_element.xpath('..')[0])
+            enasarco_percentage = -self.currency_id.round(enasarco_amount / base_amount * 100) if base_amount else 0.0
+            type_tax_use_domain = [('type_tax_use', '=', 'purchase' if self.is_outbound(include_receipts=True) else 'sale')]
+            domain = [('l10n_it_pension_fund_type', '=', 'TC07')] + type_tax_use_domain
+            if enasarco_tax := self._l10n_it_edi_search_tax_for_import(self.company_id, enasarco_percentage, domain, vat_only=False):
+                to_remove_index = int(get_float(parent_element, './NumeroLinea')) - 1
+                self.invoice_line_ids[to_remove_index].unlink()
+                self.invoice_line_ids.tax_ids |= enasarco_tax
+
+        return self
+
+    def _get_l10_it_edi_get_taxable_amount_from_summary_data(self, element):
+        taxable_amount = 0.0
+        for summary_data_element in element.xpath('.//DatiRiepilogo'):
+            taxable_amount += get_float(summary_data_element, './/ImponibileImporto')
+        return taxable_amount

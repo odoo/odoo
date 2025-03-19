@@ -296,12 +296,15 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             self.assertEqual(self.withholding_purchase_tax_23, line.tax_ids.filtered(lambda x: x.l10n_it_withholding_reason == 'ZO'))
 
     def test_enasarco_tax_import_global(self):
-        """Test that if we have a ENASARCO line with a price of 0.0,
-        the pension fund contribution will be applied on the total
-        amount of the invoice instead of the line amount.
+        """Test that if we have a unique ENASARCO line with a price of 0.0,
+        the pension fund contribution will be applied on the total amount of
+        the invoice instead of the line amount because it's considered as global.
         """
         applied_xml = """
-            <xpath expr="//AltriDatiGestionali[RiferimentoNumero=29.75]" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=1]/AltriDatiGestionali" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=2]/AltriDatiGestionali" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=3]/AltriDatiGestionali" position="replace"/>
+            <xpath expr="//DettaglioLinee[NumeroLinea=4]/AltriDatiGestionali" position="replace"/>
 
             <xpath expr="//DettaglioLinee[NumeroLinea=4]" position="after">
                 <DettaglioLinee>

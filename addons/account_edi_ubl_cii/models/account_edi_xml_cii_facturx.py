@@ -92,7 +92,7 @@ class AccountEdiXmlCII(models.AbstractModel):
     def _get_scheduled_delivery_time(self, invoice):
         # don't create a bridge only to get line.sale_line_ids.order_id.picking_ids.date_done
         # line.sale_line_ids.order_id.picking_ids.scheduled_date or line.sale_line_ids.order_id.commitment_date
-        return invoice.invoice_date
+        return invoice.delivery_date or invoice.invoice_date
 
     def _get_invoicing_period(self, invoice):
         # get the Invoicing period (BG-14): a list of dates covered by the invoice
@@ -240,7 +240,7 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         role = invoice.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
         name = self._find_value(f"//ram:{role}/ram:Name", tree)
-        mail = self._find_value(f"//ram:{role}//ram:URIID[@schemeID='SMTP']", tree)
+        mail = self._find_value(f"//ram:{role}//ram:URIID", tree)
         vat = self._find_value(f"//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID[string-length(text()) > 5]", tree)
         phone = self._find_value(f"//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber", tree)
         country_code = self._find_value(f'//ram:{role}/ram:PostalTradeAddress//ram:CountryID', tree)

@@ -55,14 +55,19 @@ class Generate2307Wizard(models.TransientModel):
                 'last_name': partner.last_name or '',
                 'address': ', '.join([val for val in partner_address_info if val])
             }
-            for invoice_line in move.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section')):
-                for tax in invoice_line.tax_ids.filtered(lambda x: x.l10n_ph_atc):
+            aggregated_taxes = move._prepare_invoice_aggregated_taxes()
+            for invoice_line, tax_details_for_line in aggregated_taxes['tax_details_per_record'].items():
+                for tax_detail in tax_details_for_line['tax_details'].values():
+                    tax = tax_detail['tax']
+                    if not tax.l10n_ph_atc:
+                        continue
+
                     product_name = invoice_line.product_id.name or invoice_line.name
                     values['product_name'] = re.sub(r'[\(\)]', '', product_name) if product_name else ""
                     values['atc'] = tax.l10n_ph_atc
-                    values['price_subtotal'] = invoice_line.price_subtotal
+                    values['price_subtotal'] = tax_detail['base_amount']
                     values['amount'] = tax.amount
-                    values['tax_amount'] = tax._compute_amount(invoice_line.price_subtotal, invoice_line.price_unit)
+                    values['tax_amount'] = tax_detail['tax_amount']
                     self._write_single_row(worksheet, worksheet_row, values)
                     worksheet_row += 1
 
