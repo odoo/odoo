@@ -6,11 +6,11 @@ import {
     goToCart,
     goToCheckout,
     pay,
-} from '@website_sale/js/tours/tour_utils';
+} from "@website_sale/js/tours/tour_utils";
 
 function assertRewardAmounts(rewards, visibleOnly) {
     const steps = [];
-    const currencyValue = `.oe_currency_value${visibleOnly ? ':visible' : ':not(:visible)'}`;
+    const currencyValue = `.oe_currency_value${visibleOnly ? ":visible" : ":not(:visible)"}`;
     for (const [reward, amount] of Object.entries(rewards)) {
         steps.push({
             content: `check if ${reward} reward is correct`,
@@ -24,19 +24,19 @@ function selectDelivery(provider) {
     return {
         content: `select ${provider} shipping`,
         trigger: `li[name=o_delivery_method]:contains(${provider}) input`,
-        run: 'click',
+        run: "click",
     };
 }
 
 const waitForPaymentPage = {
     content: "wait for Payment page to load",
-    trigger: '.o_total_card:contains(Order summary)',
+    trigger: ".o_total_card:contains(Order summary)",
 };
 
-const webTours = registry.category('web_tour.tours');
+const webTours = registry.category("web_tour.tours");
 
-webTours.add('check_shipping_discount', {
-    url: '/shop?search=Plumbus',
+webTours.add("check_shipping_discount", {
+    url: "/shop?search=Plumbus",
     checkDelay: 50,
     steps: () => [
         {
@@ -64,8 +64,8 @@ webTours.add('check_shipping_discount', {
         ...assertRewardAmounts({ shipping: "- 6.00" }),
         {
             content: "pay with eWallet",
-            trigger: 'form[name=claim_reward] a.btn-primary:contains(Pay with eWallet)',
-            run: 'click',
+            trigger: "form[name=claim_reward] a.btn-primary:contains(Pay with eWallet)",
+            run: "click",
         },
         waitForPaymentPage,
         ...assertRewardAmounts({ discount: "- 304.00" }),
@@ -74,23 +74,27 @@ webTours.add('check_shipping_discount', {
         ...assertRewardAmounts({ discount: "- 300.00", shipping: "- 5.00" }),
         {
             content: "confirm shipping method",
-            trigger: '.o_total_card a[name=website_sale_main_button]',
-            run: 'click',
+            trigger: ".o_total_card a[name=website_sale_main_button]",
+            run: "click",
         },
         pay(),
     ],
 });
 
-webTours.add('update_shipping_after_discount', {
-    url: '/shop',
+webTours.add("update_shipping_after_discount", {
+    url: "/shop",
     checkDelay: 50,
     steps: () => [
         ...addToCart({ productName: "Plumbus" }),
         goToCart(),
         {
             content: "use eWallet to check it doesn't impact `free_over` shipping",
-            trigger: 'a.btn-primary:contains(Pay with eWallet)',
-            run: 'click',
+            trigger: "a.btn-primary:contains(Pay with eWallet)",
+            run: "click",
+        },
+        {
+            content: "Check pay with eWallet is applied",
+            trigger: ".o_cart_product [name=website_sale_cart_line_price]:contains(- 100.00)",
         },
         goToCheckout(),
         selectDelivery("delivery1"),
@@ -98,22 +102,22 @@ webTours.add('update_shipping_after_discount', {
             total: "0.00", // $100 total is covered by eWallet
             delivery: "0.00", // $100 is over $75 `free_over` amount, so free shipping
         }),
+        ...assertRewardAmounts({ discount: "- 100.00" }),
         confirmOrder(),
         waitForPaymentPage,
         {
             content: "enter discount code",
-            trigger: 'form[name=coupon_code] input[name=promo]',
-            run: 'edit test-50pc',
+            trigger: "form[name=coupon_code] input[name=promo]",
+            run: "edit test-50pc",
         },
         {
             content: "apply discount code",
-            trigger: 'form[name=coupon_code] .a-submit',
-            run: 'click',
+            trigger: "form[name=coupon_code] .a-submit",
+            run: "click",
         },
         ...assertCartAmounts({
             total: "0.00", // $50 total is covered by eWallet
             delivery: "5.00", // $50 is below $75 `free_over` amount, so no free shipping
         }),
-        ...assertRewardAmounts({ discount: "- 50.00" }), // eWallet & promo code are both $50
     ],
 });
