@@ -613,16 +613,9 @@ class TestAPI(MailCommon, TestRecipients):
         expected_all = [
             # nobody to suggest (no public !)
             [],
-            # FIXME should be nobody to suggest (no root !)
-            [
-                {
-                    'create_values': {},
-                    'email': self.user_root.email_normalized,
-                    'name': self.user_root.name,
-                    'partner_id': self.user_root.partner_id.id,
-                },
-            ],
-            # only valid is the customer FIXME and not alias domain bits !
+            #nobody to suggest (no root !)
+            [],
+            # only valid is the customer
             [
                 {
                     'create_values': {},
@@ -630,45 +623,14 @@ class TestAPI(MailCommon, TestRecipients):
                     'name': self.test_partner.name,
                     'partner_id': self.test_partner.id,
                 },
-            ] + [
-                {
-                    'create_values': {},
-                    'email': 'catchall.test@test.mycompany.com',
-                    'name': self.test_partner_catchall.name,
-                    'partner_id': self.test_partner_catchall.id,
-                },
-            ] + [
-                {
-                    'create_values': {},
-                    'email': tools.mail.email_normalize(domain),
-                    'name': tools.mail.email_split_tuples(domain)[0][0],
-                    'partner_id': False,
-                } for domain in domains_cc_list if tools.mail.email_normalize(domain) != 'catchall.test@test.mycompany.com'
             ],
-            # only valid is the customer FIXME and not aliases !
+            # only valid is the customer (and not aliases nor partner with alias email)
             [
                 {
                     'create_values': {},
                     'email': self.test_partner_archived.email_normalized,
                     'name': self.test_partner_archived.name,
                     'partner_id': self.test_partner_archived.id,
-                },
-            ] + [
-                {
-                    'create_values': {},
-                    'email': self.test_partner_alias.email_normalized,
-                    'name': self.test_partner_alias.name,
-                    'partner_id': self.test_partner_alias.id,
-                }, {
-                    'create_values': {},
-                    'email': self.test_partner_catchall.email_normalized,
-                    'name': self.test_partner_catchall.name,
-                    'partner_id': self.test_partner_catchall.id,
-                }, {
-                    'create_values': {},
-                    'email': 'bounce.test@test.mycompany.com',
-                    'name': '',
-                    'partner_id': False,
                 },
             ],
         ]
