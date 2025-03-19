@@ -31,7 +31,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-burger.png"/>
             <field name="available_in_pos" eval="True"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]" />
         </record>
 
@@ -90,7 +90,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-cheeseburger.png"/>
             <field name="available_in_pos" eval="True"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]" />
         </record>
 
@@ -118,7 +118,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pizza-ma.png"/>
             <field name="available_in_pos" eval="True"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]" />
         </record>
 
@@ -223,7 +223,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pizza-ve.png"/>
             <field name="available_in_pos" eval="True"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]" />
         </record>
 
@@ -297,7 +297,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pasta-4f.png"/>
             <field name="available_in_pos" eval="True"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]" />
         </record>
 
@@ -359,7 +359,7 @@
             <field name="name">Funghi</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pizza-fu.png"/>
         </record>
         <record id="pos_food_bolo" model="product.product">
@@ -368,7 +368,7 @@
             <field name="name">Pasta Bolognese</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pasta.png"/>
         </record>
         <record id="pos_food_chicken" model="product.product">
@@ -377,7 +377,7 @@
             <field name="name">Chicken Curry Sandwich</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-sandwich.png"/>
         </record>
         <record id="pos_food_tuna" model="product.product">
@@ -386,7 +386,7 @@
             <field name="name">Spicy Tuna Sandwich</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-tuna.png"/>
         </record>
         <record id="pos_food_mozza" model="product.product">
@@ -395,7 +395,7 @@
             <field name="name">Mozzarella Sandwich</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-mozza.png"/>
         </record>
         <record id="pos_food_club" model="product.product">
@@ -404,7 +404,7 @@
             <field name="name">Club Sandwich</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-club.png"/>
         </record>
         <record id="pos_food_maki" model="product.product">
@@ -413,7 +413,7 @@
             <field name="name">Lunch Maki 18pc</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-maki.png"/>
         </record>
         <record id="pos_food_salmon" model="product.product">
@@ -422,7 +422,7 @@
             <field name="name">Lunch Salmon 20pc</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-salmon.png"/>
         </record>
         <record id="pos_food_temaki" model="product.product">
@@ -431,7 +431,7 @@
             <field name="name">Lunch Temaki mix 3pc</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-temaki.png"/>
         </record>
         <record id="pos_food_chirashi" model="product.product">
@@ -440,7 +440,7 @@
             <field name="name">Salmon and Avocado</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-salmon-avocado.png"/>
         </record>
 
@@ -451,7 +451,7 @@
             <field name="name">Coca-Cola</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-coke.png"/>
         </record>
 
@@ -461,7 +461,7 @@
             <field name="name">Water</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-water.png"/>
         </record>
 
@@ -471,7 +471,7 @@
             <field name="name">Minute Maid</field>
             <field name="weight">0.01</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-minute_maid.png"/>
         </record>
 
@@ -480,7 +480,7 @@
             <field name="list_price">4.70</field>
             <field name="name">Espresso</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-espresso.png"/>
         </record>
 
@@ -489,7 +489,7 @@
             <field name="list_price">4.70</field>
             <field name="name">Green Tea</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-green_tea.png"/>
         </record>
 
@@ -498,7 +498,7 @@
             <field name="list_price">3.60</field>
             <field name="name">Milkshake Banana</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-milkshake_banana.png"/>
         </record>
 
@@ -507,7 +507,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Ice Tea</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-ice_tea.png"/>
         </record>
 
@@ -516,7 +516,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Schweppes</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-schweppes.png"/>
         </record>
 
@@ -525,7 +525,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Fanta</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-fanta.png"/>
         </record>
 
@@ -583,7 +583,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/combo-hamb.png"/>
             <field name="combo_ids" eval="[(6, 0, [ref('drink_combo'), ref('burger_combo')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
             <field name="supplier_taxes_id" eval="[(5,)]"/>
