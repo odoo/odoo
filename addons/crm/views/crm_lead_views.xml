@@ -68,12 +68,20 @@
                                 </div>
                                 <div class="col-auto">
                                     <label for="probability" class="d-inline-block"/>
-                                    <button class="d-inline-block px-2 py-0 btn btn-link" name="action_set_automated_probability" type="object"
-                                            invisible="is_automated_probability">
-                                        <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
-                                    </button>
-                                    <small class="d-inline-block opacity-50 h6 mb-0" invisible="is_automated_probability">
-                                        <field class="mb-0" name="automated_probability" force_save="1"/> %
+                                    <a class="border-0 mx-1 p-0 mb-1 mb-md-0 btn btn-light"
+                                        name="action_set_automated_probability"
+                                        role="button" type="object"
+                                        invisible="is_automated_probability or won_status == 'lost'">
+                                            <img class="m-1 o_lead_opportunity_form_AI_switch_img"
+                                                title="Switch to AI-computed probabilities"
+                                                aria-label="Switch to AI-computed probabilities"
+                                                src="/crm/static/src/img/pls-tooltip-ai-icon.png"
+                                                alt="AI"/>
+                                    </a>
+                                    <widget name="pls_tooltip_button" class="d-inline-block"
+                                        invisible="won_status != 'pending' or not is_automated_probability"/>
+                                    <small class="d-inline-block opacity-50 h6 mb-0" invisible="is_automated_probability or won_status == 'lost'">
+                                        ~<field class="mb-0" name="automated_probability" force_save="1"/> %
                                     </small>
                                     <div id="probability" class="d-flex align-items-baseline">
                                         <field name="is_automated_probability" invisible="1"/>
