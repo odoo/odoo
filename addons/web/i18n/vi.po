@@ -468,12 +468,12 @@ msgstr "9:30"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -489,6 +489,11 @@ msgid ""
 "                            </select>\n"
 "                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead to partially invalid result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id=\"profile_aggregation_mode\">\n"
+"                                <option value=\"tabs\">Tách biệt (một mục trên mỗi tab)</option>\n"
+"                                <option value=\"temporal\">Thời gian (thử nghiệm)</option>\n"
+"                            </select>\n"
+"                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Cảnh báo:</b> Chế độ Thời gian sẽ hợp nhất tất cả các mẫu. <br/>Điều này có thể dẫn đến kết quả không hợp lệ một phần trong trường hợp có các hồ sơ đồng thời.<br/> Hãy sử dụng cẩn trọng.</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -830,7 +835,7 @@ msgstr "Tác vụ"
 #. odoo-javascript
 #: code:addons/web/static/src/search/cog_menu/cog_menu.xml:0
 msgid "Actions menu"
-msgstr ""
+msgstr "Menu tác vụ"
 
 #. module: web
 #. odoo-javascript
@@ -1013,12 +1018,12 @@ msgstr "Châu Phi"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregate SQL"
-msgstr ""
+msgstr "SQL tổng hợp"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregation mode"
-msgstr ""
+msgstr "Chế độ tổng hợp"
 
 #. module: web
 #. odoo-javascript
@@ -1921,7 +1926,7 @@ msgstr "Đã khôi phục kết nối. Bạn đã online trở lại."
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Constant Time"
-msgstr ""
+msgstr "Thời gian không đổi"
 
 #. module: web
 #: model:ir.model,name:web.model_res_partner
@@ -2071,7 +2076,7 @@ msgstr "Số tập dữ liệu"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Count Limit"
-msgstr ""
+msgstr "Giới hạn số lượng"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
@@ -2155,7 +2160,7 @@ msgstr "Tiền tệ"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Current state is %s"
-msgstr ""
+msgstr "Trạng thái hiện tại là %s"
 
 #. module: web
 #. odoo-javascript
@@ -2510,7 +2515,7 @@ msgstr "Hiển thị trong thẻ"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Display presets"
-msgstr ""
+msgstr "Hiển thị cài đặt sẵn"
 
 #. module: web
 #. odoo-javascript
@@ -2718,7 +2723,7 @@ msgstr "Chỉnh sửa thẻ"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Edit favorite"
-msgstr ""
+msgstr "Chỉnh sửa danh sách yêu thích"
 
 #. module: web
 #. odoo-javascript
@@ -2793,7 +2798,7 @@ msgstr "Doanh nghiệp"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Entry Count"
-msgstr ""
+msgstr "Số lượng mục nhập"
 
 #. module: web
 #. odoo-javascript
@@ -2918,7 +2923,7 @@ msgstr "Hệ số"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_model.js:0
 msgid "Failed to evaluate the context: %(context)s."
-msgstr ""
+msgstr "Không thể đánh giá bối cảnh: %(context)s."
 
 #. module: web
 #. odoo-javascript
@@ -2966,7 +2971,7 @@ msgstr "Đu quay"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 msgid "Field Selector"
-msgstr ""
+msgstr "Bộ chọn trường"
 
 #. module: web
 #. odoo-javascript
@@ -3127,12 +3132,12 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames"
-msgstr ""
+msgstr "Khung"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames + sql (Combined)"
-msgstr ""
+msgstr "Khung + SQL (Kết hợp)"
 
 #. module: web
 #. odoo-javascript
@@ -4464,7 +4469,7 @@ msgstr "Văn bản nhiều dòng"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Multiple profile"
-msgstr ""
+msgstr "Nhiều hồ sơ"
 
 #. module: web
 #. odoo-javascript
@@ -4776,7 +4781,7 @@ msgstr "Không phải là một %s hợp lệ"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Not active state, click to change it to %s"
-msgstr ""
+msgstr "Không phải trạng thái hoạt động, bấm để thay đổi thành %s"
 
 #. module: web
 #. odoo-javascript
@@ -5396,7 +5401,7 @@ msgstr "In"
 #. odoo-javascript
 #: code:addons/web/static/src/search/cog_menu/cog_menu.js:0
 msgid "Print report: %s"
-msgstr ""
+msgstr "In báo cáo: %s"
 
 #. module: web
 #. odoo-javascript
@@ -5812,12 +5817,12 @@ msgstr "Nút SOS"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "SQL density"
-msgstr ""
+msgstr "Mật độ SQL"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "SQL no gap"
-msgstr ""
+msgstr "SQL không có khoảng trống"
 
 #. module: web
 #. odoo-javascript
@@ -6729,7 +6734,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "This date is in the future"
-msgstr ""
+msgstr "Ngày này ở trong tương lai"
 
 #. module: web
 #. odoo-javascript
@@ -7123,7 +7128,7 @@ msgstr "Bỏ chọn tất cả"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Unselected state is %s"
-msgstr ""
+msgstr "Trạng thái không được lựa chọn là %s"
 
 #. module: web
 #. odoo-python
@@ -7230,7 +7235,7 @@ msgstr "Sử dụng người dùng khác"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Use execution context"
-msgstr ""
+msgstr "Sử dụng ngữ cảnh thực thi"
 
 #. module: web
 #. odoo-javascript
@@ -15673,19 +15678,19 @@ msgstr "trong khoảng"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is equal"
-msgstr ""
+msgstr "bằng"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is greater"
-msgstr ""
+msgstr "lớn hơn"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is greater or equal"
-msgstr ""
+msgstr "lớn hơn hoặc bằng"
 
 #. module: web
 #. odoo-javascript
@@ -15697,13 +15702,13 @@ msgstr "trong"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is lower"
-msgstr ""
+msgstr "nhỏ hơn"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is lower or equal"
-msgstr ""
+msgstr "nhỏ hơn hoặc bằng"
 
 #. module: web
 #. odoo-javascript
@@ -15715,13 +15720,13 @@ msgstr "không được"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not between"
-msgstr ""
+msgstr "không nằm giữa"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not equal"
-msgstr ""
+msgstr "không bằng"
 
 #. module: web
 #. odoo-javascript
@@ -15739,7 +15744,7 @@ msgstr "không được thiết lập"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not within"
-msgstr ""
+msgstr "không nằm trong"
 
 #. module: web
 #. odoo-javascript
@@ -25172,7 +25177,7 @@ msgstr "virus"
 #. odoo-python
 #: code:addons/web/controllers/vcard.py:0
 msgid "vobject library is not installed"
-msgstr ""
+msgstr "Thư viện vobject chưa được cài đặt"
 
 #. module: web
 #. odoo-javascript

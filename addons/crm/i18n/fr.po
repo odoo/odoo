@@ -217,6 +217,8 @@ msgstr "<span class=\"opacity-50 p-2\"> %</span>"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads assigned the last 30 days out of a maximum of </span>"
 msgstr ""
+"<span> les pistes attribuées au cours des 30 derniers jours sur un maximum "
+"de </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -246,6 +248,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Attribuez périodiquement des pistes en fonction des priorités et des filtres.</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                     Toutes les équipes commerciales utiliseront ce paramètre par défaut, sauf\n"
+"                                    indication contraire.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -426,6 +433,8 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A lead in a Won stage cannot be lost. Move it to another stage first."
 msgstr ""
+"Une piste en phase \"Gagnée\" ne peut pas être perdue. Déplacez-la d'abord "
+"vers une autre phase."
 
 #. module: crm
 #. odoo-python
@@ -864,6 +873,9 @@ msgid ""
 "operations, as the probabilities of opportunities in this stage will be "
 "recomputed on saving."
 msgstr ""
+"Modifier la valeur de \"Est une phase gagnante\" peut entraîner un grand "
+"nombre d'opérations, car les probabilités des opportunités dans cette phase "
+"seront recalculées lors de l'enregistrement."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_tree
@@ -1400,7 +1412,7 @@ msgstr "Ne pas lier à un client"
 #. odoo-python
 #: code:addons/crm/models/crm_stage.py:0
 msgid "Do you really want to update this stage?"
-msgstr ""
+msgstr "Voulez-vous vraiment mettre à jour cette phase ?"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -2031,12 +2043,12 @@ msgstr "Assignation de la piste"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment"
-msgstr ""
+msgstr "Attribution des pistes"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment Filter"
-msgstr ""
+msgstr "Filtre d'attribution des pistes"
 
 #. module: crm
 #. odoo-python
@@ -2072,7 +2084,7 @@ msgstr "Plans de la piste"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Priority Filter"
-msgstr ""
+msgstr "Filtre de priorité des pistes"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
@@ -2487,6 +2499,8 @@ msgid ""
 "Member preferred assignment domain for user %(user)s and team %(team)s is "
 "incorrectly formatted"
 msgstr ""
+"Le domaine d'attribution préféré pour l'utilisateur %(user)s et l'équipe "
+"%(team)s est mal formaté."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2741,7 +2755,7 @@ msgstr "Pas assez de stock"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Not specified"
-msgstr ""
+msgstr "Non spécifié"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__description
@@ -3037,7 +3051,7 @@ msgstr "Le partenaire est sur liste noire"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_optout
 msgid "Pause assignment"
-msgstr ""
+msgstr "Mettre l'attribution en pause"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__pending
@@ -3152,7 +3166,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain_preferred
 msgid "Preference assignment Domain"
-msgstr ""
+msgstr "Domaine d'attribution préféré"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3691,7 +3705,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "The lead %s cannot be won and lost at the same time."
-msgstr ""
+msgstr "La piste %s ne peut pas être à la fois gagnée et perdue."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
@@ -4195,7 +4209,7 @@ msgstr "Nombre d'opportunités gagnées"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__won_status
 msgid "Won/Lost"
-msgstr ""
+msgstr "Gagnée/Perdue"
 
 #. module: crm
 #. odoo-python

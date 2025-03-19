@@ -3,9 +3,9 @@
 # 	* loyalty
 # 
 # Translators:
-# Chloe Wang, 2025
 # Wil Odoo, 2025
 # Emily Jia <eji@odoo.com>, 2025
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2025\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +42,10 @@ msgid ""
 "         and used by reward.\n"
 "        "
 msgstr ""
+"\n"
+"        在客户门户网站、PoS 客户单据、电子商务结账页面中，显示可用积分\n"
+"         及奖励使用的积分。\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -363,6 +367,54 @@ msgid ""
 "</tbody></table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
+"<tr>\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        <t t-if=\"object._mail_get_customer().name\">\n"
+"            <t t-out=\"object._mail_get_customer().name or ''\">Brandon Freeman</t>，恭喜您！<br/>\n"
+"        </t>\n"
+"\n"
+"        这是 <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>给您的奖励。<br/>\n"
+"\n"
+"        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
+"            <t t-if=\"reward.required_points &lt;= object.points\">\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-esc=\"reward.description\">奖励说明</span>\n"
+"                <br/>\n"
+"            </t>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"<tr style=\"margin-top: 16px\">\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        使用此促销代码\n"
+"        <t t-if=\"object.expiration_date\">\n"
+"            有效期至 <t t-out=\"object.expiration_date or ''\">2021 年 6 月 16 日</t>\n"
+"        </t>\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\" t-out=\"object.code or ''\">15637502648479132902</strong>\n"
+"        </p>\n"
+"        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
+"            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    最少采购 <t t-out=\"rule.minimum_qty or ''\">10</t> 件产品\n"
+"                </span><br/>\n"
+"            </t>\n"
+"            <t t-if=\"rule.minimum_amount != 0.00\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    采购额高于 <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>有效\n"
+"                </span><br/>\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/>\n"
+"        谢谢！\n"
+"        <t t-if=\"object._get_signature()\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object._get_signature() or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -1402,7 +1454,7 @@ msgstr "会员积分"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__available_on
 msgid "Manage where your program should be available for use."
-msgstr ""
+msgstr "管理您的程序应在何处使用。"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
@@ -2044,7 +2096,7 @@ msgstr "生成优惠券时，您可以定义可以兑换奖励的特定积分值
 msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid..."
-msgstr ""
+msgstr "是否按匹配单位分离奖励优惠券，仅适用于 “未来”计划，以及按消费金额或支付单位触发模式..."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -2163,7 +2215,7 @@ msgstr "会员奖赏"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "mail.template"
-msgstr ""
+msgstr "mail.template"
 
 #. module: loyalty
 #. odoo-python

@@ -468,12 +468,12 @@ msgstr "9:30"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -489,6 +489,11 @@ msgid ""
 "                            </select>\n"
 "                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead to partially invalid result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id=\"profile_aggregation_mode\">\n"
+"                                <option value=\"tabs\">分割 (タブごとに1つ)</option>\n"
+"                                <option value=\"temporal\">Temporal (実験的)</option>\n"
+"                            </select>\n"
+"                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>警告:</b> Temporalモードでは、全てのサンプルが統合されます。<br/>同時実行されるプロファイルがある場合、一部の結果が無効になる場合があります。<br/>慎重に使用して下さい </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1011,12 +1016,12 @@ msgstr "アフリカ"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregate SQL"
-msgstr ""
+msgstr "集計 SQL"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregation mode"
-msgstr ""
+msgstr "集計モード"
 
 #. module: web
 #. odoo-javascript
@@ -1901,7 +1906,7 @@ msgstr "接続が復活しました。オンラインです。"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Constant Time"
-msgstr ""
+msgstr "一定時間"
 
 #. module: web
 #: model:ir.model,name:web.model_res_partner
@@ -2047,7 +2052,7 @@ msgstr "カウント"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Count Limit"
-msgstr ""
+msgstr "カウント限度"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
@@ -2482,7 +2487,7 @@ msgstr "カード上の表示"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Display presets"
-msgstr ""
+msgstr "プリセットを表示"
 
 #. module: web
 #. odoo-javascript
@@ -2889,7 +2894,7 @@ msgstr "要素"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_model.js:0
 msgid "Failed to evaluate the context: %(context)s."
-msgstr ""
+msgstr "以下のコンテキストの評価に失敗しました: %(context)s."
 
 #. module: web
 #. odoo-javascript
@@ -3092,12 +3097,12 @@ msgstr "言語設定に応じて 値をフォーマットする - 例: 千分�
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames"
-msgstr ""
+msgstr "フレーム"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames + sql (Combined)"
-msgstr ""
+msgstr "フレーム + sql (統合)"
 
 #. module: web
 #. odoo-javascript
@@ -4414,7 +4419,7 @@ msgstr "複数行テキスト"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Multiple profile"
-msgstr ""
+msgstr "複数プロファイル"
 
 #. module: web
 #. odoo-javascript
@@ -4812,7 +4817,7 @@ msgstr "Odooクライアントエラー"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 msgid "Odoo Enterprise"
-msgstr "Odooエンタープライズ"
+msgstr "Odoo企業版"
 
 #. module: web
 #. odoo-javascript
@@ -5753,12 +5758,12 @@ msgstr "SOSボタン"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "SQL density"
-msgstr ""
+msgstr "SQL 密度"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "SQL no gap"
-msgstr ""
+msgstr "SQL ギャップなし"
 
 #. module: web
 #. odoo-javascript
@@ -6654,7 +6659,7 @@ msgstr "このブロックは、印刷される文書によっては必ずしも
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "This date is in the future"
-msgstr ""
+msgstr "この日付は未来です"
 
 #. module: web
 #. odoo-javascript
@@ -7147,7 +7152,7 @@ msgstr "他のユーザを使用"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Use execution context"
-msgstr ""
+msgstr "実行コンテキストを使用"
 
 #. module: web
 #. odoo-javascript
@@ -15618,7 +15623,7 @@ msgstr "が次ではない"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not between"
-msgstr ""
+msgstr "以下の間にない:"
 
 #. module: web
 #. odoo-javascript
@@ -15642,7 +15647,7 @@ msgstr "は設定なし"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not within"
-msgstr ""
+msgstr "以下の範囲内ではない:"
 
 #. module: web
 #. odoo-javascript

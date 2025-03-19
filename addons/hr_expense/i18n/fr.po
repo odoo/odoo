@@ -1289,14 +1289,14 @@ msgid ""
 "New expenses are awaiting your approval.\n"
 "                You can review them by following this link"
 msgstr ""
-"De nouvelles dépenses attendent votre approbation.\n"
+"De nouvelles dépenses attendent votre validation.\n"
 "                Vous pouvez les examiner en suivant ce lien."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New expenses waiting for your approval"
-msgstr "Nouvelles dépenses en attente d’approbation"
+msgstr "Nouvelles dépenses en attente de validation"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
@@ -1412,7 +1412,7 @@ msgid ""
 "wait for approval."
 msgstr ""
 "Une fois votre <b>note de frais prête</b>, vous pouvez l'envoyer à votre "
-"responsable et attendre son approbation."
+"responsable et attendre sa validation."
 
 #. module: hr_expense
 #. odoo-python
@@ -1420,24 +1420,28 @@ msgstr ""
 msgid ""
 "Only HR Officers, accountants, or the concerned employee can reset to draft."
 msgstr ""
+"Seuls les responsables RH, les comptables ou l'employé concerné peuvent "
+"réinitialiser en brouillon."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only draft expenses can have a total of 0."
-msgstr ""
+msgstr "Seules les notes de frais en brouillon peuvent avoir un total de 0."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only expense paid by the employee can be posted with the wizard"
 msgstr ""
+"Seules les dépenses payées par l'employé peuvent être comptabilisées avec "
+"l'assistant."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only one expense can be linked to a particular payment"
-msgstr ""
+msgstr "Une seule dépense peut être liée à un paiement spécifique."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1470,12 +1474,12 @@ msgstr "Payé par"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Company"
-msgstr ""
+msgstr "Payé par l'entreprise"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Employee"
-msgstr ""
+msgstr "Payé par l'employé"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
@@ -1527,6 +1531,8 @@ msgstr "Factures de téléphone, frais de port, etc."
 msgid ""
 "Please specify if the expenses were paid by the company, or the employee."
 msgstr ""
+"Veuillez préciser si les dépenses ont été payées par l'entreprise ou par "
+"l'employé."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1537,7 +1543,7 @@ msgstr "Enregistrer les écritures"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Post Expenses"
-msgstr ""
+msgstr "Comptabiliser les dépenses"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1548,13 +1554,13 @@ msgstr "Enregistrer les pièces comptables"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses"
-msgstr ""
+msgstr "Comptabiliser les dépenses"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses paid by the employee"
-msgstr ""
+msgstr "Comptabiliser les dépenses payées par l'employé"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__posted
@@ -2001,6 +2007,8 @@ msgstr "La somme après le fractionnement reste identique"
 msgid ""
 "The work email of some employees is missing. Please add it on their form."
 msgstr ""
+"L'e-mail professionnel de certains employés est manquant. Veuillez l'ajouter"
+" à leur fiche."
 
 #. module: hr_expense
 #. odoo-python
@@ -2034,7 +2042,7 @@ msgstr "Astuce : envoyer les justificatifs par e-mail"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Post"
-msgstr ""
+msgstr "À comptabiliser"
 
 #. module: hr_expense
 #. odoo-python
@@ -2076,7 +2084,7 @@ msgstr "Total des taxes"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Total Untaxed Amount"
-msgstr ""
+msgstr "Montant total hors taxes"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount_currency
@@ -2168,7 +2176,7 @@ msgstr "Voir la note de frais"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "View expenses"
-msgstr ""
+msgstr "Voir les dépenses"
 
 #. module: hr_expense
 #. odoo-python
@@ -2182,7 +2190,7 @@ msgstr "En attente de validation"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Waiting Reimbursement"
-msgstr ""
+msgstr "En attente de remboursement"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2235,7 +2243,7 @@ msgstr "Vous n'êtes pas autorisé à modifier cette note de frais."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can not submit an expense without a category."
-msgstr ""
+msgstr "Vous ne pouvez pas soumettre une dépense sans catégorie."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2258,6 +2266,8 @@ msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
 msgstr ""
+"Vous ne pouvez pas comptabiliser simultanément des dépenses payées par "
+"l'employé appartenant à différentes entreprises"
 
 #. module: hr_expense
 #. odoo-python
@@ -2274,6 +2284,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot cancel an expense linked to a posted journal entry"
 msgstr ""
+"Vous ne pouvez pas annuler une dépense liée à une écriture comptable validée"
 
 #. module: hr_expense
 #. odoo-python
@@ -2296,12 +2307,16 @@ msgstr ""
 msgid ""
 "You cannot do this modification since the payment is linked to an expense."
 msgstr ""
+"Vous ne pouvez pas effectuer cette modification car le paiement est lié à "
+"une dépense."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot edit the security fields of an expense manually"
 msgstr ""
+"Vous ne pouvez pas modifier manuellement les champs de sécurité d'une "
+"dépense"
 
 #. module: hr_expense
 #. odoo-python
@@ -2318,30 +2333,33 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a posted journal entry."
 msgstr ""
+"Vous ne pouvez pas réinitialiser en brouillon une dépense liée à une "
+"écriture comptable validée."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
-msgstr ""
+msgstr "Vous ne pouvez pas diviser une dépense déjà comptabilisée."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the required permission to submit this expense."
 msgstr ""
+"Vous n'avez pas les autorisations requises pour soumettre cette dépense."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
-msgstr ""
+msgstr "Vous n'avez pas les droits pour modifier cette dépense."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the rights to create accounting entries."
-msgstr ""
+msgstr "Vous n'avez pas les droits pour créer des écritures comptables."
 
 #. module: hr_expense
 #. odoo-python

@@ -669,6 +669,44 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'devis' if object.state in ('draft', 'sent') else 'commande'\"/>\n"
+"        Bonjour,\n"
+"        <br/><br/>\n"
+"        Votre <t t-out=\"doc_name or ''\">devis</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (avec la référence : <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        d'un montant de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10 €</span> attend votre validation.\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
+"        <t t-if=\"documents\">\n"
+"            <br/> \n"
+"            <t t-if=\"len(documents)&gt;1\">\n"
+"                Voici quelques documents supplémentaires qui pourraient vous intéresser :\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Voici un document supplémentaire qui pourrait vous intéresser :\n"
+"            </t>\n"
+"            <ul style=\"margin-bottom: 0;\">\n"
+"                <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\">\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                    </li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </t>\n"
+"        <br/>\n"
+"        N'hésitez pas à nous contacter si vous avez des questions.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_proforma
@@ -694,6 +732,26 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'devis' if object.state in ('draft', 'sent') else 'commande'\"/>\n"
+"        Bonjour,\n"
+"        <br/><br/>\n"
+"        Votre facture pro forma pour le <t t-out=\"doc_name or ''\">devis</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (avec la référence : <t t-out=\"object.origin or ''\"/> )\n"
+"        </t>\n"
+"        d'un montant de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10 €</span> est disponible.\n"
+"        <br/><br/>\n"
+"        N'hésitez pas à nous contacter si vous avez des questions.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1293,6 +1351,8 @@ msgid ""
 "Are you sure you want to cancel this order? This may affect related "
 "documents or processes."
 msgstr ""
+"Êtes-vous sûr de vouloir annuler cette commande ? Cela peut affecter les "
+"documents ou processus associés."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1617,7 +1677,7 @@ msgstr "Calculer les frais d'expédition et expédier avec Easypost"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
+msgstr "Calculer les frais d'expédition et expédier avec Envia.com"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2332,7 +2392,7 @@ msgstr "Saisissez une valeur personnalisée"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_envia
 msgid "Envia.com Connector"
-msgstr ""
+msgstr "Connecteur Envia.com"
 
 #. module: sale
 #. odoo-python
@@ -4588,7 +4648,7 @@ msgstr "Connecteur Shiprocket"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
 msgid "Shopee Sync"
-msgstr ""
+msgstr "Synchronisation Shopee"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter

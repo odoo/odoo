@@ -55,7 +55,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_view_tree
 msgid "# Public Holidays"
-msgstr ""
+msgstr "# Jours fériés"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2797,19 +2797,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset a refused leave."
-msgstr ""
+msgstr "Seul un gestionnaire des congés peut réinitialiser un congé refusé."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset a started leave."
-msgstr ""
+msgstr "Seul un gestionnaire des congés peut réinitialiser un congé en cours."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset other people leaves."
 msgstr ""
+"Seul un gestionnaire des congés peut réinitialiser les congés des autres."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2818,6 +2819,8 @@ msgid ""
 "Only a Time Off Officer or Administrator can approve/refuse its own "
 "requests."
 msgstr ""
+"Seul un responsable ou un gestionnaire des congés peut approuver/refuser ses"
+" propres demandes."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3895,7 +3898,7 @@ msgstr "Type de congés"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Time Off Type's Name"
-msgstr ""
+msgstr "Nom du type de congé"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
@@ -4527,6 +4530,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Time Off Approver to approve this leave"
 msgstr ""
+"Vous devez être l'approbateur de congés de %s pour approuver ce congé."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4535,6 +4539,8 @@ msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "approve this leave"
 msgstr ""
+"Vous devez être soit l'approbateur de congés de %s, soit le gestionnaire des"
+" congés pour approuver ce congé."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4553,6 +4559,8 @@ msgid ""
 "You must either be a Time off Officer or Time off Administrator to approve "
 "this leave"
 msgstr ""
+"Vous devez être soit un responsable des congés, soit un gestionnaire des "
+"congés pour approuver ce congé."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero

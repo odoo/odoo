@@ -490,6 +490,11 @@ msgid ""
 "                            </select>\n"
 "                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead to partially invalid result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id=\"profile_aggregation_mode\">\n"
+"                                <option value=\"tabs\">분리됨 (탭당 하나)</option>\n"
+"                                <option value=\"temporal\">임시 (테스트용)</option>\n"
+"                            </select>\n"
+"                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>경고:</b> 임시 모드에서는 샘플이 모두 병합됩니다.<br/>동시 프로필의 경우 일부 결과가 잘못될 수 있습니다.<br/>주의해서 사용하세요. </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -2891,7 +2896,7 @@ msgstr "요소"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_model.js:0
 msgid "Failed to evaluate the context: %(context)s."
-msgstr ""
+msgstr "컨텍스트를 평가하지 못했습니다: %(context)s."
 
 #. module: web
 #. odoo-javascript
@@ -3099,7 +3104,7 @@ msgstr "프레임"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames + sql (Combined)"
-msgstr ""
+msgstr "프레임 + SQL (결합)"
 
 #. module: web
 #. odoo-javascript

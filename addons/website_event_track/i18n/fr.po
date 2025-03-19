@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2025
-# Manon Rondou, 2025
 # Jolien De Paepe, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Jolien De Paepe, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,6 +119,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Bonjour <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    Nous avons le plaisir de vous informer que votre proposition <t t-out=\"object.name or ''\">Informations sur l'événement</t> a été acceptée et confirmée pour l'événement <t t-out=\"object.event_id.name or ''\">Révélation en ligne de la collection OpenWood</t>.\n"
+"    <br/>\n"
+"    Vous trouverez plus de détails ici :\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Voir la présentation\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Merci,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -1872,7 +1889,7 @@ msgstr "Bio de l'intervenant"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Speaker Name"
-msgstr ""
+msgstr "Nom de l'intervenant"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__image
@@ -2022,12 +2039,12 @@ msgstr "Merci pour votre proposition."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "L'URL absolue complète pour accéder au document via le site web."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "L'URL relative complète pour accéder au document via le site web."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
@@ -2463,7 +2480,7 @@ msgstr "Site Web"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "URL absolue du site web"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website__app_icon

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -342,6 +342,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Xin chào <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Tôi rất vui mừng được thông báo với bạn rằng chúng tôi đã hoàn thành dự án \"<strong t-out=\"object.name or ''\">Cải tiến</strong>\" thành công .\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Bạn nhận được email này vì dự án của bạn đã được chuyển sang giai đoạn <b t-out=\"object.stage_id.name or ''\">Hoàn tất</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -360,6 +370,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Xin chào <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"    Cảm ơn bạn đã liên lạc và quan tâm đến sản phẩm/dịch vụ của chúng tôi.<br/>\n"
+"    Chúng tôi hiện đang xem xét trường hợp này và sẽ trả lời email của bạn sớm nhất có thể.<br/>\n"
+"    Nếu bạn có thêm bất kỳ câu hỏi hoặc thắc mắc nào trong thời gian này, xin vui lòng liên hệ lại. Chúng tôi luôn sẵn sàng trợ giúp bạn.<br/><br/>\n"
+"    Cảm ơn bạn đã kiên nhẫn chờ đợi.<br/>\n"
+"    Trân trọng,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -375,7 +398,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-lightbulb-o pe-2\" title=\"Info\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-lightbulb-o pe-2\" title=\"Thông tin\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -385,7 +408,7 @@ msgstr "<i class=\"fa fa-lock\"/> Riêng tư"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-warning pe-2\" title=\"Cảnh báo\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -660,7 +683,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Add Milestones"
-msgstr ""
+msgstr "Thêm mốc thời gian"
 
 #. module: project
 #. odoo-javascript
@@ -1875,7 +1898,7 @@ msgstr "Chỉnh sửa"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Edit Milestones"
-msgstr ""
+msgstr "Chỉnh sửa mốc thời gian"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
@@ -2121,7 +2144,7 @@ msgstr "Đặt <b>tên</b> cho nhiệm vụ phụ"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/search/control_panel/control_panel.xml:0
 msgid "Go back to 'My Projects'"
-msgstr ""
+msgstr "Quay lại 'Dự án của tôi'"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -2185,7 +2208,7 @@ msgstr "Xin chào"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Hide Sub-tasks"
-msgstr ""
+msgstr "Ẩn nhiệm vụ phụ"
 
 #. module: project
 #. odoo-javascript

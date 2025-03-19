@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Tiffany Chang, 2025
-# Chloe Wang, 2025
 # Wil Odoo, 2025
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +71,8 @@ msgid ""
 "<i class=\"fa fa-pencil me-1\"/>\n"
 "                        Edit"
 msgstr ""
+"<i class=\"fa fa-pencil me-1\"/>\n"
+"                        编辑"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -80,7 +82,7 @@ msgstr "<i class=\"fa fa-pencil\"/> 编辑信息"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_row
 msgid "<i class=\"fa fa-plus fa-2x mb-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"fa fa-plus fa-2x mb-2\"/>新增地址"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -128,6 +130,11 @@ msgid ""
 "                        operation.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        若已有文件为您的账户发出，就不可再修改公司名称\n"
+"                        或增值税号码。要进行此操作，\n"
+"                        请直接联络我们。\n"
+"                    </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -146,7 +153,7 @@ msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" tit
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "<span class=\"mx-2\">|</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">|</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -391,7 +398,7 @@ msgstr "已添加"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 msgid "Address Management"
-msgstr ""
+msgstr "地址管理"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -451,7 +458,7 @@ msgstr "一旦您的账户开具发票，不可更改增值税号码。如需要
 msgid ""
 "Changing your name is not allowed once document(s) have been issued for your"
 " account. Please contact us directly for this operation."
-msgstr ""
+msgstr "账户文件签发后不得更改姓名。请直接与我们联系。"
 
 #. module: portal
 #. odoo-javascript
@@ -774,7 +781,7 @@ msgstr "如果为外部人员订购，请通过后台下订单。如果您想更
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "如要修改，请更新"
 
 #. module: portal
 #. odoo-javascript
@@ -913,7 +920,7 @@ msgstr "我的账户"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
-msgstr ""
+msgstr "我的地址"
 
 #. module: portal
 #. odoo-javascript
@@ -1080,7 +1087,7 @@ msgstr "移除"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "Remove address"
-msgstr ""
+msgstr "移除地址"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1100,7 +1107,7 @@ msgstr "与发货地址一样"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "Save Address"
-msgstr ""
+msgstr "保存地址"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1212,13 +1219,13 @@ msgstr "谢谢！"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your company account."
-msgstr ""
+msgstr "%(field_name)s 是以您的公司账户管理的。"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your main account address."
-msgstr ""
+msgstr "%(field_name)s 是在您的主账户地址上管理的。"
 
 #. module: portal
 #. odoo-python
@@ -1244,13 +1251,13 @@ msgstr "该附件不存在，或者您没有权利访问它。"
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid ""
 "The company name and VAT number can only be updated on the company account."
-msgstr ""
+msgstr "公司名称和增值税号，只能在公司账户中更新。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid ""
 "The company name and VAT number can only be updated on your main account."
-msgstr ""
+msgstr "公司名称和增值税号，只能在主账户上更新。"
 
 #. module: portal
 #. odoo-python
@@ -1485,7 +1492,7 @@ msgstr "密码错误."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot archive your main address"
-msgstr ""
+msgstr "您无法存档您的主要地址"
 
 #. module: portal
 #. odoo-python
@@ -1513,7 +1520,7 @@ msgstr "您应该首先授予合作伙伴\"%s\"的门户权限。"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_kanban
 msgid "Your Account Address"
-msgstr ""
+msgstr "您的账户地址"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

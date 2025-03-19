@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +62,8 @@ msgid ""
 "Ready for \"{{ object.event_id.name }}\" {{ object.event_date_range }}?\n"
 "{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
 msgstr ""
+"Gotowy na \"{{ object.event_id.name }}\" {{ object.event_date_range }}?\n"
+"{{ 'Zaczyna się o %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at%s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nWidzimy się na miejscu!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Dołącz do nas na %s/wydarzenie/%i!' % (object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
@@ -102,5 +105,5 @@ msgid ""
 "{{ object.event_id.name }} event."
 msgstr ""
 "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}:Jesteśmy szczęśliwi potwierdzając Twoją rejestrację"
+"user.env.company.name }}: Z radością pragniemy potwierdzić Twoją rejestrację"
 " na wydarzenie  {{ object.event_id.name }}"

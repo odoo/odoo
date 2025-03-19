@@ -3,8 +3,8 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Marta Wacławek, 2025
 # Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1775,7 +1775,7 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Wybierz konkretną pozycję fiskalną w zamówieniu w zależności od rodzaju "
+"Wybierz konkretny obszar podatkowy w zamówieniu w zależności od rodzaju "
 "klienta (zwolniony z podatku, na miejscu lub na wynos itp.)."
 
 #. module: point_of_sale
@@ -2587,7 +2587,7 @@ msgstr "Domyślna należność na koncie (PoS)"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr "Domyślna pozycja fiskalna"
+msgstr "Domyślny obszar podatkowy"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3226,7 +3226,7 @@ msgstr "Obszar podatkowy"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Fiscal Position not found"
-msgstr "Nie znaleziono pozycji fiskalnej"
+msgstr "Nie znaleziono obszaru podatkowego"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fiscal_position_ids
@@ -7446,7 +7446,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Set fiscal position"
-msgstr "Ustalenie pozycji fiskalnej"
+msgstr "Ustalenie obszaru podatkowego"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7683,7 +7683,7 @@ msgstr "Buty sportowe"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 msgid "Start Date"
-msgstr "Data początkowa"
+msgstr "Data rozpoczęcia"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7907,7 +7907,7 @@ msgstr "Z podatkiem"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Mapowanie pozycji podatkowej"
+msgstr "Mapowanie obszaru podatkowego"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -8113,8 +8113,8 @@ msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
 msgstr ""
-"Pozycja fiskalna użyta w oryginalnym zamówieniu nie jest ładowana. Upewnij "
-"się, że jest ładowana, dodając ją w konfiguracji pos."
+"Obszar podatkowy użyty w oryginalnym zamówieniu nie jest ładowany. Upewnij "
+"się, że będzie ładowany, dodając go w konfiguracji pos."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9154,7 +9154,8 @@ msgstr "Używaj kodów kreskowych do skanowania produktów, kart klientów itp."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
-msgstr "Użyj pozycji fiskalnych, aby uzyskać różne podatki według kolejności"
+msgstr ""
+"Użyj obszarów podatkowych, aby uzyskać różne podatki według kolejności"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__order_seq_id

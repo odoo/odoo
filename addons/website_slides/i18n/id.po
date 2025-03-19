@@ -3,8 +3,8 @@
 # 	* website_slides
 # 
 # Translators:
-# Abe Manyo, 2025
 # Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:07+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,25 +126,25 @@ msgstr "'. Menunjukkan hasil untuk '"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(e.g., https://drive.google.com/file/d/ABC/view)."
-msgstr ""
+msgstr "(contoh., https://drive.google.com/file/d/ABC/view)."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(e.g., https://drive.google.com/file/d/ABC/view?usp=sharing)."
-msgstr ""
+msgstr "(contoh., https://drive.google.com/file/d/ABC/view?usp=sharing)."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(e.g., https://vimeo.com/ABC)."
-msgstr ""
+msgstr "(contoh., https://vimeo.com/ABC)."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(e.g., https://youtube/ABC)."
-msgstr ""
+msgstr "(contoh., https://youtube/ABC)."
 
 #. module: website_slides
 #. odoo-javascript
@@ -158,6 +158,7 @@ msgstr "(empty)"
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(which means only accessible via link, not searchable)."
 msgstr ""
+"(yang berarti hanya dapat diakses melalui link, dan tidak dapat dicari)."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_5
@@ -262,6 +263,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px;\">Halo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p><b>Selamat!</b></p>\n"
+"                        <p>Anda menyelesaikan kursus <b t-out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>Periksa kursus lainnya yang tersedia.</p><br/>\n"
+"\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                Periksa kursus-kursus\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Nikmati konten eksklusif ini!\n"
+"                        <t t-if=\"object.channel_id.user_id.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.channel_id.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_shared
@@ -1436,7 +1457,7 @@ msgstr "Siapapun dengan link"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Anyone with the link."
-msgstr ""
+msgstr "Siapa pun dengan link."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__challenge_category
@@ -2193,7 +2214,7 @@ msgstr "Salin Link"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Copy the shareable link"
-msgstr ""
+msgstr "Salin link yang dapat dibagi"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_0
@@ -3223,7 +3244,7 @@ msgstr "Google Drive Video"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Google Drive:"
-msgstr ""
+msgstr "Google Drive:"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3325,7 +3346,7 @@ msgstr "Bagaimana cara saya menambahkan konten baru?"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How to Add New Content:"
-msgstr ""
+msgstr "Cara Menambahkan Konten Baru:"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_3
@@ -3360,7 +3381,7 @@ msgstr "Bagaimana cara menanam potted.list"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How to upload Videos:"
-msgstr ""
+msgstr "Cara mengunggah Video:"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_2
@@ -3683,7 +3704,7 @@ msgstr "Dipublikasikan"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_visible
 msgid "Is Visible On Website"
-msgstr ""
+msgstr "Apakah Terlihat Di Website"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_category
@@ -4152,7 +4173,7 @@ msgstr "Paling Banyak Upvote"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Most formats via Google Drive (Docs, Sheets, PowerPoints, etc)."
-msgstr ""
+msgstr "Kebanyakan format melalui Google Drive (Doc, Sheet, PowerPoint, dsb)."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -4550,7 +4571,7 @@ msgstr "Konten PDF"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "PDFs (local uploads)."
-msgstr ""
+msgstr "PDF (unggah lokal)."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -4677,7 +4698,7 @@ msgstr "Presentasi"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 msgid "Presentation / Doc"
-msgstr ""
+msgstr "Presentasi / Doc"
 
 #. module: website_slides
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
@@ -5292,13 +5313,13 @@ msgstr "Urutan"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Set file permissions to"
-msgstr ""
+msgstr "Tetapkan izin file menjadi"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Set permissions to"
-msgstr ""
+msgstr "Tetapkan izin menjadi"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.website_slides_action_settings
@@ -5650,7 +5671,7 @@ msgstr "Dapatkan karma bila sukses"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Supported Files:"
-msgstr ""
+msgstr "File yang Didukung:"
 
 #. module: website_slides
 #. odoo-javascript
@@ -6172,13 +6193,13 @@ msgstr "Unggah Kelompok"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Upload a PDF file from your computer or share a Google Drive link."
-msgstr ""
+msgstr "Unggah file PDF dari komputer Anda atau bagikan link Google Drive."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Upload as"
-msgstr ""
+msgstr "Unggah sebagai"
 
 #. module: website_slides
 #. odoo-javascript
@@ -6191,13 +6212,13 @@ msgstr "Unggah dari Perangkat"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Upload the file to Drive."
-msgstr ""
+msgstr "Unggah file ke Drive."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Upload the file to Google Drive."
-msgstr ""
+msgstr "Unggah file ke Google Drive."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
@@ -6258,7 +6279,7 @@ msgstr "Voting user"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Using Google Drive:"
-msgstr ""
+msgstr "Menggunakan Google Drive:"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
@@ -6344,7 +6365,7 @@ msgstr "Video Vimeo"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Vimeo:"
-msgstr ""
+msgstr "Vimeo:"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_published
@@ -6790,7 +6811,7 @@ msgstr "Video YouTube"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "YouTube:"
-msgstr ""
+msgstr "YouTube:"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -6896,7 +6917,7 @@ msgstr "breadcrumb"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "button to get a link"
-msgstr ""
+msgstr "tombol untuk mendapatkan link"
 
 #. module: website_slides
 #. odoo-javascript
@@ -7086,7 +7107,7 @@ msgstr "sign in"
 #. odoo-python
 #: code:addons/website_slides/models/gamification_karma_tracking.py:0
 msgid "slide.channel"
-msgstr ""
+msgstr "slide.channel"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join

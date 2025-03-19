@@ -468,12 +468,12 @@ msgstr "9:30"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "<i class=\"fa fa-download\"/> (html)"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> (html)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "<i class=\"fa fa-download\"/> (json)"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> (json)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -489,6 +489,11 @@ msgid ""
 "                            </select>\n"
 "                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead to partially invalid result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id=\"profile_aggregation_mode\">\n"
+"                                <option value=\"tabs\">Separati (uno per scheda)</option>\n"
+"                                <option value=\"temporal\">Temporale (sperimentale)</option>\n"
+"                            </select>\n"
+"                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Avviso:</b> la modalità temporale unirà tutti i campioni.<br/>Può comportare risultati parziali non validi in caso di profili concorrenti.<br/>Usala con cauzione </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1014,12 +1019,12 @@ msgstr "Africa"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregate SQL"
-msgstr ""
+msgstr "Aggrega SQL"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Aggregation mode"
-msgstr ""
+msgstr "Modalità aggregazione"
 
 #. module: web
 #. odoo-javascript
@@ -1924,7 +1929,7 @@ msgstr "Connessione ripristinata, di nuovo in linea."
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Constant Time"
-msgstr ""
+msgstr "Tempo costante"
 
 #. module: web
 #: model:ir.model,name:web.model_res_partner
@@ -2074,7 +2079,7 @@ msgstr "Numero totale"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Count Limit"
-msgstr ""
+msgstr "Limite conteggio"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__country_id
@@ -2510,7 +2515,7 @@ msgstr "Visualizza in carte"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Display presets"
-msgstr ""
+msgstr "Mostra preconfigurazioni"
 
 #. module: web
 #. odoo-javascript
@@ -2920,7 +2925,7 @@ msgstr "Fattore"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_model.js:0
 msgid "Failed to evaluate the context: %(context)s."
-msgstr ""
+msgstr "Impossibile valutare il contesto: %(context)s."
 
 #. module: web
 #. odoo-javascript
@@ -3130,12 +3135,12 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames"
-msgstr ""
+msgstr "Frame"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Frames + sql (Combined)"
-msgstr ""
+msgstr "Frame + sql (Combinati)"
 
 #. module: web
 #. odoo-javascript
@@ -4473,7 +4478,7 @@ msgstr "Testo multiriga"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Multiple profile"
-msgstr ""
+msgstr "Profili multipli"
 
 #. module: web
 #. odoo-javascript
@@ -5823,12 +5828,12 @@ msgstr "Pulsante SOS"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "SQL density"
-msgstr ""
+msgstr "Densità SQL"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "SQL no gap"
-msgstr ""
+msgstr "SQL no spazio vuoto"
 
 #. module: web
 #. odoo-javascript
@@ -6743,7 +6748,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "This date is in the future"
-msgstr ""
+msgstr "La data è nel futuro"
 
 #. module: web
 #. odoo-javascript
@@ -7243,7 +7248,7 @@ msgstr "Usa un altro utente"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Use execution context"
-msgstr ""
+msgstr "Usa contesto di esecuzione"
 
 #. module: web
 #. odoo-javascript
@@ -15736,7 +15741,7 @@ msgstr "non è"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not between"
-msgstr ""
+msgstr "non è tra"
 
 #. module: web
 #. odoo-javascript
@@ -15760,7 +15765,7 @@ msgstr "non è impostato"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not within"
-msgstr ""
+msgstr "non è in"
 
 #. module: web
 #. odoo-javascript

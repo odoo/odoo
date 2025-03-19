@@ -116,6 +116,8 @@ msgid ""
 "<span class=\"opacity-50\" invisible=\"partner_latitude &lt;= 0\">N </span>\n"
 "                                    <span class=\"opacity-50\" invisible=\"partner_latitude &gt;= 0\">S </span>"
 msgstr ""
+"<span class=\"opacity-50\" invisible=\"partner_latitude &lt;= 0\">B</span>\n"
+"                                    <span class=\"opacity-50\" invisible=\"partner_latitude &gt;= 0\">N</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -124,11 +126,14 @@ msgid ""
 "                                    <span class=\"opacity-50\" invisible=\"partner_longitude &gt;= 0\">W </span>\n"
 "                                    <span class=\"opacity-50 ps-1\">) </span>"
 msgstr ""
+"<span class=\"opacity-50\" invisible=\"partner_longitude &lt;= 0\">Đ</span>\n"
+"                                    <span class=\"opacity-50\" invisible=\"partner_longitude &gt;= 0\">T</span>\n"
+"                                    <span class=\"opacity-50 ps-1\">) </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid "<span class=\"opacity-50\">( </span>"
-msgstr ""
+msgstr "<span class=\"opacity-50\">( </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -609,7 +614,7 @@ msgstr "Ngày hợp tác"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Review"
-msgstr "Ngày đánh giá"
+msgstr "Ngày nhận xét"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -895,7 +900,7 @@ msgstr "Đánh giá đối tác gần đây"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review
 msgid "Latest Review"
-msgstr ""
+msgstr "Nhận xét gần đây nhất"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -1017,7 +1022,7 @@ msgstr "Ngày thực hiện kết tiếp"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review_next
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review_next
 msgid "Next Review"
-msgstr ""
+msgstr "Nhận xét tiếp theo"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1391,12 +1396,12 @@ msgstr "Mẫu mail chuyển tiếp không có trong Cơ sở dữ liệu"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "URL tuyệt đối đầy đủ để truy cập tài liệu thông qua trang web."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "URL tương đối đầy đủ để truy cập tài liệu thông qua trang web."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -1473,7 +1478,7 @@ msgstr "Trang web"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "URL tuyệt đối của trang web"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_url
@@ -1516,13 +1521,13 @@ msgstr "một đối tác duy nhất: lựa chọn đối tác thủ công"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "activity_date_deadline"
-msgstr ""
+msgstr "activity_date_deadline"
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "activity_ids"
-msgstr ""
+msgstr "activity_ids"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1582,4 +1587,4 @@ msgstr "user_id"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "won_status"
-msgstr ""
+msgstr "won_status"

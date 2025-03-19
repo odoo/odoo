@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -1952,6 +1952,10 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+"Số lượng sản phẩm mặc định (theo đơn vị sản phẩm) có thể được sản xuất đồng "
+"thời (cùng lúc) tại khu vực sản xuất này. Ví dụ: công suất là 5 và bạn cần "
+"sản xuất 10 thì thời gian vận hành ghi trên BoM sẽ được nhân 2. Tuy nhiên, "
+"lưu ý rằng cả thời gian trước và sau khi sản xuất sẽ chỉ được tính một lần."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -4716,7 +4720,7 @@ msgstr "Số lượng đang sản xuất"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_ready
 msgid "Quantity Ready"
-msgstr ""
+msgstr "Số lượng sẵn sàng"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -6397,6 +6401,11 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"Khi một đơn mua sắm được thiết lập tuyến 'sản xuất' có loại hoạt động, Lệnh "
+"sản xuất cho sản phẩm đó sẽ được tạo ra bằng cách sử dụng một BoM với cùng "
+"loại hoạt động. Nếu không, loại hoạt động sẽ không được tính đến trong quá "
+"trình tìm kiếm BoM. Điều đó cho phép xác định quy tắc tồn kho kích hoạt các "
+"lệnh sản xuất khác nhau với các BoM khác nhau."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption

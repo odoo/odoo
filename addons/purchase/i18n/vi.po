@@ -123,6 +123,36 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Xin chào <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Đây là email nhắc nhở rằng đơn mua hàng <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"        </t>\n"
+"        được dự kiến giao vào ngày \n"
+"        <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"        </t>\n"
+"         <t t-else=\"\">\n"
+"            <span style=\"font-weight:bold;\">chưa xác định</span>.\n"
+"        </t>\n"
+"        Vui lòng giúp chúng tôi xác nhận liệu đơn hàng có được giao đúng hạn hay không?\n"
+"        <br/><br/>\n"
+"        <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Xác nhận</a>\n"
+"        <br/><br/>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -157,6 +187,35 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Xin chào <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Tệp đính kèm là đơn mua hàng <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            với mã tham chiếu: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        và số tiền <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        từ <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            Biên lai được dự kiến xuất vào ngày <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <br/><br/>\n"
+"            Vui lòng giúp chúng tôi xác nhận bạn đã nhận được biên lai hay chưa.\n"
+"            <br/><br/>\n"
+"            <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Xác nhận</a>\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -184,6 +243,28 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kính gửi <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Tệp đính kèm là yêu cầu báo giá <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            với mã số: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        từ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Nếu bạn có bất kỳ thắc mắc nào, xin đừng ngần ngại liên hệ với chúng tôi.\n"
+"        <br/><br/>\n"
+"        Trân trọng,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -287,7 +368,7 @@ msgstr "<span class=\"o_stat_text\">Khớp hoá đơn</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Price Comparison</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">So sánh giá</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -414,7 +495,7 @@ msgstr "<strong>Ngày lập yêu cầu báo giá:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
-msgstr ""
+msgstr "<strong>Ngày vận chuyển yêu cầu:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -604,37 +685,37 @@ msgstr "Tất cả"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Days to Order"
-msgstr ""
+msgstr "Tất cả ngày để đặt hàng"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Draft RFQs"
-msgstr "Tất cả YCBG nháp"
+msgstr "Tất cả RFQ nháp"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Late RFQs"
-msgstr "Tất cả YCBG trễ"
+msgstr "Tất cả RFQ trễ"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Late Receipt RFQs"
-msgstr ""
+msgstr "Tất cả RFQ có hàng nhập trễ"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Not Acknowledged RFQs"
-msgstr ""
+msgstr "Tất cả RFQ không được xác nhận"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Sent RFQs"
-msgstr ""
+msgstr "Tất cả RFQ đã gửi"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -706,7 +787,7 @@ msgstr "Phê duyệt đơn hàng"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Are you sure you want to cancel the selected RFQs/Orders?"
-msgstr "Bạn có chắc chắn muốn huỷ YCBG/Đơn hàng đã chọn không?"
+msgstr "Bạn có chắc chắn muốn huỷ RFQ/Đơn hàng đã chọn không?"
 
 #. module: purchase
 #. odoo-python
@@ -966,7 +1047,7 @@ msgstr "Xác nhận đơn hàng"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_confirm_rfqs
 msgid "Confirm RFQ"
-msgstr "Xác nhận YCBG"
+msgstr "Xác nhận RFQ"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
@@ -1131,7 +1212,7 @@ msgstr "Ngày để xác nhận"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Days to Order"
-msgstr ""
+msgstr "Ngày để đặt hàng"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
@@ -1273,7 +1354,7 @@ msgstr "Khoản trả trước"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
 msgid "Draft RFQ"
-msgstr "YCBG nháp"
+msgstr "RFQ nháp"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1558,6 +1639,7 @@ msgid ""
 "It indicates that the vendor has acknowledged the receipt of the purchase "
 "order."
 msgstr ""
+"Điều này cho biết nhà cung cấp đã xác nhận việc nhận được đơn mua hàng."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1598,13 +1680,13 @@ msgstr "Hoạt động chậm trễ"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late RFQ"
-msgstr ""
+msgstr "RFQ trễ"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late Receipt"
-msgstr ""
+msgstr "Phiếu nhập kho trễ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1783,25 +1865,25 @@ msgstr "Hạn chót hoạt động của tôi"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Draft RFQs"
-msgstr "YCBG nháp của tôi"
+msgstr "RFQ nháp của tôi"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Late RFQs"
-msgstr "YCBG trễ của tôi"
+msgstr "RFQ trễ của tôi"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Late Receipt RFQs"
-msgstr ""
+msgstr "RFQ có hàng nhập trễ của tôi"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Not Acknowledged RFQs"
-msgstr ""
+msgstr "RFQ không được xác nhận của tôi"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1817,7 +1899,7 @@ msgstr "Mua hàng của tôi"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Waiting RFQs"
-msgstr "YCBG đang chờ của tôi"
+msgstr "RFQ đang chờ của tôi"
 
 #. module: purchase
 #. odoo-python
@@ -1873,7 +1955,7 @@ msgstr "Không có tin nhắn"
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No Products for the selected Vendor."
-msgstr ""
+msgstr "Không có Sản phẩm nào cho Nhà cung cấp đã chọn."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -2105,8 +2187,8 @@ msgid ""
 "Please select at least two purchase orders with state RFQ and RFQ sent to "
 "merge."
 msgstr ""
-"Vui lòng chọn ít nhất hai đơn mua hàng có YCBG có trạng thái và YCBG đã gửi "
-"để hợp nhất."
+"Vui lòng chọn ít nhất hai đơn mua hàng có RFQ có trạng thái và RFQ đã gửi để"
+" hợp nhất."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
@@ -2259,7 +2341,7 @@ msgstr "Chi tiết hoá đơn mua hàng"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Purchase Comparison for %s"
-msgstr ""
+msgstr "So sánh mua hàng đối với %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2529,22 +2611,22 @@ msgstr "Số lượng:"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
 msgid "RFQ"
-msgstr "YCBG"
+msgstr "RFQ"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "YCBG đã duyệt"
+msgstr "RFQ đã duyệt"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "YCBG đã xác nhận"
+msgstr "RFQ đã xác nhận"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr "YCBG hoàn tất"
+msgstr "RFQ hoàn tất"
 
 #. module: purchase
 #. odoo-javascript
@@ -2553,29 +2635,29 @@ msgstr "YCBG hoàn tất"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__sent
 #: model:mail.message.subtype,name:purchase.mt_rfq_sent
 msgid "RFQ Sent"
-msgstr "YCBG đã gửi"
+msgstr "RFQ đã gửi"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
-msgstr "YCBG được hợp nhất với %(oldest_rfq_name)s và %(cancelled_rfq)s"
+msgstr "RFQ được hợp nhất với %(oldest_rfq_name)s và %(cancelled_rfq)s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %s"
-msgstr "YCBG được hợp nhất với %s"
+msgstr "RFQ được hợp nhất với %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "RFQs"
-msgstr "YCBG"
+msgstr "RFQ"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "YCBG và mua hàng"
+msgstr "RFQ và mua hàng"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
@@ -2816,12 +2898,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO"
-msgstr ""
+msgstr "Gửi PO"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ"
-msgstr ""
+msgstr "Gửi RFQ"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
@@ -2886,7 +2968,7 @@ msgstr "Chia sẻ"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_comparison
 msgid "Show Comparison"
-msgstr ""
+msgstr "Hiện so sánh"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3103,7 +3185,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
 #: model:ir.model.fields,help:purchase.field_res_users__property_purchase_currency_id
 msgid "This currency will be used for purchases from the current partner"
-msgstr ""
+msgstr "Tiền tệ này sẽ được sử dụng để mua hàng từ nhà đối tác hiện tại"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3125,7 +3207,7 @@ msgstr "Hoá đơn mua hàng này đã được chỉnh sửa từ:"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
-msgstr "Nhà cung cấp này chưa có đơn mua hàng nào. Tạo một YCBG mới"
+msgstr "Nhà cung cấp này chưa có đơn mua hàng nào. Tạo một RFQ mới"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
@@ -3209,7 +3291,7 @@ msgstr "Tổng tiền"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total_cc
 msgid "Total in currency"
-msgstr ""
+msgstr "Tổng theo loại tiền tệ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
@@ -3220,7 +3302,7 @@ msgstr "Tổng số tiền đã mua hàng"
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
-msgstr ""
+msgstr "Hãy thử xóa bộ lọc trên cùng để mở rộng tìm kiếm của bạn"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
@@ -3280,7 +3362,7 @@ msgstr "Mở khoá"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unsupported operator"
-msgstr ""
+msgstr "Nhà điều hành không được hỗ trợ"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree

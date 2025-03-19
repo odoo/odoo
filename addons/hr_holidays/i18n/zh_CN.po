@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -54,7 +54,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_view_tree
 msgid "# Public Holidays"
-msgstr ""
+msgstr "公共假期数目"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2725,19 +2725,19 @@ msgstr "只有%s的休假审批人、休假主管/负责人或管理员才能批
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset a refused leave."
-msgstr ""
+msgstr "只限休假管理员才可重设已被拒绝的休假。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset a started leave."
-msgstr ""
+msgstr "只限休假管理员才能重置已开始的休假。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Administrator can reset other people leaves."
-msgstr ""
+msgstr "只限休假管理员才能重设其他人的休假。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2745,7 +2745,7 @@ msgstr ""
 msgid ""
 "Only a Time Off Officer or Administrator can approve/refuse its own "
 "requests."
-msgstr ""
+msgstr "只有休假主管或管理员才能批准/拒绝自己的申请。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4347,7 +4347,7 @@ msgstr "您没有权利对请假申请进行二次审批"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Time Off Approver to approve this leave"
-msgstr ""
+msgstr "您必须是%s的休假审批人，才能批准此休假"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4355,7 +4355,7 @@ msgstr ""
 msgid ""
 "You must be either %s's Time Off Approver or Time off Administrator to "
 "approve this leave"
-msgstr ""
+msgstr "您必须是%s的休假审批人或休假管理员，才能批准此休假。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4371,7 +4371,7 @@ msgstr "您必须是%s的休假审批人或休假管理员，才能验证此分�
 msgid ""
 "You must either be a Time off Officer or Time off Administrator to approve "
 "this leave"
-msgstr ""
+msgstr "您必须是休假审批人或休假管理员，才能批准此假期"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero

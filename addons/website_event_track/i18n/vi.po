@@ -118,6 +118,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Thân gửi <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    Chúng tôi rất vui mừng thông báo rằng đề xuất <t t-out=\"object.name or ''\">Nội dung sự kiện</t> đã được chấp nhận và xác nhận cho sự kiện <t t-out=\"object.event_id.name or ''\">Ra mắt Bộ sưu tập OpenWood Online</t>.\n"
+"    <br/>\n"
+"    Bạn có thể xem thêm chi tiết tại đây:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Xem bài phát biểu\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Cảm ơn bạn!\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -1847,7 +1864,7 @@ msgstr "Tiểu sử diễn giả"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Speaker Name"
-msgstr ""
+msgstr "Tên diễn giả"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__image
@@ -1997,12 +2014,12 @@ msgstr "Cám ơn bạn đã đăng ký."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "URL tuyệt đối đầy đủ để truy cập tài liệu thông qua trang web."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "URL tương đối đầy đủ để truy cập tài liệu thông qua trang web."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
@@ -2430,7 +2447,7 @@ msgstr "Trang web"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "URL tuyệt đối của trang web"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
@@ -2644,4 +2661,4 @@ msgstr "bắt đầu vào"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "track"
-msgstr ""
+msgstr "nội dung"
