@@ -546,7 +546,7 @@ class CrmLead(models.Model):
 
     @api.depends(lambda self: ['stage_id', 'team_id'] + self._pls_get_safe_fields())
     def _compute_probabilities(self):
-        lead_probabilities = self._pls_get_naive_bayes_probabilities()
+        lead_probabilities, _unused = self._pls_get_naive_bayes_probabilities()
         for lead in self:
             if lead.id in lead_probabilities:
                 was_automated = lead.active and lead.is_automated_probability
@@ -1134,6 +1134,9 @@ class CrmLead(models.Model):
         return True
 
     def action_set_automated_probability(self):
+        """ Update the automated probability and align probability to that value """
+        self.ensure_one()
+        self._compute_probabilities()
         self.write({'probability': self.automated_probability})
 
     def action_set_won_rainbowman(self):
@@ -2123,7 +2126,7 @@ class CrmLead(models.Model):
     # ---------------------------------
     # PLS: Probability Computation
     # ---------------------------------
-    def _pls_get_naive_bayes_probabilities(self, batch_mode=False):
+    def _pls_get_naive_bayes_probabilities(self, batch_mode=False, is_tooltip=False):
         """
         In machine learning, naive Bayes classifiers (NBC) are a family of simple "probabilistic classifiers" based on
         applying Bayes theorem with strong (naive) independence assumptions between the variables taken into account.
@@ -2146,11 +2149,27 @@ class CrmLead(models.Model):
         This is called 'zero frequency' and that leads to division (or at least multiplication) by zero.
         To avoid this, we add 0.1 in each frequency. With few data, the computation is than not really realistic.
         The more we have records to analyse, the more the estimation will be precise.
-        :return: probability in percent (and integer rounded) that the lead will be won at the current stage.
+
+        :param: is_tooltip (boolean). If true, method recomputes the probability of self, that should be a singleton, and
+            also returns a dict containing probability, and a list of all (score, field, value) triplets for all value of
+            PLS fields that impact the computation of the probability. Score is a simple value that indicates whether the
+            impact is positive (>.5) or negative (<.5). See method prepare_pls_tooltip_data, or test_pls_tooltip_data for
+            more details
+
+        :return: probability in percent (and rounded at 2 decimals) that the lead will be won at the current stage.
         """
         lead_probabilities = {}
         if not self:
             return lead_probabilities
+
+        # Initialize tooltip data. A returned 0.00 probability means computation was not possible.
+        tooltip_data = {}
+        if is_tooltip:
+            self.ensure_one()
+            tooltip_data = {
+                'probability': 0.0,
+                'scores': [],
+            }
 
         # Get all leads values, no matter the team_id
         domain = []
@@ -2182,6 +2201,13 @@ class CrmLead(models.Model):
         frequency_teams = frequencies.mapped('team_id')
         frequency_team_ids = [team.id for team in frequency_teams]
 
+        # restrict to frequencies of lead team if any exist.
+        if is_tooltip and self.team_id & frequency_teams:
+            frequency_team_ids = [self.team_id.id]
+            frequencies = frequencies.filtered(
+                lambda frequency: frequency.team_id & self.team_id
+            )
+
         # 1. Compute each variable value count individually
         # regroup each variable to be able to compute their own probabilities
         # As all the variable does not enter into account (as we reject unset values in the process)
@@ -2192,7 +2218,7 @@ class CrmLead(models.Model):
         result[-1] = dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)
         for frequency in frequencies:
             field = frequency['variable']
-            value = frequency['value']
+            value = frequency['value']  # This is always a string
 
             # To avoid that a tag take too much importance if its subset is too small,
             # we ignore the tag frequencies if we have less than 50 won or lost for this tag.
@@ -2253,17 +2279,28 @@ class CrmLead(models.Model):
                 if value_result:
                     total_won = team_won if field == 'stage_id' else field_result['won_total']
                     total_lost = team_lost if field == 'stage_id' else field_result['lost_total']
-
                     # if one count = 0, we cannot compute lead probability
                     if not total_won or not total_lost:
                         continue
-                    s_lead_won *= value_result['won'] / total_won
-                    s_lead_lost *= value_result['lost'] / total_lost
+                    p_field_value_won = value_result['won'] / total_won
+                    p_field_value_lost = value_result['lost'] / total_lost
+                    s_lead_won *= p_field_value_won
+                    s_lead_lost *= p_field_value_lost
 
+                    if is_tooltip:
+                        score = (
+                            1 - p_field_value_lost if field == 'stage_id'
+                            else p_field_value_won / (p_field_value_won + p_field_value_lost)
+                        )
+                        tooltip_data['scores'].append((score, field, value))
             # 3. Compute Probability to win
             probability = s_lead_won / (s_lead_won + s_lead_lost)
             lead_probabilities[lead_id] = min(max(round(100 * probability, 2), 0.01), 99.99)
-        return lead_probabilities
+
+        if tooltip_data and self.id in lead_probabilities:
+            tooltip_data['probability'] = lead_probabilities[self.id]
+
+        return lead_probabilities, tooltip_data
 
     # ---------------------------------
     # PLS: Live Increment
@@ -2343,7 +2380,8 @@ class CrmLead(models.Model):
         lead_probabilities = {}
         for i in range(0, leads_to_update_count, PLS_COMPUTE_BATCH_STEP):
             leads_to_update_part = leads_to_update[i:i + PLS_COMPUTE_BATCH_STEP]
-            lead_probabilities.update(leads_to_update_part._pls_get_naive_bayes_probabilities(batch_mode=True))
+            batch_probabilites, _unused = leads_to_update_part._pls_get_naive_bayes_probabilities(batch_mode=True)
+            lead_probabilities.update(batch_probabilites)
         _logger.info("Predictive Lead Scoring : New automated probabilities computed")
 
         # 3. Group by new probability to reduce server roundtrips when executing the update
@@ -2704,3 +2742,79 @@ class CrmLead(models.Model):
                         lead_values.append(('tag_id', tag.id))
                 leads_values_dict[lead.id] = {'values': lead_values, 'team_id': lead['team_id'].id}
             return leads_values_dict
+
+    # PLS Backend Tooltip
+    # -------------------
+    def prepare_pls_tooltip_data(self):
+        '''
+            Compute and return all necessary information to render CrmPlsTooltip, displayed when
+            pressing the small AI button, located next to the label of probability when automated,
+            in the crm.lead form view. This method first replaces ids with display names of relational
+            fields before returning data, then also recomputes probabilities and writes them on self.
+
+            :returns dict: {
+                low_3_data: list of field-value couples for lowest 3 criterions, lowest first
+                probability: numerical value, used for display on tooltip
+                team_name: string, name of lead team if any
+                top_3_data: list of field-value couples for top 3 criterions, highest first
+            }
+        '''
+        self.ensure_one()
+        _unused, tooltip_data = self._pls_get_naive_bayes_probabilities(is_tooltip=True)
+        sorted_scores_with_name = []
+
+        # We want to display names in the tooltip, not ids.
+        # The last element in tuple is only used for tags to ensure same color in tooltip.
+        for score, field, value in sorted(tooltip_data['scores']):
+            # Skip nonsense results for phone and email states. May happen in a db having a few leads.
+            if field in ['phone_state', 'email_state']:
+                if value in [False, 'incorrect'] and tools.float_compare(score, 0.50, 2) > 0:
+                    continue
+                if value == 'correct' and tools.float_compare(score, 0.50, 2) < 0:
+                    continue
+            if field == 'tag_id':
+                tag = self.tag_ids.filtered(lambda tag: tag.id == value)
+                sorted_scores_with_name.append((score, field, tag.display_name, tag.color))
+            elif isinstance(self[field], models.BaseModel):
+                sorted_scores_with_name.append((score, field, self[field].display_name, False))
+            else:
+                sorted_scores_with_name.append((score, field, str(value), False))
+
+        # Update automated probability, as it may have changed since last computation
+        # -> avoids differences in display between tooltip and record. A 0.00 probability implies
+        # that the computation was not possible. Sample data will be used instead.
+        probability_values = {'automated_probability': tooltip_data['probability']}
+        if self.is_automated_probability:
+            probability_values['probability'] = tooltip_data['probability']
+        self.write(probability_values)
+
+        # Sample values if probability could not be computed. If it was, but if all scores
+        # were excluded above, a placeholder will be used instead in the tooltip.
+        if tools.float_is_zero(tooltip_data['probability'], 2):
+            sorted_scores_with_name = [
+                (.1, 'email_state', False, False),
+                (.2, 'tag_id', _('Exploration'), 4),
+                (.3, 'stage_id', _('New'), False),
+                (.7, 'phone_state', 'correct', False),
+                (.8, 'country_id', _('Belgium'), False),
+                (.9, 'tag_id', _('Consulting'), 3),
+            ]
+
+        return {
+            'low_3_data': [
+                {
+                    'field': element[1],
+                    'value': element[2],
+                    'color': element[3]
+                } for element in sorted_scores_with_name[:3] if tools.float_compare(element[0], 0.50, 2) < 0
+            ],
+            'probability': tooltip_data['probability'],
+            'team_name': self.team_id.display_name,
+            'top_3_data': [
+                {
+                    'field': element[1],
+                    'value': element[2],
+                    'color': element[3]
+                } for element in sorted_scores_with_name[::-1][:3] if tools.float_compare(element[0], 0.50, 2) > 0
+            ],
+        }
