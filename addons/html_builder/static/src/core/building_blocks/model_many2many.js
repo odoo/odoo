@@ -1,8 +1,8 @@
 import { Component, useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { useDomState } from "@html_builder/core/building_blocks/utils";
-import { useCachedModel } from "@html_builder/core/plugins/cached_model_utils";
+import { useDomState } from "@html_builder/core/utils";
+import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { BuilderComponent } from "./builder_component";
 import { BasicMany2Many } from "./basic_many2many";
 

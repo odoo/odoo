@@ -5,7 +5,7 @@ import {
     getAllActionsAndOperations,
     useBuilderComponent,
     useDomState,
-} from "./utils";
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { BasicMany2Many } from "./basic_many2many";
 

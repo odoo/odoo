@@ -1,6 +1,5 @@
-import { defaultBuilderComponents } from "../core/default_builder_components";
 import { Component } from "@odoo/owl";
-import { useIsActiveItem } from "../core/building_blocks/utils";
+import { useBuilderComponents, useIsActiveItem } from "../core/utils";
 
 export const connectorOptionParams = [
     { key: "", param: "None" },
@@ -11,10 +10,10 @@ export const connectorOptionParams = [
 
 export class ProcessStepsOption extends Component {
     static template = "html_builder.ProcessStepsOption";
-    static components = { ...defaultBuilderComponents };
     static props = {};
 
     setup() {
+        useBuilderComponents();
         this.isActiveItem = useIsActiveItem();
         this.connectorOptionParams = connectorOptionParams;
     }

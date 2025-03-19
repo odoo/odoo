@@ -1,6 +1,6 @@
 import { Component, useState } from "@odoo/owl";
 import { OptionsContainer } from "./option_container";
-import { useIsActiveItem } from "@html_builder/core/building_blocks/utils";
+import { useIsActiveItem } from "@html_builder/core/utils";
 import { useOptionsSubEnv } from "@html_builder/utils/utils";
 
 export class ThemeTab extends Component {

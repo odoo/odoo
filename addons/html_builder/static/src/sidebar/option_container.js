@@ -1,21 +1,20 @@
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { defaultBuilderComponents } from "../core/default_builder_components";
 import {
     useVisibilityObserver,
     useApplyVisibility,
     useIsActiveItem,
     useGetItemValue,
-} from "../core/building_blocks/utils";
+    useBuilderComponents,
+} from "../core/utils";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
-import { useOperation } from "../core/plugins/operation_plugin";
+import { useOperation } from "../core/operation_plugin";
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";
     static components = {
-        ...defaultBuilderComponents,
         BorderConfigurator,
         ShadowOption,
     };
@@ -33,6 +32,7 @@ export class OptionsContainer extends Component {
     };
 
     setup() {
+        useBuilderComponents();
         this.notification = useService("notification");
         useOptionsSubEnv(() => [this.props.editingElement]);
         this.isActiveItem = useIsActiveItem();

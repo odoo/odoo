@@ -1,14 +1,13 @@
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 import { Component } from "@odoo/owl";
 import { ShapeSelector } from "../shape/shape_selector";
-import { useDomState } from "@html_builder/core/building_blocks/utils";
+import { useBuilderComponents, useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
 
 export class ImageShapeOption extends Component {
     static template = "html_builder.ImageShapeOption";
-    static components = { ...defaultBuilderComponents };
     static props = {};
     setup() {
+        useBuilderComponents();
         this.customizeTabPlugin = this.env.editor.shared.customizeTab;
         this.imageShapeOption = this.env.editor.shared.imageShapeOption;
         this.toRatio = toRatio;

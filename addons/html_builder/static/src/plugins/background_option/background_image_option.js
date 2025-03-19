@@ -1,15 +1,12 @@
-import { useIsActiveItem } from "@html_builder/core/building_blocks/utils";
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { useBuilderComponents, useIsActiveItem } from "@html_builder/core/utils";
 import { getBgImageURLFromEl, normalizeColor } from "@html_builder/utils/utils_css";
 import { Component } from "@odoo/owl";
 
 export class BackgroundImageOption extends Component {
     static template = "html_builder.BackgroundImageOption";
-    static components = {
-        ...defaultBuilderComponents,
-    };
     static props = {};
     setup() {
+        useBuilderComponents();
         this.isActiveItem = useIsActiveItem();
     }
     showMainColorPicker() {

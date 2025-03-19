@@ -4,7 +4,7 @@ import { Component, reactive, xml } from "@odoo/owl";
 import { delay } from "@web/core/utils/concurrency";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
-import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
+import { useBuilderComponents } from "@html_builder/core/utils";
 
 defineWebsiteModels();
 
@@ -20,7 +20,9 @@ test.tags("focus required")("basic many2many: find tag, select tag, unselect tag
             selection: Array,
             setSelection: Function,
         };
-        static components = { ...defaultBuilderComponents };
+        setup() {
+            useBuilderComponents();
+        }
     }
     const selection = reactive([]);
     addOption({

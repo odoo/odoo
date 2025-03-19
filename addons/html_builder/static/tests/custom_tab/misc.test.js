@@ -1,11 +1,10 @@
-import { useDomState } from "@html_builder/core/building_blocks/utils";
+import { useBuilderComponents, useDomState } from "@html_builder/core/utils";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defaultBuilderComponents } from "../../src/core/default_builder_components";
 import { OptionsContainer } from "../../src/sidebar/option_container";
 import {
     addActionOption,
@@ -36,8 +35,10 @@ test("Open custom tab with Component option", async () => {
             <BuilderRow label="'Row 1'">
                 Test
             </BuilderRow>`;
-        static components = { ...defaultBuilderComponents };
         static props = {};
+        setup() {
+            useBuilderComponents();
+        }
     }
     addOption({
         selector: ".test-options-target",

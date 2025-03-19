@@ -1,11 +1,13 @@
 import { Component } from "@odoo/owl";
-import { defaultBuilderComponents } from "../../core/default_builder_components";
+import { useBuilderComponents } from "@html_builder/core/utils";
 
 export class AddProductOption extends Component {
     static template = "html_builder.AddProductOption";
-    static components = { ...defaultBuilderComponents };
     static props = {
         applyTo: String,
         productSelector: String,
     };
+    setup() {
+        useBuilderComponents();
+    }
 }

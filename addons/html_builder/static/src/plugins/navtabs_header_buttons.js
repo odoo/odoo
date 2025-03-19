@@ -1,5 +1,5 @@
-import { useDomState } from "@html_builder/core/building_blocks/utils";
-import { useOperation } from "@html_builder/core/plugins/operation_plugin";
+import { useDomState } from "@html_builder/core/utils";
+import { useOperation } from "@html_builder/core/operation_plugin";
 import { Component } from "@odoo/owl";
 
 export class NavTabsHeaderMiddleButtons extends Component {

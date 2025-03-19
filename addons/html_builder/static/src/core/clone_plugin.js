@@ -2,8 +2,8 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isElementInViewport } from "@html_builder/utils/utils";
-import { isRemovable } from "../remove/remove_plugin";
-import { isMovable } from "../move/move_plugin";
+import { isRemovable } from "./remove_plugin";
+import { isMovable } from "./move_plugin";
 
 const clonableSelector = "a.btn:not(.oe_unremovable)";
 
