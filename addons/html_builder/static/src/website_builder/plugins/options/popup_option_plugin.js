@@ -120,15 +120,12 @@ class PopupOptionPlugin extends Plugin {
         // save (see save plugin) and Bootstrap moves it if it is not within the
         // document (see Bootstrap Modal's _showElement).
         if (target.matches(".s_popup") && this.editable.contains(target)) {
-            const modalEl = target.querySelector(".modal");
-            this.window.Modal.getOrCreateInstance(modalEl).show();
-            target.classList.remove("d-none");
+            this.window.Modal.getOrCreateInstance(target.querySelector(".modal")).show();
         }
     }
 
     onTargetHide(target) {
         if (target.matches(".s_popup")) {
-            target.classList.add("d-none");
             this.window.Modal.getOrCreateInstance(target.querySelector(".modal")).hide();
         }
     }
@@ -138,6 +135,7 @@ class PopupOptionPlugin extends Plugin {
             modalEl.parentElement.dataset.invisible = "1";
             // Do not call .hide() directly, because it is queued whereas
             // .dispose() is not.
+            modalEl.classList.remove("show");
             this.window.Modal.getOrCreateInstance(modalEl)._hideModal();
             this.window.Modal.getInstance(modalEl).dispose();
         }
