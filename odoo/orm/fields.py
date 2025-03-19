@@ -151,11 +151,11 @@ class Field(typing.Generic[T]):
         .. code-block:: python
 
             @api.model
-            def _read_group_selection_field(self, values, domain, order):
+            def _read_group_selection_field(self, values, domain):
                 return ['choice1', 'choice2', ...] # available selection choices.
 
             @api.model
-            def _read_group_many2one_field(self, records, domain, order):
+            def _read_group_many2one_field(self, records, domain):
                 return records + self.search([custom_domain])
 
     :param bool default_export_compatible: whether the field must be exported by
