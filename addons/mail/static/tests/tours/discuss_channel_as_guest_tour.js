@@ -29,7 +29,9 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
         {
             trigger: ".o-mail-DiscussCommand",
             async run() {
-                await contains(".fa-hashtag");
+                await contains(".fa-hashtag", {
+                    parent: [".o-mail-DiscussCommand", { text: "Test channel" }],
+                });
                 await contains(".fa-user", { count: 0 });
             },
         },
