@@ -787,6 +787,94 @@ class TestAPI(MailCommon, TestRecipients):
             with self.subTest():
                 self.assertDictEqual(recipient, expected)
 
+    @users("employee")
+    def test_message_get_suggested_recipients_conversation_filter(self):
+        """ Test sorting of messages when suggested is used in reply-all based
+        on last message. """
+        test_record = self.env['mail.test.recipients'].create({
+            'email_cc': '"Test Cc" <test.cc.1@test.example.com>',
+            'name': 'Test Recipients',
+        })
+        base_expected = [{
+            'create_values': {},
+            'email': 'test.cc.1@test.example.com',
+            'name': 'Test Cc',
+            'partner_id': False,
+        }]
+        for user, post_values, expected_add in [
+            (
+                self.user_employee,
+                {
+                    'body': 'Note with pings, to ignore',
+                    'message_type': 'comment',
+                    'subtype_id': self.env.ref('mail.mt_note').id,
+                },
+                []
+            ), (
+                self.user_root,
+                {
+                    'author_id': False,
+                    'email_from': '"Outdated" <outdated@test.example.com>',
+                    'body': 'Incoming (old) email',
+                    'message_type': 'email',
+                    'subtype_id': self.env.ref('mail.mt_comment').id,
+                },
+                [{
+                    'create_values': {},
+                    'email': 'outdated@test.example.com',
+                    'name': 'Outdated',
+                    'partner_id': False,
+                }],
+            ), (
+                self.user_employee,
+                {
+                    'body': 'Some discussion',
+                    'message_type': 'comment',
+                    'partner_ids': self.user_portal.partner_id.ids,
+                    'subtype_id': self.env.ref('mail.mt_comment').id,
+                },
+                [{
+                    'create_values': {},
+                    'email': self.user_portal.email_normalized,
+                    'name': self.user_portal.name,
+                    'partner_id': self.user_portal.partner_id.id,
+                }, {
+                    'create_values': {},
+                    'email': self.user_employee.email_normalized,
+                    'name': self.user_employee.name,
+                    'partner_id': self.user_employee.partner_id.id,
+                }],
+            ), (
+                self.user_root,
+                {
+                    'author_id': self.partner_employee_2.id,
+                    'body': 'Some marketing email',
+                    'message_type': 'email_outgoing',
+                    'subtype_id': self.env.ref('mail.mt_note').id,
+                },
+                [{
+                    'create_values': {},
+                    'email': self.user_portal.email_normalized,
+                    'name': self.user_portal.name,
+                    'partner_id': self.user_portal.partner_id.id,
+                }, {
+                    'create_values': {},
+                    'email': self.user_employee.email_normalized,
+                    'name': self.user_employee.name,
+                    'partner_id': self.user_employee.partner_id.id,
+                }],
+            ),
+        ]:
+            test_record.with_user(user).message_post(**post_values)
+            test_record.message_unsubscribe(partner_ids=test_record.message_partner_ids.ids)
+            suggested = test_record._message_get_suggested_recipients(reply_discussion=True, no_create=True)
+            expected = base_expected + expected_add
+            # as we can't use sorted directly, reorder manually, hey
+            expected.sort(key=lambda item: item['partner_id'], reverse=True)
+            with self.subTest(message=post_values['body']):
+                for sugg, expected_sugg in zip(suggested, expected, strict=True):
+                    self.assertDictEqual(sugg, expected_sugg)
+
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
     def test_message_update_content(self):
