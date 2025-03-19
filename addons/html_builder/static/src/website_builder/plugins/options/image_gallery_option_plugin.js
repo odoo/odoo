@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { applyModifications, loadImageInfo } from "@html_editor/utils/image_processing";
+import { ImageGalleryComponent } from "./image_gallery_option";
 
 class ImageGalleryOption extends Plugin {
     static id = "imageGalleryOption";
@@ -8,7 +9,7 @@ class ImageGalleryOption extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "html_builder.ImageGalleryOption",
+                OptionComponent: ImageGalleryComponent,
                 selector: ".s_image_gallery",
             },
         ],
@@ -60,6 +61,12 @@ class ImageGalleryOption extends Plugin {
                 },
                 isApplied: ({ editingElement, param: { mainParam: columns } }) =>
                     columns === this.getColumns(editingElement),
+            },
+            setCarouselSpeed: {
+                apply: ({ editingElement, value }) => {
+                    editingElement.dataset.bsInterval = value * 1000;
+                },
+                getValue: ({ editingElement }) => editingElement.dataset.bsInterval / 1000,
             },
         };
     }

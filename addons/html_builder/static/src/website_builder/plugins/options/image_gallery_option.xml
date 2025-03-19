@@ -6,8 +6,7 @@
         <BuilderButton type="'success'" className="'flex-grow-1'" preview="false" title.translate="Add Image"  action="'addImage'"> Add </BuilderButton>
         <BuilderButton type="'danger'" className="'flex-grow-1'" preview="false" title.translate="Remove all images" action="'removeAllImages'"> Remove all </BuilderButton>
     </BuilderRow>
-    <BuilderRow label.translate="Mode">
-        <!-- TODO: No mode when implementing layout slideshow -->
+    <BuilderRow label.translate="Mode" t-if="!this.state.isSlideShow">
         <BuilderSelect>
             <BuilderSelectItem id="'image_gallery_grid_id'" action="'setImageGalleryLayout'" actionParam="'grid'">Grid</BuilderSelectItem>
             <BuilderSelectItem id="'image_gallery_masonry_id'" action="'setImageGalleryLayout'" actionParam="'masonry'">Masonry</BuilderSelectItem>
@@ -15,6 +14,7 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow
+        t-if="!this.state.isSlideShow"
         label.translate="Images Spacing">
         <BuilderRange action="'setClassRange'" actionParam="['o_spc-none','o_spc-small','o_spc-medium','o_spc-big']" max="3"/>
     </BuilderRow>
@@ -25,6 +25,10 @@
                 <BuilderSelectItem action="'setImageGalleryColumns'" actionParam="column"><t t-esc="column"/></BuilderSelectItem>
             </t>
         </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Speed" t-if="this.state.isSlideShow">
+        <BuilderNumberInput applyTo="'.carousel'" action="'setCarouselSpeed'" unit="'s'" saveUnit="''" step="0.1"/>
     </BuilderRow>
 </t>
 
