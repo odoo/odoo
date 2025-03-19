@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo import Command
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.tests import Form, tagged
 
-import odoo.tests
 
-
-@odoo.tests.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install')
 class TestAutomation(TransactionCaseWithUserDemo):
 
     def test_01_on_create_or_write(self):
@@ -45,32 +44,6 @@ class TestAutomation(TransactionCaseWithUserDemo):
         bilbo.active = True
         bilbo.name = "Bilbo"
         self.assertFalse(bilbo.active)
-
-        # verify the "Base Action Rule: check and execute" frequency is updated correctly when a new action is created.
-        self.env["base.automation"].create([
-            {
-                "name": "Bilbo time senstive reminder in a hurry",
-                "trigger": "on_time",
-                "model_id": self.env.ref("base.model_res_partner").id,
-                "trigger_field_ids": [],
-                "trg_date_range": -60,
-                "trg_date_range_type": "minutes",
-                "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
-            },
-            {
-                "name": "Bilbo time senstive reminder late",
-                "trigger": "on_time",
-                "model_id": self.env.ref("base.model_res_partner").id,
-                "trigger_field_ids": [],
-                "trg_date_range": 60,
-                "trg_date_range_type": "minutes",
-                "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
-            }
-            ])
-
-        cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
-        self.assertEqual(cron.interval_number, 6)
-        self.assertEqual(cron.interval_type, "minutes")
 
     def test_02_on_create_or_write_restricted(self):
         """ on_create action with low portal user """
@@ -211,10 +184,13 @@ class TestAutomation(TransactionCaseWithUserDemo):
         automation1 = self.env['base.automation'].create({
             'active': True,
             'name': 'Automation 1',
-            'trigger': 'on_time_created',
+            'trigger': 'on_time',
             'model_id': self.env.ref('base.model_res_partner').id,
             'trg_date_range': 2,
             'trg_date_range_type': 'hour',
+            'trg_date_range_mode': 'before',
+            # of course the chosen field does not really make sense here, but hey its testing data
+            "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
         })
         self.assertRecordValues(cron, [{
             'active': True,
@@ -275,3 +251,29 @@ class TestAutomation(TransactionCaseWithUserDemo):
             'interval_type': 'minutes',
             'interval_number': 6,  # should have not changed
         }])
+
+    def test_computed_on_scheduled_action(self):
+        with Form(self.env['base.automation'], view='base_automation.view_base_automation_form') as f:
+            f.name = 'Test Automation'
+            f.model_id = self.env.ref('base.model_res_partner')
+            f.trigger = 'on_time'
+            f.trg_date_range = 2
+            f.trg_date_range_type = 'hour'
+            f.trg_date_range_mode = 'after'
+            f.trg_date_id = self.env.ref('base.field_res_partner__write_date')
+            # Negate trg_date_range should toggle trg_date_range_mode
+            f.trg_date_range = -2
+            self.assertEqual(f.trg_date_range_mode, 'before')
+            self.assertEqual(f.trg_date_range, 2)
+            # Change without negating should not toggle trg_date_range_mode
+            f.trg_date_range = 3
+            self.assertEqual(f.trg_date_range_mode, 'before')
+            self.assertEqual(f.trg_date_range, 3)
+            # Negate trg_date_range should toggle trg_date_range_mode
+            f.trg_date_range = -3
+            self.assertEqual(f.trg_date_range_mode, 'after')
+            self.assertEqual(f.trg_date_range, 3)
+            # Change without negating should not toggle trg_date_range_mode
+            f.trg_date_range = 2
+            self.assertEqual(f.trg_date_range_mode, 'after')
+            self.assertEqual(f.trg_date_range, 2)

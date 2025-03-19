@@ -197,15 +197,19 @@ class BaseAutomation(models.Model):
         help="""When should the condition be triggered.
                 If present, will be checked by the scheduler. If empty, will be checked at creation and update.""")
     trg_date_range = fields.Integer(
-        string='Delay after trigger date',
+        string='Delay',
         compute='_compute_trg_date_range_data',
-        readonly=False, store=True, tracking=True,
-        help="Use negative value to trigger it before the date")
+        readonly=False, store=True, tracking=True)
+    trg_date_range_mode = fields.Selection(
+        [('after', 'After'), ('before', 'Before')],
+        string='Delay mode',
+        compute='_compute_trg_date_range_data',
+        readonly=False, store=True, tracking=True)
     trg_date_range_type = fields.Selection(
         [('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
-        string='Delay type',
+        string='Delay unit',
         compute='_compute_trg_date_range_data',
-        readonly=False, store=True)
+        readonly=False, store=True, tracking=True)
     trg_date_calendar_id = fields.Many2one(
         "resource.calendar", string='Use Calendar',
         compute='_compute_trg_date_calendar_id',
@@ -269,6 +273,12 @@ class BaseAutomation(models.Model):
         for rec in self:
             rec.model_id = self.env["ir.model"]._get(rec.model_name)
 
+    @api.constrains('trigger', 'trg_date_range')
+    def _check_time_trigger(self):
+        for record in self:
+            if record.trigger in TIME_TRIGGERS and record.trg_date_range < 0:
+                raise exceptions.ValidationError(_("Delay must be positive. Set 'Delay mode' to 'Before' to negate the delay."))
+
     @api.constrains('trigger', 'action_server_ids')
     def _check_trigger_state(self):
         for record in self:
@@ -309,12 +319,25 @@ class BaseAutomation(models.Model):
         for record in (self - to_reset):
             record.trg_date_id = record._get_trigger_specific_field()
 
+    @api.onchange('trg_date_range')
+    def _onchange_trg_date_range_data(self):
+        if self.trg_date_range < 0:
+            self.trg_date_range = abs(self.trg_date_range)
+            if self.trigger == 'on_time':
+                self.trg_date_range_mode = 'before' if self.trg_date_range_mode == 'after' else 'after'
+
     @api.depends('trigger')
     def _compute_trg_date_range_data(self):
-        to_reset = self.filtered(lambda a: a.trigger not in TIME_TRIGGERS)
-        to_reset.trg_date_range = False
-        to_reset.trg_date_range_type = False
-        (self - to_reset).filtered(lambda a: not a.trg_date_range_type).trg_date_range_type = 'hour'
+        for record in self:
+            if record.trigger not in TIME_TRIGGERS:
+                record.trg_date_range = False
+                record.trg_date_range_type = False
+                record.trg_date_range_mode = False
+                continue
+            if not record.trg_date_range_type:
+                record.trg_date_range_type = 'hour'
+            if not record.trg_date_range_mode or record.trigger not in 'on_time':
+                record.trg_date_range_mode = 'after'
 
     @api.depends('trigger', 'trg_date_id', 'trg_date_range_type')
     def _compute_trg_date_calendar_id(self):
@@ -1073,7 +1096,8 @@ class BaseAutomation(models.Model):
 
         # we can search for the records to trigger
         # find the relative dates
-        relative_offset = DATE_RANGE[automation.trg_date_range_type] * automation.trg_date_range
+        value_sign = 1 if automation.trg_date_range_mode == 'after' else -1
+        relative_offset = DATE_RANGE[automation.trg_date_range_type] * value_sign * abs(automation.trg_date_range)
         relative_until = until + relative_offset
         relative_last_run = last_run + relative_offset
         if date_field.type == 'date':

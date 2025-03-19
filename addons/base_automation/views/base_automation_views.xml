@@ -71,10 +71,11 @@
                                     />
                                 </div>
                                 <field name="log_webhook_calls" widget="boolean_toggle" invisible="trigger != 'on_webhook'" groups="base.group_no_one"/>
-                                <label for="trg_date_range" string="Delay" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
+                                <label for="trg_date_range" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']"/>
                                 <div class="d-flex flex-row gap-2" invisible="trigger not in ['on_time', 'on_time_created', 'on_time_updated']">
                                     <field name="trg_date_range" class="oe_inline o_input_3ch" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
                                     <field name="trg_date_range_type" class="oe_inline" required="trigger in ['on_time', 'on_time_created', 'on_time_updated']" />
+                                    <field name="trg_date_range_mode" class="oe_inline" invisible="trigger in ['on_time_created', 'on_time_updated']" required="trigger == 'on_time'" />
                                     <button
                                         type="object"
                                         name="action_open_scheduled_action"
@@ -201,6 +202,7 @@
                                     <div class="d-flex align-items-center gap-1" invisible="trigger != 'on_time'">
                                         <field name="trg_date_range"/>
                                         <field name="trg_date_range_type" class="text-lowercase text-nowrap" />
+                                        <field name="trg_date_range_mode" class="text-lowercase text-nowrap" />
                                         <span class="flex-shrink-0">
                                             based on <field name="trg_date_id" invisible="trigger != 'on_time'"  class="o_tag o_tag_color_0 rounded-pill p-1 px-2" />
                                         </span>
