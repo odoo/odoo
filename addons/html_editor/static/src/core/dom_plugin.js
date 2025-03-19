@@ -191,7 +191,11 @@ export class DomPlugin extends Plugin {
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>.
-        if (container.childElementCount === 1 && shouldUnwrap(container.firstChild)) {
+        if (
+            container.childElementCount === 1 &&
+            (this.dependencies.baseContainer.isCandidateForBaseContainer(container.firstChild) ||
+                shouldUnwrap(container.firstChild))
+        ) {
             const nodeToUnwrap = container.firstElementChild;
             container.replaceChildren(...childNodes(nodeToUnwrap));
         } else if (container.childElementCount > 1) {
