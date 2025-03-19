@@ -657,10 +657,44 @@ class HolidaysAllocation(models.Model):
             raise UserError(_('Allocation state must be "Refused" in order to be reset to "To Approve".'))
         self.write({
             'state': 'confirm',
+<<<<<<< 127949451439cd7e665832aac148d0c9f0a7081e
             'approver_id': False,
             'second_approver_id': False,
         })
         self.activity_update()
+||||||| ae8783ca00f289d5a6bfb0e00cf9a2bdfc653ef4
+            'allocation_type': self.allocation_type,
+            'date_from': self.date_from,
+            'date_to': self.date_to,
+            'accrual_plan_id': self.accrual_plan_id.id,
+        } for employee in employees]
+
+    def action_validate(self):
+        to_validate = self.filtered(lambda alloc: alloc.state != 'validate')
+        if to_validate:
+            to_validate.write({
+                'state': 'validate',
+                'approver_id': self.env.user.employee_id.id
+            })
+            to_validate._action_validate_create_childs()
+            to_validate.activity_update()
+=======
+            'allocation_type': self.allocation_type,
+            'date_from': self.date_from,
+            'date_to': self.date_to,
+            'accrual_plan_id': self.accrual_plan_id.id,
+        } for employee in employees if (not employee.resource_calendar_id) or employee.resource_calendar_id.hours_per_day]
+
+    def action_validate(self):
+        to_validate = self.filtered(lambda alloc: alloc.state != 'validate')
+        if to_validate:
+            to_validate.write({
+                'state': 'validate',
+                'approver_id': self.env.user.employee_id.id
+            })
+            to_validate._action_validate_create_childs()
+            to_validate.activity_update()
+>>>>>>> 25420a107fb9ce7d01b55d9baa342069cbfe4d1f
         return True
 
     def action_approve(self):
