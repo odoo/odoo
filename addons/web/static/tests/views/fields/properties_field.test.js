@@ -16,11 +16,7 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
-import {
-    editTime,
-    getPickerApplyButton,
-    getPickerCell,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
+import { editTime, getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickCancel,
     clickSave,
@@ -396,8 +392,6 @@ test("properties: access to parent", async () => {
     await click(getPickerCell("3"));
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1);
-
-    await click(getPickerApplyButton());
 
     expect(".o_property_field_popover").toHaveCount(1, {
         message: "Should not close the definition popover after selecting a date",

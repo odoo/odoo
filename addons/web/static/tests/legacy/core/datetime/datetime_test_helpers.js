@@ -150,10 +150,6 @@ export function assertDateTimePicker(expectedParams) {
     assert.containsN(fixture, ".o_today", todayCells);
 }
 
-export function getPickerApplyButton() {
-    return select(".o_datetime_picker .o_datetime_buttons .o_apply").at(0);
-}
-
 /**
  * @param {RegExp | string} expr
  */

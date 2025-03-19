@@ -13,7 +13,6 @@ const firstLeaveDateTo = "01/17/2022";
 const secondLeaveDateFrom = "01/18/2022";
 const secondLeaveDateTo = "01/18/2022";
 
-
 registry.category("web_tour.tours").add("hr_leave_type_tour", {
     url: "/web",
     steps: () => [
@@ -89,22 +88,10 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             run: `edit ${firstLeaveDateFrom}`,
         },
         {
-            trigger: "button.o_apply",
-            content: "Confirm date selection",
-            tooltipPosition: "bottom",
-            run: "click",
-        },
-        {
             trigger: "input[data-field=request_date_to]",
             content: "Select the end date of the leave",
             tooltipPosition: "right",
             run: `edit ${firstLeaveDateTo}`,
-        },
-        {
-            trigger: "button.o_apply",
-            content: "Confirm date selection",
-            tooltipPosition: "bottom",
-            run: "click",
         },
         {
             trigger: 'button[name="action_approve"]',
@@ -114,7 +101,8 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
         },
         {
             trigger: 'button[name="action_cancel"]',
-            content: "Make sure that the leave is approved by checking that the cancel button appears",
+            content:
+                "Make sure that the leave is approved by checking that the cancel button appears",
         },
         {
             trigger: ".o_switch_company_menu button",
@@ -142,7 +130,8 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
         },
         {
             trigger: 'div[name="holiday_status_id"] input',
-            content: "Select leave_type_2 from the list. It should be available now because company_2 is selected",
+            content:
+                "Select leave_type_2 from the list. It should be available now because company_2 is selected",
             tooltipPosition: "bottom",
             run: `edit ${leaveType2}`,
         },
@@ -162,22 +151,10 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             run: `edit ${secondLeaveDateFrom}`,
         },
         {
-            trigger: "button.o_apply",
-            content: "Confirm date selection",
-            tooltipPosition: "bottom",
-            run: "click",
-        },
-        {
             trigger: "input[data-field=request_date_to]",
             content: "Select the end date of the leave",
             tooltipPosition: "right",
             run: `edit ${secondLeaveDateTo}`,
-        },
-        {
-            trigger: "button.o_apply",
-            content: "Confirm date selection",
-            tooltipPosition: "bottom",
-            run: "click",
         },
         {
             trigger: 'button[name="action_approve"]',
@@ -187,7 +164,8 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
         },
         {
             trigger: 'button[name="action_cancel"]',
-            content: "Make sure that the leave is approved by checking that the cancel button appears",
+            content:
+                "Make sure that the leave is approved by checking that the cancel button appears",
         },
     ],
 });

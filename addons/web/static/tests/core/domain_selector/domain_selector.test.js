@@ -1,12 +1,9 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryAllAttributes, queryAllTexts } from "@odoo/hoot-dom";
+import { press, queryAll, queryAllAttributes, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 
-import {
-    getPickerApplyButton,
-    getPickerCell,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
+import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     Partner,
     Product,
@@ -167,7 +164,7 @@ test("building a domain with a datetime", async () => {
     // Change the date in the datepicker
     await contains(".o_datetime_input").click();
     await contains(getPickerCell("26")).click();
-    await contains(getPickerApplyButton()).click();
+    await press("enter");
 
     // The input field should display the date and time in the user's timezone
     expect(".o_datetime_input").toHaveValue("03/26/2017 16:42");

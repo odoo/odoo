@@ -29,10 +29,7 @@ import {
     tick,
 } from "@odoo/hoot-mock";
 import { Component, markup, onRendered, onWillStart, useRef, xml } from "@odoo/owl";
-import {
-    getPickerApplyButton,
-    getPickerCell,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
+import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
     clickModalButton,
@@ -10367,10 +10364,10 @@ test(`multi edit field with daterange widget`, async () => {
     // change dates range
     await contains(getPickerCell("16").at(0)).click();
     await contains(getPickerCell("12").at(1)).click();
-    expect(getPickerApplyButton()).not.toHaveAttribute("disabled");
 
     // Apply the changes
-    await contains(getPickerApplyButton()).click();
+    await contains(`.o_list_view`).click();
+
     expect(`.modal`).toHaveCount(1, {
         message: "The confirm dialog should appear to confirm the multi edition.",
     });
