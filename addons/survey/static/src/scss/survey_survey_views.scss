@@ -13,13 +13,17 @@
 
     // Grouped / Ungrouped sections hidding
     &.o_kanban_grouped {
-        .o_survey_kanban_card_ungrouped {
-            display:none !important;
-        }
-    }
-    &.o_kanban_ungrouped {
-        .o_survey_kanban_card_grouped {
-            display:none !important;
+        .row > div {
+            flex: 1 1 100% !important;
+            max-width: 100% !important;
+            padding-left: 0 !important;
+            &.col-6 {
+                flex: 1 1 50% !important;
+                max-width: 50% !important;
+            }
+            &.d-none {
+                display: none !important; //forcing the d-none to override the d-lg or d-sm classes for grouped view
+            }
         }
     }
 
@@ -39,13 +43,6 @@
 
     // Grouped specific
     &.o_kanban_grouped {
-        // Set a minimal height otherwise display may have different card sized
-        .o_survey_kanban_card_grouped {
-            & > .row {
-                min-height: 60px;
-            }
-        }
-
         // Due to activity widget crashing if present twice, have to set absolute and tweak
         .o_survey_kanban_card_bottom {
             position: absolute;
@@ -57,10 +54,8 @@
     // Ungrouped specific
     &.o_kanban_ungrouped {
         // Set a minimal height otherwise display may have different card sized
-        .o_survey_kanban_card_ungrouped {
-            &.row {
+        .o_survey_kanban_card > div.row {
                 min-height: 60px;
-            }
         }
 
         // Left semi-trophy icon for certifications: tweak display for list view
@@ -87,7 +82,7 @@
 
     // RIBBON: Kanban specific
     // Ungrouped specific
-    .o_survey_kanban_card_ungrouped {
+    .o_survey_kanban_card {
         .ribbon {
             --Ribbon-wrapper-width: 6rem;
 
