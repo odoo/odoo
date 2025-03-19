@@ -6,6 +6,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     createElementWithContent,
     htmlEscape,
+    htmlFormatList,
     isHtmlEmpty,
     setElementContent,
 } from "@web/core/utils/html";
@@ -52,4 +53,13 @@ test("setElementContent keeps html markup", () => {
     const div = document.createElement("div");
     setElementContent(div, markup("<p>test</p>"));
     expect(div.innerHTML).toBe("<p>test</p>");
+});
+
+test("htmlFormatList", () => {
+    const list = ["<p>test 1</p>", markup("<p>test 2</p>"), "&lt;p&gt;test 3&lt;/p&gt;"];
+    const res = htmlFormatList(list, { localeCode: "fr-FR" });
+    expect(res.toString()).toBe(
+        "&lt;p&gt;test 1&lt;/p&gt;, <p>test 2</p> et &amp;lt;p&amp;gt;test 3&amp;lt;/p&amp;gt;"
+    );
+    expect(res).toBeInstanceOf(Markup);
 });

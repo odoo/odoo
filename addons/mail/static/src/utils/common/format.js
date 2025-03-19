@@ -2,14 +2,20 @@ import {
     createDocumentFragmentFromContent,
     htmlJoin,
     htmlReplace,
+    htmlReplaceAll,
     htmlTrim,
 } from "@mail/utils/common/html";
 
 import { markup } from "@odoo/owl";
 
 import { stateToUrl } from "@web/core/browser/router";
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
-import { createElementWithContent, htmlEscape, setElementContent } from "@web/core/utils/html";
+import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
+import {
+    createElementWithContent,
+    htmlEscape,
+    htmlFormatList,
+    setElementContent,
+} from "@web/core/utils/html";
 import { escapeRegExp, unaccent } from "@web/core/utils/strings";
 import { setAttributes } from "@web/core/utils/xml";
 
@@ -44,11 +50,10 @@ export async function prettifyMessageContent(
     rawBody,
     { validMentions = [], allowEmojiLoading = true } = {}
 ) {
-    // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
-    // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
-    // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
-    const escapedAndCompactContent = escapeAndCompactTextContent(rawBody);
-    let body = htmlReplace(escapedAndCompactContent, /&nbsp;/g, " ");
+    let body = htmlTrim(rawBody);
+    body = htmlReplace(body, /(\r|\n){2,}/g, () => markup("<br/><br/>"));
+    body = htmlReplace(body, /(\r|\n)/g, () => markup("<br/>"));
+    body = htmlReplace(body, /&nbsp;/g, () => " ");
     body = htmlTrim(body);
     // This message will be received from the mail composer as html content
     // subtype but the urls will not be linkified. If the mail composer
@@ -157,24 +162,6 @@ export function addLink(node, transformChildren) {
 }
 
 /**
- * Returns an escaped conversion of a content.
- *
- * @param {string|ReturnType<markup>} content
- * @returns {ReturnType<markup>}
- */
-export function escapeAndCompactTextContent(content) {
-    //Removing unwanted extra spaces from message
-    let value = htmlTrim(content);
-    value = htmlReplace(value, /(\r|\n){2,}/g, markup("<br/><br/>"));
-    value = htmlReplace(value, /(\r|\n)/g, markup("<br/>"));
-
-    // prevent html space collapsing
-    value = htmlReplace(value, / /g, markup("&nbsp;"));
-    value = htmlReplace(value, /([^>])&nbsp;([^<])/g, markup("$1 $2"));
-    return value;
-}
-
-/**
  * @param body {string|ReturnType<markup>}
  * @param validRecords {Object}
  * @param validRecords.partners {Array}
@@ -247,7 +234,7 @@ async function _generateEmojisOnHtml(htmlString) {
         for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
             const escapedSource = htmlEscape(String(source));
             const regexp = new RegExp("(\\s|^)(" + escapeRegExp(escapedSource) + ")(?=\\s|$)", "g");
-            htmlString = htmlReplace(htmlString, regexp, "$1" + emoji.codepoints);
+            htmlString = htmlReplace(htmlString, regexp, (_, group1) => group1 + emoji.codepoints);
         }
     }
     return htmlEscape(htmlString);
@@ -278,7 +265,7 @@ export function getNonEditableMentions(body) {
  * @returns {string}
  */
 export function htmlToTextContentInline(htmlString) {
-    htmlString = htmlReplace(htmlString, /<br\s*\/?>/gi, " ");
+    htmlString = htmlReplace(htmlString, /<br\s*\/?>/gi, () => " ");
     const div = document.createElement("div");
     try {
         setElementContent(div, htmlString);
@@ -292,7 +279,7 @@ export function htmlToTextContentInline(htmlString) {
 }
 
 export function convertBrToLineBreak(str) {
-    str = htmlReplace(str, /<br\s*\/?>/gi, "\n");
+    str = htmlReplace(str, /<br\s*\/?>/gi, () => "\n");
     return createDocumentFragmentFromContent(str).body.textContent;
 }
 
@@ -323,3 +310,41 @@ export function parseEmail(text) {
 }
 
 export const EMOJI_REGEX = /\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200d/gu;
+
+/**
+ * Wrap emojis present in the given text with a title and return a safe HTML
+ * string.
+ *
+ * @param {string|ReturnType<markup>} content
+ * @returns {ReturnType<markup>}
+ */
+export function wrapEmojisWithTitles(content) {
+    if (!loader.loaded || !content) {
+        return content;
+    }
+    const doc = createDocumentFragmentFromContent(content);
+    const nodes = document.evaluate(
+        ".//text()",
+        doc.body,
+        null,
+        XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+        null
+    );
+    for (let i = 0; i < nodes.snapshotLength; i++) {
+        const node = nodes.snapshotItem(i);
+        const span = document.createElement("span");
+        setElementContent(
+            span,
+            htmlReplaceAll(node.textContent, loader.loaded.emojiRegex, (codepoints) =>
+                markup(
+                    `<span title="${htmlFormatList(
+                        loader.loaded.emojiValueToShortcodes[codepoints],
+                        { style: "unit-narrow" }
+                    )}">${htmlEscape(codepoints)}</span>`
+                )
+            )
+        );
+        node.replaceWith(...span.childNodes);
+    }
+    return markup(doc.body.innerHTML);
+}
