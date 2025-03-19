@@ -115,7 +115,9 @@ export class CallParticipantCard extends Component {
     }
 
     get isTalking() {
-        return Boolean(this.rtcSession && this.rtcSession.isActuallyTalking);
+        return Boolean(
+            this.rtcSession && this.rtcSession.isActuallyTalking && !this.rtc.selfSession?.isDeaf
+        );
     }
 
     get hasRaisingHand() {

@@ -88,6 +88,29 @@ class StockMove(models.Model):
         """
         return ['in', 'out', 'dropshipped', 'dropshipped_returned']
 
+    def _get_move_directions(self):
+        move_in_ids = set()
+        move_out_ids = set()
+        locations_should_be_valued = (self.move_line_ids.location_id | self.move_line_ids.location_dest_id).filtered(lambda l: l._should_be_valued())
+        for record in self:
+            for move_line in self.move_line_ids:
+                if move_line._should_exclude_for_valuation() or not move_line.picked:
+                    continue
+                if move_line.location_id not in locations_should_be_valued and move_line.location_dest_id in locations_should_be_valued:
+                    move_in_ids.add(record.id)
+                if move_line.location_id in locations_should_be_valued and move_line.location_dest_id not in locations_should_be_valued:
+                    move_out_ids.add(record.id)
+
+        move_directions = defaultdict(set)
+        for record in self:
+            if record.id in move_in_ids and not record._is_dropshipped_returned():
+                move_directions[record.id].add('in')
+
+            if record.id in move_out_ids and not record._is_dropshipped():
+                move_directions[record.id].add('out')
+
+        return move_directions
+
     def _get_in_move_lines(self):
         """ Returns the `stock.move.line` records of `self` considered as incoming. It is done thanks
         to the `_should_be_valued` method of their source and destionation location as well as their
@@ -693,20 +716,30 @@ class StockMove(models.Model):
         if self._should_exclude_for_valuation():
             return am_vals
 
-        company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
-        company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
+        move_directions = self.env.context.get('move_directions') or False
+
+        self_is_out_move = self_is_in_move = False
+        if move_directions:
+            self_is_out_move = move_directions.get(self.id) and 'out' in move_directions.get(self.id)
+            self_is_in_move = move_directions.get(self.id) and 'in' in move_directions.get(self.id)
+        else:
+            self_is_out_move = self._is_out()
+            self_is_in_move = self._is_in()
+
+        company_from = self_is_out_move and self.mapped('move_line_ids.location_id.company_id') or False
+        company_to = self_is_in_move and self.mapped('move_line_ids.location_dest_id.company_id') or False
 
         journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
-        if self._is_in():
+        if self_is_in_move:
             if self._is_returned(valued_type='in'):
                 am_vals.append(self.with_company(company_to).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
             else:
                 am_vals.append(self.with_company(company_to)._prepare_account_move_vals(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost))
 
         # Create Journal Entry for products leaving the company
-        if self._is_out():
+        if self_is_out_move:
             cost = -1 * cost
             if self._is_returned(valued_type='out'):
                 am_vals.append(self.with_company(company_from).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))

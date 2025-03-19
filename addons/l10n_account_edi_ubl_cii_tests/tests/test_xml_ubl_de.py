@@ -2,6 +2,7 @@
 from odoo import Command
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
+from odoo.exceptions import UserError
 import base64
 
 
@@ -296,3 +297,37 @@ class TestUBLDE(TestUBLCommon):
         self._detach_attachment(attachment)
         created_bill.message_post(attachment_ids=[attachment.id])
         self.assertTrue(created_bill)
+
+    def test_ensure_buyer_reference_xrechnung_xml(self):
+        acc_bank = self.env['res.partner.bank'].create({
+            'acc_number': 'BE15001559627232',
+            'partner_id': self.company_data['company'].partner_id.id,
+        })
+
+        self.partner_1.ref = False
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            partner_id=self.partner_1.id,
+            partner_bank_id=acc_bank.id,
+            invoice_date='2017-01-01',
+            date='2017-01-01',
+            invoice_line_ids=[{
+                'product_id': self.product_a.id,
+                'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                'price_unit': 275.0,
+                'quantity': 5,
+                'discount': 20.0,
+                'tax_ids': [(6, 0, self.tax_19.ids)],
+            }],
+        )
+
+        with self.assertRaises(UserError):
+            self.env['account.move.send'].with_context(
+                active_model='account.move',
+                active_ids=invoice.ids,
+            ).create({
+                'checkbox_download': False,
+                'checkbox_send_mail': False,
+            }).action_send_and_print()

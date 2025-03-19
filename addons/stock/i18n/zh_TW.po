@@ -1773,7 +1773,7 @@ msgstr "若想在此操作中產生貨運標籤，請勾選此方格。"
 #: model:ir.model.fields,help:stock.field_stock_move__scrapped
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
-msgstr "勾取此選項以允許此位置放置已報廢/已毀壞的貨品."
+msgstr "若勾選此方格，將允許使用此位置存放已報廢/已損壞的貨物。"
 
 #. module: stock
 #. odoo-python
@@ -8874,6 +8874,15 @@ msgstr "批次/序號（%s）已連結至另一個產品。"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid ""
 "The Serial Number (%(serial_number)s) is already used in location(s): %(location_list)s.\n"
@@ -10423,6 +10432,8 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need. %(suffix)s"
 msgstr ""
+"當 <b>%(destination)s</b> 需要產品時，<br>會自動建立 <b>%(operation)s</b> 操作，由 "
+"<b>%(source_location)s</b> 調配產品，以滿足需求。%(suffix)s"
 
 #. module: stock
 #. odoo-python

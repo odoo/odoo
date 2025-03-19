@@ -174,7 +174,8 @@ class StockMove(models.Model):
         different from the purchased one, we need to empty the stock_in account
         with the difference
         """
-        am_vals_list = super()._account_entry_move(qty, description, svl_id, cost)
+        move_directions = self.env.context.get('move_directions') or False
+        am_vals_list = super(StockMove, self.with_context(move_directions=move_directions))._account_entry_move(qty, description, svl_id, cost)
         returned_move = self.origin_returned_move_id
         move = (self | returned_move).with_prefetch(self._prefetch_ids)
         pdiff_exists = bool(move.stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
@@ -184,7 +185,13 @@ class StockMove(models.Model):
 
         layer = self.env['stock.valuation.layer'].browse(svl_id)
 
-        if returned_move and self._is_out() and self._is_returned(valued_type='out'):
+        self_is_out_move = False
+        if move_directions:
+            self_is_out_move = move_directions.get(self.id) and 'out' in move_directions.get(self.id)
+        else:
+            self_is_out_move = self._is_out()
+
+        if returned_move and self_is_out_move and self._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
             unit_diff = layer._get_layer_price_unit() - returned_layer._get_layer_price_unit() if returned_layer else 0
         elif returned_move and returned_move._is_out() and returned_move._is_returned(valued_type='out'):

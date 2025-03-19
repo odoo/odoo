@@ -335,8 +335,8 @@ class AccountPayment(models.Model):
         currency_id = self.currency_id.id
 
         # Compute a default label to set on the journal items.
-        liquidity_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
-        counterpart_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
+        liquidity_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list() if x[1])
+        counterpart_line_name = liquidity_line_name
 
         line_vals_list = [
             # Liquidity line.
@@ -979,6 +979,7 @@ class AccountPayment(models.Model):
             pay.move_id \
                 .with_context(skip_invoice_sync=True) \
                 .write({
+                'date': pay.date,
                 'partner_id': pay.partner_id.id,
                 'currency_id': pay.currency_id.id,
                 'partner_bank_id': pay.partner_bank_id.id,

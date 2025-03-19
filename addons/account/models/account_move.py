@@ -36,7 +36,7 @@ from odoo.tools import (
     OrderedSet,
     SQL,
 )
-from odoo.tools.mail import email_re, email_split, is_html_empty
+from odoo.tools.mail import email_re, email_split, is_html_empty, generate_tracking_message_id
 from odoo.tools.misc import StackMap
 
 
@@ -1881,7 +1881,13 @@ class AccountMove(models.Model):
                 move.move_type in ('in_invoice', 'in_refund')
                 AND (
                    move.ref = duplicate_move.ref
-                   AND (move.invoice_date = duplicate_move.invoice_date OR move.state = 'draft')
+                   AND (
+                       move.invoice_date IS NULL
+                       OR
+                       duplicate_move.invoice_date IS NULL
+                       OR
+                       date_part('year', move.invoice_date) = date_part('year', duplicate_move.invoice_date)
+                   )
                 )
             """)
             to_query.append((in_moves, in_moves_sql_condition))
@@ -3519,17 +3525,18 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         # EXTENDS account sequence.mixin
         self.ensure_one()
-        year_part = "%04d" % self.date.year
+        move_date = self.date or self.invoice_date or fields.Date.context_today(self)
+        year_part = "%04d" % move_date.year
         last_day = int(self.company_id.fiscalyear_last_day)
         last_month = int(self.company_id.fiscalyear_last_month)
         is_staggered_year = last_month != 12 or last_day != 31
         if is_staggered_year:
-            max_last_day = calendar.monthrange(self.date.year, last_month)[1]
+            max_last_day = calendar.monthrange(move_date.year, last_month)[1]
             last_day = min(last_day, max_last_day)
-            if self.date > date(self.date.year, last_month, last_day):
-                year_part = "%s-%s" % (self.date.strftime('%y'), (self.date + relativedelta(years=1)).strftime('%y'))
+            if move_date > date(move_date.year, last_month, last_day):
+                year_part = "%s-%s" % (move_date.strftime('%y'), (move_date + relativedelta(years=1)).strftime('%y'))
             else:
-                year_part = "%s-%s" % ((self.date + relativedelta(years=-1)).strftime('%y'), self.date.strftime('%y'))
+                year_part = "%s-%s" % ((move_date + relativedelta(years=-1)).strftime('%y'), move_date.strftime('%y'))
         # Arbitrarily use annual sequence for sales documents, but monthly
         # sequence for other documents
         if self.journal_id.type in ['sale', 'bank', 'cash', 'credit']:
@@ -3538,7 +3545,7 @@ class AccountMove(models.Model):
             # example). Note that it's already the case for monthly sequences.
             starting_sequence = "%s/%s/%s" % (self.journal_id.code, year_part, '0000' if is_staggered_year else '00000')
         else:
-            starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, self.date.month)
+            starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, move_date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
         if self.journal_id.payment_sequence and self.origin_payment_id or self.env.context.get('is_payment'):
@@ -4179,14 +4186,20 @@ class AccountMove(models.Model):
 
                 except RedirectWarning:
                     raise
-                except Exception:
+                except Exception as e:
                     message = _(
                         "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)",
                         file_name=file_data['filename'],
                         decoder=decoder.__name__,
                     )
-                    current_invoice.sudo().message_post(body=message)
                     _logger.exception(message)
+                    if isinstance(e, UserError):
+                        message = Markup("%s<br/><br/>%s<br/>%s") % (
+                            message,
+                            _("This specific error occurred during the import:"),
+                            str(e),
+                        )
+                    current_invoice.sudo().message_post(body=message)
 
             passed_file_data_list.append(file_data)
             close_file(file_data)
@@ -5003,7 +5016,10 @@ class AccountMove(models.Model):
             and not self.abnormal_amount_warning
             and not self.restrict_mode_hash_table
         ):
-            self.action_post()
+            if self.duplicated_ref_ids:
+                self.message_post(body=_("Auto-post was disabled on this invoice because a potential duplicate was detected."))
+            else:
+                self.action_post()
 
     def _show_autopost_bills_wizard(self):
         if (
@@ -5949,7 +5965,9 @@ class AccountMove(models.Model):
                 'company_email': self.env.company.email,
                 'company_name': self.env.company.name,
             })
-            self._routing_create_bounce_email(message_dict['from'], body, message)
+            self._routing_create_bounce_email(
+                message_dict['from'], body, message,
+                references=f'{message_dict["message_id"]} {generate_tracking_message_id("loop-detection-bounce-email")}')
             return ()
         return super()._routing_check_route(message, message_dict, route, raise_exception=raise_exception)
 

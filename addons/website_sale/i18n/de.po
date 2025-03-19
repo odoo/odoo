@@ -3264,6 +3264,12 @@ msgstr "Zahlungstransaktionen"
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
+msgid "Payment is already being processed."
+msgstr "Die Zahlung wird bereits bearbeitet."
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Pedal-based opening system"
 msgstr "Pedalgestütztes Öffnungssystem"
@@ -3367,6 +3373,12 @@ msgstr "Einzelpreis"
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
 msgstr "Preisliste für diese E-Commerce/Website verfügbar"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Price will be updated after choosing a delivery method"
+msgstr ""
+"Der Preis wird aktualisiert, nachdem eine Liefermethode ausgewählt wurde"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -4380,6 +4392,13 @@ msgstr "Das Zugriffstoken ist ungültig."
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
+"Der Warenkorb wurde bereits bezahlt. Bitte aktualisieren Sie die Seite."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has been updated. Please refresh the page."
 msgstr "Der Warenkorb wurde aktualisiert. Bitte aktualisieren Sie die Seite."
 
@@ -4577,7 +4596,7 @@ msgid ""
 msgstr ""
 "Um Einladungen im B2B-Modus zu versenden, öffnen Sie einen Kontakt oder "
 "wählen Sie in der Listenansicht mehrere aus und klicken Sie im Drop-down-"
-"Menü *Aktion* auf die Option „Portal-Zugriffsverwaltung“."
+"Menü *Aktion* auf die Option „Portalzugriffsverwaltung“."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options

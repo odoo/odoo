@@ -221,7 +221,14 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
     color: inherit;
 }
 .form-control.bg-light {
+    @include o-search-cancel-button(adjust-color-to-background($input-color, $light));
+
     color: adjust-color-to-background($input-color, $light);
+}
+
+// Default style inputs
+input[type="search"] {
+    @include o-search-cancel-button($input-color);
 }
 
 $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
@@ -274,9 +281,18 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
 }
 
 // Dropdown
-.dropdown .dropdown-menu {
+.dropdown-menu {
     .text-muted {
         color: adjust-color-to-background($text-muted, $dropdown-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+
+    // Since we define the $dropdown-link-active-bg variable, we need to
+    // redefine the .active state of the dropdown items to differentiate
+    // an active class from the active state. This allows a discreet effect for
+    // the active state while keeping an active navigation element prominent.
+    .dropdown-item.active {
+        --dropdown-link-active-bg: #{$component-active-bg};
+        --dropdown-link-active-color: #{$component-active-color};
     }
 }
 
