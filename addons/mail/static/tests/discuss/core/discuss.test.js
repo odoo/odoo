@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { asyncStep, getService, waitForSteps } from "@web/../tests/web_test_helpers";
+import { asyncStep, Command, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -26,56 +26,59 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
 });
 
-test("bus subscription is refreshed when channel is joined", async () => {
+test("subscribe to known partner presences", async () => {
+    onWebsocketEvent("subscribe", (data) => asyncStep(`subscribe - [${data.channels}]`));
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
-    onWebsocketEvent("subscribe", (data) => {
-        asyncStep(`subscribe - ${JSON.stringify(data.channels)}`);
+    const bobPartnerId = pyEnv["res.partner"].create({
+        name: "Bob",
+        user_ids: [Command.create({ name: "bob" })],
     });
     const later = luxon.DateTime.now().plus({ seconds: 2 });
     mockDate(
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
     await start();
-    const expectedSubscribes = [];
-    for (const { type, id } of getService("mail.store").imStatusTrackedPersonas) {
-        const model = type === "partner" ? "res.partner" : "mail.guest";
-        expectedSubscribes.unshift(`"odoo-presence-${model}_${id}"`);
-    }
-    await waitForSteps([`subscribe - [${expectedSubscribes.join(",")}]`]);
+    await openDiscuss();
+    const expectedPresences = [
+        `odoo-presence-res.partner_${serverState.partnerId}`,
+        `odoo-presence-res.partner_${serverState.odoobotId}`,
+    ];
+    await waitForSteps([`subscribe - [${expectedPresences.join(",")}]`]);
+    await click("[placeholder='Find or start a conversation']");
+    await click(".o-mail-DiscussCommand", { text: "Bob" });
+    expectedPresences.push(`odoo-presence-res.partner_${bobPartnerId}`);
+    await waitForSteps([`subscribe - [${expectedPresences.join(",")}]`]);
+});
+
+test("bus subscription is refreshed when channel is joined", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
+    onWebsocketEvent("subscribe", () => asyncStep("subscribe"));
+    const later = luxon.DateTime.now().plus({ seconds: 2 });
+    mockDate(
+        `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
+    );
+    await start();
+    await waitForSteps(["subscribe"]);
     await openDiscuss();
     await waitForSteps([]);
     await click("input[placeholder='Find or start a conversation']");
     await insertText("input[placeholder='Search a conversation']", "new channel");
-    await click("a", { text: "Create Channel" });
-    await contains(".o-mail-DiscussSidebar-item", { text: "new channel" });
-    const [newChannel] = pyEnv["discuss.channel"].search([["name", "=", "new channel"]]);
-    expectedSubscribes.unshift(`"discuss.channel_${newChannel}"`);
-    await waitForSteps([
-        `subscribe - [${expectedSubscribes.join(",")}]`,
-        `subscribe - [${expectedSubscribes.join(",")}]`, // 1 is enough. The 2 comes from technical details (1: from channel_join, 2: from channel open), 2nd covers shadowing
-    ]);
+    await waitForSteps(["subscribe"]);
 });
 
 test("bus subscription is refreshed when channel is left", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
-    onWebsocketEvent("subscribe", (data) => {
-        asyncStep(`subscribe - ${JSON.stringify(data.channels)}`);
-    });
+    onWebsocketEvent("subscribe", () => asyncStep("subscribe"));
     const later = luxon.DateTime.now().plus({ seconds: 2 });
     mockDate(
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
-    const env = await start();
-    const imStatusChannels = [];
-    for (const { type, id } of env.services["mail.store"].imStatusTrackedPersonas) {
-        const model = type === "partner" ? "res.partner" : "mail.guest";
-        imStatusChannels.unshift(`"odoo-presence-${model}_${id}"`);
-    }
-    await waitForSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
+    await start();
+    await waitForSteps(["subscribe"]);
     await openDiscuss();
     await waitForSteps([]);
     await click("[title='Leave Channel']");
-    await waitForSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
+    await waitForSteps(["subscribe"]);
 });
