@@ -121,9 +121,9 @@ patch(Colibri.prototype, {
         let stealthFn = fn;
         if (wysiwyg?.odooEditor && !fn.isHandler && stealth) {
             const name = `${this.interaction.constructor.name}/${event}`;
-            stealthFn = async (...args) => {
+            stealthFn = (...args) => {
                 wysiwyg.odooEditor.observerUnactive(name);
-                const result = await fn(...args);
+                const result = fn(...args);
                 wysiwyg.odooEditor.observerActive(name);
                 return result;
             };
