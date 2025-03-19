@@ -347,9 +347,11 @@ class StockMoveLine(models.Model):
 
         mls = super().create(vals_list)
 
+        created_moves = set()
         def create_move(move_line):
             new_move = self.env['stock.move'].create(move_line._prepare_stock_move_vals())
             move_line.move_id = new_move.id
+            created_moves.add(new_move.id)
 
         # If the move line is directly create on the picking view.
         # If this picking is already done we should generate an
@@ -390,6 +392,7 @@ class StockMoveLine(models.Model):
                 if move:
                     move_to_recompute_state.add(move.id)
         self.env['stock.move'].browse(move_to_recompute_state)._recompute_state()
+        self.env['stock.move'].browse(created_moves)._post_process_created_moves()
 
         for ml in mls:
             if ml.state == 'done':
