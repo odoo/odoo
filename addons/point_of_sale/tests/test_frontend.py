@@ -1638,6 +1638,26 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductCardUoMPrecision', login="pos_user")
 
+    def test_product_with_variants(self):
+        product_template = self.env['product.template'].create({
+            'name': 'variant product',
+            'available_in_pos': True,
+            'list_price': 150,
+        })
+        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        color_red = self.env['product.attribute.value'].create({'name': 'Red', 'attribute_id': color_attribute.id})
+        color_blue = self.env['product.attribute.value'].create({'name': 'Blue', 'attribute_id': color_attribute.id})
+
+        # Assign the color attribute to the product
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, [color_red.id, color_blue.id])],
+        })
+        product_template._create_variant_ids()
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'productwithvariantstour', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
