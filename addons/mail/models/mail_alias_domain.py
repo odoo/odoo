@@ -178,6 +178,21 @@ class MailAliasDomain(models.Model):
         return config_values
 
     @api.model
+    def _find_aliases(self, email_list):
+        """ Utility method to find both alias domains aliases (bounce, catchall
+        or default from) and mail aliases from an email list. """
+        if not email_list:
+            return email_list
+        all_domains = self.search([])
+        aliases = all_domains.mapped('bounce_email') + all_domains.mapped('catchall_email') + all_domains.mapped('default_from_email')
+        # search on aliases using the proposed list, as we could have a lot of aliases
+        # better than returning 'all alias emails'
+        aliases += self.env['mail.alias'].search(
+            [('alias_full_name', 'in', email_list)]
+        ).mapped('alias_full_name')
+        return [email for email in email_list if email in aliases]
+
+    @api.model
     def _migrate_icp_to_domain(self):
         """ Compatibility layer helping going from pre-v17 ICP to alias
         domains. Mainly used when base mail configuration is done with 'base'
