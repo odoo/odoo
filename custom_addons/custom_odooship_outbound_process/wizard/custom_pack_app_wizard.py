@@ -599,6 +599,13 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     @api.onchange('product_id', 'package_box_type_id')
     def _compute_add_line_boolean(self):
         for line in self:
+            if line.product_id.is_fragile:
+                return {
+                    'warning': {
+                        'title': _("Packing Information"),
+                        'message': _("This item is fragile and must be packed with bubble wrap for protection."),
+                    }
+                }
             if line.product_id and line.package_box_type_id and line.weight:
                 payload = line.wizard_id.prepare_payload_for_individual_line(line)
                 line.line_added = True
