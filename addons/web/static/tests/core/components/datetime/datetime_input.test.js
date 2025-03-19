@@ -422,7 +422,7 @@ describe("DateTimeInput (datetime)", () => {
     });
 
     test("Datepicker works with norwegian locale", async () => {
-        expect.assertions(7);
+        expect.assertions(5);
 
         await changeLang("nb");
 
@@ -449,10 +449,6 @@ describe("DateTimeInput (datetime)", () => {
 
         await contains(getPickerCell("1")).click();
         expect(".o_datetime_input").toHaveValue("01 apr., 1997");
-        expect.verifySteps(["datetime-changed"]);
-
-        await click(".o_apply");
-        await animationFrame();
         expect.verifySteps(["datetime-changed"]);
     });
 
@@ -502,7 +498,7 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_input").toHaveValue("08/02/1997 15:45");
     });
 
-    test("Clicking close button closes datetime picker", async () => {
+    test("Clicking clear button doesn't close datetime picker", async () => {
         await mountWithCleanup(DateTimeInputComp, {
             props: {
                 value: DateTime.fromFormat("09/01/1997 12:30:01", "dd/MM/yyyy HH:mm:ss"),
@@ -513,7 +509,7 @@ describe("DateTimeInput (datetime)", () => {
         await contains(".o_datetime_input").click();
         await contains(".o_datetime_picker .o_datetime_buttons .btn-secondary").click();
 
-        expect(".o_datetime_picker").toHaveCount(0);
+        expect(".o_datetime_picker").toHaveCount(1);
     });
 
     test("check datepicker in localization with textual month format", async () => {

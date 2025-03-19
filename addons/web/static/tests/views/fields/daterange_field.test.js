@@ -1,6 +1,7 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import {
     click,
+    press,
     queryAll,
     queryAllProperties,
     queryAllTexts,
@@ -1031,7 +1032,7 @@ test("date values are selected eagerly and do not flicker", async () => {
     await contains(".o_field_datetime input").click();
     await contains(getPickerCell("19")).click();
     await contains(".o_add_date:enabled").click();
-    await contains(".btn:contains(Apply)").click();
+    await press("enter");
 
     expect(queryAllValues(".o_field_datetime input")).toEqual([
         "02/19/2017 15:30",

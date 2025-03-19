@@ -13,7 +13,6 @@ import {
 
 import {
     editTime,
-    getPickerApplyButton,
     getPickerCell,
     zoomOut,
 } from "@web/../tests/core/datetime/datetime_test_helpers";
@@ -220,11 +219,7 @@ test("DatetimeField in editable list view", async () => {
     await click(getPickerCell("22"));
     await animationFrame();
     await editTime("8:25");
-    // Apply changes
-
-    await click(getPickerApplyButton());
     await animationFrame();
-    expect(".o_datetime_picker").toHaveCount(0, { message: "datepicker should be closed" });
 
     const newExpectedDateString = "04/22/2018 08:25";
 
