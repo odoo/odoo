@@ -8,6 +8,7 @@ class BlogPostTagsOptionPlugin extends Plugin {
     resources = {
         builder_options: {
             selector: ".o_wblog_post_page_cover[data-res-model='blog.post']",
+            applyTo: "#o_wblog_post_name",
             OptionComponent: BlogPostTagsOption,
             cleanForSave: () => {
                 // keep track of temporary edited value
