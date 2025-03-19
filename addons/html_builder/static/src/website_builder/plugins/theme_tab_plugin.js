@@ -4,8 +4,9 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { isCSSColor } from "@web/core/utils/colors";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { getCSSVariableValue, isColorCombinationName } from "../utils/utils_css";
+import { getCSSVariableValue, isColorCombinationName } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
+import { BuilderFontFamilyPicker } from "@html_builder/website_builder/builder_fontfamilypicker";
 
 export class ThemeTabPlugin extends Plugin {
     static id = "themeTab";
@@ -13,6 +14,7 @@ export class ThemeTabPlugin extends Plugin {
     static shared = ["makeSCSSCusto"];
     resources = {
         builder_actions: this.getActions(),
+        builder_components: { BuilderFontFamilyPicker },
         theme_options: [
             withSequence(
                 10,
