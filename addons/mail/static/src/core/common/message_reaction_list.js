@@ -1,8 +1,8 @@
 import { useHover } from "@mail/utils/common/hooks";
-import { Component, onMounted, onPatched, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -23,19 +23,13 @@ export class MessageReactionList extends Component {
             onAway: () => (this.preview.isOpen = false),
             stateObserver: () => [this.preview?.isOpen],
         });
-        this.state = useState({ emojiLoaded: Boolean(loader.loaded) });
-        if (!loader.loaded) {
-            loader.onEmojiLoaded(() => (this.state.emojiLoaded = true));
-        }
-        onMounted(() => void this.state.emojiLoaded);
-        onPatched(() => void this.state.emojiLoaded);
     }
 
     /** @param {import("models").MessageReactions} reaction */
     previewText(reaction) {
         const { count, content: emoji } = reaction;
         const personNames = reaction.personas.slice(0, 3).map((persona) => persona.name);
-        const shortcode = loader.loaded?.emojiValueToShortcode?.[emoji] ?? "?";
+        const shortcode = this.store.emojiLoader.loaded?.emojiValueToShortcodes?.[emoji][0] ?? "?";
         switch (count) {
             case 1:
                 return _t("%(emoji)s reacted by %(person)s", {

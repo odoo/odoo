@@ -8,6 +8,7 @@ import {
     onWillPatch,
     onWillStart,
     onWillUnmount,
+    reactive,
     useComponent,
     useEffect,
     useExternalListener,
@@ -40,16 +41,11 @@ export function useEmojiPicker(...args) {
     return usePicker(EmojiPicker, ...args);
 }
 
-const loadingListeners = [];
-
-export const loader = {
+export const loader = reactive({
     loadEmoji: () => loadBundle("web.assets_emoji"),
-    /** @type {{ emojiValueToShortcode: Object<string, string> }} */
+    /** @type {{ emojiValueToShortcodes: Object<string, string[]>, emojiRegex: RegExp} }} */
     loaded: undefined,
-    onEmojiLoaded(cb) {
-        loadingListeners.push(cb);
-    },
-};
+});
 
 /** @returns {Promise<{ categories: Object[], emojis: Emoji[] }>")} */
 export async function loadEmoji() {
@@ -67,16 +63,22 @@ export async function loadEmoji() {
         return res;
     } finally {
         if (!loader.loaded) {
-            loader.loaded = { emojiValueToShortcode: {} };
+            const emojiValueToShortcodes = {};
             for (const emoji of res.emojis) {
-                const value = emoji.codepoints;
-                const shortcode = emoji.shortcodes[0];
-                loader.loaded.emojiValueToShortcode[value] = shortcode;
-                for (const listener of loadingListeners) {
-                    listener();
-                }
-                loadingListeners.length = 0;
+                emojiValueToShortcodes[emoji.codepoints] = emoji.shortcodes;
             }
+            loader.loaded = {
+                emojiValueToShortcodes,
+                emojiRegex: new RegExp(
+                    Object.keys(emojiValueToShortcodes).length
+                        ? Object.keys(emojiValueToShortcodes)
+                              .map((c) => c.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"))
+                              .sort((a, b) => b.length - a.length) // Sort to get composed emojis first
+                              .join("|")
+                        : /(?!)/,
+                    "gu"
+                ),
+            };
         }
     }
 }

@@ -1,6 +1,7 @@
 import { markup } from "@odoo/owl";
 
 import { escape } from "@web/core/utils/strings";
+import { formatList } from "../l10n/utils";
 
 const Markup = markup().constructor;
 
@@ -26,6 +27,25 @@ export function createElementWithContent(elementName, content) {
  */
 export function htmlEscape(content) {
     return content instanceof Markup ? content : markup(escape(content));
+}
+
+/**
+ * Same behavior as formatList, but produces safe HTML. If the values are flagged as safe HTML using
+ * `markup()` they are set as it is. Otherwise they are escaped.
+ *
+ * @param {Array<string|ReturnType<markup>>} list The array of values to format into a list.
+ * @param {Object} [param0]
+ * @param {string} [param0.localeCode] The locale to use (e.g. en-US).
+ * @param {"standard"|"standard-short"|"or"|"or-short"|"unit"|"unit-short"|"unit-narrow"} [param0.style="standard"] The style to format the list with.
+ * @returns {ReturnType<markup>} The formatted list.
+ */
+export function htmlFormatList(list, ...args) {
+    return markup(
+        formatList(
+            Array.from(list, (val) => htmlEscape(val).toString()),
+            ...args
+        )
+    );
 }
 
 /**
