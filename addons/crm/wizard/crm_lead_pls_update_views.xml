@@ -9,7 +9,7 @@
                     The success rate is computed based on the stage, but you can add more fields in the statistical analysis.
                 </p>
                 <p>
-                    <field name="pls_fields" widget="many2many_tags" placeholder="Extra fields..."/>
+                    <field name="pls_fields" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': True}" placeholder="Extra fields..."/>
                 </p>
                 <p>
                     Consider leads created as of the: <field name="pls_start_date" class="o_field_highlight"/>
@@ -17,7 +17,7 @@
                 <footer>
                     <button name="action_update_crm_lead_probabilities" type="object"
                         string="Update" class="btn-primary" data-hotkey="q"/>
-                    <button special="cancel" data-hotkey="x" string="Cancel"/>
+                    <button special="cancel" data-hotkey="x" string="Discard"/>
                 </footer>
             </form>
         </field>

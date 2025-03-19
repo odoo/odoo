@@ -593,6 +593,95 @@ class TestCrmPls(CrmPlsCommon):
         self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
         self.assertEqual(tools.float_compare(lead.automated_probability, 0, 2), 0)
 
+    def test_pls_tooltip_data(self):
+        """ Assert that the method preparing tooltip data correctly returns (field, couple)
+            values, in order of importance, of TOP 3 and LOW 3 criterions in PLS computation.
+            See Table in docstring below for more details and a practical situation."""
+        Lead = self.env['crm.lead']
+        self.env['ir.config_parameter'].sudo().set_param(
+            "crm.pls_fields",
+            "country_id,state_id,email_state,phone_state,source_id"
+        )
+        country_ids = self.env['res.country'].search([], limit=2).ids
+        source_ids = self.env['utm.source'].search([], limit=2).ids
+        stage_ids = self.env['crm.stage'].search([], limit=3).ids
+        state_ids = self.env['res.country.state'].search([], limit=2).ids
+        team_id = self.env['crm.team'].create([{'name': 'Team Tooltip'}]).id
+        leads = Lead.create([
+            self._prepare_test_lead_values(team_id, 'lead Won A', country_ids[0], state_ids[0], False, False, source_ids[1], stage_ids[0]),
+            self._prepare_test_lead_values(team_id, 'lead Won B', country_ids[1], state_ids[0], False, False, False, stage_ids[0]),
+            self._prepare_test_lead_values(team_id, 'lead Lost C', False, False, False, False, source_ids[0], stage_ids[0]),
+            self._prepare_test_lead_values(team_id, 'lead Lost D', country_ids[0], False, False, False, source_ids[0], stage_ids[0]),
+            self._prepare_test_lead_values(team_id, 'lead Lost E', False, state_ids[1], False, False, False, stage_ids[2]),
+            self._prepare_test_lead_values(team_id, 'lead Tooltip', country_ids[0], state_ids[0], False, False, source_ids[0], stage_ids[1]),
+        ])
+
+        # On creation, as phone and email are not set, these two fields will be set to False
+        leads.email_state = 'correct'
+        (leads[0] | leads[1] | leads[4] | leads[5]).phone_state = 'correct'
+        (leads[2] | leads[3]).phone_state = 'incorrect'
+
+        leads[:2].action_set_won()
+        leads[2:5].action_set_lost()
+        Lead._cron_update_automated_probabilities()
+        self.env.invalidate_all()
+
+        # Values for leads[5]:
+        # pW / pL is the probability that a won / lost lead has the lead value for a given field
+        # [Score = pW / (pW + pL)] -> A score above .5 is a TOP, below .5 a LOW, equal to .5 ignored
+        # Exception : for stage_id -> Score = 1 - P(current stage or lower for a lost lead)
+        # ------------------------------------------------------------------------------------------
+        # -- LOW 3 (lowest first, only 2 here)
+        # source_id:   pW = 0.1/1.2  pL = 2.1/2.2            -> Score = 0.08
+        # country_id:  pW = 1.1/2.2  pL = 1.1/1.2            -> Score = 0.353
+        # -- Neither
+        # email_state: pW = 2.1/2.1  pL = 3.1/3.1            -> Score = 0.5
+        # -- TOP 3 (highest first)
+        # state_id:    pW = 2.1/2.2  pL = 0.1/1.2            -> Score = 0.92
+        # phone_state: pW = 2.1/2.2  pL = 1.1/3.2            -> Score = 0.735
+        # stage_id:                  pL = 1.1/3.1            -> Score = 0.645
+        expected_low_3 = ['source_id', 'country_id']
+        expected_top_3 = ['state_id', 'phone_state', 'stage_id']
+
+        tooltip_data = leads[5].prepare_pls_tooltip_data()
+        self.assertEqual('Team Tooltip', tooltip_data['team_name'])
+        self.assertEqual(tools.float_compare(tooltip_data['probability'], 74.30, 2), 0)
+
+        self.assertListEqual([top_entry.get('field') for top_entry in tooltip_data['top_3_data']], expected_top_3)
+        self.assertListEqual([low_entry.get('field') for low_entry in tooltip_data['low_3_data']], expected_low_3)
+
+        # Assert scores for phone/email_state are excluded if absurd,
+        # e.g. in top 3 when incorrect / not set or in low 3 if correct
+        # Stage does not change and always has a score of 0.645
+        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "email_state,phone_state")
+
+        leads[5].phone_state = False
+        leads[5].email_state = 'incorrect'
+        leads[:2].phone_state = False
+        leads[:2].email_state = 'incorrect'
+        leads[2:5].phone_state = 'correct'
+        leads[2:5].email_state = 'correct'
+        Lead._cron_update_automated_probabilities()
+        self.env.invalidate_all()
+
+        # phone_state: pW = 2.1/2.2  pL = 0.1/3.2            -> Score = 0.968
+        # email_state: pW = 2.1/2.2  pL = 0.1/3.2            -> Score = 0.968
+        tooltip_data = leads[5].prepare_pls_tooltip_data()
+        self.assertEqual(['stage_id'], [entry['field'] for entry in tooltip_data['top_3_data']])
+        self.assertFalse(tooltip_data['low_3_data'])
+
+        leads[5].email_state = 'correct'
+        leads[5].phone_state = 'incorrect'
+        leads[:2].phone_state = 'incorrect'
+        Lead._cron_update_automated_probabilities()
+        self.env.invalidate_all()
+
+        # phone_state: pW = 2.1/2.2  pL = 0.1/3.2            -> Score = 0.968
+        # email_state: pW = 0.1/2.2  pL = 3.1/3.2            -> Score = 0.045
+        tooltip_data = leads[5].prepare_pls_tooltip_data()
+        self.assertEqual(['stage_id'], [entry['field'] for entry in tooltip_data['top_3_data']])
+        self.assertFalse(tooltip_data['low_3_data'])
+
 
 @tagged('post_install', '-at_install', 'crm_lead_pls')
 class TestCrmPlsSides(CrmPlsCommon):
