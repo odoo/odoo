@@ -18,7 +18,6 @@ const FAKE_PROPS = {
     createRecord() {},
     deleteRecord() {},
     editRecord() {},
-    displayName: "Plop",
     sidePanelMode: SIDE_PANEL_MODES.filter,
 };
 
