@@ -391,6 +391,11 @@ export class PaymentScreen extends Component {
         let nextPage = this.nextPage;
         let switchScreen = true;
 
+        this.currentOrder.uiState.locked = true;
+        if (!this.pos.config.module_pos_restaurant) {
+            this.pos.sendOrderInPreparation(this.currentOrder, { orderDone: true });
+        }
+
         if (
             nextPage.page === "ReceiptScreen" &&
             this.currentOrder.nb_print === 0 &&
@@ -401,11 +406,10 @@ export class PaymentScreen extends Component {
                 : true;
 
             if (invoiced_finalized) {
-                this.pos.printReceipt({ order: this.currentOrder });
+                await this.pos.printReceipt({ order: this.currentOrder });
 
                 if (this.pos.config.iface_print_skip_screen) {
-                    this.currentOrder.setScreenData({ name: "" });
-                    this.currentOrder.uiState.locked = true;
+                    this.pos.orderDone(this.currentOrder);
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextPage = this.pos.defaultPage;
                     if (switchScreen) {

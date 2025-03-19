@@ -2443,6 +2443,14 @@ export class PosStore extends WithLazyGetterTrap {
     getTime(date) {
         return date.toFormat("hh:mm");
     }
+
+    orderDone(order) {
+        order.setScreenData({ name: "" });
+        order.uiState.locked = true;
+        if (this.getOrder() === order) {
+            this.searchProductWord = "";
+        }
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
