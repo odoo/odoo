@@ -1368,7 +1368,6 @@ Please change the quantity done or the rounding precision in your settings.""",
                 }
             }
 
-
     def _key_assign_picking(self):
         self.ensure_one()
         keys = (self.reference_ids, self.location_id, self.location_dest_id, self.picking_type_id)
