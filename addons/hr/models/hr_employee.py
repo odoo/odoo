@@ -31,45 +31,21 @@ class HrEmployee(models.Model):
     _description = "Employee"
     _order = 'name'
     _inherit = ['hr.employee.base', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
+    _inherits = {'hr.employee.version': 'version_id'}
     _mail_post_access = 'read'
     _primary_email = 'work_email'
-
-    def _default_history_ids(self):
-        return self.env['hr.employee.version'].create([{'employee_id': self.id}])
 
     @api.model
     def _lang_get(self):
         return self.env['res.lang'].get_installed()
 
-    version_ids = fields.One2many(
+    version_id = fields.Many2one(
         'hr.employee.version',
-        'employee_id',
-        default=_default_history_ids,
-        copy=False)
-    current_version_id = fields.Many2one(
-        'hr.employee.version',
-        compute='_compute_current_version_id',
-        store=True)
-    selected_version_id = fields.Many2one(
-        'hr.employee.version',
-        compute='_compute_selected_version_id',
-        domain="[('employee_id', '=', id)]",
-        copy=False,
-        store=True,
-        readonly=False)
-
-    contract_ids = fields.One2many(
-        'hr.employee.contract',
-        'employee_id',
-        copy=False)
-    selected_contract_id = fields.Many2one(
-        'hr.employee.contract',
-        compute='_compute_selected_contract_id',
-        domain="[('employee_id', '=', id)]",
-        copy=False,
-        store=True,
-        readonly=False)
-    contract_index = fields.Integer(default=1, readonly=True)
+        compute='_compute_version_id',
+        search='_search_version_id',
+        ondelete='cascade',
+        store=False,
+        required=True)
 
     # Global Fields
     resource_id = fields.Many2one('resource.resource')
@@ -133,98 +109,6 @@ class HrEmployee(models.Model):
     pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
                       help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application "
                            "(if enabled in Configuration) and to change the cashier in the Point of Sale application.")
-
-    # Personal Information
-    country_id = fields.Many2one(related='current_version_id.country_id', store=True, readonly=False)
-    identification_id = fields.Char(related='current_version_id.identification_id', store=True, readonly=False)
-    ssnid = fields.Char(related='current_version_id.ssnid', store=True, readonly=False)
-    passport_id = fields.Char(related='current_version_id.passport_id', store=True, readonly=False)
-
-    form_country_id = fields.Many2one(related='selected_version_id.country_id', readonly=False)
-    form_identification_id = fields.Char(related='selected_version_id.identification_id', readonly=False)
-    form_ssnid = fields.Char(related='selected_version_id.ssnid', readonly=False)
-    form_passport_id = fields.Char(related='selected_version_id.passport_id', readonly=False)
-
-    private_street = fields.Char(related='current_version_id.private_street', store=True, readonly=False)
-    private_street2 = fields.Char(related='current_version_id.private_street2', store=True, readonly=False)
-    private_city = fields.Char(related='current_version_id.private_city', store=True, readonly=False)
-    private_state_id = fields.Many2one(related='current_version_id.private_state_id', store=True, readonly=False)
-    private_zip = fields.Char(related='current_version_id.private_zip', store=True, readonly=False)
-    private_country_id = fields.Many2one(related='current_version_id.private_country_id', store=True, readonly=False)
-
-    form_private_street = fields.Char(related='selected_version_id.private_street', readonly=False)
-    form_private_street2 = fields.Char(related='selected_version_id.private_street2', readonly=False)
-    form_private_city = fields.Char(related='selected_version_id.private_city', readonly=False)
-    form_private_state_id = fields.Many2one(related='selected_version_id.private_state_id', readonly=False)
-    form_private_zip = fields.Char(related='selected_version_id.private_zip', readonly=False)
-    form_private_country_id = fields.Many2one(related='selected_version_id.private_country_id', readonly=False)
-
-    distance_home_work = fields.Integer(related='current_version_id.distance_home_work', store=True, readonly=False)
-    km_home_work = fields.Integer(related='current_version_id.km_home_work', store=True, readonly=False)
-    distance_home_work_unit = fields.Selection(related='current_version_id.distance_home_work_unit',
-                                               store=True, readonly=False)
-
-    form_distance_home_work = fields.Integer(related='selected_version_id.distance_home_work', readonly=False)
-    form_km_home_work = fields.Integer(related='selected_version_id.km_home_work', readonly=False)
-    form_distance_home_work_unit = fields.Selection(related='selected_version_id.distance_home_work_unit',
-                                                    readonly=False)
-
-    marital = fields.Selection(related='current_version_id.marital', store=True, readonly=False)
-    spouse_complete_name = fields.Char(related='current_version_id.spouse_complete_name', store=True, readonly=False)
-    spouse_birthdate = fields.Date(related='current_version_id.spouse_birthdate', store=True, readonly=False)
-    children = fields.Integer(related='current_version_id.children', store=True, readonly=False)
-
-    form_marital = fields.Selection(related='selected_version_id.marital', readonly=False)
-    form_spouse_complete_name = fields.Char(related='selected_version_id.spouse_complete_name', readonly=False)
-    form_spouse_birthdate = fields.Date(related='selected_version_id.spouse_birthdate', readonly=False)
-    form_children = fields.Integer(related='selected_version_id.children', readonly=False)
-
-    certificate = fields.Selection(related='current_version_id.certificate', store=True, readonly=False)
-    study_field = fields.Char(related='current_version_id.study_field', store=True, readonly=False)
-
-    form_certificate = fields.Selection(related='selected_version_id.certificate', readonly=False)
-    form_study_field = fields.Char(related='selected_version_id.study_field', readonly=False)
-
-    # Work Information
-    department_id = fields.Many2one(related='current_version_id.department_id', store=True, readonly=False)
-    job_id = fields.Many2one(related='current_version_id.job_id', store=True, readonly=False)
-    parent_id = fields.Many2one(related='current_version_id.parent_id', store=True, readonly=False)
-
-    form_department_id = fields.Many2one(related='selected_version_id.department_id', readonly=False)
-    form_job_id = fields.Many2one(related='selected_version_id.job_id', readonly=False)
-    form_job_title = fields.Char(related='form_job_id.name', readonly=False)
-    form_parent_id = fields.Many2one(related='selected_version_id.parent_id', readonly=False)
-
-    address_id = fields.Many2one(related='current_version_id.address_id', store=True, readonly=False)
-    work_location_id = fields.Many2one(related='current_version_id.work_location_id', store=True, readonly=False)
-    work_location_name = fields.Char(related='current_version_id.work_location_name')
-    work_location_type = fields.Selection(related='current_version_id.work_location_type')
-
-    form_address_id = fields.Many2one(related='selected_version_id.address_id', readonly=False)
-    form_work_location_id = fields.Many2one(related='selected_version_id.work_location_id', readonly=False)
-    form_work_location_name = fields.Char(related='selected_version_id.work_location_name')
-    form_work_location_type = fields.Selection(related='selected_version_id.work_location_type')
-
-    departure_reason_id = fields.Many2one(related='current_version_id.departure_reason_id', store=True, readonly=False)
-    departure_description = fields.Html(related='current_version_id.departure_description', store=True, readonly=False)
-    departure_date = fields.Date(related='current_version_id.departure_date', store=True, readonly=False)
-
-    form_departure_reason_id = fields.Many2one(related='selected_version_id.departure_reason_id', readonly=False)
-    form_departure_description = fields.Html(related='selected_version_id.departure_description', readonly=False)
-    form_departure_date = fields.Date(related='selected_version_id.departure_date', readonly=False)
-
-    resource_calendar_id = fields.Many2one(related='current_version_id.resource_calendar_id', store=True, readonly=False)
-    tz = fields.Selection(related='current_version_id.tz', store=True, readonly=False)
-
-    form_resource_calendar_id = fields.Many2one(related='selected_version_id.resource_calendar_id', readonly=False)
-    form_tz = fields.Selection(related='selected_version_id.tz', readonly=False)
-
-    # Contract Information
-    form_contract_name = fields.Char(related='selected_contract_id.name', readonly=False)
-    form_contract_reference = fields.Char(related='selected_contract_id.reference', string="Reference")
-    form_contract_date_from = fields.Date(related='selected_contract_id.date_from', readonly=False)
-    form_contract_date_to = fields.Date(related='selected_contract_id.date_to', readonly=False)
-    form_contract_type_id = fields.Many2one(related='selected_contract_id.contract_type_id', readonly=False)
 
     # user
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
@@ -292,6 +176,29 @@ class HrEmployee(models.Model):
         'A user cannot be linked to multiple employees in the same company.',
     )
 
+    # def _register_hook(self):
+    #     ignored_fields = ['id', 'employee_id']
+    #     for field_name in self.env['hr.employee.version']._fields:
+    #         if field_name in ignored_fields:
+    #             continue
+    #         print(field_name)
+    #         field = self._fields[field_name]
+    #         field._depends_context = ('version_id',)
+    #         depends, depends_context = field.get_depends(self)
+    #         self.pool.field_depends_context[field] = tuple(depends_context)
+    #     return super()._register_hook()
+
+    def _create(self, vals_list):
+        versions = []
+        for val in vals_list:
+            versions.append(val['stored'].pop('version_id', None))
+        result = super(HrEmployee, self)._create(vals_list)
+
+        for (employee, version_id) in zip(result, versions):
+            self.env['hr.employee.version'].browse(version_id).employee_id = employee.id
+        return result
+
+
     @api.model
     def check_field_access_rights(self, operation, field_names):
         # DISCLAIMER: Dirty hack to avoid having to create a bridge module to override only a
@@ -314,43 +221,60 @@ class HrEmployee(models.Model):
             or field.name not in ('activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error')
         )
 
+    @api.depends_context('version_id')
+    def _compute_version_id(self):
+        for employee in self:
+            if self._context.get('version_id'):
+                version = self.env['hr.employee.version'].search([('id', '=', self._context['version_id'])], limit=1)
+            else:
+                today_version = self._get_version()
+                if today_version:
+                    version = today_version
+                else:
+                    version = self.env['hr.employee.version'].search([('employee_id', '=', employee.id)], limit=1)
+            print(self, version)
+            employee.version_id = version
+
+    def _search_version_id(self, operator, value):
+        return [('id', 'in', self.env['hr.employee.version'].search([('id', operator, value)]).mapped('employee_id.id'))]
+
     @api.depends('name')
     def _compute_legal_name(self):
         for employee in self:
             if not employee.legal_name:
                 employee.legal_name = employee.name
 
-    @api.depends_context('uid')
-    @api.depends('version_ids')
-    def _compute_current_version_id(self):
-        today = fields.Date.today()
-        for record in self:
-            record.selected_version_id = record._get_version(today)
+    # @api.depends_context('uid')
+    # @api.depends('version_ids')
+    # def _compute_current_version_id(self):
+    #     today = fields.Date.today()
+    #     for record in self:
+    #         record.selected_version_id = record._get_version(today)
+    #
+    # @api.depends('current_version_id')
+    # def _compute_selected_version_id(self):
+    #     for record in self:
+    #         record.selected_version_id = record.current_version_id
+    #
+    # @api.depends('contract_ids')
+    # def _compute_selected_contract_id(self):
+    #     for record in self:
+    #         record.selected_contract_id = record.contract_ids[0] if record.contract_ids else 0
 
-    @api.depends('current_version_id')
-    def _compute_selected_version_id(self):
-        for record in self:
-            record.selected_version_id = record.current_version_id
-
-    @api.depends('contract_ids')
-    def _compute_selected_contract_id(self):
-        for record in self:
-            record.selected_contract_id = record.contract_ids[0] if record.contract_ids else 0
-
-    def _get_version(self, date):
-        version = self.version_ids.filtered(
-            lambda v:
-            (not v.date_from and not v.date_to) or
-            (not v.date_from and v.date_to >= date) or
-            (not v.date_to and v.date_from <= date) or
-            (v.date_from and v.date_to and v.date_from <= date <= v.date_to))
-        return version[0] if version else False
-
-    def _get_contracts(self, date):
-        return self.contract_ids.filtered(
-            lambda c:
-            (c.date_from <= date and not c.date_to) or
-            (c.date_to and c.date_from <= date <= c.date_to))
+    def _get_version(self, date=fields.Date.today()):
+        # Version are ordered from the most recent to the oldest
+        previous_versions = self.env['hr.employee.version'].search([
+            ('employee_id', '=', self.id),
+            '|',
+            ('date_version', '=', False),
+            ('date_version', '<=', date)])
+        return previous_versions[0] if previous_versions else self.env['hr.employee.version']
+    #
+    # def _get_contracts(self, date):
+    #     return self.contract_ids.filtered(
+    #         lambda c:
+    #         (c.date_from <= date and not c.date_to) or
+    #         (c.date_to and c.date_from <= date <= c.date_to))
 
     # def _get_contracts_between(self, date_from, date_to):
     #     return self.contract_ids.filtered(

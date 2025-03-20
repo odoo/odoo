@@ -38,8 +38,8 @@
             <div id="o_work_employee_main" position="after">
                 <div id="o_employee_right" class="col-lg-5 px-0 ps-lg-5 pe-lg-0">
                     <group name="organization" string="Organization">
-                        <field name="form_department_id"/>
-                        <field name="form_job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                        <field name="department_id"/>
+                        <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
                         <field name="parent_id" widget="many2one_avatar_employee"/>
                     </group>
                     <separator string="Organization Chart"/>

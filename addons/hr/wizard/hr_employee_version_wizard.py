@@ -21,12 +21,23 @@ class HrEmployeeVersionWizard(models.TransientModel):
 
     def action_create_new_version(self):
         version_to_split = self.employee_id._get_version(self.effective_date)
-        if version_to_split.date_from == self.effective_date:
+        if version_to_split.date_version == self.effective_date:
             raise UserError(_('A version already exists on that effective date'))
         new_version = version_to_split.copy()
-        new_version.date_from = self.effective_date
-        version_to_split.date_to = self.effective_date - timedelta(days=1)
-        self.employee_id.version_ids |= new_version
-        self.employee_id.selected_version_id = new_version
+        new_version.date_version = self.effective_date
+        new_version.employee_id = version_to_split.employee_id
+        new_version.employee_id.version_id = new_version
+        # print(new_version, new_version.date_version, new_version.employee_id)
 
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Employees',
+            'path': 'employee',
+            'res_model': 'hr.employee',
+            'res_id': new_version.employee_id.id,
+            'view_mode': 'form',
+            'context': {
+                'version_id': new_version.id,
+            }
+        }
+        return {'type': 'ir.actions.client', 'tag': 'reload', 'context': {'version_id': new_version.id}}

@@ -60,19 +60,11 @@
             <field name="arch" type="xml">
                 <form string="Employee History" class="o_hr_employee_form_view">
                     <header groups="hr.group_hr_user">
-                        <button name="%(hr_employee_contract_wizard_action)d" class="btn btn-primary"
-                                icon="fa-plus" string="New Contract" type="action" invisible="contract_ids"/>
-                        <button name="%(hr_employee_contract_wizard_action)d" class="btn btn-secondary"
-                                icon="fa-plus" string="New Contract" type="action" invisible="not contract_ids"/>
-                        <button name="action_delete_selected_contract" class="btn btn-secondary"
-                                icon="fa-trash" string="Delete Contract" type="object"
-                                confirm="Are you sure you want to proceed ? The record will be lost forever"
-                                invisible="not selected_contract_id"/>
                         <button name="%(hr_employee_version_wizard_action)d" class="btn btn-secondary"
                                 icon="fa-plus" string="New Version" type="action"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                                 invisible="not active or not id" context="{'sort_by_responsible': True}"/>
-                        <field name="selected_version_id" widget="statusbar_employee" options="{'clickable': '1'}"/>
+                        <field name="version_id" widget="versions_timeline" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <div class="row justify-content-between position-relative w-100 m-0 mb-2">
@@ -84,12 +76,12 @@
                                     <field name="name" placeholder="Employee's Name"
                                         required="True" style="font-size: min(4vw, 2.6rem);"/>
                                 </h1>
-                                <h2 invisible="not contract_ids">
-                                    <field name="selected_contract_id"
-                                           options='{"no_open": True, "no_create": True}'
-                                           required="contract_ids"
-                                           placeholder="Select a Contract"/>
-                                </h2>
+<!--                                <h2 invisible="not contract_ids">-->
+<!--                                    <field name="selected_contract_id"-->
+<!--                                           options='{"no_open": True, "no_create": True}'-->
+<!--                                           required="contract_ids"-->
+<!--                                           placeholder="Select a Contract"/>-->
+<!--                                </h2>-->
                             </div>
                             <div class="o_employee_avatar m-0 p-0">
                                 <field name="image_1920" widget='image' class="oe_avatar m-0"
@@ -122,12 +114,15 @@
                                         invisible="user_id"/>
                                 </div>
                             </group>
-                            <group>
-                                <field name="current_version_id" groups="base.group_no_one"/>
-                            </group>
-                            <group>
-                                <field name="selected_version_id" groups="base.group_no_one"/>
-                            </group>
+<!--                            <group>-->
+<!--                                <field name="current_version_id" groups="base.group_no_one"/>-->
+<!--                            </group>-->
+<!--                            <group>-->
+<!--                                <field name="selected_version_id" groups="base.group_no_one"/>-->
+<!--                            </group>-->
+                        </group>
+                        <group>
+                            <field name="version_id"/>
                         </group>
                         <notebook>
                             <page name="global_information" string="Global Information" groups="hr.group_hr_user">
@@ -188,84 +183,84 @@
                             <page name="personal_information" string="Personal Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Citizenship">
-                                        <field name="form_country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="form_identification_id"/>
-                                        <field name="form_ssnid"/>
-                                        <field name="form_passport_id"/>
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id"/>
+                                        <field name="ssnid"/>
+                                        <field name="passport_id"/>
                                     </group>
                                     <group string="Location">
-                                        <label for="form_private_street" string="Private Address"/>
+                                        <label for="private_street" string="Private Address"/>
                                         <div class="o_address_format">
-                                            <field name="form_private_street" placeholder="Street..." class="o_address_street"/>
-                                            <field name="form_private_street2" placeholder="Street 2..." class="o_address_street"/>
-                                            <field name="form_private_city" placeholder="City" class="o_address_city"/>
-                                            <field name="form_private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
-                                            <field name="form_private_zip" placeholder="ZIP" class="o_address_zip"/>
-                                            <field name="form_private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                            <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                            <field name="private_city" placeholder="City" class="o_address_city"/>
+                                            <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
+                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
-                                        <label for="form_distance_home_work"/>
+                                        <label for="distance_home_work"/>
                                         <div class="o_row" name="div_km_home_work">
-                                            <field name="form_distance_home_work" class="o_hr_narrow_field"/>
-                                            <span><field name="form_distance_home_work_unit"/></span>
+                                            <field name="distance_home_work" class="o_hr_narrow_field"/>
+                                            <span><field name="distance_home_work_unit"/></span>
                                         </div>
                                     </group>
                                     <group string="Family">
-                                        <field name="form_marital"/>
-                                        <field name="form_spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
-                                        <field name="form_spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
-                                        <field name="form_children"/>
+                                        <field name="marital"/>
+                                        <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="children"/>
                                     </group>
                                     <group string="Education">
-                                        <field name="form_certificate"/>
-                                        <field name="form_study_field"/>
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
                                     </group>
                                 </group>
                             </page>
-                            <page name="work_information" string="Work Information" invisible="not selected_contract_id">
+                            <page name="work_information" string="Work Information">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
                                     <div id="o_work_employee_main" class="flex-grow-1">
                                         <group name="organization" string="Organization">
-                                            <field name="form_department_id"/>
-                                            <field name="form_job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
-                                            <field name="form_parent_id" widget="many2one_avatar_employee"/>
+                                            <field name="department_id"/>
+                                            <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                                            <field name="parent_id" widget="many2one_avatar_employee"/>
                                         </group>
                                         <group string="Location">
-                                            <field name="form_address_id"
+                                            <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"highlight_first_line": True}'/>
-                                            <field name="form_work_location_id"
-                                                   context="{'default_address_id': form_address_id}"
+                                            <field name="work_location_id"
+                                                   context="{'default_address_id': address_id}"
                                                    placeholder="e.g. Building 2, Remote, etc."/>
                                         </group>
                                         <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
                                             <!-- is overridden in other hr related modules -->
                                         </group>
                                         <group name="departure" string="Departure" invisible="active">
-                                            <field name="form_departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                                            <field name="form_departure_description"/>
-                                            <field name="form_departure_date"/>
+                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                            <field name="departure_description"/>
+                                            <field name="departure_date"/>
                                         </group>
                                         <group string="Schedule">
-                                            <field name="form_resource_calendar_id" help="The default working hours are set in configuration."/>
-                                            <field name="form_tz" required="id"/>
+                                            <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
+                                            <field name="tz" required="id"/>
                                         </group>
 
                                     </div>
                                 </div>
                             </page>
-                            <page name="salary_information" string="Salary Information" invisible="not selected_contract_id">
+                            <page name="salary_information" string="Salary Information">
 
                             </page>
-                            <page name="contract_information" string="Contract Information" invisible="not selected_contract_id">
+                            <page name="contract_information" string="Contract Information">
                                 <group>
                                     <group string="General Information">
-                                        <field name="form_contract_reference"/>
-                                        <field name="form_contract_name" required="selected_contract_id"/>
-                                        <field name="form_contract_type_id"/>
+<!--                                        <field name="contract_reference"/>-->
+<!--                                        <field name="contract_name"/>-->
+<!--                                        <field name="contract_type_id"/>-->
                                     </group>
                                     <group string="Contract Period">
-                                        <field name="form_contract_date_from" required="selected_contract_id"/>
-                                        <field name="form_contract_date_to" placeholder="No End Date"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to" placeholder="No End Date"/>
                                     </group>
                                 </group>
                             </page>

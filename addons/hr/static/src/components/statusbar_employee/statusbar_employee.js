@@ -18,6 +18,17 @@ export class StatusBarEmployee extends StatusBarField {
         const value = this.field.type === "many2one" ? [item.value, item.label] : item.value;
         await record.update({ [name]: value });
         await record.save();
+        await this.actionService.doAction({
+            type: 'ir.actions.act_window',
+            name: 'Employees',
+            path: 'employee',
+            res_model: 'hr.employee',
+            res_id: record.id,
+            view_mode: 'form',
+            context: {
+                version_id: item.value,
+            }
+        })
     }
 }
 

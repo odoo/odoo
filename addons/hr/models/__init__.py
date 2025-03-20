@@ -3,9 +3,9 @@
 
 from . import hr_contract_type
 from . import hr_employee_base
+from . import hr_employee_version
 from . import hr_employee
 from . import hr_employee_category
-from . import hr_employee_version
 from . import hr_employee_contract
 from . import hr_employee_public
 from . import hr_department
