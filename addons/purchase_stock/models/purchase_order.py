@@ -317,9 +317,17 @@ class PurchaseOrder(models.Model):
             'partner_id': self.partner_id.id,
         }
 
+    def _prepare_reference_vals(self):
+        self.ensure_one()
+        return {
+            'name': self.name,
+        }
+
     def _prepare_picking(self):
         if not self.group_id:
             self.group_id = self.group_id.create(self._prepare_group_vals())
+        if not self.reference_ids:
+            self.reference_ids = self.reference_ids.create(self._prepare_reference_vals())
         if not self.partner_id.property_stock_supplier.id:
             raise UserError(_("You must set a Vendor Location for this partner %s", self.partner_id.name))
         return {
@@ -332,6 +340,7 @@ class PurchaseOrder(models.Model):
             'location_id': self.partner_id.property_stock_supplier.id,
             'company_id': self.company_id.id,
             'state': 'draft',
+            'reference_ids': [Command.set(self.reference_ids.ids)],
         }
 
     def _create_picking(self):

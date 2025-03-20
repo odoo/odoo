@@ -602,7 +602,7 @@ class StockWarehouseOrderpoint(models.Model):
         """
         date_deadline = date or fields.Date.today()
         dates_info = self.product_id._get_dates_info(date_deadline, self.location_id, route_ids=self.route_id)
-        return {
+        values =  {
             'route_ids': self.route_id,
             'date_planned': dates_info['date_planned'],
             'date_order': dates_info['date_order'],
@@ -611,6 +611,10 @@ class StockWarehouseOrderpoint(models.Model):
             'orderpoint_id': self,
             'group_id': group or self.group_id,
         }
+        reference = self.env.context.get('reference_ids')
+        if reference:
+            values['reference_ids'] = self.env['stock.reference'].browse(reference)
+        return values
 
     def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=None, raise_user_error=True):
         """ Create procurements based on orderpoints.

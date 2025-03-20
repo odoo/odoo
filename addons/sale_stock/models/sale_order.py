@@ -46,6 +46,9 @@ class SaleOrder(models.Model):
         help="True if any related picking has late availability"
     )
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+    stock_reference_ids = fields.Many2many(
+        'stock.reference', 'stock_reference_sale_rel',
+        'sale_id', 'reference_id', string='References', copy=False)
     effective_date = fields.Datetime("Effective Date", compute='_compute_effective_date', store=True, help="Completion date of the first delivery order.")
     expected_date = fields.Datetime( help="Delivery date you can promise to the customer, computed from the minimum lead time of "
                                           "the order lines in case of Service products. In case of shipping, the shipping policy of "

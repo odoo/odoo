@@ -133,6 +133,24 @@ class StockMoveLine(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        if self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'):
+            production_id = self.env['mrp.production'].browse(self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'))
+
+            if production_id.state not in ('draft', 'cancel'):
+                if production_id.state != 'done':
+                    defaults['state'] = 'draft'
+                else:
+                    defaults['state'] = 'done'
+                    defaults['additional'] = True
+                defaults['product_uom_qty'] = 0.0
+            elif production_id.state == 'draft':
+                defaults['reference_ids'] = production_id.reference_ids.ids
+                defaults['reference'] = production_id.name
+        return defaults
+
     created_production_id = fields.Many2one('mrp.production', 'Created Production Order', check_company=True, index=True)
     production_id = fields.Many2one(
         'mrp.production', 'Production Order for finished products', check_company=True, index='btree_not_null', ondelete="cascade")
@@ -285,6 +303,15 @@ class StockMove(models.Model):
                 moves_with_reference |= move
         super(StockMove, self - moves_with_reference)._compute_reference()
 
+    def _set_references(self):
+        super()._set_references()
+        for move in self:
+            if move.reference_ids:
+                continue
+            production = move.raw_material_production_id or move.production_id
+            if production:
+                move.reference_ids = [Command.set(production.reference_ids.ids)]
+
     @api.depends('raw_material_production_id.qty_producing', 'product_uom_qty', 'product_uom')
     def _compute_should_consume_qty(self):
         for move in self:
@@ -330,23 +357,6 @@ class StockMove(models.Model):
             if move.raw_material_production_id and move.product_uom.compare(move.quantity, 0) < 0:
                 raise ValidationError(_("Please enter a positive quantity."))
 
-    @api.model
-    def default_get(self, fields_list):
-        defaults = super(StockMove, self).default_get(fields_list)
-        if self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'):
-            production_id = self.env['mrp.production'].browse(self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'))
-            if production_id.state not in ('draft', 'cancel'):
-                if production_id.state != 'done':
-                    defaults['state'] = 'draft'
-                else:
-                    defaults['state'] = 'done'
-                    defaults['additional'] = True
-                defaults['product_uom_qty'] = 0.0
-            elif production_id.state == 'draft':
-                defaults['group_id'] = production_id.procurement_group_id.id
-                defaults['reference'] = production_id.name
-        return defaults
-
     @api.model_create_multi
     def create(self, vals_list):
         """ Enforce consistent values (i.e. match _get_move_raw_values/_get_move_finished_values) for:
@@ -371,6 +381,7 @@ class StockMove(models.Model):
                 values['origin'] = mo._get_origin()
                 values['group_id'] = mo.procurement_group_id.id
                 values['propagate_cancel'] = mo.propagate_cancel
+                values['reference_ids'] = mo.reference_ids.ids
                 if values.get('raw_material_production_id', False):
                     product = product_id_to_product[values['product_id']]
                     if not product:
@@ -440,14 +451,13 @@ class StockMove(models.Model):
                 possible_reduceable_qty = -sum(move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.product_uom_qty).mapped('product_uom_qty'))
                 procurement_qty = max(procurement_qty, possible_reduceable_qty)
                 values = move._prepare_procurement_values()
-                origin = move._prepare_procurement_origin()
-                procurements.append(self.env['procurement.group'].Procurement(
+                procurements.append(self.env['stock.rule'].Procurement(
                     move.product_id, procurement_qty, move.product_uom,
-                    move.location_id, move.reference, origin, move.company_id, values))
+                    move.location_id, move.reference, move.origin, move.company_id, values))
 
         to_assign._action_assign()
         if procurements:
-            self.env['procurement.group'].run(procurements)
+            self.env['stock.rule'].run(procurements)
 
     def _action_assign(self, force_qty=False):
         res = super(StockMove, self)._action_assign(force_qty=force_qty)

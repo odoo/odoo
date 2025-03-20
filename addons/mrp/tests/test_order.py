@@ -5290,12 +5290,11 @@ class TestMrpOrder(TestMrpCommon):
             'mo_id': grandparent_production.id,
             'product_qty': 2,
         })
-        # Update the quantity to produce of the grandparent to 2, this should create a new MO for both the parent and the child.
+        # Update the quantity to produce of the grandparent to 2, this should update the quantity for both the parent and the child.
         update_quantity_wizard.change_prod_qty()
         self.assertEqual(grandparent_production.move_raw_ids.product_uom_qty, 2)
-        child_production_2, parent_production_2 = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids), ('id', 'not in', [parent_production.id, child_production.id])], order='id desc', limit=2)
-        self.assertEqual(grandparent_production._get_children(), (parent_production | parent_production_2))
-        self.assertEqual(parent_production_2._get_children(), child_production_2)
+        self.assertEqual(parent_production.product_qty, 2)
+        self.assertEqual(child_production.product_qty, 2)
 
     def test_workcenter_with_resource_calendar_from_another_company(self):
         """Test that only the resource calendars from the same

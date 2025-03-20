@@ -1673,6 +1673,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'route_ids': self.route_ids or self.move_line_ids.result_package_id.package_type_id.route_ids,
             'warehouse_id': warehouse,
             'priority': self.priority,
+            'reference_ids': self.reference_ids,
             'orderpoint_id': self.orderpoint_id,
             'packaging_uom_id': self.packaging_uom_id,
         }
